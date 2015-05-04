@@ -43,8 +43,8 @@ class CreateUsersTable extends Migration {
 			$table->string('id_twitter')->nullable();
 			$table->rememberToken();
 			$table->timestamps();
-			$table->enum('visibleBirthday',['yes','no'])->default('no');
-			$table->enum('visibleEmail',['yes','no'])->default('no');
+			$table->enum('visibleBirthday',['yes','no'])->default('no')->nullable();
+			$table->enum('visibleEmail',['yes','no'])->default('no')->nullable();
 		});
 	}
 
