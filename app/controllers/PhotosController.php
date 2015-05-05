@@ -73,8 +73,10 @@ class PhotosController extends \BaseController {
       'tags' => 'required',
       'photo_country' => 'required',
       'photo_state' => 'required',
-	    'photo_city' => 'required'
+	    'photo_city' => 'required',
+      'photo_authorization_checkbox' => 'required'
     );
+
 	$validator = Validator::make($input, $rules);
 	    
   if ($validator->fails()) {
@@ -107,8 +109,9 @@ class PhotosController extends \BaseController {
       if ( !empty($input["photo_workDate"]) )
         $photo->workdate = Photo::formatDate($input["photo_workDate"]);
       if ( !empty($input["photo_imageDate"]) )
-        $photo->dataCriacao = Photo::formatDate($input["photo_imageDate"]);
-      
+
+      $photo->dataCriacao = Photo::formatDate($input["photo_imageDate"]);
+
       $photo->nome_arquivo = $file->getClientOriginalName();
 
       $photo->user_id = Auth::user()->id;

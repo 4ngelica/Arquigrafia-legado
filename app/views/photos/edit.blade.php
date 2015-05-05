@@ -178,12 +178,12 @@
                <br>
                
                <br>
-               Escolho a licença <a href="http://creativecommons.org/licenses/?lang=pt_BR" id="creative_commons" target="_blank" style="text-decoration:underline; line-height:16px;">Creative Commons</a>, para publicar minha obra, com as seguintes permissões:
+               Escolho a licença <a href="http://creativecommons.org/licenses/?lang=pt_BR" id="creative_commons" target="_blank" style="text-decoration:underline; line-height:16px;">Creative Commons</a>, para publicar a imagem, com as seguintes permissões:
             </p>          
 					</div>
            
           <div class="four columns" id="creative_commons_left_form">
-            Permitir o uso comercial da sua obra?
+            Permitir o uso comercial da imagem?
 
             <br>
              <div class="form-row">
@@ -197,7 +197,7 @@
             
           </div>
           <div class="four columns" id="creative_commons_right_form">
-            Permitir modificações em sua obra?
+            Permitir modificações em sua imagem?
             <br>
             <div class="form-row">
               <input type="radio" name="photo_allowModifications" value="YES" id="photo_allowModifications" {{$photo->allowModifications == 'YES' ? "checked" : ""}}>

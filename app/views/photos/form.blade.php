@@ -160,16 +160,18 @@
 						</table>
 					</div>
 					<div class="twelve columns omega row">
-						<p>
-							<input name="terms" type="checkbox" value="read" id="creative_commons_text_checkbox"> Sou o autor da imagem ou possuo permissão expressa do autor para disponibilizá-la no Arquigrafia.
-							<br>
-							<label for="terms" generated="true" class="error" style="display: inline-block; "></label>
-							<br>
-							Escolho a licença <a href="http://creativecommons.org/licenses/?lang=pt_BR" id="creative_commons" target="_blank" style="text-decoration:underline; line-height:16px;">Creative Commons</a>, para publicar minha obra, com as seguintes permissões:
-						</p>
+						<div class="form-group">
+							*{{ Form::checkbox('photo_authorization_checkbox', 1, true) }}
+							{{ Form::label('photo_authorization_checkbox', '&nbsp;Sou o autor da imagem ou possuo permissão expressa do autor para disponibilizá-la no Arquigrafia')}}
+							<br>{{ $errors->first('photo_authorization_checkbox') }}
+						</div>
+					</div>
+					<div class="twelve columns omega row">
+						<label for="terms" generated="true" class="error" style="display: inline-block; "></label>	
+						Escolho a licença <a href="http://creativecommons.org/licenses/?lang=pt_BR" id="creative_commons" target="_blank" style="text-decoration:underline; line-height:16px;">Creative Commons</a>, para publicar a imagem, com as seguintes permissões:			
 					</div>
 					<div class="four columns" id="creative_commons_left_form">
-						Permitir o uso comercial da sua obra?
+						Permitir o uso comercial da imagem?
 						<br>
 						 <div class="form-row">
 							<input type="radio" name="photo_allowCommercialUses" value="YES" id="photo_allowCommercialUses" checked="checked">
@@ -181,7 +183,7 @@
 						 </div>
 					</div>
 					<div class="four columns" id="creative_commons_right_form">
-						Permitir modificações em sua obra?
+						Permitir modificações em sua imagem?
 						<br>
 						<div class="form-row">
 							<input type="radio" name="photo_allowModifications" value="YES" id="photo_allowModifications" checked="checked">
@@ -201,8 +203,11 @@
 					</div>
 				</div>
 			{{ Form::close() }}
+
 		</div>
+
 	</div>
+
 	<script type="text/javascript">
 		function readURL(input) {
 				$("#preview_photo").hide();
@@ -237,4 +242,5 @@
 		});
 			
 	</script>
+
 @stop
