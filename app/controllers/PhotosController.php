@@ -47,29 +47,39 @@ class PhotosController extends \BaseController {
   // upload form
 	public function form()
   {
-		// show form view
-    if (Auth::check()) return View::make('/photos/form'); else return View::make('/users/login');
+    $tags = null;
+    if ( Session::has('tags') )
+    {   
+      $tags = Session::pull('tags');
+      $tags = explode(',', $tags);
+    }
+    return View::make('/photos/form')->with('tags', $tags);
 	}
 
   public function store() {  
-	// put input into flash session for form repopulation
-	Input::flash();
+	
+	Input::flashExcept('tags', 'photo');
 	
 	$input = Input::all();
-	// validate data	
+
+  if (Input::has('tags'))
+    $input["tags"] = str_replace(array('\'', '"', '[', ']'), '', $input["tags"]);
+  else
+    $input["tags"] = '';
+
     $rules = array(			
-        'photo_name' => 'required',
-        'photo_imageAuthor' => 'required',
-        'tags' => 'required',
-        'photo_country' => 'required',
-        'photo_state' => 'required',
-		'photo_city' => 'required'
+      'photo_name' => 'required',
+      'photo_imageAuthor' => 'required',
+      'tags' => 'required',
+      'photo_country' => 'required',
+      'photo_state' => 'required',
+	    'photo_city' => 'required'
     );
 	$validator = Validator::make($input, $rules);
 	    
   if ($validator->fails()) {
       $messages = $validator->messages();      
-	  return Redirect::to('/photos/upload')->withErrors($messages);
+	  return Redirect::to('/photos/upload')->with(['tags' => $input['tags']])->withErrors($messages);
     } else {
 
     if (Input::hasFile('photo') and Input::file('photo')->isValid()) {      
@@ -98,7 +108,7 @@ class PhotosController extends \BaseController {
         $photo->workdate = Photo::formatDate($input["photo_workDate"]);
       if ( !empty($input["photo_imageDate"]) )
         $photo->dataCriacao = Photo::formatDate($input["photo_imageDate"]);
-      // $photo->deleted = false;
+      
       $photo->nome_arquivo = $file->getClientOriginalName();
 
       $photo->user_id = Auth::user()->id;
@@ -112,8 +122,7 @@ class PhotosController extends \BaseController {
       
       $photo->save();
 
-      $input["tags"] = str_replace(array('\'', '"', '[', ']'), '', $input["tags"]); 
-      $tags = preg_split("/[\s,]+/", $input["tags"]);
+      $tags = explode(',', $input['tags']);
       
       if (!empty($tags)) {
         $tags = array_map('trim', $tags);
@@ -262,17 +271,6 @@ class PhotosController extends \BaseController {
     return "OK.";
   }
 
-  /**
- * Show the form for editing the specified resource.
- *
- * @return Response
- */
-  public function edit($id) {     
-    $photo = Photo::find($id); 
-    return View::make('photos.edit')
-      ->with(['photo' => $photo, 'tags' => $photo->tags] );
-  }
-
   public function evaluate($id) {     
     $photo = Photo::find($id); 
     $user = User::find($photo->user_id);
@@ -294,13 +292,28 @@ class PhotosController extends \BaseController {
       'architectureName' => Photo::composeArchitectureName($photo->name)]);
   }
 
+  public function edit($id) {     
+    $photo = Photo::find($id);
+    if (Session::has('tags'))
+    {
+      $tags = Session::pull('tags');
+      $tags = explode(',', $tags);  
+    } else {
+      $tags = $photo->tags->lists('name');
+    }
+    return View::make('photos.edit')
+      ->with(['photo' => $photo, 'tags' => $tags] );
+  }
+
   public function update($id) {              
     $photo = Photo::find($id);
-     Input::flash();    
-     $input = Input::only('photo_name', 'photo_imageAuthor', 'tags', 'photo_country', 'photo_state', 'photo_city', 
-      'photo_aditionalImageComments', 'photo_allowCommercialUses', 'photo_allowModifications', 'photo_description', 
-      'photo_district', 'photo_street', 'photo_workAuthor', 'photo_workDate', 'photo_imageDate');    
+     Input::flashExcept('tags', 'photo');    
+     $input = Input::all();
 
+    if (Input::has('tags'))
+      $input["tags"] = str_replace(array('\'', '"', '[', ']'), '', $input["tags"]); 
+    else
+      $input["tags"] = '';
     // validate data      
     $rules = array(     
         'photo_name' => 'required',
@@ -315,7 +328,7 @@ class PhotosController extends \BaseController {
       
   if ($validator->fails()) {
       $messages = $validator->messages();      
-    return Redirect::to('/photos/edit')->withErrors($messages);
+      return Redirect::to('/photos/' . $photo->id . '/edit')->with('tags', $input['tags'])->withErrors($messages);
     } else {        
       if ( !empty($input["photo_aditionalImageComments"]) ) 
         $photo->aditionalImageComments = $input["photo_aditionalImageComments"];
@@ -339,12 +352,10 @@ class PhotosController extends \BaseController {
         $photo->workdate = Photo::formatDate($input["photo_workDate"]);
       if ( !empty($input["photo_imageDate"]) )
         $photo->dataCriacao = Photo::formatDate($input["photo_imageDate"]);
-      // $photo->deleted = false;          
 
       $photo->save();      
 
-      $input["tags"] = str_replace(array('\'', '"', '[', ']'), '', $input["tags"]); 
-      $tags = preg_split("/[\s,]+/", $input["tags"]);
+      $tags = explode(',', $input['tags']);
       
       if (!empty($tags)) {
         $tags = array_map('trim', $tags);

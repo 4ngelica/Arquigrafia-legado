@@ -36,20 +36,20 @@
           <p>(*) Campos obrigatórios.</p>
           <br />
           
-          <div class="five columns alpha row">
+          <div class="six columns alpha row">
         	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
             <tr>
               
-			  <div class="two columns alpha"><p>{{ Form::label('photo_name', 'Título*:') }}</p></div>
-				<div class="two columns omega">				
+			  <div class="two columns alpha omega"><p>{{ Form::label('photo_name', 'Título*:') }}</p></div>
+				<div class="three columns alpha">				
         <p>{{ Form::text('photo_name', $photo->name) }} <br>
 				{{ $errors->first('photo_name') }}</p>
 			  </div>			   
             </tr>
             <tr>
              
-			  <div class="two columns alpha"><p>{{ Form::label('photo_imageAuthor', 'Autor da imagem*:') }}</p></div>
-				<div class="two columns omega">				
+			  <div class="two columns alpha omega"><p>{{ Form::label('photo_imageAuthor', 'Autor da imagem*:') }}</p></div>
+				<div class="three columns alpha">				
         <p>{{ Form::text('photo_imageAuthor', $photo->imageAuthor) }} <br>
 				{{ $errors->first('photo_imageAuthor') }}</p>
 			  </div>
@@ -58,20 +58,20 @@
               
               <td>
               	
-				<div class="two columns alpha"><p>{{ Form::label('tags', 'Tags*:') }}</p></div>					
-					<div class="two columns omega">							
-					<p><small>* Separe as tags com um ENTER.</small>
-					{{ Form::textarea('tags') }} <br>						 
-					{{ $errors->first('tags') }}</p>
-				</div>
-              	<script type="text/javascript">
-                  $('#tags').textext({ plugins: 'tags' });
-                  @foreach($tags as $tag)
-                    $('#tags').textext()[0].tags().addTags([ {{ '"' . $tag->name . '"' }} ]);
-	                 console.log("{{ $tag->name }}");
-                  @endforeach
-  								
-								</script>
+                  <div class="two columns alpha omega"><p>{{ Form::label('tags_input', 'Tags*:') }}</p></div>
+                  <div class="two columns alpha">
+                    <p>
+                      {{ Form::text('tags_input') }} <br>
+                      {{ $errors->first('tags') }}
+                    </p>
+                  </div>
+                  <div class="two columns alpha">
+                    <button class="btn alpha" id="add_tag">Adicionar tag</button>
+                  </div>
+                  <div class="five columns alpha">
+                    <textarea name="tags" id="tags" cols="60" rows="1" style="display: none;"></textarea>
+                  </div>
+
                
               </td>
             </tr>
@@ -226,5 +226,20 @@
 	</div>
 
   </div>
+  <script type="text/javascript">
+    $(document).ready(function() {
+     $('#tags').textext({ plugins: 'tags' });
+      @foreach($tags as $tag)
+        $('#tags').textext()[0].tags().addTags([ {{ '"' . $tag . '"' }} ]);
+      @endforeach
+      $('#add_tag').click(function(e) {
+        e.preventDefault();
+        var tag = $('#tags_input').val();
+        if (tag == '') return;
+        $('#tags').textext()[0].tags().addTags([ tag ]);
+        $('#tags_input').val('');
+      });
+    })
     
+  </script>
 @stop
