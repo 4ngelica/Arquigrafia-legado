@@ -356,6 +356,12 @@ class PhotosController extends \BaseController {
       if ( !empty($input["photo_imageDate"]) )
         $photo->dataCriacao = Photo::formatDate($input["photo_imageDate"]);
 
+      if (Input::hasFile('photo') and Input::file('photo')->isValid()) {      
+        $file = Input::file('photo');       
+        $ext = $file->getClientOriginalExtension();
+        $photo->nome_arquivo = $photo->id.".".$ext;
+      }
+
       $photo->save();      
 
       $tags = explode(',', $input['tags']);
@@ -389,13 +395,19 @@ class PhotosController extends \BaseController {
           }
         }
 
-      }       
+      }
+
+      $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
+      $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
+      $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
+      $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
+      $file->move(public_path().'/arquigrafia-images', $photo->id."_original.".strtolower($ext)); // original
+
+      $photo->saveMetadata(strtolower($ext)); 
 
       return Redirect::to("/photos/{$photo->id}")->with('message', '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso'); 
      
-  }
-
-  
+  }  
 }
 
   public function destroy($id) {
