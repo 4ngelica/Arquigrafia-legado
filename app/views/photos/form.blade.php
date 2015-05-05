@@ -180,40 +180,29 @@
           
           <div class="five columns omega row">
           	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
-              <tr>
-                <!--<td><label>Data da imagem:</label></td>
-                <td><input name="photo_imageDate" type="text" class="text" id="imageDate" placeholder="01/01/01"></td>
-				-->
+              <tr>              
+				
 				<div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
 				<div class="two columns omega">
 				<p>{{ Form::text('photo_imageDate', Input::old('photo_imageDate')) }} <br>
 				</p>
 			  </div>
               </tr>
-              <tr>
-                <!--<td><label>Autor da obra:</label></td>
-                <td><input name="photo_workAuthor" type="text" class="text" id="workAuthor"></td>-->
+              <tr>               
 				<div class="two columns alpha"><p>{{ Form::label('photo_workAuthor', 'Autor da obra:') }}</p></div>
 				<div class="two columns omega">
 				<p>{{ Form::text('photo_workAuthor', Input::old('photo_workAuthor')) }} <br>
 				</p>
 			  </div>
               </tr>	
-              <tr>
-                <!--<td><label>Data da obra:</label></td>
-                <td><input name="photo_workDate" type="text" class="text" id="workDate" placeholder="01/01/01"></td>
-				-->
+              <tr>               
 				<div class="two columns alpha"><p>{{ Form::label('photo_workDate', 'Data da obra:') }}</p></div>
 				<div class="two columns omega">
 				<p>{{ Form::text('photo_workDate', Input::old('photo_workDate')) }} <br>
 				</p>
 			  </div>
               </tr>
-              <tr>
-                <!--<td><label>Descrição:</label></td>
-                <td><textarea name="photo_description" class="input_content"></textarea>
-                </td>
-				-->
+              <tr>                
 				<div class="two columns alpha"><p>{{ Form::label('photo_description', 'Descrição:') }}</p></div>
 				<div class="two columns omega">
 				<p>{{ Form::textarea('photo_description', Input::old('photo_description')) }} <br>
@@ -229,12 +218,12 @@
                <br>
                <label for="terms" generated="true" class="error" style="display: inline-block; "></label>
                <br>
-               Escolho a licença <a href="http://creativecommons.org/licenses/?lang=pt_BR" id="creative_commons" target="_blank" style="text-decoration:underline; line-height:16px;">Creative Commons</a>, para publicar minha obra, com as seguintes permissões:
+               Escolho a licença <a href="http://creativecommons.org/licenses/?lang=pt_BR" id="creative_commons" target="_blank" style="text-decoration:underline; line-height:16px;">Creative Commons</a>, para publicar a imagem, com as seguintes permissões:
             </p>          
 					</div>
            
           <div class="four columns" id="creative_commons_left_form">
-            Permitir o uso comercial da sua obra?
+            Permitir o uso comercial da imagem?
             <br>
              <div class="form-row">
               <input type="radio" name="photo_allowCommercialUses" value="YES" id="photo_allowCommercialUses" checked="checked">
@@ -246,8 +235,8 @@
              </div>
             
           </div>
-          <div class="four columns" id="creative_commons_right_form">
-            Permitir modificações em sua obra?
+          <div class="four columns" id="creative_commons_right_form">            
+            Permitir modificações em sua imagem?
             <br>
             <div class="form-row">
               <input type="radio" name="photo_allowModifications" value="YES" id="photo_allowModifications" checked="checked">
