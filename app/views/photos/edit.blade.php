@@ -14,7 +14,7 @@
   <div class="container">
   
 	<div id="registration">      
-      {{ Form::open(array('url'=>'photos/' . $photo->id, 'method' => 'put')) }}       
+      {{ Form::open(array('url'=>'photos/' . $photo->id, 'method' => 'put', 'files'=> true)) }}           
       
       <div class="twelve columns row step-1">
       	<h1><span class="step-text">Edição de dados da imagem {{$photo->name}}</span></h1>
@@ -27,11 +27,20 @@
             </a>
           </p>
           <br>
-        </div>
+
+           <p>{{ Form::label('photo','Alterar imagem:') }} 
+          {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}</p>
+          <br>
+        </div>    
+
+
+         
+           
+
       </div> 
 
       
-      <div id="registration" class="twelve columns row step-2">
+      <div id="registration" class="twelve columns row step-2">         
       	          
           <p>(*) Campos obrigatórios.</p>
           <br />
