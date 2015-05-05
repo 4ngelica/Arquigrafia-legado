@@ -211,16 +211,21 @@
               </tr>
             </table>
           </div>
+       
         	
-          <div class="twelve columns omega row">
-            <p> 
-               <input name="terms" type="checkbox" value="read" id="creative_commons_text_checkbox"> Sou o autor da imagem ou possuo permissão expressa do autor para disponibilizá-la no Arquigrafia. 
-               <br>
+        <div class="twelve columns omega row">
+          <div class="form-group">
+            *{{ Form::checkbox('photo_authorization_checkbox', 1, true) }}
+            {{ Form::label('photo_authorization_checkbox', '&nbsp;Sou o autor da imagem ou possuo permissão expressa do autor para disponibilizá-la no Arquigrafia')}}
+            <br>{{ $errors->first('photo_authorization_checkbox') }}
+          </div> 
+				</div>         
+
+
+          <div class="twelve columns omega row">            
                <label for="terms" generated="true" class="error" style="display: inline-block; "></label>
-               <br>
-               Escolho a licença <a href="http://creativecommons.org/licenses/?lang=pt_BR" id="creative_commons" target="_blank" style="text-decoration:underline; line-height:16px;">Creative Commons</a>, para publicar a imagem, com as seguintes permissões:
-            </p>          
-					</div>
+              Escolho a licença <a href="http://creativecommons.org/licenses/?lang=pt_BR" id="creative_commons" target="_blank" style="text-decoration:underline; line-height:16px;">Creative Commons</a>, para publicar a imagem, com as seguintes permissões:
+          </div>
            
           <div class="four columns" id="creative_commons_left_form">
             Permitir o uso comercial da imagem?
