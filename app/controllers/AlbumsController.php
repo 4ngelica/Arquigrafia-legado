@@ -16,12 +16,16 @@ class AlbumsController extends \BaseController {
 		$url = URL::to('/albums/photos/add');
 		$photos = Photo::paginateUserPhotos(Auth::user(), 24);
 		$maxPage = $photos->getLastPage();
+		$image = null;
+		if ( Session::has('image') )
+			$image = Photo::find(Session::get('image'));
 		return View::make('albums.form')
 			->with(['photos' => $photos, 
 				'url' => $url, 
 				'maxPage' => $maxPage, 
 				'page' => 1,
-				'type' => 'add'
+				'type' => 'add',
+				'image' => $image
 			]);
 	}
 
@@ -212,8 +216,19 @@ class AlbumsController extends \BaseController {
 				$album->cover_id = $photo;
 			}
 		}
-		
-		return Redirect::to('/photos/' . $photo);
+		if (Input::has('create_album'))
+			if ($albums->isEmpty())
+				return Redirect::to('/albums/create')->with('image', $photo);
+			else
+				return Redirect::to('/albums/create')->with([
+					'message' => '<strong>Imagem adicionada com sucesso ao(s) seu(s) álbum(ns)</strong>',
+					'image' => $photo
+				]);
+
+		if ($albums->isEmpty())
+			return Redirect::to('/photos/' . $photo);
+		else	
+			return Redirect::to('/albums')->with('message', '<strong>Imagem adicionada com sucesso ao(s) seu(s) álbum(ns)</strong>');
 	}
 
 	public function destroy($id) {

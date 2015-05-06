@@ -2,38 +2,50 @@
 	{{ Form::open(array('url' => URL::to('/albums/photo/add'))) }}
 		{{ Form::hidden('_photo', $photo_id) }}
 		<div id="albums_list" class="list">
-				<h2> Seus Álbuns </h2>
-				<p class="row"> Selecione os álbuns em que a imagem será inserida</p>
-				<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
-					@foreach($albums as $album)
-						@if ($album_counter % 3 == 0)
-							<tr>
-						@endif
-						<td width="33%">
-							<input type="checkbox"  id="{{ 'album_' . $album->id }}" 
-								name="albums[]" value="{{ $album->id }}">
-							 <label for="{{ 'album_' . $album->id }}"></label>
-							<p>{{ $album->title }}</p>
-						</td>
-						@if($album_counter %3 == 2)
-							</tr>
-						@endif
-						<?php $album_counter++ ?>
-					@endforeach
-					
-					@if($album_counter %3 > 0)
-						@while($album_counter %3 > 0)
-							<td width="33%"></td>
-							<?php $album_counter++; ?>
-						@endwhile
+			<h2> Seus Álbuns </h2>
+			<p class="row"> Selecione os álbuns em que a imagem será inserida</p>
+			<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td width="33%">
+						<input type="checkbox" id="create_album" name="create_album" value="0">
+						<label for="create_album"></label>
+						<p>Criar novo álbum</p>
+					</td>	
+				<?php $album_counter++ ?>
+				@foreach($albums as $album)
+					@if ($album_counter % 3 == 0)
+						<tr>
+					@endif
+					<td width="33%">
+						<input type="checkbox"  id="{{ 'album_' . $album->id }}" 
+							name="albums[]" value="{{ $album->id }}">
+						 <label for="{{ 'album_' . $album->id }}"></label>
+						<p>{{ $album->title }}</p>
+					</td>
+					@if($album_counter %3 == 2)
 						</tr>
 					@endif
-				</table>
+					<?php $album_counter++ ?>
+				@endforeach
+				
+				@if($album_counter %3 > 0)
+					@while($album_counter %3 > 0)
+						<td width="33%"></td>
+						<?php $album_counter++; ?>
+					@endwhile
+					</tr>
+				@endif
+			</table>
 		</div>
 		<p>{{ Form::submit("ADICIONAR AOS ÁLBUNS", array('class'=>'btn')) }}</p>
 	{{ Form::close() }}
 
 	<style>
+		#create_album + label {
+			background: url('/img/create_album.png');
+			
+		}
+
 		@foreach($albums as $album)
 			{{ '#album_' . $album->id . ' + label' }}
 			{

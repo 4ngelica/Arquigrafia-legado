@@ -12,6 +12,13 @@
 @stop
 
 @section('content')
+	@if (Session::get('message'))
+		<div class="container">
+			<div class="twelve columns">
+				<div class="message">{{ Session::get('message') }}</div>
+			</div>
+		</div>
+	@endif
 	<!--   HEADER DO USUÁRIO   -->
 	<div class="container">
 		<div id="user_header" class="twelve columns">

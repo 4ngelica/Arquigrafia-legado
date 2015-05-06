@@ -12,20 +12,9 @@
 		var url = '{{ $url }}';
 		var photos_count = {{ $photos->count() }};
 		$(document).ready(function() {
-			var first_photo = $('#add_page' + currentPage + ' .add_photo').first();
-			first_photo.prop('checked', true);
 			@if( !isset($image) )
-				/* $('#create_album').submit(function(e) {
-					e.preventDefault();
-					if(photos_count == 0)
-						this.submit();
-					var n = $(".add_photo:checked").length;
-					if (n < 1) {
-						//fazer algo
-					} else {
-						this.submit();
-					}
-				}); */
+				var first_photo = $('#add_page' + currentPage + ' .add_photo').first();
+				first_photo.prop('checked', true);
 			@endif
 
 		});
@@ -34,8 +23,16 @@
 @stop
 
 @section('content')
-	<div class="container">
-				
+
+	@if (Session::get('message'))
+		<div class="container">
+			<div class="twelve columns">
+				<div class="message">{{ Session::get('message') }}</div>
+			</div>
+		</div>
+	@endif
+
+	<div class="container">				
 		<div class="twelve columns">
 			<h1>Novo álbum</h1>
 			<p>Crie um novo álbum.<br><br>
