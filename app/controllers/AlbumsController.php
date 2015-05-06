@@ -223,4 +223,9 @@ class AlbumsController extends \BaseController {
 		return Redirect::to('/albums');
 	}
 
+	public function removePhotoFromAlbum($album_id, $photo_id) {
+		$album = Album::find($album_id);
+		$album->photos()->detach($photo_id);
+		return Redirect::to('/albums/' . $album->id);
+	}
 }
