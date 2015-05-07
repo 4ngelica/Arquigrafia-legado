@@ -95,7 +95,7 @@ i.info {background-position: -121px 0;}
 
 /* forms */
 form p {margin: 3px 0;}
-input[type="text"], input[type="password"] {border-bottom: solid 1px #ccc;} 
+input[type="text"], input[type="password"] {border-bottom: solid 1px #ccc; width: 140px; } 
 input[type="range"] {width: 220px;}
 .registration input[type="text"], .registration input[type="password"] {border: solid 1px #ddd; font-size: 10px; font-weight: bold; padding: 5px 10px; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; margin: -5px 0 10px;}
 .form-table td {vertical-align: top; padding-bottom: 5px;}

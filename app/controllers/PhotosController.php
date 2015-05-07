@@ -134,7 +134,10 @@ class PhotosController extends \BaseController {
         // tudo em minusculas, para remover redundancias, como Casa/casa/CASA
         $tags = array_unique($tags); //retira tags repetidas, se houver.
         foreach ($tags as $t) {          
-          $tag = Tag::firstOrCreate(['name' => $t]); //não deveria haver tags repetidas no banco
+          $tag = Tag::where('name', $t)->first();
+          if (is_null($tag)) {
+            $tag = Tag::create(['name' => $t]);
+          }
           $photo->tags()->attach($tag->id);
           if ($tag->count == null)
             $tag->count = 0;
@@ -375,7 +378,10 @@ class PhotosController extends \BaseController {
         // tudo em minusculas, para remover redundancias, como Casa/casa/CASA
         $tags = array_unique($tags); //retira tags repetidas, se houver.
         foreach ($tags as $t) {          
-          $tag = Tag::firstOrCreate(['name' => $t]); //não deveria haver tags repetidas no banco
+          $tag = Tag::where('name', $t)->first();
+          if (is_null($tag)) {
+            $tag = Tag::create(['name' => $t]);
+          }
           if ( !$photo_tags->contains($tag) )
           {
             if ($tag->count == null) $tag->count = 0;

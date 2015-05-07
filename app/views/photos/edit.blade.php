@@ -253,6 +253,11 @@
         $('#tags').textext()[0].tags().addTags([ tag ]);
         $('#tags_input').val('');
       });
+      $('#tags_input').keypress(function(e) {
+        var key = e.which || e.keyCode;
+        if (key == 44 || key == 59) // key = , ou key = ;
+          e.preventDefault();
+      });
     })
     
   </script>

@@ -63,8 +63,8 @@
 											<div class="error">{{ $errors->first('tags') }}</div>
 										</p>
 									</div>
-									<div class="two columns alpha">
-										<button class="btn alpha" id="add_tag">Adicionar tag</button>
+									<div class="two columns">
+										<button class="btn" id="add_tag">Adicionar tag</button>
 									</div>
 									<div class="five columns alpha">
 										<textarea name="tags" id="tags" cols="60" rows="1" style="display: none;"></textarea>
@@ -240,6 +240,12 @@
 				if (tag == '') return;
 				$('#tags').textext()[0].tags().addTags([ tag ]);
 				$('#tags_input').val('');
+			});
+
+			$('#tags_input').keypress(function(e) {
+				var key = e.which || e.keyCode;
+				if (key == 44 || key == 59) // key = , ou key = ;
+					e.preventDefault();
 			});
 		});
 			
