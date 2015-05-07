@@ -136,7 +136,9 @@ class PhotosController extends \BaseController {
         foreach ($tags as $t) {          
           $tag = Tag::where('name', $t)->first();
           if (is_null($tag)) {
-            $tag = Tag::create(['name' => $t]);
+            $tag = new Tag();
+            $tag->name = $t;
+            $tag->save();
           }
           $photo->tags()->attach($tag->id);
           if ($tag->count == null)
@@ -380,7 +382,9 @@ class PhotosController extends \BaseController {
         foreach ($tags as $t) {          
           $tag = Tag::where('name', $t)->first();
           if (is_null($tag)) {
-            $tag = Tag::create(['name' => $t]);
+            $tag = new Tag();
+            $tag->name = $t;
+            $tag->save();
           }
           if ( !$photo_tags->contains($tag) )
           {
