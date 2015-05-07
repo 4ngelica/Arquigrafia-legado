@@ -308,9 +308,9 @@ $(document).ready(function(){
 					<h4>Endereço:</h4>
 					<p>
 						@if (!empty($photos->street) && !empty($photos->city))
-						<a href="{{ URL::to("/search?q=".$photos->street) }}">
-						{{ $photos->street }},
-						</a>
+						<a href="{{ URL::to("/search?q=".$photos->street."&city=".$photos->city) }}">  
+            {{ $photos->street }},
+            </a>
 						@elseif (!empty($photos->street))
 						<a href="{{ URL::to("/search?q=".$photos->street) }}">
 						{{ $photos->street }}
