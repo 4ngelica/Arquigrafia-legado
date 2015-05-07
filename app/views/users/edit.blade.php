@@ -176,7 +176,7 @@
           <div class="four columns alpha omega">  
           
             <br>            
-            <a href="{{ URL::to('/users/' . $user->id) }}" class='btn right'>CANCELAR</a>
+            <a href="{{ URL::to('/users/' . $user->id) }}" class='btn right'>VOLTAR</a>
             {{ Form::submit("EDITAR", array('class'=>'btn right')) }}
           
           </div>
