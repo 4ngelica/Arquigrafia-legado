@@ -40,16 +40,18 @@ class PagesController extends BaseController {
           Log::info("Logging info txtcity <".$txtcity.">"); 
           $photos = Photo::where('city', 'LIKE', '%' . $txtcity . '%')
                        ->where('street', 'LIKE', '%' . $txtstreet . '%')
+                       ->whereNull('deleted_at')
                        ->get();
         $needle = $txtstreet;
 
-       }else{
+       }else{ 
                 $photos = Photo::where('name', 'LIKE', '%' . $needle . '%')
               ->orWhere('description', 'LIKE', '%' . $needle . '%')
               ->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%')
               ->orWhere('workAuthor', 'LIKE', '%' . $needle . '%')
               ->orWhere('state', 'LIKE', '%' . $needle . '%')
               ->orWhere('city', 'LIKE', '%' . $needle . '%')
+              ->whereNull('deleted_at')
               ->get();
 
        } 
@@ -70,7 +72,7 @@ class PagesController extends BaseController {
 	}
   
   public function advancedSearch()
-	{
+	{ 
     //2015-05-06 msy begin, add workauthor
     $fields = array(
         'name',
@@ -96,7 +98,7 @@ class PagesController extends BaseController {
       if ($state != '') $query->where('state', 'LIKE', '%'. $state .'%'); 
       if ($country != '') $query->where('country', 'LIKE', '%'. $country .'%');  
       if ($workAuthor != '') $query->where('workAuthor', 'LIKE', '%'. $workAuthor .'%'); 
-
+      $query->whereNull('deleted_at'); 
       $photos = $query->get();
       
     } //2015-05-06 msy end
