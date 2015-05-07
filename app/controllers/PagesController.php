@@ -37,15 +37,17 @@ class PagesController extends BaseController {
           
         Log::info("Logging info txtcity <".$txtcity.">");           
           
-        $query = Photo::whereNull('deleted_at');   
+        $query = Photo::where('id', '>', 0);  
         $query->where('city', 'LIKE', '%' . $txtcity . '%');
         $query->where('street', 'LIKE', '%' . $txtstreet . '%');
+        $query->whereNull('deleted_at');
         $photos = $query->get();
+        
         $needle = $txtstreet;
 
        } else{               
 
-           $query = Photo::whereNull('deleted_at');         
+           $query = Photo::where('id', '>', 0);        
            $query->where('name', 'LIKE', '%'. $needle .'%');  
            $query->orWhere('description', 'LIKE', '%'. $needle .'%');  
            $query->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%');
@@ -53,6 +55,7 @@ class PagesController extends BaseController {
            $query->orWhere('country', 'LIKE', '%'. $needle .'%');  
            $query->orWhere('state', 'LIKE', '%'. $needle .'%'); 
            $query->orWhere('city', 'LIKE', '%'. $needle .'%'); 
+           $query->whereNull('deleted_at'); 
            $photos = $query->get();
 
        } 
