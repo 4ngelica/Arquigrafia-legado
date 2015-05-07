@@ -74,7 +74,8 @@ class PhotosController extends \BaseController {
       'photo_country' => 'required',
       'photo_state' => 'required',
 	    'photo_city' => 'required',
-      'photo_authorization_checkbox' => 'required'
+      'photo_authorization_checkbox' => 'required',
+      'photo' => 'required'
     );
 
 	$validator = Validator::make($input, $rules);
@@ -324,7 +325,7 @@ class PhotosController extends \BaseController {
         'tags' => 'required',
         'photo_country' => 'required',
         'photo_state' => 'required',
-        'photo_city' => 'required'
+        'photo_city' => 'required'        
     );  
 
   $validator = Validator::make($input, $rules);
