@@ -30,17 +30,19 @@
 				
 		<div class="twelve columns">
 			<h1>{{ $album->title }}</h1>
-			<p>Edite seu álbum</p>
-			<br>
+			<p>Edite seu álbum<br>
+			<small>* Os campos a seguir são obrigatórios.</small>
+			</p>			
 		</div>
 			
 		<div id="registration">
 			{{ Form::open(array('url' => 'albums/' . $album->id, 'method' => 'put')) }}
 				<div class="five columns row">
-					<div class="one column alpha"><p>{{ Form::label('title', 'Título') }}</p></div>
+					<div class="one column alpha"><p>{{ Form::label('title', 'Título*') }}</p></div>
 					<div class="four columns omega">
 						<p>{{ Form::text('title', $album->title) }} <br>
-						{{ $errors->first('title') }}</p>
+							<div class="error">{{ $errors->first('title') }} </div>
+						</p>
 					</div>
 					
 					<div class="one column alpha"><p>{{ Form::label('description', 'Descrição') }}</p></div>

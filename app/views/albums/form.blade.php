@@ -36,7 +36,7 @@
 		<div class="twelve columns">
 			<h1>Novo álbum</h1>
 			<p>Crie um novo álbum.<br><br>
-			<small>* Todos os campos a seguir são obrigatórios.</small>
+			<small>* Os campos a seguir são obrigatórios.</small>
 			</p>
 		</div>
 
@@ -46,7 +46,8 @@
 					<div class="one column alpha"><p>{{ Form::label('title', 'Título*') }}</p></div>
 					<div class="two columns omega">
 						<p>{{ Form::text('title') }} <br>
-						{{ $errors->first('title') }}</p>
+							<div class="error">{{ $errors->first('title') }}</div>
+						</p>
 					</div>
 					
 					<div class="one column alpha"><p>{{ Form::label('description', 'Descrição') }}</p></div>
