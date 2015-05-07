@@ -203,9 +203,13 @@ $(document).ready(function(){
           
             @foreach($comments as $comment)
             <div class="clearfix">
-              <div class="column alpha omega row">
-                <!--{{$comment->user->name}}--> 
-                <img class="user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" />
+              <div class="column alpha omega row">                 
+               <!-- <img class="user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" /> -->
+               <?php if ($comment->user->photo != "") { ?>
+                  <img class="user_thumbnail" src="{{ asset($comment->user->photo); }}" />
+                <?php } else { ?>
+                  <img class="user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" />
+                <?php } ?>               
               </div>
               <div class="four columns omega row">
                 <small>{{$comment->user->name}} - {{$comment->created_at->format('d/m/Y h:m') }}</small>

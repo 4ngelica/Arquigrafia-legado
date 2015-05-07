@@ -214,68 +214,8 @@
       });
     </script>
   </div>
-@endif
-        
-				<!--   BOX DE COMENTARIOS   -->
-				<div id="comments_block" class="eight columns row alpha omega">
-        	<h3>Comentários</h3>
-          
-          <?php $comments = $photos->comments; ?>
-          
-          @if (!isset($comments))          
-         
-          <p>Ninguém comentou sobre {{$architectureName}}. Seja o primeiro!</p>
-          
-          @endif
-          
-          <?php if (Auth::check()) { ?>
-            
-            {{ Form::open(array('url' => "photos/{$photos->id}/comment")) }}
-              <div class="column alpha omega row">
-              <?php if (Auth::user()->photo != "") { ?>
-                <img class="user_thumbnail" src="{{ asset(Auth::user()->photo); }}" />
-              <?php } else { ?>
-                <img class="user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" />
-              <?php } ?>
-              </div>
-              
-              <div class="three columns row">
-                <strong><a href="#" id="name">{{ Auth::user()->name }}</a></strong><br>
-                Deixe seu comentário <br>
-                {{ $errors->first('text') }}
-                {{ Form::textarea('text', '', ['id'=>'comment_field']) }}
-                {{ Form::hidden('user', $photos->id ) }}
-                {{ Form::submit('COMENTAR', ['id'=>'comment_button','class'=>'cursor btn']) }}
-              </div>
-            {{ Form::close() }}
-            
-            <br class="clear">
-            
-          <?php } else { ?>            
-            <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e comente sobre {{$architectureName}}</p>
-          <?php } ?>
-          
-          @if (isset($comments))
-          
-            @foreach($comments as $comment)
-            <div class="clearfix">
-              <div class="column alpha omega row">                
-                <img class="user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" />
-              </div>
-              <div class="four columns omega row">
-                <small>{{$comment->user->name}} - {{$comment->created_at->format('d/m/Y h:m') }}</small>
-                <p>{{ $comment->text }}</p>
-              </div>        
-            </div>       
-            @endforeach
-          
-          @endif    
-          
-          
-          
-          
-        </div>
-				<!-- FIM DO BOX DE COMENTARIOS -->
+@endif      
+				
         
         
         
@@ -378,91 +318,77 @@
         </div>
 
       </br>
-        
-        <!-- MÉDIA DE AVALIAÇÕES -->
-        <!--@if (!empty($average))            
-            
-          <h3>Média de Avaliações d{{$architectureName}}</h3>
+    </br>
+
+      <!--   BOX DE COMENTARIOS   -->
+        <div id="comments_block" class="eight columns row alpha omega">
+          <h3>Comentários</h3>
           
-
-          <div id="evaluation_average">
-          <!-- Google Charts -->
-          <!--<div>
-            <script type="text/javascript" src="https://www.google.com/jsapi"></script>            
-            <div id="chart_div"><div>            
-            <script>
-            
-              google.load('visualization', '1', {packages: ['corechart', 'line']});
-              google.setOnLoadCallback(drawCurveTypes);
-              
-              function drawCurveTypes() {
-                var data = new google.visualization.DataTable();
-                data.addColumn('number', 'Pontuação');
-                data.addColumn('number', 'Média');
-                
-                @if(Auth::check() && isset($userEvaluations) && !$userEvaluations->isEmpty())
-                  data.addColumn('number', 'Sua avaliação');
-                @endif
-                <?php $count = 0; ?>
-                data.addRows([
-
-                  @foreach($average as $avg)
-                      [
-                        {{ $count . ', ' }}
-                        {{ $avg->avgPosition }}
-                        @if(isset($userEvaluations) && !$userEvaluations->isEmpty())
-                          <?php  $userEvaluation = $userEvaluations->get($count); ?>
-                          {{ ', ' .  $userEvaluation->evaluationPosition }}
-                        @endif
-                      ],
-                      <?php $count++ ?>
-                  @endforeach
-                ]);
-
-                var options = {
-                  orientation: 'vertical',
-                  legend: {
-                    position: 'bottom',
-                  },
-                  pointSize: 6,
-                  width: 250,
-                  height: 250,
-                  hAxis: {
-                    viewWindow: {min: 0, max: 100}
-                  },
-                  vAxis: {
-                    ticks: [
-                        <?php $count = 0?>
-                        @foreach($binomials as $binomial)
-                          {v: {{ $count }}, f: '{{ $binomial->firstOption . "-" . $binomial->secondOption }}' },
-                          <?php $count++; ?>
-                        @endforeach
-                      ]
-                  },
-                  series: {
-                    0: { color: '#999999' },
-                    1: { color: '#000000' }
-                  }
-                };
+          <?php $comments = $photos->comments; ?>
           
-                var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-                chart.draw(data, options);
-              }
+          @if (!isset($comments))          
+         
+          <p>Ninguém comentou sobre {{$architectureName}}. Seja o primeiro!</p>
+          
+          @endif
+          
+          <?php if (Auth::check()) { ?>
+            
+            {{ Form::open(array('url' => "photos/{$photos->id}/comment")) }}
+              <div class="column alpha omega row">
+              <?php if (Auth::user()->photo != "") { ?>
+                <img class="user_thumbnail" src="{{ asset(Auth::user()->photo); }}" />
+              <?php } else { ?>
+                <img class="user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" />
+              <?php } ?>
+              </div>
               
-            </script>
-          </div>
-        
+              <div class="three columns row">
+                <strong><a href="#" id="name">{{ Auth::user()->name }}</a></strong><br>
+                Deixe seu comentário <br>
+                {{ $errors->first('text') }}
+                {{ Form::textarea('text', '', ['id'=>'comment_field']) }}
+                {{ Form::hidden('user', $photos->id ) }}
+                {{ Form::submit('COMENTAR', ['id'=>'comment_button','class'=>'cursor btn']) }}
+              </div>
+            {{ Form::close() }}
+            
+            <br class="clear">
+            
+          <?php } else { ?>            
+            <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e comente sobre {{$architectureName}}</p>
+          <?php } ?>
+          
+          @if (isset($comments))
+          
+            @foreach($comments as $comment)
+            <div class="clearfix">
+              <div class="column alpha omega row">                
+                <!--<img class="user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" />-->
+                <?php if ($comment->user->photo != "") { ?>
+                  <img class="user_thumbnail" src="{{ asset($comment->user->photo); }}" />
+                <?php } else { ?>
+                  <img class="user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" />
+                <?php } ?>
+
+
+              </div>
+              <div class="four columns omega row">
+                <small>{{$comment->user->name}} - {{$comment->created_at->format('d/m/Y h:m') }}</small>
+                <p>{{ $comment->text }}</p>
+              </div>        
+            </div>       
+            @endforeach
+          
+          @endif    
+          
+          
+          
+          
         </div>
+        <!-- FIM DO BOX DE COMENTARIOS -->
         
-        <br class="clear">
-        
-			</div>
-      
-     </div> 
-     @endif -->
-
-
-      
+              
 			<!--   FIM - SIDEBAR   -->
 		</div>
     
