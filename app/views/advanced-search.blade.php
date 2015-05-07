@@ -72,12 +72,12 @@
             <p>{{ Form::label('state', 'Estado:') }} {{ Form::text('state', Input::get("state") ) }}</p>
             <p>{{ Form::label('country', 'País:') }} {{ Form::text('country', Input::get("country") ) }}</p>
           </div>
-          
+          <!-- 2015-05-06 msy begin, workAuthor -->
           <div class="four columns omega row">
             <h3>Arquitetura</h3>
-            <p>{{ Form::label('workAuthor', 'Arquiteto:') }} {{ Form::text('workAuthor', Input::get("country") ) }}</p>
+            <p>{{ Form::label('workAuthor', 'Arquiteto:') }} {{ Form::text('workAuthor', Input::get("workAuthor") ) }}</p>
           </div>
-          
+          <!-- 2015-05-06 msy end -->
           <div class="six columns alpha row">
             <p>{{ Form::submit('BUSCAR', ['class'=>'btn']) }}</p>
           </div>
