@@ -158,7 +158,7 @@ input.search_bar_button { background: url(../img/sprite.png) -330px 0; height: 2
 /* calendário */
 .ui-widget-header { background: none #CB9833 !important; border: 1px solid #CB9833 !important; }
 /* erros e mensagens */
-.message {color: #000; border: solid 1px #ddd; border-radius: 5px; padding: 10px; text-align: center; margin: 0 0 20px; }
+.message {color: #4AA02C; border: solid 1px #ddd; border-radius: 5px; padding: 10px; text-align: center; margin: 0 0 20px; }
 .message strong {font-size: 13px; font-weight: bold; text-transform: uppercase;}
 
 /* --- PÁGINA INICIAL --- */
