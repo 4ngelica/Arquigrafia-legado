@@ -33,26 +33,27 @@ class PagesController extends BaseController {
 
         $allowed = "/[^a-z\\.\/\s]/i";
         $txtstreet=  preg_replace($allowed,"",$needle);
-        $txtstreet = rtrim($txtstreet); 
-
-        //echo $txtstreet; die();
+        $txtstreet = rtrim($txtstreet);         
           
-          Log::info("Logging info txtcity <".$txtcity.">"); 
-          $photos = Photo::where('city', 'LIKE', '%' . $txtcity . '%')
-                       ->where('street', 'LIKE', '%' . $txtstreet . '%')
-                       ->whereNull('deleted_at')
-                       ->get();
+        Log::info("Logging info txtcity <".$txtcity.">");           
+          
+        $query = Photo::whereNull('deleted_at');   
+        $query->where('city', 'LIKE', '%' . $txtcity . '%');
+        $query->where('street', 'LIKE', '%' . $txtstreet . '%');
+        $photos = $query->get();
         $needle = $txtstreet;
 
-       }else{ 
-                $photos = Photo::where('name', 'LIKE', '%' . $needle . '%')
-              ->orWhere('description', 'LIKE', '%' . $needle . '%')
-              ->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%')
-              ->orWhere('workAuthor', 'LIKE', '%' . $needle . '%')
-              ->orWhere('state', 'LIKE', '%' . $needle . '%')
-              ->orWhere('city', 'LIKE', '%' . $needle . '%')
-              ->whereNull('deleted_at')
-              ->get();
+       } else{               
+
+           $query = Photo::whereNull('deleted_at');         
+           $query->where('name', 'LIKE', '%'. $needle .'%');  
+           $query->orWhere('description', 'LIKE', '%'. $needle .'%');  
+           $query->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%');
+           $query->orWhere('workAuthor', 'LIKE', '%'. $needle .'%');
+           $query->orWhere('country', 'LIKE', '%'. $needle .'%');  
+           $query->orWhere('state', 'LIKE', '%'. $needle .'%'); 
+           $query->orWhere('city', 'LIKE', '%'. $needle .'%'); 
+           $photos = $query->get();
 
        } 
       //2015-05-06 msy end
