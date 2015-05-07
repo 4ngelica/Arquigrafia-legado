@@ -25,7 +25,16 @@ class UsersController extends \BaseController {
 	{
 		$user = User::whereid($id)->first();
     $photos = $user->photos()->get()->reverse();
-		return View::make('/users/show',['user' => $user, 'photos' => $photos]); 
+    if (Auth::check()) {      
+      if (Auth::user()->following->contains($user->id))
+        $follow = false;
+      else 
+        $follow = true;
+    } else {
+      $follow = true;
+    }
+
+		return View::make('/users/show',['user' => $user, 'photos' => $photos, 'follow' => $follow]); 
 	}
   
   // show create account form
