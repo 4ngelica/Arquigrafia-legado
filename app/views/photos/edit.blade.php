@@ -134,7 +134,7 @@
               </tr>
               <tr>
                 
-				<div class="two columns alpha"><p>{{ Form::label('photo_street', 'Logradouro:') }}</p></div>
+				<div class="two columns alpha"><p>{{ Form::label('photo_street', 'Endereço:') }}</p></div>
 				<div class="two columns omega">
 				<p>{{ Form::text('photo_street', $photo->street) }} <br>
 				</p>
