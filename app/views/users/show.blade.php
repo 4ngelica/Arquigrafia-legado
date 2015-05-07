@@ -27,13 +27,20 @@
           
 	        <div class="info">
 
-	          <h1>{{ $user->name}} {{ $user->secondName}}</h1>
-			  @if ( !empty($user->city) )
-				<p>Cidade: {{ $user->city }}
+	          <h1>{{ $user->name}} {{ $user->secondName}}</h1>	          
+
+			 @if ( !empty($user->city) )
+				<p>{{ $user->city }}</p>
 			  @endif
-			  @if ( !empty($user->site) )
-				<br>Site pessoal: {{ $user->site }}</p>
-			  @endif
+
+			  @if (Auth::check() && $user->id != Auth::user()->id)
+    			@if (!empty($follow) && $follow == true )
+	    			<a href="{{ URL::to("/friends/follow/" . $user->id) }}" id="single_view_contact_add">Seguir</a><br />
+ 				  @else
+            		<div>Seguindo</div>
+ 				@endif
+			 @endif	
+			  
 	        </div>
 	      	<div class="count">Fotos compartilhadas ({{ count($photos) }})</div>
 	      </div>
