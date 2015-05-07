@@ -230,7 +230,7 @@
         
           <div class="twelve columns">
             <input name="enviar" type="submit" class="btn" value="ENVIAR">
-            <a href="{{ URL::to('/photos/' . $photo->id) }}" class='btn'>CANCELAR</a>&nbsp;&nbsp;
+            <a href="{{ URL::to('/photos/' . $photo->id) }}" class='btn'>VOLTAR</a>&nbsp;&nbsp;
           </div>
         
       </div>

@@ -301,7 +301,7 @@
                   
               <?php } ?>
               
-               <a href="{{ URL::to('/photos/' . $photos->id) }}" class='btn right'>CANCELAR</a>
+               <a href="{{ URL::to('/photos/' . $photos->id) }}" class='btn right'>VOLTAR</a>
               {{ Form::submit('AVALIAR', ['id'=>'evaluation_button','class'=>'btn right']) }} 
                 
             {{ Form::close() }}
