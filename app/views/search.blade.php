@@ -18,7 +18,16 @@
     	
       <div class="container">
         <div id="search_result" class="twelve columns row">
-          <h1>Resultado de: {{ $query }}</h1>
+          
+          <!--2015-05-06 msy begin, show result query street-->
+          @if ($city != "") 
+
+          <h1>Resultado de: "{{ ucwords($query) }}" da cidade de "{{ucwords($city)}}"</h1>
+          @else
+          <h1>Resultado de: {{ $query }} </h1>
+          @endif
+          <!--2015-05-06 msy end-->
+         <!-- <h1>Resultado de: {{ $query }} </h1> -->
           
           <p>Tags contendo o termo: 
           
