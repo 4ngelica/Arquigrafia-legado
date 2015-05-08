@@ -7,6 +7,8 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 @stop
 
 @section('content')
@@ -181,17 +183,22 @@
 				<p>{{ Form::text('photo_workAuthor', $photo->workAuthor) }} <br>
 				</p>
 			  </div>
-              </tr>	
-              <tr>
-                
-				<div class="two columns alpha"><p>{{ Form::label('photo_workDate', 'Data da obra:') }}</p></div>
-				<div class="two columns omega">
-				<p>{{ Form::text('photo_workDate', $photo->workdate) }} <br>
-				</p>
-			  </div>
-              </tr>
-              <tr>
-                
+        </tr>	
+
+        <tr>                
+         <div class="two columns alpha"><p>{{ Form::label('photo_workDate', 'Data da obra:') }}</p></div>
+         <div class="two columns omega">
+         @if (($photo->workdate)!= 'NULL' )
+          <p>{{ Form::text('photo_workDate',date("d/m/Y",strtotime($photo->workdate)),array('id' => 'datepicker','placeholder'=>'dd/mm/yyyy')) }} 
+         @else
+          <p>{{ Form::text('photo_workDate','',array('id' => 'datepicker','placeholder'=>'dd/mm/yyyy')) }} 
+         @endif  
+         <br> <div class="error">{{ $errors->first('photo_workDate') }}</div>
+         </p>       
+        </div>
+        </tr>
+        
+        <tr>        
 				<div class="two columns alpha"><p>{{ Form::label('photo_description', 'Descrição:') }}</p></div>
 				<div class="two columns omega">
 				<p>{{ Form::textarea('photo_description', $photo->description) }} <br>
@@ -275,5 +282,13 @@
       });
     })
     
+//msy
+    $(function() {
+    $( "#datepicker" ).datepicker({
+      dateFormat:'dd/mm/yy'
+    }
+      );
+    });
+
   </script>
 @stop
