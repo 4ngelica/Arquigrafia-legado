@@ -27,7 +27,10 @@ class PagesController extends BaseController {
     $txtcity = Input::get("city"); 
 
 		if ($needle != "") {
-      $tags = Tag::where('name', 'LIKE', '%' . $needle . '%')->get();
+      //$tags = Tag::where('name', 'LIKE', '%' . $needle . '%')->get();
+      $query = Tag::where('name', 'LIKE', '%' . $needle . '%');  
+      $tags = $query->get();
+
        Log::info("Logging info txtcity <".$txtcity.">");
        $photo = new Photo();
        if ($txtcity != "") {
@@ -63,7 +66,10 @@ class PagesController extends BaseController {
       //2015-05-06 msy end
       
       // se houver uma tag exatamente como a busca, pegar todas as fotos dessa tag e juntar no painel
-      $tag = Tag::where('name', '=', $needle)->get();
+      //$tag = Tag::where('name', '=', $needle)->get();
+      $query = Tag::where('name', '=', $needle);  
+      $tag = $query->get();
+
       if ($tag->first()) {
         $byTag = $tag->first()->photos;
         $photos = $photos->merge($byTag);
