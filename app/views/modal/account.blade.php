@@ -45,9 +45,9 @@
             </p>
           </div>
           
-          <!--<div class="two columns row alpha"><p>{{ Form::label('password_confirmation', 'Repita a senha*:') }}</p></div>
+          <div class="two columns row alpha"><p>{{ Form::label('password_confirmation', 'Repita a senha*:') }}</p></div>
           <div class="two columns row omega"><p>{{ Form::password('password_confirmation') }}</p></div>
-          -->
+          
           <div class="four columns alpha omega">
           
             <p>Li e aceito os <a href="{{ URL::to('/termos') }}" target="_blank" style="text-decoration: underline;">termos de compromisso</a>: {{ Form::checkbox('terms', 'read') }}</p>
