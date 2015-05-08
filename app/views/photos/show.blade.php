@@ -297,12 +297,12 @@ $(document).ready(function(){
 					<h4>Autor da Obra:</h4>
 					<p>{{ $photos->workAuthor }}</p>
 				@endif
-
-				@if ( !empty($photos->workdate) )
+<!-- msy -->
+				@if ( !empty($photos->workdate) && $photos->workdate!='NULL' )
 					<h4>Data da Obra:</h4>
 					<p>{{ Photo::translate($photos->workdate) }}</p>
 				@endif
-
+<!---msy end -->
 				@if ( !empty($photos->street) || !empty($photos->city) ||
 					!empty($photos->state) || !empty($photos->country) )
 					<h4>Endereço:</h4>
