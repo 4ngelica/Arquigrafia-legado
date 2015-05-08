@@ -40,7 +40,7 @@ class PagesController extends BaseController {
         $query = Photo::where('id', '>', 0);  
         $query->where('city', 'LIKE', '%' . $txtcity . '%');
         $query->where('street', 'LIKE', '%' . $txtstreet . '%');
-        $query->whereNull('deleted_at');
+        //$query->whereNull('deleted_at');
         $photos = $query->get();
         
         $needle = $txtstreet;
@@ -55,7 +55,7 @@ class PagesController extends BaseController {
            $query->orWhere('country', 'LIKE', '%'. $needle .'%');  
            $query->orWhere('state', 'LIKE', '%'. $needle .'%'); 
            $query->orWhere('city', 'LIKE', '%'. $needle .'%'); 
-           $query->whereNull('deleted_at'); 
+           //$query->whereNull('deleted_at'); 
            $photos = $query->get();
 
        } 
