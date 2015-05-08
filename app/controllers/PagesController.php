@@ -29,24 +29,25 @@ class PagesController extends BaseController {
 		if ($needle != "") {
       $tags = Tag::where('name', 'LIKE', '%' . $needle . '%')->get();
        Log::info("Logging info txtcity <".$txtcity.">");
+       $photo = new Photo();
        if ($txtcity != "") {
 
         $allowed = "/[^a-z\\.\/\s]/i";
         $txtstreet=  preg_replace($allowed,"",$needle);
         $txtstreet = rtrim($txtstreet);         
           
-        Log::info("Logging info txtcity <".$txtcity.">");           
+        Log::info("Logging info txtcity <".$txtcity.">");            
           
         $query = Photo::where('id', '>', 0);  
         $query->where('city', 'LIKE', '%' . $txtcity . '%');
         $query->where('street', 'LIKE', '%' . $txtstreet . '%');
-        $query->whereNull('deleted_at');
+        $query->whereNull($photo->getQualifiedDeletedAtColumn()); 
         $photos = $query->get();
         
         $needle = $txtstreet;
 
-       } else{               
-
+       } else{           
+           
            $query = Photo::where('id', '>', 0);        
            $query->where('name', 'LIKE', '%'. $needle .'%');  
            $query->orWhere('description', 'LIKE', '%'. $needle .'%');  
@@ -55,7 +56,7 @@ class PagesController extends BaseController {
            $query->orWhere('country', 'LIKE', '%'. $needle .'%');  
            $query->orWhere('state', 'LIKE', '%'. $needle .'%'); 
            $query->orWhere('city', 'LIKE', '%'. $needle .'%'); 
-           $query->whereNull('deleted_at'); 
+           $query->whereNull($photo->getQualifiedDeletedAtColumn()); 
            $photos = $query->get();
 
        } 
