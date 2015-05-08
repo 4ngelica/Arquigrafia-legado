@@ -31,8 +31,7 @@ class PagesController extends BaseController {
       $query = Tag::where('name', 'LIKE', '%' . $needle . '%');  
       $tags = $query->get();
 
-       Log::info("Logging info txtcity <".$txtcity.">");
-       $photo = new Photo();
+       Log::info("Logging info txtcity <".$txtcity.">");       
        if ($txtcity != "") {
 
         $allowed = "/[^a-z\\.\/\s]/i";
@@ -41,7 +40,8 @@ class PagesController extends BaseController {
           
         Log::info("Logging info txtcity <".$txtcity.">");            
           
-        $query = Photo::where('id', '>', 0);  
+        //$query = Photo::where('id', '>', 0); 
+        $query = Photo::orderByRaw("RAND()");   
         $query->where('city', 'LIKE', '%' . $txtcity . '%');
         $query->where('street', 'LIKE', '%' . $txtstreet . '%');
         $query->whereNull('deleted_at'); 
@@ -51,7 +51,7 @@ class PagesController extends BaseController {
 
        } else{           
            
-           $query = Photo::where('id', '>', 0);        
+           $query = Photo::orderByRaw("RAND()");       
            $query->where('name', 'LIKE', '%'. $needle .'%');  
            $query->orWhere('description', 'LIKE', '%'. $needle .'%');  
            $query->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%');
