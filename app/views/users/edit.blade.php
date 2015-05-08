@@ -34,9 +34,10 @@
         <div class="twelve columns row step-1">
         
                 
-        <div class="four columns alpha">
-          <img src="" id="preview_photo">
+        <div class="four columns alpha">          
           <p>{{ Form::label('photo','Alterar foto:') }} {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}</p>
+          <br>
+          <img src="" id="preview_photo">
           <br>
         </div>
       </div>
@@ -49,7 +50,7 @@
             reader.onload = function (e) {
               $('#preview_photo')
                 .attr('src', e.target.result)
-                .width(600);
+                .width(200);
                 $("#preview_photo").show();
             };
             reader.readAsDataURL(input.files[0]);

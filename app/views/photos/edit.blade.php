@@ -20,7 +20,7 @@
       	<h1><span class="step-text">Edição de dados da imagem {{$photo->name}}</span></h1>
         
         <div class="four columns alpha">
-          <img src="" id="preview_photo">
+          
 
           <p><a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" >
             <img class="single_view_image" style="" src="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" />
@@ -31,10 +31,25 @@
            <p>{{ Form::label('photo','Alterar imagem:') }} 
           {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}</p>
            <br>
-        </div>    
+           <img src="" id="preview_photo">
+           <br>
+        </div>  
 
-
-         
+        <script type="text/javascript">
+          function readURL(input) {
+            $("#preview_photo").hide();
+            if (input.files && input.files[0]) {
+              var reader = new FileReader();
+              reader.onload = function (e) {
+                $('#preview_photo')
+                  .attr('src', e.target.result)
+                  .width(600);
+                  $("#preview_photo").show();
+              };
+              reader.readAsDataURL(input.files[0]);
+            }
+          }
+       </script>      
            
 
       </div> 
