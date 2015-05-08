@@ -9,6 +9,8 @@ class Photo extends Eloquent {
 
 	use SoftDeletingTrait;
 
+	protected $softDelete = true;
+
 	protected $dates = ['deleted_at'];
 
 	protected $fillable = ['user_id','name', 'description', 'nome_arquivo','state','street', 'tombo', 'workAuthor', 'workdate', 'dataUpload', 'dataCriacao', 'country', 'collection', 'city'];
