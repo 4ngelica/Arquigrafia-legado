@@ -375,7 +375,8 @@ class UsersController extends \BaseController {
         $file->move(public_path().'/arquigrafia-avatars', $user->id."_original.".strtolower($ext));         
       } 
       
-      return Redirect::to('/users/' . $user->id);
+      return Redirect::to("/users/{$user->id}")->with('message', '<strong>Edição de perfil do usuário</strong><br>Dados alterados com sucesso'); 
+      
     }    
   }
 

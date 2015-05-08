@@ -17,7 +17,7 @@
       {{ Form::open(array('url'=>'photos/' . $photo->id, 'method' => 'put', 'files'=> true)) }}           
       
       <div class="twelve columns row step-1">
-      	<h1><span class="step-text">Edição de dados da imagem {{$photo->name}}</span></h1>
+      	<h1><span class="step-text">Edição de informações da imagem {{$photo->name}}</span></h1>
         
         <div class="four columns alpha">
           

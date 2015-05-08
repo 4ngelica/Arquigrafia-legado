@@ -15,7 +15,7 @@
     <div id="registration">
     
       <div class="twelve columns">
-        <h1>Edição do Perfil</h1>
+        <h1>Edição de Perfil do usuário</h1>
         <p>   
         <div>            
             <?php if ($user->photo != "") { ?>
