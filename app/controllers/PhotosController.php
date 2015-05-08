@@ -303,6 +303,8 @@ class PhotosController extends \BaseController {
 
   public function edit($id) {     
     $photo = Photo::find($id);
+    
+    
     if (Session::has('tags'))
     {
       $tags = Session::pull('tags');
@@ -316,9 +318,10 @@ class PhotosController extends \BaseController {
 
   public function update($id) {              
     $photo = Photo::find($id);
+      
      Input::flashExcept('tags', 'photo');    
      $input = Input::all();
-
+    
     if (Input::has('tags'))
       $input["tags"] = str_replace(array('\'', '"', '[', ']'), '', $input["tags"]); 
     else
@@ -330,11 +333,15 @@ class PhotosController extends \BaseController {
         'tags' => 'required',
         'photo_country' => 'required',
         'photo_state' => 'required',
-        'photo_city' => 'required'        
-    );  
+        'photo_city' => 'required',
+        'photo_workDate' => 'date_format:"d/m/Y"'
 
+       // array('required', 'date_format:"m/d/Y"')       
+    );  
+  //dd($input); 
   $validator = Validator::make($input, $rules);
-      
+      //dd($validator->fails());
+      //die();
   if ($validator->fails()) {
       $messages = $validator->messages();      
       return Redirect::to('/photos/' . $photo->id . '/edit')->with('tags', $input['tags'])->withErrors($messages);
@@ -357,8 +364,13 @@ class PhotosController extends \BaseController {
         $photo->street = $input["photo_street"];
       if ( !empty($input["photo_workAuthor"]) )
         $photo->workAuthor = $input["photo_workAuthor"];
-      if ( !empty($input["photo_workDate"]) )
+      //msy
+      if ( !empty($input["photo_workDate"])) {
         $photo->workdate = Photo::formatDate($input["photo_workDate"]);
+      }else{
+        $photo->workdate = 'NULL';
+      }
+
       if ( !empty($input["photo_imageDate"]) )
         $photo->dataCriacao = Photo::formatDate($input["photo_imageDate"]);
 
