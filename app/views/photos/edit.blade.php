@@ -168,14 +168,29 @@
           
           <div class="five columns omega row">
           	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
-              <tr>
-                
+         
+        <!-- <tr>       
 				<div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
 				<div class="two columns omega">
 				<p>{{ Form::text('photo_imageDate', $photo->dataCriacao) }} <br>
 				</p>
 			  </div>
-              </tr>
+        </tr>-->
+
+        <tr>                
+         <div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
+         <div class="two columns omega">
+         @if (($photo->dataCriacao)!= null )
+          <p>{{ Form::text('photo_imageDate',date("d/m/Y",strtotime($photo->dataCriacao)),array('id' => 'datePickerImageDate','placeholder'=>'dd/mm/yyyy')) }} 
+         @else
+          <p>{{ Form::text('photo_imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'dd/mm/yyyy')) }} 
+         @endif  
+         <br> <div class="error">{{ $errors->first('photo_imageDate') }}</div>
+         </p>       
+        </div>
+        </tr>
+
+
               <tr>
                 
 				<div class="two columns alpha"><p>{{ Form::label('photo_workAuthor', 'Autor da obra:') }}</p></div>
@@ -188,10 +203,10 @@
         <tr>                
          <div class="two columns alpha"><p>{{ Form::label('photo_workDate', 'Data da obra:') }}</p></div>
          <div class="two columns omega">
-         @if (($photo->workdate)!= 'NULL' )
-          <p>{{ Form::text('photo_workDate',date("d/m/Y",strtotime($photo->workdate)),array('id' => 'datepicker','placeholder'=>'dd/mm/yyyy')) }} 
+         @if (($photo->workdate)!= null )
+          <p>{{ Form::text('photo_workDate',date("d/m/Y",strtotime($photo->workdate)),array('id' => 'datePickerWorkDate','placeholder'=>'dd/mm/yyyy')) }} 
          @else
-          <p>{{ Form::text('photo_workDate','',array('id' => 'datepicker','placeholder'=>'dd/mm/yyyy')) }} 
+          <p>{{ Form::text('photo_workDate','',array('id' => 'datePickerWorkDate','placeholder'=>'dd/mm/yyyy')) }} 
          @endif  
          <br> <div class="error">{{ $errors->first('photo_workDate') }}</div>
          </p>       
@@ -284,7 +299,11 @@
     
 //msy
     $(function() {
-    $( "#datepicker" ).datepicker({
+    $( "#datePickerWorkDate" ).datepicker({
+      dateFormat:'dd/mm/yy'
+    }
+      );
+    $( "#datePickerImageDate" ).datepicker({
       dateFormat:'dd/mm/yy'
     }
       );

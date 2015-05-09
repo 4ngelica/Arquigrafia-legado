@@ -26,10 +26,21 @@ class PagesController extends BaseController {
     $userList = $query->get();    
     return $userList->lists('id');
   }
+   //2015-05-09 msy end
+  private static function streetAndCitySearch(&$needle,&$txtcity) {
+        Log::info("Logging info txtcity <".$txtcity.">");       
 
-  public function streetAndCitySearch($needle, $txtcity) {
-              
-        return $needle;  
+        $allowed = "/[^a-z\\.\/\sçáéíóúãàõ]/i";
+        $txtstreet=  preg_replace($allowed,"",$needle);
+        $txtstreet = rtrim($txtstreet);      
+        $needle = $txtstreet;        
+                  
+        $query = Photo::orderByRaw("RAND()");         
+        $query->where('city', 'LIKE', '%' . $txtcity . '%');
+        $query->where('street', 'LIKE', '%' . $txtstreet . '%');
+        $query->whereNull('deleted_at');
+        $photos = $query->get(); 
+        return $photos;  
   }
 	
 	public function search()
@@ -44,31 +55,22 @@ class PagesController extends BaseController {
       $tags = $query->get();
 
       if ($txtcity != "") {  
-        Log::info("Logging info txtcity <".$txtcity.">");       
-
-        $allowed = "/[^a-z\\.\/\s]/i";
-        $txtstreet=  preg_replace($allowed,"",$needle);
-        $txtstreet = rtrim($txtstreet);      
-        $needle = $txtstreet;  
-          
-        Log::info("Logging info txtcity <".$txtcity.">");       
-                  
-        $query = Photo::orderByRaw("RAND()");         
-        $query->where('city', 'LIKE', '%' . $txtcity . '%');
-        $query->where('street', 'LIKE', '%' . $txtstreet . '%');
-        $query->whereNull('deleted_at');
-        $photos = $query->get();          
+        //2015-05-09 msy end
+        $photos = static::streetAndCitySearch($needle,$txtcity);
+        
+                
        } else {         
 
            $idUserList = static::userPhotosSearch($needle);
+           
                                             
            $query = Photo::orderBy('created_at', 'desc');       
            $query->where('name', 'LIKE', '%'. $needle .'%');  
            $query->orWhere('description', 'LIKE', '%'. $needle .'%');  
            $query->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%');
            $query->orWhere('workAuthor', 'LIKE', '%'. $needle .'%');
-           if ($idUserList != null && !empty($idUserList))
-            $query->orWhereIn('user_id', $idUserList);
+           if ($idUserList != null && !empty($idUserList)) {
+            $query->orWhereIn('user_id', $idUserList);}
            $query->orWhere('country', 'LIKE', '%'. $needle .'%');  
            $query->orWhere('state', 'LIKE', '%'. $needle .'%'); 
            $query->orWhere('city', 'LIKE', '%'. $needle .'%'); 

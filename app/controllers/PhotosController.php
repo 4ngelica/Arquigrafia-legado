@@ -66,7 +66,7 @@ class PhotosController extends \BaseController {
     $input["tags"] = str_replace(array('\'', '"', '[', ']'), '', $input["tags"]);
   else
     $input["tags"] = '';
-
+//2015-05-09 msy add validate for date image/work end
     $rules = array(			
       'photo_name' => 'required',
       'photo_imageAuthor' => 'required',
@@ -75,7 +75,9 @@ class PhotosController extends \BaseController {
       'photo_state' => 'required',
 	    'photo_city' => 'required',
       'photo_authorization_checkbox' => 'required',
-      'photo' => 'required'
+      'photo' => 'required',
+      'photo_workDate' => 'date_format:"d/m/Y"',
+      'photo_imageDate' => 'date_format:"d/m/Y"'
     );
 
 	$validator = Validator::make($input, $rules);
@@ -110,7 +112,6 @@ class PhotosController extends \BaseController {
       if ( !empty($input["photo_workDate"]) )
         $photo->workdate = Photo::formatDate($input["photo_workDate"]);
       if ( !empty($input["photo_imageDate"]) )
-
       $photo->dataCriacao = Photo::formatDate($input["photo_imageDate"]);
 
       $photo->nome_arquivo = $file->getClientOriginalName();
@@ -326,7 +327,7 @@ class PhotosController extends \BaseController {
       $input["tags"] = str_replace(array('\'', '"', '[', ']'), '', $input["tags"]); 
     else
       $input["tags"] = '';
-    // validate data      
+    //2015-05-09 msy add validate for date image/work end     
     $rules = array(     
         'photo_name' => 'required',
         'photo_imageAuthor' => 'required',
@@ -334,14 +335,13 @@ class PhotosController extends \BaseController {
         'photo_country' => 'required',
         'photo_state' => 'required',
         'photo_city' => 'required',
-        'photo_workDate' => 'date_format:"d/m/Y"'
-
-       // array('required', 'date_format:"m/d/Y"')       
+        'photo_workDate' => 'date_format:"d/m/Y"',
+        'photo_imageDate' => 'date_format:"d/m/Y"'
+      
     );  
-  //dd($input); 
+
   $validator = Validator::make($input, $rules);
-      //dd($validator->fails());
-      //die();
+     
   if ($validator->fails()) {
       $messages = $validator->messages();      
       return Redirect::to('/photos/' . $photo->id . '/edit')->with('tags', $input['tags'])->withErrors($messages);
@@ -364,16 +364,19 @@ class PhotosController extends \BaseController {
         $photo->street = $input["photo_street"];
       if ( !empty($input["photo_workAuthor"]) )
         $photo->workAuthor = $input["photo_workAuthor"];
-      //msy
+      //2015-05-09 msy add validate for date image/work end
       if ( !empty($input["photo_workDate"])) {
         $photo->workdate = Photo::formatDate($input["photo_workDate"]);
       }else{
-        $photo->workdate = 'NULL';
+        $photo->workdate = null;
       }
 
-      if ( !empty($input["photo_imageDate"]) )
+      if ( !empty($input["photo_imageDate"]) ){ 
         $photo->dataCriacao = Photo::formatDate($input["photo_imageDate"]);
-
+      }else{
+        $photo->dataCriacao = null;
+      }  
+    //endmsy
       if (Input::hasFile('photo') and Input::file('photo')->isValid()) {      
         $file = Input::file('photo');       
         $ext = $file->getClientOriginalExtension();

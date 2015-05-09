@@ -3,6 +3,9 @@
 	<title>Arquigrafia - Fotos - Upload</title>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
 	<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
+
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+	<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 @stop
 @section('content')
 	<script type="text/javascript">
@@ -127,14 +130,22 @@
 					</div>
 					<div class="five columns omega row">
 						<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
+							<!--<tr>
 								<div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
 								<div class="two columns omega">
 									<p>
 										{{ Form::text('photo_imageDate', Input::old('photo_imageDate')) }} <br>
 									</p>
 								</div>
-							</tr>
+							</tr> -->
+							 <tr>                
+         						<div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
+         						<div class="two columns omega">
+          						   <p>{{ Form::text('photo_imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'dd/mm/yyyy')) }} 
+         							<br> <div class="error">{{ $errors->first('photo_imageDate') }}</div>
+         							</p>       
+        							</div>
+        						</tr>       
 							<tr>
 								<div class="two columns alpha"><p>{{ Form::label('photo_workAuthor', 'Autor da obra:') }}</p></div>
 								<div class="two columns omega">
@@ -143,6 +154,7 @@
 									</p>
 								</div>
 							</tr>
+							<!--
 							<tr>
 								<div class="two columns alpha"><p>{{ Form::label('photo_workDate', 'Data da obra:') }}</p></div>
 								<div class="two columns omega">
@@ -150,7 +162,22 @@
 										{{ Form::text('photo_workDate', Input::old('photo_workDate')) }} <br>
 									</p>
 								</div>
-							</tr>
+							</tr> -->
+
+							<tr>                
+         						<div class="two columns alpha"><p>{{ Form::label('photo_workDate', 'Data da obra:') }}</p></div>
+         						<div class="two columns omega">         						
+          						<p>
+          							{{ Form::text('photo_workDate','',array('id' => 'datePickerWorkDate','placeholder'=>'dd/mm/yyyy')) }} 
+         						<br>
+         						<div class="error">{{ $errors->first('photo_workDate') }}</div>
+         					</p>       
+        					</div>
+        					</tr>
+
+
+
+
 							<tr>
 								<div class="two columns alpha"><p>{{ Form::label('photo_description', 'Descrição:') }}</p></div>
 								<div class="two columns omega">
@@ -248,6 +275,18 @@
 					e.preventDefault();
 			});
 		});
+
+		//msy
+		$(function() {
+    	$( "#datePickerWorkDate" ).datepicker({
+      		dateFormat:'dd/mm/yy'
+    	}
+      	);
+    	$( "#datePickerImageDate" ).datepicker({
+      	dateFormat:'dd/mm/yy'
+    	}
+      	);
+    	});
 			
 	</script>
 

@@ -288,7 +288,7 @@ $(document).ready(function(){
 					<p>{{ Photo::translate($photos->dataUpload) }}</p>
 				@endif
 
-				@if ( !empty($photos->dataCriacao) )
+				@if ( !empty($photos->dataCriacao) && $photos->dataCriacao!= null  )
 					<h4>Data da Imagem:</h4>
 					<p>{{ Photo::translate($photos->dataCriacao) }}</p>
 				@endif
@@ -298,7 +298,7 @@ $(document).ready(function(){
 					<p>{{ $photos->workAuthor }}</p>
 				@endif
 <!-- msy -->
-				@if ( !empty($photos->workdate) && $photos->workdate!='NULL' )
+				@if ( !empty($photos->workdate) && $photos->workdate!= null )
 					<h4>Data da Obra:</h4>
 					<p>{{ Photo::translate($photos->workdate) }}</p>
 				@endif
