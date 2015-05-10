@@ -62,8 +62,8 @@ class PhotosController extends \BaseController {
 	
 	$input = Input::all();
 
-  if (Input::has('tags'))
-    $input["tags"] = str_replace(array('\'', '"', '[', ']'), '', $input["tags"]);
+  if (Input::has('tags')) 
+    $input["tags"] = str_replace(array('\'', '"', '[', ']'), '', $input["tags"]);    
   else
     $input["tags"] = '';
 //2015-05-09 msy add validate for date image/work end
@@ -83,7 +83,8 @@ class PhotosController extends \BaseController {
 	$validator = Validator::make($input, $rules);
 	    
   if ($validator->fails()) {
-      $messages = $validator->messages();      
+      $messages = $validator->messages(); 
+
 	  return Redirect::to('/photos/upload')->with(['tags' => $input['tags']])->withErrors($messages);
     } else {
 
@@ -129,18 +130,33 @@ class PhotosController extends \BaseController {
 
       $tags = explode(',', $input['tags']);
       
-      if (!empty($tags)) {
+      if (!empty($tags)) { 
+     
+            
         $tags = array_map('trim', $tags);
-        $tags = array_map('strtolower', $tags);
+        //$tags = array_map('strtolower', $tags);
+        //  10/05/2015 msy begin
+        $tags = array_map('mb_strtolower', $tags); // com suporte para cadeias multibytes
+        //  10/05/2015 msy end
         // tudo em minusculas, para remover redundancias, como Casa/casa/CASA
         $tags = array_unique($tags); //retira tags repetidas, se houver.
         foreach ($tags as $t) {          
           $tag = Tag::where('name', $t)->first();
+          
           if (is_null($tag)) {
             $tag = new Tag();
-            $tag->name = $t;
-            $tag->save();
+            $tag->name = $t;//utf8_encode($t);
+            // 10/05/2015 msy begin
+            try {
+              $tag->save();
+            } catch (PDOException $e) {
+                Log::error("Logging exception, error to register tags");
+                $photo->forceDelete();
+                //$messages = array('tags'=>array('invalido')); 
+                return Redirect::to('/photos/upload')->with(['tags' => $input['tags']]); //->withErrors($messages)
+            }            
           }
+          // 10/05/2015  msy end
           $photo->tags()->attach($tag->id);
           if ($tag->count == null)
             $tag->count = 0;
@@ -389,7 +405,10 @@ class PhotosController extends \BaseController {
       
       if (!empty($tags)) {
         $tags = array_map('trim', $tags);
-        $tags = array_map('strtolower', $tags);
+        //$tags = array_map('strtolower', $tags);
+        //10/05/2015 msy begin
+        $tags = array_map('mb_strtolower', $tags);
+        //10/05/2015 msy end
         $tags_id = [];
         $photo_tags = $photo->tags;
         // tudo em minusculas, para remover redundancias, como Casa/casa/CASA

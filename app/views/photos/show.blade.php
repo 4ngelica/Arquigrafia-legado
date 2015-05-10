@@ -279,7 +279,7 @@ $(document).ready(function(){
 				@if ( !empty($photos->imageAuthor) )
 					<h4>Autor da Imagem:</h4>
 					<p>
-						{{ $photos->imageAuthor }}						
+						{{ $photos->imageAuthor }}					
 					</p>
 				@endif
 				
