@@ -55,12 +55,12 @@ $(document).ready(function() {
 
 	$('#rm_select_all').click(function(e) {
 		e.preventDefault();
-		$('#rm_page' + currentPage + ' .rm_photo').prop('checked', true);
+		$('#rm_page' + rmCurrentPage + ' .rm_photo').prop('checked', true);
 	});
 
 	$('#rm_remove_all').click(function(e) {
 		e.preventDefault();
-		$('#rm_page' + currentPage + ' .rm_photo').prop('checked', false);
+		$('#rm_page' + rmCurrentPage + ' .rm_photo').prop('checked', false);
 	});
 	$("#toggle-rm").click(function(e) {
 		e.preventDefault();
