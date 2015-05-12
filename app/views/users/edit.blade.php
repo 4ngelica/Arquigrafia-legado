@@ -5,6 +5,9 @@
 
   <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 @stop
 
 @section('content')
@@ -97,13 +100,26 @@
 
 
          <div class="two columns alpha"><p>{{ Form::label('birthday', 'Data de nascimento:') }}</p></div>
+          <!--
           <div class="two columns omega">
             <p>{{ Form::text('birthday', $user->birthday) }} 
             <input name="visibleBirthday" type="checkbox" value="yes" {{$user->visibleBirthday == 'yes' ? "checked" : ""}}>Visível no perfil público <br>
             <div class="error">{{ $errors->first('birthday') }} </div>
             </p>
             
-          </div>
+          </div>-->
+
+         
+         <div class="two columns omega">
+         @if (($user->birthday)!= null )
+          <p>{{ Form::text('birthday',date("d/m/Y",strtotime($user->birthday)),array('id' => 'datePickerBirthday','placeholder'=>'dd/mm/yyyy')) }} 
+         @else
+          <p>{{ Form::text('birthday','',array('id' => 'datePickerBirthday','placeholder'=>'dd/mm/yyyy')) }} 
+         @endif  
+         <br> <div class="error">{{ $errors->first('birthday') }}</div>
+         </p>       
+        </div>
+        
 
           <div class="two columns alpha" >
             <p>Sexo: </p>
@@ -192,5 +208,14 @@
     </div>
     
   </div>
+<script type="text/javascript">
+//msy
+    $(function() {
     
+    $( "#datePickerBirthday" ).datepicker({
+      dateFormat:'dd/mm/yy'
+    }
+      );
+    });
+</script>    
 @stop
