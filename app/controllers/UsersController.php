@@ -14,7 +14,7 @@ class UsersController extends \BaseController {
     $this->beforeFilter('auth',
       array('only' => ['follow', 'unfollow']));
   }
-u
+  
 	public function index()
 	{
 		$users = User::all();
