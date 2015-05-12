@@ -106,4 +106,9 @@ class Photo extends Eloquent {
 		return $architectureName = $architectureName .$name;
 	}
 
+	public static function getEvaluatedPhotosByUser($user) {
+		$evaluations =  Evaluation::where("user_id", $user->id)->groupBy('photo_id')->distinct()->get();
+    	return Photo::whereIn('id', $evaluations->lists('photo_id'))->get();
+	}
+
 }
