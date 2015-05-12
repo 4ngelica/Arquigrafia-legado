@@ -116,10 +116,10 @@ return array(
             'required' => 'É obrigatório escolher uma imagem.',
         ),
         'photo_workDate' => array(
-            'date_format' => 'O valor inserido não é invalido.',
+            'date_format' => 'O valor inserido não é válido.',
         ),
         'photo_imageDate' => array(
-            'date_format' => 'O valor inserido não é invalido.',
+            'date_format' => 'O valor inserido não é válido.',
         ),
         'title' => array(
             'required' => 'É obrigatório inserir um valor para o título do album.',
@@ -133,7 +133,7 @@ return array(
             'required' => 'É obrigatório inserir um valor para o login.',
         ),
         'email' => array(
-            'required' => 'É obrigatório inserir seu email.',
+            'required' => 'É obrigatório inserir seu e-mail.',
         ),
         'terms' => array(
             'required' => 'É obrigatório selecionar os termos de compromisso.',
