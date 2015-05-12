@@ -265,9 +265,10 @@
             {{ Form::open(array('url' => "photos/{$photos->id}/saveEvaluation")) }}
 
             <script>
-                      function outputUpdate(binomio, val) {
-                        document.querySelector('#binomialValue'+binomio).value = val;
-                      }
+              function outputUpdate(binomio, val) {                        
+                document.querySelector('#leftBinomialValue'+binomio).value = 100 - val;
+                document.querySelector('#rightBinomialValue'+binomio).value = val;                                         
+              }
             </script> 
             
               <?php 
@@ -280,21 +281,27 @@
                   <p>
                     <table border = 0 width= 220>
                       <tr>
-                        <td width=150>{{ Form::label('value-'.$binomial->id, $binomial->firstOption) }} </td>
-                        <td align="right"> {{ Form::label('value-'.$binomial->id, $binomial->secondOption) }} </td>
+                        <td width=110>{{ Form::label('value-'.$binomial->id, $binomial->firstOption) }} 
+                    @if (isset($userEvaluations) && !$userEvaluations->isEmpty())
+                            <?php $userEvaluation = $userEvaluations->get($count) ?>
+                            (<output for=fader{{$binomial->id}} id=leftBinomialValue{{$binomial->id}}>{{100 - $userEvaluation->evaluationPosition}}</output> %)</td>
+                            <td align="right"> {{ Form::label('value-'.$binomial->id, $binomial->secondOption) }} 
+                            (<output for=fader{{$binomial->id}} id=rightBinomialValue{{$binomial->id}}>{{$userEvaluation->evaluationPosition}}</output> %)</td>
                       </tr>
                     </table> 
-                                       
-                    @if (isset($userEvaluations) && !$userEvaluations->isEmpty())
-                      <?php $userEvaluation = $userEvaluations->get($count) ?>
-                      {{ Form::input('range', 'value-'.$binomial->id, $userEvaluation->evaluationPosition, ['min'=>'0','max'=>'100', 
-                      'oninput'=>'outputUpdate(' . $binomial->id . ', value)']) }}
-                      <output for=fader{{$binomial->id}} id=binomialValue{{$binomial->id}}>{{$userEvaluation->evaluationPosition}}</output> 
+                            {{ Form::input('range', 'value-'.$binomial->id, $userEvaluation->evaluationPosition, ['min'=>'0','max'=>'100', 
+                      'oninput'=>'outputUpdate(' . $binomial->id . ', value)']) }} 
+
                     @else
-                      {{ Form::input('range', 'value-'.$binomial->id, $binomial->defaultValue, ['min'=>'0','max'=>'100',
-                      'oninput'=>'outputUpdate(' . $binomial->id . ', value)']) }}
-                      <output for=fader{{$binomial->id}} id=binomialValue{{$binomial->id}}>{{$binomial->defaultValue}}</output>
-                    @endif   
+                            (<output for=fader{{$binomial->id}} id=leftBinomialValue{{$binomial->id}}>{{100 - $binomial->defaultValue}}</output>%)</td>
+                            <td align="right"> {{ Form::label('value-'.$binomial->id, $binomial->secondOption) }} 
+                            (<output for=fader{{$binomial->id}} id=rightBinomialValue{{$binomial->id}}>{{$binomial->defaultValue}}</output>%)</td>
+                            </tr>
+                    </table> 
+                             {{ Form::input('range', 'value-'.$binomial->id, $binomial->defaultValue, ['min'=>'0','max'=>'100',
+                      'oninput'=>'outputUpdate(' . $binomial->id . ', value)']) }} 
+
+                    @endif 
 
                     <?php $count-- ?>  
                   </p>
