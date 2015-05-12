@@ -42,12 +42,40 @@ class PagesController extends BaseController {
         $photos = $query->get(); 
         return $photos;  
   }
+
+  private static function dateSearch(&$needle,&$type){
+
+      if($type=='work'){
+        Log::info("Logging information of work date<".$needle.">"); 
+         $dateType = 'workdate';
+
+      }elseif ($type=='img') {
+        Log::info("Logging information of image date<".$needle.">"); 
+         $dateType = 'dataCriacao';
+
+      }elseif ($type=='up') {
+        Log::info("Logging information for upload <".$needle.">");
+        $dateType = 'dataUpload';
+        $date = new DateTime($needle);
+        $needle =  $date->format('Y-m-d');
+       Log::info("Logging information for format upload <".$needle.">");
+      }
+        
+       
+        $query = Photo::orderByRaw("RAND()");         
+        $query->where($dateType, 'LIKE', '%' . $needle . '%');
+        $query->whereNull('deleted_at');
+        $photos = $query->get(); 
+        return $photos;   
+  }
+
 	
 	public function search()
 	{
     //2015-05-06 msy begin, add param city
     $needle = Input::get("q");
     $txtcity = Input::get("city"); 
+    $type = Input::get("t"); 
 
 		if ($needle != "") {
       
@@ -59,10 +87,14 @@ class PagesController extends BaseController {
         $photos = static::streetAndCitySearch($needle,$txtcity);
         
                 
+       }elseif ((DateTime::createFromFormat('Y-m-d', $needle) !== FALSE || DateTime::createFromFormat('Y-m-d H:i:s', $needle) !== FALSE )&& !empty($type)) {
+         $photos = static::dateSearch($needle,$type);
+
        } else {         
 
            $idUserList = static::userPhotosSearch($needle);
            
+
                                             
            $query = Photo::orderBy('created_at', 'desc');       
            $query->where('name', 'LIKE', '%'. $needle .'%');  
