@@ -6,6 +6,7 @@ use Facebook\FacebookRequest;
 use Facebook\FacebookAuthorizationException;
 use Facebook\FacebookRequestException;
 
+
 class UsersController extends \BaseController {
 
   public function __construct()
@@ -13,7 +14,7 @@ class UsersController extends \BaseController {
     $this->beforeFilter('auth',
       array('only' => ['follow', 'unfollow']));
   }
-
+u
 	public function index()
 	{
 		$users = User::all();
@@ -329,7 +330,8 @@ class UsersController extends \BaseController {
     $rules = array(
         'name' => 'required',
         'login' => 'required',
-        'email' => 'required|email'                  
+        'email' => 'required|email',
+        'birthday' => 'date_format:"d/m/Y"'                  
     );     
     if ($input['email'] !== $user->email)        
       $rules['email'] = 'required|email|unique:users';
@@ -348,7 +350,11 @@ class UsersController extends \BaseController {
       $user->scholarity = $input['scholarity'];
       $user->lastName = $input['lastName'];
       $user->site = $input['site'];
-      $user->birthday = $input['birthday'];
+      //begin 12/05/2015 msy
+      if ( !empty($input["birthday"]) )
+      $user->birthday = User::formatDate($input["birthday"]);      
+      //$user->birthday = $input['birthday'];
+      //end
       $user->country = $input['country'];
       $user->state = $input['state'];
       $user->city = $input['city'];  
