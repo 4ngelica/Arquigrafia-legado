@@ -145,7 +145,7 @@ class PhotosController extends \BaseController {
           
           if (is_null($tag)) {
             $tag = new Tag();
-            $tag->name = $t;//utf8_encode($t);
+            $tag->name = $t;
             // 10/05/2015 msy begin
             try {
               $tag->save();
@@ -154,9 +154,10 @@ class PhotosController extends \BaseController {
                 $photo->forceDelete();
                 //$messages = array('tags'=>array('invalido')); 
                 return Redirect::to('/photos/upload')->with(['tags' => $input['tags']]); //->withErrors($messages)
-            }            
+            }     
+            // 10/05/2015  msy end       
           }
-          // 10/05/2015  msy end
+          
           $photo->tags()->attach($tag->id);
           if ($tag->count == null)
             $tag->count = 0;
@@ -399,44 +400,71 @@ class PhotosController extends \BaseController {
         $photo->nome_arquivo = $photo->id.".".$ext;
       }
 
-      $photo->save();      
+      $photo->save();  
+
 
       $tags = explode(',', $input['tags']);
       
       if (!empty($tags)) {
         $tags = array_map('trim', $tags);
-        //$tags = array_map('strtolower', $tags);
         //10/05/2015 msy begin
+               
         $tags = array_map('mb_strtolower', $tags);
-        //10/05/2015 msy end
+        //12/05/2015 msy end
         $tags_id = [];
         $photo_tags = $photo->tags;
         // tudo em minusculas, para remover redundancias, como Casa/casa/CASA
         $tags = array_unique($tags); //retira tags repetidas, se houver.
-        foreach ($tags as $t) {          
+        
+        foreach ($tags as $t) {   
+          
           $tag = Tag::where('name', $t)->first();
+  
           if (is_null($tag)) {
             $tag = new Tag();
             $tag->name = $t;
-            $tag->save();
+           
+            try{
+              $tag->save();
+            }catch(PDOException $e) {
+              Log::error("Logging exception, error to edit tags 1");
+              
+              $messages = array('tags'=>array('Erro nos tags'));
+              return Redirect::to("/photos/{$photo->id}/edit")->with(['tags' => $input['tags']])->withErrors($messages);
+              
+            }
           }
           if ( !$photo_tags->contains($tag) )
           {
             if ($tag->count == null) $tag->count = 0;
             $tag->count++;
             $photo->tags()->attach($tag->id);
-            $tag->save();
+            try{
+              $tag->save();
+            }catch(PDOException $e) {
+              Log::error("Logging exception, error to edit tags 2");
+              $messages = array('tags'=>array('Erro nos tags'));
+              return Redirect::to("/photos/{$photo->id}/edit")->with(['tags' => $input['tags']])->withErrors($messages);
+            }
+
           }
           array_push($tags_id, $tag->id);
         }
+        
 
         foreach($photo_tags as $tag)
         {
           if (!in_array($tag->id, $tags_id))
-          {
+          { 
             $tag->count--;
             $photo->tags()->detach($tag->id);
-            $tag->save();
+            try{
+              $tag->save();
+            }catch(PDOException $e) {
+              Log::error("Logging exception, error to edit tags 3");
+              $messages = array('tags'=>array('Erro nos tags'));
+              return Redirect::to("/photos/{$photo->id}/edit")->with(['tags' => $input['tags']])->withErrors($messages);
+            }
           }
         }
 
