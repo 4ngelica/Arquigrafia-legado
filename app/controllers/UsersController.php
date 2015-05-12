@@ -31,11 +31,11 @@ class UsersController extends \BaseController {
         $follow = false;
       else 
         $follow = true;
-    } else {
+    } else 
       $follow = true;
-    }
-
-		return View::make('/users/show',['user' => $user, 'photos' => $photos, 'follow' => $follow]); 
+    
+		return View::make('/users/show',['user' => $user, 'photos' => $photos, 'follow' => $follow,
+      'evaluatedPhotos' => Photo::getEvaluatedPhotosByUser($user)]);
 	}
   
   // show create account form
