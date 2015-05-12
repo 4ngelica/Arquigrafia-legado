@@ -34,8 +34,10 @@
 		<div class="container row">
 			<div class="twelve columns">
 			<p>
-				Este álbum ainda não tem nenhuma imagem.
-				Para adicionar suas imagens, clique <a href="{{ URL::to('/albums/' . $album->id . '/edit') }}">aqui</a>
+				Este álbum ainda não possui imagens.
+				@if ($album->user_id == Auth::id())
+					Para adicionar suas imagens, clique <a href="{{ URL::to('/albums/' . $album->id . '/edit') }}">aqui</a>
+				@endif
 			</p>
 			</div>
 		</div>
