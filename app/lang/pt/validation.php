@@ -90,6 +90,7 @@ return array(
         ),
     ), */
     'custom' => array(
+        //To photo
         'photo_name' => array(
             'required' => 'É obrigatório inserir um valor para o título da imagem.',
         ),
@@ -120,6 +121,35 @@ return array(
         'photo_imageDate' => array(
             'date_format' => 'O valor inserido não é invalido.',
         ),
+        'title' => array(
+            'required' => 'É obrigatório inserir um valor para o título do album.',
+        ),
+        //To create and edit usuário.
+        'name' => array(
+            'required' => 'É obrigatório inserir seu nome completo.',
+        ),
+        
+        'login' => array(
+            'required' => 'É obrigatório inserir um valor para o login.',
+        ),
+        'email' => array(
+            'required' => 'É obrigatório inserir seu email.',
+        ),
+        'terms' => array(
+            'required' => 'É obrigatório selecionar os termos de compromisso.',
+        ), 
+        'birthday' => array(
+            'date_format' => 'O valor inserido deve ser dd/mm/yy',
+        ),
+        //To create user.
+        'password' => array(
+            'required' => 'A confirmação para o campo senha não coincide.',
+        ),
+        'password' => array(
+            'confirmed' => 'A confirmação para o campo senha não coincide.',
+        ),
+
+        
     ), 
 
 
