@@ -279,14 +279,14 @@
                   
                   
                   <p>
-                    <table border = 0 width= 220>
+                    <table border = 0 width= 230>
                       <tr>
                         <td width=110>{{ Form::label('value-'.$binomial->id, $binomial->firstOption) }} 
                     @if (isset($userEvaluations) && !$userEvaluations->isEmpty())
                             <?php $userEvaluation = $userEvaluations->get($count) ?>
-                            (<output for=fader{{$binomial->id}} id=leftBinomialValue{{$binomial->id}}>{{100 - $userEvaluation->evaluationPosition}}</output> %)</td>
+                            (<output for=fader{{$binomial->id}} id=leftBinomialValue{{$binomial->id}}>{{100 - $userEvaluation->evaluationPosition}}</output>%)</td>
                             <td align="right"> {{ Form::label('value-'.$binomial->id, $binomial->secondOption) }} 
-                            (<output for=fader{{$binomial->id}} id=rightBinomialValue{{$binomial->id}}>{{$userEvaluation->evaluationPosition}}</output> %)</td>
+                            (<output for=fader{{$binomial->id}} id=rightBinomialValue{{$binomial->id}}>{{$userEvaluation->evaluationPosition}}</output>%)</td>
                       </tr>
                     </table> 
                             {{ Form::input('range', 'value-'.$binomial->id, $userEvaluation->evaluationPosition, ['min'=>'0','max'=>'100', 
