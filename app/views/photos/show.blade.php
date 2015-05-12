@@ -285,22 +285,40 @@ $(document).ready(function(){
 				
 				@if ( !empty($photos->dataUpload) )
 					<h4>Data de Upload:</h4>
-					<p>{{ Photo::translate($photos->dataUpload) }}</p>
+          <p>
+            <a href="{{ URL::to("/search?q=".$photos->dataUpload."&t=up") }}">  
+            {{ Photo::translate($photos->dataUpload) }}
+            </a>
+          </p>
 				@endif
 
 				@if ( !empty($photos->dataCriacao) && $photos->dataCriacao!= null  )
 					<h4>Data da Imagem:</h4>
-					<p>{{ Photo::translate($photos->dataCriacao) }}</p>
+					<p>
+            <a href="{{ URL::to("/search?q=".$photos->dataCriacao."&t=img") }}">  
+            {{ Photo::translate($photos->dataCriacao) }}
+            </a>
+          </p>
 				@endif
 
 				@if ( !empty($photos->workAuthor) )
 					<h4>Autor da Obra:</h4>
-					<p>{{ $photos->workAuthor }}</p>
+					<p>
+            <a href="{{ URL::to("/search?q=".$photos->workAuthor) }}">  
+            {{ $photos->workAuthor }}
+            </a>
+          </p>
 				@endif
 <!-- msy -->
 				@if ( !empty($photos->workdate) && $photos->workdate!= null )
 					<h4>Data da Obra:</h4>
-					<p>{{ Photo::translate($photos->workdate) }}</p>
+					<!--<p>{{ Photo::translate($photos->workdate) }}</p>-->
+          <p>
+            <a href="{{ URL::to("/search?q=".$photos->workdate."&t=work") }}">  
+            {{ Photo::translate($photos->workdate) }}
+            </a>
+          </p>
+
 				@endif
 <!---msy end -->
 				@if ( !empty($photos->street) || !empty($photos->city) ||
