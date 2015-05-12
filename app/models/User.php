@@ -4,6 +4,8 @@ use Illuminate\Auth\UserTrait;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
+// begin 12/05/2015 for date msy
+use lib\date\Date;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
 	
@@ -40,7 +42,12 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	{
 		return $this->belongsToMany('User', 'friendship', 'following_id', 'followed_id');
 	}
-
+	//begin 12/05/2015 format date msy
+	public static function formatDate($date)
+	{
+		return Date::formatDate($date);
+	}
+	//end
 	use UserTrait, RemindableTrait;
 
 	protected $hidden = array('password', 'remember_token');
