@@ -115,13 +115,11 @@ return array(
             'required' => 'É obrigatório escolher uma imagem.',
         ),
         'photo_workDate' => array(
-            'date_format' => 'O valor inserido é invalido.',
+            'date_format' => 'O valor inserido não é invalido.',
         ),
         'photo_imageDate' => array(
-            'date_format' => 'O valor inserido é invalido.',
+            'date_format' => 'O valor inserido não é invalido.',
         ),
-
-
     ), 
 
 
