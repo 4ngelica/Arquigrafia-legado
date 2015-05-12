@@ -83,12 +83,48 @@ return array(
     | specify a specific custom language line for a given attribute rule.
     |
     */
-
+    /*
     'custom' => array(
         'attribute-name' => array(
             'rule-name' => 'custom-message',
         ),
-    ),
+    ), */
+    'custom' => array(
+        'photo_name' => array(
+            'required' => 'É obrigatório inserir um valor para o título da imagem.',
+        ),
+        'photo_imageAuthor' => array(
+            'required' => 'É obrigatório inserir um valor para o autor da imagem.',
+        ),
+        'tags' => array(
+            'required' => 'É obrigatório inserir um valor para o campo tag.',
+        ),
+        'photo_country' => array(
+            'required' => 'É obrigatório escolher um valor para o país.',
+        ),
+        'photo_state' => array(
+            'required' => 'É obrigatório escolher um valor para o estado.',
+        ),
+        'photo_city' => array(
+            'required' => 'É obrigatório inserir um valor para a cidade.',
+        ),
+        'photo_authorization_checkbox' => array(
+            'required' => 'É obrigatório selecionar a permissão da imagem.',
+        ),
+        'photo' => array(
+            'required' => 'É obrigatório escolher uma imagem.',
+        ),
+        'photo_workDate' => array(
+            'date_format' => 'O valor inserido é invalido.',
+        ),
+        'photo_imageDate' => array(
+            'date_format' => 'O valor inserido é invalido.',
+        ),
+
+
+    ), 
+
+
 
     /*
     |--------------------------------------------------------------------------
