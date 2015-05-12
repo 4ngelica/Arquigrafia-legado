@@ -51,7 +51,7 @@
 			 @endif	
 			  
 	        </div>
-	      	<div class="count">Fotos compartilhadas ({{ count($photos) }})</div>
+	      	<div class="count">Imagens compartilhadas ({{ count($photos) }})</div>
 	      </div>
 	    </div>
     
@@ -66,14 +66,21 @@
       	<div class="container row">
       		<div class="six columns">
 	      		<p>
-	      			Você ainda não tem fotos no seu perfil. Faça o upload de uma imagem 
-	      			<a href="{{ URL::to('/photos/upload') }}">aqui</a>
+	      			@if (Auth::check() && $user->id == Auth::user()->id)
+	      				Você ainda não possui imagens no seu perfil. Faça o upload de uma imagem 
+	      				<a href="{{ URL::to('/photos/upload') }}">aqui</a>
+	      			@else
+	      				Não possui imagens.
+	      			@endif
 	      		</p>
       		</div>
       	</div>
       @endif
     
     </div>
+
+    <br>
+    <br>
     
     <!-- USUÁRIO -->
     <div class="container row">
@@ -178,13 +185,21 @@
       </div>
       
     </div>
+
+    <br>
     
     	    <!-- MEUS ALBUNS -->
 	<div class="container">
 				
 			<div class="twelve columns albums">
 				<hgroup class="profile_block_title">
-					<h3><i class="photos"></i>Meus álbuns</h3>
+					<h3><i class="photos"></i>
+						@if (Auth::check() && $user->id == Auth::user()->id)
+							Meus álbuns
+						@else
+							Álbuns
+						@endif
+					</h3>
 				</hgroup>
 				<?php $albums = $user->albums; ?>
 				
@@ -211,7 +226,55 @@
 						@endforeach
 					@else
 						<p>
-						Você ainda não tem nenhum álbum. Crie um <a href="{{ URL::to('/albums/create') }}">aqui</a>
+						@if (Auth::check() && $user->id == Auth::user()->id)
+							Você ainda não tem nenhum álbum. Crie um <a href="{{ URL::to('/albums/create') }}">aqui</a>
+						@else
+							Não possui álbuns.
+						@endif
+						</p>
+					@endif
+				</div>
+			
+			</div>
+	
+	</div>
+
+	<br>
+	<br>
+	<!-- MINHAS AVALIAÇÕES -->
+	<div class="container">
+				
+			<div class="twelve columns albums">
+				<hgroup class="profile_block_title">
+					<h3><img src="{{ asset("img/evaluate.png") }}" width="16" height="16"/>
+						@if (Auth::check() && $user->id == Auth::user()->id)
+							Minhas imagens avaliadas
+						@else
+							Imagens avaliadas
+						@endif
+					</h3>
+				</hgroup>			
+				
+				<div class="profile_box">
+					@if ($evaluatedPhotos->count() > 0)
+						@foreach($evaluatedPhotos as $evaluatedPhoto)
+							<div class="gallery_box">
+								<a href='{{"/photos/" . $evaluatedPhoto->id . "/evaluate" }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">									
+									<img src="{{ URL::to("/arquigrafia-images/" . $evaluatedPhoto->id . "_home.jpg") }}" class="gallery_photo" />									
+								</a>
+								<a href='{{"/photos/" . $evaluatedPhoto->id . "/evaluate" }}' class="name">
+									{{ $evaluatedPhoto->name  }}
+								</a>
+								<br />
+							</div>
+						@endforeach
+					@else
+						<p>
+						@if (Auth::check() && $user->id == Auth::user()->id)
+							Você ainda não realizou nenhuma avaliação. <a href="{{ URL::to('/') }}">Selecione</a> uma imagem e avalie a arquitetura apresentada nela.
+						@else
+							Não possui avaliações.
+						@endif
 						</p>
 					@endif
 				</div>
