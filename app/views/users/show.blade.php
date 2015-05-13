@@ -107,7 +107,7 @@
 				<li><strong>Apelido: </strong>{{ $user->lastName }}</li>
 			@endif
 			@if ( !empty($user->birthday) && $user->visibleBirthday == 'yes')
-				<li><strong>Data de nascimento: </strong>{{ $user->birthday }}</li>
+				<li><strong>Data de nascimento: </strong>{{ date("d/m/Y",strtotime($user->birthday)) }}</li>
 			@endif
 			@if ( !empty($user->gender) )
 				<li><strong>Sexo: </strong>{{ $user->gender == 'female' ? 'Feminino' : 'Masculino' }}</li>

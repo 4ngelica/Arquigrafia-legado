@@ -100,23 +100,15 @@
 
 
          <div class="two columns alpha"><p>{{ Form::label('birthday', 'Data de nascimento:') }}</p></div>
-          <!--
-          <div class="two columns omega">
-            <p>{{ Form::text('birthday', $user->birthday) }} 
-            <input name="visibleBirthday" type="checkbox" value="yes" {{$user->visibleBirthday == 'yes' ? "checked" : ""}}>Visível no perfil público <br>
-            <div class="error">{{ $errors->first('birthday') }} </div>
-            </p>
-            
-          </div>-->
-
-         
+                            
          <div class="two columns omega">
          @if (($user->birthday)!= null )
           <p>{{ Form::text('birthday',date("d/m/Y",strtotime($user->birthday)),array('id' => 'datePickerBirthday','placeholder'=>'dd/mm/yyyy')) }} 
          @else
           <p>{{ Form::text('birthday','',array('id' => 'datePickerBirthday','placeholder'=>'dd/mm/yyyy')) }} 
-         @endif  
-         <br> <div class="error">{{ $errors->first('birthday') }}</div>
+         @endif 
+         <input name="visibleBirthday" type="checkbox" value="yes" {{$user->visibleBirthday == 'yes' ? "checked" : ""}}>Visível no perfil público <br> 
+         <div class="error">{{ $errors->first('birthday') }}</div>
          </p>       
         </div>
         
