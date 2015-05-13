@@ -42,7 +42,7 @@ class PagesController extends BaseController {
         $photos = $query->get(); 
         return $photos;  
   }
-
+//msy
   private static function dateSearch(&$needle,&$type){
 
       if($type=='work'){
@@ -66,17 +66,41 @@ class PagesController extends BaseController {
         $photos = $query->get(); 
         return $photos;   
   }
+  //msy
+  public static function yearSearch(&$needle,&$dateFilter,&$date){
+        
+      //  $dateFilter = array('dataCriacao','dataUpload','workdate');
+      
+        $dateFilter = [
+            'di'=>'Data da Imagem',
+            'du'=>'Data de Upload',
+            'do'=>'Data da Obra'
+        ];
 
-  public static function yearSearch($needle){
-        // 
-   
-        $query = Photo::orderByRaw("RAND()");         
-        $query->where('dataCriacao', 'LIKE', '%' . $needle . '%');
-        $query->orWhere('dataUpload', 'LIKE', '%' . $needle . '%');
-        $query->orWhere('workdate', 'LIKE', '%' . $needle . '%');
-        $query->whereNull('deleted_at');
-        $photos = $query->get(); 
-        return $photos; 
+
+        if(!empty($date) ){  //&& !isset($date)
+          
+            if($date == 'di' ) $dateType = 'dataCriacao';          
+            if ($date == 'du' ) $dateType = 'dataUpload';
+            if ($date == 'do' ) {$dateType = 'workdate'; }                   
+           
+            $query = Photo::orderByRaw("RAND()");         
+            $query->where($dateType, 'LIKE', '%' . $needle . '%');
+            $query->whereNull('deleted_at');
+            $photos = $query->get(); 
+            return $photos; 
+
+        }else{
+          $query = Photo::orderByRaw("RAND()");         
+          $query->where('dataCriacao', 'LIKE', '%' . $needle . '%');
+          $query->orWhere('dataUpload', 'LIKE', '%' . $needle . '%');
+          $query->orWhere('workdate', 'LIKE', '%' . $needle . '%');
+          $query->whereNull('deleted_at');
+          $photos = $query->get(); 
+          return $photos; 
+        }
+
+        
   }
 
 	
@@ -86,6 +110,8 @@ class PagesController extends BaseController {
     $needle = Input::get("q");
     $txtcity = Input::get("city"); 
     $type = Input::get("t"); 
+    $dateFilter = null;
+    $date = Input::get("d"); 
 
 		if ($needle != "") {
       
@@ -100,7 +126,9 @@ class PagesController extends BaseController {
          $photos = static::dateSearch($needle,$type);
 
        }elseif (DateTime::createFromFormat('Y', $needle) !== FALSE) {
-            $photos = static::yearSearch($needle);      
+
+            $photos = static::yearSearch($needle,$dateFilter,$date);      
+
        } else {         
 
            $idUserList = static::userPhotosSearch($needle);
@@ -130,7 +158,7 @@ class PagesController extends BaseController {
         $photos = $photos->merge($byTag);
       }
       // retorna resultado da busca
-      return View::make('/search',['tags' => $tags, 'photos' => $photos, 'query'=>$needle, 'city'=>$txtcity]);
+      return View::make('/search',['tags' => $tags, 'photos' => $photos, 'query'=>$needle, 'city'=>$txtcity,'dateFilter'=>$dateFilter]);
     } else {
       // busca vazia
       return View::make('/search',['tags' => [], 'photos' => [], 'query' => "", 'city'=>""]);
