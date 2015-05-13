@@ -159,9 +159,9 @@ class PagesController extends BaseController {
       }
       // retorna resultado da busca
       return View::make('/search',['tags' => $tags, 'photos' => $photos, 'query'=>$needle, 'city'=>$txtcity,'dateFilter'=>$dateFilter]);
-    } else {
+    } else { 
       // busca vazia
-      return View::make('/search',['tags' => [], 'photos' => [], 'query' => "", 'city'=>""]);
+      return View::make('/search',['tags' => [], 'photos' => [], 'query' => "", 'city'=>"",'dateFilter'=>[]]);
     }
 	}  
   
