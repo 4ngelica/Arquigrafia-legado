@@ -57,16 +57,26 @@ class PagesController extends BaseController {
         Log::info("Logging information for upload <".$needle.">");
         $dateType = 'dataUpload';
         $date = new DateTime($needle);
-        $needle =  $date->format('Y-m-d');
+        $needle =  $date->format('Y-m-d');  
        Log::info("Logging information for format upload <".$needle.">");
       }
-        
-       
         $query = Photo::orderByRaw("RAND()");         
         $query->where($dateType, 'LIKE', '%' . $needle . '%');
         $query->whereNull('deleted_at');
         $photos = $query->get(); 
         return $photos;   
+  }
+
+  public static function yearSearch($needle){
+        // 
+   
+        $query = Photo::orderByRaw("RAND()");         
+        $query->where('dataCriacao', 'LIKE', '%' . $needle . '%');
+        $query->orWhere('dataUpload', 'LIKE', '%' . $needle . '%');
+        $query->orWhere('workdate', 'LIKE', '%' . $needle . '%');
+        $query->whereNull('deleted_at');
+        $photos = $query->get(); 
+        return $photos; 
   }
 
 	
@@ -83,32 +93,30 @@ class PagesController extends BaseController {
       $tags = $query->get();
 
       if ($txtcity != "") {  
-        //2015-05-09 msy end
-        $photos = static::streetAndCitySearch($needle,$txtcity);
-        
+            //2015-05-09 msy end
+            $photos = static::streetAndCitySearch($needle,$txtcity);        
                 
        }elseif ((DateTime::createFromFormat('Y-m-d', $needle) !== FALSE || DateTime::createFromFormat('Y-m-d H:i:s', $needle) !== FALSE )&& !empty($type)) {
          $photos = static::dateSearch($needle,$type);
 
+       }elseif (DateTime::createFromFormat('Y', $needle) !== FALSE) {
+            $photos = static::yearSearch($needle);      
        } else {         
 
            $idUserList = static::userPhotosSearch($needle);
-           
-
-                                            
+                               
            $query = Photo::orderBy('created_at', 'desc');       
            $query->where('name', 'LIKE', '%'. $needle .'%');  
            $query->orWhere('description', 'LIKE', '%'. $needle .'%');  
            $query->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%');
            $query->orWhere('workAuthor', 'LIKE', '%'. $needle .'%');
            if ($idUserList != null && !empty($idUserList)) {
-            $query->orWhereIn('user_id', $idUserList);}
+               $query->orWhereIn('user_id', $idUserList);}
            $query->orWhere('country', 'LIKE', '%'. $needle .'%');  
            $query->orWhere('state', 'LIKE', '%'. $needle .'%'); 
            $query->orWhere('city', 'LIKE', '%'. $needle .'%'); 
            $query->whereNull('deleted_at');  
            $photos = $query->get();
-
        } 
       //2015-05-06 msy end
       
