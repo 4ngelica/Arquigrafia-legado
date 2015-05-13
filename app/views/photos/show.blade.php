@@ -85,7 +85,10 @@ $(document).ready(function(){
 					<!--   NOME / STATUS DA FOTO   -->
 					<div>
 						<div class="four columns alpha">
-            	<h1>{{ $photos->name }}</h1> 
+            	<h1><a href="{{ URL::to("/search?q=".$photos->name)}}">  
+            {{ $photos->name }}
+            </a>
+              </h1> 
 
             </div>
 
@@ -150,13 +153,15 @@ $(document).ready(function(){
           @if (isset($tags))
             @foreach($tags as $tag)
               @if ($tag->id == $tags->last()->id)
-                {{ $tag->name }}
+              <a style="" href="{{ URL::to("/search?q=".$tag->name) }}">                
+                {{ $tag->name }} </a>
               @else
-                {{ $tag->name }},          
+                <a href="{{ URL::to("/search?q=".$tag->name) }}">                
+                {{ $tag->name }} </a>,          
               @endif          
             @endforeach
           @endif   
-          
+         
           </p>
           </div>
         
@@ -278,8 +283,10 @@ $(document).ready(function(){
 				
 				@if ( !empty($photos->imageAuthor) )
 					<h4>Autor da Imagem:</h4>
-					<p>
-						{{ $photos->imageAuthor }}					
+					<p>								
+            <a href="{{ URL::to("/search?q=".$photos->imageAuthor)}}">  
+            {{ $photos->imageAuthor }}
+            </a>			
 					</p>
 				@endif
 				
@@ -341,12 +348,12 @@ $(document).ready(function(){
 					    {{ $photos->city }}
 						</a>
 						<br />
-            			@endif
+            @endif
 
 			            @if (!empty($photos->state) && !empty($photos->country))
-			            {{ $photos->state }} - {{ $photos->country }}
+			            <a href="{{ URL::to("/search?q=".$photos->state) }}">{{ $photos->state }}</a> - {{ $photos->country }}
 			            @elseif (!empty($photos->state))
-			            {{ $photos->state }}
+			            <a href="{{ URL::to("/search?q=".$photos->state) }}">{{ $photos->state }}</a>
 			            @else
 			            {{ $photos->country }}
 			            @endif
