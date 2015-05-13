@@ -27,8 +27,21 @@
           <h1>Resultado de: {{ $query }} </h1>
           @endif
           <!--2015-05-06 msy end-->
-         <!-- <h1>Resultado de: {{ $query }} </h1> -->
-          
+         <!-- To data search  -->
+         @if(count($dateFilter)!=0)
+          <p>Data: 
+          @foreach ($dateFilter as $k =>$date)
+            @if ($k != "do" )
+            <a href="{{ URL::to("/search?q=".$query."&d=".$k)}}"> 
+            {{ $date }}</a>,
+            @else
+            <a href="{{ URL::to("/search?q=".$query."&d=".$k)}}"> {{ $date }}</a>
+            @endif
+          @endforeach
+          </p>
+          @endif
+         <!-- -->
+          @if(count($tags)!=0)            
           <p>Tags contendo o termo: 
           
           @foreach($tags as $k => $tag)
@@ -42,7 +55,7 @@
           @endforeach
           
           </p>
-          
+          @endif
           <?php if ( count($photos) < 1 ) { ?>
             <p>Não encontramos nenhuma imagem com o termo {{ $query }}.</p>
           <?php } else { ?>
