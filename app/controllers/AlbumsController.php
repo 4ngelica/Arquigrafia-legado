@@ -114,6 +114,34 @@ class AlbumsController extends \BaseController {
 				'rmUrl' => $rmUrl,
 				'type' => 'rm',
 				'photos' => null] );
+
+	}
+
+	public function edition($id) {
+		$user = Auth::user();
+		$album = Album::find($id);
+
+		if ($user->id != $album->user_id) 
+			return Redirect::to('/');
+				
+		$album_photos = Photo::paginateAlbumPhotos($album);
+		$other_photos = Photo::paginateOtherPhotos($user, $album->photos);
+		$maxPage = $other_photos->getLastPage();
+		$rmMaxPage = $album_photos->getLastPage();
+		$url = URL::to('/albums/' . $album->id . '/photos/add');
+		$rmUrl = URL::to('/albums/' . $album->id . '/photos/rm');
+		return View::make('albums.edition')
+			->with(
+				['album' => $album, 
+				'album_photos' => $album_photos, 
+				'other_photos' => $other_photos,
+				'page' => 1,
+				'maxPage' => $maxPage,
+				'rmMaxPage' => $rmMaxPage,
+				'url' => $url,
+				'rmUrl' => $rmUrl,
+				'type' => 'rm',
+				'photos' => null] );
 	}
 
 	public function removePhotos($id) {
