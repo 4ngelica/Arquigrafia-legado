@@ -1,106 +1,29 @@
-
-
-var Album = (function($){
+$(document).ready(function() {
 	
-	var submit_id = '#send_forgot_password',
-	    validation_id = '#validation_error',
-	    url = '';
-	
-	
-	init = function(href) {
-		url = href;
-		$(submit_id).live('submit', function(e){
-			e.preventDefault();
-			
-			$.post(this.action, $(this).serialize(), success, 'json')
-		
-			.error(function(message) {
-				validation(message);
-			 });
-		});		
-	};
-
-	function success(message) {
-		$('#mask').fadeIn('fast');
-		$('#form_window').fadeIn('slow');
-		$('#registration').load(url);	
-	}
-
-	function validation(message) {
-		var messages = $.parseJSON(message.responseText),
-		validations = '';
-		jQuery.each(messages.errors, function(index, item){
-			validations += item.message;
-			validations += "<br/>";
-		});			
-		$(validation_id).empty().append(validations);
-
-	}
-	
-	return {
-		init: init,
-	};
-	
-	
-}(jQuery));
-
-
-
-
-$(function(){
-
-	
-	
-	$('#album_bar').on('click', 'img', function(e) {
+	$("#album_info form").submit(function(e) {
 		e.preventDefault();
-		var url = $(this).parent().attr('href'), 
-			context_path = $('#context_path').val(),
-			icon = $('<img src="' + context_path + '/img/loader.gif"/>');
-		$.ajax({
-			url: url,
-			type: 'get',
-			dataType: 'html',
-			beforeSend: function() {
-				$('#galery_box').html(icon);
-			},
-			success: function(photos) {
-				$('#galery_box').empty().append(photos);
-			},
-			complete: function() {
-				icon.remove();
+		var cover = $("#_cover").val();
+		var title = $("#title").val();
+		var description = $("#description").val();
+		var data = { title: title, description: description, cover_id: cover };
+		var url = $(this).attr('action');
+		$.post(url, data).done(function(response) {
+			if (response === 'success') {
+				$("#info .error:first").html('');
+				$("#album_title").html('Edição de ' + title);
+				$("div.success").success_message('Informações do álbum atualizadas com sucesso!');
+			} else {
+				$("#info .error:first").append(response.title[0]);
 			}
+		}).fail(function() {
+			alert("Ocorreu um erro! Tente novamente mais tarde");
 		});
-		
-	});
-	
-	
-	$('#plus').live('click', function(e){
-		e.preventDefault();
-		$('#mask').fadeIn('fast');
-		$('#form_window').fadeIn('slow');
-		$('#registration').load(this.href);	
-		// Album.init(this.href);
 	});
 
-	
-	$('#new_album, #edit_album').live('click', function(e){
-		e.preventDefault();
-		$('#mask').fadeIn('fast');
-		$('#form_window').fadeIn('slow');
-		$('#registration').load(this.href);	
-		form_window_loaded = true;
-	});
-
-	$('#new_album_image').live('click', function(e){
-		e.preventDefault();
-		$('#mask').fadeIn('fast');
-		$('#form_window').fadeIn('slow');
-		$('#registration').load(this.href);	
-	});
-
-	
-	$('#delete_album').live('click', function(e){
-		return confirm('Tem certeza que deseja excluir o álbum?');
+	$.fn.extend({
+   	success_message: function (message) {
+      	$(this).html('Informações do álbum atualizadas com sucesso!').fadeIn().delay(3000).fadeOut();
+   	}
 	});
 
 });

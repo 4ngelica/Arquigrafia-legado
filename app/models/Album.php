@@ -15,4 +15,11 @@ class Album extends Eloquent {
 	{
 		return $this->belongsTo('User');
 	}
+
+	public function updateInfo($info) {
+		$this->title = $info['title'];
+		$this->cover_id = $info['cover_id'];
+		$this->description = $info['description'];
+		$this->save();
+	}
 }

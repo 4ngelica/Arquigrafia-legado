@@ -1,12 +1,24 @@
-#album_info .img_container { width: 300px; border-radius: 3px; position: relative;}
+#album_info .img_container { width: 300px; border-radius: 3px; -moz-border-radius: 3px;
+	-webkit-border-radius: 3px; position: relative; margin-top: 10px; }
+
 #album_info .img_container img { width: 100%; }
+
 #album_info .img_container span { display: none; position: absolute; top: 0; left: 0; right: 0;
 	bottom: 0; text-align: center; background: rgba(0,0,0,0.85); padding: 5px 10px; }
+
 #album_info .img_container span a { color: #fff; font-size: 35px; display: block; position: absolute;
 	top: 50%; left: 50%; width: 150px; height: 50px; margin-top: -35px; margin-left: -75px; }
+
 #album_info .img_container:hover span { display: block; }
+
 .tab label { font-size: 16px; }
-.tab input { font-size: 14px; width: 200px; }
-.tab textarea { width: 300px; }
-.tab #info { height: 200px; position: absolute; top: 50%; margin-top: -50px; }
+
+.tab input { font-size: 12px; margin-bottom: 10px; }
+
+.tab input[type="text"] { font-size: 14px; width: 200px; }
+
+.tab textarea { width: 300px; margin-bottom: 10px; }
+.tab #info { margin-top: 5px; }
+/*.tab #info { height: 200px; position: absolute; top: 50%; margin-top: -50px; }*/
+
 .columns.center { display: block; margin: 0 auto; float: none; }

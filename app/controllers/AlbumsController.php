@@ -5,6 +5,8 @@ class AlbumsController extends \BaseController {
 	public function __construct() {
 		$this->beforeFilter('auth', 
 			array( 'except' => 'show' ));
+		$this->beforeFilter('ajax',
+			array( 'only' => array())); //temporariamente sem métodos
 	}
 
 	public function index() {
@@ -185,6 +187,24 @@ class AlbumsController extends \BaseController {
 				$album->photos()->detach($photos_rm);
 			return Redirect::to('/albums/' . $album->id);
 		}
+	}
+
+	public function updateInfo($id) {
+		$album = Album::find($id);
+		if ( is_null($album) ) {
+			return Redirect::to('/');
+		}
+		$input = Input::all();
+		$rules = array(
+			'title' => 'required',
+		);
+		$validator = Validator::make($input, $rules);
+		if ($validator->fails()) {
+			$messages = $validator->messages();
+			return Response::json($messages);
+		}
+		$album->updateInfo($input);
+		return Response::json("success");
 	}
 
 	public function paginateByUser() {

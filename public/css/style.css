@@ -29,7 +29,7 @@ small { font-size: 11px; }
 img.left { margin-right: 15px; margin-bottom: 10px; }
 img.right { margin-left: 15px; }
 .btn { background: #fff; color: #444; border: solid 1px #ddd; font-size: 10px; font-weight: bold; padding: 5px 10px; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
-.btn:hover, .btn:hover a { color: #222; text-decoration: none; cursor: pointer; }
+.btn:hover, .btn:hover a { color: #222; text-decoration: none; cursor: pointer; border-color: #aaa; }
 .step {background: #fff; color: #444; border: solid 1px #ddd; font-size: 10px; font-weight: bold; padding: 5px 7px 5px 8px; -webkit-border-radius: 20px; -moz-border-radius: 20px; border-radius: 20px; line-height: 20px; vertical-align: middle;}
 .step-text {vertical-align: middle; margin-left: 5px;}
 .error {color: #C52D30;}
@@ -523,7 +523,7 @@ input#login_white_button:hover { background-position: -160px -258px; }
 .list p { color: #000; }
 
 .form.window a.close { float: right; text-align: center; margin-bottom: 10px; }
-.form.window a.close:hover { background-position: -160px -216px; text-decoration: underline; }
+.form.window a.close:hover { text-decoration: underline; }
 
 #delete_button { display: inline-block; width: 16px; height: 16px; background: url("../img/delete.png"); margin-left: 5px; }
 #delete_button:hover { cursor: pointer; }
@@ -557,3 +557,7 @@ input#login_white_button:hover { background-position: -160px -258px; }
 #form_login_window input[type="text"], #form_login_window input[type="password"] { margin: 5px 0 10px; width: 198px; font-size: 12px; }
 #form_login_window .columns { display: block; margin: 0 auto; float: none; }
 #form_login_window .error { font-size: 10px; }
+
+.success {	border: 1px solid; margin: 10px 0px; padding:15px 20px; color: #4F8A10;
+	background-color: #DFF2BF; position: fixed; top: 5%; left: 40%; max-width: 400px; 
+	margin-left: -75px; font-size: 14px; display: none; }
