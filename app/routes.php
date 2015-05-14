@@ -54,7 +54,6 @@ Route::resource('/profile','ProfileController'); // lixo ?
 
 /* ALBUMS */
 Route::resource('/albums','AlbumsController');
-Route::get('/albums/delete/{id}', 'AlbumsController@delete');
 Route::get('/albums/photos/add', 'AlbumsController@paginateByUser');
 Route::get('/albums/{id}/photos/rm', 'AlbumsController@paginateByAlbum');
 Route::get('/albums/{id}/photos/add', 'AlbumsController@paginateByOtherPhotos');
@@ -63,6 +62,7 @@ Route::post('/albums/photo/add', 'AlbumsController@addPhotoToAlbums');
 Route::get('/albums/get/cover/{id}', 'AlbumsController@paginateByCoverPhotos');
 Route::delete('/albums/{album_id}/photos/{photo_id}/remove', 'AlbumsController@removePhotoFromAlbum');
 Route::get('/albums/{id}/edition', 'AlbumsController@edition');
+Route::post('/albums/{id}/update/info', 'AlbumsController@updateInfo');
 /* COMMENTS */
 Route::post('/photos/{photo_id}/comment','PhotosController@comment');
 
