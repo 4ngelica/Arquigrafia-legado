@@ -3,6 +3,7 @@
 @section('head')
    <title>
       Arquigrafia - Entrar
+      <script type="text/javascript" src="{{ URL::to('/js/stoaLogin.js') }}"></script>
    </title>
 @stop
 
@@ -77,7 +78,6 @@
                   <p class="error">Número USP e/ou senha inválidos.</p>
                </div>
             {{ Form::close() }}
-            <script type="text/javascript" src="{{ URL::to('/js/stoaLogin.js') }}"></script>
          </div>
       </div>
    </div>
