@@ -89,10 +89,12 @@
           <p>
           @if (isset($tags))
             @foreach($tags as $tag)
-              @if ($tag->id == $tags->last()->id)              
-                {{ $tag->name }}             
+              @if ($tag->id == $tags->last()->id) 
+              <a style="" href="{{ URL::to("/search?q=".$tag->name) }}">             
+                {{ $tag->name }}   </a>          
               @else              
-                {{ $tag->name }},          
+              <a href="{{ URL::to("/search?q=".$tag->name) }}">
+                {{ $tag->name }}, </a>         
               @endif          
             @endforeach
           @endif   
