@@ -27,13 +27,22 @@
 		<div class="container">
 	      <div id="user_header" class="twelve columns">
           
-          <?php if ($user->photo != "") { ?>
-            <img class="avatar" src="{{ asset($user->photo) }}" class="user_photo_thumbnail"/>
-          </a>
-          <?php } else { ?>
-            <img class="avatar" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
-          <?php } ?>
-          
+             <!-- Avatar with edit profile -->
+			<?php if (Auth::check() && Auth::user()->id == $user->id) { ?>
+			  <a href= '{{"/users/" . $user->id . "/edit" }}' title="Editar perfil" >
+				<?php if ($user->photo != "") { ?>
+            	 <img class="avatar" src="{{ asset($user->photo) }}" class="user_photo_thumbnail"/>          
+          		<?php } else { ?>
+            	<img class="avatar" src="{{ asset("img/avatar-perfil.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
+          		<?php } ?>
+          	  </a>
+            <?php }else{ ?>
+            		<?php if ($user->photo != "") { ?>
+            	 		<img class="avatar" src="{{ asset($user->photo) }}" class="user_photo_thumbnail"/>          
+          			<?php } else { ?>
+            			<img class="avatar" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
+          			<?php } ?>
+            <?php } ?>
 	        <div class="info">
 
 	          <h1>{{ $user->name}} {{ $user->secondName}}</h1>	          
