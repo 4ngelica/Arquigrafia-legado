@@ -217,9 +217,32 @@
     </script>
   </div>
 @endif      
-				
-        
-        
+
+		<!-- Photos with similar average  -->
+    <div id="evaluation_average">   
+     
+    <hgroup class="profile_block_title">    
+      <h3>Imagens com avaliação similar</h3>
+    </hgroup> 
+      @if (count($similarPhotos) > 0) 
+      @foreach($similarPhotos as $k => $similarPhoto)         
+         @if($photos->id != $similarPhoto->id)  
+              
+                <a  class="hovertext" href='{{"/photos/" . $similarPhoto->id . "/evaluate" }}' class="gallery_photo" title="{{ $similarPhoto->name }}">                  
+                  <img src="{{ URL::to("/arquigrafia-images/" . $similarPhoto->id . "_home.jpg") }}" class="gallery_photo" />                 
+                </a>
+                <!--
+                <a href='{{"/photos/" . $similarPhoto->id . "/evaluate" }}' class="name">
+                  <div class="innerbox">{{ $similarPhoto->name }}</div>
+                </a>-->
+                
+          @endif
+      @endforeach         
+      @endif        
+    		
+    </div> 
+     
+ 
         
         
 			</div>
