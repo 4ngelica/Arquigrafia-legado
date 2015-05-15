@@ -354,6 +354,7 @@ span.twitter { background: url(../img/sprite.png) -63px -145px; }
 #evaluate_button { float: left; }
 #evaluation_average { float: left; margin: 0 0 0 3px; }
 .single_view_map { margin: 5px 0; }
+#similar_average { float: left; margin: 0 0 0 3px; }
 
 /*Comentários*/
 #comments_block { margin: 20px 0; }
@@ -561,3 +562,58 @@ input#login_white_button:hover { background-position: -160px -258px; }
 .success {	border: 1px solid; margin: 10px 0px; padding:15px 20px; color: #4F8A10;
 	background-color: #DFF2BF; position: fixed; top: 5%; left: 40%; max-width: 400px; 
 	margin-left: -75px; font-size: 14px; display: none; }
+/* Similar images*/
+#image_similar { float: left; margin: 0 0 0 3px; }
+.image_similar { 
+   
+   margin:0px auto;
+   width:620px; 
+   height:auto;
+   padding:10px;
+}
+
+.image_similar p {
+  background-color: rgb(129, 124, 124);
+  color: #fff;
+  display: inline;
+  padding: 0.5rem;
+  padding-top: 5px;
+}
+
+a.hovertext {
+    position: relative;
+    width: 104px;
+    text-decoration: none !important;
+    text-align: center;
+  }
+  a.hovertext:after {
+    content: attr(title);
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding: 0.5em 20px;
+    width: 104px;
+    background: rgba(0,0,0,0.8);
+    text-decoration: none !important;
+    color: #fff;
+    opacity: 0;
+    -webkit-transition: 0.5s;
+    -moz-transition: 0.5s;
+    -o-transition: 0.5s;
+    -ms-transition: 0.5s;
+  }
+  a.hovertext:hover:after, a.hovertext:focus:after {
+    opacity: 1.0;
+  } 
+
+div.outerbox {position:relative; width:104px; height:130px;}
+
+div.innerbox {
+position:absolute;
+top:90px;
+left:10px;
+width:104px;
+height:130px;
+z-index:7;
+
+}
