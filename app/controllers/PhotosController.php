@@ -316,7 +316,8 @@ class PhotosController extends \BaseController {
     return View::make('/photos/evaluate',
       ['photos' => $photo, 'owner' => $user, 'follow' => $follow, 'tags' => $photo->tags, 'commentsCount' => $photo->comments->count(),
       'average' => $average, 'userEvaluations' => $evaluations, 'binomials' => $binomials,
-      'architectureName' => Photo::composeArchitectureName($photo->name)]);
+      'architectureName' => Photo::composeArchitectureName($photo->name),
+      'similarPhotos'=>Photo::photosWithSimilarEvaluation($average)]);
   }
 
   public function edit($id) {     
