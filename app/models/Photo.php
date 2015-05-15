@@ -111,4 +111,67 @@ class Photo extends Eloquent {
     	return Photo::whereIn('id', $evaluations->lists('photo_id'))->get();
 	}
 
+//msy
+	public static function photosWithSimilarEvaluation($average) { 		
+		$similarPhotos = array();
+		$arrayPhotosId = array();
+		$arrayPhotosDB = array();
+		
+		$i=0;
+		foreach ($average as $avg) {                    
+			Log::info("Logging params ".$avg->binomial_id." ".$avg->avgPosition);
+			//media de fotos x binomio
+			$avgPhotosBinomials = DB::table('binomial_evaluation')
+			->select('photo_id', DB::raw('avg(evaluationPosition) as avgPosition'))
+			->where('binomial_id', $avg->binomial_id)				
+			->groupBy('photo_id')->get();
+
+			
+			$arrayPhotosId = array();
+			$flag=false;
+
+			foreach ($avgPhotosBinomials as $avgPhotoBinomial) {
+				//Log::info("Logging iterate avgPhotoBinomial pos ".$avgPhotoBinomial->avgPosition." param ".$avg->avgPosition);
+				if(abs($avgPhotoBinomial->avgPosition - $avg->avgPosition)<=5){
+					$flag=true;
+					//Log::info("Logging push ".$avgPhotoBinomial->photo_id);
+					array_push($arrayPhotosId,$avgPhotoBinomial->photo_id);
+
+				}
+			}
+			
+			if($flag == false){
+				Log::info("Logging break "); 
+				$similarPhotos = array();
+				break;
+			}
+
+			if($i==0){				
+				$similarPhotos = $arrayPhotosId;			
+			}
+
+			$similarPhotos = array_intersect($similarPhotos, $arrayPhotosId);
+			$i++;
+			
+		}
+		//To remove repeted values
+		$similarPhotos = array_unique($similarPhotos);
+
+
+
+		//To obtain name of similarPhotos
+		foreach ($similarPhotos  as $similarPhotosId ) {
+
+			$similarPhotosDB = DB::table('photos')
+			->select('id', 'name')
+			->where('id',$similarPhotosId )				
+			->get(); 
+
+			array_push($arrayPhotosDB,$similarPhotosDB[0]);
+
+		}
+		
+    	return $arrayPhotosDB;
+	}
+
 }
