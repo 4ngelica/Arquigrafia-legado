@@ -11,7 +11,7 @@ $(document).ready(function() {
 			if (response === 'success') {
 				$("#info .error:first").html('');
 				$("#album_title").html('Edição de ' + title);
-				$("div.success").success_message('Informações do álbum atualizadas com sucesso!');
+				$(".message_box").message('Informações do álbum atualizadas com sucesso!', 'success');
 			} else {
 				$("#info .error:first").append(response.title[0]);
 			}
@@ -21,8 +21,12 @@ $(document).ready(function() {
 	});
 
 	$.fn.extend({
-   	success_message: function (message) {
-      	$(this).html('Informações do álbum atualizadas com sucesso!').fadeIn().delay(3000).fadeOut();
+   	message: function (message, type) {
+   		var message_box = $(this);
+      	message_box.addClass(type).html('Informações do álbum atualizadas com sucesso!').fadeIn()
+      		.delay(3000).fadeOut(400, function () {
+      			message_box.removeClass(type);
+      		});
    	}
 	});
 

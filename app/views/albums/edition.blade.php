@@ -97,7 +97,7 @@
     <a class="close" href="#" title="FECHAR">Fechar</a>
     <div id="covers_registration"></div>
   </div>
-  <div class="success"></div>
+  <div class="message_box"></div>
   <script type="text/javascript">
     $(document).ready(function() {
       $('.tabs .tab-links a').on('click', function(e) {

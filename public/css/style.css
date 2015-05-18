@@ -559,9 +559,9 @@ input#login_white_button:hover { background-position: -160px -258px; }
 #form_login_window .columns { display: block; margin: 0 auto; float: none; }
 #form_login_window .error { font-size: 10px; }
 
-.success {	border: 1px solid; margin: 10px 0px; padding:15px 20px; color: #4F8A10;
-	background-color: #DFF2BF; position: fixed; top: 5%; left: 40%; max-width: 400px; 
-	margin-left: -75px; font-size: 14px; display: none; }
+.message_box { border: 1px solid; margin: 10px 0px; padding:15px 20px; position: fixed; top: 5%; left: 40%; max-width: 400px; margin-left: -75px; font-size: 14px; display: none; }
+.message_box.success { color: #4F8A10;	background-color: #DFF2BF; }
+.message_box.error { color: #D8000C; background-color: #FFBABA; }
 /* Similar images*/
 #image_similar { float: left; margin: 0 0 0 3px; }
 .image_similar { 
