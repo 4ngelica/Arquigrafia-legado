@@ -112,66 +112,74 @@ class Photo extends Eloquent {
 	}
 
 //msy
-	public static function photosWithSimilarEvaluation($average) { 		
+	public static function photosWithSimilarEvaluation($average,$idPhotoSelected) { 		
+		Log::info("Logging function Similar evaluation");
 		$similarPhotos = array();
 		$arrayPhotosId = array();
-		$arrayPhotosDB = array();
-		
+		$arrayPhotosDB = array();		
 		$i=0;
-		foreach ($average as $avg) {                    
-			Log::info("Logging params ".$avg->binomial_id." ".$avg->avgPosition);
-			//media de fotos x binomio
-			$avgPhotosBinomials = DB::table('binomial_evaluation')
-			->select('photo_id', DB::raw('avg(evaluationPosition) as avgPosition'))
-			->where('binomial_id', $avg->binomial_id)				
-			->groupBy('photo_id')->get();
 
-			
-			$arrayPhotosId = array();
-			$flag=false;
+		if (!empty($average)) {
+			foreach ($average as $avg) {                   
+				Log::info("Logging params ".$avg->binomial_id." ".$avg->avgPosition);
+				//average of photo by each binomial(media de fotos x binomio)
+				$avgPhotosBinomials = DB::table('binomial_evaluation')
+				->select('photo_id', DB::raw('avg(evaluationPosition) as avgPosition'))
+				->where('binomial_id', $avg->binomial_id)
+				->where('photo_id','<>' ,$idPhotoSelected)				
+				->groupBy('photo_id')->get();
 
-			foreach ($avgPhotosBinomials as $avgPhotoBinomial) {
+				//clean array for news id photo
+				$arrayPhotosId = array();
+				$flag=false;
+				//dd($avgPhotosBinomials);
+				foreach ($avgPhotosBinomials as $avgPhotoBinomial) { 
 				//Log::info("Logging iterate avgPhotoBinomial pos ".$avgPhotoBinomial->avgPosition." param ".$avg->avgPosition);
-				if(abs($avgPhotoBinomial->avgPosition - $avg->avgPosition)<=5){
-					$flag=true;
-					//Log::info("Logging push ".$avgPhotoBinomial->photo_id);
-					array_push($arrayPhotosId,$avgPhotoBinomial->photo_id);
-
+					if(abs($avgPhotoBinomial->avgPosition - $avg->avgPosition)<=5){
+						$flag=true;
+						//echo $avgPhotoBinomial->photo_id;
+						//Log::info("Logging push ".$avgPhotoBinomial->photo_id);
+						array_push($arrayPhotosId,$avgPhotoBinomial->photo_id);
+					}
 				}
-			}
-			
-			if($flag == false){
-				Log::info("Logging break "); 
-				$similarPhotos = array();
-				break;
-			}
+				
+				//dd($arrayPhotosId);
+				if($flag == false){
+					Log::info("Logging break "); 
+					$similarPhotos = array();
+					break;
+				}
 
-			if($i==0){				
-				$similarPhotos = $arrayPhotosId;			
-			}
+				if($i==0){				
+					$similarPhotos = $arrayPhotosId;			
+				}
 
 			$similarPhotos = array_intersect($similarPhotos, $arrayPhotosId);
 			$i++;
 			
+			}
+			//To remove repeted values
+			$similarPhotos = array_unique($similarPhotos);
+
+
+
+			//To obtain name of similarPhotos
+			foreach ($similarPhotos  as $similarPhotosId ) {
+
+				$similarPhotosDB = DB::table('photos')
+				->select('id', 'name')
+				->where('id',$similarPhotosId )				
+				->get(); 
+
+				array_push($arrayPhotosDB,$similarPhotosDB[0]);
+
+			}
 		}
-		//To remove repeted values
-		$similarPhotos = array_unique($similarPhotos);
 
-
-
-		//To obtain name of similarPhotos
-		foreach ($similarPhotos  as $similarPhotosId ) {
-
-			$similarPhotosDB = DB::table('photos')
-			->select('id', 'name')
-			->where('id',$similarPhotosId )				
-			->get(); 
-
-			array_push($arrayPhotosDB,$similarPhotosDB[0]);
-
-		}
 		
     	return $arrayPhotosDB;
 	}
 
+
+	
 }
