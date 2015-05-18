@@ -27,7 +27,7 @@ $(document).ready(function() {
 		{
 			var cover_id = $(".covers:checked").val();
 			$("#_cover").val(cover_id);
-			$("#cover-img").attr("src", "/arquigrafia-images/" + cover_id + "_view.jpg");
+			$("#cover-img").attr("src", "/arquigrafia-images/" + cover_id + "_home.jpg");
 			$('#mask').fadeOut();
 			$('#form_window').fadeOut('fast');
 		}

@@ -29,12 +29,12 @@
   color:#4c4c4c;
   transition:all linear 0.15s;
   outline: none;
-  border: 2px solid #ddd;
+  border: 1px solid #ddd;
   border-bottom: none;
 }
 
 .tab-links a:hover {
-  border: 2px solid #777;
+  border: 1px solid #777;
   border-bottom: none;
   text-decoration:none;
 }
@@ -42,7 +42,7 @@
 li.active a, li.active a:hover {
   background:#ffffee;
   color:#4c4c4c;
-  border: 2px solid #999;
+  border: 1px solid #999;
   border-bottom: #fff;
 }
 
@@ -53,9 +53,9 @@ li.active a, li.active a:hover {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   margin: 0;
-  margin-top: -2px;
+  margin-top: -1px;
   background:#fff;
-  border-top: 2px solid #ddd;
+  border-top: 1px solid #999;
   min-height: 300px;
 }
 

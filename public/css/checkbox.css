@@ -1,8 +1,13 @@
-input[type=checkbox] {
+input[type=checkbox].covers,
+input[type=checkbox].rm_photo,
+input[type=checkbox].add_photo
+{
 	display:none;
 }
 
-input[type=checkbox] + label
+input[type=checkbox].covers + label,
+input[type=checkbox].rm_photo + label,
+input[type=checkbox].add_photo + label
 {
 	height: 83px;
 	width: 124px;
@@ -10,14 +15,21 @@ input[type=checkbox] + label
 	padding: 0px;
 	margin: 2px;
 	cursor: pointer;
-	/*opacity: 0.5*/
 }
-/*input[type=checkbox]:checked + label
-{
-	display:inline-block;
-	padding: 0 0 0 0px;
-	opacity: 1.0;
-}*/
+
+input[type=checkbox].add_photo + label {
+	opacity: 0.5;
+}
+
+input[type=checkbox].rm_photo:checked + label {
+	opacity: 0.3;
+}
+
+input[type=checkbox].add_photo:checked + label {
+	opacity: 1;
+}
+
+
 
 h2 a { font-weight: normal; color: #555; }
 .centered { text-align: center; }

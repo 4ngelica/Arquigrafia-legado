@@ -4,7 +4,7 @@
   <title>Arquigrafia - tabs</title>
   <link rel="stylesheet" type="text/css" href="{{ URL::to('/css/tabs.css') }}">
   <script src="{{ URL::to('/js/albums-covers.js') }}"></script>
-  <script src="{{ URL::to('/js/album-add-photos.js') }}"></script>
+  <!--<script src="{{ URL::to('/js/album-add-photos.js') }}"></script>-->
   <script src="{{ URL::to('/js/album.js') }}"></script>
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/checkbox.css" />
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/album.css" />
@@ -37,19 +37,37 @@
     <div class="twelve columns">
       <div class="tabs">
         <ul class="tab-links">
-          <li><a href="#album_images">Imagens do álbum</a></li>
-          <li class="active"><a href="#album_info">Informações do álbum</a></li>
+          <li class="active"><a href="#album_images">Imagens do álbum</a></li>
+          <li><a href="#album_info">Informações do álbum</a></li>
           <li><a href="#add_images">Adicionar imagens</a></li>
         </ul>
         <div class="tab-content">
-          <div id="album_images" class="tab">
-          <?php 
-            $photos = $album_photos;
-            $type = 'rm';
-          ?>
-          
+          <div id="album_images" class="tab active">
+            <?php 
+              $photos = $album_photos;
+              $type = 'rm';
+            ?>
+            <div class="eleven columns block">
+              {{ Form::open(array('url' => '/albums/' . $album->id . '/update/info', 'method' => 'post', 
+                'class' => 'eleven columns alpha omega album_form')) }}
+                <div class="four columns alpha omega">
+                  <input id="rm_select_all" type="checkbox">
+                  <label for="rm_select_all">Marcar todas para remoção</label>
+                </div>
+                <div class="four columns alpha omega">
+                    <input type="text" class="search_bar">
+                    <input type="button" class="search_bar_button cursor" value="FILTRAR">
+                </div>
+                <div class="three columns omega">
+                  <input type="button" id="remove_photos" class="btn right" value="REMOVER IMAGENS MARCADAS">
+                </div>
+              {{ Form::close() }}
+            </div>
+            <div class="eleven columns">
+              @include('albums.includes.album-photos-edit')
+            </div>
           </div>
-          <div id="album_info" class="tab active">
+          <div id="album_info" class="tab">
             {{ Form::open(array('url' => '/albums/' . $album->id . '/update/info', 'method' => 'post')) }}
               <div class="eleven columns">
                 <div class="five columns">
@@ -106,6 +124,23 @@
         $(this).parent('li').addClass('active').siblings().removeClass('active');
         e.preventDefault();
       });
+      $('#rm_select_all').on('click', function() {
+          if ( $(this).is(':checked') ) {
+            $('.rm_photo').prop('checked', true);
+            $('#remove_photos').fadeIn();
+          } else {
+            $('.rm_photo').prop('checked', false);
+            $('#remove_photos').fadeOut();
+          }
+      });
+
+      $('.rm_photo').click(function() {
+        if ($('.rm_photo:checked').length == 0) {
+          $('#remove_photos').fadeOut();
+        } else {
+          $('#remove_photos').fadeIn();
+        }
+      });
     });
-  </script>
+  </script>    
 @stop

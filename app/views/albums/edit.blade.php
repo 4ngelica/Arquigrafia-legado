@@ -66,7 +66,7 @@
 					</div>
 					<div id="cover_btn_box" class="four columns">
 						@if ($album_photos->count() > 0)
-							<a id="cover_btn" href="#" class="btn">Selecionar capa</a>
+							<a class="cover_btn" href="#" >Selecionar capa</a>
 						@else
 							<p>Para alterar a capa do álbum, é preciso ter pelo menos uma imagem.</p>
 							@endif
