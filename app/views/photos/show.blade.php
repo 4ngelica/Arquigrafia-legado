@@ -228,10 +228,39 @@ $(document).ready(function(){
           
         </div>
 				<!-- FIM DO BOX DE COMENTARIOS -->
+        <!-- msy Avaliação similar-->
+     @if (count($similarPhotos) > 0)    
+      <div id="comments_block" class="eight columns row alpha omega"> 
         
-        
-        
-        
+
+        <hgroup class="profile_block_title">    
+          <h3><img src="{{ asset("img/evaluate.png") }}" width="16" height="16"/>
+            Imagens avaliadas com média similar </h3>
+          <span>({{count($similarPhotos) }})
+            @if(count($similarPhotos)>1) 
+               Imagens 
+            @else
+               Imagem
+            @endif </span>  
+        </hgroup>
+      
+
+      @foreach($similarPhotos as $k => $similarPhoto)         
+         @if($photos->id != $similarPhoto->id)  
+              
+                <a  class="hovertext" href='{{"/photos/" . $similarPhoto->id . "/evaluate" }}' class="gallery_photo" title="{{ $similarPhoto->name }}">                  
+                  <img src="{{ URL::to("/arquigrafia-images/" . $similarPhoto->id . "_home.jpg") }}" class="gallery_photo" />                 
+                </a>
+                <!--
+                <a href='{{"/photos/" . $similarPhoto->id . "/evaluate" }}' class="name">
+                  <div class="innerbox">{{ $similarPhoto->name }}</div>
+                </a>-->
+                
+          @endif
+      @endforeach
+      </div>
+      @endif   
+        <!-- -->
 			</div>
 			<!--   FIM - COLUNA ESQUERDA   -->
 			<!--   SIDEBAR   -->
