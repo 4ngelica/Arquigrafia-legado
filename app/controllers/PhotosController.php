@@ -322,7 +322,7 @@ class PhotosController extends \BaseController {
       'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photo->id)]);
   }
 
-  public function edit($id) {     
+  public function edit($id) {
     $photo = Photo::find($id);
     
     
@@ -337,7 +337,7 @@ class PhotosController extends \BaseController {
       ->with(['photo' => $photo, 'tags' => $tags] );
   }
 
-  public function update($id) {              
+  public function update($id) {           
     $photo = Photo::find($id);
       
      Input::flashExcept('tags', 'photo');    
@@ -396,13 +396,15 @@ class PhotosController extends \BaseController {
       }else{
         $photo->dataCriacao = null;
       }  
+      
     //endmsy
       if (Input::hasFile('photo') and Input::file('photo')->isValid()) {      
         $file = Input::file('photo');       
         $ext = $file->getClientOriginalExtension();
         $photo->nome_arquivo = $photo->id.".".$ext;
       }
-
+      //update o field update_at
+      $photo->touch();
       $photo->save();  
 
 
