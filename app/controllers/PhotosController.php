@@ -19,7 +19,7 @@ class PhotosController extends \BaseController {
 	}
 
 	public function show($id)
-	{
+	{ 
     $photos = Photo::whereid($id)->first();
     if (!isset($photos))
       return Redirect::to('/');
@@ -41,7 +41,9 @@ class PhotosController extends \BaseController {
     return View::make('/photos/show',
       ['photos' => $photos, 'owner' => $user, 'follow' => $follow, 'tags' => $tags, 'commentsCount' => $photos->comments->count(),
       'average' => $average, 'userEvaluations' => $evaluations, 'binomials' => $binomials, 
-      'architectureName' => Photo::composeArchitectureName($photos->name)]);
+      'architectureName' => Photo::composeArchitectureName($photos->name),
+      'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photos->id)
+      ]);
 	}
 	
   // upload form
@@ -302,7 +304,7 @@ class PhotosController extends \BaseController {
     $photo = Photo::find($id); 
     $user = User::find($photo->user_id);
     $binomials = Binomial::all()->keyBy('id');
-    $average = Evaluation::average($photo->id);
+    $average = Evaluation::average($photo->id);    
     $evaluations = null;    
     if (Auth::check()) {
       $evaluations =  Evaluation::where("user_id", Auth::id())->where("photo_id", $id)->orderBy("binomial_id", "asc")->get();
@@ -317,7 +319,7 @@ class PhotosController extends \BaseController {
       ['photos' => $photo, 'owner' => $user, 'follow' => $follow, 'tags' => $photo->tags, 'commentsCount' => $photo->comments->count(),
       'average' => $average, 'userEvaluations' => $evaluations, 'binomials' => $binomials,
       'architectureName' => Photo::composeArchitectureName($photo->name),
-      'similarPhotos'=>Photo::photosWithSimilarEvaluation($average)]);
+      'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photo->id)]);
   }
 
   public function edit($id) {     
