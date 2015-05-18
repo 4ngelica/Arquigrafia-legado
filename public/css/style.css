@@ -617,3 +617,6 @@ height:130px;
 z-index:7;
 
 }
+/**/
+.profile_block_title span {float: right; margin-top:6px; margin-right: 10px;}
+#comments_block { margin: 40px 0; }
