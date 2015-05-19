@@ -144,7 +144,12 @@
 			@endif
 			@if ( !empty($user->site) )
 				<li><strong>Site pessoal: </strong> {{ $user->site }}</li>
-			@endif			
+			@endif	
+			</br>
+
+			
+
+			
         </ul>
       </div>
       
@@ -194,8 +199,30 @@
       </div>
       
     </div>
+    
+
 
     <br>
+    <div class="container row">
+      <div class="twelve columns albums">	
+    	<hgroup class="profile_block_title">
+					<h3><img src="{{ asset("img/logg.png") }}" width="16" height="16" />Logs</h3>
+		</hgroup>
+		<ul>
+		 @if ( !empty($user->updated_at) && ($user->created_at!=$user->updated_at) )
+				<li><strong>Atualizou perfil: </strong> {{ Photo::translate($user->updated_at) }}</li>
+			@endif
+			
+			@if ( !empty($lastDateUploadPhoto->dataUpload) )
+				<li><strong>Subiu imagem: </strong> {{ Photo::dateDiff(date("Y-m-d H:i:s"),$lastDateUploadPhoto->dataUpload) }} atrás</li>
+			@endif
+			@if ( !empty($lastDateUpdatePhoto->updated_at) )
+				<li><strong>Atualizou imagem: </strong> {{ Photo::dateDiff(date("Y-m-d H:i:s"),$lastDateUpdatePhoto->updated_at) }} atrás</li>
+			@endif
+			</ul>
+	  </div>	
+    </div>
+    </br>
     
     	    <!-- MEUS ALBUNS -->
 	<div class="container">
