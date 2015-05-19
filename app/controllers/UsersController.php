@@ -31,11 +31,15 @@ class UsersController extends \BaseController {
         $follow = false;
       else 
         $follow = true;
-    } else 
+    } else{ 
       $follow = true;
-    
-		return View::make('/users/show',['user' => $user, 'photos' => $photos, 'follow' => $follow,
-      'evaluatedPhotos' => Photo::getEvaluatedPhotosByUser($user)]);
+    }
+     
+    return View::make('/users/show',['user' => $user, 'photos' => $photos, 'follow' => $follow,
+      'evaluatedPhotos' => Photo::getEvaluatedPhotosByUser($user),
+      'lastDateUpdatePhoto' => Photo::getLastUpdatePhotoByUser($id),
+      'lastDateUploadPhoto' => Photo::getLastUploadPhotoByUser($id)
+      ]);
 	}
   
   // show create account form
