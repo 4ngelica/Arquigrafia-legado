@@ -120,4 +120,31 @@ class Date {
 	public static function isCentury($date) {
 		return strlen($date) == 2;
 	}
+
+	public static function dateDiff($start,$end=false){
+		$stringDate = array();
+   
+   		try {
+      			$start = new DateTime($start);
+      			$end = new DateTime($end);
+      			$form = $start->diff($end);
+   			} catch (Exception $e){
+      			return $e->getMessage();
+   			}
+   
+   			$display = array('y'=>'ano',
+               'm'=>'mês',
+               'd'=>'dia',
+               'h'=>'hora',
+               'i'=>'minuto');
+               //'s'=>'seg');
+
+   			foreach($display as $key => $value){
+      			if($form->$key > 0){
+         			$stringDate[] = $form->$key.' '.($form->$key > 1 ? $value.'s' : $value);
+      			}
+   			}
+   
+   			return implode($stringDate, ', ');
+	}
 }
