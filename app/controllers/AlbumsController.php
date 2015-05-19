@@ -219,7 +219,7 @@ class AlbumsController extends \BaseController {
 		$album = Album::find($id);
 		$photos = Photo::paginateAlbumPhotos($album);
 		$page = $photos->getCurrentPage();
-		return Response::json(View::make('albums.includes.album-photos')
+		return Response::json(View::make('albums.includes.album-photos-edit')
 			->with(['photos' => $photos, 'page' => $page, 'type' => 'rm'])
 			->render());
 	}

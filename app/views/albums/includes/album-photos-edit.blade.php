@@ -5,7 +5,7 @@
 	@if ($count % 6 == 0)
 		<tr>
 	@endif
-	<td>
+	<td width="143">
 		<input type="checkbox" class="{{ $type . '_photo'}}" id="{{ 'photo_' . $photo->id }}"
 			name="{{ 'photos_' . $type . '[]' }}" value="{{ $photo->id }}">
 		<label id="{{ 'label_' . $photo->id }}" for="{{ 'photo_' . $photo->id }}"></label>

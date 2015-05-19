@@ -15,6 +15,7 @@ input[type=checkbox].add_photo + label
 	padding: 0px;
 	margin: 2px;
 	cursor: pointer;
+	border: 1px solid #fff;
 }
 
 input[type=checkbox].add_photo + label {
@@ -22,22 +23,20 @@ input[type=checkbox].add_photo + label {
 }
 
 input[type=checkbox].rm_photo:checked + label {
-	opacity: 0.3;
+	opacity: 0.8;
+	border-color: #2E2E2E;
 }
 
 input[type=checkbox].add_photo:checked + label {
 	opacity: 1;
 }
 
-
-
 h2 a { font-weight: normal; color: #555; }
 .centered { text-align: center; }
 .loader { display: block; margin: 195px auto 0}
 #add-buttons p, #rm-buttons p { display: inline-block; margin: 0 5px;}
+.buttons p { display: inline-block; margin: 0 5px;}
 .greater-than { margin-right: 5px; }
 .less-than { margin-left: 5px; }
 
 #description { width: 20em; height: 7em; }
-
-/*#cover-img {margin-bottom: 10px; width: 124px; height: 83px;}*/

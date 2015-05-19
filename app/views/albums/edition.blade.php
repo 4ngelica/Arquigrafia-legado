@@ -9,21 +9,24 @@
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/checkbox.css" />
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/album.css" />
   <script>
-    var currentPage = 1;
-    var rmCurrentPage = 1;
-    var maxPage = {{ $maxPage }};
-    var rmMaxPage = {{ $rmMaxPage }};
-    var loadedPages = [1];
-    var rmLoadedPages = [1];
-    var url = '{{ $url }}';
-    var rmUrl = '{{ $rmUrl }}';
+    var paginators = {
+      add: {
+        currentPage: 1,
+        maxPage: {{ $maxPage }},
+        url: '{{ $url }}',
+        loadedPages: [1]
+      },
+      rm: {
+        currentPage: 1,
+        maxPage: {{ $rmMaxPage }},
+        url: '{{ $rmUrl }}',
+        loadedPages: [1]
+      }
+    }
     var coverPage = 1;
     var maxCoverPage = {{ ceil($album->photos->count() / 48) }};
     var album = {{ $album->id }};
     var covers_counter = 0;
-    $(document).ready(function() {
-      $("#add-container").hide();
-    });
   </script>
 @stop
 
@@ -52,19 +55,27 @@
                 'class' => 'eleven columns alpha omega album_form')) }}
                 <div class="four columns alpha omega">
                   <input id="rm_select_all" type="checkbox">
-                  <label for="rm_select_all">Marcar todas para remoção</label>
+                  <label for="rm_select_all">Marcar todas</label>
                 </div>
                 <div class="four columns alpha omega">
                     <input type="text" class="search_bar">
                     <input type="button" class="search_bar_button cursor" value="FILTRAR">
                 </div>
                 <div class="three columns omega">
-                  <input type="button" id="remove_photos" class="btn right" value="REMOVER IMAGENS MARCADAS">
+                  <input type="button" id="rm_photos_btn" class="btn right" value="REMOVER IMAGENS MARCADAS">
                 </div>
               {{ Form::close() }}
             </div>
-            <div class="eleven columns">
+            <div id="rm" class="eleven columns">
+              <img class="rm loader" src="{{ URL::to('/img/ajax-loader.gif') }}" />
               @include('albums.includes.album-photos-edit')
+            </div>
+            <div class="eleven columns rm buttons">
+              <input type="button" class="btn less less-than" value="&lt;&lt;">
+              <input type="button" class="btn less-than" value="&lt;">
+              <p>1/{{ $rmMaxPage }}</p>
+              <input type="button" class="btn greater-than" value="&gt;">
+              <input type="button" class="btn greater greater-than" value="&gt;&gt;">
             </div>
           </div>
           <div id="album_info" class="tab">
@@ -123,23 +134,6 @@
         $('.tabs ' + currentAttrValue).fadeIn('slow').siblings().hide();
         $(this).parent('li').addClass('active').siblings().removeClass('active');
         e.preventDefault();
-      });
-      $('#rm_select_all').on('click', function() {
-          if ( $(this).is(':checked') ) {
-            $('.rm_photo').prop('checked', true);
-            $('#remove_photos').fadeIn();
-          } else {
-            $('.rm_photo').prop('checked', false);
-            $('#remove_photos').fadeOut();
-          }
-      });
-
-      $('.rm_photo').click(function() {
-        if ($('.rm_photo:checked').length == 0) {
-          $('#remove_photos').fadeOut();
-        } else {
-          $('#remove_photos').fadeIn();
-        }
       });
     });
   </script>    

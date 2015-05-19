@@ -1,3 +1,4 @@
+.tab p, .tab label { color: #777; }
 #album_info .img_container { width: 300px; border-radius: 3px; -moz-border-radius: 3px;
 	-webkit-border-radius: 3px; position: relative; margin-top: 10px; }
 #album_info .img_container img { width: 100%; }
@@ -19,13 +20,9 @@
 .tab p { font-size: 14px; margin-left: 10px; }
 
 .block { margin-top: 10px; margin-bottom: 15px; }
-.filter_section { padding-right: 15px; }
-.album_form label { font-size: 16px; }
 
-#album_images table td {
-	width: 143px;
-}
-
-#remove_photos { display: none; }
-
+#album_images table td { width: 143px; }
+#rm_photos_btn { display: none; }
 #album_images div:first-child { height: 23px; }
+#add, #rm { height: 390px; }
+.add.loader, .rm.loader { display: block; margin: 130px auto 0; }
