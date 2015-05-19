@@ -56,6 +56,11 @@ class Photo extends Eloquent {
 		return Date::formatDate($date);
 	}
 
+	public static function dateDiff($start,$end)
+	{
+		return Date::dateDiff($start,$end);
+	}
+
 	public static function translate($date) {
 		return Date::translate($date);
 	}
@@ -111,6 +116,22 @@ class Photo extends Eloquent {
     	return Photo::whereIn('id', $evaluations->lists('photo_id'))->get();
 	}
 
+
+	public static function getLastUpdatePhotoByUser($user_id) { 
+		//select user_id,id,dataUpload, created_at, updated_at 
+		//from photos
+		//where user_id=1 order by updated_at desc limit 5;
+		//return $id;
+		
+		return $dataUpdate = Photo::where("user_id", $user_id)->orderBy('updated_at','desc')->first();
+		//return Date::dateDiff(date("Y-m-d H:i:s"),$dataUpdate->updated_at);
+		//date("Y-m-d H:i:s")
+		
+	}
+	public static function getLastUploadPhotoByUser($user_id) { 
+		return Photo::where("user_id", $user_id)->orderBy('dataUpload','desc')->first();
+		//return Date::dateDiff(date("Y-m-d H:i:s"),$dataUpload->dataUpload
+	}
 //msy
 	public static function photosWithSimilarEvaluation($average,$idPhotoSelected) { 		
 		Log::info("Logging function Similar evaluation");
