@@ -127,8 +127,7 @@ $(document).ready(function(){
 
 					<li><a href="{{ URL::to('/photos/' . $photos->id . '/evaluate' ) }}" title="Avalie {{$architectureName}}" id="evaluate" ></a></li>  
 
-				</ul>
-            
+				</ul>            
              <?php } else { ?>
               <div class="six columns alpha">Faça o <a href="{{ URL::to('/users/login') }}">login</a> para fazer o download e comentar as imagens.</div>
             <?php } ?>
