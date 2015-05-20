@@ -29,7 +29,7 @@
 	<div class="container">
 				
 		<div class="twelve columns">
-			<h1>{{ $album->title }}</h1>
+			<h1>Edição do álbum {{ $album->title }}</h1>
 			<p>Edite seu álbum<br>
 			<small>* Os campos a seguir são obrigatórios.</small>
 			</p>			
