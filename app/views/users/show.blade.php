@@ -202,13 +202,13 @@
     
 
 
-    <br>
+    <!--<br>
     <div class="container row">
       <div class="twelve columns albums">	
     	<hgroup class="profile_block_title">
 					<h3><img src="{{ asset("img/logg.png") }}" width="16" height="16" />Últimas atualizações</h3>
 		</hgroup>
-		<?php 
+		<#?php 
 			if (Auth::check() && Auth::user()->id == $user->id)  
 				$name = 'Você';
 			else
@@ -229,6 +229,7 @@
 	  </div>	
     </div>
     </br>
+    -->
     
     	    <!-- MEUS ALBUNS -->
 	<div class="container">
