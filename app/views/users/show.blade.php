@@ -206,18 +206,18 @@
     <div class="container row">
       <div class="twelve columns albums">	
     	<hgroup class="profile_block_title">
-					<h3><img src="{{ asset("img/logg.png") }}" width="16" height="16" />Logs</h3>
+					<h3><img src="{{ asset("img/logg.png") }}" width="16" height="16" />Últimas atualizações</h3>
 		</hgroup>
 		<ul>
 		 @if ( !empty($user->updated_at) && ($user->created_at!=$user->updated_at) )
-				<li><strong>Atualizou perfil: </strong> {{ Photo::translate($user->updated_at) }}</li>
+				<li><strong>$user->name atualizou seu perfil pela última vez em: </strong> {{ Photo::translate($user->updated_at) }}</li>
 			@endif
 			
-			@if ( !empty($lastDateUploadPhoto->dataUpload) )
-				<li><strong>Subiu imagem: </strong> {{ Photo::dateDiff(date("Y-m-d H:i:s"),$lastDateUploadPhoto->dataUpload) }} atrás</li>
+			@if$user->name a( !empty($lastDateUploadPhoto->dataUpload) )
+				<li><strong>O último upload de imagem que $user->name realizou foi em: </strong> {{ Photo::dateDiff(date("Y-m-d H:i:s"),$lastDateUploadPhoto->dataUpload) }} atrás</li>
 			@endif
 			@if ( !empty($lastDateUpdatePhoto->updated_at) )
-				<li><strong>Atualizou imagem: </strong> {{ Photo::dateDiff(date("Y-m-d H:i:s"),$lastDateUpdatePhoto->updated_at) }} atrás</li>
+				<li><strong>A última atualização de imagem que $user->name realizou foi em: </strong> {{ Photo::dateDiff(date("Y-m-d H:i:s"),$lastDateUpdatePhoto->updated_at) }} atrás</li>
 			@endif
 			</ul>
 	  </div>	
