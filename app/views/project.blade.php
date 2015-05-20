@@ -17,9 +17,9 @@
         
         <p>O ARQUIGRAFIA é um ambiente colaborativo digital público, sem fins lucrativos, dedicado à difusão de imagens de arquitetura, com especial atenção à arquitetura brasileira. Este projeto é desenvolvido na Faculdade de Arquitetura e Urbanismo da Universidade de São Paulo (FAUUSP), em parceria com o Instituto de Matemática e Estatística (IMEUSP) e a Escola de Comunicação e Artes (ECAUSP). Abrigado desde 2012 no Núcleo de Apoio à Pesquisa em Ambientes Colaborativos na Web (NaWEB), o ARQUIGRAFIA recebeu ao longo de sua história apoio da RNP, da FAPESP, do CNPq e das Pró-Reitorias de Pesquisa e de Cultura e Extensão da USP. O objetivo principal deste projeto é contribuir para o estudo, a docência, a pesquisa e a difusão da cultura arquitetônica e urbanística, ao promover interações colaborativas entre pessoas e instituições na Internet.</p>
         <div class="project-photos clearfix">
-        <img class="left" src="img/project_photos/equipe1.jpg" alt="Texto alternativo da foto" title="Título da foto" />
-        <img class="left" src="img/project_photos/equipe2.jpg" alt="Texto alternativo da foto" title="Título da foto" />
-        <img class="left" src="img/project_photos/equipe3.jpg" alt="Texto alternativo da foto" title="Título da foto" />
+        <img class="left" src="img/project_photos/equipe1.jpg" alt="Texto alternativo da foto" title="Reuniões e workshops internos dos membros do projeto Arquigrafia" />
+        <img class="left" src="img/project_photos/equipe2.jpg" alt="Texto alternativo da foto" title="Reuniões e workshops internos dos membros do projeto Arquigrafia" />
+        <img class="left" src="img/project_photos/equipe3.jpg" alt="Texto alternativo da foto" title="Reuniões e workshops internos dos membros do projeto Arquigrafia" />
         </div>
         <p>Desde 2011 a equipe do projeto ARQUIGRAFIA realiza também um trabalho de conservação e digitalização do acervo original de imagens fotográficas do Setor Audiovisual da Biblioteca da FAU e solicita aos autores de imagens uma autorização específica para difusão de tais fotografias na Internet para fins acadêmicos e de difusão, voltados ao ensino e à pesquisa.</p>
         
@@ -96,6 +96,7 @@
           <li><small><a href="#" target="_blank">Kevin Ritschel - Graduando FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/7328149928743537" target="_blank">Lucas Caracik - Graduando em IC FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/0908900989509491" target="_blank">Luciana Molinari Monteforte - Graduanda FAUUSP</a></small></li>
+          <li><small><a href="http://lattes.cnpq.br/4891767216267666" target="_blank">Marisol Solis Yucra - Mestranda IMEUSP</a></small></li>
           <li><small><a href="#" target="_blank">Marina de Souza Barbosa Ferreira - Graduanda ECAUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/1280093125646759" target="_blank">Martim Passos - Graduando FAUUSP</a></small></li>
           <li><small><a href="#" target="_blank">Nita Napoleão Encola - Graduanda ECAUSP</a></small></li>
