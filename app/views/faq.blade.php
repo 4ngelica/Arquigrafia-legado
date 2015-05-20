@@ -41,8 +41,7 @@
            
            <br>
            
-          <h3>Outras perguntas</h3>
-          <p> Caso ainda tenha dúvidas entre contato com nossa equipe usando o email <a href="mailto:arquigrafiabrasil@gmail.com " target="_blank">arquigrafiabrasil@gmail.com</a>.</p>
+          
 	 	</div>
         <!--   FIM - TEXTO DO PROJETO   -->
       </div>
@@ -51,7 +50,7 @@
       <div class="four columns">
         <h2>Ainda precisando de Ajuda?</h2>
 		<h3>Entre em contato com nossa equipe</h3>
-        <p> Esta é uma versão beta do Arquigrafia e ainda pode conter erros. Caso tenha alguma dificuldade ou perceba problemas na navegação escreva para: <a href="mailto:arquigrafiabrasil@gmail.com " target="_blank">arquigrafiabrasil@gmail.com</a>.</p>
+        <p> Esta é uma versão alpha do Arquigrafia e ainda pode conter erros. Caso tenha alguma dificuldade ou perceba problemas na navegação escreva para: <a href="mailto:arquigrafiabrasil@gmail.com " target="_blank">arquigrafiabrasil@gmail.com</a>.</p>
       </div>
       <!--   FIM - COLUNA DIREITA   -->
     </div>
