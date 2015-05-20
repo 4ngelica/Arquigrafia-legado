@@ -22,9 +22,9 @@
           <!--2015-05-06 msy begin, show result query street-->
           @if ($city != "") 
 
-          <h1>Resultado de: "{{ ucwords($query) }}" da cidade de "{{ucwords($city)}}"</h1>
+          <h1>Resultados encontrados para: "{{ ucwords($query) }}" da cidade de "{{ucwords($city)}}"</h1>
           @else
-          <h1>Resultado de: {{ $query }} </h1>
+          <h1>Resultados encontrados para: {{ $query }} </h1>
           @endif
           <!--2015-05-06 msy end-->
          <!-- To data search  -->
