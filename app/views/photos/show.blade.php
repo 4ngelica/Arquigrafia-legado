@@ -130,7 +130,7 @@ $(document).ready(function(){
 				</ul>
             
              <?php } else { ?>
-              <div class="six columns alpha">Faça o login para fazer o download e comentar as imagens.</div>
+              <div class="six columns alpha">Faça o <a href="{{ URL::to('/users/login') }}">login</a> para fazer o download e comentar as imagens.</div>
             <?php } ?>
             
 						<ul id="single_view_social_network_buttons">
