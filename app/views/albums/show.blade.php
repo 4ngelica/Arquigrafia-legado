@@ -42,7 +42,8 @@
 			</div>
 		</div>
 	@endif
-	
+	</br>
+    </br>
 
 	<div class="container row">
 		<div class="twelve columns albums">
