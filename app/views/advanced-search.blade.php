@@ -51,8 +51,8 @@
             
           @endif
           
-          <div class="eight columns alpha">
-          <p>Campos vazios não serão considerados na busca. Todos os outros campos serão utilizados em uma busca tipo AND, isso quer dizer que apenas imagens que correspondam em todos os critérios serão mostradas.</p>
+          <div class="twelve columns alpha">
+          <p>Apenas os campos que forem preenchidos abaixo serão considerados na busca, para trazer as imagens que correspondam a todos os critérios informados.</p>
           </div>
           
         </div>
