@@ -22,7 +22,7 @@
         <p>   
         <div>            
             <?php if ($user->photo != "") { ?>
-              <img class="avatar" src="{{ asset($user->photo) }}" class="user_photo_thumbnail"/>
+              <img class="avatar" src="{{ asset($user->photo) }}" class="user_photo_thumbnail" width="60" height="60" />
             <?php } else { ?>
               <img class="avatar" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
             <?php } ?>
