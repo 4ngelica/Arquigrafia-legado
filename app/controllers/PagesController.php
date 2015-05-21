@@ -174,12 +174,19 @@ class PagesController extends BaseController {
         'city',
         'state',
         'country',
-        'workAuthor'
+        'workAuthor',
+        'imageAuthor',
+        'dataCriacao',
+        'dataUpload',
+        'workdate'
+
+
     );
     
     foreach($fields as $field) $$field = Input::get($field);
     
-    if(empty($name) && empty($description) && empty($city) && empty($state) && empty($country) && empty($workAuthor)) {
+    if(empty($name) && empty($description) && empty($city) && empty($state) && empty($country) && empty($workAuthor) 
+      && empty($imageAuthor) && empty($dataCriacao) && empty($dataUpload) && empty($workdate)) {
        // busca vazia
        return View::make('/advanced-search',['tags' => [], 'photos' => [], 'query' => ""]);
     } else {
@@ -191,7 +198,31 @@ class PagesController extends BaseController {
       if ($city != '') $query->where('city', 'LIKE', '%'. $city .'%');  
       if ($state != '') $query->where('state', 'LIKE', '%'. $state .'%'); 
       if ($country != '') $query->where('country', 'LIKE', '%'. $country .'%');  
-      if ($workAuthor != '') $query->where('workAuthor', 'LIKE', '%'. $workAuthor .'%'); 
+      if ($workAuthor  != '') $query->where('workAuthor', 'LIKE', '%'. $workAuthor .'%');  
+      
+       if ($workdate != ''){
+          if(DateTime::createFromFormat('Y', $workdate)!== FALSE) {
+            $query->where('workdate', 'LIKE', '%' . $workdate . '%');
+          }else{
+            $query->where('workdate', 'LIKE', '%' . Photo::formatDate($workdate) . '%');
+          }
+       }
+       if ($dataCriacao != ''){
+          if(DateTime::createFromFormat('Y', $dataCriacao)!== FALSE) {
+            $query->where('dataCriacao', 'LIKE', '%' . $dataCriacao . '%');
+          }else{
+            $query->where('dataCriacao', 'LIKE', '%' . Photo::formatDate($dataCriacao) . '%');
+          }
+       }
+       if ($dataUpload != ''){
+          if(DateTime::createFromFormat('Y', $dataUpload)!== FALSE) {
+            $query->where('dataUpload', 'LIKE', '%' . $dataUpload . '%');
+          }else{
+            $query->where('dataUpload', 'LIKE', '%' . Photo::formatDate($dataUpload) . '%');
+          }
+       }
+  
+     
       $query->whereNull('deleted_at'); 
       $photos = $query->get();
       
