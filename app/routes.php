@@ -64,6 +64,7 @@ Route::delete('/albums/{album_id}/photos/{photo_id}/remove', 'AlbumsController@r
 Route::get('/albums/{id}/edition', 'AlbumsController@edition');
 Route::post('/albums/{id}/update/info', 'AlbumsController@updateInfo');
 Route::post('/albums/{id}/detach/photos', 'AlbumsController@detachPhotos');
+Route::get('/albums/{id}/paginate/photos', 'AlbumsController@paginateAlbumPhotosWithQuery');
 /* COMMENTS */
 Route::post('/photos/{photo_id}/comment','PhotosController@comment');
 

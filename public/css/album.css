@@ -8,7 +8,6 @@
 	top: 50%; left: 50%; width: 150px; height: 50px; margin-top: -35px; margin-left: -75px; }
 #album_info .img_container:hover span { display: block; }
 .tab label { font-size: 16px; }
-/*.tab input { font-size: 12px; }*/
 .tab input[type="text"] { font-size: 14px; width: 200px; margin-bottom: 10px; }
 .tab textarea { width: 300px; margin-bottom: 10px; }
 .tab #info { margin-top: 5px; }
@@ -19,11 +18,11 @@
 .tab input.search_bar { margin: 0; }
 .tab p { font-size: 14px; margin-left: 10px; }
 
-.block { margin-top: 10px; margin-bottom: 15px; }
+.block { margin-top: 10px; margin-bottom: 15px; min-height: 25px; }
 
 #album_images table td { width: 143px; }
 #rm_photos_btn { display: none; }
-#album_images div:first-child { height: 23px; }
+
 #add, #rm { height: 390px; }
 .add.loader, .rm.loader { display: block; margin: 130px auto 0; }
 .select_all, .select_all + label { cursor: pointer; }

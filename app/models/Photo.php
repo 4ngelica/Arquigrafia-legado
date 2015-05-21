@@ -92,6 +92,18 @@ class Photo extends Eloquent {
 			->paginate($perPage);
 	}
 
+	public static function paginateFromAlbumWithQuery($album, $query, $perPage = 24) {
+		if (empty($query)) {
+			return Photo::paginateAlbumPhotos($album);
+		}
+		return Photo::where('name', 'like', '%' . $query . '%')
+			->orWhere('workAuthor', 'like', '%' . $query . '%')
+			->with(array('albums' => function($query) use($album) {
+				$query->where('id', $album->id);
+			}))
+			->paginate($perPage);
+	}
+
 	public static function composeArchitectureName($name) {
 		$array = explode(" ", $name);
 		$architectureName = "";			

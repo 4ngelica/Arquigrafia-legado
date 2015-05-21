@@ -6,10 +6,11 @@
 		<tr>
 	@endif
 	<td width="143" class="{{ $type }}">
-		<input type="checkbox" class="{{'ch_photo'}}" id="{{ 'photo_' . $photo->id }}"
+		<div class="photo {{ $type }}">
+			<input type="checkbox" class="{{'ch_photo'}}" id="{{ 'photo_' . $photo->id }}"
 			name="{{ 'photos_' . $type . '[]' }}" value="{{ $photo->id }}">
-		<label id="{{ 'label_' . $photo->id }}" for="{{ 'photo_' . $photo->id }}"></label>
-		<span></span>
+			<img src="{{ URL::to('/arquigrafia-images/' . $photo->id . '_home.jpg') }}">
+		</div>
 	</td>
 	@if ($count % 6 == 5)
 		</tr>
@@ -24,11 +25,3 @@
 		</tr>
 	@endif
 </table>
-<style>
-	@foreach($photos as $photo)
-		{{ '#photo_' . $photo->id . ' + label' }}
-		{
-			background: url('{{"/arquigrafia-images/" . $photo->id . "_home.jpg" }}');
-		}
-	@endforeach
-</style>

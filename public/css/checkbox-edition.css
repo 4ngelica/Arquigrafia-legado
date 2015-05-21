@@ -1,0 +1,52 @@
+.loader { display: block; margin: 195px auto 0}
+.buttons p { display: inline-block; margin: 0 5px;}
+.greater-than { margin-right: 5px; }
+.less-than { margin-left: 5px; }
+
+.covers + label
+{
+	height: 83px;
+	width: 124px;
+	display:inline-block;
+	padding: 0px;
+	margin: 2px;
+	cursor: pointer;
+	border: 1px solid #fff;
+}
+
+.covers
+{
+	display:none;
+}
+
+.ch_photo {
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	width: 15px;
+	height: 15px;
+	margin: 0;
+	display: block;
+	z-index: 3;
+}
+.ch_photo + img {
+	height: 83px;
+	width: 124px;
+	padding: 0px;
+	margin: 2px;
+	cursor: pointer;
+	border: 1px solid #fff;	
+	position: absolute;
+	z-index: 2;
+}
+
+.ch_photo:checked + img {
+	/*border-color: #2E2E2E;*/
+	opacity: 0.8;
+}
+
+div.photo {
+	width: 126px;
+	height: 85px;
+	position: relative;
+}

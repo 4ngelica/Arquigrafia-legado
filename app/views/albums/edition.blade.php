@@ -5,7 +5,7 @@
   <link rel="stylesheet" type="text/css" href="{{ URL::to('/css/tabs.css') }}">
   <script src="{{ URL::to('/js/albums-covers.js') }}"></script>
   <script src="{{ URL::to('/js/album.js') }}"></script>
-  <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/checkbox.css" />
+  <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/checkbox-edition.css" />
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/album.css" />
   <script>
     var paginators = {
@@ -14,16 +14,19 @@
         maxPage: {{ $maxPage }},
         url: '{{ $url }}',
         loadedPages: [1],
-        selectedItems: 0
+        selectedItems: 0,
+        searchQuery: ''
       },
       rm: {
         currentPage: 1,
         maxPage: {{ $rmMaxPage }},
         url: '{{ $rmUrl }}',
         loadedPages: [1],
-        selectedItems: 0
+        selectedItems: 0,
+        searchQuery: ''
       }
-    }
+    };
+    var searchQuery = '';
     var coverPage = 1;
     var maxCoverPage = {{ ceil($album->photos->count() / 48) }};
     var album = {{ $album->id }};
@@ -84,10 +87,6 @@
             {{ Form::close() }}
           </div>
           <div id="album_images" class="tab">
-            <?php 
-              $photos = $album_photos;
-              $type = 'rm';
-            ?>
             <div class="eleven columns block">
               {{ Form::open(array('url' => '', 'method' => 'post', 
                 'class' => 'eleven columns alpha omega album_form')) }}
@@ -100,14 +99,18 @@
                     <p class="selectedItems"></p>
                   </div>
                 </div>
-                <div class="four columns alpha omega">
+                <div class="four columns alpha omega rm">
                     <input type="text" class="search_bar">
-                    <input type="button" class="search_bar_button cursor" value="FILTRAR">
+                    <input type="button" class="rm search_bar_button cursor" value="FILTRAR">
                 </div>
               {{ Form::close() }}
             </div>
             <div id="rm" class="eleven columns">
               <img class="rm loader" src="{{ URL::to('/img/ajax-loader.gif') }}" />
+              <?php 
+                $photos = $album_photos;
+                $type = 'rm';
+              ?>
               @include('albums.includes.album-photos-edit')
             </div>
             <div class="eleven columns">

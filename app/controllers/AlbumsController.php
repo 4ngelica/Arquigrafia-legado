@@ -131,7 +131,7 @@ class AlbumsController extends \BaseController {
 		$maxPage = $other_photos->getLastPage();
 		$rmMaxPage = $album_photos->getLastPage();
 		$url = URL::to('/albums/' . $album->id . '/photos/add');
-		$rmUrl = URL::to('/albums/' . $album->id . '/photos/rm');
+		$rmUrl = URL::to('/albums/' . $album->id . '/paginate/photos');
 		return View::make('albums.edition')
 			->with(
 				['album' => $album, 
@@ -219,7 +219,7 @@ class AlbumsController extends \BaseController {
 		$album = Album::find($id);
 		$photos = Photo::paginateAlbumPhotos($album);
 		$page = $photos->getCurrentPage();
-		return Response::json(View::make('albums.includes.album-photos-edit')
+		return Response::json(View::make('albums.includes.album-photos')
 			->with(['photos' => $photos, 'page' => $page, 'type' => 'rm'])
 			->render());
 	}
@@ -294,13 +294,25 @@ class AlbumsController extends \BaseController {
 
 	public function detachPhotos($id) {	
 		try {
-			return Response::json('failed');
 			$album = Album::find($id);
 			$photos = Input::only('photos_rm');
 			$album->photos()->detach($photos);
 		} catch (Exception $e) {
 			return Response::json('failed');	
 		}
-		return $this->paginateByAlbum($id);
+		return $this->paginateAlbumPhotosWithQuery($id);
+	}
+
+	public function paginateAlbumPhotosWithQuery($id) {
+		$album = Album::find($id);
+		$query = Input::has('q') ? Input::get('q') : '';
+		$photos = Photo::paginateFromAlbumWithQuery($album, $query);
+		$page = $photos->getCurrentPage();
+		$response = [];
+		$response['content'] = View::make('albums.includes.album-photos-edit')
+			->with(['photos' => $photos, 'page' => $page, 'type' => 'rm'])
+			->render(); 
+		$response['maxPage'] = $photos->getLastPage();
+		return Response::json($response);
 	}
 }
