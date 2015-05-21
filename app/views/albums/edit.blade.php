@@ -90,7 +90,7 @@
 							<div class="eleven columns row">
 								<div id="rm" class="eleven columns row">
 									<img id="rm_loader" class="loader row" src="{{ URL::to('/img/ajax-loader.gif') }}" />
-									@include('albums.includes.album-photos')
+									@include('albums.includes.album-photos-edit')
 								</div>
 								<div id="rm-buttons" class="eleven columns alpha">
 									<a id="rm-less-less" href="#" class="btn less-than"> &lt;&lt; </a>
@@ -123,7 +123,7 @@
 							<div class="eleven columns row">
 								<div id="add" class="eleven columns row">
 									<img id="add_loader" class="loader row" src="{{ URL::to('/img/ajax-loader.gif') }}" />
-									@include('albums.includes.album-photos')
+									@include('albums.includes.album-photos-edit')
 								</div>
 								<div id="add-buttons" class="eleven columns alpha">
 									<a id="less-less" href="#" class="btn less-than"> &lt;&lt; </a>

@@ -64,6 +64,7 @@ td.add .ch_photo + label {
 
 td.add .ch_photo:checked + label {
 	opacity: 1;
+	border-color: #2E2E2E;
 }
 
 td.rm .ch_photo:checked + label {

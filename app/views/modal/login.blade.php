@@ -3,8 +3,8 @@
 @section('head')
    <title>
       Arquigrafia - Entrar
-      <script type="text/javascript" src="{{ URL::to('/js/stoaLogin.js') }}"></script>
    </title>
+   <script type="text/javascript" src="{{ URL::to('/js/stoaLogin.js') }}"></script>
 @stop
 
 @section('content')
