@@ -271,7 +271,7 @@
 
 			$('#tags_input').keypress(function(e) {
 				var key = e.which || e.keyCode;
-				if (key == 44 || key == 59) // key = , ou key = ;
+				if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
 					e.preventDefault();
 			});
 		});
