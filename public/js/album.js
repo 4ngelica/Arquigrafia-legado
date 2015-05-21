@@ -20,13 +20,13 @@ $(document).ready(function() {
 	});
 
 	$.fn.extend({
-   	message: function (message, type) {
-   		var message_box = $(this);
-      	message_box.addClass(type).html(message).fadeIn()
-      		.delay(3000).fadeOut(400, function () {
-      			message_box.removeClass(type);
-      		});
-   	}
+		message: function (message, type) {
+			var message_box = $(this);
+			message_box.addClass(type).html(message).fadeIn()
+				.delay(3000).fadeOut(400, function () {
+					message_box.removeClass(type);
+				});
+		}
 	});
 
 	$('.loader').hide();
@@ -37,24 +37,63 @@ $(document).ready(function() {
 		$('.rm.buttons').hide();
 	}
 
-   $('#rm_select_all').click(function() {
-      checkPhotos('rm');
-   });
+	$('.select_all').click(function() {
+		var checked = $(this).is(':checked');
+		var type = getType(this);
+		checkPhotos(type, checked, paginators[type]);
+	});
 
-   $('.rm_photo').click(function() {
-     if ($('.rm_photo:checked').length == 0) {
-       $('#rm_photos_btn').fadeOut();
-       $('#rm_select_all').prop('checked', false);
-     } else {
-       $('#rm_photos_btn').fadeIn();
-     }
-   });
+	$('.select_all + label').click(function() {
+		var type = getType(this);
+		var checkbox = $(this).siblings('.select_all');
+		var check = checkbox.is(':checked');
+		checkbox.prop('checked', !check);
+		checkPhotos(type, !check, paginators[type]);
+	});
+ 
+	$('.ch_photo').live('click', function() {
+		var type = getType(this);
+		var paginator = paginators[type];
+		paginator.selectedItems += ($(this).is(':checked') ? 1 : -1);
+		updateSelectedItemsText(type, paginator.selectedItems);
+		updateCheckBox(type, paginator);
+	});
 
-	function getType(element) {
-		if ( $(element).parent().hasClass('rm') ) {
-			return 'rm';
+	function checkPhotos(type, checked, paginator) {
+		var currentPage = paginator.currentPage;
+		var ch_photos = $( photosFromCurrentPage(type, paginator) );
+		var checked_ch_photos = $( photosFromCurrentPage(type, paginator) + ':checked');
+		var diff = ch_photos.length - checked_ch_photos.length;
+		ch_photos.prop('checked', checked);
+		paginator.selectedItems += (checked ? diff : -ch_photos.length);
+		updateSelectedItemsText(type, paginator.selectedItems);
+	}
+
+	function updateSelectedItemsText(type, selectedItems) {
+		if (selectedItems > 0) {
+			$('#' + type + '_photos_btn').fadeIn();
+			if (selectedItems == 1) {
+				$('.rm p.selectedItems').html(selectedItems + ' imagem selecionada');
+			} else {
+				$('.rm p.selectedItems').html(selectedItems + ' imagens selecionadas');
+			}
+		} else {
+			$('#' + type + '_photos_btn').fadeOut();
+			$('.rm p.selectedItems').html('');
 		}
-		return 'add';
+	}
+
+	function updateCheckBox(type, paginator) {
+		var current_photos = photosFromCurrentPage(type, paginator);
+		if ( $(current_photos).length != $(current_photos + ':checked').length ) {
+			$('.' + type + ' .select_all').prop('checked', false);
+		} else {
+			$('.' + type + ' .select_all').prop('checked', true);
+		}
+	}
+
+	function photosFromCurrentPage(type, paginator) {
+		return '#' + type + '_page' + paginator.currentPage + ' .ch_photo';
 	}
 
 	$(".less-than").click(function(e) {
@@ -83,49 +122,72 @@ $(document).ready(function() {
 		}
 	});
 
-});
+	function getType(element) {
+		if ( $(element).parent().hasClass('rm') ) {
+			return 'rm';
+		}
+		return 'add';
+	}
 
-function transition(paginator, page, type) {
-	$('#' + type + '_page' + paginator.currentPage).hide();
-	if (paginator.loadedPages.indexOf(page) >= 0) {
-		$("#"+ type + "_page" + page).fadeIn();
-		paginator.currentPage = page;
-		$('.' + type + '.buttons p').html(paginator.currentPage + ' / ' + paginator.maxPage);
-	} else {
-		var callback = function(paginator, page) {
-			if (paginator.loadedPages.indexOf(page) < 0) {
+	function transition(paginator, page, type) {
+		$('#' + type + '_page' + paginator.currentPage).hide();
+		if (paginator.loadedPages.indexOf(page) >= 0) {
+			$("#"+ type + "_page" + page).fadeIn();
+			paginator.currentPage = page;
+			$('.' + type + '.buttons p').html(paginator.currentPage + ' / ' + paginator.maxPage);
+			updateCheckBox(type, paginator);
+		} else {
+			var callback = function(paginator, page) {
 				paginator.loadedPages.push(page);
 				paginator.currentPage = page;
 				$('.' + type + '.buttons p').html(paginator.currentPage + ' / ' + paginator.maxPage);
-			}
-		};
-		requestPage(page, type, paginator.url, callback, paginator);
-	}
-}
-
-function requestPage(page, type, URL, callback, paginator) {
-	var ret = 0;
-	$("." + type + ".loader").show();
-	$.get(URL + '?page=' + page)
-	.done(function() {
-		ret = 1;
-	}).fail(function() {
-		$(".message_box").message('Não foi possível atualizar seu álbum! Tente novamente mais tarde.', 'error');	
-	}).always(function(data) {
-		$("." + type + ".loader").hide();
-		if (ret == 1) {
-			$("#" + type).append(data);
-			callback(paginator, page, type);
+				updateCheckBox(type, paginator);
+			};
+			requestPage(page, type, paginator.url, callback, paginator);
 		}
-	});
-}
-
-function checkPhotos(type) {
-	if ($('#' + type + '_select_all').is(':checked')) {
-		$('.' + type + '_photo').prop('checked', true);
-		$('#' + type + '_photos_btn').fadeIn();
-	} else {
-		$('.' + type + '_photo').prop('checked', false);
-		$('#' + type + '_photos_btn').fadeOut();
 	}
-}
+
+	function requestPage(page, type, URL, callback, paginator) {
+		var ret = 0;
+		$("." + type + ".loader").show();
+		$.get(URL + '?page=' + page)
+		.done(function() {
+			ret = 1;
+		}).fail(function() {
+			$(".message_box").message('Não foi possível atualizar seu álbum! Tente novamente mais tarde.', 'error');	
+		}).always(function(data) {
+			$("." + type + ".loader").hide();
+			if (ret == 1) {
+				$("#" + type).append(data);
+				callback(paginator, page, type);
+			}
+		});
+	}
+
+	$('#rm_photos_btn').click(function(e) {
+		e.preventDefault();
+		var rm_photos = [];
+		$.each($('[name="photos_rm[]"]:checked'), function() {
+			rm_photos.push($(this).val());
+		});
+		var photos = { "photos_rm[]": rm_photos };
+		detachPhotos(photos);
+	})
+
+	function detachPhotos(photos, callback) {
+		// $.post('/albums/' + album + '/detach/photos', photos).done(function(response) {
+		$.post('/albums/99/detach/photos', photos).done(function(response) {
+			if (response == 'failed') {
+				return;
+			} else {
+				console.log(response);
+			}
+		}).fail(function(xhr, status, error) {
+			console.log(status);
+			
+			$(".message_box").message('Não foi possível atualizar seu álbum! Tente novamente mais tarde.', 'error');
+		});
+
+	}
+
+});

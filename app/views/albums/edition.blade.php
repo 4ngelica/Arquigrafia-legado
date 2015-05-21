@@ -4,7 +4,6 @@
   <title>Arquigrafia - tabs</title>
   <link rel="stylesheet" type="text/css" href="{{ URL::to('/css/tabs.css') }}">
   <script src="{{ URL::to('/js/albums-covers.js') }}"></script>
-  <!--<script src="{{ URL::to('/js/album-add-photos.js') }}"></script>-->
   <script src="{{ URL::to('/js/album.js') }}"></script>
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/checkbox.css" />
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/album.css" />
@@ -14,13 +13,15 @@
         currentPage: 1,
         maxPage: {{ $maxPage }},
         url: '{{ $url }}',
-        loadedPages: [1]
+        loadedPages: [1],
+        selectedItems: 0
       },
       rm: {
         currentPage: 1,
         maxPage: {{ $rmMaxPage }},
         url: '{{ $rmUrl }}',
-        loadedPages: [1]
+        loadedPages: [1],
+        selectedItems: 0
       }
     }
     var coverPage = 1;
@@ -40,45 +41,12 @@
     <div class="twelve columns">
       <div class="tabs">
         <ul class="tab-links">
-          <li class="active"><a href="#album_images">Imagens do álbum</a></li>
-          <li><a href="#album_info">Informações do álbum</a></li>
-          <li><a href="#add_images">Adicionar imagens</a></li>
+          <li class="active"><a href="#album_info">Informações do álbum</a></li>
+          <li><a href="#album_images">Imagens do álbum</a></li>
+          <li><a href="#add_images">Adição de imagens</a></li>
         </ul>
         <div class="tab-content">
-          <div id="album_images" class="tab active">
-            <?php 
-              $photos = $album_photos;
-              $type = 'rm';
-            ?>
-            <div class="eleven columns block">
-              {{ Form::open(array('url' => '/albums/' . $album->id . '/update/info', 'method' => 'post', 
-                'class' => 'eleven columns alpha omega album_form')) }}
-                <div class="four columns alpha omega">
-                  <input id="rm_select_all" type="checkbox">
-                  <label for="rm_select_all">Marcar todas</label>
-                </div>
-                <div class="four columns alpha omega">
-                    <input type="text" class="search_bar">
-                    <input type="button" class="search_bar_button cursor" value="FILTRAR">
-                </div>
-                <div class="three columns omega">
-                  <input type="button" id="rm_photos_btn" class="btn right" value="REMOVER IMAGENS MARCADAS">
-                </div>
-              {{ Form::close() }}
-            </div>
-            <div id="rm" class="eleven columns">
-              <img class="rm loader" src="{{ URL::to('/img/ajax-loader.gif') }}" />
-              @include('albums.includes.album-photos-edit')
-            </div>
-            <div class="eleven columns rm buttons">
-              <input type="button" class="btn less less-than" value="&lt;&lt;">
-              <input type="button" class="btn less-than" value="&lt;">
-              <p>1/{{ $rmMaxPage }}</p>
-              <input type="button" class="btn greater-than" value="&gt;">
-              <input type="button" class="btn greater greater-than" value="&gt;&gt;">
-            </div>
-          </div>
-          <div id="album_info" class="tab">
+          <div id="album_info" class="tab active">
             {{ Form::open(array('url' => '/albums/' . $album->id . '/update/info', 'method' => 'post')) }}
               <div class="eleven columns">
                 <div class="five columns">
@@ -114,6 +82,46 @@
                 </div>
               </div>
             {{ Form::close() }}
+          </div>
+          <div id="album_images" class="tab">
+            <?php 
+              $photos = $album_photos;
+              $type = 'rm';
+            ?>
+            <div class="eleven columns block">
+              {{ Form::open(array('url' => '', 'method' => 'post', 
+                'class' => 'eleven columns alpha omega album_form')) }}
+                <div class="seven columns alpha omega">
+                  <div class="three columns alpha omega rm">
+                    <input class="select_all" type="checkbox">
+                    <label for="">Imagens desta página</label>
+                  </div>
+                  <div class="three columns alpha omega rm">
+                    <p class="selectedItems"></p>
+                  </div>
+                </div>
+                <div class="four columns alpha omega">
+                    <input type="text" class="search_bar">
+                    <input type="button" class="search_bar_button cursor" value="FILTRAR">
+                </div>
+              {{ Form::close() }}
+            </div>
+            <div id="rm" class="eleven columns">
+              <img class="rm loader" src="{{ URL::to('/img/ajax-loader.gif') }}" />
+              @include('albums.includes.album-photos-edit')
+            </div>
+            <div class="eleven columns">
+              <div class="eight columns alpha rm buttons">
+                <input type="button" class="btn less less-than" value="&lt;&lt;">
+                <input type="button" class="btn less-than" value="&lt;">
+                <p>1/{{ $rmMaxPage }}</p>
+                <input type="button" class="btn greater-than" value="&gt;">
+                <input type="button" class="btn greater greater-than" value="&gt;&gt;">
+              </div>
+              <div class="three columns omega">
+                <input type="button" id="rm_photos_btn" class="btn right" value="REMOVER IMAGENS MARCADAS">
+              </div>
+            </div>
           </div>
           <div id="add_images" class="tab">
           </div>

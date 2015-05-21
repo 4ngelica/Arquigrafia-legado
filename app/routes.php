@@ -63,6 +63,7 @@ Route::get('/albums/get/cover/{id}', 'AlbumsController@paginateByCoverPhotos');
 Route::delete('/albums/{album_id}/photos/{photo_id}/remove', 'AlbumsController@removePhotoFromAlbum');
 Route::get('/albums/{id}/edition', 'AlbumsController@edition');
 Route::post('/albums/{id}/update/info', 'AlbumsController@updateInfo');
+Route::post('/albums/{id}/detach/photos', 'AlbumsController@detachPhotos');
 /* COMMENTS */
 Route::post('/photos/{photo_id}/comment','PhotosController@comment');
 

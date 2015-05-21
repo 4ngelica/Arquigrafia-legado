@@ -26,3 +26,4 @@
 #album_images div:first-child { height: 23px; }
 #add, #rm { height: 390px; }
 .add.loader, .rm.loader { display: block; margin: 130px auto 0; }
+.select_all, .select_all + label { cursor: pointer; }

@@ -291,4 +291,16 @@ class AlbumsController extends \BaseController {
 		$album->photos()->detach($photo_id);
 		return Redirect::to('/albums/' . $album->id);
 	}
+
+	public function detachPhotos($id) {	
+		try {
+			return Response::json('failed');
+			$album = Album::find($id);
+			$photos = Input::only('photos_rm');
+			$album->photos()->detach($photos);
+		} catch (Exception $e) {
+			return Response::json('failed');	
+		}
+		return $this->paginateByAlbum($id);
+	}
 }
