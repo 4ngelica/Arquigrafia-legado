@@ -53,7 +53,11 @@
           <a href="{{ URL::to("/users/logout/") }}" id="logout" class="btn">SAIR</a><br />
           <ul id="logged_menu">
             @if (Auth::user()->photos->count() > 0)
-              <li> <a href="{{ URL::to('/albums') }}" id="users" title="Meus álbuns">&nbsp;</a></li>
+              @if(Auth::user()->albums->count() > 0)
+                <li><a href="{{ URL::to('/albums') }}" id="users" title="Meus álbuns">&nbsp;</a></li>
+              @else
+                <li><a href="{{ URL::to('/albums/create') }}" id="users" title="Criar álbum">&nbsp;</a></li>
+              @endif
             @endif
             <!-- <li><a href="#" id="comunities" title="Comunidades">&nbsp;</a></li> -->
             <li><a href="{{ URL::to("/photos/upload") }}" name="modal" id="upload" title="Enviar uma imagem">&nbsp;</a></li>
