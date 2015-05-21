@@ -23,8 +23,8 @@ input[type=checkbox].add_photo + label {
 }
 
 input[type=checkbox].rm_photo:checked + label {
-	opacity: 0.8;
-	border-color: #2E2E2E;
+	opacity: 0.5;
+	/*border-color: #2E2E2E;*/
 }
 
 input[type=checkbox].add_photo:checked + label {
