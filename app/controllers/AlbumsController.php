@@ -295,8 +295,9 @@ class AlbumsController extends \BaseController {
 	public function detachPhotos($id) {	
 		try {
 			$album = Album::find($id);
-			$photos = Input::only('photos_rm');
+			$photos = Input::get('photos_rm');
 			$album->photos()->detach($photos);
+
 		} catch (Exception $e) {
 			return Response::json('failed');	
 		}

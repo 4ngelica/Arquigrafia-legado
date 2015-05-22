@@ -187,15 +187,26 @@ $(document).ready(function() {
 	})
 
 	function detachPhotos(photos, callback) {
+		$('#rm .page').fadeOut();
+		$('.rm.loader').show();
 		$.post('/albums/' + album + '/detach/photos?page=1', photos).done(function(response) { //volta tudo para a página 1
-			if (response == 'failed') {
-				return;
-			} else {
-				$('#rm .page').fadeOut().detach();
-				$('#rm').append(response['content']);
-				// resetCheckboxAndText('rm');
-			}
+			$('.rm.loader').hide(function() {
+				if (response == 'failed') {
+					$('#rm_page' + paginators['rm'].currentPage).fadeIn();
+					$(".message_box").message('Não foi possível atualizar seu álbum! Tente novamente mais tarde.', 'error');			
+				} else {
+					$('#rm .page').detach();
+					$('#rm').append(response['content']);
+					paginators['rm'].currentPage = 1;
+					paginators['rm'].maxPage = response['maxPage'];
+					paginators['rm'].loadedPages = [1];
+					paginators['rm'].selectedItems = 0;
+					resetCheckboxAndText('rm');
+				}
+			});
 		}).fail(function(xhr, status, error) {
+			$('.rm.loader').hide();
+			$('#rm_page' + paginators['rm'].currentPage).fadeIn();
 			$(".message_box").message('Não foi possível atualizar seu álbum! Tente novamente mais tarde.', 'error');
 		});
 
@@ -210,8 +221,14 @@ $(document).ready(function() {
 	});
 
 	function resetCheckboxAndText(type) {
+		var paginator = paginators[type];
 		$('.' + type + ' .select_all').prop('checked', false);	
 		$('#' + type + '_photos_btn').fadeOut();
 		$('.' + type + ' p.selectedItems').html('');
+		if (paginator.maxPage == 1) {
+			$('.' + type + '.buttons').hide();
+		} else {
+			$('.' + type + '.buttons p').html(paginator.currentPage + ' / ' + paginator.maxPage);
+		}
 	}
 });
