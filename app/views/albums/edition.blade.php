@@ -113,7 +113,7 @@
               ?>
               @include('albums.includes.album-photos-edit')
             </div>
-            <div class="eleven columns">
+            <div class="eleven columns block">
               <div class="eight columns alpha rm buttons">
                 <input type="button" class="btn less less-than" value="&lt;&lt;">
                 <input type="button" class="btn less-than" value="&lt;">

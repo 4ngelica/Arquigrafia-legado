@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	
 	$("#album_info form").submit(function(e) {
 		e.preventDefault();
 		var cover = $("#_cover").val();
@@ -30,12 +31,6 @@ $(document).ready(function() {
 	});
 
 	$('.loader').hide();
-	if (paginators['add'].maxPage < 2) {
-		$('.add.buttons').hide();
-	}
-	if (paginators['rm'].maxPage < 2) {
-		$('.rm.buttons').hide();
-	}
 
 	$('.select_all').click(function() {
 		var checked = $(this).is(':checked');
@@ -142,6 +137,7 @@ $(document).ready(function() {
 	}
 
 	function transition(paginator, page, type) {
+		fixContentDivHeight(type);
 		$('#' + type + '_page' + paginator.currentPage).hide();
 		if (paginator.loadedPages.indexOf(page) >= 0) {
 			$("#"+ type + "_page" + page).fadeIn();
@@ -186,26 +182,40 @@ $(document).ready(function() {
 		detachPhotos(photos);
 	})
 
+	function fixContentDivHeight(type, animate) {
+		var maxHeight = $('#' + type).children('#' + type + '_page1').css('height');
+		if (animate) {
+			$('#' + type).animate({ 'height' : maxHeight });
+		} else {
+			$('#' + type).css({ 'height' : maxHeight });
+		}
+	}
+
 	function detachPhotos(photos, callback) {
-		$('#rm .page').fadeOut();
-		$('.rm.loader').show();
+		var loaderMarginTop = $('#rm_page1').height() / 2;
+		loaderMarginTop = (loaderMarginTop >= 150 ? 130 : loaderMarginTop);
+		fixContentDivHeight('rm');
+		$('#rm .page').hide();
+		$('.rm.loader').css({ 'margin-top' : loaderMarginTop }).show();
 		$.post('/albums/' + album + '/detach/photos?page=1', photos).done(function(response) { //volta tudo para a página 1
-			$('.rm.loader').hide(function() {
+			$('.rm.loader').fadeOut('fast', function() {
 				if (response == 'failed') {
 					$('#rm_page' + paginators['rm'].currentPage).fadeIn();
 					$(".message_box").message('Não foi possível atualizar seu álbum! Tente novamente mais tarde.', 'error');			
 				} else {
 					$('#rm .page').detach();
-					$('#rm').append(response['content']);
-					paginators['rm'].currentPage = 1;
-					paginators['rm'].maxPage = response['maxPage'];
-					paginators['rm'].loadedPages = [1];
-					paginators['rm'].selectedItems = 0;
-					resetCheckboxAndText('rm');
+					$(response['content']).appendTo('#rm').hide().fadeIn(function() {
+						paginators['rm'].currentPage = 1;
+						paginators['rm'].maxPage = response['maxPage'];
+						paginators['rm'].loadedPages = [1];
+						paginators['rm'].selectedItems = 0;
+						resetCheckboxAndText('rm');
+						fixContentDivHeight('rm', true);
+					});
 				}
 			});
 		}).fail(function(xhr, status, error) {
-			$('.rm.loader').hide();
+			$('.rm.loader').hide().delay(500);
 			$('#rm_page' + paginators['rm'].currentPage).fadeIn();
 			$(".message_box").message('Não foi possível atualizar seu álbum! Tente novamente mais tarde.', 'error');
 		});
@@ -225,10 +235,6 @@ $(document).ready(function() {
 		$('.' + type + ' .select_all').prop('checked', false);	
 		$('#' + type + '_photos_btn').fadeOut();
 		$('.' + type + ' p.selectedItems').html('');
-		if (paginator.maxPage == 1) {
-			$('.' + type + '.buttons').hide();
-		} else {
-			$('.' + type + '.buttons p').html(paginator.currentPage + ' / ' + paginator.maxPage);
-		}
+		$('.' + type + '.buttons p').html(paginator.currentPage + ' / ' + paginator.maxPage);
 	}
 });

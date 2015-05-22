@@ -23,6 +23,6 @@
 #album_images table td { width: 143px; }
 #rm_photos_btn { display: none; }
 
-#add, #rm { height: 390px; }
+#add, #rm { overflow: hidden; }
 .add.loader, .rm.loader { display: block; margin: 130px auto 0; }
 .select_all, .select_all + label { cursor: pointer; }
