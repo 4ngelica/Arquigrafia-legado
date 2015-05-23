@@ -56,8 +56,13 @@
             <h3>Descrição</h3>
             <p>{{ Form::label('name', 'Título da imagem:') }} {{ Form::text('name', Input::get("name") ) }}</p>
             <p>{{ Form::label('description', 'Descrição da imagem:') }} {{ Form::text('description', Input::get("description") ) }}</p>
-            <p>{{ Form::label('imageAuthor', 'Autor da imagem:') }} {{ Form::text('imageAuthor', Input::get("imageAuthor") ) }}</p>
+            <p>{{ Form::label('tag', 'Tag:') }} {{ Form::text('tag', Input::get("tag") ) }}</p>           
           </div>
+
+
+
+
+
           
           <div class="four columns row">
             <h3>Localização</h3>
@@ -68,8 +73,8 @@
           <!-- 2015-05-06 msy begin, workAuthor -->
           <div class="four columns omega row">
             <h3>Arquitetura</h3>
-            <p>{{ Form::label('workAuthor', 'Arquiteto:') }} {{ Form::text('workAuthor', Input::get("workAuthor") ) }}</p>
-
+            <p>{{ Form::label('workAuthor', 'Autor da obra:') }} {{ Form::text('workAuthor', Input::get("workAuthor") ) }}</p>
+            <p>{{ Form::label('imageAuthor', 'Autor da imagem:') }} {{ Form::text('imageAuthor', Input::get("imageAuthor") ) }}</p>
             <p>{{ Form::label('workdate', 'Data da obra:') }} 
               {{ Form::text('workdate',Input::get("workdate"),array('id' => 'datePickerWorkDate')) }} </p>
             <p>{{ Form::label('dataCriacao', 'Data da imagem:') }} 
@@ -80,10 +85,8 @@
             <!--<p>{{ Form::label('dataCriacao', 'Data da imagem:') }} {{ Form::text('dataCriacao', Input::get("dataCriacao") ) }}</p>-->
             <!--<p>{{ Form::label('dataUpload', 'Data de upload:') }} {{ Form::text('dataUpload', Input::get("dataUpload") ) }}</p>-->
             
-
-        
-
           </div>
+          
           
           <!-- 2015-05-06 msy end -->
           <div class="six columns alpha row">
@@ -136,10 +139,13 @@
     });
     $( "#datePickerdataUpload" ).datepicker({
         dateFormat:'dd/mm/yy',
-      beforeShow: function(input, inst)
-        {
-
-        inst.dpDiv.css({marginTop: -65-input.offsetHeight + 'px', marginLeft: input.offsetWidth + 'px'});
+      beforeShow: function(datePickerdataUpload)
+        {          
+          $(datePickerdataUpload).css({
+            "position":"relative",
+            "z-index":999999
+          } );
+        
         }
     });
     
