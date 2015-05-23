@@ -178,57 +178,72 @@ class PagesController extends BaseController {
         'imageAuthor',
         'dataCriacao',
         'dataUpload',
-        'workdate'
+        'workdate',
+        'tag'
 
 
     );
     
-    foreach($fields as $field) $$field = Input::get($field);
+    foreach($fields as $field) $$field = trim(Input::get($field));
     
     if(empty($name) && empty($description) && empty($city) && empty($state) && empty($country) && empty($workAuthor) 
-      && empty($imageAuthor) && empty($dataCriacao) && empty($dataUpload) && empty($workdate)) {
+      && empty($imageAuthor) && empty($dataCriacao) && empty($dataUpload) && empty($workdate) && empty($tag) ) {
        // busca vazia
        return View::make('/advanced-search',['tags' => [], 'photos' => [], 'query' => ""]);
     } else {
       
-      $query = Photo::where('id', '>', 0);
-      //
-      if ($name != '') $query->where('name', 'LIKE', '%'. $name .'%');  
+      $query = Photo::where('id', '>', 0); 
+      
+      if ($name != '') $query->where('name', 'LIKE', '%'. $name .'%');
       if ($description != '') $query->where('description', 'LIKE', '%'. $description .'%');  
       if ($city != '') $query->where('city', 'LIKE', '%'. $city .'%');  
       if ($state != '') $query->where('state', 'LIKE', '%'. $state .'%'); 
-      if ($country != '') $query->where('country', 'LIKE', '%'. $country .'%');  
+      if ($country != '') $query->where('country', 'LIKE', '%'. $country .'%'); 
       if ($workAuthor  != '') $query->where('workAuthor', 'LIKE', '%'. $workAuthor .'%');  
+      if ($imageAuthor  != '') $query->where('imageAuthor', 'LIKE', '%'. $imageAuthor .'%');
       
-       if ($workdate != ''){
+       if ($workdate != ''){ 
           if(DateTime::createFromFormat('Y', $workdate)!== FALSE) {
             $query->where('workdate', 'LIKE', '%' . $workdate . '%');
           }else{
             $query->where('workdate', 'LIKE', '%' . Photo::formatDate($workdate) . '%');
           }
        }
-       if ($dataCriacao != ''){
+       if ($dataCriacao != ''){ 
           if(DateTime::createFromFormat('Y', $dataCriacao)!== FALSE) {
             $query->where('dataCriacao', 'LIKE', '%' . $dataCriacao . '%');
           }else{
             $query->where('dataCriacao', 'LIKE', '%' . Photo::formatDate($dataCriacao) . '%');
           }
        }
-       if ($dataUpload != ''){
+       if ($dataUpload != ''){ 
           if(DateTime::createFromFormat('Y', $dataUpload)!== FALSE) {
             $query->where('dataUpload', 'LIKE', '%' . $dataUpload . '%');
           }else{
             $query->where('dataUpload', 'LIKE', '%' . Photo::formatDate($dataUpload) . '%');
           }
        }
-  
-     
+       
       $query->whereNull('deleted_at'); 
       $photos = $query->get();
-      
-    } //2015-05-06 msy end
 
-    if($photos->count()) {
+      
+      //Adding search by tags
+      if ($tag != ''){ 
+          //$query = Tag::where('name', 'LIKE', '%' . $tags . '%');
+          $query = Tag::where('name', '=', $tag);
+          $tags = $query->get();
+          
+          if ($tags->first()) { 
+            $byTag = $tags->first()->photos;
+            $photos = $photos->intersect($byTag);
+          }         
+        }
+
+      
+    } //2015-05-21 msy end
+    
+    if($photos->count()) { 
       // retorna resultado da busca
       return View::make('/advanced-search',['tags' => [], 'photos' => $photos]);
     } else {
