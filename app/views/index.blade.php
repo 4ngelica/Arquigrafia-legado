@@ -14,6 +14,13 @@
 @stop
 
 @section('content')
+@if (Session::get('message'))
+      <div class="container">
+        <div class="twelve columns">
+          <div class="message">{{ Session::get('message') }}</div>
+        </div>
+      </div>
+    @endif
     <!--   MEIO DO SITE - ÁREA DE NAVEGAÇÃO   -->
     <div id="content">
     
