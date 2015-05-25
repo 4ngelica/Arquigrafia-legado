@@ -179,6 +179,8 @@ class PagesController extends BaseController {
         'dataCriacao',
         'dataUpload',
         'workdate',
+        'district',
+        'street',
         'tag'
 
 
@@ -187,7 +189,8 @@ class PagesController extends BaseController {
     foreach($fields as $field) $$field = trim(Input::get($field));
     
     if(empty($name) && empty($description) && empty($city) && empty($state) && empty($country) && empty($workAuthor) 
-      && empty($imageAuthor) && empty($dataCriacao) && empty($dataUpload) && empty($workdate) && empty($tag) ) {
+      && empty($imageAuthor) && empty($dataCriacao) && empty($dataUpload) && empty($workdate) && empty($district)
+      && empty($street)&& empty($tag) ) {
        // busca vazia
        return View::make('/advanced-search',['tags' => [], 'photos' => [], 'query' => ""]);
     } else {
@@ -201,7 +204,9 @@ class PagesController extends BaseController {
       if ($country != '') $query->where('country', 'LIKE', '%'. $country .'%'); 
       if ($workAuthor  != '') $query->where('workAuthor', 'LIKE', '%'. $workAuthor .'%');  
       if ($imageAuthor  != '') $query->where('imageAuthor', 'LIKE', '%'. $imageAuthor .'%');
-      
+      if ($district  != '') $query->where('district', 'LIKE', '%'. $district .'%');
+      if ($street  != '') $query->where('street', 'LIKE', '%'. $street .'%');
+
        if ($workdate != ''){ 
           if(DateTime::createFromFormat('Y', $workdate)!== FALSE) {
             $query->where('workdate', 'LIKE', '%' . $workdate . '%');
