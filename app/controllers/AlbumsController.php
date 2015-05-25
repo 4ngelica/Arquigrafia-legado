@@ -3,7 +3,7 @@
 class AlbumsController extends \BaseController {
 
 	public function __construct() {
-		$this->beforeFilter('auth', 
+		$this->beforeFilter('auth',
 			array( 'except' => 'show' ));
 		$this->beforeFilter('ajax',
 			array( 'only' => array())); //temporariamente sem métodos
@@ -22,9 +22,9 @@ class AlbumsController extends \BaseController {
 		if ( Session::has('image') )
 			$image = Photo::find(Session::get('image'));
 		return View::make('albums.form')
-			->with(['photos' => $photos, 
-				'url' => $url, 
-				'maxPage' => $maxPage, 
+			->with(['photos' => $photos,
+				'url' => $url,
+				'maxPage' => $maxPage,
 				'page' => 1,
 				'type' => 'add',
 				'image' => $image
@@ -41,14 +41,14 @@ class AlbumsController extends \BaseController {
 			if ( Auth::check() && $user->id == Auth::id() )
 				$edit = true;
 			return View::make('albums.show')
-				->with(['photos' => $photos, 'album' => $album, 
+				->with(['photos' => $photos, 'album' => $album,
 					'user' => $user,
 					'other_albums' => $other_albums]);
-			
+
 		}
 		return Redirect::to('/');
 	}
-	
+
 	public function store() {
 		$input = Input::only('title', 'description');
 		$photos = Input::get('photos_add');
@@ -58,7 +58,7 @@ class AlbumsController extends \BaseController {
 			'title' => 'required',
 		);
 		$validator = Validator::make($input, $rules);
-	
+
 		if ($validator->fails()) {
 			$messages = $validator->messages();
 			return Redirect::to('/albums/create')->withErrors($messages);
@@ -76,9 +76,9 @@ class AlbumsController extends \BaseController {
 			return Redirect::to('/albums/' . $album->id);
 		}
 	}
-	
+
 	public function delete($id) {
-		
+
 		$album = Album::whereid($id)->first();
 		$logged_user = Auth::user();
 		if ( isset($album) && $logged_user->id == $album->user_id)
@@ -95,9 +95,9 @@ class AlbumsController extends \BaseController {
 		$user = Auth::user();
 		$album = Album::find($id);
 
-		if ($user->id != $album->user_id) 
+		if ($user->id != $album->user_id)
 			return Redirect::to('/');
-				
+
 		$album_photos = Photo::paginateAlbumPhotos($album);
 		$other_photos = Photo::paginateOtherPhotos($user, $album->photos);
 		$maxPage = $other_photos->getLastPage();
@@ -106,8 +106,8 @@ class AlbumsController extends \BaseController {
 		$rmUrl = URL::to('/albums/' . $album->id . '/photos/rm');
 		return View::make('albums.edit')
 			->with(
-				['album' => $album, 
-				'album_photos' => $album_photos, 
+				['album' => $album,
+				'album_photos' => $album_photos,
 				'other_photos' => $other_photos,
 				'page' => 1,
 				'maxPage' => $maxPage,
@@ -123,9 +123,9 @@ class AlbumsController extends \BaseController {
 		$user = Auth::user();
 		$album = Album::find($id);
 
-		if ($user->id != $album->user_id) 
+		if ($user->id != $album->user_id)
 			return Redirect::to('/');
-				
+
 		$album_photos = Photo::paginateAlbumPhotos($album);
 		$other_photos = Photo::paginateOtherPhotos($user, $album->photos);
 		$maxPage = $other_photos->getLastPage();
@@ -134,8 +134,8 @@ class AlbumsController extends \BaseController {
 		$rmUrl = URL::to('/albums/' . $album->id . '/paginate/photos');
 		return View::make('albums.edition')
 			->with(
-				['album' => $album, 
-				'album_photos' => $album_photos, 
+				['album' => $album,
+				'album_photos' => $album_photos,
 				'other_photos' => $other_photos,
 				'page' => 1,
 				'maxPage' => $maxPage,
@@ -165,7 +165,7 @@ class AlbumsController extends \BaseController {
 		$input = Input::only('title', 'description');
 		$rules = array('title' => 'required');
 		$validator = Validator::make($input, $rules);
-	
+
 		if ($validator->fails()) {
 			$messages = $validator->messages();
 			return Redirect::to('/albums/' . $id . '/edit')->withErrors($messages);
@@ -251,14 +251,14 @@ class AlbumsController extends \BaseController {
 			->with(['albums' => $albums, 'photo_id' => $id])
 			->render());
 	}
-	
+
 	public function addPhotoToAlbums() {
 		$albums_id = Input::get('albums');
 		$photo = Input::get('_photo');
 		$albums = Album::findMany($albums_id);
-		
+
 		foreach ($albums as $album)
-		{	
+		{
 			$album->photos()->sync(array($photo), false);
 			if (!isset($album->cover_id)) {
 				$album->cover_id = $photo;
@@ -275,7 +275,7 @@ class AlbumsController extends \BaseController {
 
 		if ($albums->isEmpty())
 			return Redirect::to('/photos/' . $photo);
-		else	
+		else
 			return Redirect::to('/albums')->with('message', '<strong>Imagem adicionada com sucesso ao(s) seu(s) álbum(ns)</strong>');
 	}
 
@@ -292,14 +292,14 @@ class AlbumsController extends \BaseController {
 		return Redirect::to('/albums/' . $album->id);
 	}
 
-	public function detachPhotos($id) {	
+	public function detachPhotos($id) {
 		try {
 			$album = Album::find($id);
 			$photos = Input::get('photos_rm');
 			$album->photos()->detach($photos);
 
 		} catch (Exception $e) {
-			return Response::json('failed');	
+			return Response::json('failed');
 		}
 		return $this->paginateAlbumPhotosWithQuery($id);
 	}
@@ -312,7 +312,7 @@ class AlbumsController extends \BaseController {
 		$response = [];
 		$response['content'] = View::make('albums.includes.album-photos-edit')
 			->with(['photos' => $photos, 'page' => $page, 'type' => 'rm'])
-			->render(); 
+			->render();
 		$response['maxPage'] = $photos->getLastPage();
 		return Response::json($response);
 	}

@@ -88,7 +88,7 @@
           </div>
           <div id="album_images" class="tab">
             <div class="eleven columns block">
-              {{ Form::open(array('url' => '', 'method' => 'post', 
+              {{ Form::open(array('url' => '', 'method' => '',
                 'class' => 'eleven columns alpha omega album_form')) }}
                 <div class="seven columns alpha omega">
                   <div class="three columns alpha omega rm">

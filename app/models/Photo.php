@@ -92,15 +92,19 @@ class Photo extends Eloquent {
 			->paginate($perPage);
 	}
 
-	public static function paginateFromAlbumWithQuery($album, $query, $perPage = 24) {
-		if (empty($query)) {
+	public static function paginateFromAlbumWithQuery($album, $q, $perPage = 24) {
+		if (empty($q)) {
 			return Photo::paginateAlbumPhotos($album);
 		}
-		return Photo::where('name', 'like', '%' . $query . '%')
-			->orWhere('workAuthor', 'like', '%' . $query . '%')
-			->with(array('albums' => function($query) use($album) {
-				$query->where('id', $album->id);
-			}))
+		$album_id = $album->id;
+
+		return Photo::where(function ($query) use($q) {
+				$query->where('name', 'like', '%' . $q . '%')
+					->orWhere('workAuthor', 'like', '%' . $q . '%');
+			})
+			->whereHas('albums', function($query) use($album_id) {
+				$query->where('album_id', $album_id);
+			})
 			->paginate($perPage);
 	}
 
