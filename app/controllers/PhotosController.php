@@ -300,9 +300,13 @@ class PhotosController extends \BaseController {
     return "OK.";
   }
 
-  public function evaluate($id) {     
-    $photo = Photo::find($id); 
-    $user = User::find($photo->user_id);
+  public function evaluate($id) { 
+    return static::getEvaluation($id, true);    
+  }
+
+  private function getEvaluation($id, $isOwner) {    
+    $photo = Photo::find($id);
+    $user = User::find($photo->user_id); 
     $binomials = Binomial::all()->keyBy('id');
     $average = Evaluation::average($photo->id);    
     $evaluations = null;    
@@ -312,15 +316,17 @@ class PhotosController extends \BaseController {
         $follow = false;
       else 
         $follow = true;
-    } else {
-      $follow = true;
-    }
+    } else 
+      $follow = true;    
+
     return View::make('/photos/evaluate',
       ['photos' => $photo, 'owner' => $user, 'follow' => $follow, 'tags' => $photo->tags, 'commentsCount' => $photo->comments->count(),
       'average' => $average, 'userEvaluations' => $evaluations, 'binomials' => $binomials,
       'architectureName' => Photo::composeArchitectureName($photo->name),
-      'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photo->id)]);
+      'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photo->id), 
+      'isOwner' => $isOwner]);
   }
+
 
   public function edit($id) {
     $photo = Photo::find($id);
@@ -493,6 +499,10 @@ class PhotosController extends \BaseController {
     $photo = Photo::find($id);
     $photo->delete();  
     return Redirect::to('/users/' . $photo->user_id);
+  }
+
+  public function viewEvaluation($id) {    
+    return static::getEvaluation($id, false);
   }
 
 }
