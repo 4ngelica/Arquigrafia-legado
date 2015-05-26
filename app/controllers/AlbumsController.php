@@ -314,6 +314,7 @@ class AlbumsController extends \BaseController {
 			->with(['photos' => $photos, 'page' => $page, 'type' => 'rm'])
 			->render();
 		$response['maxPage'] = $photos->getLastPage();
+		$response['empty'] = ($photos->count() == 0 ? true : false);
 		return Response::json($response);
 	}
 }

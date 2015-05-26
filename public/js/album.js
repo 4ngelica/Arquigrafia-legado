@@ -137,9 +137,9 @@ $(document).ready(function() {
 	}
 
 	function transition(paginator, page, type) {
-		fixContentDivHeight(type);
-		$('#' + type + '_page' + paginator.currentPage).hide();
 		if (paginator.loadedPages.indexOf(page) >= 0) {
+			fixContentDivHeight(type);
+			hidePages(type);
 			$("#"+ type + "_page" + page).fadeIn();
 			paginator.currentPage = page;
 			$('.' + type + '.buttons p').html(paginator.currentPage + ' / ' + paginator.maxPage);
@@ -158,7 +158,9 @@ $(document).ready(function() {
 	//requisição ajax para navegar pelas páginas de fotos do álbum
 	function requestPage(page, type, URL, callback, paginator) {
 		var ret = 0;
-		$("." + type + ".loader").show();
+		fixContentDivHeight(type);
+		clearContent(type);
+		showAndFixElementSpacing(type, $('.' + type + '.loader'));
 		$.get(URL + '?page=' + page + '&q=' + paginator.searchQuery)
 		.done(function() {
 			ret = 1;
@@ -181,11 +183,15 @@ $(document).ready(function() {
 			rm_photos.push($(this).val());
 		});
 		var photos = { "photos_rm[]": rm_photos };
-		actOnPhotos(photos, resetData, 'rm', 'detach');
+		actOnPhotos(photos, updateContent, 'rm', 'detach');
 	})
 
 	function fixContentDivHeight(type, animate) {
 		var maxHeight = $('#' + type).children('#' + type + '_page1').css('height');
+		if (typeof maxHeight === 'undefined') {
+			maxHeight = $('#' + type).css('height');
+		}
+		console.log(maxHeight);
 		if (animate) {
 			$('#' + type).animate({ 'height' : maxHeight });
 		} else {
@@ -205,10 +211,7 @@ $(document).ready(function() {
 					$('#' + type + '_page' + paginators[type].currentPage).fadeIn();
 					$(".message_box").message('Não foi possível atualizar seu álbum! Tente novamente mais tarde.', 'error');
 				} else {
-					$('#' + type + ' .page').detach();
-					$(response['content']).appendTo('#' + type).hide().fadeIn(function() {
-						callback(type, response);
-					});
+					callback(type, response);
 				}
 			});
 		}).fail(function(xhr, status, error) {
@@ -244,7 +247,7 @@ $(document).ready(function() {
 			var type = getType(this);
 			var paginator = paginators[type];
 			var text = $(this).val();
-			if (type == null || text == '') {
+			if (type == null) {
 				return;
 			}
 			e.preventDefault();
@@ -256,7 +259,7 @@ $(document).ready(function() {
 		var type = getType(this);
 		var paginator = paginators[type];
 		var text = $(this).siblings('input[type=text]').val();
-		if (type == null || text == '') {
+		if (type == null) {
 			return;
 		}
 		e.preventDefault();
@@ -266,13 +269,57 @@ $(document).ready(function() {
 	function searchPhotos(type, paginator, text) {
 		paginator.searchQuery = text;
 		var callback = function (paginator, page, type, data) {
-			$('#' + type + ' .page').detach();
-			$(data['content']).appendTo('#' + type).hide().fadeIn(function() {
-				resetData(type, data);
-			});
+			console.log(data);
+			updateContent(type, data);
 		};
-		$('#' + type + ' .page').hide();
 		requestPage(1, type, paginator.url, callback, paginator);
+	}
+
+	var updateContent = function(type, response) {
+		$('#' + type + ' .page').remove();
+		if (response['empty']) {
+				var msg;
+				if (type == 'add') {
+					msg = 'Não foi encontrada nenhuma imagem para ser adicionada ao seu álbum.'
+				} else {
+					if (paginators[type].searchQuery == '') {
+						msg = 'Seu álbum está vazio.'
+					} else {
+						msg = 'Sua pesquisa não retornou nenhuma imagem.'
+					}
+				}
+				$('<p>' + msg + '</p>').appendTo('#' + type).hide();
+				showAndFixElementSpacing(type, $('#' + type + ' p'));
+				resetData(type, response);
+		} else {
+			$(response['content']).appendTo('#' + type).hide().fadeIn(function() {
+				resetData(type, response);
+			});
+		}
+	};
+
+	$('.rm .search_bar').tooltipster({
+		theme: 'custom-tooltip',
+		position: 'bottom'
+	});
+
+	function hidePages(type) {
+		$('#' + type + ' .page').hide();
+	}
+
+	function clearContent(type) {
+		hidePages(type);
+		$('#' + type).children('p').remove();
+	}
+
+	function showCurrentPage(type) {
+		$('#' + type + '_page' + paginators[type].currentPage).show();
+	}
+
+	function showAndFixElementSpacing(type, element) {
+		var containerHeight = $('#' + type).height();
+		element.show();
+		element.css({ 'margin-top' : containerHeight / 2 });
 	}
 
 });
