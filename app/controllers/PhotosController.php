@@ -78,7 +78,7 @@ class PhotosController extends \BaseController {
       'photo_state' => 'required',
 	    'photo_city' => 'required',
       'photo_authorization_checkbox' => 'required',
-      'photo' => 'max:10241|required|mimes:jpeg,jpg,png,gif',
+      'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',
       'photo_workDate' => 'date_format:"d/m/Y"',
       'photo_imageDate' => 'date_format:"d/m/Y"'
     );
@@ -347,7 +347,6 @@ class PhotosController extends \BaseController {
 
   public function update($id) {           
     $photo = Photo::find($id);
-      
      Input::flashExcept('tags', 'photo');    
      $input = Input::all();
     
@@ -364,14 +363,15 @@ class PhotosController extends \BaseController {
         'photo_state' => 'required',
         'photo_city' => 'required',
         'photo_workDate' => 'date_format:"d/m/Y"',
-        'photo_imageDate' => 'date_format:"d/m/Y"'
+        'photo_imageDate' => 'date_format:"d/m/Y"',
+        'photo' => 'max:10240|mimes:jpeg,jpg,png,gif'
       
     );  
 
   $validator = Validator::make($input, $rules);
      
   if ($validator->fails()) {
-      $messages = $validator->messages();      
+      $messages = $validator->messages(); 
       return Redirect::to('/photos/' . $photo->id . '/edit')->with('tags', $input['tags'])->withErrors($messages);
     } else {        
       if ( !empty($input["photo_aditionalImageComments"]) ) 
@@ -419,11 +419,9 @@ class PhotosController extends \BaseController {
       $tags = explode(',', $input['tags']);
       
       if (!empty($tags)) {
-        $tags = array_map('trim', $tags);
-        //10/05/2015 msy begin
-               
+        $tags = array_map('trim', $tags);               
         $tags = array_map('mb_strtolower', $tags);
-        //12/05/2015 msy end
+        
         $tags_id = [];
         $photo_tags = $photo->tags;
         // tudo em minusculas, para remover redundancias, como Casa/casa/CASA
