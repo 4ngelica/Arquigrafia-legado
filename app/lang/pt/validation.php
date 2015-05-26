@@ -115,7 +115,7 @@ return array(
         'photo' => array(
             'required' => 'É obrigatório escolher uma imagem com tamanho maximo 10MB',
             'max' => 'O tamanho máximo da imagem é 10MB',
-            'mimes' => 'Os tipo de arquivos permitidos são jpeg,jpg,png,gif.'
+            'mimes' => 'Os tipos de arquivos permitidos são jpeg,jpg,png,gif.'
         ),        
         'photo_workDate' => array(
             'date_format' => 'O valor inserido não é válido.',
