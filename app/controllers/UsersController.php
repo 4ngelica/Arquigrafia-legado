@@ -78,9 +78,8 @@ class UsersController extends \BaseController {
       );
   
       // attempt to do the login
-      if (Auth::attempt($userdata)) {        
-        return Redirect::to("/")->with('message', '<strong>Criação de conta</strong><br>Cadastro realizado com sucesso'); 
-        //return Redirect::to('/');
+      if (Auth::attempt($userdata)) {
+        return Redirect::to('/');
       } else {
         return $error;
       }
