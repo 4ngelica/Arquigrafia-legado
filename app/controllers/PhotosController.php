@@ -78,7 +78,7 @@ class PhotosController extends \BaseController {
       'photo_state' => 'required',
 	    'photo_city' => 'required',
       'photo_authorization_checkbox' => 'required',
-      'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',
+      'photo' => 'max:10241|required|mimes:jpeg,jpg,png,gif',
       'photo_workDate' => 'date_format:"d/m/Y"',
       'photo_imageDate' => 'date_format:"d/m/Y"'
     );
