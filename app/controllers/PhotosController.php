@@ -77,7 +77,7 @@ class PhotosController extends \BaseController {
       'photo_state' => 'required',
 	    'photo_city' => 'required',
       'photo_authorization_checkbox' => 'required',
-      'photo' => 'required',
+      'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',
       'photo_workDate' => 'date_format:"d/m/Y"',
       'photo_imageDate' => 'date_format:"d/m/Y"'
     );
@@ -85,7 +85,8 @@ class PhotosController extends \BaseController {
 	$validator = Validator::make($input, $rules);
 	    
   if ($validator->fails()) {
-      $messages = $validator->messages(); 
+      $messages = $validator->messages();
+      //dd($messages); 
 
 	  return Redirect::to('/photos/upload')->with(['tags' => $input['tags']])->withErrors($messages);
     } else {
