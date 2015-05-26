@@ -80,6 +80,7 @@ Route::get('/photos/batch','PhotosController@batch');
 Route::get('/photos/upload','PhotosController@form');
 Route::get('/photos/download/{photo_id}','PhotosController@download');
 Route::resource('/photos','PhotosController');
+Route::get('/photos/{id}/get/info', 'PhotosController@getPhotoInfo')
 
 Route::resource('/groups','GroupsController');
 
