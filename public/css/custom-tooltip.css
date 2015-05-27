@@ -1,0 +1,36 @@
+.ui-tooltip {
+	position: absolute;
+	z-index: 9999;
+	max-width: 300px;
+}
+
+.ui-tooltip-content {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	padding: 8px;
+	line-height: 16px;
+	border-radius: 2px; 
+	border: 1px solid;
+}
+
+.search_bar-info-theme .ui-tooltip-content {
+	background: #FEEFB3;
+	color: #9F6000;	
+}
+
+.img-theme .ui-tooltip-content {
+	background: #FFF;
+	color: #555;
+}
+
+.img-theme .ui-tooltip-content img {
+	display: block;
+	margin-bottom: 5px;
+}
+
+.img-theme .ui-tooltip-content p {
+	width: 200px;
+	margin-top: 5px;
+	margin-bottom: 0;
+	color: #555;
+}

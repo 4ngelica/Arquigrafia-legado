@@ -191,7 +191,6 @@ $(document).ready(function() {
 		if (typeof maxHeight === 'undefined') {
 			maxHeight = $('#' + type).css('height');
 		}
-		console.log(maxHeight);
 		if (animate) {
 			$('#' + type).animate({ 'height' : maxHeight });
 		} else {
@@ -269,7 +268,6 @@ $(document).ready(function() {
 	function searchPhotos(type, paginator, text) {
 		paginator.searchQuery = text;
 		var callback = function (paginator, page, type, data) {
-			console.log(data);
 			updateContent(type, data);
 		};
 		requestPage(1, type, paginator.url, callback, paginator);
@@ -298,11 +296,6 @@ $(document).ready(function() {
 		}
 	};
 
-	$('.rm .search_bar').tooltipster({
-		theme: 'custom-tooltip',
-		position: 'bottom'
-	});
-
 	function hidePages(type) {
 		$('#' + type + ' .page').hide();
 	}
@@ -317,9 +310,41 @@ $(document).ready(function() {
 	}
 
 	function showAndFixElementSpacing(type, element) {
-		var containerHeight = $('#' + type).height();
+		var containerHeight = element.parent().height();
+		var containerWidth = element.parent().width();
+		var marginTop = containerHeight / 2 - element.height() / 2;
+		var marginLeft = containerWidth / 2 - element.width() / 2;
 		element.show();
-		element.css({ 'margin-top' : containerHeight / 2 });
+		element.css({ 'margin-top' : marginTop, 'margin-left' : marginLeft });
 	}
 
+	$('.rm .search_bar').tooltip({
+		tooltipClass: 'search_bar-info-theme'
+	});
+
+	tooltipPhotos();
+
 });
+
+$(document).ajaxComplete(function() {
+	tooltipPhotos();
+});
+
+function tooltipPhotos() {
+	$('.ch_photo + img').each(function() {
+		var id = $(this).data('id');
+		var tooltip_position;
+		if ( $(this).hasClass('left-side') ) {
+			tooltip_position = { my: 'right center', at: 'left-10 center' };
+		} else {
+			tooltip_position = { my: 'left center', at: 'right+10 center' };
+		}
+		var photo_content = '<img src="/arquigrafia-images/' + id + '_view.jpg" width="200">';
+		photo_content += '<p>' + $(this).attr('title') + '</p>';
+		$(this).tooltip({
+			tooltipClass: 'img-theme',
+			content: photo_content,
+			position: tooltip_position
+		});
+	});
+}

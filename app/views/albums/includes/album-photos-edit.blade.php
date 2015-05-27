@@ -9,7 +9,15 @@
 		<div class="photo {{ $type }}">
 			<input type="checkbox" class="{{'ch_photo'}}" id="{{ 'photo_' . $photo->id }}"
 			name="{{ 'photos_' . $type . '[]' }}" value="{{ $photo->id }}">
-			<img src="{{ URL::to('/arquigrafia-images/' . $photo->id . '_home.jpg') }}">
+			@if ($count % 6 < 3)
+				<img src="{{ URL::to('/arquigrafia-images/' . $photo->id . '_home.jpg') }}"
+					class="img_photo right-side" data-id="{{ $photo->id }}"
+					title="{{ $photo->name }}">
+			@else
+				<img src="{{ URL::to('/arquigrafia-images/' . $photo->id . '_home.jpg') }}"
+					class="img_photo left-side" data-id="{{ $photo->id }}"
+					title="{{ $photo->name }}">
+			@endif
 		</div>
 	</td>
 	@if ($count % 6 == 5)

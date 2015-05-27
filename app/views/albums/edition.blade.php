@@ -5,11 +5,11 @@
   <link rel="stylesheet" type="text/css" href="{{ URL::to('/css/tabs.css') }}">
   <script src="{{ URL::to('/js/albums-covers.js') }}"></script>
   <script src="{{ URL::to('/js/album.js') }}"></script>
-  <script src="{{ URL::to('/js/jquery.tooltipster.min.js') }}"></script>
+  <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/custom-tooltip.css" />
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/checkbox-edition.css" />
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/album.css" />
-  <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/tooltipster.css" />
-  <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/custom-tooltipster.css" />
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+ 
   <script>
     var paginators = {
       add: {
@@ -47,12 +47,12 @@
     <div class="twelve columns">
       <div class="tabs">
         <ul class="tab-links">
-          <li class="active"><a href="#album_info">Informações do álbum</a></li>
-          <li><a href="#album_images">Imagens do álbum</a></li>
+          <li><a href="#album_info">Informações do álbum</a></li>
+          <li class="active"><a href="#album_images">Imagens do álbum</a></li>
           <li><a href="#add_images">Adição de imagens</a></li>
         </ul>
         <div class="tab-content">
-          <div id="album_info" class="tab active">
+          <div id="album_info" class="tab">
             {{ Form::open(array('url' => '/albums/' . $album->id . '/update/info', 'method' => 'post')) }}
               <div class="eleven columns">
                 <div class="five columns">
@@ -89,7 +89,7 @@
               </div>
             {{ Form::close() }}
           </div>
-          <div id="album_images" class="tab">
+          <div id="album_images" class="tab active">
             <div class="eleven columns block">
               {{ Form::open(array('url' => '', 'method' => '',
                 'class' => 'eleven columns alpha omega album_form')) }}
