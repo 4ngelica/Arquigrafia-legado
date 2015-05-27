@@ -69,7 +69,7 @@ class PhotosController extends \BaseController {
   else
     $input["tags"] = '';
 //2015-05-25 msy add validate for date image/work end
-  //validate for tamnho maximo e tipo de extensao 
+  //validate for tamnho maximo e tipo de extensao
     $rules = array(			
       'photo_name' => 'required',
       'photo_imageAuthor' => 'required',
