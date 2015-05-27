@@ -5,8 +5,11 @@
   <link rel="stylesheet" type="text/css" href="{{ URL::to('/css/tabs.css') }}">
   <script src="{{ URL::to('/js/albums-covers.js') }}"></script>
   <script src="{{ URL::to('/js/album.js') }}"></script>
+  <script src="{{ URL::to('/js/jquery.tooltipster.min.js') }}"></script>
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/checkbox-edition.css" />
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/album.css" />
+  <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/tooltipster.css" />
+  <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/custom-tooltipster.css" />
   <script>
     var paginators = {
       add: {
@@ -91,16 +94,17 @@
               {{ Form::open(array('url' => '', 'method' => '',
                 'class' => 'eleven columns alpha omega album_form')) }}
                 <div class="seven columns alpha omega">
-                  <div class="three columns alpha omega rm">
+                  <div class="four columns alpha omega rm">
                     <input class="select_all" type="checkbox">
-                    <label for="">Imagens desta página</label>
+                    <label for="">Selecionar imagens desta página</label>
                   </div>
                   <div class="three columns alpha omega rm">
                     <p class="selectedItems"></p>
                   </div>
                 </div>
                 <div class="four columns alpha omega rm">
-                    <input type="text" class="search_bar">
+                    <input type="text" class="search_bar" placeholder="Imagens do seu álbum"
+                      title="Filtre as imagens do seu álbum por nome">
                     <input type="button" class="rm search_bar_button cursor" value="FILTRAR">
                 </div>
               {{ Form::close() }}
@@ -111,7 +115,11 @@
                 $photos = $album_photos;
                 $type = 'rm';
               ?>
-              @include('albums.includes.album-photos-edit')
+              @if ($photos->count() > 0)
+                @include('albums.includes.album-photos-edit')
+              @else
+                <p>Seu álbum está vazio.</p>
+              @endif
             </div>
             <div class="eleven columns block">
               <div class="eight columns alpha rm buttons">

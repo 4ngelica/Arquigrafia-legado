@@ -24,5 +24,6 @@
 #rm_photos_btn { display: none; }
 
 #add, #rm { overflow: hidden; }
-.add.loader, .rm.loader { display: block; margin: 130px auto 0; }
+#add p, #rm p { text-align: center; font-size: 16px; margin: 130px auto; } 
+.add.loader, .rm.loader { display: block; margin: 0 auto; }
 .select_all, .select_all + label { cursor: pointer; }

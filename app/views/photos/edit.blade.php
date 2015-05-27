@@ -31,7 +31,9 @@
           <br>
 
            <p>{{ Form::label('photo','Alterar imagem:') }} 
-          {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}</p>
+          {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
+              <div class="error">{{ $errors->first('photo') }}</div>
+          </p>
            <br>
            <img src="" id="preview_photo">
            <br>
