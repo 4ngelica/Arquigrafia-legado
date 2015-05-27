@@ -507,7 +507,7 @@ class PhotosController extends \BaseController {
 
   public function getPhotoInfo($id) {
     $photo = Photo::find($id);
-    return Response::json(View::make('/photos/get-info')->with('photo', $photo));
+    return Response::json(View::make('/photos/get-info')->with('photo', $photo)->render());
   }
 
 }
