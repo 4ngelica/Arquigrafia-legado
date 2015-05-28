@@ -1,4 +1,4 @@
-.ui-tooltip {
+/*.ui-tooltip {
 	position: absolute;
 	z-index: 9999;
 	max-width: 300px;
@@ -9,7 +9,7 @@
 	font-size: 14px;
 	padding: 8px;
 	line-height: 16px;
-	border-radius: 2px; 
+	border-radius: 5px; 
 	border: 1px solid;
 }
 
@@ -25,12 +25,50 @@
 
 .img-theme .ui-tooltip-content img {
 	display: block;
+	margin: 0 auto;
 	margin-bottom: 5px;
+	max-width: 300px;
+	max-height: 300px;
 }
 
 .img-theme .ui-tooltip-content p {
-	width: 200px;
+	max-width: 100%;
 	margin-top: 5px;
 	margin-bottom: 0;
 	color: #555;
+}*/
+
+.search-bar-info-theme {
+	border-radius: 5px; 
+	border: 1px solid;
+	background: #FEEFB3;
+	color: #9F6000;
+}
+
+.image-tooltip-theme {
+	border-radius: 5px; 
+	border: 1px solid;
+	background: #fff;
+}
+
+.tooltipster-content {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	padding: 8px;
+	line-height: 16px;
+}
+
+.image-tooltip-theme .tooltipster-content p {
+	max-width: 100%;
+	margin-top: 5px;
+	margin-bottom: 0;
+	color: #555;
+}
+
+.image-tooltip-theme .tooltipster-content img {
+	display: block;
+	margin: 0 auto;
+	margin-bottom: 5px;
+	max-width: 250px;
+	max-height: 250px;
 }

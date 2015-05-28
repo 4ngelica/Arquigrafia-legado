@@ -8,8 +8,9 @@
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/custom-tooltip.css" />
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/checkbox-edition.css" />
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/album.css" />
-  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
- 
+  {{-- // <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script> --}}
+  <script src="{{ URL::to('/js/jquery.tooltipster.min.js') }}"></script>
+  <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/tooltipster.css" />
   <script>
     var paginators = {
       add: {

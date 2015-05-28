@@ -318,10 +318,7 @@ $(document).ready(function() {
 		element.css({ 'margin-top' : marginTop, 'margin-left' : marginLeft });
 	}
 
-	$('.rm .search_bar').tooltip({
-		tooltipClass: 'search_bar-info-theme'
-	});
-
+	$('.rm .search_bar').toolTip('search-bar-info-theme');
 	tooltipPhotos();
 
 });
@@ -330,21 +327,44 @@ $(document).ajaxComplete(function() {
 	tooltipPhotos();
 });
 
+$.fn.extend({
+	toolTip: function(tooltip_theme, tooltip_content, tooltip_position) {
+		var options = {}
+		options.contentAsHTML = true;
+		options.theme =  tooltip_theme;
+		if (typeof tooltip_content === 'undefined') {
+			tooltip_content = $(this).attr('title');
+		}
+		options.content =  tooltip_content;
+		if (typeof tooltip_position !== 'undefined') {
+			options.position = tooltip_position;
+		}
+		console.log(options);
+		$(this).tooltipster(options);
+	},
+	getPosition: function() {
+		return $(this).hasClass('left') ? 'left' : 'right';
+	}
+});
+
+
 function tooltipPhotos() {
 	$('.ch_photo + img').each(function() {
+		var element = this;
 		var id = $(this).data('id');
-		var tooltip_position;
-		if ( $(this).hasClass('left-side') ) {
-			tooltip_position = { my: 'right center', at: 'left-10 center' };
-		} else {
-			tooltip_position = { my: 'left center', at: 'right+10 center' };
-		}
-		var photo_content = '<img src="/arquigrafia-images/' + id + '_view.jpg" width="200">';
-		photo_content += '<p>' + $(this).attr('title') + '</p>';
-		$(this).tooltip({
-			tooltipClass: 'img-theme',
-			content: photo_content,
-			position: tooltip_position
-		});
+		var img = $('<img />').attr('src', '/arquigrafia-images/' + id + '_view.jpg')
+			.load(function () {
+				if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+					alert('broken image: ' + id);
+				} else {
+					var photo_content = $('<div></div>');
+					var title = $(element).attr('title');
+					photo_content.append($(this));
+					photo_content.append('<p>' + title + '</p>');
+					
+					$(element).toolTip('image-tooltip-theme', photo_content.html(),
+						$(element).getPosition());
+				}
+			});
 	});
 }
