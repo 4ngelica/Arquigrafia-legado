@@ -123,20 +123,24 @@ class AlbumsController extends \BaseController {
 		$user = Auth::user();
 		$album = Album::find($id);
 
-		if ($user->id != $album->user_id)
+		if (is_null($album) || $user->notEqual($album->user)) {
 			return Redirect::to('/');
+		}
 
 		$album_photos = Photo::paginateAlbumPhotos($album);
-		$other_photos = Photo::paginateOtherPhotos($user, $album->photos);
+		$other_photos_pagination = Photo::paginateUserPhotosNotInAlbum($user, $album);
+		$other_photos = $other_photos_pagination[0];
+		$other_photos_count = $other_photos_pagination[1];
 		$maxPage = $other_photos->getLastPage();
 		$rmMaxPage = $album_photos->getLastPage();
-		$url = URL::to('/albums/' . $album->id . '/photos/add');
+		$url = URL::to('/albums/' . $album->id . '/paginate/other/photos/');
 		$rmUrl = URL::to('/albums/' . $album->id . '/paginate/photos');
 		return View::make('albums.edition')
 			->with(
 				['album' => $album,
 				'album_photos' => $album_photos,
 				'other_photos' => $other_photos,
+				'other_photos_count' => $other_photos_count,
 				'page' => 1,
 				'maxPage' => $maxPage,
 				'rmMaxPage' => $rmMaxPage,
@@ -297,24 +301,59 @@ class AlbumsController extends \BaseController {
 			$album = Album::find($id);
 			$photos = Input::get('photos_rm');
 			$album->photos()->detach($photos);
-
 		} catch (Exception $e) {
 			return Response::json('failed');
 		}
 		return $this->paginateAlbumPhotosWithQuery($id);
 	}
 
+	public function attachPhotos($id) {
+		try {
+			$album = Album::find($id);
+			$photos = Input::get('photos_add');
+			$album->photos()->attach($photos);		
+		} catch (Exception $e) {
+			return Response::json('failed');
+		}
+		return $this->paginatePhotosNotInAlbum($id);
+	}
+
 	public function paginateAlbumPhotosWithQuery($id) {
 		$album = Album::find($id);
 		$query = Input::has('q') ? Input::get('q') : '';
-		$photos = Photo::paginateFromAlbumWithQuery($album, $query);
+		$pagination = Photo::paginateFromAlbumWithQuery($album, $query);
+		return $this->paginationResponse($pagination, 'rm');
+	}
+
+	public function paginatePhotosNotInAlbum($id) {
+		$album = Album::find($id);
+		$user = Auth::user();
+		if ( is_null($album) || $user->notEqual($album->user) ) {
+			return Response::json('failed');
+		}
+		$query = Input::has('q') ? Input::get('q') : '';
+		$which_photos = Input::get('wp');
+		$pagination = null;
+		if (strcmp($which_photos, 'user') == 0) {
+			$pagination = Photo::paginateUserPhotosNotInAlbum($user, $album, $query);
+		} else {
+			$pagination = Photo::paginateAllPhotosNotInAlbum($album, $query);
+		}
+		return $this->paginationResponse($pagination, 'add');
+	}
+
+	private function paginationResponse($pagination, $type) {
+		$photos = $pagination[0];
+		$count = $pagination[1];
 		$page = $photos->getCurrentPage();
 		$response = [];
 		$response['content'] = View::make('albums.includes.album-photos-edit')
-			->with(['photos' => $photos, 'page' => $page, 'type' => 'rm'])
+			->with(['photos' => $photos, 'page' => $page, 'type' => $type])
 			->render();
 		$response['maxPage'] = $photos->getLastPage();
 		$response['empty'] = ($photos->count() == 0 ? true : false);
+		$response['count'] = $count;
 		return Response::json($response);
 	}
+
 }

@@ -35,6 +35,7 @@
     var maxCoverPage = {{ ceil($album->photos->count() / 48) }};
     var album = {{ $album->id }};
     var covers_counter = 0;
+    var which_photos = 'user';
   </script>
 @stop
 
@@ -69,7 +70,7 @@
                       @endif
                     </div>
                     <a class="cover_btn" href="#">Alterar capa</a>
-                    {{ Form::hidden('_cover', $album->cover_id, ['id' => '_cover']) }}
+                    {{ Form::hidden('cover_id', $album->cover_id, ['id' => 'cover_id']) }}
                   </div>
                 </div>
                 <div id="info" class="five columns">
@@ -91,27 +92,28 @@
             {{ Form::close() }}
           </div>
           <div id="album_images" class="tab active">
-            <div class="eleven columns block">
+            <div class="eleven columns select_options rm">
               {{ Form::open(array('url' => '', 'method' => '',
                 'class' => 'eleven columns alpha omega album_form')) }}
                 <div class="seven columns alpha omega">
-                  <div class="four columns alpha omega rm">
+                  <div class="four columns alpha omega block">
                     <input class="select_all" type="checkbox">
                     <label for="">Selecionar imagens desta página</label>
+                    <p class="filter">Todas as imagens ({{ $album->photos->count() }})</p>
                   </div>
-                  <div class="three columns alpha omega rm">
+                  <div class="three columns alpha omega block">
                     <p class="selectedItems"></p>
                   </div>
                 </div>
-                <div class="four columns alpha omega rm">
+                <div class="four columns alpha omega block">
                     <input type="text" class="search_bar" placeholder="Imagens do seu álbum"
-                      title="Filtre as imagens do seu álbum por nome">
-                    <input type="button" class="rm search_bar_button cursor" value="FILTRAR">
+                      title="Pesquise as imagens do seu álbum pelo nome">
+                    <input type="button" class="search_bar_button cursor" value="FILTRAR">
                 </div>
               {{ Form::close() }}
             </div>
-            <div id="rm" class="eleven columns">
-              <img class="rm loader" src="{{ URL::to('/img/ajax-loader.gif') }}" />
+            <div id="rm" class="eleven columns rm">
+              <img class="loader" src="{{ URL::to('/img/ajax-loader.gif') }}" />
               <?php 
                 $photos = $album_photos;
                 $type = 'rm';
@@ -122,11 +124,11 @@
                 <p>Seu álbum está vazio.</p>
               @endif
             </div>
-            <div class="eleven columns block">
-              <div class="eight columns alpha rm buttons">
+            <div class="eleven columns block rm">
+              <div class="eight columns alpha buttons">
                 <input type="button" class="btn less less-than" value="&lt;&lt;">
                 <input type="button" class="btn less-than" value="&lt;">
-                <p>1/{{ $rmMaxPage }}</p>
+                <p>1 / {{ $rmMaxPage }}</p>
                 <input type="button" class="btn greater-than" value="&gt;">
                 <input type="button" class="btn greater greater-than" value="&gt;&gt;">
               </div>
@@ -136,6 +138,55 @@
             </div>
           </div>
           <div id="add_images" class="tab">
+          <div class="eleven columns select_options add">
+              {{ Form::open(array('url' => '', 'method' => '',
+                'class' => 'eleven columns alpha omega album_form')) }}
+                <div class="seven columns alpha omega">
+                  <div class="four columns alpha omega block">
+                    <input class="select_all" type="checkbox">
+                    <label for="">Selecionar imagens desta página</label>
+                    <p class="filter">Todas as imagens ({{ $other_photos_count }})</p>
+                  </div>
+                  <div class="three columns alpha omega block">
+                    <p class="selectedItems"></p>
+                  </div>
+                </div>
+                <div class="four columns alpha omega block">
+                  <div class="four columns alpha omega"> 
+                   <input type="text" class="search_bar"
+                      title="Pesquise imagens fora do seu álbum pelo nome">
+                    <input type="button" class="add search_bar_button cursor" value="FILTRAR">
+                  </div>
+                  <div class="four columns alpha omega block">
+                    <input type="radio" name="which_photos" value="user" checked/><label for="">Suas imagens</label>
+                    <input type="radio" name="which_photos" value="all" /><label for="">Imagens do Arquigrafia</label>
+                  </div>
+                </div>
+              {{ Form::close() }}
+            </div>
+            <div id="add" class="eleven columns add">
+              <img class="loader" src="{{ URL::to('/img/ajax-loader.gif') }}" />
+              <?php 
+                $photos = $other_photos;
+                $type = 'add';
+              ?>
+              @if ($photos->count() > 0)
+                @include('albums.includes.album-photos-edit')
+              @else
+                <p>Seu álbum está vazio.</p>
+              @endif
+            </div>
+            <div class="eleven columns block add">
+              <div class="eight columns alpha buttons">
+                <input type="button" class="btn less less-than" value="&lt;&lt;">
+                <input type="button" class="btn less-than" value="&lt;">
+                <p>1 / {{ $maxPage }}</p>
+                <input type="button" class="btn greater-than" value="&gt;">
+                <input type="button" class="btn greater greater-than" value="&gt;&gt;">
+              </div>
+              <div class="three columns omega">
+                <input type="button" id="add_photos_btn" class="btn right" value="ADICIONAR IMAGENS MARCADAS">
+              </div>
           </div>
         </div>
       </div>

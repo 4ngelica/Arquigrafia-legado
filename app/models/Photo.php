@@ -92,20 +92,51 @@ class Photo extends Eloquent {
 			->paginate($perPage);
 	}
 
+	public static function paginateUserPhotosNotInAlbum($user, $album, $q = null, $perPage = 24) {
+		$photos = self::photosNotInAlbum($album, $q);
+		$photos = $photos->where('user_id', $user->id);
+		$count = $photos->get()->count();
+		$photos = $photos->paginate($perPage);
+		return [$photos, $count];
+	}
+
+	public static function paginateAllPhotosNotInAlbum($album, $q = null, $perPage = 24) {
+		$photos = self::photosNotInAlbum($album, $q);
+		$count = $photos->get()->count();
+		$photos = $photos->paginate($perPage);
+		return [$photos, $count];
+	}
+
+	private static function photosNotInAlbum($album, $q) {
+		$photos = Photo::whereDoesntHave('albums', function($query) use($album) {
+			$query->where('album_id', $album->id);
+		});
+		if (!empty($q)) {
+			$photos = $photos->where(function ($query) use($q) {
+				$query->where('name', 'like', '%' . $q . '%')
+				->orWhere('workAuthor', 'like', '%' . $q . '%');
+			});
+		}
+		return $photos;
+	}
+
 	public static function paginateFromAlbumWithQuery($album, $q, $perPage = 24) {
 		if (empty($q)) {
-			return Photo::paginateAlbumPhotos($album);
+			$photos = Photo::paginateAlbumPhotos($album);
+			$count = $album->photos->count();
 		}
-		$album_id = $album->id;
-
-		return Photo::where(function ($query) use($q) {
+		else {
+			$photos = Photo::where(function ($query) use($q) {
 				$query->where('name', 'like', '%' . $q . '%')
 					->orWhere('workAuthor', 'like', '%' . $q . '%');
 			})
-			->whereHas('albums', function($query) use($album_id) {
-				$query->where('album_id', $album_id);
-			})
-			->paginate($perPage);
+			->whereHas('albums', function($query) use($album) {
+				$query->where('album_id', $album->id);
+			});
+			$count = $photos->get()->count();
+			$photos = $photos->paginate($perPage);
+		} 
+		return [$photos, $count];
 	}
 
 	public static function composeArchitectureName($name) {
