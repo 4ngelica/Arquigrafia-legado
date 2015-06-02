@@ -49,12 +49,12 @@
     <div class="twelve columns">
       <div class="tabs">
         <ul class="tab-links">
-          <li><a href="#album_info">Informações do álbum</a></li>
-          <li class="active"><a href="#album_images">Imagens do álbum</a></li>
+          <li class="active"><a href="#album_info">Informações do álbum</a></li>
+          <li><a href="#album_images">Imagens do álbum</a></li>
           <li><a href="#add_images">Inserção de imagens</a></li>
         </ul>
         <div class="tab-content">
-          <div id="album_info" class="tab">
+          <div id="album_info" class="tab active">
             {{ Form::open(array('url' => '/albums/' . $album->id . '/update/info', 'method' => 'post')) }}
               <div class="eleven columns">
                 <div class="five columns">
@@ -91,7 +91,7 @@
               </div>
             {{ Form::close() }}
           </div>
-          <div id="album_images" class="tab active rm">
+          <div id="album_images" class="tab rm">
             <div class="eleven columns select_options rm">
               {{ Form::open(array('url' => '', 'method' => '',
                 'class' => 'eleven columns alpha omega album_form')) }}
@@ -185,7 +185,7 @@
                 <input type="button" class="btn greater greater-than" value="&gt;&gt;">
               </div>
               <div class="three columns omega">
-                <input type="button" id="add_photos_btn" class="btn right" value="ADICIONAR IMAGENS MARCADAS">
+                <input type="button" id="add_photos_btn" class="btn right" value="INSERIR IMAGENS MARCADAS">
               </div>
           </div>
         </div>
