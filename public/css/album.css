@@ -24,10 +24,11 @@
 #rm_photos_btn { display: none; }
 
 #add, #rm { overflow: hidden; }
-#add p, #rm p { text-align: center; font-size: 16px; max-width: 300px;} 
+#add p, #rm p { text-align: center; font-size: 16px; max-width: 600px; display: block; margin: 130px auto;} 
 .add .loader, .rm .loader { display: none; margin: 0 auto; }
 .select_all, .select_all + label { cursor: pointer; }
-p.filter { margin-top: 10px; margin-left: 0; }
+p.filter { margin-top: 15px; margin-left: 0; }
+p.filter p { margin-left: 0; font-size: 12px; }
+p.filter a:hover { text-decoration: underline; }
 input[name=which_photos] + label { font-size: 12px; }
 .select_options { height: 76px; }
-p.filter { margin-top: 15px; }

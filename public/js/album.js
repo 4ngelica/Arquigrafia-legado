@@ -38,6 +38,12 @@ $(document).ready(function() {
 		updatePageInfo(checkbox);
 	});
 
+	$('.clear_search').live('click', function(e) {
+		var type = $(this).getType();
+		e.preventDefault();
+		searchPhotos(type, '');
+	});
+
 	$(".less-than").click(function(e) {
 		var type = $(this).getType();
 		var p = getPaginator(type);
@@ -57,37 +63,6 @@ $(document).ready(function() {
 			changePage(p, newPage, type);
 		}
 	});
-
-
-	// $('#rm_photos_btn').click(function(e) {
-	// 	e.preventDefault();
-	// 	var photos = [];
-	// 	var callback;
-	// 	$.each($('[name="photos_rm[]"]:checked'), function() {
-	// 		rm_photos.push($(this).val());
-	// 	});
-	// 	photos = { "photos[]": photos };
-	// 	callback = function(type, response) {
-	// 		updateContent(type, response);
-	// 		updatePages = oppositeType(type);
-	// 	}
-	// 	detachOrAttachPhotos(photos, callback, 'rm', 'detach');
-	// });
-
-	// $('#add_photos_btn').click(function(e) {
-	// 	e.preventDefault();
-	// 	var photos = [];
-	// 	var callback;
-	// 	$.each($('[name="photos_add[]"]:checked'), function() {
-	// 		photos.push($(this).val());
-	// 	});
-	// 	photos = { "photos[]": photos };
-	// 	callback = function(type, response) {
-	// 		updateContent(type, response);
-	// 		updatePages = oppositeType(type);
-	// 	}
-	// 	detachOrAttachPhotos(photos, callback, 'add', 'attach');
-	// });
 
 	$('#rm_photos_btn, #add_photos_btn').click(function(e) {
 		e.preventDefault();
@@ -351,12 +326,12 @@ var updateContent = function(type, response) {
 };
 function updateFilterText(type, photo_count) {
 	var paginator = getPaginator(type);
-	var message = 'Todas as imagens';
+	var message = 'Todas as imagens (' + photo_count + ').';
 	if (paginator.searchQuery != '') {
-		message = 'Filtro: "' + paginator.searchQuery + '"';
+		message = 'Filtro: "' + paginator.searchQuery + '" (' + photo_count + '). ';
+		message += '<p><a href="#" class="clear_search">Ver todas as imagens</a></p>';
 	}
-	message += ' (' + photo_count + ')';
-	$('.' + type + ' .filter').text(message);
+	$('.' + type + ' .filter').html(message);
 }
 function hidePages(type) {
 	$('#' + type + ' .page').hide();

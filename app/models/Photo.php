@@ -13,7 +13,8 @@ class Photo extends Eloquent {
 
 	protected $dates = ['deleted_at'];
 
-	protected $fillable = ['user_id','name', 'description', 'nome_arquivo','state','street', 'tombo', 'workAuthor', 'workdate', 'dataUpload', 'dataCriacao', 'country', 'collection', 'city'];
+	protected $fillable = ['user_id','name', 'description', 'nome_arquivo','state','street', 'tombo',
+		'workAuthor', 'workdate', 'dataUpload', 'dataCriacao', 'country', 'collection', 'city'];
 
 	static $allowModificationsList = [
 		'YES' => ['Sim', ''],
@@ -97,14 +98,14 @@ class Photo extends Eloquent {
 		$photos = $photos->where('user_id', $user->id);
 		$count = $photos->get()->count();
 		$photos = $photos->paginate($perPage);
-		return [$photos, $count];
+		return ['photos' => $photos, 'photos_count' => $count];
 	}
 
 	public static function paginateAllPhotosNotInAlbum($album, $q = null, $perPage = 24) {
 		$photos = self::photosNotInAlbum($album, $q);
 		$count = $photos->get()->count();
 		$photos = $photos->paginate($perPage);
-		return [$photos, $count];
+		return ['photos' => $photos, 'photos_count' => $count];
 	}
 
 	private static function photosNotInAlbum($album, $q) {
@@ -136,7 +137,7 @@ class Photo extends Eloquent {
 			$count = $photos->get()->count();
 			$photos = $photos->paginate($perPage);
 		} 
-		return [$photos, $count];
+		return ['photos' => $photos, 'photos_count' => $count];
 	}
 
 	public static function composeArchitectureName($name) {

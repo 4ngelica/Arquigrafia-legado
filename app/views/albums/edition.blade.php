@@ -1,14 +1,13 @@
 @extends('layouts.default')
 
 @section('head')
-  <title>Arquigrafia - tabs</title>
+  <title>Arquigrafia - Edição de {{ $album->title }}</title>
   <link rel="stylesheet" type="text/css" href="{{ URL::to('/css/tabs.css') }}">
   <script src="{{ URL::to('/js/albums-covers.js') }}"></script>
   <script src="{{ URL::to('/js/album.js') }}"></script>
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/custom-tooltip.css" />
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/checkbox-edition.css" />
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/album.css" />
-  {{-- // <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script> --}}
   <script src="{{ URL::to('/js/jquery.tooltipster.min.js') }}"></script>
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/tooltipster.css" />
   <script>
@@ -52,7 +51,7 @@
         <ul class="tab-links">
           <li><a href="#album_info">Informações do álbum</a></li>
           <li class="active"><a href="#album_images">Imagens do álbum</a></li>
-          <li><a href="#add_images">Adição de imagens</a></li>
+          <li><a href="#add_images">Inserção de imagens</a></li>
         </ul>
         <div class="tab-content">
           <div id="album_info" class="tab">
@@ -174,7 +173,7 @@
               @if ($photos->count() > 0)
                 @include('albums.includes.album-photos-edit')
               @else
-                <p>Seu álbum está vazio.</p>
+                <p>Não foi encontrada nenhuma imagem sua para ser adicionada.</p>
               @endif
             </div>
             <div class="eleven columns block add">
