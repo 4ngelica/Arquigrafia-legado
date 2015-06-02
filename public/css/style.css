@@ -562,6 +562,7 @@ input#login_white_button:hover { background-position: -160px -258px; }
 .message_box { border: 1px solid; margin: 10px 0px; padding:15px 20px; position: fixed; top: 5%; left: 40%; max-width: 400px; margin-left: -75px; font-size: 14px; display: none; }
 .message_box.success { color: #4F8A10;	background-color: #DFF2BF; }
 .message_box.error { color: #D8000C; background-color: #FFBABA; }
+.message_box.info { color: #9F6000; background: #FEEFB3; }
 /* Similar images*/
 #image_similar { float: left; margin: 0 0 0 3px; }
 .image_similar { 

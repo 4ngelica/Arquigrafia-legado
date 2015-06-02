@@ -299,7 +299,7 @@ class AlbumsController extends \BaseController {
 	public function detachPhotos($id) {
 		try {
 			$album = Album::find($id);
-			$photos = Input::get('photos_rm');
+			$photos = Input::get('photos');
 			$album->photos()->detach($photos);
 		} catch (Exception $e) {
 			return Response::json('failed');
@@ -310,7 +310,7 @@ class AlbumsController extends \BaseController {
 	public function attachPhotos($id) {
 		try {
 			$album = Album::find($id);
-			$photos = Input::get('photos_add');
+			$photos = Input::get('photos');
 			$album->photos()->attach($photos);		
 		} catch (Exception $e) {
 			return Response::json('failed');

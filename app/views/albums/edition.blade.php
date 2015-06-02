@@ -36,6 +36,7 @@
     var album = {{ $album->id }};
     var covers_counter = 0;
     var which_photos = 'user';
+    var update = null;
   </script>
 @stop
 
@@ -91,7 +92,7 @@
               </div>
             {{ Form::close() }}
           </div>
-          <div id="album_images" class="tab active">
+          <div id="album_images" class="tab active rm">
             <div class="eleven columns select_options rm">
               {{ Form::open(array('url' => '', 'method' => '',
                 'class' => 'eleven columns alpha omega album_form')) }}
@@ -137,7 +138,7 @@
               </div>
             </div>
           </div>
-          <div id="add_images" class="tab">
+          <div id="add_images" class="tab add">
           <div class="eleven columns select_options add">
               {{ Form::open(array('url' => '', 'method' => '',
                 'class' => 'eleven columns alpha omega album_form')) }}
@@ -205,6 +206,11 @@
         $('.tabs ' + currentAttrValue).fadeIn('slow').siblings().hide();
         $(this).parent('li').addClass('active').siblings().removeClass('active');
         e.preventDefault();
+        console.log(update);
+        console.log($('.tabs ' + currentAttrValue).hasClass(update));
+        if (update && $('.tabs ' + currentAttrValue).hasClass(update)) {
+          updatePages(update);
+        }
       });
     });
   </script>    

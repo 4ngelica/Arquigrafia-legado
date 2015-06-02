@@ -59,26 +59,59 @@ $(document).ready(function() {
 	});
 
 
-	$('#rm_photos_btn').click(function(e) {
-		e.preventDefault();
-		var rm_photos = [];
-		$.each($('[name="photos_rm[]"]:checked'), function() {
-			rm_photos.push($(this).val());
-		});
-		var photos = { "photos_rm[]": rm_photos };
-		detachOrAttachPhotos(photos, updateContent, 'rm', 'detach');
-	});
+	// $('#rm_photos_btn').click(function(e) {
+	// 	e.preventDefault();
+	// 	var photos = [];
+	// 	var callback;
+	// 	$.each($('[name="photos_rm[]"]:checked'), function() {
+	// 		rm_photos.push($(this).val());
+	// 	});
+	// 	photos = { "photos[]": photos };
+	// 	callback = function(type, response) {
+	// 		updateContent(type, response);
+	// 		updatePages = oppositeType(type);
+	// 	}
+	// 	detachOrAttachPhotos(photos, callback, 'rm', 'detach');
+	// });
 
-	$('#add_photos_btn').click(function(e) {
+	// $('#add_photos_btn').click(function(e) {
+	// 	e.preventDefault();
+	// 	var photos = [];
+	// 	var callback;
+	// 	$.each($('[name="photos_add[]"]:checked'), function() {
+	// 		photos.push($(this).val());
+	// 	});
+	// 	photos = { "photos[]": photos };
+	// 	callback = function(type, response) {
+	// 		updateContent(type, response);
+	// 		updatePages = oppositeType(type);
+	// 	}
+	// 	detachOrAttachPhotos(photos, callback, 'add', 'attach');
+	// });
+
+	$('#rm_photos_btn, #add_photos_btn').click(function(e) {
 		e.preventDefault();
+		var callback;
 		var photos = [];
-		$.each($('[name="photos_add[]"]:checked'), function() {
+		var type = $(this).getType();
+		var action = (type == 'rm') ? 'detach' : 'attach';
+		$.each($('[name="photos_' + type + '[]"]:checked'), function() {
 			photos.push($(this).val());
 		});
-		var photos = { "photos_add[]": photos };
-		detachOrAttachPhotos(photos, updateContent, 'add', 'attach');
+		photos = { "photos[]": photos };
+		callback = function(type, response) {
+			var message;
+			if (type == 'add') {
+				message = 'Imagens adicionadas ao álbum com sucesso';
+			} else {
+				message = 'Imagens adicionadas ao álbum com sucesso';
+			}
+			updateContent(type, response);
+			update = oppositeType(type);
+			$('.message_box').message(message, 'success');
+		}
+		detachOrAttachPhotos(photos, callback, type, action);
 	});
-
 
 	$('.rm input[type=text].search_bar, .add input[type=text].search_bar').keypress(function(e) {
 		if (e.which == 13) {
@@ -94,11 +127,12 @@ $(document).ready(function() {
 
 	$('input[name=which_photos]').click(function() {
 		var wp = $(this).val();
+		var paginator = getPaginator('add');
 		if (wp == which_photos) {
 			return;
 		}
 		which_photos = wp;
-		searchPhotos('add', '');
+		searchPhotos('add', paginator.searchQuery);
 	});
 
 	$('.search_bar').toolTip('search-bar-info-theme');
@@ -127,11 +161,11 @@ $.fn.extend({
 	getPosition: function() {
 		return $(this).hasClass('left') ? 'left' : 'right';
 	},
-	message: function (message, type) {
+	message: function (message, message_type) {
 		var message_box = $(this);
-		message_box.addClass(type).text(message).fadeIn()
-			.delay(3000).fadeOut(400, function () {
-				message_box.removeClass(type);
+		message_box.addClass(message_type).text(message).fadeIn()
+			.delay(2000).fadeOut(400, function () {
+				message_box.removeClass(message_type);
 			});
 	},
 	isChecked: function() {
@@ -234,12 +268,13 @@ function changePage(paginator, page, type) {
 	}
 }
 
-function requestPage(page, type, URL, callback, paginator) {
+function requestPage(page, type, URL, callback, paginator, runInBackground) {
 	var data = { page: page, q: paginator.searchQuery, wp: $('input[name=which_photos]:checked').val() };
-	console.log(data);
-	fixPageContainerHeight(type);
 	clearContent(type);
-	showAndFixElementSpacing(type, $('.' + type + ' .loader'));
+	if (!runInBackground) {
+		fixPageContainerHeight(type);
+		showAndFixElementSpacing(type, $('.' + type + ' .loader'));
+	}
 	$.get(URL, data)
 	.done(function(data) {
 		$("." + type + " .loader").hide();
@@ -385,5 +420,22 @@ function detachOrAttachPhotos(photos, callback, type, action) {
 		$('.' + type + ' .loader').hide();
 		failedRequest(type, 'Não foi possível atualizar seu álbum! Tente novamente mais tarde.');
 	});
+
 }
 
+function oppositeType(type) {
+	return (type == 'rm') ? 'add' : 'rm';
+}
+
+function updatePages(type) {
+	var message;
+	var paginator = getPaginator(type);
+	if (type == 'add') {
+		message = 'Atualizando imagens disponíveis para adição...';
+	} else {
+		message = 'Atualizando álbum...';
+	}
+	$('.message_box').message(message, 'info');
+	searchPhotos(type, paginator.searchQuery);
+	update = null;
+}
