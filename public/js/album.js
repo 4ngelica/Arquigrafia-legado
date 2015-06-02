@@ -2,323 +2,115 @@ $(document).ready(function() {
 
 	$("#album_info form").submit(function(e) {
 		e.preventDefault();
-		var cover = $("#_cover").val();
-		var title = $("#title").val();
-		var description = $("#description").val();
-		var data = { title: title, description: description, cover_id: cover };
 		var url = $(this).attr('action');
+		var data = $(this).serializeArray();
 		$.post(url, data).done(function(response) {
 			if (response === 'success') {
-				$("#info .error:first").html('');
-				$("#album_title").html('Edição de ' + title);
+				$("#info .error:first").text('');
+				$("#album_title").text('Edição de ' + $("#title").val());
 				$(".message_box").message('Informações do álbum atualizadas com sucesso!', 'success');
 			} else {
 				$("#info .error:first").append(response.title[0]);
 			}
 		}).fail(function() {
-			$(".message_box").message('Não foi possível atualizar seu álbum! Tente novamente mais tarde.', 'error');
+			var message = 'Não foi possível atualizar seu álbum! Tente novamente mais tarde.';
+			$(".message_box").message(message, 'error');
 		});
 	});
 
-	$.fn.extend({
-		message: function (message, type) {
-			var message_box = $(this);
-			message_box.addClass(type).html(message).fadeIn()
-				.delay(3000).fadeOut(400, function () {
-					message_box.removeClass(type);
-				});
-		}
-	});
-
-	$('.loader').hide();
-
 	$('.select_all').click(function() {
-		var checked = $(this).is(':checked');
-		var type = getType(this);
-		checkPhotos(type, checked, paginators[type]);
+		toggleCurrentPagePhotos($(this));
 	});
 
 	$('.select_all + label').click(function() {
-		var type = getType(this);
 		var checkbox = $(this).siblings('.select_all');
-		var check = checkbox.is(':checked');
-		checkbox.prop('checked', !check);
-		checkPhotos(type, !check, paginators[type]);
+		checkbox.toggleCheckbox();
+		toggleCurrentPagePhotos(checkbox);
 	});
 
 	$('.ch_photo').live('click', function() {
-		var type = getType(this);
-		var paginator = paginators[type];
-		paginator.selectedItems += ($(this).is(':checked') ? 1 : -1);
-		updateSelectedItemsText(type, paginator.selectedItems);
-		updateCheckBox(type, paginator);
+		updatePageInfo($(this));
 	});
 
 	$('.ch_photo + img').live('click', function () {
-		var type = getType(this);
-		var paginator = paginators[type];
 		var checkbox = $(this).siblings('.ch_photo');
-		checkbox.prop('checked', !checkbox.prop('checked'));
-		paginator.selectedItems += (checkbox.is(':checked') ? 1 : -1);
-		updateSelectedItemsText(type, paginator.selectedItems);
-		updateCheckBox(type, paginator);
+		checkbox.toggleCheckbox();
+		updatePageInfo(checkbox);
 	});
 
-	function checkPhotos(type, checked, paginator) {
-		var currentPage = paginator.currentPage;
-		var ch_photos = $( photosFromCurrentPage(type, paginator) );
-		var checked_ch_photos = $( photosFromCurrentPage(type, paginator) + ':checked');
-		var diff = ch_photos.length - checked_ch_photos.length;
-		ch_photos.prop('checked', checked);
-		paginator.selectedItems += (checked ? diff : -ch_photos.length);
-		updateSelectedItemsText(type, paginator.selectedItems);
-	}
-
-	function updateSelectedItemsText(type, selectedItems) {
-		if (selectedItems > 0) {
-			$('#' + type + '_photos_btn').fadeIn();
-			if (selectedItems == 1) {
-				$('.' + type + ' p.selectedItems').html(selectedItems + ' imagem selecionada');
-			} else {
-				$('.' + type + ' p.selectedItems').html(selectedItems + ' imagens selecionadas');
-			}
-		} else {
-			$('#' + type + '_photos_btn').fadeOut();
-			$('.' + type + ' p.selectedItems').html('');
-		}
-	}
-
-	function updateCheckBox(type, paginator) {
-		var current_photos = photosFromCurrentPage(type, paginator);
-		if ( $(current_photos).length != $(current_photos + ':checked').length ) {
-			$('.' + type + ' .select_all').prop('checked', false);
-		} else {
-			$('.' + type + ' .select_all').prop('checked', true);
-		}
-	}
-
-	function photosFromCurrentPage(type, paginator) {
-		return '#' + type + '_page' + paginator.currentPage + ' .ch_photo';
-	}
+	$('.clear_search').live('click', function(e) {
+		var type = $(this).getType();
+		e.preventDefault();
+		searchPhotos(type, '');
+	});
 
 	$(".less-than").click(function(e) {
+		var type = $(this).getType();
+		var p = getPaginator(type);
 		e.preventDefault();
-		var type = getType(this);
-		var p = paginators[type];
 		if (p.currentPage > 1) {
-			if ( $(this).hasClass('less')) {
-				transition(p, 1, type);
-			} else {
-				transition(p, p.currentPage - 1, type);
-			}
+			var newPage = ( $(this).hasClass('less') ? 1 : p.currentPage - 1 );
+			changePage(p, newPage, type);
 		}
 	});
 
 	$(".greater-than").click(function(e) {
+		var type = $(this).getType();
+		var p = getPaginator(type);
 		e.preventDefault();
-		var type = getType(this);
-		var p = paginators[type];
 		if (p.currentPage < p.maxPage) {
-			if ( $(this).hasClass('greater')) {
-				transition(p, p.maxPage, type);
-			} else {
-				transition(p, p.currentPage + 1, type);
-			}
+			var newPage = ( $(this).hasClass('greater') ? p.maxPage : p.currentPage + 1 );
+			changePage(p, newPage, type);
 		}
 	});
 
-	function getType(element) {
-		if ( $(element).parent().hasClass('rm') ) {
-			return 'rm';
-		} else if ( $(element).parent().hasClass('rm') ) {
-			return 'add';
-		}
-		return null;
-	}
-
-	function transition(paginator, page, type) {
-		if (paginator.loadedPages.indexOf(page) >= 0) {
-			fixContentDivHeight(type);
-			hidePages(type);
-			$("#"+ type + "_page" + page).fadeIn();
-			paginator.currentPage = page;
-			$('.' + type + '.buttons p').html(paginator.currentPage + ' / ' + paginator.maxPage);
-			updateCheckBox(type, paginator);
-		} else {
-			var callback = function(paginator, page, type, data) {
-				$("#" + type).append(data['content']);
-				paginator.loadedPages.push(page);
-				paginator.currentPage = page;
-				$('.' + type + '.buttons p').html(paginator.currentPage + ' / ' + paginator.maxPage);
-				updateCheckBox(type, paginator);
-			};
-			requestPage(page, type, paginator.url, callback, paginator);
-		}
-	}
-	//requisição ajax para navegar pelas páginas de fotos do álbum
-	function requestPage(page, type, URL, callback, paginator) {
-		var ret = 0;
-		fixContentDivHeight(type);
-		clearContent(type);
-		showAndFixElementSpacing(type, $('.' + type + '.loader'));
-		$.get(URL + '?page=' + page + '&q=' + paginator.searchQuery)
-		.done(function() {
-			ret = 1;
-		}).fail(function() {
-			$(".message_box").message('Não foi possível atualizar seu álbum! Tente novamente mais tarde.', 'error');
-		}).always(function(data) {
-			$("." + type + ".loader").hide();
-			if (ret == 1) {
-				callback(paginator, page, type, data);
-			} else {
-				$('#' + type + '_page' + paginator.currentPage).show();
-			}
-		});
-	}
-
-	$('#rm_photos_btn').click(function(e) {
+	$('#rm_photos_btn, #add_photos_btn').click(function(e) {
 		e.preventDefault();
-		var rm_photos = [];
-		$.each($('[name="photos_rm[]"]:checked'), function() {
-			rm_photos.push($(this).val());
+		var callback;
+		var photos = [];
+		var type = $(this).getType();
+		var action = (type == 'rm') ? 'detach' : 'attach';
+		$.each($('[name="photos_' + type + '[]"]:checked'), function() {
+			photos.push($(this).val());
 		});
-		var photos = { "photos_rm[]": rm_photos };
-		actOnPhotos(photos, updateContent, 'rm', 'detach');
-	})
-
-	function fixContentDivHeight(type, animate) {
-		var maxHeight = $('#' + type).children('#' + type + '_page1').css('height');
-		if (typeof maxHeight === 'undefined') {
-			maxHeight = $('#' + type).css('height');
+		photos = { "photos[]": photos };
+		callback = function(type, response) {
+			var message;
+			if (type == 'add') {
+				message = 'Imagens adicionadas ao álbum com sucesso';
+			} else {
+				message = 'Imagens adicionadas ao álbum com sucesso';
+			}
+			updateContent(type, response);
+			update = oppositeType(type);
+			$('.message_box').message(message, 'success');
 		}
-		if (animate) {
-			$('#' + type).animate({ 'height' : maxHeight });
-		} else {
-			$('#' + type).css({ 'height' : maxHeight });
-		}
-	}
-
-	function actOnPhotos(photos, callback, type, action) {
-		var loaderMarginTop = $('#' + type + '_page1').height() / 2;
-		loaderMarginTop = (loaderMarginTop >= 150 ? 130 : loaderMarginTop);
-		fixContentDivHeight(type);
-		$('#'+ type + ' .page').hide();
-		$('.' + type + '.loader').css({ 'margin-top' : loaderMarginTop }).show();
-		$.post('/albums/' + album + '/' + action + '/photos?page=1&q=' + paginators[type].searchQuery, photos).done(function(response) { //volta tudo para a página 1
-			$('.'+ type + '.loader').fadeOut('fast', function() {
-				if (response == 'failed') {
-					$('#' + type + '_page' + paginators[type].currentPage).fadeIn();
-					$(".message_box").message('Não foi possível atualizar seu álbum! Tente novamente mais tarde.', 'error');
-				} else {
-					callback(type, response);
-				}
-			});
-		}).fail(function(xhr, status, error) {
-			$('.' + type + '.loader').hide().delay(500);
-			$('#' + type + '_page' + paginators[type].currentPage).fadeIn();
-			$(".message_box").message('Não foi possível atualizar seu álbum! Tente novamente mais tarde.', 'error');
-		});
-	}
-
-	var resetData = function(type, response) {
-		clearPaginator(type, response['maxPage']);
-		resetCheckboxAndText(type);
-		fixContentDivHeight(type, true);
-	};
-
-	function clearPaginator(type, maxPage) {
-		paginators[type].currentPage = 1;
-		paginators[type].maxPage = maxPage;
-		paginators[type].loadedPages = [1];
-		paginators[type].selectedItems = 0;
-	}
-
-	function resetCheckboxAndText(type) {
-		var paginator = paginators[type];
-		$('.' + type + ' .select_all').prop('checked', false);
-		$('#' + type + '_photos_btn').fadeOut();
-		$('.' + type + ' p.selectedItems').html('');
-		$('.' + type + '.buttons p').html(paginator.currentPage + ' / ' + paginator.maxPage);
-	}
+		detachOrAttachPhotos(photos, callback, type, action);
+	});
 
 	$('.rm input[type=text].search_bar, .add input[type=text].search_bar').keypress(function(e) {
 		if (e.which == 13) {
-			var type = getType(this);
-			var paginator = paginators[type];
-			var text = $(this).val();
-			if (type == null) {
-				return;
-			}
 			e.preventDefault();
-			searchPhotos(type, paginator, text);
+			getTextAndSearchPhotos($(this));
 		}
 	});
 
 	$('input[type=button].search_bar_button').click(function(e) {
-		var type = getType(this);
-		var paginator = paginators[type];
-		var text = $(this).siblings('input[type=text]').val();
-		if (type == null) {
-			return;
-		}
 		e.preventDefault();
-		searchPhotos(type, paginator, text);
+		getTextAndSearchPhotos($(this).siblings('input[type=text]'));
 	});
 
-	function searchPhotos(type, paginator, text) {
-		paginator.searchQuery = text;
-		var callback = function (paginator, page, type, data) {
-			updateContent(type, data);
-		};
-		requestPage(1, type, paginator.url, callback, paginator);
-	}
-
-	var updateContent = function(type, response) {
-		$('#' + type + ' .page').remove();
-		if (response['empty']) {
-				var msg;
-				if (type == 'add') {
-					msg = 'Não foi encontrada nenhuma imagem para ser adicionada ao seu álbum.'
-				} else {
-					if (paginators[type].searchQuery == '') {
-						msg = 'Seu álbum está vazio.'
-					} else {
-						msg = 'Sua pesquisa não retornou nenhuma imagem.'
-					}
-				}
-				$('<p>' + msg + '</p>').appendTo('#' + type).hide();
-				showAndFixElementSpacing(type, $('#' + type + ' p'));
-				resetData(type, response);
-		} else {
-			$(response['content']).appendTo('#' + type).hide().fadeIn(function() {
-				resetData(type, response);
-			});
+	$('input[name=which_photos]').click(function() {
+		var wp = $(this).val();
+		var paginator = getPaginator('add');
+		if (wp == which_photos) {
+			return;
 		}
-	};
+		which_photos = wp;
+		searchPhotos('add', paginator.searchQuery);
+	});
 
-	function hidePages(type) {
-		$('#' + type + ' .page').hide();
-	}
-
-	function clearContent(type) {
-		hidePages(type);
-		$('#' + type).children('p').remove();
-	}
-
-	function showCurrentPage(type) {
-		$('#' + type + '_page' + paginators[type].currentPage).show();
-	}
-
-	function showAndFixElementSpacing(type, element) {
-		var containerHeight = element.parent().height();
-		var containerWidth = element.parent().width();
-		var marginTop = containerHeight / 2 - element.height() / 2;
-		var marginLeft = containerWidth / 2 - element.width() / 2;
-		element.show();
-		element.css({ 'margin-top' : marginTop, 'margin-left' : marginLeft });
-	}
-
-	$('.rm .search_bar').toolTip('search-bar-info-theme');
+	$('.search_bar').toolTip('search-bar-info-theme');
 	tooltipPhotos();
 
 });
@@ -339,14 +131,34 @@ $.fn.extend({
 		if (typeof tooltip_position !== 'undefined') {
 			options.position = tooltip_position;
 		}
-		console.log(options);
 		$(this).tooltipster(options);
 	},
 	getPosition: function() {
 		return $(this).hasClass('left') ? 'left' : 'right';
+	},
+	message: function (message, message_type) {
+		var message_box = $(this);
+		message_box.addClass(message_type).text(message).fadeIn()
+			.delay(2000).fadeOut(400, function () {
+				message_box.removeClass(message_type);
+			});
+	},
+	isChecked: function() {
+		return $(this).is(':checked');
+	},
+	toggleCheckbox: function() {
+		var checked = $(this).isChecked();
+		$(this).prop('checked', !checked);
+	},
+	getType: function() {
+		if ( $(this).closest('.rm').length ) {
+			return 'rm';
+		} else if ( $(this).closest('.add').length ) {
+			return 'add';
+		}
+		return null;
 	}
 });
-
 
 function tooltipPhotos() {
 	$('.ch_photo + img').each(function() {
@@ -367,4 +179,238 @@ function tooltipPhotos() {
 				}
 			});
 	});
+}
+
+function getPaginator(type) {
+	return paginators[type];
+}
+
+function photosFromCurrentPage(type) {
+	var paginator = getPaginator(type);
+	return '#' + type + '_page' + paginator.currentPage + ' .ch_photo';
+}
+
+function toggleCurrentPagePhotos(checkbox) {
+	var type = checkbox.getType();
+	var paginator = getPaginator(type);
+	var checked = checkbox.isChecked();
+	var current_photos = photosFromCurrentPage(type);
+	var checked_photos = $( current_photos + ':checked');
+	var unchecked_photos = $( current_photos + ':not(:checked)');
+	$(current_photos).prop('checked', checked); // check or uncheck all checkboxes from current page
+	paginator.selectedItems += (checked ? unchecked_photos.length : -checked_photos.length);
+	updateSelectedItemsText(type, paginator.selectedItems);
+}
+
+function updatePageInfo(checkbox) {
+	var type = checkbox.getType();
+	var paginator = getPaginator(type);
+	paginator.selectedItems += (checkbox.isChecked() ? 1 : -1);
+	updateSelectedItemsText(type, paginator.selectedItems);
+	updateSelectAllCheckbox(type, paginator);
+}
+
+function updateSelectedItemsText(type, selectedItems) {
+	var message = '';
+	if (selectedItems > 0) {
+		message = selectedItems;
+		message += (selectedItems == 1 ? ' imagem selecionada' : ' imagens selecionadas');
+		$('#' + type + '_photos_btn').fadeIn();
+	} else {
+		$('#' + type + '_photos_btn').fadeOut();
+	}
+	$('.' + type + ' p.selectedItems').text(message);
+}
+
+function updateSelectAllCheckbox(type, paginator) {
+	var current_photos = photosFromCurrentPage(type, paginator);
+	var checked = ( $(current_photos).length == $(current_photos + ':checked').length );
+	$('.' + type + ' .select_all').prop('checked', checked);
+}
+
+function changePage(paginator, page, type) {
+	if (paginator.loadedPages.indexOf(page) >= 0) {
+		fixPageContainerHeight(type);
+		clearContent(type);
+		showPage(page, type);
+	} else {
+		var callback = function(type, data, paginator, page) {
+			$("#" + type).append(data['content']);
+			paginator.loadedPages.push(page);
+			showPage(page, type);
+		};
+		requestPage(page, type, paginator.url, callback, paginator);
+	}
+}
+
+function requestPage(page, type, URL, callback, paginator, runInBackground) {
+	var data = { page: page, q: paginator.searchQuery, wp: $('input[name=which_photos]:checked').val() };
+	clearContent(type);
+	if (!runInBackground) {
+		fixPageContainerHeight(type);
+		showAndFixElementSpacing(type, $('.' + type + ' .loader'));
+	}
+	$.get(URL, data)
+	.done(function(data) {
+		$("." + type + " .loader").hide();
+		callback(type, data, paginator, page);
+	}).fail(function() {
+		$("." + type + " .loader").hide();
+		failedRequest(type, 'Aconteceu um erro! Tente novamente mais tarde.');
+	});
+}
+
+function failedRequest(type, message) {
+	paginator = getPaginator(type);
+	showPage(paginator.currentPage, type);
+	$(".message_box").message(message, 'error');
+}
+
+var resetData = function(type, response) {
+	updateFilterText(type, response['count']);
+	clearPaginator(type, response['maxPage']);
+	resetCheckboxAndText(type);
+	fixPageContainerHeight(type, true);
+};
+
+function clearPaginator(type, maxPage) {
+	var paginator = getPaginator(type);
+	paginator.currentPage = 1;
+	paginator.maxPage = maxPage;
+	paginator.loadedPages = [1];
+	paginator.selectedItems = 0;
+}
+
+function resetCheckboxAndText(type) {
+	var paginator = getPaginator(type);
+	$('.' + type + ' .select_all').prop('checked', false);
+	updateSelectedItemsText(type, 0);
+	updatePaginationButtons(type);
+}
+
+
+function getTextAndSearchPhotos(element) {
+	var type = element.getType();
+	var text = element.val();
+	searchPhotos(type, text);
+}
+
+function searchPhotos(type, text) {
+	var paginator = getPaginator(type);
+	paginator.searchQuery = text;
+	var callback = function (type, data) {
+		updateContent(type, data);
+	};
+	requestPage(1, type, paginator.url, callback, paginator);
+}
+
+var updateContent = function(type, response) {
+	$('#' + type + ' .page').remove();
+	if (response['empty']) {
+			var msg;
+			if (type == 'add') {
+				msg = 'Não foi encontrada nenhuma imagem para ser adicionada ao seu álbum.'
+			} else if (paginators[type].searchQuery == '') {
+				msg = 'Seu álbum está vazio.'
+			} else {
+				msg = 'Sua pesquisa não retornou nenhuma imagem.'
+			}
+			$('<p>' + msg + '</p>').appendTo('#' + type).hide();
+			showAndFixElementSpacing(type, $('#' + type + ' p'));
+			resetData(type, response);
+	} else {
+		$(response['content']).appendTo('#' + type).hide().fadeIn(function() {
+			resetData(type, response);		
+		});
+	}
+};
+function updateFilterText(type, photo_count) {
+	var paginator = getPaginator(type);
+	var message = 'Todas as imagens (' + photo_count + ').';
+	if (paginator.searchQuery != '') {
+		message = 'Filtro: "' + paginator.searchQuery + '" (' + photo_count + '). ';
+		message += '<p><a href="#" class="clear_search">Ver todas as imagens</a></p>';
+	}
+	$('.' + type + ' .filter').html(message);
+}
+function hidePages(type) {
+	$('#' + type + ' .page').hide();
+}
+
+function showPage(page, type) {
+	var paginator = getPaginator(type);
+	$('#' + type + '_page' + page).fadeIn();
+	paginator.currentPage = page;
+	updatePaginationButtons(type);
+	updateSelectAllCheckbox(type, paginator);
+}
+
+function updatePaginationButtons(type) {
+	var paginator = getPaginator(type);
+	var buttons = $('.' + type + ' .buttons');
+	buttons.find('p').text(paginator.currentPage + ' / ' + paginator.maxPage);
+}
+
+function showAndFixElementSpacing(type, element) {
+	var containerHeight = element.parent().height();
+	var containerWidth = element.parent().width();
+	var marginTop = containerHeight / 2 - element.height() / 2;
+	var marginLeft = containerWidth / 2 - element.width() / 2;
+	element.css({ 'margin-top' : marginTop, 'margin-left' : marginLeft });
+	element.show();
+}
+
+function fixPageContainerHeight(type, animate) {
+	var maxHeight = $('#' + type).children('#' + type + '_page1').css('height');
+	if (typeof maxHeight === 'undefined') {
+		maxHeight = $('#' + type).css('height');
+	}
+	if (animate) {
+		$('#' + type).animate({ 'height' : maxHeight });
+	} else {
+		$('#' + type).css({ 'height' : maxHeight });
+	}
+}
+
+function clearContent(type) {
+	hidePages(type);
+	$('#' + type).children('p').remove();
+}
+
+function detachOrAttachPhotos(photos, callback, type, action) {
+	var paginator = getPaginator(type);
+	fixPageContainerHeight(type);
+	clearContent(type);
+	showAndFixElementSpacing(type, $('.' + type + ' .loader'));
+	photos['q'] = paginator.searchQuery;
+	photos['wp'] = $('input[name=which_photos]:checked').val();
+	$.post('/albums/' + album + '/' + action + '/photos?page=1', photos).done(function(response) { //volta tudo para a página 1
+		$('.'+ type + ' .loader').hide();
+		if (response == 'failed') {
+			failedRequest(type, 'Não foi possível atualizar seu álbum! Tente novamente mais tarde.');
+		} else {
+			callback(type, response);
+		}
+	}).fail(function() {
+		$('.' + type + ' .loader').hide();
+		failedRequest(type, 'Não foi possível atualizar seu álbum! Tente novamente mais tarde.');
+	});
+
+}
+
+function oppositeType(type) {
+	return (type == 'rm') ? 'add' : 'rm';
+}
+
+function updatePages(type) {
+	var message;
+	var paginator = getPaginator(type);
+	if (type == 'add') {
+		message = 'Atualizando imagens disponíveis para adição...';
+	} else {
+		message = 'Atualizando álbum...';
+	}
+	$('.message_box').message(message, 'info');
+	searchPhotos(type, paginator.searchQuery);
+	update = null;
 }

@@ -97,4 +97,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		$image->save(public_path().'/arquigrafia-avatars/'.$user->id.'.jpg');
 		$image->save(public_path().'/arquigrafia-avatars/'. $user->id."_original.jpg");
 	}
+
+	public function equal($user) {
+		return ($this->id == $user->id);
+	}
 }

@@ -16,7 +16,7 @@ class AlbumsController extends \BaseController {
 
 	public function create() {
 		$url = URL::to('/albums/photos/add');
-		$photos = Photo::paginateUserPhotos(Auth::user(), 24);
+		$photos = Photo::paginateUserPhotos(Auth::user());
 		$maxPage = $photos->getLastPage();
 		$image = null;
 		if ( Session::has('image') )
@@ -33,20 +33,20 @@ class AlbumsController extends \BaseController {
 
 	public function show($id) {
 		$album = Album::find($id);
-		if ( isset($album) ) {
-			$photos = $album->photos;
-			$user = $album->user;
-			$edit = false;
-			$other_albums = $user->albums->except($album->id);
-			if ( Auth::check() && $user->id == Auth::id() )
-				$edit = true;
-			return View::make('albums.show')
-				->with(['photos' => $photos, 'album' => $album,
-					'user' => $user,
-					'other_albums' => $other_albums]);
-
+		if (is_null($album)) {
+			return Redirect::to('/');
 		}
-		return Redirect::to('/');
+		$photos = $album->photos;
+		$user = $album->user;
+		$edit = false;
+		$other_albums = $user->albums->except($album->id);
+		return View::make('albums.show')
+			->with([
+				'photos' => $photos,
+				'album' => $album,
+				'user' => $user,
+				'other_albums' => $other_albums
+			]);
 	}
 
 	public function store() {
@@ -62,27 +62,24 @@ class AlbumsController extends \BaseController {
 		if ($validator->fails()) {
 			$messages = $validator->messages();
 			return Redirect::to('/albums/create')->withErrors($messages);
-		} else {
-			$album = Album::create([
-					'title' => $input["title"],
-					'description' => $input["description"],
-					'creationDate' => date('Y-m-d H:i:s'),
-					'user_id' => Auth::id(),
-					'cover_id' => $cover_id
-				]);
-			if (!empty($photos))
-				$album->photos()->sync($photos);
-
-			return Redirect::to('/albums/' . $album->id);
 		}
+		$album = Album::create([
+				'title' => $input["title"],
+				'description' => $input["description"],
+				'creationDate' => date('Y-m-d H:i:s'),
+				'user_id' => Auth::id(),
+				'cover_id' => $cover_id
+			]);
+		if (!empty($photos)) {
+			$album->photos()->sync($photos);
+		}
+		return Redirect::to('/albums/' . $album->id);
 	}
 
 	public function delete($id) {
-
-		$album = Album::whereid($id)->first();
-		$logged_user = Auth::user();
-		if ( isset($album) && $logged_user->id == $album->user_id)
-		{
+		$album = Album::find($id);
+		$user = Auth::user();
+		if ( isset($album) && $user->equal($album->user) ) {
 			$title = $album->title;
 			$album->photos()->detach();
 			$album->delete();
@@ -95,8 +92,9 @@ class AlbumsController extends \BaseController {
 		$user = Auth::user();
 		$album = Album::find($id);
 
-		if ($user->id != $album->user_id)
+		if (!$user->equal($album->user)) {
 			return Redirect::to('/');
+		}
 
 		$album_photos = Photo::paginateAlbumPhotos($album);
 		$other_photos = Photo::paginateOtherPhotos($user, $album->photos);
@@ -122,21 +120,23 @@ class AlbumsController extends \BaseController {
 	public function edition($id) {
 		$user = Auth::user();
 		$album = Album::find($id);
-
-		if ($user->id != $album->user_id)
+		if (is_null($album) || !$user->equal($album->user)) {
 			return Redirect::to('/');
-
+		}
 		$album_photos = Photo::paginateAlbumPhotos($album);
-		$other_photos = Photo::paginateOtherPhotos($user, $album->photos);
+		$other_photos_pagination = Photo::paginateUserPhotosNotInAlbum($user, $album);
+		$other_photos = $other_photos_pagination['photos'];
+		$other_photos_count = $other_photos_pagination['photos_count'];
 		$maxPage = $other_photos->getLastPage();
 		$rmMaxPage = $album_photos->getLastPage();
-		$url = URL::to('/albums/' . $album->id . '/photos/add');
+		$url = URL::to('/albums/' . $album->id . '/paginate/other/photos/');
 		$rmUrl = URL::to('/albums/' . $album->id . '/paginate/photos');
 		return View::make('albums.edition')
 			->with(
 				['album' => $album,
 				'album_photos' => $album_photos,
 				'other_photos' => $other_photos,
+				'other_photos_count' => $other_photos_count,
 				'page' => 1,
 				'maxPage' => $maxPage,
 				'rmMaxPage' => $rmMaxPage,
@@ -295,26 +295,61 @@ class AlbumsController extends \BaseController {
 	public function detachPhotos($id) {
 		try {
 			$album = Album::find($id);
-			$photos = Input::get('photos_rm');
+			$photos = Input::get('photos');
 			$album->photos()->detach($photos);
-
 		} catch (Exception $e) {
 			return Response::json('failed');
 		}
 		return $this->paginateAlbumPhotosWithQuery($id);
 	}
 
+	public function attachPhotos($id) {
+		try {
+			$album = Album::find($id);
+			$photos = Input::get('photos');
+			$album->photos()->attach($photos);		
+		} catch (Exception $e) {
+			return Response::json('failed');
+		}
+		return $this->paginatePhotosNotInAlbum($id);
+	}
+
 	public function paginateAlbumPhotosWithQuery($id) {
 		$album = Album::find($id);
 		$query = Input::has('q') ? Input::get('q') : '';
-		$photos = Photo::paginateFromAlbumWithQuery($album, $query);
+		$pagination = Photo::paginateFromAlbumWithQuery($album, $query);
+		return $this->paginationResponse($pagination, 'rm');
+	}
+
+	public function paginatePhotosNotInAlbum($id) {
+		$album = Album::find($id);
+		$user = Auth::user();
+		if ( is_null($album) || !$user->equal($album->user) ) {
+			return Response::json('failed');
+		}
+		$query = Input::has('q') ? Input::get('q') : '';
+		$which_photos = Input::get('wp');
+		$pagination = null;
+		if (strcmp($which_photos, 'user') == 0) {
+			$pagination = Photo::paginateUserPhotosNotInAlbum($user, $album, $query);
+		} else {
+			$pagination = Photo::paginateAllPhotosNotInAlbum($album, $query);
+		}
+		return $this->paginationResponse($pagination, 'add');
+	}
+
+	private function paginationResponse($pagination, $type) {
+		$photos = $pagination['photos'];
+		$count = $pagination['photos_count'];
 		$page = $photos->getCurrentPage();
 		$response = [];
 		$response['content'] = View::make('albums.includes.album-photos-edit')
-			->with(['photos' => $photos, 'page' => $page, 'type' => 'rm'])
+			->with(['photos' => $photos, 'page' => $page, 'type' => $type])
 			->render();
 		$response['maxPage'] = $photos->getLastPage();
 		$response['empty'] = ($photos->count() == 0 ? true : false);
+		$response['count'] = $count;
 		return Response::json($response);
 	}
+
 }
