@@ -283,7 +283,7 @@ class PhotosController extends \BaseController {
       } 
 
       }
-      return Redirect::to("/photos/{$id}/evaluate/{$user_id}")->with('message', '<strong>Avaliação salva com sucesso</strong><br>Abaixo você pode visualizar a média atual de avaliações');
+      return Redirect::to("/photos/{$id}/evaluate")->with('message', '<strong>Avaliação salva com sucesso</strong><br>Abaixo você pode visualizar a média atual de avaliações');
     } else {
       // avaliação sem login
       return Redirect::to("/photos/{$id}")->with('message', '<strong>Erro na avaliação</strong><br>Faça login para poder avaliar');
