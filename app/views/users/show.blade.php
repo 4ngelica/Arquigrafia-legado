@@ -272,20 +272,20 @@
 						@foreach($evaluatedPhotos as $evaluatedPhoto)
 							@if (Auth::check() && $user->id == Auth::user()->id)
 								<div class="gallery_box">
-									<a href='{{"/photos/" . $evaluatedPhoto->id . "/evaluate" }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">									
+									<a href='{{"/photos/" . $evaluatedPhoto->id . "/evaluate/" }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">									
 										<img src="{{ URL::to("/arquigrafia-images/" . $evaluatedPhoto->id . "_home.jpg") }}" class="gallery_photo" />									
 									</a>
-									<a href='{{"/photos/" . $evaluatedPhoto->id . "/evaluate" }}' class="name">
+									<a href='{{"/photos/" . $evaluatedPhoto->id . "/evaluate/" }}' class="name">
 										{{ $evaluatedPhoto->name  }}
 									</a>
 									<br />
 								</div>
 							@else
 								<div class="gallery_box">
-									<a href='{{"/photos/" . $evaluatedPhoto->id . "/viewEvaluation" }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">									
+									<a href='{{"/photos/" . $evaluatedPhoto->id . "/viewEvaluation/" . $user->id }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">									
 										<img src="{{ URL::to("/arquigrafia-images/" . $evaluatedPhoto->id . "_home.jpg") }}" class="gallery_photo" />									
 									</a>
-									<a href='{{"/photos/" . $evaluatedPhoto->id . "/viewEvaluation" }}' class="name">
+									<a href='{{"/photos/" . $evaluatedPhoto->id . "/viewEvaluation/" . $user->id }}' class="name">
 										{{ $evaluatedPhoto->name  }}
 									</a>
 									<br />
