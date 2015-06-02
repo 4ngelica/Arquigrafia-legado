@@ -283,7 +283,7 @@ class PhotosController extends \BaseController {
       } 
 
       }
-      return Redirect::to("/photos/{$id}/evaluate")->with('message', '<strong>Avaliação salva com sucesso</strong><br>Abaixo você pode visualizar a média atual de avaliações');
+      return Redirect::to("/photos/{$id}/evaluate/{$user_id}")->with('message', '<strong>Avaliação salva com sucesso</strong><br>Abaixo você pode visualizar a média atual de avaliações');
     } else {
       // avaliação sem login
       return Redirect::to("/photos/{$id}")->with('message', '<strong>Erro na avaliação</strong><br>Faça login para poder avaliar');
@@ -302,24 +302,29 @@ class PhotosController extends \BaseController {
     return "OK.";
   }
 
-  public function evaluate($id) { 
-    return static::getEvaluation($id, true);    
+  public function evaluate($photoId ) { 
+    return static::getEvaluation($photoId, Auth::user()->id, true);    
   }
 
-  private function getEvaluation($id, $isOwner) {    
-    $photo = Photo::find($id);
-    $user = User::find($photo->user_id); 
+  private function getEvaluation($photoId, $userId, $isOwner) {    
+    $photo = Photo::find($photoId);    
     $binomials = Binomial::all()->keyBy('id');
     $average = Evaluation::average($photo->id);    
-    $evaluations = null;    
-    if (Auth::check()) {
-      $evaluations =  Evaluation::where("user_id", Auth::id())->where("photo_id", $id)->orderBy("binomial_id", "asc")->get();
-      if (Auth::user()->following->contains($user->id))
-        $follow = false;
-      else 
-        $follow = true;
-    } else 
-      $follow = true;    
+    $evaluations = null;  
+     
+    $user = null;
+    $follow = true; 
+    if ($userId != null) { 
+      $user = User::find($userId); 
+      if (Auth::check()) {      
+        if (Auth::user()->following->contains($user->id))
+          $follow = false;
+        else 
+          $follow = true;
+      }
+      
+      $evaluations =  Evaluation::where("user_id", $user->id)->where("photo_id", $photo->id)->orderBy("binomial_id", "asc")->get();  
+    }
 
     return View::make('/photos/evaluate',
       ['photos' => $photo, 'owner' => $user, 'follow' => $follow, 'tags' => $photo->tags, 'commentsCount' => $photo->comments->count(),
@@ -501,8 +506,12 @@ class PhotosController extends \BaseController {
     return Redirect::to('/users/' . $photo->user_id);
   }
 
-  public function viewEvaluation($id) {    
-    return static::getEvaluation($id, false);
+  public function viewEvaluation($photoId, $userId ) { 
+    return static::getEvaluation($photoId, $userId, false);  
+  }
+
+  public function showSimilarAverage($photoId) {
+    return static::getEvaluation($photoId, null, false);
   }
 
   public function getPhotoInfo($id) {
