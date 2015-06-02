@@ -65,8 +65,8 @@
          <div class="four columns">
             {{ Form::open(array( 'url' => '/users/stoaLogin')) }}
 
-               <div class="three columns">{{ Form::label('nusp', 'Número USP:') }}</div>
-               <div class="three columns">{{ Form::text('nusp', '', ['class' => 'right']) }}</div>
+               <div class="three columns">{{ Form::label('stoa_account', 'Número USP:') }}</div>
+               <div class="three columns">{{ Form::text('stoa_account', '', ['class' => 'right']) }}</div>
                {{ $errors->first('login') }}
                
                <div class="three columns">{{ Form::label('password', 'Senha:') }}</div>

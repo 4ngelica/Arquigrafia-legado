@@ -3,10 +3,10 @@ $(document).ready(function() {
 	$('#registrationStoa form').submit(function (e) {
 	 	e.preventDefault();
 		var form = $(this);
-		var nusp = form.find('#nusp').val();
-		var password = $(this).find('#password').val();
-		
-		$.post('/users/stoaLogin', { nusp: nusp, password: password})
+		// var nusp = form.find('#stoa_account').val();
+		// var password = $(this).find('#password').val();
+		var data = form.serializeArray();
+		$.post('/users/stoaLogin', data)
 		.done(function(success) {
 			if (success) {
 				window.location.replace('/');

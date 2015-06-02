@@ -391,25 +391,28 @@ class UsersController extends \BaseController {
   }
 
   public function stoaLogin() {
-    $usp_id = Input::get('nusp');
+    $account = Input::get('stoa_account');
     $password = Input::get('password');
-    $stoa_user = $this->getStoaAccount($usp_id, $password);
-    if (!$stoa_user->ok)
-      return Response::json(false);
+    $stoa_user = $this->getStoaAccount($account, $password, 'login');
+    if (!$stoa_user->ok) {
+      $stoa_user = $this->getStoaAccount($account, $password, 'usp_id');
+      if (!$stoa_user->ok) {
+        return Response::json(false);
+      }
+    }
     $user = User::stoaUser($stoa_user);
     Auth::loginUsingId($user->id);
     return Response::json(true);
   }
 
-  private function getStoaAccount($usp_id, $password) {
+  private function getStoaAccount($account, $password, $account_type) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL,"https://social.stoa.usp.br/plugin/stoa/authenticate/");
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS,
       http_build_query([
-          'usp_id' => $usp_id,
+          $account_type => $account,
           'password' => $password,
           'fields' => 'full'
         ])
