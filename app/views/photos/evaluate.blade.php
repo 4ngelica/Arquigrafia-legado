@@ -197,7 +197,9 @@
                   enabled: true
                 },
                 color: '#999999',
-            }, {            
+            }, 
+              @if ($owner != null)
+              {            
                 <?php $count = 0; ?> 
                 data: [
                   @if(isset($userEvaluations) && !$userEvaluations->isEmpty())
@@ -207,14 +209,22 @@
                     @endforeach              
                   @endif
                 ],
-                yAxis: 0,
-                name: 'Sua avaliação',
+                Axis: 0,          
+
                 marker: {
                   symbol: 'circle',
                   enabled: true
                 },
                 color: '#000000',
-            }]
+                name: 
+                @if (Auth::check() && $owner->id == Auth::user()->id)
+                  'Sua avaliação' 
+                @else
+                  'Avaliação de {{$owner->name}}'
+                @endif
+            }
+            @endif
+            ]
         });
       });
     </script>
@@ -240,7 +250,7 @@
       @foreach($similarPhotos as $k => $similarPhoto)         
          @if($photos->id != $similarPhoto->id)  
               
-                <a  class="hovertext" href='{{"/photos/" . $similarPhoto->id . "/evaluate" }}' class="gallery_photo" title="{{ $similarPhoto->name }}">                  
+                <a  class="hovertext" href='{{"/photos/" . $similarPhoto->id . "/showSimilarAverage/" }}' class="gallery_photo" title="{{ $similarPhoto->name }}">                  
                   <img src="{{ URL::to("/arquigrafia-images/" . $similarPhoto->id . "_home.jpg") }}" class="gallery_photo" />                 
                 </a>
                 <!--
@@ -260,31 +270,33 @@
 			</div>
 			<!--   FIM - COLUNA ESQUERDA   -->
 			<!--   SIDEBAR   -->
+
 			<div id="sidebar" class="four columns">
 				<!--   USUARIO   -->
-				
-        <div id="single_user" class="clearfix row">
-				  
-          
-          <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
-            <?php if ($owner->photo != "") { ?>
-              <img id="single_view_user_thumbnail" src="<?php echo asset($owner->photo); ?>" class="user_photo_thumbnail"/>
-            <?php } else { ?>
-              <img id="single_view_user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" class="user_photo_thumbnail"/>
-            <?php } ?>
-          </a>  
-          
-          
-          
-					<h1 id="single_view_owner_name"><a href="{{ URL::to("/users/".$owner->id) }}" id="name">{{ $owner->name }}</a></h1>
-    		@if (Auth::check() && $owner->id != Auth::user()->id)
-    			@if (!empty($follow) && $follow == true)
-	    			<a href="{{ URL::to("/friends/follow/" . $owner->id) }}" id="single_view_contact_add">Seguir</a><br />
- 				  @else
-            <div>Seguindo</div>
- 				  @endif
-			  @endif	
-				</div>
+				@if ($owner != null)
+          <div id="single_user" class="clearfix row">
+  				  
+            
+            <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
+              <?php if ($owner->photo != "") { ?>
+                <img id="single_view_user_thumbnail" src="<?php echo asset($owner->photo); ?>" class="user_photo_thumbnail"/>
+              <?php } else { ?>
+                <img id="single_view_user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" class="user_photo_thumbnail"/>
+              <?php } ?>
+            </a>  
+            
+            
+            
+  					<h1 id="single_view_owner_name"><a href="{{ URL::to("/users/".$owner->id) }}" id="name">{{ $owner->name }}</a></h1>
+      		@if (Auth::check() && $owner->id != Auth::user()->id)
+      			@if (!empty($follow) && $follow == true)
+  	    			<a href="{{ URL::to("/friends/follow/" . $owner->id) }}" id="single_view_contact_add">Seguir</a><br />
+   				  @else
+              <div>Seguindo</div>
+   				  @endif
+  			  @endif	
+  				</div>
+        @endif
 				<!--   FIM - USUARIO   -->				
         
         <!-- AVALIAÇÃO -->
@@ -346,7 +358,9 @@
               <?php } ?>
               
                <a href="{{ URL::to('/photos/' . $photos->id) }}" class='btn right'>VOLTAR</a>
-              {{ Form::submit('AVALIAR', ['id'=>'evaluation_button','class'=>'btn right']) }} 
+               @if (Auth::check() && $owner != null && $owner->id == Auth::user()->id)
+                {{ Form::submit('AVALIAR', ['id'=>'evaluation_button','class'=>'btn right']) }} 
+               @endif
                 
             {{ Form::close() }}
             
