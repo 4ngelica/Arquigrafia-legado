@@ -73,7 +73,8 @@ Route::get('/photos/{photo_id}/saveEvaluation','PhotosController@saveEvaluation'
 Route::post('/photos/{photo_id}/saveEvaluation','PhotosController@saveEvaluation');
 Route::get('/photos/{photo_id}/evaluate','PhotosController@evaluate');
 Route::post('/photos/{photo_id}/evaluate','PhotosController@evaluate');
-Route::get('/photos/{photo_id}/viewEvaluation','PhotosController@viewEvaluation');
+Route::get('/photos/{photo_id}/viewEvaluation/{user_id}','PhotosController@viewEvaluation');
+Route::get('/photos/{photo_id}/showSimilarAverage/', 'PhotosController@showSimilarAverage');
 
 /* PHOTOS */
 Route::get('/photos/batch','PhotosController@batch');
