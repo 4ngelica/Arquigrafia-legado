@@ -190,6 +190,7 @@
             },
             plotOptions: {
                 series: {
+                    name: 'Média',
                     stacking: 'normal',
                     pointPadding: 0,
                     groupPadding: 0.2
@@ -212,16 +213,17 @@
             },
             legend: {
               enabled: false
-            },
 
+            },
                 series: [{
+                    name: 'Sua avaliação',
                     xAxis:1,
                     <?php $count=0; ?>                  
                     data: [
                     @if(isset($userEvaluationsChart) && !empty($userEvaluationsChart))
                       @foreach($userEvaluationsChart as $userEvaluation)
-                        {y:{{$userEvaluation->avg}},color:'#C0C0C0'},
-                        {y:{{$userEvaluation->evaluationPosition}},color:'#808080'},
+                        {y:{{$userEvaluation->avg}},color:'#FFFFFF'},
+                        {y:{{$userEvaluation->evaluationPosition}},color:'#FFFFFF'},
                         @if($count!=5)
                           {y:0},
                         @endif
@@ -254,14 +256,23 @@
     </script>
 
   </div>
-              @if ($owner != null)
+
+<text x="21" style="color:#808080;font-size:12px;font-weight:bold;cursor:pointer;fill:#808080;" text-anchor="start" zIndex="2" y="15">
+  <tspan>
+      @if ($owner != null)
                 @if (Auth::check() && $owner->id == Auth::user()->id)
-                  <span class="legend_style">*{{ 'Sua avaliação' }}</span>
+                  <span class="legend_style">{{ 'Sua avaliação' }}</span>
                 @else
                   <span class="legend_style">{{'Avaliação de '.$owner->name}}</span>
                 @endif
-              @endif            
-  <span class="legend_style">#Media </span>
+              @endif   
+  </tspan>
+</text>
+<rect x="0" y="4" width="16" height="12" zIndex="3" fill="#808080"></rect> 
+<text x="21" style="color:#C0C0C0;font-size:12px;font-weight:bold;cursor:pointer;fill:#C0C0C0;" text-anchor="start" zIndex="2" y="15">                      
+  <span class="legend_style">Média </span>
+</text>
+  <rect x="0" y="4" width="16" height="12" zIndex="3" fill="#C0C0C0"></rect> 
 @endif      
 
 		<!-- Photos with similar average  -->
