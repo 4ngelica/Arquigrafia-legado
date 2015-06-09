@@ -1,8 +1,9 @@
 <?php
-
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use Monolog\Formatter\LineFormatter;
+//add
+use lib\utils\ActionUser;
+//use Monolog\Logger;
+//use Monolog\Handler\StreamHandler;
+//use Monolog\Formatter\LineFormatter;
 
 class PhotosController extends \BaseController {
 
@@ -48,7 +49,7 @@ class PhotosController extends \BaseController {
 	
   // upload form
 	public function form()
-  {
+  {  
     $tags = null;
     if ( Session::has('tags') )
     {   
@@ -139,9 +140,8 @@ class PhotosController extends \BaseController {
             
         $tags = array_map('trim', $tags);
         //$tags = array_map('strtolower', $tags);
-        //  10/05/2015 msy begin
-        $tags = array_map('mb_strtolower', $tags); // com suporte para cadeias multibytes
-        //  10/05/2015 msy end
+        
+        $tags = array_map('mb_strtolower', $tags); // com suporte para cadeias multibytes        
         // tudo em minusculas, para remover redundancias, como Casa/casa/CASA
         $tags = array_unique($tags); //retira tags repetidas, se houver.
         foreach ($tags as $t) {          
@@ -169,6 +169,10 @@ class PhotosController extends \BaseController {
           $tag->save();
         }
       }
+
+      //add
+      $pageSource = Request::header('referer'); //get url of the source page
+      ActionUser::userEvents($photo->user_id, $photo->id,'upload',$pageSource);
 
       $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
       $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
@@ -203,7 +207,11 @@ class PhotosController extends \BaseController {
         /*      Log de Downloads - user_id, photo_id, download_date                         */
         /*==================================================================================*/
         
-        $user_id = Auth::user()->id; //usuario logado, verificado em Auth::check()
+        $user_id = Auth::user()->id;
+        $pageSource = Request::header('referer'); //get url of the source page
+        ActionUser::userEvents($user_id,$id,'downloads',$pageSource);
+        
+        /*$user_id = Auth::user()->id; //usuario logado, verificado em Auth::check()
         $log_info = sprintf('[%s][%d][%d]', date('Y-m-d'), $user_id, $id);
 
         $log = new Logger('Download_logger');
@@ -217,7 +225,7 @@ class PhotosController extends \BaseController {
         $handler = new StreamHandler($file, Logger::INFO);
         $handler->setFormatter($formatter);
         $log->pushHandler($handler);
-        $log->addInfo($log_info);
+        $log->addInfo($log_info);*/
 
         /*================================================================================*/
 
