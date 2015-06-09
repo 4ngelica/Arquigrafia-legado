@@ -23,8 +23,7 @@ class Occupation extends Eloquent {
 				 
 				 $arrayOccupations[] = $valOccupations; //->occupation;
 			}
-			 return $arrayOccupations;
-			
+			 return $arrayOccupations;			
 		}	
 
 	}
