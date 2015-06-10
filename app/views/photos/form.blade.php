@@ -31,6 +31,8 @@
 				<div id="registration" class="twelve columns row step-2">
 					<h1><span class="step-text">Dados da imagem</span></h1>
 					<p>(*) Campos obrigatórios.</p>
+					<p>{{ Form::hidden('pageSource', $pageSource) }} </p>
+
 					<br>
 					<div class="six columns alpha row">
 						<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
