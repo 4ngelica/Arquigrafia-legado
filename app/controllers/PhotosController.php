@@ -176,7 +176,7 @@ class PhotosController extends \BaseController {
 
       //add
       $pageSource = $input["pageSource"]; //get url of the source page through form
-      ActionUser::userEvents($photo->user_id, $photo->id,'upload',$pageSource);
+      ActionUser::userEvents($photo->user_id, $photo->id,'upload',$pageSource, "");
 
       $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
       $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
@@ -213,7 +213,7 @@ class PhotosController extends \BaseController {
         
         $user_id = Auth::user()->id;
         $pageSource = Request::header('referer'); //get url of the source page
-        ActionUser::userEvents($user_id,$id,'downloads',$pageSource);
+        ActionUser::userEvents($user_id,$id,'downloads',$pageSource, "");
 
         /*================================================================================*/
 
@@ -246,6 +246,11 @@ class PhotosController extends \BaseController {
       $comment = new Comment($comment);
       $photo = Photo::find($id);
       $photo->comments()->save($comment);
+
+      $user_id = Auth::user()->id;
+      $pageSource = Request::header('referer');
+      ActionUser::userEvents($user_id, $id,'comments',$pageSource, "insertion");
+
       return Redirect::to("/photos/{$id}");
     }
     
