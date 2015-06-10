@@ -50,13 +50,17 @@ class PhotosController extends \BaseController {
   // upload form
 	public function form()
   {  
+    
+    $pageSource = Request::header('referer');
+    if(empty($pageSource)) $pageSource = '';
     $tags = null;
     if ( Session::has('tags') )
     {   
       $tags = Session::pull('tags');
       $tags = explode(',', $tags);
     }
-    return View::make('/photos/form')->with('tags', $tags);
+    return View::make('/photos/form')->with(['tags', $tags,'pageSource'=>$pageSource]);
+    
 	}
 
   public function store() {  
@@ -83,7 +87,7 @@ class PhotosController extends \BaseController {
       'photo_workDate' => 'date_format:"d/m/Y"',
       'photo_imageDate' => 'date_format:"d/m/Y"'
     );
-
+//echo $input["pageSource"]; die();
 	$validator = Validator::make($input, $rules);
 	    
   if ($validator->fails()) {
@@ -171,7 +175,7 @@ class PhotosController extends \BaseController {
       }
 
       //add
-      $pageSource = Request::header('referer'); //get url of the source page
+      $pageSource = $input["pageSource"]; //get url of the source page through form
       ActionUser::userEvents($photo->user_id, $photo->id,'upload',$pageSource);
 
       $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
