@@ -210,22 +210,6 @@ class PhotosController extends \BaseController {
         $user_id = Auth::user()->id;
         $pageSource = Request::header('referer'); //get url of the source page
         ActionUser::userEvents($user_id,$id,'downloads',$pageSource);
-        
-        /*$user_id = Auth::user()->id; //usuario logado, verificado em Auth::check()
-        $log_info = sprintf('[%s][%d][%d]', date('Y-m-d'), $user_id, $id);
-
-        $log = new Logger('Download_logger');
-        $file = storage_path() . '/logs/downloads/downloads.log';
-        if (!file_exists($file)) {
-          $handle = fopen($file, 'a+');
-          fclose($handle);
-        }
-
-        $formatter = new LineFormatter("%message%\n", null, false, true);
-        $handler = new StreamHandler($file, Logger::INFO);
-        $handler->setFormatter($formatter);
-        $log->pushHandler($handler);
-        $log->addInfo($log_info);*/
 
         /*================================================================================*/
 
