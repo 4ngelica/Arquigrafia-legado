@@ -1,6 +1,7 @@
 <?php 
 namespace lib\utils;
 use Occupation;
+use UsersRole;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
@@ -11,16 +12,19 @@ class ActionUser{
 	{
 		//to get occupation
         $arrayOccupation = Occupation::userOccupation($user_id);
+        $arrayUsersRoles = UsersRole::valueUserRole($user_id);
         $stringOccupation ="";
-       
+        $stringRoles ="";
         $stringOccupation = static::convertArrayObjectToString($arrayOccupation,'occupation');
-        
+        $stringRoles = static::convertArrayObjectToString($arrayUsersRoles,'name');
+        //dd($stringRoles);
         if (strcmp($edit, "edit") == 0 || strcmp($edit, "insertion") == 0) {
-            $log_info = sprintf('[%s][%d][%d][%s][%s][%s]', date('Y-m-d'), $user_id, $photo_id,$sourcePage, $stringOccupation, $edit);
+            $log_info = sprintf('[%s][%d][%d][%s][%s][%s]', date('Y-m-d'), $user_id, $photo_id,$sourcePage, $stringOccupation, $edit,$stringRoles);
         }
         else {
-            $log_info = sprintf('[%s][%d][%d][%s][%s]', date('Y-m-d'), $user_id, $photo_id,$sourcePage,$stringOccupation);     
+            $log_info = sprintf('[%s][%d][%d][%s][%s][%s]', date('Y-m-d'), $user_id, $photo_id,$sourcePage,$stringOccupation,$stringRoles);     
         } 
+
         $log = new Logger('Download_logger');
         $file = storage_path() . '/logs/'.$events.'/'.$events.'.log';
         if (!file_exists($file)) {
