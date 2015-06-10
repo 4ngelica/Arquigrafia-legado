@@ -1,5 +1,5 @@
 <?php
-
+use lib\utils\ActionUser;
 use Facebook\FacebookSession;
 use Facebook\FacebookRedirectLoginHelper;
 use Facebook\FacebookRequest;
@@ -275,8 +275,13 @@ class UsersController extends \BaseController {
     $following = $logged_user->following;
 
     
-    if ($user_id != $logged_user->id && !$following->contains($user_id))
+    if ($user_id != $logged_user->id && !$following->contains($user_id)) {
       $logged_user->following()->attach($user_id);
+
+      $logged_user_id = Auth::user()->id;
+      $pageSource = Request::header('referer'); //get url of the source page
+      ActionUser::userEvents($logged_user_id, $user_id,'follow',$pageSource, "");
+    }
 
     return Redirect::to(URL::previous()); // redirecionar para friends
   }
@@ -291,8 +296,13 @@ class UsersController extends \BaseController {
     $following = $logged_user->following;
 
     
-    if ($user_id != $logged_user->id && $following->contains($user_id))
+    if ($user_id != $logged_user->id && $following->contains($user_id)) {
       $logged_user->following()->detach($user_id);
+
+      $logged_user_id = Auth::user()->id;
+      $pageSource = Request::header('referer'); //get url of the source page
+      ActionUser::userEvents($logged_user_id, $user_id,'unfollow',$pageSource, "");
+    }
 
     return Redirect::to(URL::previous()); // redirecionar para friends
   }
