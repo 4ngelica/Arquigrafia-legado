@@ -7,7 +7,7 @@ use Monolog\Formatter\LineFormatter;
 
 class ActionUser{
 
-	public static function userEvents($user_id, $photo_id,$events,$sourcePage)
+	public static function userEvents($user_id, $photo_id,$events,$sourcePage, $edit)
 	{
 		//to get occupation
         $arrayOccupation = Occupation::userOccupation($user_id);
@@ -15,7 +15,12 @@ class ActionUser{
        
         $stringOccupation = static::convertArrayObjectToString($arrayOccupation,'occupation');
         
-        $log_info = sprintf('[%s][%d][%d][%s][%s]', date('Y-m-d'), $user_id, $photo_id,$sourcePage,$stringOccupation);
+        if (strcmp($edit, "edit") == 0 || strcmp($edit, "insertion") == 0) {
+            $log_info = sprintf('[%s][%d][%d][%s][%s][%s]', date('Y-m-d'), $user_id, $photo_id,$sourcePage, $stringOccupation, $edit);
+        }
+        else {
+            $log_info = sprintf('[%s][%d][%d][%s][%s]', date('Y-m-d'), $user_id, $photo_id,$sourcePage,$stringOccupation);     
+        } 
         $log = new Logger('Download_logger');
         $file = storage_path() . '/logs/'.$events.'/'.$events.'.log';
         if (!file_exists($file)) {
