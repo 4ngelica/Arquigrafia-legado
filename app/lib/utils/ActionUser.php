@@ -11,21 +11,11 @@ class ActionUser{
 	{
 		//to get occupation
         $arrayOccupation = Occupation::userOccupation($user_id);
-        if(!empty($arrayOccupation)) {
-            
-            foreach ($arrayOccupation as $value) {
-                 //echo $value->occupation;
-            }
-           
-        }else{
-            echo ""; 
-        }
-
-      
-         
-         
-
-        $log_info = sprintf('[%s][%d][%d][%s]', date('Y-m-d'), $user_id, $photo_id,$sourcePage);
+        $stringOccupation ="";
+       
+        $stringOccupation = static::convertArrayObjectToString($arrayOccupation,'occupation');
+        
+        $log_info = sprintf('[%s][%d][%d][%s][%s]', date('Y-m-d'), $user_id, $photo_id,$sourcePage,$stringOccupation);
         $log = new Logger('Download_logger');
         $file = storage_path() . '/logs/'.$events.'/'.$events.'.log';
         if (!file_exists($file)) {
@@ -41,4 +31,22 @@ class ActionUser{
         return null; 
 
 	}
+
+    public static function convertArrayObjectToString($array,$atribute){
+
+        $string = "";
+        $numElement = count($array);
+        $i = 1;
+        $separator = ', ';
+        if(!empty($array)) {             
+            foreach ($array as $value) {
+                if($numElement == $i){
+                    $separator = '';
+                }
+                 $string = $string.''.$value->$atribute.$separator;
+                 $i++;
+            }           
+        }
+        return $string;
+    }
 }
