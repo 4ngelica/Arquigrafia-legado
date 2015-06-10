@@ -1,9 +1,6 @@
 <?php
 //add
 use lib\utils\ActionUser;
-//use Monolog\Logger;
-//use Monolog\Handler\StreamHandler;
-//use Monolog\Formatter\LineFormatter;
 
 class PhotosController extends \BaseController {
 
@@ -37,7 +34,7 @@ class PhotosController extends \BaseController {
         $follow = true;
     } else {
       $follow = true;
-    }
+    }    
 
     return View::make('/photos/show',
       ['photos' => $photos, 'owner' => $user, 'follow' => $follow, 'tags' => $tags, 'commentsCount' => $photos->comments->count(),
