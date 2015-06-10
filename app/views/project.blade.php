@@ -101,7 +101,8 @@
           <li><small><a href="http://lattes.cnpq.br/4891767216267666" target="_blank">Marisol Solis Yucra - Mestranda IMEUSP</a></small></li>          
           <li><small><a href="http://lattes.cnpq.br/1280093125646759" target="_blank">Martim Passos - Graduando FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/0439483635062120" target="_blank">Nita Napoleão Encola - Graduanda ECAUSP</a></small></li>
-		  <li><small><a href="#" target="_blank">Renato Massao Maeda da Silva - Graduando IMEUSP</a></small></li>
+          <li><small><a href="#" target="_blank">Rafael Marinaro Verona - Graduando IMEUSP</a></small></li>
+		      <li><small><a href="#" target="_blank">Renato Massao Maeda da Silva - Graduando IMEUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/0223428961992896" target="_blank">Renato Veras de Paiva - Graduando ECAUSP</a></small></li>
           <li><small><a href="#" target="_blank">Rodrigo Ciorciari Salandim - Graduando EACHUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/8004254725476493" target="_blank">Ruth Cuiá Troncarelli - Graduanda FAUUSP</a></small></li>
