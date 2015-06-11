@@ -60,4 +60,24 @@ class ActionUser{
         }
         return $string;
     }
+
+    //funções não utilizadas por enquanto, em desenvolvimento
+
+    public static function printInitialStatment($file_path, $user_id, $source_page) {
+        $occupation_array = Occupation::userOccupation($user_id);
+        $role_array = UsersRole::valueUserRole($user_id);
+        $user_occupation ="";
+        $user_roles ="";
+        $user_occupation = static::convertArrayObjectToString($occupation_array,'occupation');
+        $user_roles = static::convertArrayObjectToString($role_array,'name');
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        $info = sprintf('Acesso do usuário [$d], com ocupação [%s] e role [%s], as [%s] a partir de [%s].', $user_id, $user_occupation, $user_roles, $date_and_time, $source_page);
+        
+        $log = new Logger('Download_logger');
+        $formatter = new LineFormatter("%message%\n", null, false, true);
+        $handler = new StreamHandler($file_path, Logger::INFO);
+        $handler->setFormatter($formatter);
+        $log->pushHandler($handler);
+        $log->addInfo($info);
+    }
 }
