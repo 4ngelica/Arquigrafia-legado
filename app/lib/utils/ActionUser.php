@@ -24,9 +24,9 @@ class ActionUser{
             $log_info = sprintf('[%s][%d][%d][%s][%s][%s][%s]', $time, $user_id, $photo_id, $sourcePage, $stringOccupation, $stringRoles, $edit);
         }
         else {
-            $log_info = sprintf('[%s][%d][%d][%s][%s][%s]', $time, $user_id, $photo_id, $sourcePage, $stringOccupation, $stringRoles);     
+            $log_info = sprintf('Acesso do usuário [%d], com ocupação:[%s], e com role: [%s], acessou em :[%s],a partir da página [%s],e realizou as seguinte ação:[%s], da photo: [%d]',$user_id,$stringOccupation,$stringRoles,$time, $sourcePage,$events,$photo_id);     
         } 
-
+        
         $log = new Logger('Download_logger');
         $file = storage_path() . '/logs/'.$events.'/'.$events.'.log';
         if (!file_exists($file)) {
