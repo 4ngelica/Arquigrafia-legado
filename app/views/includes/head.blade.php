@@ -32,5 +32,4 @@
    }(document, 'script', 'facebook-jssdk'));
 </script>
 
-{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> --}}
-<script type="text/javascript" src="{{ URL::to('/js/jquery.min.js') }}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
