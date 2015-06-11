@@ -2,8 +2,6 @@
 
 @section('head')
 
-	{{ HTML::style('/css/style.css'); }}
-
 	<title>Arquigrafia - Seu universo de imagens de arquitetura</title>
 
 	<script src="{{ URL::to("/") }}/js/jquery.isotope.min.js"></script>

@@ -101,8 +101,8 @@ Route::filter('csrf', function()
 
 Route::filter('ajax', function()
 {
-	if ( !Request::ajax() )
+	if ( !(Request::ajax() && Auth::check()) )
 	{
-		return Redirect::to('/');
+		return Response::make('Unauthorized', 401);
 	}
 });

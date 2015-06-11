@@ -7,7 +7,7 @@
 			<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td width="33%">
-						<input type="checkbox" id="create_album" name="create_album" value="0">
+						<input type="checkbox" id="create_album" class="albums" name="create_album" value="0">
 						<label for="create_album"></label>
 						<p>Criar novo álbum</p>
 					</td>	
@@ -18,7 +18,7 @@
 					@endif
 					<td width="33%">
 						<input type="checkbox"  id="{{ 'album_' . $album->id }}" 
-							name="albums[]" value="{{ $album->id }}">
+							name="albums[]" class="albums" value="{{ $album->id }}">
 						 <label for="{{ 'album_' . $album->id }}"></label>
 						<p>{{ $album->title }}</p>
 					</td>

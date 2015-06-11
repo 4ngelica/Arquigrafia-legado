@@ -6,7 +6,15 @@ class AlbumsController extends \BaseController {
 		$this->beforeFilter('auth',
 			array( 'except' => 'show' ));
 		$this->beforeFilter('ajax',
-			array( 'only' => array())); //temporariamente sem métodos
+			array( 'only' => array(
+				'paginateAlbumPhotos',
+				'updateInfo',
+				'detachPhotos',
+				'attachPhotos',
+				'paginatePhotosNotInAlbum',
+				'paginateCoverPhotos',
+				'getList'
+			)));
 	}
 
 	public function index() {
@@ -233,7 +241,7 @@ class AlbumsController extends \BaseController {
 			->render());
 	}
 
-	public function paginateByCoverPhotos($id) {
+	public function paginateCoverPhotos($id) {
 		$album = Album::find($id);
 		$photos = Photo::paginateAlbumPhotos($album, 48);
 		$photos_ids = [];
@@ -245,7 +253,7 @@ class AlbumsController extends \BaseController {
 
 	public function getList($id) {
 		$photo_albums_ids = Photo::find($id)->albums->modelKeys(); // albums que já têm essa foto
-		$albums = Album::where('user_id', '=', Auth::id())
+		$albums = Album::where('user_id', Auth::id())
 			->whereNotIn('id', $photo_albums_ids)->get();
 		return Response::json(View::make('albums.get-albums')
 			->with(['albums' => $albums, 'photo_id' => $id])
@@ -300,7 +308,7 @@ class AlbumsController extends \BaseController {
 		} catch (Exception $e) {
 			return Response::json('failed');
 		}
-		return $this->paginateAlbumPhotosWithQuery($id);
+		return $this->paginateAlbumPhotos($id);
 	}
 
 	public function attachPhotos($id) {
@@ -314,7 +322,7 @@ class AlbumsController extends \BaseController {
 		return $this->paginatePhotosNotInAlbum($id);
 	}
 
-	public function paginateAlbumPhotosWithQuery($id) {
+	public function paginateAlbumPhotos($id) {
 		$album = Album::find($id);
 		$query = Input::has('q') ? Input::get('q') : '';
 		$pagination = Photo::paginateFromAlbumWithQuery($album, $query);
@@ -347,7 +355,7 @@ class AlbumsController extends \BaseController {
 			->with(['photos' => $photos, 'page' => $page, 'type' => $type])
 			->render();
 		$response['maxPage'] = $photos->getLastPage();
-		$response['empty'] = ($photos->count() == 0 ? true : false);
+		$response['empty'] = ($photos->count() == 0);
 		$response['count'] = $count;
 		return Response::json($response);
 	}

@@ -59,14 +59,18 @@ Route::get('/albums/{id}/photos/rm', 'AlbumsController@paginateByAlbum');
 Route::get('/albums/{id}/photos/add', 'AlbumsController@paginateByOtherPhotos');
 Route::get('/albums/get/list/{id}', 'AlbumsController@getList');
 Route::post('/albums/photo/add', 'AlbumsController@addPhotoToAlbums');
-Route::get('/albums/get/cover/{id}', 'AlbumsController@paginateByCoverPhotos');
 Route::delete('/albums/{album_id}/photos/{photo_id}/remove', 'AlbumsController@removePhotoFromAlbum');
-Route::get('/albums/{id}/edition', 'AlbumsController@edition');
+// Route::get('/albums/{id}/edition', 'AlbumsController@edition');
+
+/* ALBUMS - ajax */
+Route::get('/albums/get/cover/{id}', 'AlbumsController@paginateCoverPhotos');
 Route::post('/albums/{id}/update/info', 'AlbumsController@updateInfo');
 Route::post('/albums/{id}/detach/photos', 'AlbumsController@detachPhotos');
 Route::post('/albums/{id}/attach/photos', 'AlbumsController@attachPhotos');
-Route::get('/albums/{id}/paginate/photos', 'AlbumsController@paginateAlbumPhotosWithQuery');
+Route::get('/albums/{id}/paginate/photos', 'AlbumsController@paginateAlbumPhotos');
 Route::get('/albums/{id}/paginate/other/photos', 'AlbumsController@paginatePhotosNotInAlbum');
+
+
 /* COMMENTS */
 Route::post('/photos/{photo_id}/comment','PhotosController@comment');
 

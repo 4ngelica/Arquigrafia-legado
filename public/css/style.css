@@ -136,11 +136,11 @@ ul#logged_menu li a:hover { text-decoration: none; opacity: 0.8; }
 ul#logged_menu li #messages, ul#logged_menu li #users, ul#logged_menu li #comunities, ul#logged_menu li #upload { display: block; width: 22px; height: 22px; }
 ul#logged_menu li #users, ul#logged_menu li #upload, ul#logged_menu li #exit { display: block; width: 18px; height: 18px; }
 ul#logged_menu li #messages { background: url(http://arquigrafia.org.br/img/sprite.png) -203px 0px; margin-top: -4px; }
-ul#logged_menu li #users { background: url(img/i-album.png); }
+ul#logged_menu li #users { background: url(/img/i-album.png); }
 ul#logged_menu li #comunities { background: url(http://arquigrafia.org.br/img/sprite.png) -262px -2px; }
 ul#logged_menu li #comunities:hover { background-position: -262px -34px; }
-ul#logged_menu li #upload { background: url(img/i-download.png);}
-ul#logged_menu li #exit { background: url(img/i-exit.png);}
+ul#logged_menu li #upload { background: url(/img/i-download.png);}
+ul#logged_menu li #exit { background: url(/img/i-exit.png);}
 #user_name { margin-left: 4px; font-size: 13px; font-weight: 600; text-transform: uppercase; line-height: 24px; margin-right: -100px; }
 .header #user_photo {display: block; width: 48px; height: 48px; overflow: hidden; margin: 4px 12px 0 5px; float: left; }
 #logout { position: absolute; bottom: 0; right: 0; }
@@ -327,7 +327,7 @@ a.footer_image { display: block; margin: 4px; float: left; border: none; width: 
 #single_view_image_rating li small { margin: 0 14px 0 5px; }
 #single_view_image_rating li:last-child small { margin: 0 25px 0 3px; }
 i#graph { background: url(http://arquigrafia.org.br/img/sprite.png) -679px 0px; width: 24px; }
-i#comments { display: inline-block; background: url(img/i-comments.png); width: 18px; height: 18px; padding: 0; margin-right: 5px; }
+i#comments { display: inline-block; background: url(/img/i-comments.png); width: 18px; height: 18px; padding: 0; margin-right: 5px; }
 i#favourite { background: url(http://arquigrafia.org.br/img/sprite.png) -609px 0px; width: 24px; }
 
 /*botões de ações abaixo da foto*/
@@ -339,16 +339,16 @@ i#favourite { background: url(http://arquigrafia.org.br/img/sprite.png) -609px 0
 #eyedroppper, #denounce { display: block; width: 24px; height: 25px; margin-left: 4px; }
 #download { display: block; width: 18px; height: 18px; margin-left: 4px; }
 #add_favourite { background: url(http://arquigrafia.org.br/img/sprite.png) -575px 0; }
-#plus { background: url(img/i-plus.png); }
+#plus { background: url(/img/i-plus.png); }
 #eyedroppper { background: url(http://arquigrafia.org.br/img/sprite.png) -436px 0; }
 #denounce { background: url(http://arquigrafia.org.br/img/sprite.png) -540px 0; }
 #denounce:hover { background-position: -540px -33px; }
-#download { background: url(img/i-download.png); }
+#download { background: url(/img/i-download.png); }
 #delete { display: block; width: 24px; height: 25px; margin-left: 1px; }
 #delete { background: url(http://arquigrafia.org.br/img/sprite.png) -776px -145px; }
 #delete:hover { background-position: -776px -177px; }
 #evaluate { display: block; width: 18px; height: 18px; margin-left: 4px;}
-#evaluate { background: url(img/i-evaluate.png)}
+#evaluate { background: url(/img/i-evaluate.png)}
 
 /*redes sociais*/
 #single_view_social_network_buttons { float: right; margin-right: 20px; }

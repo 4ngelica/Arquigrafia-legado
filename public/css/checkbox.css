@@ -1,13 +1,15 @@
 input[type=checkbox].covers,
 input[type=checkbox].rm_photo,
-input[type=checkbox].add_photo
+input[type=checkbox].add_photo,
+input[type=checkbox].albums
 {
 	display:none;
 }
 
 input[type=checkbox].covers + label,
 input[type=checkbox].rm_photo + label,
-input[type=checkbox].add_photo + label
+input[type=checkbox].add_photo + label,
+input[type=checkbox].albums + label
 {
 	height: 83px;
 	width: 124px;
@@ -18,6 +20,8 @@ input[type=checkbox].add_photo + label
 	border: 1px solid #fff;
 }
 
+
+input[type=checkbox].albums + label,
 input[type=checkbox].add_photo + label {
 	opacity: 0.5;
 }
@@ -27,6 +31,7 @@ input[type=checkbox].rm_photo:checked + label {
 	/*border-color: #2E2E2E;*/
 }
 
+input[type=checkbox].albums:checked + label,
 input[type=checkbox].add_photo:checked + label {
 	opacity: 1;
 }

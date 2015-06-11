@@ -18,7 +18,8 @@
         url: '{{ $url }}',
         loadedPages: [1],
         selectedItems: 0,
-        searchQuery: ''
+        searchQuery: '',
+        selected_photos: 0,
       },
       rm: {
         currentPage: 1,
@@ -26,7 +27,8 @@
         url: '{{ $rmUrl }}',
         loadedPages: [1],
         selectedItems: 0,
-        searchQuery: ''
+        searchQuery: '',
+        selected_photos: 0,
       }
     };
     var searchQuery = '';
@@ -205,8 +207,6 @@
         $('.tabs ' + currentAttrValue).fadeIn('slow').siblings().hide();
         $(this).parent('li').addClass('active').siblings().removeClass('active');
         e.preventDefault();
-        console.log(update);
-        console.log($('.tabs ' + currentAttrValue).hasClass(update));
         if (update && $('.tabs ' + currentAttrValue).hasClass(update)) {
           updatePages(update);
         }
