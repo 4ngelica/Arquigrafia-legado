@@ -79,7 +79,7 @@ class Photo extends Eloquent {
 	}
 
 	public static function paginateUserPhotos($user, $perPage = 24) {
-		return Photo::where('user_id', '=', $user->id)
+		return Photo::where('user_id', $user->id)
 			->paginate($perPage);
 	}
 
@@ -122,7 +122,7 @@ class Photo extends Eloquent {
 	}
 
 	public static function paginateFromAlbumWithQuery($album, $q, $perPage = 24) {
-		if (empty($q)) {
+		if ($q == '' || is_null($q)) {
 			$photos = Photo::paginateAlbumPhotos($album);
 			$count = $album->photos->count();
 		}
