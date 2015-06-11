@@ -70,20 +70,34 @@ $(document).ready(function() {
 		var photos = [];
 		var type = $(this).getType();
 		var action = (type == 'rm') ? 'detach' : 'attach';
+		var paginator = getPaginator(type);
 		$.each($('[name="photos_' + type + '[]"]:checked'), function() {
 			photos.push($(this).val());
 		});
+		paginator.selected_photos = photos.length;
 		photos = { "photos[]": photos };
 		callback = function(type, response) {
 			var message;
+			var message_type;
+			var paginator = getPaginator(type);
+			var photo_count = paginator.selected_photos;
 			if (type == 'add') {
-				message = 'Imagens adicionadas ao álbum com sucesso';
+				message = '1 nova imagem foi adicionada ao seu álbum';
+				if (photo_count > 1) {
+					message = photo_count + ' novas imagens foram adicionadas ao seu álbum';
+				}
+				message_type = 'success';
 			} else {
-				message = 'Imagens adicionadas ao álbum com sucesso';
+				message = '1 imagem foi removida do seu álbum';
+				if (photo_count > 1) {
+					message = photo_count + ' imagens foram removidas do seu álbum';
+				}
+				message_type = 'info';
 			}
+			paginator.selected_photos = 0;
 			updateContent(type, response);
 			update = oppositeType(type);
-			$('.message_box').message(message, 'success');
+			$('.message_box').message(message, message_type);
 		}
 		detachOrAttachPhotos(photos, callback, type, action);
 	});
@@ -248,7 +262,7 @@ function requestPage(page, type, URL, callback, paginator, runInBackground) {
 	clearContent(type);
 	if (!runInBackground) {
 		fixPageContainerHeight(type);
-		showAndFixElementSpacing(type, $('.' + type + ' .loader'));
+		showAndFixElementSpacing(type, $('.' + type + ' .loader'), true);
 	}
 	$.get(URL, data)
 	.done(function(data) {
@@ -351,12 +365,21 @@ function updatePaginationButtons(type) {
 	buttons.find('p').text(paginator.currentPage + ' / ' + paginator.maxPage);
 }
 
-function showAndFixElementSpacing(type, element) {
-	var containerHeight = element.parent().height();
-	var containerWidth = element.parent().width();
-	var marginTop = containerHeight / 2 - element.height() / 2;
-	var marginLeft = containerWidth / 2 - element.width() / 2;
-	element.css({ 'margin-top' : marginTop, 'margin-left' : marginLeft });
+function showAndFixElementSpacing(type, element, adjustMarginLeft) {
+	var container = element.parent();
+	var containerHeight = container.height();
+	var marginTop;
+	if (containerHeight == 0) {
+		container.css({ 'min-height' : 300 });
+		containerHeight = 300;
+	}
+	marginTop = containerHeight / 2 - element.height() / 2;
+	element.css({ 'margin-top' : marginTop });
+	if (adjustMarginLeft) {
+		var containerWidth = container.width();
+		var marginLeft = containerWidth / 2 - element.width() / 2;
+		element.css({ 'margin-left' : marginLeft });
+	}
 	element.show();
 }
 
@@ -381,7 +404,7 @@ function detachOrAttachPhotos(photos, callback, type, action) {
 	var paginator = getPaginator(type);
 	fixPageContainerHeight(type);
 	clearContent(type);
-	showAndFixElementSpacing(type, $('.' + type + ' .loader'));
+	showAndFixElementSpacing(type, $('.' + type + ' .loader'), true);
 	photos['q'] = paginator.searchQuery;
 	photos['wp'] = $('input[name=which_photos]:checked').val();
 	$.post('/albums/' + album + '/' + action + '/photos?page=1', photos).done(function(response) { //volta tudo para a página 1
