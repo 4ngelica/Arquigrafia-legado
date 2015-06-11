@@ -2,8 +2,6 @@
 
 @section('head')
 
-{{ HTML::style('/css/style.css'); }}
-
 <title>Arquigrafia - {{ $photos->name }}</title>
 
 <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/checkbox.css" />
