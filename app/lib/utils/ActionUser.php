@@ -2,6 +2,7 @@
 namespace lib\utils;
 use Occupation;
 use UsersRole;
+use Carbon\Carbon;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
@@ -11,6 +12,7 @@ class ActionUser{
 	public static function userEvents($user_id, $photo_id,$events,$sourcePage, $edit)
 	{
 		//to get occupation
+        $time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
         $arrayOccupation = Occupation::userOccupation($user_id);
         $arrayUsersRoles = UsersRole::valueUserRole($user_id);
         $stringOccupation ="";
@@ -19,10 +21,10 @@ class ActionUser{
         $stringRoles = static::convertArrayObjectToString($arrayUsersRoles,'name');
         //dd($stringRoles);
         if (strcmp($edit, "edit") == 0 || strcmp($edit, "insertion") == 0) {
-            $log_info = sprintf('[%s][%d][%d][%s][%s][%s]', date('Y-m-d'), $user_id, $photo_id,$sourcePage, $stringOccupation, $edit,$stringRoles);
+            $log_info = sprintf('[%s][%d][%d][%s][%s][%s][%s]', $time, $user_id, $photo_id, $sourcePage, $stringOccupation, $stringRoles, $edit);
         }
         else {
-            $log_info = sprintf('[%s][%d][%d][%s][%s][%s]', date('Y-m-d'), $user_id, $photo_id,$sourcePage,$stringOccupation,$stringRoles);     
+            $log_info = sprintf('[%s][%d][%d][%s][%s][%s]', $time, $user_id, $photo_id, $sourcePage, $stringOccupation, $stringRoles);     
         } 
 
         $log = new Logger('Download_logger');
