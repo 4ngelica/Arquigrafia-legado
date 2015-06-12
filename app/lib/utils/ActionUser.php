@@ -79,7 +79,7 @@ class ActionUser{
         }
     }
 
-    public  function convertArrayObjectToString($array,$atribute){
+    public static function convertArrayObjectToString($array,$atribute){
 
         $string = "";
         $numElement = count($array);
@@ -99,24 +99,20 @@ class ActionUser{
 
     //public static function
 
-    //funções não utilizadas por enquanto, em desenvolvimento
+    //funções em teste e desenvolvimento
 
     public static function printInitialStatment($file_path, $user_id, $source_page) {
         $occupation_array = Occupation::userOccupation($user_id);
         $roles_array = UsersRole::valueUserRole($user_id);
         $user_occupation ="";
         $user_roles ="";
-        $user_occupation = $this->convertArrayObjectToString($occupation_array,'occupation');
-        $user_roles = $this->convertArrayObjectToString($roles_array,'name');
+        $user_occupation = ActionUser::convertArrayObjectToString($occupation_array,'occupation');
+        $user_roles = ActionUser::convertArrayObjectToString($roles_array,'name');
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $info = sprintf('Acesso do usuário [$d], com ocupação [%s] e role [%s], as [%s] a partir de [%s].', $user_id, $user_occupation, $user_roles, $date_and_time, $source_page);
+        $info = sprintf('Acesso do usuário de ID nº: [%d], com ocupação [%s] e role [%s], as [%s] a partir de [%s].', $user_id, $user_occupation, $user_roles, $date_and_time, $source_page);
         
         $log = new Logger('Access_logger');
-        $formatter = new LineFormatter("%message%\n", null, false, true);
-        $handler = new StreamHandler($file_path, Logger::INFO);
-        $handler->setFormatter($formatter);
-        $log->pushHandler($handler);
-        $log->addInfo($info);
+        ActionUser::addInfoToLog($log, $file_path, $info);
     }
 
     public static function createDirectoryAndFile($date, $user_id, $source_page) {
@@ -135,17 +131,81 @@ class ActionUser{
         return $file_path;
     }
 
-    public static function printDownloadLog($user_id, $photo_id, $source_page) {
-        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $date_only = date('Y-m-d');
-        $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page);
-        $info = sprintf('[%s] Download da foto de ID nº: %d, pela página %s', $date_and_time, $photo_id, $source_page);
-
-        $log = new Logger('Access_logger');
+    public static function addInfoToLog($log, $file_path, $info) {
         $formatter = new LineFormatter("%message%\n", null, false, true);
         $handler = new StreamHandler($file_path, Logger::INFO);
         $handler->setFormatter($formatter);
         $log->pushHandler($handler);
         $log->addInfo($info);
+    }
+
+    public static function printUploadOrDownloadLog($user_id, $photo_id, $source_page, $up_or_down) {
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        $date_only = date('Y-m-d');
+        $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page);
+        $info = sprintf('[%s] ' . $up_or_down . ' da foto de ID nº: %d, pela página %s', $date_and_time, $photo_id, $source_page);
+
+        $log = new Logger('UpOrDownload_logger');
+        ActionUser::addInfoToLog($log, $file_path, $info);
+    }
+
+    public static function printFollowOrUnfollowLog($user_id, $target_user_id, $source_page, $follow_or_unfollow) {
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        $date_only = date('Y-m-d');
+        $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page);
+        $info = sprintf('[%s] ' . $follow_or_unfollow . ' no usuário de ID nº: %d, pela página %s', $date_and_time, $target_user_id, $source_page);
+
+        $log = new Logger('FollowOrUnfollow_logger');
+        ActionUser::addInfoToLog($log, $file_path, $info);
+    }
+
+    public static function printSelectPhoto($user_id, $photo_id, $source_page) {
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        $date_only = date('Y-m-d');
+        $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page);
+        $info = sprintf('[%s] selecionou a foto de ID nº: %d, pela página %s', $date_and_time, $photo_id, $source_page);
+
+        $log = new Logger('Select logger');
+        ActionUser::addInfoToLog($log, $file_path, $info);
+    }
+
+    public static function printLoginOrLogout($user_id, $source_page, $login_or_logout, $arquigrafia_facebook_stoa) {
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        $date_only = date('Y-m-d');
+        $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page);
+        $info = sprintf('[%s] ' . $login_or_logout .' através do ' . $arquigrafia_facebook_stoa . ', pela página %s', $date_and_time, $source_page);
+
+        $log = new Logger('LoginOrLogout logger');
+        ActionUser::addInfoToLog($log, $file_path, $info);
+    }
+
+    public static function printSelectUser($user_id, $target_user_id, $source_page) {
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        $date_only = date('Y-m-d');
+        $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page);
+        $info = sprintf('[%s] selecionou o usuário de ID nº: %d, pela página %s', $date_and_time, $target_user_id, $source_page);
+
+        $log = new Logger('SelectUser logger');
+        ActionUser::addInfoToLog($log, $file_path, $info);
+    }
+
+    public static function printComment($user_id, $source_page, $inserted_edited_deleted, $comment_id, $photo_id) {
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        $date_only = date('Y-m-d');
+        $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page);
+        $info = sprintf('[%s] '. $inserted_edited_deleted . ' o comentário de ID nº: %d, na foto de ID nº: %d, pela página %s', $date_and_time, $comment_id, $photo_id, $source_page);
+
+        $log = new Logger('Comment logger');
+        ActionUser::addInfoToLog($log, $file_path, $info);
+    }
+
+    public static function printSearch($user_id, $source_page, $key_words) {
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        $date_only = date('Y-m-d');
+        $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page);
+        $info = sprintf('[%s] buscou pelas palavras: ' . $key_words . '; pela página %s', $date_and_time, $source_page);
+
+        $log = new Logger('Search logger');
+        ActionUser::addInfoToLog($log, $file_path, $info);
     }
 }
