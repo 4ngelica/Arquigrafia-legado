@@ -214,6 +214,10 @@ class PhotosController extends \BaseController {
         $actionUser = new ActionUser();
         $actionUser->userEvents($user_id,$id,'downloads',$pageSource, "");
 
+        //TESTE DO NOVO LOG
+
+        ActionUser::printDownloadLog($user_id, $id, $pageSource);
+
         /*================================================================================*/
 
         header('Content-Description: File Transfer');        
