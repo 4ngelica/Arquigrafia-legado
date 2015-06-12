@@ -36,6 +36,11 @@ class PhotosController extends \BaseController {
       $follow = true;
     }    
 
+    //NEW LOG
+    $user_id = Auth::user()->id;
+    $source_page = Request::header('referer');
+    ActionUser::printSelectPhoto($user_id, $id, $source_page); 
+
     return View::make('/photos/show',
       ['photos' => $photos, 'owner' => $user, 'follow' => $follow, 'tags' => $tags, 'commentsCount' => $photos->comments->count(),
       'average' => $average, 'userEvaluations' => $evaluations, 'binomials' => $binomials, 
@@ -171,10 +176,12 @@ class PhotosController extends \BaseController {
         }
       }
 
-      //add
+      //OLD LOG
       $pageSource = $input["pageSource"]; //get url of the source page through form
       $actionUser = new ActionUser();
       $actionUser->userEvents($photo->user_id, $photo->id,'upload',$pageSource, "");
+      //NEW LOG
+      ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $pageSource, "upload");
 
       $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
       $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
@@ -216,7 +223,7 @@ class PhotosController extends \BaseController {
 
         //TESTE DO NOVO LOG
 
-        ActionUser::printDownloadLog($user_id, $id, $pageSource);
+        ActionUser::printUploadOrDownloadLog($user_id, $id, $pageSource, "download");
 
         /*================================================================================*/
 
@@ -249,12 +256,13 @@ class PhotosController extends \BaseController {
       $comment = new Comment($comment);
       $photo = Photo::find($id);
       $photo->comments()->save($comment);
-
+      //OLD LOG
       $user_id = Auth::user()->id;
-      $pageSource = Request::header('referer');
+      $source_page = Request::header('referer');
       $actionUser = new ActionUser();
-      $actionUser->userEvents($user_id, $id,'comments',$pageSource, "insertion");
-
+      $actionUser->userEvents($user_id, $id,'comments',$source_page, "insertion");
+      //NEW LOG
+      ActionUser::printComment($user_id, $source_page, "inseriu", $comment->id, $id);
       return Redirect::to("/photos/{$id}");
     }
     
