@@ -1,5 +1,7 @@
 <?php
 
+use lib\utils\ActionUser;
+
 class PagesController extends BaseController {
 
 	/*
@@ -157,6 +159,10 @@ class PagesController extends BaseController {
         $byTag = $tag->first()->photos;
         $photos = $photos->merge($byTag);
       }
+      $user_id = Auth::user()->id;
+      $source_page = Request::header('referer');
+      ActionUser::printSearch($user_id, $source_page, $needle);
+
       // retorna resultado da busca
       return View::make('/search',['tags' => $tags, 'photos' => $photos, 'query'=>$needle, 'city'=>$txtcity,'dateFilter'=>$dateFilter]);
     } else { 
