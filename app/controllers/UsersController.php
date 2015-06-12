@@ -34,7 +34,11 @@ class UsersController extends \BaseController {
     } else{ 
       $follow = true;
     }
-     
+    
+    $user_id = Auth::user()->id;
+    $source_page = Request::header('referer');
+    ActionUser::printSelectUser($user_id, $id, $source_page);
+
     return View::make('/users/show',['user' => $user, 'photos' => $photos, 'follow' => $follow,
       'evaluatedPhotos' => Photo::getEvaluatedPhotosByUser($user),
       'lastDateUpdatePhoto' => Photo::getLastUpdatePhotoByUser($id),
@@ -154,6 +158,10 @@ class UsersController extends \BaseController {
   // formulário de login
   public function logout()
   {
+    $user_id = Auth::user()->id;
+    $source_page = Request::header('referer');
+    ActionUser::printLoginOrLogout($user_id, $source_page, "logout", "arquigrafia");
+
     Auth::logout();
     return Redirect::to('/');
   }
@@ -277,11 +285,13 @@ class UsersController extends \BaseController {
     
     if ($user_id != $logged_user->id && !$following->contains($user_id)) {
       $logged_user->following()->attach($user_id);
-
+      //OLD LOG
       $logged_user_id = Auth::user()->id;
       $pageSource = Request::header('referer'); //get url of the source page
       $actionUser = new ActionUser();
       $actionUser->userEvents($logged_user_id, $user_id,'follow',$pageSource, "");
+      //NEW LOG
+      ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "follow");
     }
 
     return Redirect::to(URL::previous()); // redirecionar para friends
@@ -299,11 +309,13 @@ class UsersController extends \BaseController {
     
     if ($user_id != $logged_user->id && $following->contains($user_id)) {
       $logged_user->following()->detach($user_id);
-
+      //OLD LOG
       $logged_user_id = Auth::user()->id;
       $pageSource = Request::header('referer'); //get url of the source page
       $actionUser = new ActionUser();
       $actionUser->userEvents($logged_user_id, $user_id,'unfollow',$pageSource, "");
+      //NEW LOG
+      ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "unfollow");
     }
 
     return Redirect::to(URL::previous()); // redirecionar para friends
@@ -414,6 +426,9 @@ class UsersController extends \BaseController {
     }
     $user = User::stoaUser($stoa_user);
     Auth::loginUsingId($user->id);
+    $user_id = Auth::user()->id;
+    $source_page = Request::header('referer');
+    ActionUser::printLoginOrLogout($user_id, $source_page, "login", "stoa");
     return Response::json(true);
   }
 
