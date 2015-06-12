@@ -103,15 +103,45 @@ class ActionUser{
 
     public static function printInitialStatment($file_path, $user_id, $source_page) {
         $occupation_array = Occupation::userOccupation($user_id);
-        $role_array = UsersRole::valueUserRole($user_id);
+        $roles_array = UsersRole::valueUserRole($user_id);
         $user_occupation ="";
         $user_roles ="";
-        $user_occupation = static::convertArrayObjectToString($occupation_array,'occupation');
-        $user_roles = static::convertArrayObjectToString($role_array,'name');
+        $user_occupation = $this->convertArrayObjectToString($occupation_array,'occupation');
+        $user_roles = $this->convertArrayObjectToString($roles_array,'name');
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
         $info = sprintf('Acesso do usuário [$d], com ocupação [%s] e role [%s], as [%s] a partir de [%s].', $user_id, $user_occupation, $user_roles, $date_and_time, $source_page);
         
-        $log = new Logger('Download_logger');
+        $log = new Logger('Access_logger');
+        $formatter = new LineFormatter("%message%\n", null, false, true);
+        $handler = new StreamHandler($file_path, Logger::INFO);
+        $handler->setFormatter($formatter);
+        $log->pushHandler($handler);
+        $log->addInfo($info);
+    }
+
+    public static function createDirectoryAndFile($date, $user_id, $source_page) {
+        $dir_path =  storage_path() . '/logs/' . $date;
+        $file_path = storage_path() . '/logs/' . $date . '/' . 'user_' . $user_id . '.log';
+
+        $filesystem = new Filesystem();
+        if(!$filesystem->exists($dir_path)) {
+            $dir_created = $filesystem->makeDirectory($dir_path);
+        }
+        if(!$filesystem->exists($file_path)) {
+            $handle = fopen($file_path, 'a+');
+            fclose($handle);
+            ActionUser::printInitialStatment($file_path, $user_id, $source_page);
+        }
+        return $file_path;
+    }
+
+    public static function printDownloadLog($user_id, $photo_id, $source_page) {
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        $date_only = date('Y-m-d');
+        $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page);
+        $info = sprintf('[%s] Download da foto de ID nº: %d, pela página %s', $date_and_time, $photo_id, $source_page);
+
+        $log = new Logger('Access_logger');
         $formatter = new LineFormatter("%message%\n", null, false, true);
         $handler = new StreamHandler($file_path, Logger::INFO);
         $handler->setFormatter($formatter);
