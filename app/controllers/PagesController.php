@@ -159,7 +159,10 @@ class PagesController extends BaseController {
         $byTag = $tag->first()->photos;
         $photos = $photos->merge($byTag);
       }
-      $user_id = Auth::user()->id;
+      if (Auth::check())
+        $user_id = Auth::user()->id;
+      else 
+        $user_id = 0;
       $source_page = Request::header('referer');
       ActionUser::printSearch($user_id, $source_page, $needle);
 
