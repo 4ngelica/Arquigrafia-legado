@@ -37,7 +37,11 @@ class PhotosController extends \BaseController {
     }    
 
     //NEW LOG
-    $user_id = Auth::user()->id;
+    if (Auth::check())
+        $user_id = Auth::user()->id;
+    else 
+        $user_id = 0;
+
     $source_page = Request::header('referer');
     ActionUser::printSelectPhoto($user_id, $id, $source_page); 
 
