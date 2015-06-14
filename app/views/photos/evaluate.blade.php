@@ -103,175 +103,130 @@
           </p>
           </div>
 
-
-@if (!empty($average)) 
-                     
-  <div id="evaluation_average">    
- <script src="http://code.highcharts.com/highcharts.js"></script>
- <script src="http://code.highcharts.com/modules/exporting.js"></script>
-        <script type="text/javascript">
+@if (!empty($average))  
+  <div id="evaluation_average">
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script type="text/javascript">
       $(function () {     
         var l1 = [
-            <?php $i = 0; ?>
             @foreach($binomials as $binomial)
-              '{{$binomial->firstOption}} ',
-              '{{$binomial->firstOption}}',              
-                @if($i != 5) 
-                    '',
-                @endif
-
-            <?php $i++; ?>       
+              '{{ $binomial->firstOption}}',     
             @endforeach
         ];      
         var l2 = [
-          <?php $i = 0; ?>
             @foreach($binomials as $binomial)
-              '{{ $binomial->secondOption}} ', 
-              '{{$binomial->secondOption}}', 
-             @if($i != 5) 
-                    '',
-                @endif 
-            <?php $i++; ?>       
+              '{{ $binomial->secondOption }}',       
             @endforeach
         ];    
-        $(document).ready(function () {
         $('#evaluation_average').highcharts({
-            
+            credits: {
+                enabled: false,
+            },
             chart: {
-                type: 'bar'
+                marginRight: 80,          
             },
             title: {
                 text: '<b> Média de Avaliações d{{$architectureName}} </b>'
             },
-            xAxis: [{               
-                gridLineColor: '',
-                categories: l1,
-                reversed: false,
-                labels: {                       
-                   step: 1,
-                   formatter: function() {
-                      if(l1.indexOf(this.value) % 3 === 0)
-                           return '';
-                      else
-                         return "<b>"+this.value+"</b>";
-                    } 
-                }
-            },{ // mirror axis on right side
-                gridLineColor: '',
-                opposite: true,
-                reversed: false,
-                categories: l2,                
-                linkedTo: 0,
-                labels: {
-                    step: 1,
-                    formatter: function() {
-                       if(l2.indexOf(this.value) % 3 == 0)
-                           return "";
-                       else
-                         return "<b>"+this.value+"</b>";
-                    } 
-                }
-            }],
-            yAxis: {
-                gridLineColor: '',
-                title: {
-                    text: null
-                },
-                labels: {
-                    formatter: function () {
-                        return this.value;
-                    }
-                },
+            tooltip: {
+              formatter: function() {
+              return ''+ l1[this.y] + '-' + l2[this.y] + ': <br>' + this.series.name + '= ' + this.x;
+              },
+              crosshairs: [true,true]
+            },
+            xAxis: {
+                lineColor: '#000',
                 min: 0,
                 max: 100,
-                tickInterval: 50
             },
-            plotOptions: {
-                series: {
-                    name: 'Média',
-                    stacking: 'normal',
-                    pointPadding: 0,
-                    groupPadding: 0.2
-                },           
-                value:20,
-                width:40,
-                pointWidth: -5
-            },
-            tooltip: {                   
-                followPointer: true,
-                formatter: function () {
-                    if(l1.indexOf(this.x) % 3 == 0 || l2.indexOf(this.x) % 3 == 0 ){
-                        this.title = 'Média ';
-                    }else{ 
-                        this.title = 'Sua avaliação';
-                    }                    
-                    return '<b>'+'*'+this.title+'  <br>"' +this.point.category +'"</b>=' + this.point.y;
-                    
-                }
-            },
-            legend: {
-              enabled: false
-
-            },
-                series: [{
-                    name: 'Sua avaliação',
-                    xAxis:1,
-                    <?php $count=0; ?>                  
-                    data: [
-                    @if(isset($userEvaluationsChart) && !empty($userEvaluationsChart))
-                      @foreach($userEvaluationsChart as $userEvaluation)
-                        {y:{{$userEvaluation->avg}},color:'#FFFFFF'},
-                        {y:{{$userEvaluation->evaluationPosition}},color:'#FFFFFF'},
-                        @if($count!=5)
-                          {y:0},
-                        @endif
-                        <?php $count++; ?>  
-                      @endforeach 
-                    @endif   
-                    ]
-                  },
-                  {
-                   <?php $count=0; ?>  
-                    data: [
-                    @if(isset($userEvaluationsChart) && !empty($userEvaluationsChart))
-                      @foreach($userEvaluationsChart as $userEvaluation)
-                        {y:{{100-$userEvaluation->avg}},color:'#C0C0C0'},
-                        {y:{{100-$userEvaluation->evaluationPosition}},color:'#808080'},
-                        @if($count!=5)
-                          {y:0},
-                        @endif
-                        <?php $count++; ?>  
-                      @endforeach 
-                    @endif 
-                     ]
+            yAxis: [{
+                lineColor: '#000',
+                lineWidth: 1,            
+                tickAmount: {{$binomials->count()}},              
+                tickPositions: [
+                  <?php $count = 0?>
+                  @foreach($binomials as $binomial)
+                    {{ $count }},
+                    <?php $count++; ?>
+                  @endforeach
+                ],
+                title: {
+                    text: ''
+                },
+                labels: {
+                  formatter: function() {
+                    return l1[this.value];
                   }
-                ]
-            
-            });
-    });
-
-});
-    </script>
-
-  </div>
-
-<text x="21" style="color:#808080;font-size:12px;font-weight:bold;cursor:pointer;fill:#808080;" text-anchor="start" zIndex="2" y="15">
-  <tspan>
-      @if ($owner != null)
+                }
+            }, {                
+                lineWidth: 1,
+                tickAmount: {{$binomials->count()}},  
+                tickPositions: [
+                  <?php $count = 0?>
+                  @foreach($binomials as $binomial)
+                    {{ $count }},
+                    <?php $count++; ?>
+                  @endforeach
+                ],
+                opposite: true,
+                title: {
+                    text: ''
+                },
+                labels: {
+                  formatter: function() {
+                    return l2[this.value];
+                  }
+                },
+            }],
+            series: [{            
+                <?php $count = 0; ?>
+                data: [ 
+                  @foreach($average as $avg)
+                    [{{ $avg->avgPosition }}, {{ $count }}],                      
+                    <?php $count++ ?>
+                  @endforeach
+                ],
+                yAxis: 1,
+                name: 'Média',            
+                marker: {
+                  symbol: 'circle',
+                  enabled: true
+                },
+                color: '#999999',
+            }, 
+              @if ($owner != null)
+              {            
+                <?php $count = 0; ?> 
+                data: [
+                  @if(isset($userEvaluations) && !$userEvaluations->isEmpty())
+                    @foreach($userEvaluations as $userEvaluation)
+                      [{{ $userEvaluation->evaluationPosition }}, {{ $count }}], 
+                      <?php $count++ ?>
+                    @endforeach              
+                  @endif
+                ],
+                Axis: 0,          
+                marker: {
+                  symbol: 'circle',
+                  enabled: true
+                },
+                color: '#000000',
+                name: 
                 @if (Auth::check() && $owner->id == Auth::user()->id)
-                  <span class="legend_style">{{ 'Sua avaliação' }}</span>
+                  'Sua avaliação' 
                 @else
-                  <span class="legend_style">{{'Avaliação de '.$owner->name}}</span>
+                  'Avaliação de {{$owner->name}}'
                 @endif
-              @endif   
-  </tspan>
-</text>
-<rect x="0" y="4" width="16" height="12" zIndex="3" fill="#808080"></rect> 
-<text x="21" style="color:#C0C0C0;font-size:12px;font-weight:bold;cursor:pointer;fill:#C0C0C0;" text-anchor="start" zIndex="2" y="15">                      
-  <span class="legend_style">Média </span>
-</text>
-  <rect x="0" y="4" width="16" height="12" zIndex="3" fill="#C0C0C0"></rect> 
-@endif      
+            }
+            @endif
+            ]
+        });
+      });
+    </script>
+  </div>
+@endif   
+      
 
 		<!-- Photos with similar average  -->
     @if (count($similarPhotos) > 0) 
@@ -399,7 +354,7 @@
                   
               <?php } ?>
               
-               <a href="{{ URL::to('/photos/' . $photos->id) }}" class='btn right'>VOLTAR</a>
+               <a href="{{ URL::previous() }}" class='btn right'>VOLTAR</a>
                @if (Auth::check() && $owner != null && $owner->id == Auth::user()->id)
                 {{ Form::submit('AVALIAR', ['id'=>'evaluation_button','class'=>'btn right']) }} 
                @endif
