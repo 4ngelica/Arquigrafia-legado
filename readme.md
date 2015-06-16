@@ -1,25 +1,17 @@
-## Laravel PHP Framework
+## Arquigrafia
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/downloads.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+The Arquigrafia project intends to research how the individual and the collective
+knowledge building processes relate to each other, by sharing subjectivities on interactive and communicative experiences based on an online collective gallery of Brazilian architecture digital images. 
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, and caching.
+Considering the need for specific iconographic galleries, organized and open for free public access on the Internet, this project gathers a multidisciplinary research team to work on the design and construction of a social network on the Web 2.0 focused on Brazilian architecture digital images, whose operation dynamics will support the study of knowledge building processes. 
 
-Laravel aims to make the development process a pleasing one for the developer without sacrificing application functionality. Happy developers make the best code. To this end, we've attempted to combine the very best of what we have seen in other web frameworks, including frameworks implemented in other languages, such as Ruby on Rails, ASP.NET MVC, and Sinatra.
+So far, the project has focused on photographic images but, in a next step, drawings and
+videos will be added. The collective network composed of digital image galleries will complement the current visual bases on Brazilian architecture and, later, may be extended to world architecture. The aim of this project is to stimulate architectural visual culture, promoting interaction between architecture students, teachers,
+professional architects and, in a broader approach, among all those interested in architectural images.
 
-Laravel is accessible, yet powerful, providing powerful tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+Keywords: Iconography. Photography. Architecture Web 2.0. Collaborative Systems. Collective intelligence. 
 
-## Official Documentation
-
-Documentation for the entire framework can be found on the [Laravel website](http://laravel.com/docs).
-
-### Contributing To Laravel
-
-**All issues and pull requests should be filed on the [laravel/framework](http://github.com/laravel/framework) repository.**
 
 ### License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+The Arquigrafia project is open-sourced software licensed under the [Creative Commons Attribution 3.0](http://creativecommons.org/licenses/by/3.0/deed.pt_BR).
