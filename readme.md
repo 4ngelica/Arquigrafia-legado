@@ -9,7 +9,7 @@ So far, the project has focused on photographic images but, in a next step, draw
 videos will be added. The collective network composed of digital image galleries will complement the current visual bases on Brazilian architecture and, later, may be extended to world architecture. The aim of this project is to stimulate architectural visual culture, promoting interaction between architecture students, teachers,
 professional architects and, in a broader approach, among all those interested in architectural images.
 
-Keywords: Iconography. Photography. Architecture Web 2.0. Collaborative Systems. Collective intelligence. 
+Keywords: Architecture, Iconography, Web 2.0, Collaborative Systems, Collective intelligence.
 
 
 ### License
