@@ -97,8 +97,6 @@ class ActionUser{
         return $string;
     }
 
-    //public static function
-
     //funções em teste e desenvolvimento
 
     public static function printInitialStatment($file_path, $user_id, $source_page) {
@@ -109,7 +107,7 @@ class ActionUser{
         $user_occupation = ActionUser::convertArrayObjectToString($occupation_array,'occupation');
         $user_roles = ActionUser::convertArrayObjectToString($roles_array,'name');
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $info = sprintf('Acesso do usuário de ID nº: [%d], com ocupação [%s] e role [%s], as [%s] a partir de [%s].', $user_id, $user_occupation, $user_roles, $date_and_time, $source_page);
+        $info = sprintf('[%s] Acesso do usuário de ID nº: [%d], com ocupação [%s] e role [%s], a partir de [%s].', $date_and_time, $user_id, $user_occupation, $user_roles, $source_page);
         
         $log = new Logger('Access_logger');
         ActionUser::addInfoToLog($log, $file_path, $info);
@@ -129,6 +127,38 @@ class ActionUser{
             ActionUser::printInitialStatment($file_path, $user_id, $source_page);
         }
         return $file_path;
+    }
+
+    public static function verifyTimeout($file_path, $user_id, $source_page) {
+        if ($user_id == 0) return;
+        $data = file($file_path);
+        $line = $data[count($data)-1];
+        sscanf($line, "[%s %s]", $date, $time);
+        list($last_hour, $last_minutes, $last_seconds) = explode(":", $time);
+        $last_seconds = explode("]", $last_seconds);
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        list($today, $now) = explode(" ", $date_and_time);
+        list($now_hour, $now_minutes, $now_seconds) = explode(":", $now);
+        if ((int)$now_hour - (int)$last_hour > 1) {
+            $result = "Timeout atingido, novo acesso detectado";
+            $log = new Logger('Timeout_logger');
+            ActionUser::addInfoToLog($log, $file_path, $result);
+            ActionUser::printInitialStatment($file_path, $user_id, $source_page);
+        }
+        elseif ((int)$now_hour - (int)$last_hour == 0) {
+            if(abs((int)$now_minutes - (int)$last_minutes) > 20) {
+                $result = "Timeout atingido, novo acesso detectado";
+                $log = new Logger('Timeout_logger');
+                ActionUser::addInfoToLog($log, $file_path, $result);
+                ActionUser::printInitialStatment($file_path, $user_id, $source_page);
+            }
+        }
+        elseif ((60-(abs((int)$now_minutes - (int)$last_minutes))) > 20) {
+            $result = "Timeout atingido, novo acesso detectado";
+            $log = new Logger('Timeout_logger');
+            ActionUser::addInfoToLog($log, $file_path, $result);
+            ActionUser::printInitialStatment($file_path, $user_id, $source_page);
+        }
     }
 
     public static function addInfoToLog($log, $file_path, $info) {
@@ -163,6 +193,7 @@ class ActionUser{
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
         $date_only = date('Y-m-d');
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page);
+        ActionUser::verifyTimeout($file_path, $user_id, $source_page);
         $info = sprintf('[%s] selecionou a foto de ID nº: %d, pela página %s', $date_and_time, $photo_id, $source_page);
 
         $log = new Logger('Select logger');
