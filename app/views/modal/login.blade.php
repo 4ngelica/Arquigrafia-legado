@@ -17,9 +17,9 @@
             
             {{ Form::open() }}
 
-               <p>Entre com seu usuário e senha:</p>
+               <p>Entre com seu usuário ou e-mail e senha:</p>
                <br>
-               <div class="one columns alpha">{{ Form::label('login', 'Usuário:', array('class'=>'right')) }}</div>
+               <div class="one columns alpha">{{ Form::label('login', 'Usuário ou E-mail:', array('class'=>'right')) }}</div>
                <div class="two columns omega">{{ Form::text('login', '', array('class'=>'right') ) }}</div>
                {{ $errors->first('login') }}
                
@@ -31,6 +31,12 @@
                @endif
 
                <br>
+               <div style="text-decoration: underline"> 
+                  <!--<a href="{{ URL::to("/forget/".$errors->first('login') )}}" id="single_view_contact_add">
+                     Esquecí minha senha
+                  </a>-->Esquecí minha senha
+                 
+                  </div>
                <p>{{ Form::submit("LOGIN",array('class'=>'btn right')) }}</p>
                
             {{ Form::close() }}
