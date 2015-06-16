@@ -24,7 +24,7 @@
           </div>
           
           
-          <div class="two columns alpha"><p>{{ Form::label('login', 'Login*:') }}</p></div>
+          <div class="two columns alpha"><p>{{ Form::label('login', 'Usuário*:') }}</p></div>
           <div class="two columns omega">
             <p>{{ Form::text('login') }} <br>
             <div class="error">{{ $errors->first('login') }}</div>
