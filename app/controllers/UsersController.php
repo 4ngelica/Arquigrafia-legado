@@ -117,15 +117,27 @@ class UsersController extends \BaseController {
     
     return View::make('/modal/login')->with(['fburl' => $fburl]);
   }
+  //ToDO
+  public function passwordForget($login)
+  {
+    $url = Request::url();
+    //dd($url);
+    //echo $login;
+    $input = Input::all();
+    
+    //dd($input);
+    //return Redirect::to('/');
+  }
   
   // validacao do login
   public function login()
   {
     $input = Input::all();
-    
-    $user = User::where('login', '=', $input["login"])->first();
 
-    if ($user != null && $user->oldAccount == 1)
+     $user = User::userInformation($input["login"]);
+    //$user = User::where('login', '=', $input["login"])->first();
+
+    if ($user != null && $user->oldAccount == 1) 
     {
       if ( User::checkOldAccount($user, $input["password"]) )
       {
@@ -138,7 +150,7 @@ class UsersController extends \BaseController {
       }
     }
 
-    if (Auth::attempt(array('login' => $input["login"], 'password' => $input["password"])))
+    if (Auth::attempt(array('login' => $input["login"], 'password' => $input["password"])) == true || Auth::attempt(array('email' => $input["login"], 'password' => $input["password"])) == true  )
     {
       if ( Session::has('filter.login') ) //acionado pelo login
       { 
