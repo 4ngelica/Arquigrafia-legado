@@ -113,7 +113,7 @@ return array(
             'required' => 'É obrigatório selecionar a permissão da imagem.',
         ),
         'photo' => array(
-            'required' => 'É obrigatório escolher uma imagem com tamanho maximo 10MB',
+            'required' => 'É obrigatório escolher uma imagem com tamanho máximo de 10MB',
             'max' => 'O tamanho máximo da imagem é 10MB',
             'mimes' => 'Os tipos de arquivos permitidos são: jpeg,jpg,png,gif.'
         ),        
