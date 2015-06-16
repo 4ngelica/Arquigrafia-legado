@@ -101,4 +101,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	public function equal($user) {
 		return ($this->id == $user->id);
 	}
+
+	public static function userInformation($login){
+		
+		$user = User::where('login','=',$login)
+          ->orWhere('email','=',$login)
+          ->first();
+
+          return $user;
+	}
+
+
 }
