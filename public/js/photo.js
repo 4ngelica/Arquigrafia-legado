@@ -55,7 +55,9 @@ $(function(){
 			if (data == 'fail') {
 				return;
 			}
-			data = $.parseJSON(data);
+			if (typeof data == 'string') {
+				data = $.parseJSON(data);
+			}
 			like_button.toggleClass('dislike');
 			like_button.attr('href', data.url);
 			$("#likes + small").text(data.likes_count);
@@ -73,7 +75,10 @@ $(function(){
 			if (data == 'fail') {
 				return;
 			}
-			data = $.parseJSON(data);
+			if (typeof data == 'string') {
+				data = $.parseJSON(data);
+			}
+
 			like.attr('href', data.url);
 			if (like_text == 'Curtir') {
 				like.text('Descurtir');
