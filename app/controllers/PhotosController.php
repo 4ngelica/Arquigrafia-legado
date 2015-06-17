@@ -182,13 +182,13 @@ class PhotosController extends \BaseController {
             }     
             // 10/05/2015  msy end       
           }
-          
           $photo->tags()->attach($tag->id);
           if ($tag->count == null)
             $tag->count = 0;
           $tag->count++;
           $tag->save();
         }
+        ActionUser::printTags($photo->user_id, $tags, $source_page, "user");
       }
 
       $pageSource = $input["pageSource"]; //get url of the source page through form
@@ -434,7 +434,7 @@ class PhotosController extends \BaseController {
       $photo->touch();
       $photo->save();  
 
-
+      $tags_copy = $input['tags'];
       $tags = explode(',', $input['tags']);
       
       if (!empty($tags)) {
@@ -508,7 +508,8 @@ class PhotosController extends \BaseController {
         $file->move(public_path().'/arquigrafia-images', $photo->id."_original.".strtolower($ext)); // original
         $photo->saveMetadata(strtolower($ext)); 
       }
-
+      $source_page = Request::header('referer');
+      ActionUser::printTags($photo->user_id, $id, $tags_copy, $source_page, "user");
       return Redirect::to("/photos/{$photo->id}")->with('message', '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso'); 
      
   }  
