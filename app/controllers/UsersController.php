@@ -88,6 +88,10 @@ class UsersController extends \BaseController {
           'login'     => $input["login"],
           'password'  => $input["password"]
       );
+
+      $user = User::userInformation($userdata["login"]);
+      $source_page = Request::header('referer');
+      ActionUser::printNewAccount($user->id, $source_page, "arquigrafia", "user");  
   
       // attempt to do the login
       if (Auth::attempt($userdata)) {
@@ -159,15 +163,24 @@ class UsersController extends \BaseController {
       if ( Session::has('filter.login') ) //acionado pelo login
       { 
         Session::forget('filter.login');
+        $source_page = Request::header('referer');
+        ActionUser::printLoginOrLogout($user->id, $source_page, "login", "arquigrafia", "user");
         return Redirect::intended('/');
       }
       if ( Session::has('url.previous') )
       {
         $url = Session::pull('url.previous');
-        if (!empty($url) )
+        if (!empty($url) ) {
+          $source_page = Request::header('referer');
+          ActionUser::printLoginOrLogout($user->id, $source_page, "login", "arquigrafia", "user");
           return Redirect::to($url);
+        }
+        $source_page = Request::header('referer');
+        ActionUser::printLoginOrLogout($user->id, $source_page, "login", "arquigrafia", "user");
         return Redirect::to('/');
       }
+      $source_page = Request::header('referer');
+      ActionUser::printLoginOrLogout($user->id, $source_page, "login", "arquigrafia", "user");
       return Redirect::to('/');
     } else {
 			Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
@@ -252,6 +265,9 @@ class UsersController extends \BaseController {
           $user->photo = '/arquigrafia-avatars/'.$user->id.'.jpg';
           $user->save();
         }
+
+        $source_page = Request::header('referer');
+        ActionUser::printLoginOrLogout($user->id, $source_page, "login", "facebook", "user");
         
         return Redirect::to('/')->with('message', "Bem-vindo {$user->name}!");
         
@@ -284,6 +300,9 @@ class UsersController extends \BaseController {
         $user->photo = '/arquigrafia-avatars/'.$user->id.'.jpg';
         $user->save();
         
+        $source_page = Request::header('referer');
+        ActionUser::printLoginOrLogout($user->id, $source_page, "login", "arquigrafia", "user");
+
         // return $user;
         return Redirect::to('/')->with('message', 'Sua conta foi criada com sucesso!');
       }
