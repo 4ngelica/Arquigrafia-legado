@@ -43,14 +43,17 @@ class PhotosController extends \BaseController {
     }
 
 
-    //NEW LOG
-    if (Auth::check())
+    if (Auth::check()) {
         $user_id = Auth::user()->id;
-    else 
-        $user_id = 0;
-
+        $user_or_visitor = "user";
+    }
+    else { 
+        $user_or_visitor = "visitor";
+        session_start();
+        $user_id = session_id();
+    }
     $source_page = Request::header('referer');
-    ActionUser::printSelectPhoto($user_id, $id, $source_page); 
+    ActionUser::printSelectPhoto($user_id, $id, $source_page, $user_or_visitor); 
 
     return View::make('/photos/show',
       ['photos' => $photos, 'owner' => $user, 'follow' => $follow, 'tags' => $tags, 'commentsCount' => $photos->comments->count(),
@@ -188,12 +191,8 @@ class PhotosController extends \BaseController {
         }
       }
 
-      //OLD LOG
       $pageSource = $input["pageSource"]; //get url of the source page through form
-      $actionUser = new ActionUser();
-      $actionUser->userEvents($photo->user_id, $photo->id,'upload',$pageSource, "");
-      //NEW LOG
-      ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $pageSource, "upload");
+      ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $pageSource, "upload", "user");
 
       $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
       $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
@@ -224,20 +223,9 @@ class PhotosController extends \BaseController {
       
       if( File::exists($path) ) {
       
-        /*==================================================================================*/
-        /*      Log de Downloads - user_id, photo_id, download_date                         */
-        /*==================================================================================*/
-        
         $user_id = Auth::user()->id;
-        $pageSource = Request::header('referer'); //get url of the source page
-        $actionUser = new ActionUser();
-        $actionUser->userEvents($user_id,$id,'downloads',$pageSource, "");
-
-        //TESTE DO NOVO LOG
-
-        ActionUser::printUploadOrDownloadLog($user_id, $id, $pageSource, "download");
-
-        /*================================================================================*/
+        $pageSource = Request::header('referer');
+        ActionUser::printUploadOrDownloadLog($user_id, $id, $pageSource, "download", "user");
 
         header('Content-Description: File Transfer');        
         header("Content-Disposition: attachment; filename=\"". $filename ."\"");
@@ -268,13 +256,11 @@ class PhotosController extends \BaseController {
       $comment = new Comment($comment);
       $photo = Photo::find($id);
       $photo->comments()->save($comment);
-      //OLD LOG
+
       $user_id = Auth::user()->id;
       $source_page = Request::header('referer');
-      $actionUser = new ActionUser();
-      $actionUser->userEvents($user_id, $id,'comments',$source_page, "insertion");
-      //NEW LOG
-      ActionUser::printComment($user_id, $source_page, "inseriu", $comment->id, $id);
+      ActionUser::printComment($user_id, $source_page, "inseriu", $comment->id, $id, "user");
+      
       return Redirect::to("/photos/{$id}");
     }
     

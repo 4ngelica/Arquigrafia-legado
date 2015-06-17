@@ -13,6 +13,19 @@ class PagesController extends BaseController {
 	public function home()
 	{
     $photos = Photo::orderByRaw("RAND()")->take(240)->get();
+
+    if (Auth::check()) {
+      $user_id = Auth::user()->id;
+      $user_or_visitor = "user";
+    }
+    else { 
+      $user_or_visitor = "visitor";
+      session_start();
+      $user_id = session_id();
+    }
+    $source_page = Request::header('referer');
+    ActionUser::printHomePage($user_id, $source_page, $user_or_visitor);
+
 		return View::make('index', ['photos' => $photos]);
 	}
   
@@ -159,12 +172,18 @@ class PagesController extends BaseController {
         $byTag = $tag->first()->photos;
         $photos = $photos->merge($byTag);
       }
-      if (Auth::check())
+
+      if (Auth::check()) {
         $user_id = Auth::user()->id;
-      else 
-        $user_id = 0;
+        $user_or_visitor = "user";
+      }
+      else { 
+        $user_or_visitor = "visitor";
+        session_start();
+        $user_id = session_id();
+      }
       $source_page = Request::header('referer');
-      ActionUser::printSearch($user_id, $source_page, $needle);
+      ActionUser::printSearch($user_id, $source_page, $needle, $user_or_visitor);
 
       // retorna resultado da busca
       return View::make('/search',['tags' => $tags, 'photos' => $photos, 'query'=>$needle, 'city'=>$txtcity,'dateFilter'=>$dateFilter]);
