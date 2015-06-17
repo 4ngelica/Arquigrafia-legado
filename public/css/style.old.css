@@ -622,3 +622,7 @@ z-index:7;
 /**/
 .profile_block_title span {float: right; margin-top:6px; margin-right: 10px;}
 #comments_block { margin: 40px 0; }
+
+#like_button { display: block; width: 20px; height: 20px; margin-left: 4px; background-image: url('../img/like.png'); }
+#like_button.dislike { background-image: url('../img/dislike.png'); }
+i#likes {  background: url("../img/dislikeNB.png"); padding : 2px 10px 0px;   }

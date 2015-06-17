@@ -26,7 +26,13 @@ class PhotosController extends \BaseController {
     $binomials = Binomial::all()->keyBy('id');
     $average = Evaluation::average($photos->id);
     $evaluations = null;
+    $photoliked = null;
+
+
+    //$commentliked=Comment::where('photo_id', $id);
+
     if (Auth::check()) {
+      $photoliked = Like::where("user_id", Auth::id())->where("photo_id", $photos->id)->first();
       $evaluations =  Evaluation::where("user_id", Auth::id())->where("photo_id", $id)->orderBy("binomial_id", "asc")->get();
       if (Auth::user()->following->contains($user->id))
         $follow = false;
@@ -34,7 +40,8 @@ class PhotosController extends \BaseController {
         $follow = true;
     } else {
       $follow = true;
-    }    
+    }
+
 
     //NEW LOG
     if (Auth::check())
@@ -49,7 +56,8 @@ class PhotosController extends \BaseController {
       ['photos' => $photos, 'owner' => $user, 'follow' => $follow, 'tags' => $tags, 'commentsCount' => $photos->comments->count(),
       'average' => $average, 'userEvaluations' => $evaluations, 'binomials' => $binomials, 
       'architectureName' => Photo::composeArchitectureName($photos->name),
-      'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photos->id)
+      'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photos->id),
+      'photoliked' => $photoliked
       ]);
 	}
 	

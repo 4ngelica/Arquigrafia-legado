@@ -42,6 +42,12 @@ class Photo extends Eloquent {
 		return $this->hasMany('Comment');
 	}
 
+	public function likes()
+	{
+		return $this->hasMany('Like');
+	}
+
+	
 	public function albums()
 	{
 		return $this->belongsToMany('Album', 'album_elements');
