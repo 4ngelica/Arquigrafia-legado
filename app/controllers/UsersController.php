@@ -405,7 +405,7 @@ class UsersController extends \BaseController {
       $user->gender = $input['gender'];  
       $user->visibleBirthday = $input['visibleBirthday'];  
       $user->visibleEmail = $input['visibleEmail'];   
-
+      $user->touch();
       $user->save();   
 
       if ($input["institution"] != null or $input["occupation"] != null) {
@@ -440,16 +440,23 @@ class UsersController extends \BaseController {
         return Response::json(false);
       }
     }
-    $user = User::stoaUser($stoa_user);
+    $user = User::stoa($stoa_user);
     Auth::loginUsingId($user->id);
-    $user_id = Auth::user()->id;
+    // $user_id = Auth::user()->id;
     $source_page = Request::header('referer');
-    ActionUser::printLoginOrLogout($user_id, $source_page, "login", "stoa");
+    ActionUser::printLoginOrLogout($user->id, $source_page, "login", "stoa");
     return Response::json(true);
   }
 
   private function getStoaAccount($account, $password, $account_type) {
     $ch = curl_init();
+    $this->setCurlOptions($ch, $account, $password, $account_type);
+    $response = curl_exec($ch);
+    curl_close ($ch);
+    return json_decode($response);
+  }
+
+  private function setCurlOptions($ch, $account, $password, $account_type) {
     curl_setopt($ch, CURLOPT_URL,"https://social.stoa.usp.br/plugin/stoa/authenticate/");
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -459,10 +466,7 @@ class UsersController extends \BaseController {
           'password' => $password,
           'fields' => 'full'
         ])
-    );
-    $response = curl_exec($ch);
-    curl_close ($ch);
-    return json_decode($response);
+    );    
   }
 
 }

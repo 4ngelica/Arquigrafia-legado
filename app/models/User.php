@@ -59,9 +59,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return false;
 	}
 
-	public static function stoaUser($stoa_user) {
+	public static function stoa($stoa_user) {
 
-		$user = User::where('login', '=', 'stoa_' . $stoa_user->nusp)->first();
+		$user = User::where('login', 'stoa_' . $stoa_user->nusp)->first();
 
 		if (!$user) {
 			$user = User::newStoaUser($stoa_user);
