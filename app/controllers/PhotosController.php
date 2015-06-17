@@ -154,6 +154,7 @@ class PhotosController extends \BaseController {
       
       $photo->save();
 
+      $tags_copy = $input['tags'];
       $tags = explode(',', $input['tags']);
       
       if (!empty($tags)) { 
@@ -188,11 +189,11 @@ class PhotosController extends \BaseController {
           $tag->count++;
           $tag->save();
         }
-        ActionUser::printTags($photo->user_id, $tags, $source_page, "user");
       }
 
-      $pageSource = $input["pageSource"]; //get url of the source page through form
-      ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $pageSource, "upload", "user");
+      $source_page = $input["pageSource"]; //get url of the source page through form
+      ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $source_page, "upload", "user");
+      ActionUser::printTags($photo->user_id, $photo->id, $tags_copy, $source_page, "user", "Inseriu");
 
       $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
       $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
@@ -509,7 +510,7 @@ class PhotosController extends \BaseController {
         $photo->saveMetadata(strtolower($ext)); 
       }
       $source_page = Request::header('referer');
-      ActionUser::printTags($photo->user_id, $id, $tags_copy, $source_page, "user");
+      ActionUser::printTags($photo->user_id, $id, $tags_copy, $source_page, "user", "Editou");
       return Redirect::to("/photos/{$photo->id}")->with('message', '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso'); 
      
   }  
