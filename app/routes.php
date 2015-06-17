@@ -76,6 +76,8 @@ Route::get('/albums/{id}/paginate/other/photos', 'AlbumsController@paginatePhoto
 
 /* COMMENTS */
 Route::post('/photos/{photo_id}/comment','PhotosController@comment');
+Route::get('/comments/{comment_id}/like','LikesController@commentlike');
+Route::get('/comments/{comment_id}/dislike','LikesController@commentdislike');
 
 /* EVALUATIONS */
 Route::get('/photos/{photo_id}/saveEvaluation','PhotosController@saveEvaluation');
@@ -86,13 +88,15 @@ Route::get('/photos/{photo_id}/viewEvaluation/{user_id}','PhotosController@viewE
 Route::get('/photos/{photo_id}/showSimilarAverage/', 'PhotosController@showSimilarAverage');
 
 /* PHOTOS */
+Route::get('/photos/{id}/like', 'LikesController@photolike');
+Route::get('/photos/{id}/dislike', 'LikesController@photodislike');
+Route::resource('/groups','GroupsController');
 Route::get('/photos/batch','PhotosController@batch');
 Route::get('/photos/upload','PhotosController@form');
 Route::get('/photos/download/{photo_id}','PhotosController@download');
 Route::resource('/photos','PhotosController');
 Route::get('/photos/{id}/get/info', 'PhotosController@getPhotoInfo');
 
-Route::resource('/groups','GroupsController');
 
 /* TAGS */
 Route::get('/tags/json', 'TagsController@index');
