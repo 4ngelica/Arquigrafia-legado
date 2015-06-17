@@ -8,7 +8,7 @@ class LikesController extends \BaseController {
 	    $photo = Photo::find($id);
 	    $user_id = Auth::user()->id;
       	$source_page = Request::header('referer');
-      	ActionUser::printLikeDislike($user_id, $photo->id, $source_page, "a foto", "curtiu", "user");
+      	ActionUser::printLikeDislike($user_id, $photo->id, $source_page, "a foto", "Curtiu", "user");
 	    return $this->like('photo',$photo);
 	}
 
@@ -16,7 +16,7 @@ class LikesController extends \BaseController {
 	    $photo = Photo::find($id);
 	    $user_id = Auth::user()->id;
       	$source_page = Request::header('referer');
-      	ActionUser::printLikeDislike($user_id, $photo->id, $source_page, "a foto", "descurtiu", "user");
+      	ActionUser::printLikeDislike($user_id, $photo->id, $source_page, "a foto", "Descurtiu", "user");
 	    return $this->dislike('photo', $photo);
 	}
 
@@ -24,7 +24,7 @@ class LikesController extends \BaseController {
 		$comment = Comment::find($id);
 		$user_id = Auth::user()->id;
       	$source_page = Request::header('referer');
-      	ActionUser::printLikeDislike($user_id, $comment->id, $source_page, "o comentário", "descurtiu", "user");
+      	ActionUser::printLikeDislike($user_id, $comment->id, $source_page, "o comentário", "Descurtiu", "user");
 		return $this->dislike('comment',$comment);
 	}
 
@@ -33,7 +33,7 @@ class LikesController extends \BaseController {
 	    $comment = Comment::find($id);
 	    $user_id = Auth::user()->id;
       	$source_page = Request::header('referer');
-      	ActionUser::printLikeDislike($user_id, $comment->id, $source_page, "o comentário", "curtiu", "user");
+      	ActionUser::printLikeDislike($user_id, $comment->id, $source_page, "o comentário", "Curtiu", "user");
 	    return $this->like('comment',$comment);
 	}
 
