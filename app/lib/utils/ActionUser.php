@@ -201,4 +201,15 @@ class ActionUser{
         $log = new Logger('NewAccount logger');
         ActionUser::addInfoToLog($log, $file_path, $info);
     }
+
+    public static function printLikeDislike($user_id, $photo_or_comment_id, $source_page, $photo_or_comment, $like_or_dislike, $user_or_visitor) {
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        $date_only = date('Y-m-d');
+        $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
+        ActionUser::verifyTimeout($file_path, $user_id, $source_page);
+        $info = sprintf('[%s] ' . $like_or_dislike . $photo_or_comment . ', ID nº: %d', $date_and_time, $photo_or_comment_id);
+
+        $log = new Logger('LikeDislike logger');
+        ActionUser::addInfoToLog($log, $file_path, $info);
+    }
 }
