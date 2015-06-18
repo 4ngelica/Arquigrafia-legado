@@ -93,7 +93,7 @@ $(document).ready(function(){
 
 			<div class="four columns omega">
               <span class="right"><i id="comments"></i> <small>{{$commentsCount}}</small></span>
-               <span class="right"><i id="likes"></i> <small>{{$photos->likes->count()}}</small></span>
+               <span class="right" title="{{ $photos->likes->count() }} pessoas curtiram essa imagem"><i id="likes"></i> <small>{{$photos->likes->count()}}</small></span>
               <?php if (Auth::check() && Auth::user()->id == $photos->user_id) { ?>  
                	<span class="right">
         					<a id="delete_button" href="{{ URL::to('/photos/' . $photos->id) }}" title="Excluir imagem"></a>
@@ -124,9 +124,10 @@ $(document).ready(function(){
 					<li><a href="{{ URL::to('/photos/' . $photos->id . '/evaluate' ) }}" title="Avalie {{$architectureName}}" id="evaluate" ></a></li>  
             <!-- LIKE-->
          @if(is_null($photoliked))
-          <li> <a href="{{ URL::to('/photos/' . $photos->id . '/like' ) }}" id="like_button"></a></li>
+          <li> <a href="{{ URL::to('/photos/' . $photos->id . '/like' ) }}" id="like_button" title="Curtir"></a></li>
          @else
-         <li> <a href="{{ URL::to('/photos/' . $photos->id . '/dislike' ) }}" id="like_button" class="dislike"></a></li>
+         <li> <a href="{{ URL::to('/photos/' . $photos->id . '/dislike' ) }}" id="like_button"
+          class="dislike" title="Descurtir"></a></li>
          @endif
 				</ul>            
              <?php } else { ?>
