@@ -165,7 +165,7 @@ class UsersController extends \BaseController {
       { 
         Session::forget('filter.login');
         $source_page = Request::header('referer');
-        ActionUser::printLoginOrLogout($user->id, $source_page, "login", "arquigrafia", "user");
+        ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
         return Redirect::intended('/');
       }
       if ( Session::has('url.previous') )
@@ -173,15 +173,15 @@ class UsersController extends \BaseController {
         $url = Session::pull('url.previous');
         if (!empty($url) ) {
           $source_page = Request::header('referer');
-          ActionUser::printLoginOrLogout($user->id, $source_page, "login", "arquigrafia", "user");
+          ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
           return Redirect::to($url);
         }
         $source_page = Request::header('referer');
-        ActionUser::printLoginOrLogout($user->id, $source_page, "login", "arquigrafia", "user");
+        ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
         return Redirect::to('/');
       }
       $source_page = Request::header('referer');
-      ActionUser::printLoginOrLogout($user->id, $source_page, "login", "arquigrafia", "user");
+      ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
       return Redirect::to('/');
     } else {
 			Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
@@ -194,7 +194,7 @@ class UsersController extends \BaseController {
   {
     $user_id = Auth::user()->id;
     $source_page = Request::header('referer');
-    ActionUser::printLoginOrLogout($user_id, $source_page, "logout", "arquigrafia", "user");
+    ActionUser::printLoginOrLogout($user_id, $source_page, "Logout", "arquigrafia", "user");
 
     Auth::logout();
     return Redirect::to('/');
@@ -268,7 +268,7 @@ class UsersController extends \BaseController {
         }
 
         $source_page = Request::header('referer');
-        ActionUser::printLoginOrLogout($user->id, $source_page, "login", "facebook", "user");
+        ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "facebook", "user");
         
         return Redirect::to('/')->with('message', "Bem-vindo {$user->name}!");
         
@@ -328,7 +328,7 @@ class UsersController extends \BaseController {
 
       $logged_user_id = Auth::user()->id;
       $pageSource = Request::header('referer'); //get url of the source page
-      ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "follow", "user");
+      ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "Follow", "user");
     }
 
     return Redirect::to(URL::previous()); // redirecionar para friends
@@ -349,7 +349,7 @@ class UsersController extends \BaseController {
 
       $logged_user_id = Auth::user()->id;
       $pageSource = Request::header('referer'); //get url of the source page
-      ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "unfollow", "user");
+      ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "Unfollow", "user");
     }
 
     return Redirect::to(URL::previous()); // redirecionar para friends
@@ -462,7 +462,7 @@ class UsersController extends \BaseController {
     Auth::loginUsingId($user->id);
     //$user_id = Auth::user()->id;
     $source_page = Request::header('referer');
-    ActionUser::printLoginOrLogout($user->id, $source_page, "login", "stoa", "user");
+    ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "stoa", "user");
     return Response::json(true);
   }
 

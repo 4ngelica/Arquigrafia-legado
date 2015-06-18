@@ -192,7 +192,7 @@ class PhotosController extends \BaseController {
       }
 
       $source_page = $input["pageSource"]; //get url of the source page through form
-      ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $source_page, "upload", "user");
+      ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $source_page, "Upload", "user");
       ActionUser::printTags($photo->user_id, $photo->id, $tags_copy, $source_page, "user", "Inseriu");
 
       $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
@@ -226,7 +226,7 @@ class PhotosController extends \BaseController {
       
         $user_id = Auth::user()->id;
         $pageSource = Request::header('referer');
-        ActionUser::printUploadOrDownloadLog($user_id, $id, $pageSource, "download", "user");
+        ActionUser::printUploadOrDownloadLog($user_id, $id, $pageSource, "Download", "user");
 
         header('Content-Description: File Transfer');        
         header("Content-Disposition: attachment; filename=\"". $filename ."\"");
@@ -260,7 +260,7 @@ class PhotosController extends \BaseController {
 
       $user_id = Auth::user()->id;
       $source_page = Request::header('referer');
-      ActionUser::printComment($user_id, $source_page, "inseriu", $comment->id, $id, "user");
+      ActionUser::printComment($user_id, $source_page, "Inseriu", $comment->id, $id, "user");
       
       return Redirect::to("/photos/{$id}");
     }
