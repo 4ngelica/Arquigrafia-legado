@@ -114,16 +114,18 @@ class UsersController extends \BaseController {
   }
 
   public function forget(){    
-    $input = Input::all();  
-    $user = User::userInformationObtain($input["email"]);   
+    $input = Input::all(); 
+    $email = $input["email"];
+    $user = User::userInformationObtain($email);   
     $randomPassword = Str::quickRandom(8);    
-    Mail::send('emails.users.reset-password', array('user' => $user,'email' => $input["email"],'randomPassword' => $randomPassword), function($message) {  
+    Mail::send('emails.users.reset-password', array('user' => $user,'email' => $email,'randomPassword' => $randomPassword),
+        function($message) use($email) {  
       $message->to($email)
               //->replyTo($email)
               ->subject('[Arquigrafia] - Esqueci minha senha');  
     }); 
     $message = true;   
-    return View::make('/modal/forget')->with(['message'=>$message,'email'=>$input["email"]]);
+    return View::make('/modal/forget')->with(['message'=>$message,'email'=>$email]);
   }
   
   // formulário de login
