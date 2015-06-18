@@ -106,6 +106,25 @@ class UsersController extends \BaseController {
       */
     }
   }
+
+  public function forgetForm()
+  {
+    $message = false;
+    return View::make('/modal/forget')->with(['message'=>$message]);
+  }
+
+  public function forget(){    
+    $input = Input::all();  
+    $user = User::userInformationObtain($input["email"]);   
+    $randomPassword = Str::quickRandom(8);    
+    Mail::send('emails.users.reset-password', array('user' => $user,'email' => $input["email"],'randomPassword' => $randomPassword), function($message) {  
+      $message->to($email)
+              //->replyTo($email)
+              ->subject('[Arquigrafia] - Esqueci minha senha');  
+    }); 
+    $message = true;   
+    return View::make('/modal/forget')->with(['message'=>$message,'email'=>$input["email"]]);
+  }
   
   // formulário de login
   public function loginForm()
@@ -126,17 +145,8 @@ class UsersController extends \BaseController {
     
     return View::make('/modal/login')->with(['fburl' => $fburl]);
   }
-  //ToDO
-  public function passwordForget($login)
-  {
-    $url = Request::url();
-    //dd($url);
-    //echo $login;
-    $input = Input::all();
-    
-    //dd($input);
-    //return Redirect::to('/');
-  }
+  
+
   
   // validacao do login
   public function login()
