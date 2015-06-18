@@ -110,23 +110,48 @@ class UsersController extends \BaseController {
   public function forgetForm()
   {
     $message = false;
-    return View::make('/modal/forget')->with(['message'=>$message]);
+    $existEmail = true;
+    return View::make('/modal/forget')->with(['message'=>$message, 'existEmail'=>$existEmail]);
   }
 
   public function forget(){    
     $input = Input::all(); 
     $email = $input["email"];
-    $user = User::userInformationObtain($email);   
-    $randomPassword = Str::quickRandom(8);    
-    Mail::send('emails.users.reset-password', array('user' => $user,'email' => $email,'randomPassword' => $randomPassword),
-        function($message) use($email) {  
-      $message->to($email)
-              //->replyTo($email)
-              ->subject('[Arquigrafia] - Esqueci minha senha');  
-    }); 
-    $message = true;   
-    return View::make('/modal/forget')->with(['message'=>$message,'email'=>$email]);
+    $rules = array('email' => 'required|email');
+
+    $validator = Validator::make($input, $rules);   
+    if ($validator->fails()) {
+      $messages = $validator->messages();
+      return Redirect::to('/users/forget')->withErrors($messages);
+    }else{
+
+      $user = User::userInformationObtain($email);
+
+      if(!empty($user)){
+        $randomPassword = Str::quickRandom(8); 
+        $user->password = Hash::make($randomPassword);
+        //echo $randomPassword;
+        $user->touch();
+        $user->save();
+        Mail::send('emails.users.reset-password', array('user' => $user,'email' => $email,'randomPassword' => $randomPassword),
+         function($message) use($email) {  
+               $message->to($email)
+               //->replyTo($email)
+               ->subject('[Arquigrafia] - Esqueci minha senha');  
+         }); 
+        $message = true; 
+        $existEmail = true;
+      } else{
+        $existEmail = false;
+        $message = null;
+      } 
+      return View::make('/modal/forget')->with(['message'=>$message,'email'=>$email, 'existEmail'=>$existEmail]);
+    }
+      
+    
   }
+
+
   
   // formulário de login
   public function loginForm()
@@ -154,6 +179,7 @@ class UsersController extends \BaseController {
   public function login()
   {
     $input = Input::all();
+    //dd($input["password"]);
 
      $user = User::userInformation($input["login"]);
     //$user = User::where('login', '=', $input["login"])->first();
