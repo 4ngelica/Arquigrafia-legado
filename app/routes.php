@@ -39,7 +39,8 @@ Route::post('/users/login', 'UsersController@login');
 Route::get('/users/logout', 'UsersController@logout');
 Route::get('users/login/fb', 'UsersController@facebook');
 Route::get('users/login/fb/callback', 'UsersController@callback');
-Route::get('/users/forget/{login}', 'UsersController@passwordForget');
+Route::get('/users/forget', 'UsersController@forgetForm');
+Route::post('/users/forget', 'UsersController@forget');
 
 Route::resource('/users','UsersController');
 Route::resource('/users/stoaLogin','UsersController@stoaLogin');
