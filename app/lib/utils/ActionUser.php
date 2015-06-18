@@ -130,7 +130,7 @@ class ActionUser{
         $date_only = date('Y-m-d');
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
-        $info = sprintf('[%s] selecionou a foto de ID nº: %d, pela página %s', $date_and_time, $photo_id, $source_page);
+        $info = sprintf('[%s] Selecionou a foto de ID nº: %d, pela página %s', $date_and_time, $photo_id, $source_page);
 
         $log = new Logger('Select logger');
         ActionUser::addInfoToLog($log, $file_path, $info);
@@ -152,7 +152,7 @@ class ActionUser{
         $date_only = date('Y-m-d');
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
-        $info = sprintf('[%s] selecionou o usuário de ID nº: %d, pela página %s', $date_and_time, $target_user_id, $source_page);
+        $info = sprintf('[%s] Selecionou o usuário de ID nº: %d, pela página %s', $date_and_time, $target_user_id, $source_page);
 
         $log = new Logger('SelectUser logger');
         ActionUser::addInfoToLog($log, $file_path, $info);
@@ -174,7 +174,7 @@ class ActionUser{
         $date_only = date('Y-m-d');
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
-        $info = sprintf('[%s] buscou pelas palavras: ' . $key_words . '; pela página %s', $date_and_time, $source_page);
+        $info = sprintf('[%s] Buscou pelas palavras: ' . $key_words . '; pela página %s', $date_and_time, $source_page);
 
         $log = new Logger('Search logger');
         ActionUser::addInfoToLog($log, $file_path, $info);
@@ -221,6 +221,17 @@ class ActionUser{
         $info = sprintf('[%s] ' . $inserted_edited . ' as tags: ' . $tags . '. Pertencentes a foto de ID nº: %d', $date_and_time, $photo_id);
 
         $log = new Logger('Tags logger');
+        ActionUser::addInfoToLog($log, $file_path, $info);
+    }
+
+    public static function printEvaluation($user_id, $photo_id, $source_page, $user_or_visitor, $inserted_edited, $evaluation) {
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        $date_only = date('Y-m-d');
+        $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
+        ActionUser::verifyTimeout($file_path, $user_id, $source_page);
+        $info = sprintf('[%s] ' . $inserted_edited . ' avaliação na foto de ID nº: %d, com os seguintes valores %s, pela página: %s', $date_and_time, $photo_id, $evaluation, $source_page);
+
+        $log = new Logger('Evaluation logger');
         ActionUser::addInfoToLog($log, $file_path, $info);
     }
 }
