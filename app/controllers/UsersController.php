@@ -83,6 +83,7 @@ class UsersController extends \BaseController {
     } else {
       // save user
       User::create(['name'=>$input["name"],'email'=>$input["email"],'password'=>Hash::make($input["password"]),'login'=>$input["login"]]);
+
       // auto login after saving
       $userdata = array(
           'login'     => $input["login"],
