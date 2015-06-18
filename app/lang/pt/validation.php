@@ -137,6 +137,11 @@ return array(
         'email' => array(
             'required' => 'É obrigatório inserir seu e-mail.',
         ),
+            
+        'email' => array(
+            'email' => 'O formato do e-mail é incorreto.',
+        ),    
+
         'terms' => array(
             'required' => 'É obrigatório selecionar os termos de compromisso.',
         ), 
