@@ -273,6 +273,9 @@ class PhotosController extends \BaseController {
     if (Auth::check()) {
       $evaluations =  Evaluation::where("user_id", Auth::id())->where("photo_id", $id)->get();
       $input = Input::all();
+      $evaluation_string = "";
+      $evaluation_names = array("Horizontal-Vertical", "Translúcida-Opaca", "Simétrica-Assimétrica", "Complexa-Simples", "Interna-Externa", "Aberta-Fechada");
+      $i = 0;
       $user_id = Auth::user()->id;
       // pegar do banco as possives métricas
       $binomials = Binomial::all();
@@ -286,13 +289,19 @@ class PhotosController extends \BaseController {
             'binomial_id'=> $bid,
             'user_id'=> $user_id
           ]);
+          $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
         } 
       } else {
         foreach ($evaluations as $evaluation) {
           $bid = $evaluation->binomial_id;
           $evaluation->evaluationPosition = $input['value-'.$bid];
           $evaluation->save();
+          $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
       } 
+
+      $user_id = Auth::user()->id;
+      $source_page = Request::header('referer');
+      ActionUser::printEvaluation($user_id, $id, $source_page, "user", "Inseriu", $evaluation_string);
 
       }
       return Redirect::to("/photos/{$id}/evaluate")->with('message', '<strong>Avaliação salva com sucesso</strong><br>Abaixo você pode visualizar a média atual de avaliações');

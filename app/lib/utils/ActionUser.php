@@ -229,7 +229,7 @@ class ActionUser{
         $date_only = date('Y-m-d');
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
-        $info = sprintf('[%s] ' . $inserted_edited . ' avaliação na foto de ID nº: %d, com os seguintes valores %s, pela página: %s', $date_and_time, $photo_id, $evaluation, $source_page);
+        $info = sprintf('[%s] ' . $inserted_edited . ' avaliação na foto de ID nº: %d, com os seguintes valores %spela página: %s', $date_and_time, $photo_id, $evaluation, $source_page);
 
         $log = new Logger('Evaluation logger');
         ActionUser::addInfoToLog($log, $file_path, $info);
