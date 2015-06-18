@@ -32,9 +32,9 @@
 
                <br>
                <div style="text-decoration: underline"> 
-                  <!--<a href="{{ URL::to("/forget/".$errors->first('login') )}}" id="single_view_contact_add">
-                     Esquecí minha senha
-                  </a>-->Esquecí minha senha
+                  <a href="{{ URL::to("/users/forget/")}}" id="single_view_contact_add">
+                     Esqueceu sua senha?
+                  </a>
                  
                   </div>
                <p>{{ Form::submit("LOGIN",array('class'=>'btn right')) }}</p>
