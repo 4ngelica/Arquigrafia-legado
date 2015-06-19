@@ -143,7 +143,7 @@
 				<li><strong>Ocupação: </strong>{{ $user->occupation->occupation}}</li>
 			@endif
 			@if ( !empty($user->site) )
-				<li><strong>Site pessoal: </strong> {{ $user->site }}</li>
+				<li><strong>Site pessoal: </strong> <a href="{{ $user->site }}">{{ $user->site }}</a></li>
 			@endif	
 			</br>
 
