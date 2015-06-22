@@ -13,6 +13,11 @@ class Evaluation extends Eloquent {
 		return $this->hasOne('Binomial');
 	}
 
+	public function user()
+	{
+			return $this->belongsTo('User');
+	}
+
 	public function photo()
 	{
 		return $this->hasOne('Photo');

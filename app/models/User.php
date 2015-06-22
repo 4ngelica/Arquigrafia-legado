@@ -20,6 +20,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	{
 		return $this->hasMany('Comment');
 	}
+	public function evaluations()
+	{
+		return $this->hasMany('Evaluation');
+	}
 
 	public function likes()
 	{
@@ -35,6 +39,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	public function occupation()
 	{
 		return $this->hasOne('Occupation');
+	}
+
+	public function badges()
+	{
+		return $this->belongsToMany('Badge','user_badges');
 	}
 
 	//seguidores
@@ -116,6 +125,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
           return $user;
 	}
+	
 
 	public static function userInformationObtain($email){
 		$user = User::where('email','=',$email)->first();

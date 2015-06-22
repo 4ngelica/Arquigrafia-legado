@@ -19,6 +19,10 @@
 			return $this->hasMany('Like');
 		}
 
+		public function badge() {
+			return $this->belongsTo('Badge');
+		}
+
 		public function isLiked(){
 			$user_id=Auth::id();
 			if (is_null($user_id)){
@@ -29,5 +33,10 @@
 				return false;
 			}
 			return true;
+		}
+
+		public function attachBadge($badge) {
+			$this->badge_id = $badge->id;
+			$this->save();
 		}
 	}

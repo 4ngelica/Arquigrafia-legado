@@ -30,7 +30,11 @@ class Photo extends Eloquent {
 	public function user()
 	{
 		return $this->belongsTo('User');
-	}	
+	}
+
+	public function badge() {
+		return $this->belongsTo('Badge');
+	}
 
 	public function tags()
 	{
@@ -255,6 +259,9 @@ class Photo extends Eloquent {
     	return $arrayPhotosDB;
 	}
 
-
+	public function attachBadge($badge) {
+		$this->badge_id = $badge->id;
+		$this->save();
+	}
 	
 }

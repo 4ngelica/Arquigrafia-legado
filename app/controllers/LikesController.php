@@ -34,7 +34,9 @@ class LikesController extends \BaseController {
 	    $user_id = Auth::user()->id;
       	$source_page = Request::header('referer');
       	ActionUser::printLikeDislike($user_id, $comment->id, $source_page, "o comentário", "Curtiu", "user");
-	    return $this->like('comment',$comment);
+	    $response = $this->like('comment',$comment);
+		$this->checkLikesCount($comment, 5, 'test'); 
+		return $response;
 	}
 
 	private function like($model, $model_object) {
@@ -46,8 +48,7 @@ class LikesController extends \BaseController {
 	    $like = Like::firstOrCreate(array( 
 	        "user_id" => $user_id,
 	        $model ."_id" => $model_object->id));
-	      
-
+	     
 	    return Response::json([ 
 	        'url' => URL::to('/'. $model .'s/' . $model_object->id . '/dislike'),
 	        'likes_count' => $model_object->likes->count()]);
@@ -64,5 +65,16 @@ class LikesController extends \BaseController {
 	        	'url' => URL::to('/' . $model . 's/' . $model_object->id . '/like'),
 	        	'likes_count' => $model_object->likes->count()]);
 
+	}
+
+	private function checkLikesCount($model_object, $number_likes, $badge_name) {
+		if ($model_object->badge) {
+			return ;
+		}
+		if ($model_object->likes->count()== $number_likes){
+			$badge=Badge::where('name', $badge_name)->first();
+			$model_object->user->badges()->attach($badge);
+			$model_object->attachBadge($badge);
+		}
 	}
 }
