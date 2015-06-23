@@ -122,6 +122,7 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
     'Intervention\Image\ImageServiceProvider',
+    'Tricki\Notification\NotificationServiceProvider',
 
 	),
 
