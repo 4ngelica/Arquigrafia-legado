@@ -6,7 +6,8 @@
 	"require": {
 		"laravel/framework": "4.2.*",
 		"intervention/image": ">1",
-		"facebook/php-sdk-v4": "~4.0"
+		"facebook/php-sdk-v4": "~4.0",
+		"tricki/laravel-notification": "@dev"
 	},
 	"autoload": {
 		"classmap": [
