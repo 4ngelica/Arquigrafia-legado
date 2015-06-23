@@ -9,6 +9,12 @@ class LikesController extends \BaseController {
 	    $user_id = Auth::user()->id;
       	$source_page = Request::header('referer');
       	ActionUser::printLikeDislike($user_id, $photo->id, $source_page, "a foto", "Curtiu", "user");
+
+      	//TESTE DE NOTIFICAÇÕES
+      	$user = Auth::user();
+      	$user_note = User::find($photo->user_id);
+      	Notification::create('post_liked', $user, $photo, [$user_note], null);
+
 	    return $this->like('photo',$photo);
 	}
 
