@@ -15,6 +15,9 @@ Route::get('/test', function () {
 	//testes
 });
 
+//ROTA DE NOTIFICAÇÕES, EM TESTE
+Route::get('/notifications', function() { return View::make('notifications'); });
+
 /* phpinfo() */
 Route::get('/info/', function(){ return View::make('i'); });
 
