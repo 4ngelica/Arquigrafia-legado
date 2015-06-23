@@ -128,9 +128,9 @@ class UsersController extends \BaseController {
       $user = User::userInformationObtain($email);
 
       if(!empty($user)){
-        $randomPassword = Str::quickRandom(8); 
+        $randomPassword = strtolower(Str::quickRandom(8)); 
         $user->password = Hash::make($randomPassword);
-        //echo $randomPassword;
+        
         $user->touch();
         $user->save();
         Mail::send('emails.users.reset-password', array('user' => $user,'email' => $email,'randomPassword' => $randomPassword),
@@ -177,9 +177,9 @@ class UsersController extends \BaseController {
   
   // validacao do login
   public function login()
-  {
+  { 
     $input = Input::all();
-    //dd($input["password"]);
+    //$input["password"]
 
      $user = User::userInformation($input["login"]);
     //$user = User::where('login', '=', $input["login"])->first();
@@ -198,21 +198,29 @@ class UsersController extends \BaseController {
     }
 
     if (Auth::attempt(array('login' => $input["login"], 'password' => $input["password"])) == true || Auth::attempt(array('email' => $input["login"], 'password' => $input["password"])) == true  )
-    {
+    { 
       if ( Session::has('filter.login') ) //acionado pelo login
-      { 
+      {  
         Session::forget('filter.login');
         $source_page = Request::header('referer');
         ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
         return Redirect::intended('/');
       }
+        
       if ( Session::has('url.previous') )
       {
-        $url = Session::pull('url.previous');
-        if (!empty($url) ) {
+        $url = Session::pull('url.previous'); 
+        
+        if (!empty($url)) {
           $source_page = Request::header('referer');
           ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
-          return Redirect::to($url);
+          //Redirect when user forget password
+          if($url == URL::to('users/forget')){ 
+            return Redirect::to('/');
+          }else{
+            return Redirect::to($url);
+          }
+
         }
         $source_page = Request::header('referer');
         ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
@@ -425,12 +433,13 @@ class UsersController extends \BaseController {
     
     Input::flash();    
     $input = Input::only('name', 'login', 'email', 'scholarity', 'lastName', 'site', 'birthday', 'country', 'state', 'city', 
-      'photo', 'gender', 'institution', 'occupation', 'visibleBirthday', 'visibleEmail');    
+      'photo', 'gender', 'institution', 'occupation', 'visibleBirthday', 'visibleEmail','password','password_confirmation');    
     
     $rules = array(
         'name' => 'required',
         'login' => 'required',
         'email' => 'required|email',
+        'password' => 'min:6|confirmed',
         'birthday' => 'date_format:"d/m/Y"'                  
     );     
     if ($input['email'] !== $user->email)        
@@ -461,6 +470,8 @@ class UsersController extends \BaseController {
       $user->gender = $input['gender'];  
       $user->visibleBirthday = $input['visibleBirthday'];  
       $user->visibleEmail = $input['visibleEmail'];   
+      $user->password = Hash::make($input["password"]);
+
       $user->touch();
       $user->save();   
 
