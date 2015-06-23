@@ -11,6 +11,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	
 	protected $fillable = ['id','name','email','password','login'];
 
+	public function notifications()
+    {
+        return $this->hasMany('\Tricki\Notification\Models\NotificationUser');
+    }
+
 	public function photos()
 	{
 		return $this->hasMany('Photo');
