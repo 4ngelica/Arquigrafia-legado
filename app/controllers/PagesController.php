@@ -192,10 +192,18 @@ class PagesController extends BaseController {
       return View::make('/search',['tags' => [], 'photos' => [], 'query' => "", 'city'=>"",'dateFilter'=>[]]);
     }
 	}  
+
+  private static function searchTags($t) {
+
+    $query = Tag::where('name','=', $t);    
+    $tagList = $query->get();    
+    return $tagList->lists('id');
+  }
   
   public function advancedSearch()
 	{ 
-    //2015-05-06 msy begin, add workauthor
+
+
     $fields = array(
         'name',
         'description',
@@ -209,22 +217,25 @@ class PagesController extends BaseController {
         'workdate',
         'district',
         'street',
-        'tag'
-
+        'tags',
+        'allowCommercialUses',
+        'allowModifications'
 
     );
+
     
     foreach($fields as $field) $$field = trim(Input::get($field));
     
     if(empty($name) && empty($description) && empty($city) && empty($state) && empty($country) && empty($workAuthor) 
       && empty($imageAuthor) && empty($dataCriacao) && empty($dataUpload) && empty($workdate) && empty($district)
-      && empty($street)&& empty($tag) ) {
+      && empty($street)&& empty($tags) && empty($allowModifications) && empty($allowCommercialUses)) {
        // busca vazia
        return View::make('/advanced-search',['tags' => [], 'photos' => [], 'query' => ""]);
     } else {
       
-      $query = Photo::where('id', '>', 0); 
       
+
+      $query = Photo::where('id', '>', 0);       
       if ($name != '') $query->where('name', 'LIKE', '%'. $name .'%');
       if ($description != '') $query->where('description', 'LIKE', '%'. $description .'%');  
       if ($city != '') $query->where('city', 'LIKE', '%'. $city .'%');  
@@ -234,6 +245,8 @@ class PagesController extends BaseController {
       if ($imageAuthor  != '') $query->where('imageAuthor', 'LIKE', '%'. $imageAuthor .'%');
       if ($district  != '') $query->where('district', 'LIKE', '%'. $district .'%');
       if ($street  != '') $query->where('street', 'LIKE', '%'. $street .'%');
+      if ($allowModifications  != '') $query->where('allowModifications', '=', $allowModifications);
+      if ($allowCommercialUses  != '') $query->where('allowCommercialUses', '=', $allowCommercialUses);
 
        if ($workdate != ''){ 
           if(DateTime::createFromFormat('Y', $workdate)!== FALSE) {
@@ -259,29 +272,61 @@ class PagesController extends BaseController {
        
       $query->whereNull('deleted_at'); 
       $photos = $query->get();
-
       
       //Adding search by tags
-      if ($tag != ''){ 
-          //$query = Tag::where('name', 'LIKE', '%' . $tags . '%');
-          $query = Tag::where('name', '=', $tag);
-          $tags = $query->get();
+        if (Input::has('tags')) 
+           $tags = str_replace(array('\'', '"', '[', ']'), '', $tags);    
+        else
+           $tags= '';  
+
+        $tags_copy = $tags;
+        $tags = explode(',', $tags); 
+
+        if (!empty($tags)) { 
+          $tags = array_map('trim', $tags);
+          $tags = array_map('mb_strtolower', $tags);
+          $tags = array_unique($tags);
+
+          foreach ($tags as $t) { //echo $t; echo "</br>";
+            $query = Tag::where('name','=', $t);
+            $tagsResult = $query->get();  
+
+            if ($tagsResult->first()) { 
+                $byTag = $tagsResult->first()->photos;
+                //echo "tag:"; 
+                //echo $byTag;         
+                //echo "</br>"; 
+                $photos = $photos->intersect($byTag);
+              } 
+              //echo "photo:"; echo "<br>";
+              //print_r($photos);
+              //echo "<br>";
+          }
+            
+        }
+        
+
+
+/*      if ($tags != ''){ 
           
-          if ($tags->first()) { 
-            $byTag = $tags->first()->photos;
+          $query = Tag::where('name', '=', $tags);
+          $tagsResult = $query->get();
+          
+          if ($tagsResult->first()) { 
+            $byTag = $tagsResult->first()->photos;
             $photos = $photos->intersect($byTag);
           }         
-        }
+        }*/
 
       
     } //2015-05-21 msy end
     
     if($photos->count()) { 
       // retorna resultado da busca
-      return View::make('/advanced-search',['tags' => [], 'photos' => $photos]);
+      return View::make('/advanced-search',['tags' => [], 'photos' => $photos]); //tagsResult
     } else {
       // busca sem resultados
-      return View::make('/advanced-search',['tags' => [], 'photos' => []]);
+      return View::make('/advanced-search',['tags' => [], 'photos' => []]); //tagsResult
     }
     
 	}
