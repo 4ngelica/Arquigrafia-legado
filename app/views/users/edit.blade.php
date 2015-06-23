@@ -172,14 +172,15 @@
             </p>
           </div>
           
-          <!--<div class="two columns alpha"><p>{{ Form::label('password', 'Senha:') }}</p></div>
+          <div class="two columns alpha"><p>{{ Form::label('password', 'Nova Senha:') }}</p></div>
           <div class="two columns omega">
             <p>{{ Form::password('password') }}<br>
-            {{ $errors->first('password') }}</p>
+            <div class="error">{{ $errors->first('password') }} </div>
+            </p>
           </div>
           
           <div class="two columns row alpha"><p>{{ Form::label('password_confirmation', 'Repita a senha:') }}</p></div>
-          <div class="two columns row omega"><p>{{ Form::password('password_confirmation') }}</p></div>-->
+          <div class="two columns row omega"><p>{{ Form::password('password_confirmation') }}</p></div>
 
           
           <div class="four columns alpha omega">  
