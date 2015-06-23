@@ -262,6 +262,8 @@ class PhotosController extends \BaseController {
       $source_page = Request::header('referer');
       ActionUser::printComment($user_id, $source_page, "Inseriu", $comment->id, $id, "user");
       
+      $this->checkCommentCount(5,'test');
+
       return Redirect::to("/photos/{$id}");
     }
     
@@ -324,14 +326,47 @@ class PhotosController extends \BaseController {
   }
 
   public function evaluate($photoId ) { 
+    $this->checkEvalCount(5, 'test');
     return static::getEvaluation($photoId, Auth::user()->id, true);    
   }
+
+  private function checkEvalCount($number_assessment, $badge_name){
+    $user = Auth::user();
+    if(($user->badges()->where('name', $badge_name)->first()) != null){
+        return;
+      }
+    if (($user->evaluations->groupBy('photo_id')->count()) == $number_assessment){
+        $badge=Badge::where('name', $badge_name)->first();
+        $user->badges()->attach($badge);
+      }
+    }
+
+    private function checkCommentCount($number_comment, $badge_name){
+      $user = Auth::user();
+      if(($user->badges()->where('name', $badge_name)->first()) != null){ 
+        return;
+      }
+      if (($user->comments->count()) == $number_comment){
+        $badge=Badge::where('name', $badge_name)->first();
+        $user->badges()->attach($badge);
+      }
+    }
+
+
+    function debug($data) {
+    if ( is_array( $data ) )
+        $output = "<script>console.log( 'Debug : " . implode( ',', $data) . "' );</script>";
+    else
+        $output = "<script>console.log( 'Debug : " . $data . "' );</script>";
+
+    echo $output;
+}
 
   private function getEvaluation($photoId, $userId, $isOwner) {    
     $photo = Photo::find($photoId);    
     $binomials = Binomial::all()->keyBy('id');
     //dd($binomials); 
-    
+  
     $average = Evaluation::average($photo->id); 
     $evaluations = null;  
     $averageAndEvaluations = null;
@@ -543,5 +578,6 @@ class PhotosController extends \BaseController {
     $photo = Photo::find($id);
     return Response::json(View::make('/photos/get-info')->with('photo', $photo)->render());
   }
+
 
 }
