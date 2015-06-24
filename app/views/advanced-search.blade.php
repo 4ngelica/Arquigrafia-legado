@@ -68,7 +68,8 @@
                 {{ Form::text('tags_input') }}
                 <button class="btn" id="add_tag">Adicionar tag</button>
                  <br>                          
-                <textarea name="tags" id="tags" cols="35" rows="1" style="display: none;">ss</textarea>
+                <!-- <p style="font-size: 7pt">Máximo 5 tags</p>-->
+                <textarea name="tags" id="tags" cols="35" rows="1" style="display: none;"></textarea>
                 <div class="error"></div>      
             </p>
 
@@ -176,27 +177,41 @@
       $(document).ready(function() {
       $('#tags').textext({ plugins: 'tags' });
 
-      @if (isset($tags))
+      @if (isset($tags) || $tags!=null) 
         @foreach ( $tags as $tag )
-          $('#tags').textext()[0].tags().addTags([ {{ '"' . $tag . '"' }} ]);
+          $('#tags').textext()[0].tags().addTags([ {{ '"' . $tag . '"' }} ]);          
         @endforeach
       @endif
+      
 
+      //var clicks = 0;
       $('#add_tag').click(function(e) {
-        e.preventDefault();
+        e.preventDefault(); 
+        //clicks += 1; 
         var tag = $('#tags_input').val();
         if (tag == '') return;
-        $('#tags').textext()[0].tags().addTags([ tag ]);
-        $('#tags_input').val('');
+        //if(clicks <= 5){        
+         $('#tags').textext()[0].tags().addTags([ tag ]); 
+         $('#tags_input').val('');
+        // }else{
+          //alert(' 5 tags solo');
+        //  $('#tags_input').val('');
+        // }
+         
       });
 
       $('#tags_input').keypress(function(e) {
         var key = e.which || e.keyCode;
-        if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
+        if (key == 44 || key == 46 || key == 59){ // key = , ou Key = . ou key = ;
           e.preventDefault();
+          // clicks += 1;
+          // alert(clicks);
+        }
       });
     });
 
+   
+    
 
     $(function() {
     
