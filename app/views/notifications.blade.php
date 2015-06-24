@@ -17,7 +17,7 @@
 		
 		<?php if (Auth::check()) {
         
-        $user_id = Auth::user()->id;
+    $user_id = Auth::user()->id;
 		$user = User::find($user_id);
 		$unreadNotifications = $user->notifications()->unread()->get();
 		?>
@@ -30,10 +30,5 @@
     		<li>{{"Não lidas:"}}</li>
     		<li>{{$unreadNotifications}}</li>
 		</ul>
- 		<?php } else {
-       		$home = new PagesController;
-       		$home->home();
-       		?>
-       		<div style="margin: auto; width: 250px;">Faça o login para vizualizar suas notificações.</div>
-        <?php } ?> 
+ 		<?php } ?> 
 @stop
