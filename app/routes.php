@@ -16,7 +16,12 @@ Route::get('/test', function () {
 });
 
 //ROTA DE NOTIFICAÇÕES, EM TESTE
-Route::get('/notifications', function() { return View::make('notifications'); });
+Route::get('/notifications', function() { 
+	if (Auth::check()) {
+		return View::make('notifications');
+	}
+	return Redirect::action('PagesController@home');
+});
 
 /* phpinfo() */
 Route::get('/info/', function(){ return View::make('i'); });
