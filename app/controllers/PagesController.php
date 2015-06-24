@@ -334,10 +334,10 @@ class PagesController extends BaseController {
     
     if($photos->count()) { 
       // retorna resultado da busca
-      return View::make('/advanced-search',['tags' => [], 'photos' => $photos]); //tagsResult
+      return View::make('/advanced-search',['tags' => $tags, 'photos' => $photos]); //tagsResult
     } else {
       // busca sem resultados
-      return View::make('/advanced-search',['tags' => [], 'photos' => []]); //tagsResult
+      return View::make('/advanced-search',['tags' => $tags, 'photos' => []]); //tagsResult
     }
     
 	}
