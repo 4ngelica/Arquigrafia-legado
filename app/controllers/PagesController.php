@@ -274,6 +274,7 @@ class PagesController extends BaseController {
       $photos = $query->get();
       
       //Adding search by tags
+
         if (Input::has('tags')) 
            $tags = str_replace(array('\'', '"', '[', ']'), '', $tags);    
         else
@@ -312,28 +313,12 @@ class PagesController extends BaseController {
                 return true;
               }
             });
-         
             
         }
-        
-
-
-/*      if ($tags != ''){ 
-          
-          $query = Tag::where('name', '=', $tags);
-          $tagsResult = $query->get();
-          
-          if ($tagsResult->first()) { 
-            $byTag = $tagsResult->first()->photos;
-            $photos = $photos->intersect($byTag);
-          }         
-        }*/
-
-      
     } //2015-05-21 msy end
-    
-    if($photos->count()) { 
-      // retorna resultado da busca
+    //dd($photos->count());
+    if($tags == '') $tags = [];
+    if($photos->count()) { // retorna resultado da busca       
       return View::make('/advanced-search',['tags' => $tags, 'photos' => $photos]); //tagsResult
     } else {
       // busca sem resultados
