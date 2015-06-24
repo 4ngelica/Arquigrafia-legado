@@ -279,29 +279,40 @@ class PagesController extends BaseController {
         else
            $tags= '';  
 
-        $tags_copy = $tags;
-        $tags = explode(',', $tags); 
-
+        
         if (!empty($tags)) { 
+
+          $tags_copy = $tags;
+          $tags = explode(',', $tags); 
+
           $tags = array_map('trim', $tags);
           $tags = array_map('mb_strtolower', $tags);
           $tags = array_unique($tags);
+          $tagString = implode(",", $tags);
+          
+          
 
-          foreach ($tags as $t) { //echo $t; echo "</br>";
-            $query = Tag::where('name','=', $t);
-            $tagsResult = $query->get();  
+          $query = Tag::whereIn('name', $tags);
+          $tagsResult = $query->get();  
 
-            if ($tagsResult->first()) { 
-                $byTag = $tagsResult->first()->photos;
-                //echo "tag:"; 
-                //echo $byTag;         
-                //echo "</br>"; 
-                $photos = $photos->intersect($byTag);
-              } 
-              //echo "photo:"; echo "<br>";
-              //print_r($photos);
-              //echo "<br>";
+          //commnet
+          $arrayPhotoId = array();
+          foreach ($tagsResult as $tagResult) {
+            $photosRelated = $tagResult->photos;
+            foreach ($photosRelated as $photoRel) {
+              array_push($arrayPhotoId, $photoRel->id);  
+            }
+            
           }
+          //dd($arrayTemp);
+
+          $photos = $photos->filter(
+            function($photo) use ($arrayPhotoId){
+              if(in_array($photo->id, $arrayPhotoId)){
+                return true;
+              }
+            });
+         
             
         }
         
