@@ -68,7 +68,7 @@
                 {{ Form::text('tags_input') }}
                 <button class="btn" id="add_tag">Adicionar tag</button>
                  <br>                          
-                <!-- <p style="font-size: 7pt">Máximo 5 tags</p>-->
+                <p style="font-size: 7pt">Máximo 5 tags</p>
                 <textarea name="tags" id="tags" cols="35" rows="1" style="display: none;"></textarea>
                 <div class="error"></div>      
             </p>
@@ -183,20 +183,25 @@
         @endforeach
       @endif
       
+      //var h = document.getElementsById('text-label').value;
+
+//h.value = 100;
+//alert(h);
 
       //var clicks = 0;
       $('#add_tag').click(function(e) {
         e.preventDefault(); 
-        //clicks += 1; 
+        
+        var sizeTags = $('#tags').textext()[0].tags()._formData.length; 
+
         var tag = $('#tags_input').val();
         if (tag == '') return;
-        //if(clicks <= 5){        
-         $('#tags').textext()[0].tags().addTags([ tag ]); 
-         $('#tags_input').val('');
-        // }else{
-          //alert(' 5 tags solo');
-        //  $('#tags_input').val('');
-        // }
+        if(sizeTags < 5){        
+          $('#tags').textext()[0].tags().addTags([ tag ]); 
+          $('#tags_input').val('');
+        }else{
+          $('#tags_input').val('');
+        }
          
       });
 
