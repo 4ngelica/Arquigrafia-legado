@@ -27,4 +27,15 @@ class Comment extends Eloquent {
 		$this->badge_id = $badge->id;
 		$this->save();
 	}
+
+	public function isLiked() {
+		$user = Auth::user();
+		if (Auth::check()) {
+			$like = Like::fromUser($user)->withLikable($this)->first();
+			if (!is_null($like)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
