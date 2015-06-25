@@ -126,12 +126,13 @@ ul#top_menu_items li #contact { background: url(../img/sprite.png) no-repeat -78
 /* registro e login - ON */
 ul#logged_menu { height: 25px; float: left; margin: 7px 0 2px 0; }
 ul#logged_menu li { display: inline-block; margin-left: 5px; width: 22px; height: 22px; zoom: 1; }
-ul#logged_menu li #messages, ul#logged_menu li #users, ul#logged_menu li #comunities, ul#logged_menu li #upload { display: block; width: 22px; height: 22px; }
+ul#logged_menu li #messages, ul#logged_menu li #users, ul#logged_menu li #comunities, ul#logged_menu li #upload, ul#logged_menu li #notification{ display: block; width: 22px; height: 22px; }
 ul#logged_menu li #messages { background: url(../img/sprite.png) -203px 0px; margin-top: -4px; }
 ul#logged_menu li #users { background: url(../img/sprite.png) -233px 0px; margin-top: -4px; }
 ul#logged_menu li #comunities { background: url(../img/sprite.png) -262px -2px; }
 ul#logged_menu li #comunities:hover { background-position: -262px -34px; }
 ul#logged_menu li #upload { background: url(../img/sprite.png) -402px 0px; }
+ul#logged_menu li #notification { background: url(../img/sprite.png) -202px 0px; }
 #user_name { margin-left: 8px; font-size: 12px; line-height: 24px; margin-right: -100px; }
 .header #user_photo {display: block; width: 48px; height: 48px; overflow: hidden; margin: 4px 12px 0 5px; float: left; }
 #logout { position: absolute; bottom: 0; right: 0; }

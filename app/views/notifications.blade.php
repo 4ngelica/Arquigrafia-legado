@@ -22,13 +22,9 @@
 		$unreadNotifications = $user->notifications()->unread()->get();
 		?>
 		<ul>
-			<li>{{ "You have notifications!" }}</li>
     		@foreach($user->notifications as $notification)
     		<li>{{ $notification->render() }}</li>
-    		<?php $notification->read_at = "2015" ?>
     		@endforeach
-    		<li>{{"Não lidas:"}}</li>
-    		<li>{{$unreadNotifications}}</li>
 		</ul>
  		<?php } ?> 
 @stop

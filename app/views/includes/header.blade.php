@@ -62,7 +62,7 @@
             <!-- <li><a href="#" id="comunities" title="Comunidades">&nbsp;</a></li> -->
             <li><a href="{{ URL::to("/photos/upload") }}" name="modal" id="upload" title="Enviar uma imagem">&nbsp;</a></li>
             <!-- <li><a href="#" id="messages" title="Você tem 19 mensagens">&nbsp;</a></li> -->
-            <li><a style="visibility: hidden" href="{{ URL::to("/user/notifications") }}" id="notifications" title="Vizualizar notificações">&nbsp;</a></li>
+            <li><a href="{{ URL::to("/notifications") }}" id="notification" title="Vizualizar notificações">&nbsp;</a></li>
           </ul>
          
         <?php } else { ?>
