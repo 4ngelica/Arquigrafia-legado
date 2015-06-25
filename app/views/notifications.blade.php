@@ -15,16 +15,15 @@
 
 @section('content')
 		
-		<?php if (Auth::check()) {
-        
-    $user_id = Auth::user()->id;
-		$user = User::find($user_id);
-		$unreadNotifications = $user->notifications()->unread()->get();
-		?>
-		<ul>
-    		@foreach($user->notifications as $notification)
-    		<li>{{ $notification->render() }}</li>
-    		@endforeach
-		</ul>
- 		<?php } ?> 
+	<?php if (Auth::check()) {
+     
+    $user = Auth::user();
+	$unreadNotifications = $user->notifications()->unread()->get();
+	?>
+	<ul>
+    	@foreach($user->notifications as $notification)
+    	<li>{{ $notification->render() }}</li>
+    	@endforeach
+	</ul>
+ 	<?php } ?> 
 @stop
