@@ -2,7 +2,7 @@
 
 @section('head')
 
-<title>Arquigrafia - Notificações</title>
+<title>Arquigrafia - Notificações de {{ $user->name }}</title>
 
 <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/checkbox.css" />
 
