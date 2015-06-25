@@ -1,86 +1,89 @@
-	<?php
-	//add
-	use lib\utils\ActionUser;
+<?php
+
+use lib\utils\ActionUser;
 
 class LikesController extends \BaseController {
 
-	public function photolike($id) {
-	    $photo = Photo::find($id);
-	    $user_id = Auth::user()->id;
-      	$source_page = Request::header('referer');
-      	ActionUser::printLikeDislike($user_id, $photo->id, $source_page, "a foto", "Curtiu", "user");
+  public function photolike($id) {
+    $photo = Photo::find($id);
+    $user = Auth::user();
+    $this->logLikeDislike($user, $photo, "a foto", "Curtiu", "user");
+    
+    //TESTE DE NOTIFICAÇÕES
+    $user_note = User::find($photo->user_id);
+    Notification::create('photo_liked', $user, $photo, [$user_note], null);
 
-      	//TESTE DE NOTIFICAÇÕES
-      	$user = Auth::user();
-      	$user_note = User::find($photo->user_id);
-      	Notification::create('photo_liked', $user, $photo, [$user_note], null);
+    return $this->like($photo, $user);
+  }
 
-	    return $this->like('photo',$photo);
-	}
+  public function photodislike($id) {
+    $photo = Photo::find($id);
+    $user = Auth::user();
+    $this->logLikeDislike($user, $photo, "a foto", "Descurtiu", "user");
+    return $this->dislike($photo, $user);
+  }
 
-	 public function photodislike($id) {
-	    $photo = Photo::find($id);
-	    $user_id = Auth::user()->id;
-      	$source_page = Request::header('referer');
-      	ActionUser::printLikeDislike($user_id, $photo->id, $source_page, "a foto", "Descurtiu", "user");
-	    return $this->dislike('photo', $photo);
-	}
-
-	public function commentdislike($id) {
-		$comment = Comment::find($id);
-		$user_id = Auth::user()->id;
-      	$source_page = Request::header('referer');
-      	ActionUser::printLikeDislike($user_id, $comment->id, $source_page, "o comentário", "Descurtiu", "user");
-		return $this->dislike('comment',$comment);
-	}
+  public function commentdislike($id) {
+    $comment = Comment::find($id);
+    $user = Auth::user();
+    $source_page = Request::header('referer');
+    $this->logLikeDislike($user, $comment, "o comentário", "Descurtiu", "user");
+    return $this->dislike($comment, $user);
+  }
 
 
-	public function commentlike($id) {
-	    $comment = Comment::find($id);
-	    $user_id = Auth::user()->id;
-      	$source_page = Request::header('referer');
-      	ActionUser::printLikeDislike($user_id, $comment->id, $source_page, "o comentário", "Curtiu", "user");
-	    $response = $this->like('comment',$comment);
-		$this->checkLikesCount($comment, 5, 'test'); 
-		return $response;
-	}
+  public function commentlike($id) {
+    $comment = Comment::find($id);
+    $user = Auth::user();
+    $this->logLikeDislike($user, $comment, "o comentário", "Curtiu", "user");
+    $response = $this->like($comment, $user);
+    $this->checkLikesCount($comment, 5, 'test'); 
+    return $response;
+  }
 
-	private function like($model, $model_object) {
-		$user_id = Auth::id();
-		if(is_null($model_object)) {
-	    	return 'fail';
-		}
+  private function like($likable, $user) {
+    try {
+      $like = Like::getLike($likable, $user);
+      $likable_type = strtolower(get_class($likable));
+    } catch (Exception $e) {
+      //
+    }
+    return $this->getLikeResponse($likable_type, $likable, 'dislike');
+  }
+  
+  private function dislike($likable, $user) {
+    try {
+      $like = Like::fromUser($user)->withLikable($likable)->first();
+      $likable_type = strtolower(get_class($likable));
+      $like->delete();
+    } catch (Exception $e) {
+      //
+    }
+    return $this->getLikeResponse($likable_type, $likable, 'like');
+  }
 
-	    $like = Like::firstOrCreate(array( 
-	        "user_id" => $user_id,
-	        $model ."_id" => $model_object->id));
-	     
-	    return Response::json([ 
-	        'url' => URL::to('/'. $model .'s/' . $model_object->id . '/dislike'),
-	        'likes_count' => $model_object->likes->count()]);
+  private function getLikeResponse($likable_type, $likable, $like_or_dislike) {
+    if (is_null($likable)) {
+      return Response::json('fail');
+    }
+    return Response::json([ 
+      'url' => URL::to('/' . $likable_type . 's/' . $likable->id . '/' . $like_or_dislike),
+      'likes_count' => $likable->likes->count()]);
+  }
 
-	}
-	private function dislike($model, $model_object) {
-	    $user_id = Auth::id();
-	    $like = Like::where("user_id", $user_id)
-	       	->where($model . "_id", $model_object->id)->first();
-	      	if(isset($like)){
-	        	$like->delete();
-	      	}
-	      	return Response::json([ 
-	        	'url' => URL::to('/' . $model . 's/' . $model_object->id . '/like'),
-	        	'likes_count' => $model_object->likes->count()]);
+  private function checkLikesCount($likable, $number_likes, $badge_name) {
+    if ($likable->badge) {
+      return ;
+    }
+    if ($likable->likes->count() == $number_likes) {
+      $badge = Badge::where('name', $badge_name)->first();
+      $likable->user->badges()->attach($badge);
+      $likable->attachBadge($badge);
+    }
+  }
 
-	}
-
-	private function checkLikesCount($model_object, $number_likes, $badge_name) {
-		if ($model_object->badge) {
-			return ;
-		}
-		if ($model_object->likes->count()== $number_likes){
-			$badge=Badge::where('name', $badge_name)->first();
-			$model_object->user->badges()->attach($badge);
-			$model_object->attachBadge($badge);
-		}
-	}
+  private function logLikeDislike($user, $likable, $photo_or_comment, $like_or_dislike, $user_or_visitor) {
+    $source_page = Request::header('referer');
+    ActionUser::printLikeDislike($user->id, $likable->id, $source_page, $photo_or_comment, $like_or_dislike, $user_or_visitor);
+  }
 }

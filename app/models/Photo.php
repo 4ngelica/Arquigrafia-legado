@@ -32,7 +32,8 @@ class Photo extends Eloquent {
 		return $this->belongsTo('User');
 	}
 
-	public function badge() {
+	public function badge()
+	{
 		return $this->belongsTo('Badge');
 	}
 
@@ -48,10 +49,9 @@ class Photo extends Eloquent {
 
 	public function likes()
 	{
-		return $this->hasMany('Like');
+		return $this->morphMany('Like', 'likable');
 	}
 
-	
 	public function albums()
 	{
 		return $this->belongsToMany('Album', 'album_elements');

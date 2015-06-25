@@ -18,36 +18,27 @@ class PhotosController extends \BaseController {
 
 	public function show($id)
 	{ 
-    $photos = Photo::whereid($id)->first();
-    if (!isset($photos))
+    $photos = Photo::find($id);
+    if ( !isset($photos) ) {
       return Redirect::to('/');
-    $user = User::find($photos->user_id);
+    }
+    $user = Auth::user();
+    $photo_owner = $photos->user;
     $tags = $photos->tags;
     $binomials = Binomial::all()->keyBy('id');
     $average = Evaluation::average($photos->id);
     $evaluations = null;
     $photoliked = null;
-
-
-    //$commentliked=Comment::where('photo_id', $id);
-
+    $follow = true;
     if (Auth::check()) {
-      $photoliked = Like::where("user_id", Auth::id())->where("photo_id", $photos->id)->first();
-      $evaluations =  Evaluation::where("user_id", Auth::id())->where("photo_id", $id)->orderBy("binomial_id", "asc")->get();
-      if (Auth::user()->following->contains($user->id))
+      $photoliked = Like::fromUser($user)->withLikable($photos)->first();
+      $evaluations =  Evaluation::where("user_id", $user->id)->where("photo_id", $id)->orderBy("binomial_id", "asc")->get();
+      if ($user->following->contains($photo_owner->id)) {
         $follow = false;
-      else 
-        $follow = true;
-    } else {
-      $follow = true;
-    }
-
-
-    if (Auth::check()) {
-        $user_id = Auth::user()->id;
-        $user_or_visitor = "user";
-    }
-    else { 
+      }
+      $user_id = $user->id;
+      $user_or_visitor = "user";
+    } else { 
         $user_or_visitor = "visitor";
         session_start();
         $user_id = session_id();
@@ -56,7 +47,7 @@ class PhotosController extends \BaseController {
     ActionUser::printSelectPhoto($user_id, $id, $source_page, $user_or_visitor); 
 
     return View::make('/photos/show',
-      ['photos' => $photos, 'owner' => $user, 'follow' => $follow, 'tags' => $tags, 'commentsCount' => $photos->comments->count(),
+      ['photos' => $photos, 'owner' => $photo_owner, 'follow' => $follow, 'tags' => $tags, 'commentsCount' => $photos->comments->count(),
       'average' => $average, 'userEvaluations' => $evaluations, 'binomials' => $binomials, 
       'architectureName' => Photo::composeArchitectureName($photos->name),
       'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photos->id),
