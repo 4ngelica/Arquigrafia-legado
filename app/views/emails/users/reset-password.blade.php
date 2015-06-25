@@ -4,14 +4,18 @@
 		<meta charset="utf-8">
 	</head>
 	<body>
-		<h2>Olá {{ $user->name }}</h2>
+		<h3>Olá {{ $user->name }}</h3>
 
 		<div>
-			<p>Conforme a sua solicitação, segue uma senha temporal para ingressar ao Sistema de Arquigrafia.</p>
+			<p>Conforme a sua solicitação, segue uma senha temporária para acessar o Arquigrafia.</p>
 			<br/>
-			<p>senha: {{$randomPassword}} </p>
-			<p>Faz click aqui {{ URL::to('users/login') }} para ingressar novamente. </p>
-			<p>Recomendamos fortemente, que apenas você ingresse no sistema de Arquigrafia, possa mudar sua senha.</p>
+			<p>Senha: {{$randomPassword}} </p>
+			<p>Por favor, clique aqui {{ URL::to('users/login') }} para acessar o sistema com sua nova senha. </p>
+			<p>Recomendamos fortemente que você altere a sua senha após o login. </p>
+			<p>Se você encontrar algum problema para acessar com a nova senha envie um e-mail para: arquigrafiabr@gmail.com </p>
+
+			<p>A equipe do projeto Arquigrafia agradece a sua preferência!</p>
+
 		</div>
 	</body>
 </html>
