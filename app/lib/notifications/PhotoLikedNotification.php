@@ -2,6 +2,7 @@
 namespace lib\notifications;
 
 use \Tricki\Notification\Models\Notification; 
+use User;
 
 class PhotoLikedNotification extends \Tricki\Notification\Models\Notification
 {
@@ -13,8 +14,8 @@ class PhotoLikedNotification extends \Tricki\Notification\Models\Notification
     	$object_id = $this->object_id;//integer
     	$sender_id = $this->sender_id;//integer
     	list($date, $time) = explode(" ", $created_at);//strings
-    	//$sender = User::find($sender_id);
-        return /*$sender . */"gostou da sua foto";
+    	$sender = User::find($sender_id)->name;
+        return $sender . " " . "gostou da sua foto";
     }
 }
 
