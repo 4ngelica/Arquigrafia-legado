@@ -41,12 +41,13 @@
          <div class="three columns offset-by-four">
             <br><br>
             <h1>Recuperação de senha</h1> 
-               <p> Car@ usuário,<br/>
-                  Um email foi enviado a {{$email}} com as intruções para ingressar ao Sistema do Arquigrafia.</br>
-                  Por favor, verifique seu email.</br>
-                  Se você não recebi o email em um o dois minutos, 
-                  tente reenviar as instruções ou verificar na lista de seu
-                  spam.
+               <p> Car@ usuário,<br/><br/>
+                  Um e-mail foi enviado para {{$email}} com as </br>
+                  instruções para acessar o Arquigrafia.</br>
+                  Por favor, verifique se recebeu o e-mail.</br><br/>
+                  Se você não receber dentro de um a dois minutos,
+                  tente <a href="{{ URL::to("/users/forget/")}}">reenviar seu e-mail</a> ou verifique
+                  sua caixa de spam.
 
                </p>
                <p>&nbsp;</p> 
