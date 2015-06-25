@@ -8,6 +8,9 @@
 <script src="{{ URL::to("/") }}/js/jquery.isotope.min.js"></script>
 
 <script type="text/javascript" src="{{ URL::to("/") }}/js/panel.js"></script>
+
+<script src="http://connect.facebook.net/en_US/all.js"></script>
+
 <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/checkbox.css" />
 @stop
 
@@ -302,6 +305,8 @@
 						</p>
 					@endif
 
+
+
 	
    
 
@@ -309,6 +314,32 @@
 			
 			</div>
 	
+	
+				<script>
+
+					FB.init({
+						appId:'229061013858132',
+						cookie:true,
+						status:true,
+						xfbml:true
+					});
+
+
+					function FacebookInviteFriends()
+						{
+							FB.ui({
+								method: 'apprequests',
+								message: 'Your Message diaolog'
+							});
+						}
+				</script>
+
+
+
+		<div id="fb-root"></div>
+				<a href='#' onclick="FacebookInviteFriends();"> 
+						Facebook Invite Friends Link
+				</a>
 	</div>
 
     
