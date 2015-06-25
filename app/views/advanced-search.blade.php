@@ -73,20 +73,6 @@
                 <div class="error"></div>      
             </p>
 
-          <!--  <div class="two columns alpha"><p>{{ Form::label('tags_input', 'Tags*:') }}</p></div>
-                  <div class="two columns omega">
-                    <p>
-                      {{ Form::text('tags_input') }} <br>
-                      <div class="error">{{ $errors->first('tags') }}</div>
-                    </p>
-                  </div>
-                  <div class="two columns">
-                    <button class="btn" id="add_tag">Adicionar tag</button>
-                  </div>
-             <div class="five columns alpha">
-                    <textarea name="tags" id="tags" cols="60" rows="1" style="display: none;"></textarea>
-            </div> -->
-
 
 
           </div>
