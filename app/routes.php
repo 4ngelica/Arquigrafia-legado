@@ -18,7 +18,8 @@ Route::get('/test', function () {
 //ROTA DE NOTIFICAÇÕES, EM TESTE
 Route::get('/notifications', function() { 
 	if (Auth::check()) {
-		return View::make('notifications');
+		$user = User::find(Auth::user()->id);
+		return View::make('notifications')->with('user', $user);
 	}
 	return Redirect::action('PagesController@home');
 });
