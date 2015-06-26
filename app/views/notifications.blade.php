@@ -27,9 +27,9 @@
     	@foreach($user->notifications as $notification)
     		<?php $info_array = $notification->render(); ?>
     		@if($info_array[0] == "photo_liked")
-    			<li class="notes">{{ $info_array[1] . " curtiu sua foto."}}</li>
+    			<li class="notes">{{ $info_array[1] . " curtiu sua " }} <a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{". $info_array[4], $info_array[3]."}}</li>
     		@elseif($info_array[0] == "comment_liked")
-    			<li class="notes">{{ $info_array[1] . " curtiu seu comentário."}}</li>
+    			<li class="notes">{{ $info_array[1] . " curtiu seu comentário, na foto de ."}}</li>
     		@elseif($info_array[0] == "comment_posted")
     			<li class="notes">{{ $info_array[1] . " comentou sua foto."}}</li>
     		@endif
