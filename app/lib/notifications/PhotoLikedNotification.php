@@ -9,13 +9,35 @@ class PhotoLikedNotification extends \Tricki\Notification\Models\Notification
     public static $type = 'photo_liked';
 
     public function render() {
-    	$created_at = $this->created_at;//object
-    	$object_type = $this->object_type;//string
-    	$object_id = $this->object_id;//integer
-    	$sender_id = $this->sender_id;//integer
-    	list($date, $time) = explode(" ", $created_at);//strings
-    	$sender = User::find($sender_id)->name;
-        return $sender . " " . "gostou da sua foto";
+        return array($this->getTypes(), $this->getSender(), $this->getObjectID(), $this->getDate(), $this->getTime());
+    }
+
+    public function getDate() {
+        $created_at = $this->created_at;
+        list($date, $time) = explode(" ", $created_at);
+        return $date;
+    }
+
+    public function getTime() {
+        $created_at = $this->created_at;
+        list($date, $time) = explode(" ", $created_at);
+        return $time;
+    }
+
+    public function getTypes() {
+        return $this->type;
+    }
+
+    public function getObjectID() {
+        return $this->object_id;
+    }
+
+    public function getObjectType() {
+        return $this->object_type;
+    }
+
+    public function getSender() {
+        return User::find($this->sender_id)->name;
     }
 }
 
