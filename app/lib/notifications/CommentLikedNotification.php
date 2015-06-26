@@ -2,6 +2,7 @@
 namespace lib\notifications;
 
 use \Tricki\Notification\Models\Notification; 
+use User;
 
 class CommentLikedNotification extends \Tricki\Notification\Models\Notification
 {
