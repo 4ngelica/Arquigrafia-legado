@@ -14,15 +14,23 @@
 @stop
 
 @section('content')
-		
 	<?php if (Auth::check()) {
      
     $user = Auth::user();
 	$unreadNotifications = $user->notifications()->unread()->get();
 	?>
-	<ul>
+	<h2 class="notifications">Suas notificações:</h2>
+	@if ($user->notifications == null)
+		<p id="no-notifications">Você não possui notificações.</p>
+	@endif
+	<ul class="notification-list">
     	@foreach($user->notifications as $notification)
-    	<li>{{ $notification->render() }}</li>
+    		<?php $info_array = $notification->render(); ?>
+    		@if($info_array[0] == "photo_liked")
+    			<li class="notes">{{ $info_array[1] }}</li>
+    		@elseif($info_array[0] == "comment_liked")
+    		@elseif($info_array[0] == "comment_posted")
+    		@endif
     	@endforeach
 	</ul>
  	<?php } ?> 
