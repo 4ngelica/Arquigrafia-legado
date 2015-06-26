@@ -9,7 +9,6 @@ class LikesController extends \BaseController {
     $user = Auth::user();
     $this->logLikeDislike($user, $photo, "a foto", "Curtiu", "user");
     
-    //TESTE DE NOTIFICAÇÕES
     $user_note = User::find($photo->user_id);
     Notification::create('photo_liked', $user, $photo, [$user_note], null);
 
