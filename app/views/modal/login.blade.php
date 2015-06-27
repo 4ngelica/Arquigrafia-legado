@@ -12,18 +12,18 @@
    <div class="container">
       <div class="registration">
          <!-- LOGIN SIMPLES -->
-         <div class="three columns offset-by-four">
+         <div class="four columns offset-by-four">
             <h1>Login</h1>
             
             {{ Form::open() }}
 
-               <p>Entre com seu usuário ou e-mail e senha:</p>
+               <p>Entre com seu usuário ou e-mail e em seguida digite sua senha:</p>
                <br>
-               <div class="one columns alpha">{{ Form::label('login', 'Usuário ou E-mail:', array('class'=>'right')) }}</div>
+               <div class="two columns alpha">{{ Form::label('login', 'Usuário ou E-mail:', array('class'=>'right')) }}</div>
                <div class="two columns omega">{{ Form::text('login', '', array('class'=>'right') ) }}</div>
                {{ $errors->first('login') }}
                
-               <div class="one columns alpha">{{ Form::label('password', 'Senha:', array('class'=>'right')) }}</div>
+               <div class="two columns alpha">{{ Form::label('password', 'Senha:', array('class'=>'right')) }}</div>
                <div class="two columns omega">{{ Form::password('password', array('class'=>'right') ) }}</div>
 
                @if(Session::has('login.message'))
@@ -43,6 +43,10 @@
             {{ Form::close() }}
 
             <p>&nbsp;</p>
+
+         </div>
+
+         <div class="three columns offset-by-four">
 
             <a href="{{ $fburl }}">
                <div class="login_externo logo">
