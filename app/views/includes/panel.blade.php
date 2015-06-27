@@ -3,16 +3,10 @@
 @foreach($photos as $photo)
 
 <?php 
-  $i++; 
-  $pattern1 = 1;   
-  if ($i%7 == 6) $pattern1 = 2;
-  $pattern2 = 1; 
-  if ($i%21 == 6) $pattern2 = 3;
-  
-  $size = 1;
-  if (rand(1,2) == 1)
-    $size = $pattern1;
-  else $size = $pattern2;    
+  $i++;
+  $size = 1; 
+  if ($i%7 == 6) $size = 2;
+  if ($i%21 == 6) $size = 3;    
 ?>
 
 <div class="item h<?php echo $size; ?>">
