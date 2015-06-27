@@ -14,7 +14,7 @@ class PhotosController extends \BaseController {
 	{
     $photos = Photo::all();
 		return View::make('/photos/index',['photos' => $photos]);
-	}
+	}  
 
 	public function show($id)
 	{ 
@@ -47,7 +47,7 @@ class PhotosController extends \BaseController {
     ActionUser::printSelectPhoto($user_id, $id, $source_page, $user_or_visitor); 
 
     return View::make('/photos/show',
-      ['photos' => $photos, 'owner' => $photo_owner, 'follow' => $follow, 'tags' => $tags, 'commentsCount' => $photos->comments->count(),
+      ['photos' => $photos, 'owner' => $photo_owner, 'follow' => $follow, 'tags' => $tags, 'commentsCount' => $photos->comments->count(), 'commentsMessage' => static::createCommentsMessage($photos->comments->count()),
       'average' => $average, 'userEvaluations' => $evaluations, 'binomials' => $binomials, 
       'architectureName' => Photo::composeArchitectureName($photos->name),
       'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photos->id),
@@ -377,7 +377,7 @@ class PhotosController extends \BaseController {
     ActionUser::printEvaluation(Auth::user()->id, $photoId, Request::header('referer'), "user", "Acessou a página de", null);
     
     return View::make('/photos/evaluate',
-      ['photos' => $photo, 'owner' => $user, 'follow' => $follow, 'tags' => $photo->tags, 'commentsCount' => $photo->comments->count(),
+      ['photos' => $photo, 'owner' => $user, 'follow' => $follow, 'tags' => $photo->tags, 'commentsCount' => $photo->comments->count(), 'commentsMessage' => static::createCommentsMessage($photo->comments->count()),
       'average' => $average, 'userEvaluations' => $evaluations,'userEvaluationsChart' => $averageAndEvaluations, 'binomials' => $binomials,
       'architectureName' => Photo::composeArchitectureName($photo->name),
       'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photo->id), 
@@ -570,5 +570,15 @@ class PhotosController extends \BaseController {
     return Response::json(View::make('/photos/get-info')->with('photo', $photo)->render());
   }
 
+  public function createCommentsMessage($commentsCount){
+    $commentsMessage='' ;
+    if($commentsCount == 0)
+      $commentsMessage = 'Ninguém comentou ainda esta imagem';
+    else if($commentsCount == 1)
+      $commentsMessage = 'Existe ' . $commentsCount . ' comentário sobre esta imagem';
+    else
+      $commentsMessage = 'Existem '. $commentsCount . ' comentários sobre esta imagem';
+    return $commentsMessage;          
+  }
 
 }
