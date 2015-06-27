@@ -92,8 +92,8 @@ $(document).ready(function(){
 
 
 			<div class="four columns omega">
-              <span class="right"><i id="comments"></i> <small>{{$commentsCount}}</small></span>
-               <span class="right" title="{{ $photos->likes->count() }} pessoas curtiram essa imagem"><i id="likes"></i> <small>{{$photos->likes->count()}}</small></span>
+              <span class="right" title="{{ $commentsMessage }}"><i id="comments"></i> <small>{{$commentsCount}}</small></span>
+              <!--<span class="right" title="{{ $photos->likes->count() }} pessoas curtiram essa imagem"><i id="likes"></i> <small>{{$photos->likes->count()}}</small></span>-->
               <?php if (Auth::check() && Auth::user()->id == $photos->user_id) { ?>  
                	<span class="right">
         					<a id="delete_button" href="{{ URL::to('/photos/' . $photos->id) }}" title="Excluir imagem"></a>
@@ -123,12 +123,12 @@ $(document).ready(function(){
 
 					<li><a href="{{ URL::to('/photos/' . $photos->id . '/evaluate' ) }}" title="Avalie {{$architectureName}}" id="evaluate" ></a></li>  
             <!-- LIKE-->
-         @if(is_null($photoliked))
+         <!--@if(is_null($photoliked))
           <li> <a href="{{ URL::to('/photos/' . $photos->id . '/like' ) }}" id="like_button" title="Curtir"></a></li>
          @else
          <li> <a href="{{ URL::to('/photos/' . $photos->id . '/dislike' ) }}" id="like_button"
           class="dislike" title="Descurtir"></a></li>
-         @endif
+         @endif-->
 				</ul>            
              <?php } else { ?>
               <div class="six columns alpha">Faça o <a href="{{ URL::to('/users/login') }}">login</a> para fazer o download e comentar as imagens.</div>
@@ -220,17 +220,17 @@ $(document).ready(function(){
               <div class="four columns omega row">
                 <small>
                   {{$comment->user->name}} - {{$comment->created_at->format('d/m/Y h:m') }}
-                  <img src="{{ URL::to("/") }}/img/commentNB.png" / ><small class='likes'>{{ $comment->likes->count()}}</small>
+                  <!--<img src="{{ URL::to("/") }}/img/commentNB.png" / ><small class='likes'>{{ $comment->likes->count()}}</small>-->
                 </small>
                 <p>{{ $comment->text }}</p>
                 
                 <?php if (Auth::check()){ ?>
-                  @if(!$comment->isLiked())
+                  <!--@if(!$comment->isLiked())
 
                     <p> <a href="{{ URL::to('/comments/' . $comment->id . '/like' ) }}" class='like_comment' >Curtir</a></p>
                   @else
                     <p> <a href="{{ URL::to('/comments/' . $comment->id . '/dislike' ) }}" class='like_comment' class='dislike'>Descurtir</a></p>
-                  @endif
+                  @endif-->
                 <?php } ?>  
               </div>        
             </div>       
