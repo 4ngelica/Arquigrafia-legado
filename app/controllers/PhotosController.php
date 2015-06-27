@@ -356,12 +356,10 @@ class PhotosController extends \BaseController {
   private function getEvaluation($photoId, $userId, $isOwner) {    
     $photo = Photo::find($photoId);    
     $binomials = Binomial::all()->keyBy('id');
-    //dd($binomials); 
-  
+      
     $average = Evaluation::average($photo->id); 
     $evaluations = null;  
-    $averageAndEvaluations = null;
-    // dd($average);
+    $averageAndEvaluations = null;    
     $user = null;
     $follow = true; 
     if ($userId != null) { 
@@ -374,8 +372,10 @@ class PhotosController extends \BaseController {
       }
       $averageAndEvaluations= Evaluation::averageAndUserEvaluation($photo->id,$userId);
       $evaluations =  Evaluation::where("user_id", $user->id)->where("photo_id", $photo->id)->orderBy("binomial_id", "asc")->get();  
-    } //dd($evaluations);
+    }
 
+    ActionUser::printEvaluation(Auth::user()->id, $photoId, Request::header('referer'), "user", "Acessou a página de", null);
+    
     return View::make('/photos/evaluate',
       ['photos' => $photo, 'owner' => $user, 'follow' => $follow, 'tags' => $photo->tags, 'commentsCount' => $photo->comments->count(),
       'average' => $average, 'userEvaluations' => $evaluations,'userEvaluationsChart' => $averageAndEvaluations, 'binomials' => $binomials,
