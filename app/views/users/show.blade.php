@@ -337,9 +337,9 @@
 
 
 		<div id="fb-root"></div>
-				<a href='#' onclick="FacebookInviteFriends();"> 
+				<!--<a href='#' onclick="FacebookInviteFriends();"> 
 						Facebook Invite Friends Link
-				</a>
+				</a>-->
 	</div>
 
     
