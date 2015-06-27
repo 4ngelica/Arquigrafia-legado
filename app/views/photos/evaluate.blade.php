@@ -42,7 +42,7 @@
 
 
 			<div class="four columns omega">              
-              <span class="right"><i id="comments"></i> <small>{{$commentsCount}}</small>
+              <span class="right" title="{{ $commentsMessage }}"><i id="comments"></i> <small>{{$commentsCount}}</small>
               </span>            
              
             </div>
