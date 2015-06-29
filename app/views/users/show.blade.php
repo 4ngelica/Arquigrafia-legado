@@ -9,7 +9,6 @@
 
 <script type="text/javascript" src="{{ URL::to("/") }}/js/panel.js"></script>
 
-<script src="http://connect.facebook.net/en_US/all.js"></script>
 
 <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/checkbox.css" />
 @stop
@@ -315,6 +314,7 @@
 			</div>
 	
 	
+
 				<script>
 
 					FB.init({
@@ -340,6 +340,7 @@
 				<!--<a href='#' onclick="FacebookInviteFriends();"> 
 						Facebook Invite Friends Link
 				</a>-->
+
 	</div>
 
     

@@ -24,6 +24,14 @@ Route::get('/notifications', function() {
 	return Redirect::action('PagesController@home');
 });
 
+Route::get('/badges', function() { 
+	if (Auth::check()) {
+		$user = Auth::user();
+		return View::make('badges')->with('user', $user);
+	}
+	return Redirect::action('PagesController@home');
+});
+
 /* phpinfo() */
 Route::get('/info/', function(){ return View::make('i'); });
 

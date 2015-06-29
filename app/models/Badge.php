@@ -19,4 +19,13 @@ class Badge extends Eloquent {
 	{
 		return $this->hasMany('Photo');
 	}
+
+	public function render()
+	{
+			$image = "./img/badges/".$this->image;
+			print '<img id="badge_image" src="'.$image.'" alt="badge" />';
+            print $this->description;
+            print'<br>';
+            echo $this->name;
+	}
 }
