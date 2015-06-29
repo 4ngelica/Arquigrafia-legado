@@ -57,6 +57,23 @@ class Date {
 		return null;
 	}
 
+	public static function formatDatePortugues($dateTime){
+
+		$createDate = new DateTime($dateTime);
+
+		$onlyDate = $createDate->format('Y-m-d');
+
+		$formattedDate = DateTime::createFromFormat('Y-m-d', $onlyDate);
+		
+		if ($formattedDate &&
+			DateTime::getLastErrors()["warning_count"] == 0 &&
+			DateTime::getLastErrors()["error_count"] == 0)
+				return $formattedDate->format('d/m/Y');
+
+		return null;
+
+	}
+
 	public static function translate($date) {
 		
 		if ($date == null) return null;
