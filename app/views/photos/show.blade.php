@@ -92,15 +92,24 @@ $(document).ready(function(){
 
 
 			<div class="four columns omega">
+               <span style="padding-left:103px">
+                  @if ( !empty($photos->dataUpload) )
+                    Inserido Em:
+                    <a href="{{ URL::to("/search?q=".$photos->dataUpload."&t=up") }}">  
+                        {{ Photo::formatDatePortugues($photos->dataUpload)}}
+                    </a>
+                  @endif
+               </span>
               <span class="right" title="{{ $commentsMessage }}"><i id="comments"></i> <small>{{$commentsCount}}</small></span>
               <!--<span class="right" title="{{ $photos->likes->count() }} pessoas curtiram essa imagem"><i id="likes"></i> <small>{{$photos->likes->count()}}</small></span>-->
+              
               <?php if (Auth::check() && Auth::user()->id == $photos->user_id) { ?>  
                	<span class="right">
         					<a id="delete_button" href="{{ URL::to('/photos/' . $photos->id) }}" title="Excluir imagem"></a>
               	</span>
               <?php } ?>
-             
-            </div>
+              
+      </div>
 					</div>
 					<!--   FIM - NOME / STATUS DA FOTO   -->
 					
@@ -332,14 +341,7 @@ $(document).ready(function(){
 					</p>
 				@endif
 				
-				@if ( !empty($photos->dataUpload) )
-					<h4>Data de Upload:</h4>
-          <p>
-            <a href="{{ URL::to("/search?q=".$photos->dataUpload."&t=up") }}">  
-            {{ Photo::translate($photos->dataUpload) }}
-            </a>
-          </p>
-				@endif
+
 
 				@if ( !empty($photos->dataCriacao) && $photos->dataCriacao!= null  )
 					<h4>Data da Imagem:</h4>
