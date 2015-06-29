@@ -61,7 +61,10 @@
           <div class="four columns alpha row">
             <h3>Descrição</h3>
             <p>{{ Form::label('name', 'Título da imagem:') }} {{ Form::text('name', Input::get("name") ) }}</p>
-            <p>{{ Form::label('description', 'Descrição da imagem:') }} {{ Form::text('description', Input::get("description") ) }}</p>
+            <p>{{ Form::label('description', 'Descrição da imagem:') }} 
+             <!--< {{ Form::text('description', Input::get("description") ) }}-->
+            <textarea name="description" id="description" cols="35" rows="3" >{{Input::get("description")}}</textarea>  
+            </p>
               <!--<p>{{ Form::label('tag', 'Tag:') }} {{ Form::text('tag', Input::get("tag") ) }}</p>  -->
 
             <p>{{ Form::label('tags_input', 'Tags*:') }}
@@ -108,14 +111,14 @@
           <div class="twelve columns row">
             <div class="four columns alpha row">
               <br><br>
-               <h3>Licença da imagens</h3>
+               <h3>Licença das imagens</h3>
                   <p>{{ Form::label('allowCommercialUses', 'Com uso comercial:') }} 
                      {{ Form::select('allowCommercialUses', [""=>"Escolha", "YES"=>"Sim", 
                      "NO"=>"Não"],Input::get("allowCommercialUses") ) }}
                   </p>
                    <p>{{ Form::label('allowModifications', 'Permitem alteração:') }} 
                       {{ Form::select('allowModifications', [""=>"Escolha", "YES"=>"Sim", 
-                      "YES_SA"=>"Sim, mais se compartilham", "NO"=>"Não"],Input::get("allowModifications") ) }}
+                       "NO"=>"Não"],Input::get("allowModifications") ) }}
 
             </p>
             
