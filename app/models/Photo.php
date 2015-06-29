@@ -67,6 +67,13 @@ class Photo extends Eloquent {
 		return Date::formatDate($date);
 	}
 
+	public static function formatDatePortugues($date)
+	{
+		return Date::formatDatePortugues($date);
+	}
+
+	
+
 	public static function dateDiff($start,$end)
 	{
 		return Date::dateDiff($start,$end);
