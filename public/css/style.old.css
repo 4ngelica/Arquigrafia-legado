@@ -624,7 +624,7 @@ height:130px;
 z-index:7;
 
 }
-/**/
+
 .profile_block_title span {float: right; margin-top:6px; margin-right: 10px;}
 #comments_block { margin: 40px 0; }
 
@@ -632,8 +632,17 @@ z-index:7;
 #like_button.dislike { background-image: url('../img/dislike.png'); }
 i#likes {  background: url("../img/dislikeNB.png"); padding : 2px 10px 0px;   }
 
-.notifications, .badges { margin-left: 30px; margin-bottom: 30px; }
-.notification-list, .badges-list { list-style: initial; list-style-type: square; margin-left: 50px; }
+.notifications { margin-left: 30px; margin-bottom: 30px; }
+.notification-list { list-style: initial; list-style-type: square; margin-left: 50px; }
 .notes{ margin-bottom: 30px; }
-
-
+ 
+ /* Badges page */
+.badges { margin-left: 140px; margin-bottom: 30px; }
+#toggle , #toggle1{ height:auto;  margin:1em; margin-left: 180px;}
+#badges_page { margin: 20px;  }
+.badges_list { list-style-type: none; width: 500px;}
+#badge_name { font: bold 15px/1.5 Helvetica, Verdana, sans-serif;}
+#badge_description img { float: left; margin: 0 15px 0 0;}
+#badge_description p {font: 200 12px/1.5 Georgia, Times New Roman, serif;}
+#badge_description {padding: 10px;overflow: auto;}
+#badge_description:hover {background: #eee;}

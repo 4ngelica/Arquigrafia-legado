@@ -24,8 +24,18 @@ class Badge extends Eloquent {
 	{
 			$image = "./img/badges/".$this->image;
 			print '<img id="badge_image" src="'.$image.'" alt="badge" />';
-            print $this->description;
-            print'<br>';
-            echo $this->name;
+			print '<h3 id="badge_name">'.$this->name.'</h3>';
+            print '<p>'.$this->description.'</p>';
+            
 	}
+
+	 public function scopeWhereNotRelatedToUser($query, $id)
+    {
+        $query->whereNotIn('id', function ($query) use ($id)
+        {
+            $query->select('badge_id')
+                ->from('user_badges')
+                ->where('user_id', '=', $id);
+        });
+    }
 }
