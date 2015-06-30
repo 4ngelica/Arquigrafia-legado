@@ -9,7 +9,7 @@ class CommentPostedNotification extends \Tricki\Notification\Models\Notification
     public static $type = 'comment_posted';
 
 	public function render() {
-        return array($this->getTypes(), $this->getSender(), $this->getObjectID(), $this->getDate(), $this->getTime());
+        return array($this->getTypes(), $this->getSender(), $this->getObjectID(), $this->getDate(), $this->getTime(), $this->getSenderID());
     }
 
     public function getDate() {
@@ -34,6 +34,10 @@ class CommentPostedNotification extends \Tricki\Notification\Models\Notification
 
     public function getObjectType() {
         return $this->object_type;
+    }
+
+    public function getSenderID() {
+        return $this->sender_id;
     }
 
     public function getSender() {
