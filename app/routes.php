@@ -15,7 +15,6 @@ Route::get('/test', function () {
 	//testes
 });
 
-//ROTA DE NOTIFICAÇÕES, EM TESTE
 Route::get('/notifications', function() { 
 	if (Auth::check()) {
 		$user = Auth::user();
