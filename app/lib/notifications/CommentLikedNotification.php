@@ -4,13 +4,14 @@ namespace lib\notifications;
 use \Tricki\Notification\Models\Notification; 
 use User;
 use Comment;
+use Photo;
 
 class CommentLikedNotification extends \Tricki\Notification\Models\Notification
 {
     public static $type = 'comment_liked';
 
     public function render() {
-        return array($this->getTypes(), $this->getSender(), $this->getPhotoID(), $this->getDate(), $this->getTime(), $this->getSenderID());
+        return array($this->getTypes(), $this->getSender(), $this->getPhotoID(), $this->getDate(), $this->getTime(), $this->getSenderID(), $this->getPhotoOwnerID(), $this->getPhotoOwnerName());
     }
 
     public function getDate() {
@@ -36,6 +37,15 @@ class CommentLikedNotification extends \Tricki\Notification\Models\Notification
     public function getPhotoID() {
         $comment = Comment::find($this->object_id);
         return $comment->photo_id;
+    }
+
+    public function getPhotoOwnerID() {
+        $photo = Photo::find($this->getPhotoID());
+        return $photo->user_id;
+    }
+
+    public function getPhotoOwnerName() {
+        return User::find($this->getPhotoOwnerID())->name;
     }
 
     public function getObjectType() {
