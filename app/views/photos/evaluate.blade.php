@@ -378,7 +378,11 @@
       <!--   BOX DE COMENTARIOS   -->
         <div id="comments_block" class="eight columns row alpha omega">
           <h3>Comentários</h3>
-          
+          <div class="text_comment width_comment" >Cada usuário é responsável por seus próprios comentários. 
+            O Arquigrafia não se responsabiliza pelos comentários postados,
+             mas apenas por tornar indisponível no site o conteúdo considerado
+              infringente ou danoso por determinação judicial (art.19 da Lei 12.965/14).</div>
+          <p></p>
           <?php $comments = $photos->comments; ?>
           
           @if (!isset($comments))          
