@@ -370,6 +370,9 @@ span.comment_text p { margin: 3px 0; }
 #space_to_comment { }
 textarea#comment_field { width: 545px; height: 60px; float: left; border: solid 1px #ddd; padding: 5px; margin: 5px 0; }
 input#comment_button { margin: 5px 0 0 0; float: left; }
+/**/
+.text_comment {  text-align: justify}
+.width_comment { width: 300px }
 
 /* avaliações */
 #evaluation_box {margin: 20px 0;}
@@ -632,4 +635,5 @@ i#likes {  background: url("../img/dislikeNB.png"); padding : 2px 10px 0px;   }
 .notifications, .badges { margin-left: 30px; margin-bottom: 30px; }
 .notification-list, .badges-list { list-style: initial; list-style-type: square; margin-left: 50px; }
 .notes{ margin-bottom: 30px; }
+
 
