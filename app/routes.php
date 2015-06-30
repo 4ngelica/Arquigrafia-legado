@@ -50,6 +50,9 @@ Route::resource('/teste','TesteController');
 
 /* USERS */
 Route::get('/users/account', 'UsersController@account');
+Route::get('/users/register/', 'UsersController@emailRegister');
+Route::get('/users/verify/{verifyCode}','UsersController@verify');
+Route::get('/users/verify/','UsersController@verifyError');
 Route::get('/users/login', 'UsersController@loginForm');
 Route::post('/users/login', 'UsersController@login');
 Route::get('/users/logout', 'UsersController@logout');
