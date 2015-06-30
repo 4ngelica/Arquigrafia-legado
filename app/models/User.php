@@ -136,5 +136,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
           return $user;
 	}
 
+	public static function userVerifyCode($verify_code){
+		$user = User::where('verify_code','=',$verify_code)->first();
+        return $user;
+
+	}
 
 }
