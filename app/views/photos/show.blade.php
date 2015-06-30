@@ -178,8 +178,7 @@ $(document).ready(function(){
 				<!--   BOX DE COMENTARIOS   -->
 				<div id="comments_block" class="eight columns row alpha omega">
         	<h3>Comentários</h3>
-          <div class="style=text-align:justify;
-    text-justify: inter-word;" >Cada usuário é responsável por seus próprios comentários. 
+          <div class="text_comment" >Cada usuário é responsável por seus próprios comentários. 
             O Arquigrafia não se responsabiliza pelos <br> comentários postados,
              mas apenas por tornar indisponível no site o conteúdo considerado
               infringente <br> ou danoso por determinação judicial (art.19 da Lei 12.965/14).</div>
