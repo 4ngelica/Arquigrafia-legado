@@ -37,6 +37,10 @@ class LikesController extends \BaseController {
     $this->logLikeDislike($user, $comment, "o comentário", "Curtiu", "user");
     $response = $this->like($comment, $user);
     $this->checkLikesCount($comment, 5, 'test'); 
+
+    $user_note = User::find($comment->user_id);
+    Notification::create('comment_liked', $user, $comment, [$user_note], null);
+
     return $response;
   }
 
