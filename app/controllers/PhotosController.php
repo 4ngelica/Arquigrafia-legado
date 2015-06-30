@@ -253,6 +253,10 @@ class PhotosController extends \BaseController {
       $source_page = Request::header('referer');
       ActionUser::printComment($user_id, $source_page, "Inseriu", $comment->id, $id, "user");
       
+      $user_note = User::find($photo->user_id);
+      $user = User::find($user_id);
+      Notification::create('comment_posted', $user, $photo, [$user_note], null);
+
       $this->checkCommentCount(5,'test');
 
       return Redirect::to("/photos/{$id}");
