@@ -61,7 +61,6 @@ class UsersController extends \BaseController {
     return View::make('/modal/account');
   }
 
-  // create user 
   public function store()
   {    
     // put input into flash session for form repopulation
@@ -83,13 +82,11 @@ class UsersController extends \BaseController {
     } else {
       // save user
       User::create(['name'=>$input["name"],'email'=>$input["email"],'password'=>Hash::make($input["password"]),'login'=>$input["login"]]);
-
       // auto login after saving
       $userdata = array(
           'login'     => $input["login"],
           'password'  => $input["password"]
       );
-
       $user = User::userInformation($userdata["login"]);
       $source_page = Request::header('referer');
       ActionUser::printNewAccount($user->id, $source_page, "arquigrafia", "user");  
@@ -102,10 +99,91 @@ class UsersController extends \BaseController {
       }
       /*
       $users = User::all();
-		  return View::make('/users/index',['users' => $users]);
+      return View::make('/users/index',['users' => $users]);
       */
     }
   }
+
+
+  // create user with email 
+  public function _store()
+  {    
+    // put input into flash session for form repopulation
+    Input::flash();
+    $input = Input::all();
+    
+    // validate data
+    $rules = array(
+        'name' => 'required',
+        'login' => 'required|unique:users',
+        'password' => 'required|min:6|confirmed',
+        'email' => 'required|email|unique:users',
+        'terms' => 'required'
+    );     
+    $validator = Validator::make($input, $rules);   
+    if ($validator->fails()) {
+      $messages = $validator->messages();
+      return Redirect::to('/users/account')->withErrors($messages);
+    } else {
+          
+      $name = $input["name"];
+      $email =$input["email"];
+      $login =$input["login"];
+      $verify_code = str_random(30);
+      // save user  
+      User::create([
+      'name' => $name,
+      'email' => $email,
+      'password' => Hash::make($input["password"]),
+      'login' => $login,
+      'verify_code' => $verify_code
+        //default no
+        //'active'=>'no';
+      ]);
+        
+
+        Mail::send('emails.users.verify', array('name' => $name, 'email' => $email, 'login' => $login ,'verifyCode' => $verify_code), 
+          function($msg) use($email,$login) {
+            $msg->to($email, $login)
+                ->subject('[Arquigrafia]- Cadastro de Usuário');
+        });
+
+     
+        return Redirect::to("/users/register"); 
+    }
+  }
+
+  public function emailRegister(){
+    
+    $msgType = "sendEmail";
+    return View::make('/modal/register')->with(['msgType'=>$msgType]); 
+  
+
+  }
+
+  public function verify($verify_code){
+        
+    $user = User::userVerifyCode($verify_code)->first();
+
+    if (!$user){   
+            //erro
+            return Redirect::to('users/verify');
+      }else{
+          $user->active = 'yes';
+          $user->verify_code = null;
+          $user->save();
+
+          return Redirect::to('users/login');
+
+      }
+  }
+//Of user/verify
+  public function verifyError(){
+
+      $msgType = "verify";
+      return View::make('/modal/register')->with(['msgType'=>$msgType]); 
+  }  
+
 
   public function forgetForm()
   {
