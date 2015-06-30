@@ -94,7 +94,7 @@ $(document).ready(function(){
 			<div class="four columns omega">
                <span style="padding-left:103px">
                   @if ( !empty($photos->dataUpload) )
-                    Inserido Em:
+                    Inserido em:
                     <a href="{{ URL::to("/search?q=".$photos->dataUpload."&t=up") }}">  
                         {{ Photo::formatDatePortugues($photos->dataUpload)}}
                     </a>
