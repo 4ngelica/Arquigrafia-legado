@@ -24,7 +24,7 @@
 	@if ($user->notifications == null)
 		<p id="no-notifications">Você não possui notificações.</p>
 	@endif
-	<ul class="notification-list">
+	<ul>
     	@foreach($user->notifications as $notification)
     		<?php $info_array = $notification->render(); ?>
     		@if($info_array[0] == "photo_liked")
