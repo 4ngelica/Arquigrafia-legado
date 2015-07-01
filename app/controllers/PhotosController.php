@@ -296,13 +296,11 @@ class PhotosController extends \BaseController {
           $evaluation->evaluationPosition = $input['value-'.$bid];
           $evaluation->save();
           $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
-      } 
-
+        } 
+      }
       $user_id = Auth::user()->id;
       $source_page = Request::header('referer');
       ActionUser::printEvaluation($user_id, $id, $source_page, "user", $insertion_edition, $evaluation_string);
-
-      }
       return Redirect::to("/photos/{$id}/evaluate")->with('message', '<strong>Avaliação salva com sucesso</strong><br>Abaixo você pode visualizar a média atual de avaliações');
     } else {
       // avaliação sem login
