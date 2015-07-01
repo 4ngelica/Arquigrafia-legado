@@ -14,6 +14,7 @@
 @stop
 
 @section('content')
+    <div id="content" class="container">
 	<?php if (Auth::check()) {
      
     $user = Auth::user();
@@ -36,4 +37,5 @@
     	@endforeach
 	</ul>
  	<?php } ?> 
+    </div>
 @stop
