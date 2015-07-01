@@ -175,7 +175,7 @@ class ActionUser{
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
         $size = str_word_count($key_words);
-        $info = sprintf('[%s] Buscou por %d palavras: ' . $key_words . '; pela página %s', $date_and_time, $size, $source_page);
+        $info = sprintf('[%s] Buscou por %d palavra(s): ' . $key_words . '; pela página %s', $date_and_time, $size, $source_page);
 
         $log = new Logger('Search logger');
         ActionUser::addInfoToLog($log, $file_path, $info);
@@ -241,7 +241,7 @@ class ActionUser{
         $date_only = date('Y-m-d');
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
-        $info = sprintf('[%s] Acessou a página de avaliação pelo %s da página %s', $date_and_time, $local, $source_page);
+        $info = sprintf('[%s] Acessou a página de avaliação %s da página %s', $date_and_time, $local, $source_page);
 
         $log = new Logger('EvaluationAccess logger');
         ActionUser::addInfoToLog($log, $file_path, $info);   

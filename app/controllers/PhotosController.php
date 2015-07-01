@@ -278,6 +278,7 @@ class PhotosController extends \BaseController {
       $binomials = Binomial::all();
       // fazer um loop por cada e salvar como uma avaliação
       if ($evaluations->isEmpty()) {
+        $insertion_edition = "Inseriu";
         foreach ($binomials as $binomial) {
         $bid = $binomial->id;        
           $newEvaluation = Evaluation::create([
@@ -289,6 +290,7 @@ class PhotosController extends \BaseController {
           $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
         } 
       } else {
+        $insertion_edition = "Editou";
         foreach ($evaluations as $evaluation) {
           $bid = $evaluation->binomial_id;
           $evaluation->evaluationPosition = $input['value-'.$bid];
@@ -298,7 +300,7 @@ class PhotosController extends \BaseController {
 
       $user_id = Auth::user()->id;
       $source_page = Request::header('referer');
-      ActionUser::printEvaluation($user_id, $id, $source_page, "user", "Inseriu", $evaluation_string);
+      ActionUser::printEvaluation($user_id, $id, $source_page, "user", $insertion_edition, $evaluation_string);
 
       }
       return Redirect::to("/photos/{$id}/evaluate")->with('message', '<strong>Avaliação salva com sucesso</strong><br>Abaixo você pode visualizar a média atual de avaliações');
@@ -322,6 +324,15 @@ class PhotosController extends \BaseController {
 
   public function evaluate($photoId ) { 
     $this->checkEvalCount(5, 'test');
+    if(isset($_SERVER['QUERY_STRING'])) parse_str($_SERVER['QUERY_STRING']);
+    $user_id = Auth::user()->id;
+    $source_page = Request::header('referer');
+    if(isset($f)) {
+    if($f == "sb") ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "pelo botão abaixo da imagem");
+    elseif($f == "c") ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "pelo botão abaixo do gráfico");
+    elseif($f == "g") ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "pelo gráfico");
+    }
+    else ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "diretamente");
     return static::getEvaluation($photoId, Auth::user()->id, true);    
   }
 
@@ -377,8 +388,6 @@ class PhotosController extends \BaseController {
       $averageAndEvaluations= Evaluation::averageAndUserEvaluation($photo->id,$userId);
       $evaluations =  Evaluation::where("user_id", $user->id)->where("photo_id", $photo->id)->orderBy("binomial_id", "asc")->get();  
     }
-
-    ActionUser::printEvaluation(Auth::user()->id, $photoId, Request::header('referer'), "user", "Acessou a página de", null);
     
     return View::make('/photos/evaluate',
       ['photos' => $photo, 'owner' => $user, 'follow' => $follow, 'tags' => $photo->tags, 'commentsCount' => $photo->comments->count(), 'commentsMessage' => static::createCommentsMessage($photo->comments->count()),
