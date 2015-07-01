@@ -272,23 +272,30 @@ class Photo extends Eloquent {
 	}
 
 	public static function licensePhoto($photo){
-		$license = '';		
+		$license = array();		
 		if($photo->allowCommercialUses == 'YES'){
-
+			$textAllowCommercial = 'Permite o uso comercial da imagem ';
 			if($photo->allowModifications == 'YES'){
-				 $license ='by';
+				 $license[0] ='by';
+				 $license[1] = $textAllowCommercial.'e permite modificações na imagem.';
 			}elseif ($photo->allowModifications == 'NO') {
-				 $license ='by-nd';
+				 $license[0] ='by-nd';
+				 $license[1] = $textAllowCommercial.'mas NÃO permite modificações na imagem.';
 			}else {
-				 $license = 'by-sa';
+				 $license[0] = 'by-sa';
+				 $license[1] = $textAllowCommercial.'e permite modificações contato que os outros compartilhem de forma semelhante.';
 			}	
 		}else{
+			$textAllowCommercial = 'NÃO permite o uso comercial da imagem ';
 			if($photo->allowModifications == 'YES'){
-				$license = 'by-nc';
+				$license[0] ='by-nc';
+				$license[1] =$textAllowCommercial.'mas permite modificações na imagem.';
 			}elseif ($photo->allowModifications == 'NO') {
-				$license = 'by-nc-nd';
+				$license[0] = 'by-nc-nd';
+				$license[1] = $textAllowCommercial.'e NÃO permite modificações na imagem.';
 			}else {
-				$license = 'by-nc-sa';
+				$license[0] = 'by-nc-sa';
+				$license[1] = $textAllowCommercial.'mas permite modificações contato que os outros compartilhem de forma semelhante.';
 			}	
 		}
 
