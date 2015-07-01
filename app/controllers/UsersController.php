@@ -136,15 +136,13 @@ class UsersController extends \BaseController {
       'email' => $email,
       'password' => Hash::make($input["password"]),
       'login' => $login,
-      'verify_code' => $verify_code
-        //default no
-        //'active'=>'no';
+      'verify_code' => $verify_code       
       ]);
         
 
         Mail::send('emails.users.verify', array('name' => $name, 'email' => $email, 'login' => $login ,'verifyCode' => $verify_code), 
-          function($msg) use($email,$login) {
-            $msg->to($email, $login)
+          function($msg) use($email) {
+            $msg->to($email)
                 ->subject('[Arquigrafia]- Cadastro de Usuário');
         });
 
