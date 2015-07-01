@@ -432,7 +432,7 @@ $(document).ready(function(){
           <span>
             @if (Auth::check())
               @if( Auth::id() != $photos->user_id)
-                <strong>O proprietário desta imagem "{{ucfirst($owner->name)}}": </strong><br />
+                <strong>O proprietário desta imagem "{{ucfirst($owner->name)}}" </strong><br />
               @endif
             <!--<p>{{Auth::id()}}- {{$photos->user_id}}</p>-->
             @else
