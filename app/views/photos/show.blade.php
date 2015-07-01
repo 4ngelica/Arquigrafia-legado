@@ -416,12 +416,32 @@ $(document).ready(function(){
 
         <h4>Licença:</h4>
 
-				<!-- <a href="http://creativecommons.org/licenses/by/3.0/deed.pt_BR" target="_blank" >
-					<img src="{{ asset('img/ccIcons/by88x31.png') }}" id="ccicons" alt="license" />
-				</a>-->
-        <a href="http://creativecommons.org/licenses/{{$license}}/3.0/deed.pt_BR" target="_blank">
-          <img  src="{{ asset('img/ccIcons/'.$license.'88x31.png') }}" id="ccicons" 
-          alt="Creative Commons License" />
+				<!-- 
+        <a href="http://creativecommons.org/licenses/{{$license[0]}}/3.0/deed.pt_BR" target="_blank"
+         title='O proprietário desta imagem "{{ucfirst($owner->name)}}" : "{{$license[1]}}"'>
+          
+          <img src="{{ asset('img/ccIcons/'.$license[0].'88x31.png') }}" id="ccicons" 
+          alt="Creative Commons License" />          
+        </a>
+      -->
+        <a  class="tooltip_license" href="http://creativecommons.org/licenses/{{$license[0]}}/3.0/deed.pt_BR" target="_blank" >
+          
+          <img src="{{ asset('img/ccIcons/'.$license[0].'88x31.png') }}" id="ccicons" 
+          alt="Creative Commons License" />          
+
+          <span>
+            @if (Auth::check())
+              @if( Auth::id() != $photos->user_id)
+                <strong>O proprietário desta imagem "{{ucfirst($owner->name)}}": </strong><br />
+              @endif
+            <!--<p>{{Auth::id()}}- {{$photos->user_id}}</p>-->
+            @else
+              <strong>O proprietário desta imagem "{{ucfirst($owner->name)}}" : </strong><br />
+            @endif
+            
+              "{{$license[1]}}" 
+          </span>
+          
         </a>
 
 				</br>
