@@ -271,7 +271,7 @@ class PhotosController extends \BaseController {
       $evaluations =  Evaluation::where("user_id", Auth::id())->where("photo_id", $id)->get();
       $input = Input::all();
       $evaluation_string = "";
-      $evaluation_names = array("Horizontal-Vertical", "Translúcida-Opaca", "Simétrica-Assimétrica", "Complexa-Simples", "Interna-Externa", "Aberta-Fechada");
+      $evaluation_names = array("Vertical-Horizontal", "Opaca-Translúcida", "Assimétrica-Simétrica", "Simples-Complexa", "Externa-Interna", "Fechada-Aberta");
       $i = 0;
       $user_id = Auth::user()->id;
       // pegar do banco as possives métricas
