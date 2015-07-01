@@ -130,7 +130,7 @@ $(document).ready(function(){
             
 					<li><a href="{{ asset('photos/download/'.$photos->id) }}" title="Faça o download" id="download" target="_blank"></a></li>  
 
-					<li><a href="{{ URL::to('/photos/' . $photos->id . '/evaluate' ) }}" title="Avalie {{$architectureName}}" id="evaluate" ></a></li>  
+					<li><a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=sb' )}}" title="Avalie {{$architectureName}}" id="evaluate" ></a></li>  
             <!-- LIKE-->
          <!--@if(is_null($photoliked))
           <li> <a href="{{ URL::to('/photos/' . $photos->id . '/like' ) }}" id="like_button" title="Curtir"></a></li>
@@ -423,7 +423,7 @@ $(document).ready(function(){
         
         <!-- AVALIAÇÃO -->
         <?php if (Auth::check()) { ?>
-          <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate' ) }}">
+          <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=g' ) }}">
         <?php } ?>
         
         	@if (empty($average)) 
@@ -553,13 +553,13 @@ $(document).ready(function(){
 
         <?php if (Auth::check()) { ?>
            @if (isset($userEvaluations) && !$userEvaluations->isEmpty())
-          	<a href='{{"/photos/" . $photos->id . "/evaluate" }}' title="Avaliar" id="evaluate_button" class="btn">
+          	<a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Avaliar" id="evaluate_button" class="btn">
           		Clique aqui para alterar sua avaliação</a> &nbsp;
            @else
            		@if (empty($average)) 
-           			<a href='{{"/photos/" . $photos->id . "/evaluate" }}' title="Avaliar" id="evaluate_button" class="btn">Seja o primeiro a avaliar {{$architectureName}}</a> &nbsp;
+           			<a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Avaliar" id="evaluate_button" class="btn">Seja o primeiro a avaliar {{$architectureName}}</a> &nbsp;
            		@else
-           			<a href='{{"/photos/" . $photos->id . "/evaluate" }}' title="Avaliar" id="evaluate_button" class="btn">Avalie você também {{$architectureName}}</a> &nbsp;
+           			<a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Avaliar" id="evaluate_button" class="btn">Avalie você também {{$architectureName}}</a> &nbsp;
            		@endif
            @endif
         <?php } else { ?>
