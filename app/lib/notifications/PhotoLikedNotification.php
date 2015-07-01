@@ -15,13 +15,15 @@ class PhotoLikedNotification extends \Tricki\Notification\Models\Notification
     public function getDate() {
         $created_at = $this->created_at;
         list($date, $time) = explode(" ", $created_at);
-        return $date;
+        list($year, $month, $day) = explode("-", $date);
+        return $day . "/" . $month . "/" . $year;
     }
 
     public function getTime() {
         $created_at = $this->created_at;
         list($date, $time) = explode(" ", $created_at);
-        return $time;
+        list($hour, $minutes, $seconds) = explode(":", $time);
+        return $hour . ":" . $minutes;
     }
 
     public function getTypes() {
