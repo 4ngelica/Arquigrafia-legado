@@ -414,10 +414,16 @@ $(document).ready(function(){
 				@endif
 			
 
-        <h4>Licença:</h4>                
-				<a href="http://creativecommons.org/licenses/by/3.0/deed.pt_BR" target="_blank" >
+        <h4>Licença:</h4>
+
+				<!-- <a href="http://creativecommons.org/licenses/by/3.0/deed.pt_BR" target="_blank" >
 					<img src="{{ asset('img/ccIcons/by88x31.png') }}" id="ccicons" alt="license" />
-				</a>
+				</a>-->
+        <a href="http://creativecommons.org/licenses/{{$license}}/3.0/deed.pt_BR" target="_blank">
+          <img  src="{{ asset('img/ccIcons/'.$license.'88x31.png') }}" id="ccicons" 
+          alt="Creative Commons License" />
+        </a>
+
 				</br>
 
          <!-- GOOGLE MAPS -->

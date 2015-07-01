@@ -197,7 +197,7 @@ class Photo extends Eloquent {
 		return Photo::where("user_id", $user_id)->orderBy('dataUpload','desc')->first();
 		//return Date::dateDiff(date("Y-m-d H:i:s"),$dataUpload->dataUpload
 	}
-//msy
+
 	public static function photosWithSimilarEvaluation($average,$idPhotoSelected) { 		
 		Log::info("Logging function Similar evaluation");
 		$similarPhotos = array();
@@ -269,6 +269,31 @@ class Photo extends Eloquent {
 	public function attachBadge($badge) {
 		$this->badge_id = $badge->id;
 		$this->save();
+	}
+
+	public static function licensePhoto($photo){
+		$license = '';		
+		if($photo->allowCommercialUses == 'YES'){
+
+			if($photo->allowModifications == 'YES'){
+				 $license ='by';
+			}elseif ($photo->allowModifications == 'NO') {
+				 $license ='by-nd';
+			}else {
+				 $license = 'by-sa';
+			}	
+		}else{
+			if($photo->allowModifications == 'YES'){
+				$license = 'by-nc';
+			}elseif ($photo->allowModifications == 'NO') {
+				$license = 'by-nc-nd';
+			}else {
+				$license = 'by-nc-sa';
+			}	
+		}
+
+		return $license;
+
 	}
 	
 }

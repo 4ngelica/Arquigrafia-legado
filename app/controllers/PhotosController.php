@@ -45,13 +45,15 @@ class PhotosController extends \BaseController {
     }
     $source_page = Request::header('referer');
     ActionUser::printSelectPhoto($user_id, $id, $source_page, $user_or_visitor); 
+    $license = Photo::licensePhoto($photos); 
 
     return View::make('/photos/show',
       ['photos' => $photos, 'owner' => $photo_owner, 'follow' => $follow, 'tags' => $tags, 'commentsCount' => $photos->comments->count(), 'commentsMessage' => static::createCommentsMessage($photos->comments->count()),
       'average' => $average, 'userEvaluations' => $evaluations, 'binomials' => $binomials, 
       'architectureName' => Photo::composeArchitectureName($photos->name),
       'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photos->id),
-      'photoliked' => $photoliked
+      'photoliked' => $photoliked,
+      'license' =>$license      
       ]);
 	}
 	
