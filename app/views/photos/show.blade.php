@@ -92,12 +92,12 @@ $(document).ready(function(){
 
 
 			<div class="four columns omega">
-               <span style="padding-left:103px">
+               <span class="data_upload_text">
                   @if ( !empty($photos->dataUpload) )
-                    Inserido em:
-                    <a href="{{ URL::to("/search?q=".$photos->dataUpload."&t=up") }}">  
+                    <small>Inserido em:</small>
+                    <a class="data_upload" href="{{ URL::to("/search?q=".$photos->dataUpload."&t=up") }}">  
                         {{ Photo::formatDatePortugues($photos->dataUpload)}}
-                    </a>
+                    </a>                    
                   @endif
                </span>
               <span class="right" title="{{ $commentsMessage }}"><i id="comments"></i> <small>{{$commentsCount}}</small></span>
@@ -178,10 +178,14 @@ $(document).ready(function(){
 				<!--   BOX DE COMENTARIOS   -->
 				<div id="comments_block" class="eight columns row alpha omega">
         	<h3>Comentários</h3>
-          <div class="text_comment" >Cada usuário é responsável por seus próprios comentários. 
-            O Arquigrafia não se responsabiliza pelos <br> comentários postados,
+          <div class="text_comment" >
+            <small>
+              Cada usuário é responsável por seus próprios comentários. 
+            O Arquigrafia não se responsabiliza pelos      comentários postados,
              mas apenas por tornar indisponível no site o conteúdo considerado
-              infringente <br> ou danoso por determinação judicial (art.19 da Lei 12.965/14).</div>
+              infringente       ou danoso por determinação judicial (art.19 da Lei 12.965/14).
+            </small>
+            </div>
           <p></p>
           <?php $comments = $photos->comments; ?>
           

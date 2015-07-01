@@ -371,7 +371,7 @@ span.comment_text p { margin: 3px 0; }
 textarea#comment_field { width: 545px; height: 60px; float: left; border: solid 1px #ddd; padding: 5px; margin: 5px 0; }
 input#comment_button { margin: 5px 0 0 0; float: left; }
 /**/
-.text_comment {  text-align: justify}
+.text_comment {  text-align: justify; margin-right: 25px; }
 .width_comment { width: 300px }
 
 /* avaliações */
@@ -646,3 +646,7 @@ i#likes {  background: url("../img/dislikeNB.png"); padding : 2px 10px 0px;   }
 #badge_description p {font: 200 12px/1.5 Georgia, Times New Roman, serif;}
 #badge_description {padding: 10px;overflow: auto;}
 #badge_description:hover {background: #eee;}
+
+/*Data*/
+.data_upload_text {padding-left:130px;}
+.data_upload {font-size: 9px;}
