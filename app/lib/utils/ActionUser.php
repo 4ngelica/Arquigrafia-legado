@@ -235,4 +235,15 @@ class ActionUser{
         $log = new Logger('Evaluation logger');
         ActionUser::addInfoToLog($log, $file_path, $info);
     }
+
+    public static function printEvaluationAccess($user_id, $photo_id, $source_page, $user_or_visitor, $local) {
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        $date_only = date('Y-m-d');
+        $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
+        ActionUser::verifyTimeout($file_path, $user_id, $source_page);
+        $info = sprintf('[%s] Acessou a página de avaliação pelo %s da página %s', $date_and_time, $local, $source_page);
+
+        $log = new Logger('EvaluationAccess logger');
+        ActionUser::addInfoToLog($log, $file_path, $info);   
+    }
 }
