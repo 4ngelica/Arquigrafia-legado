@@ -653,3 +653,23 @@ i#likes {  background: url("../img/dislikeNB.png"); padding : 2px 10px 0px;   }
 /*Data*/
 .data_upload_text {padding-left:130px;}
 .data_upload {font-size: 9px;}
+
+/*Tooltip to license*/
+a.tooltip_license {outline:none; }
+a.tooltip_license strong {line-height:30px;}
+a.tooltip_license:hover {text-decoration:none;} 
+a.tooltip_license span {
+    z-index:10;display:none; padding:8px 20px;
+    margin-top:-6px; margin-left:28px;
+    width:237px; line-height:15px; text-align: justify;
+}
+a.tooltip_license:hover span{
+    display:inline; position:absolute; color:#111; 
+    border:1px solid #DCA; background:#ffffff;}
+.callout {z-index:20;position:absolute;top:30px;border:0;left:-12px;}
+    
+/*CSS3 extras*/
+a.tooltip_license span
+{
+    border-radius:4px;
+    box-shadow: 5px
