@@ -635,7 +635,7 @@ i#likes {  background: url("../img/dislikeNB.png"); padding : 2px 10px 0px;   }
 /* Notifications page */
 .notifications { margin-bottom: 30px; }
 .notification-list { list-style: initial; list-style-type: square; }
-.notes{ margin-bottom: 30px; border:1px solid black; padding:10px;}
+.notes{ margin-bottom: 30px; border-bottom:1px solid black; padding:10px;}
  
  /* Badges page */
 .badges { margin-left: 140px; margin-bottom: 30px; }
