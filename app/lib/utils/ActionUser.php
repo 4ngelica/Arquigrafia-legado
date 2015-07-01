@@ -119,7 +119,7 @@ class ActionUser{
         $date_only = date('Y-m-d');
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
-        $info = sprintf('[%s] ' . $follow_or_unfollow . ' no usuário de ID nº: %d, pela página %s', $date_and_time, $target_user_id, $source_page);
+        $info = sprintf('[%s] Usuário de ID nº: %d ' . $follow_or_unfollow . ' o usuário de ID nº: %d, pela página %s', $date_and_time, $user_id, $target_user_id, $source_page);
 
         $log = new Logger('FollowOrUnfollow_logger');
         ActionUser::addInfoToLog($log, $file_path, $info);

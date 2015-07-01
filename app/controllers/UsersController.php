@@ -452,7 +452,7 @@ class UsersController extends \BaseController {
 
       $logged_user_id = Auth::user()->id;
       $pageSource = Request::header('referer'); //get url of the source page
-      ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "Follow", "user");
+      ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "passou a seguir", "user");
     }
 
     return Redirect::to(URL::previous()); // redirecionar para friends
@@ -473,7 +473,7 @@ class UsersController extends \BaseController {
 
       $logged_user_id = Auth::user()->id;
       $pageSource = Request::header('referer'); //get url of the source page
-      ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "Unfollow", "user");
+      ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "deixou de seguir", "user");
     }
 
     return Redirect::to(URL::previous()); // redirecionar para friends
