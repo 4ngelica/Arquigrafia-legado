@@ -640,7 +640,7 @@ i#likes {  background: url("../img/dislikeNB.png"); padding : 2px 10px 0px;   }
 .notes:hover { background: rgba(160, 160, 160, 0.3);} 
 
  /* Badges page */
-.badges { margin-left: 140px; margin-bottom: 30px; }
+.badges { font-size:20px; margin-left: 180px; margin-bottom: 30px; }
 #toggle , #toggle1{ height:auto;  margin:1em; margin-left: 180px;}
 #badges_page { margin: 20px;  }
 .badges_list { list-style-type: none; width: 500px;}

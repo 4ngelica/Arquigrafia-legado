@@ -14,15 +14,20 @@ jQuery(document).ready(function()
    jQuery('#toggle1').hide();
    jQuery('a#toggler').click(function()
   {
+      var src = ($('#arrow1').attr('src') === './img/arrow_bottom.png') ? './img/arrow_right.png': './img/arrow_bottom.png';
+      $('#arrow1').attr('src', src);
       jQuery('#toggle').toggle(300);
       return false;
    });
     jQuery('a#toggler1').click(function()
   {
+      var src = ($('#arrow2').attr('src') === './img/arrow_bottom.png') ? './img/arrow_right.png': './img/arrow_bottom.png';
+      $('#arrow2').attr('src', src);
       jQuery('#toggle1').toggle(300);
       return false;
    });
 });
+
 </script>
 @stop
 
@@ -31,7 +36,7 @@ jQuery(document).ready(function()
     <?php if (Auth::check()) {
       $user = Auth::user();
     ?>
-    <a href="#" id="toggler"><h2 class="badges">Badges earned <img src="./img/arrow.png" alt="" > : </h2></a>
+    <a href="#" id="toggler"><h2 class="badges"><img id='arrow1' src="./img/arrow_bottom.png" alt=""> Badges earned : </h2></a>
       <div id="toggle" style="display:none;">
         @if ($user->badges == null)
             <p id="no-badges">no badges</p>
@@ -43,7 +48,7 @@ jQuery(document).ready(function()
         </ul>
       </div>
 
-    <a href="#" id="toggler1"><h2 class="badges">Remaining badges <img src="./img/arrow.png" alt="" > : </h2></a>
+    <a href="#" id="toggler1"><h2 class="badges"><img id ='arrow2' src="./img/arrow_bottom.png" alt="" > Remaining badges : </h2></a>
     <div id="toggle1" style="display:none;">
       <?php $badges_available = Badge::WhereNotRelatedToUser($user->id)->get();?>
       <?php if (!isset($badges_available)){ ?>
