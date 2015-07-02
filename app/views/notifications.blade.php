@@ -30,7 +30,7 @@
     		@if($info_array[0] == "photo_liked")
     			<li class="notes"><a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu sua " }} <a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br><p class="date">{{"$info_array[3], às $info_array[4]."}}</p></li>
     		@elseif($info_array[0] == "comment_liked")
-    			<li class="notes"><a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu seu comentário, na "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{" de "}}<a href={{"users/" . $info_array[6]}}>{{$info_array[7]}}</a>{{"."}}</br><p class="date">{{"$info_array[3], às $info_array[4]."}}</p></li>
+    			<li class="notes"><a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu seu "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentário"}}</a>{{", na "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{" de "}}<a href={{"users/" . $info_array[6]}}>{{$info_array[7]}}</a>{{"."}}</br><p class="date">{{"$info_array[3], às $info_array[4]."}}</p></li>
     		@elseif($info_array[0] == "comment_posted")
     			<li class="notes"><a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" comentou sua "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br><p class="date">{{"$info_array[3], às $info_array[4]."}}</p></li>
     		@endif

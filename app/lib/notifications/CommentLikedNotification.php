@@ -11,7 +11,7 @@ class CommentLikedNotification extends \Tricki\Notification\Models\Notification
     public static $type = 'comment_liked';
 
     public function render() {
-        return array($this->getTypes(), $this->getSender(), $this->getPhotoID(), $this->getDate(), $this->getTime(), $this->getSenderID(), $this->getPhotoOwnerID(), $this->getPhotoOwnerName());
+        return array($this->getTypes(), $this->getSender(), $this->getPhotoID(), $this->getDate(), $this->getTime(), $this->getSenderID(), $this->getPhotoOwnerID(), $this->getPhotoOwnerName(), $this->getCommentID());
     }
 
     public function getDate() {
