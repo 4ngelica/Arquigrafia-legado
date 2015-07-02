@@ -451,18 +451,13 @@ class PhotosController extends \BaseController {
       $photo->allowModifications = $input["photo_allowModifications"];
       $photo->city = $input["photo_city"];
       $photo->country = $input["photo_country"];
-      if ( !empty($input["photo_description"]) )
-        $photo->description = $input["photo_description"];
-      if ( !empty($input["photo_district"]) )
-        $photo->district = $input["photo_district"];
-      if ( !empty($input["photo_imageAuthor"]) )  
-        $photo->imageAuthor = $input["photo_imageAuthor"];
+      $photo->description = $input["photo_description"];
+      $photo->district = $input["photo_district"];
+      $photo->imageAuthor = $input["photo_imageAuthor"];
       $photo->name = $input["photo_name"];
       $photo->state = $input["photo_state"];
-      if ( !empty($input["photo_street"]) )
-        $photo->street = $input["photo_street"];
-      if ( !empty($input["photo_workAuthor"]) )
-        $photo->workAuthor = $input["photo_workAuthor"];
+      $photo->street = $input["photo_street"];
+      $photo->workAuthor = $input["photo_workAuthor"];
       //2015-05-09 msy add validate for date image/work end
       if ( !empty($input["photo_workDate"])) {
         $photo->workdate = Photo::formatDate($input["photo_workDate"]);
