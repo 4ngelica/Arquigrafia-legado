@@ -563,7 +563,7 @@ class UsersController extends \BaseController {
       if (Input::hasFile('photo') and Input::file('photo')->isValid())  {    
         $file = Input::file('photo');
         $ext = $file->getClientOriginalExtension();
-        $user->photo = "/arquigrafia-avatars/".$user->id.".".$ext;
+        $user->photo = "/arquigrafia-avatars/".$user->id.".jpg";
         $user->save();
         $image = Image::make(Input::file('photo'))->encode('jpg', 80);         
         $image->save(public_path().'/arquigrafia-avatars/'.$user->id.'.jpg');

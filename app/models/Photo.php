@@ -303,4 +303,28 @@ class Photo extends Eloquent {
 
 	}
 	
+	public function getInformationCompletionAttribute($value) {
+		$image_info = [
+			'city', 'country', 'dataCriacao', 'description',
+			'district', 'imageAuthor', 'name', 'state',
+			'street', 'workAuthor', 'workdate'
+		];
+		$complete = 0;
+		foreach ($image_info as $info) {
+			$complete = ( empty($this->$info) ) ? $complete : $complete + 1;
+		}
+		$percentage = (int) (($complete / count($image_info)) * 100);
+		return $percentage;
+	}
+
+	public function getEmptyColumns() {
+		$image_info = [
+			'dataCriacao', 'description','district', 'street', 'workAuthor', 'workdate'
+		];
+		foreach ($image_info as $key => $info) {
+			if ( !empty($this->$info) )
+				unset($image_info[$key]);
+		}
+		return $image_info;
+	}
 }
