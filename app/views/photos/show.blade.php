@@ -235,7 +235,7 @@ $(document).ready(function(){
                 <?php } ?>               
               </div>
               <div class="four columns omega row">
-                <small>
+                <small id={{"$comment->id"}}>
                   {{$comment->user->name}} - {{$comment->created_at->format('d/m/Y h:m') }}
                   <!--<img src="{{ URL::to("/") }}/img/commentNB.png" / ><small class='likes'>{{ $comment->likes->count()}}</small>-->
                 </small>
