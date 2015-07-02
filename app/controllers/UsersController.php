@@ -106,7 +106,7 @@ class UsersController extends \BaseController {
 
 
   // create user with email 
-  public function _store()
+  public function __store()
   {    
     // put input into flash session for form repopulation
     Input::flash();
@@ -126,10 +126,11 @@ class UsersController extends \BaseController {
       return Redirect::to('/users/account')->withErrors($messages);
     } else {
           
-      $name = $input["name"];
-      $email =$input["email"];
-      $login =$input["login"];
-      $verify_code = str_random(30);
+       $name = $input["name"];
+       $email =$input["email"];
+       $login =$input["login"];
+       $verify_code = str_random(30);
+      
       // save user  
       User::create([
       'name' => $name,
@@ -148,6 +149,7 @@ class UsersController extends \BaseController {
 
      
         return Redirect::to("/users/register"); 
+
     }
   }
 
@@ -161,15 +163,17 @@ class UsersController extends \BaseController {
 
   public function verify($verify_code){
         
-    $user = User::userVerifyCode($verify_code)->first();
-
-    if (!$user){   
+    if(!empty($verify_code)){
+      $newUser= User::userVerifyCode($verify_code);
+    }
+    
+    if (!$newUser){   
             //erro
             return Redirect::to('users/verify');
       }else{
-          $user->active = 'yes';
-          $user->verify_code = null;
-          $user->save();
+          $newUser->active = 'yes';
+          $newUser->verify_code = null;
+          $newUser->save();
 
           return Redirect::to('users/login');
 
@@ -254,11 +258,8 @@ class UsersController extends \BaseController {
   // validacao do login
   public function login()
   { 
-    $input = Input::all();
-    //$input["password"]
-
-     $user = User::userInformation($input["login"]);
-    //$user = User::where('login', '=', $input["login"])->first();
+     $input = Input::all();    
+     $user = User::userInformation($input["login"]);    
 
     if ($user != null && $user->oldAccount == 1) 
     {
@@ -273,6 +274,7 @@ class UsersController extends \BaseController {
       }
     }
 
+    //if (Auth::attempt(array('login' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true || Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true  )
     if (Auth::attempt(array('login' => $input["login"], 'password' => $input["password"])) == true || Auth::attempt(array('email' => $input["login"], 'password' => $input["password"])) == true  )
     { 
       if ( Session::has('filter.login') ) //acionado pelo login
