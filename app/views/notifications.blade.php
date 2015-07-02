@@ -19,6 +19,8 @@
      
     $user = Auth::user();
 	$unreadNotifications = $user->notifications()->unread()->get();
+    $readNotifications = $user->notifications()->read()->get();
+
 	?>
 	<h2 class="notifications">Suas notificações:</h2>
 	@if ($user->notifications == null)
