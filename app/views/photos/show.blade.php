@@ -5,7 +5,7 @@
 <title>Arquigrafia - {{ $photos->name }}</title>
 
 <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/checkbox.css" />
-
+<script type="text/javascript" src="{{ URL::to("/") }}/js/progressbar.js"></script>
 <!-- Google Maps API -->
 <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>
 <script type="text/javascript">
@@ -329,7 +329,19 @@ $(document).ready(function(){
         	</a>
         	<?php } ?>
           </hgroup>
-          
+          <div id="image_info_completion">
+            <div id="progressbar"></div>
+            <script type="text/javascript">
+              var progressbar = $('#progressbar').progressbar();
+              progressbar.progress( {{ $photos->information_completion }} );
+            </script>
+            <p>
+              {{ $photos->information_completion }}% dos dados da imagem estão preenchidas. <br/>
+              @if ($photos->information_completion < 100 && $owner->equal(Auth::user()))
+                <a id="improve_image_data" href="{{ URL::to('/photos/' . $photos->id . '/edit') }}">Deseja melhorar as informações da imagem?</a>
+              @endif
+            </p>
+          </div>
           		@if ( !empty($photos->description) )
 					<h4>Descrição:</h4>
 					<p>{{ $photos->description }}</p>
