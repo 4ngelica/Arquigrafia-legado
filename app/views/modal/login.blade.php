@@ -36,7 +36,6 @@
                      Esqueceu sua senha?
                   </a> 
                   
-                 
                   </div>
                <p>{{ Form::submit("LOGIN",array('class'=>'btn right')) }}</p>
                
