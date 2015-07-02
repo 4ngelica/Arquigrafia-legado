@@ -118,7 +118,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	public function equal($user) {
-		return ($this->id == $user->id);
+		try {
+			return ($this->id == $user->id);
+		} catch (Exception $e) {
+			return false;
+		}
 	}
 
 	public static function userInformation($login){
