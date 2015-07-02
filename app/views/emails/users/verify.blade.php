@@ -15,7 +15,7 @@
             excelente ter você a bordo!<br>
 
             Por favor siga o link abaixo para confirmar o seu endereço de e-mail.<br/>  
-            {{ URL::to('users/register/' . $verifyCode) }}.<br>
+            {{ URL::to('users/verify/' . $verifyCode) }}.<br>
 
             Muito obrigado pelo seu tempo.        
 
