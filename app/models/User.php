@@ -9,7 +9,7 @@ use lib\date\Date;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
 	
-	protected $fillable = ['id','name','email','password','login'];
+	protected $fillable = ['id','name','email','password','login','verify_code'];
 
 	public function notifications()
     {
@@ -141,8 +141,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	public static function userVerifyCode($verify_code){
-		$user = User::where('verify_code','=',$verify_code)->first();
-        return $user;
+		$newUser = User::where('verify_code','=',$verify_code)->first();			
+        return $newUser;
 
 	}
 
