@@ -39,6 +39,7 @@
                         <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
                         <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu sua " }} <a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br>
                         <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
+                        <a class="link-block" href={{"photos/" . $info_array[2]}}></a>
                     </li>
                 </div>
     		@elseif($info_array[0] == "comment_liked")
@@ -48,6 +49,7 @@
                         <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
                         <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu seu "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentário"}}</a>{{", na "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{" de "}}<a href={{"users/" . $info_array[6]}}>{{$info_array[7]}}</a>{{"."}}</br>
                         <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
+                        <a class="link-block" href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}></a>
                     </li>
                 </div>
     		@elseif($info_array[0] == "comment_posted")
@@ -57,6 +59,7 @@
                         <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
                         <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" comentou sua "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br>
                         <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
+                        <a class="link-block" href={{"photos/" . $info_array[2]}}></a>
                     </li>
                 </div>
     		@endif
