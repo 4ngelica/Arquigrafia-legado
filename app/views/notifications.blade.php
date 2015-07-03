@@ -31,11 +31,33 @@
     		<?php $info_array = $notification->render(); 
             ?>
     		@if($info_array[0] == "photo_liked")
-    			<div class="notes"><li><a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a><a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu sua " }} <a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br><p class="date">{{"$info_array[3], às $info_array[4]."}}</p></li><div class="read-button"></div></div>
+    			<div class="notes">
+                    <li>
+                        <div class="read-button" title="Marcar como lida"></div>
+                        <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
+                        <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu sua " }} <a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br>
+                        <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
+                        
+                    </li>
+                </div>
     		@elseif($info_array[0] == "comment_liked")
-    			<div class="notes"><li><a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a><a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu seu "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentário"}}</a>{{", na "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{" de "}}<a href={{"users/" . $info_array[6]}}>{{$info_array[7]}}</a>{{"."}}</br><p class="date">{{"$info_array[3], às $info_array[4]."}}</p></li></div>
+    			<div class="notes">
+                    <li>
+                        <div class="read-button" title="Marcar como lida"></div>
+                        <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
+                        <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu seu "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentário"}}</a>{{", na "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{" de "}}<a href={{"users/" . $info_array[6]}}>{{$info_array[7]}}</a>{{"."}}</br>
+                        <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
+                    </li>
+                </div>
     		@elseif($info_array[0] == "comment_posted")
-    			<div class="notes not-read"><li><a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a><a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" comentou sua "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br><p class="date">{{"$info_array[3], às $info_array[4]."}}</p></li><div class="read-button"></div></div>
+    			<div class="notes not-read">
+                    <li>
+                        <div class="read-button" title="Marcar como lida"></div>
+                        <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
+                        <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" comentou sua "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br>
+                        <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
+                    </li>
+                </div>
     		@endif
     	@endforeach
 	</ul>
