@@ -642,12 +642,12 @@ i#likes {  background: url("../img/dislikeNB.png"); padding : 2px 10px 0px;   }
 
 /* Notifications page */
 .notifications { margin-bottom: 35px; border-bottom: 1px solid black; padding: 15px; font-size:20px;}
-.notes { font-size: 15px; border-bottom: 1px solid black; padding: 20px;}
+.notes { font-size: 15px; border-bottom: 1px solid black; padding: 20px; }
 .notes a { font-weight: bold; }
 .notes p { margin: 0px; font-size: 12px }
 .notes:hover { background: rgba(160, 160, 160, 0.3); } 
 .not-read { background: rgba(160, 160, 160, 0.3); }
-.mini { float: left; width: 40px; height: 40px; margin-right: 10px;}
+.mini { float: left; width: 40px; height: 40px; margin-right: 10px; }
 .read-button { float: right; border-radius: 50px/50px; 	border: solid 4px #606060; width: 6px; height: 6px; }
 .read-button:hover { background-color: #606060; border: solid 4px #ffffff }
 
