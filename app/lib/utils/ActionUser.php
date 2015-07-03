@@ -246,4 +246,11 @@ class ActionUser{
         $log = new Logger('EvaluationAccess logger');
         ActionUser::addInfoToLog($log, $file_path, $info);   
     }
+
+    public static function verifyUnread($notification, $unreadNotifications) {
+        foreach ($unreadNotifications as $unread) {
+            if ($notification->id == $unread->id) return true;
+        }
+        return false;
+    }
 }

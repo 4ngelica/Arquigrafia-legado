@@ -15,11 +15,12 @@
 
 @section('content')
     <div id="content" class="container">
-	<?php if (Auth::check()) {
+	<?php use lib\utils\ActionUser;
+        if (Auth::check()) {
      
-    $user = Auth::user();
-	$unreadNotifications = $user->notifications()->unread()->get();
-    $readNotifications = $user->notifications()->read()->get();
+            $user = Auth::user();
+	        $unreadNotifications = $user->notifications()->unread()->get();
+            $readNotifications = $user->notifications()->read()->get();
 
 	?>
 	<h2 class="notifications">Suas notificações:</h2>
@@ -32,17 +33,16 @@
                 $info_array = $notification->render(); 
             ?>
     		@if($info_array[0] == "photo_liked")
-    			<div class="notes not-read">
+    			<div class="notes<?php if(ActionUser::verifyUnread($notification, $unreadNotifications)) echo ' not-read'?>" >
                     <li>
                         <div class="read-button" title="Marcar como lida" onclick="markRead(this.parentElement.parentElement);"></div>
                         <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
                         <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu sua " }} <a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br>
                         <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
-                        
                     </li>
                 </div>
     		@elseif($info_array[0] == "comment_liked")
-    			<div class="notes">
+    			<div class="notes<?php if(ActionUser::verifyUnread($notification, $unreadNotifications)) echo ' not-read'?>">
                     <li>
                         <div class="read-button" title="Marcar como lida" onclick="markRead(this.parentElement.parentElement);"></div>
                         <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
@@ -51,7 +51,7 @@
                     </li>
                 </div>
     		@elseif($info_array[0] == "comment_posted")
-    			<div class="notes not-read">
+    			<div class="notes<?php if(ActionUser::verifyUnread($notification, $unreadNotifications)) echo ' not-read'?>">
                     <li>
                         <div class="read-button" title="Marcar como lida"  onclick="markRead(this.parentElement.parentElement);"></div>
                         <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
