@@ -34,7 +34,7 @@
     		@if($info_array[0] == "photo_liked")
     			<div class="notes not-read">
                     <li>
-                        <div class="read-button" title="Marcar como lida" onclick="this.parentElement.parentElement.className = 'notes';"></div>
+                        <div class="read-button" title="Marcar como lida" onclick="markRead(this.parentElement.parentElement);"></div>
                         <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
                         <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu sua " }} <a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br>
                         <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
@@ -44,7 +44,7 @@
     		@elseif($info_array[0] == "comment_liked")
     			<div class="notes">
                     <li>
-                        <div class="read-button" title="Marcar como lida" onclick="this.parentElement.parentElement.className = 'notes';"></div>
+                        <div class="read-button" title="Marcar como lida" onclick="markRead(this.parentElement.parentElement);"></div>
                         <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
                         <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu seu "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentário"}}</a>{{", na "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{" de "}}<a href={{"users/" . $info_array[6]}}>{{$info_array[7]}}</a>{{"."}}</br>
                         <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
@@ -53,7 +53,7 @@
     		@elseif($info_array[0] == "comment_posted")
     			<div class="notes not-read">
                     <li>
-                        <div class="read-button" title="Marcar como lida"  onclick="this.parentElement.parentElement.className = 'notes';"></div>
+                        <div class="read-button" title="Marcar como lida"  onclick="markRead(this.parentElement.parentElement);"></div>
                         <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
                         <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" comentou sua "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br>
                         <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
@@ -61,7 +61,11 @@
                 </div>
     		@endif
     	@endforeach
-        <p id="test"></p>
+        <script>
+            function markRead(object) {
+                object.className = "notes";
+            }
+        </script>
 	</ul>
  	<?php } ?> 
     </div>
