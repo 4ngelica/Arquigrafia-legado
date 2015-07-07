@@ -91,24 +91,23 @@ $(document).ready(function(){
             </div>
 
 
-			<div class="four columns omega">
-               <span class="data_upload_text">
-                  @if ( !empty($photos->dataUpload) )
-                    <small>Inserido em:</small>
-                    <a class="data_upload" href="{{ URL::to("/search?q=".$photos->dataUpload."&t=up") }}">  
-                        {{ Photo::formatDatePortugues($photos->dataUpload)}}
-                    </a>                    
-                  @endif
-               </span>
+			<div id="img_top_itens" class="four columns omega">
               <span class="right" title="{{ $commentsMessage }}"><i id="comments"></i> <small>{{$commentsCount}}</small></span>
               <span class="right" title="{{ $photos->likes->count() }} pessoas curtiram essa imagem"><i id="likes"></i> <small>{{$photos->likes->count()}}</small></span>
               
-              <?php if (Auth::check() && Auth::user()->id == $photos->user_id) { ?>  
-               	<span class="right">
-        					<a id="delete_button" href="{{ URL::to('/photos/' . $photos->id) }}" title="Excluir imagem"></a>
-              	</span>
-              <?php } ?>
-              
+              @if (Auth::check() && Auth::user()->id == $photos->user_id)
+                <span class="right">
+                  <a id="delete_button" href="{{ URL::to('/photos/' . $photos->id) }}" title="Excluir imagem"></a>
+                </span>
+              @endif
+              @if ( !empty($photos->dataUpload) )
+                <span class="right">
+                      <small>Inserido em:</small>
+                      <a class="data_upload" href="{{ URL::to("/search?q=".$photos->dataUpload."&t=up") }}">  
+                          {{ Photo::formatDatePortugues($photos->dataUpload)}}
+                      </a>                    
+                </span>
+              @endif
       </div>
 					</div>
 					<!--   FIM - NOME / STATUS DA FOTO   -->

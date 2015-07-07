@@ -686,4 +686,9 @@ a.tooltip_license:hover span{
 a.tooltip_license span
 {
     border-radius:4px;
-    box-shadow: 5px
+    box-shadow: 5px;
+}
+
+#img_top_itens span {
+	margin-right: 5px;
+}
