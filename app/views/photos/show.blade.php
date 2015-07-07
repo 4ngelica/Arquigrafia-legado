@@ -177,6 +177,7 @@ $(document).ready(function(){
 				<!--   BOX DE COMENTARIOS   -->
 				<div id="comments_block" class="eight columns row alpha omega">
         	<h3>Comentários</h3>
+          @if (Auth::check())
           <div class="text_comment" >
             <small>
               Cada usuário é responsável por seus próprios comentários. 
@@ -185,6 +186,7 @@ $(document).ready(function(){
               infringente ou danoso por determinação judicial (art.19 da Lei 12.965/14).
             </small>
             </div>
+          @endif  
           <p></p>
           <?php $comments = $photos->comments; ?>
           
