@@ -31,7 +31,7 @@ $(function(){
     });
 
     $('#delete_photo').live('click', function(e){
-		return confirm('Tem certeza que deseja excluir esta imagem?');
+		return confirm('A imagem pode estar avaliada, tem certeza que deseja excluir esta imagem?');
 	});
 
 	$('#plus').live('click', function(e){
