@@ -15,15 +15,6 @@ Route::get('/test', function () {
 	//testes
 });
 
-Route::get('/notifications', function() { 
-	if (Auth::check()) {
-		$user = Auth::user();
-		return View::make('notifications')->with('user', $user);
-	}
-	return Redirect::action('PagesController@home');
-});
-
-
 /* phpinfo() */
 Route::get('/info/', function(){ return View::make('i'); });
 
@@ -110,6 +101,24 @@ Route::get('/photos/download/{photo_id}','PhotosController@download');
 Route::resource('/photos','PhotosController');
 Route::get('/photos/{id}/get/info', 'PhotosController@getPhotoInfo');
 
-
 /* TAGS */
 Route::get('/tags/json', 'TagsController@index');
+
+/* NOTIFICATIONS */
+Route::get('/notifications', function() { 
+	if (Auth::check()) {
+		$user = Auth::user();
+		return View::make('notifications')->with('user', $user);
+	}
+	return Redirect::action('PagesController@home');
+});
+Route::get('/markRead/{id}', function($id) {
+	if (Auth::check()) {
+		$user = Auth::user();
+		$unreadNotes = $user->notifications()->unread()->get();
+		foreach ($unreadNotes as $notification) {
+			if($notification->id == $id) $notification->setRead();
+		}
+	}
+	return 0;
+});
