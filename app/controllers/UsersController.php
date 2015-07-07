@@ -61,52 +61,9 @@ class UsersController extends \BaseController {
     return View::make('/modal/account');
   }
 
-  public function store()
-  {    
-    // put input into flash session for form repopulation
-    Input::flash();
-    $input = Input::all();
-    
-    // validate data
-    $rules = array(
-        'name' => 'required',
-        'login' => 'required|unique:users',
-        'password' => 'required|min:6|confirmed',
-        'email' => 'required|email|unique:users',
-        'terms' => 'required'
-    );     
-    $validator = Validator::make($input, $rules);   
-    if ($validator->fails()) {
-      $messages = $validator->messages();
-      return Redirect::to('/users/account')->withErrors($messages);
-    } else {
-      // save user
-      User::create(['name'=>$input["name"],'email'=>$input["email"],'password'=>Hash::make($input["password"]),'login'=>$input["login"]]);
-      // auto login after saving
-      $userdata = array(
-          'login'     => $input["login"],
-          'password'  => $input["password"]
-      );
-      $user = User::userInformation($userdata["login"]);
-      $source_page = Request::header('referer');
-      ActionUser::printNewAccount($user->id, $source_page, "arquigrafia", "user");  
   
-      // attempt to do the login
-      if (Auth::attempt($userdata)) {
-        return Redirect::to('/');
-      } else {
-        return $error;
-      }
-      /*
-      $users = User::all();
-      return View::make('/users/index',['users' => $users]);
-      */
-    }
-  }
-
-
-  // create user with email 
-  public function __store()
+  // register of user with email 
+  public function store()
   {    
     // put input into flash session for form repopulation
     Input::flash();
@@ -130,8 +87,7 @@ class UsersController extends \BaseController {
        $email =$input["email"];
        $login =$input["login"];
        $verify_code = str_random(30);
-      
-      // save user  
+      //create user with a verify code      
       User::create([
       'name' => $name,
       'email' => $email,
@@ -139,14 +95,12 @@ class UsersController extends \BaseController {
       'login' => $login,
       'verify_code' => $verify_code       
       ]);
-        
-
+        //send email to user created
         Mail::send('emails.users.verify', array('name' => $name, 'email' => $email, 'login' => $login ,'verifyCode' => $verify_code), 
           function($msg) use($email) {
             $msg->to($email)
                 ->subject('[Arquigrafia]- Cadastro de Usuário');
         });
-
      
         return Redirect::to("/users/register"); 
 
@@ -171,6 +125,7 @@ class UsersController extends \BaseController {
             //erro
             return Redirect::to('users/verify');
       }else{
+          //update data of new user registered 
           $newUser->active = 'yes';
           $newUser->verify_code = null;
           $newUser->save();
@@ -179,7 +134,7 @@ class UsersController extends \BaseController {
 
       }
   }
-//Of user/verify
+
   public function verifyError(){
 
       $msgType = "verify";
@@ -274,9 +229,8 @@ class UsersController extends \BaseController {
       }
     }
 
-    //if (Auth::attempt(array('login' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true || Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true  )
-    if (Auth::attempt(array('login' => $input["login"], 'password' => $input["password"])) == true || Auth::attempt(array('email' => $input["login"], 'password' => $input["password"])) == true  )
-    { 
+    if (Auth::attempt(array('login' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true || Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true  )
+        { 
       if ( Session::has('filter.login') ) //acionado pelo login
       {  
         Session::forget('filter.login');
