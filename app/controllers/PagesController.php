@@ -146,20 +146,20 @@ class PagesController extends BaseController {
 
        } else {         
 
-           $idUserList = static::userPhotosSearch($needle);
+          $idUserList = static::userPhotosSearch($needle);
                                
-           $query = Photo::orderBy('created_at', 'desc');       
-           $query->where('name', 'LIKE', '%'. $needle .'%');  
-           $query->orWhere('description', 'LIKE', '%'. $needle .'%');  
-           $query->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%');
-           $query->orWhere('workAuthor', 'LIKE', '%'. $needle .'%');
-           if ($idUserList != null && !empty($idUserList)) {
-               $query->orWhereIn('user_id', $idUserList);}
-           $query->orWhere('country', 'LIKE', '%'. $needle .'%');  
-           $query->orWhere('state', 'LIKE', '%'. $needle .'%'); 
-           $query->orWhere('city', 'LIKE', '%'. $needle .'%'); 
-           $query->whereNull('deleted_at');  
-           $photos = $query->get();
+          $query = Photo::where(function($query) use($needle, $idUserList) {
+            $query->where('name', 'LIKE', '%'. $needle .'%');  
+            $query->orWhere('description', 'LIKE', '%'. $needle .'%');  
+            $query->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%');
+            $query->orWhere('workAuthor', 'LIKE', '%'. $needle .'%');
+            $query->orWhere('country', 'LIKE', '%'. $needle .'%');  
+            $query->orWhere('state', 'LIKE', '%'. $needle .'%'); 
+            $query->orWhere('city', 'LIKE', '%'. $needle .'%'); 
+            if ($idUserList != null && !empty($idUserList)) {
+              $query->orWhereIn('user_id', $idUserList);}
+          })->orderBy('created_at', 'desc');
+          $photos = $query->get();
        } 
       //2015-05-06 msy end
       
