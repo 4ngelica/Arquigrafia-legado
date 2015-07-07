@@ -34,7 +34,7 @@
 					<p>{{ Form::hidden('pageSource', $pageSource) }} </p>
 
 					<br>
-					<div class="six columns alpha row">
+					<div class="seven columns alpha row">
 						<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td>
@@ -62,14 +62,13 @@
 							<tr>
 								<td>
 									<div class="two columns alpha"><p>{{ Form::label('tags_input', 'Tags*:') }}</p></div>
-									<div class="two columns omega">
+									<div class="four columns">
 										<p>
-											{{ Form::text('tags_input') }} <br>
+											{{ Form::text('tags_input') }}
+											<button class="btn" id="add_tag" style="font-size: 11px;">ADICIONAR TAG</button>
+											<br>
 											<div class="error">{{ $errors->first('tags') }}</div>
 										</p>
-									</div>
-									<div class="two columns">
-										<button class="btn" id="add_tag">Adicionar tag</button>
 									</div>
 									<div class="five columns alpha">
 										<textarea name="tags" id="tags" cols="60" rows="1" style="display: none;"></textarea>
@@ -143,7 +142,7 @@
 							 <tr>                
          						<div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
          						<div class="two columns omega">
-          						   <p>{{ Form::text('photo_imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'dd/mm/yyyy')) }} 
+          						   <p>{{ Form::text('photo_imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }} 
          							<br> <div class="error">{{ $errors->first('photo_imageDate') }}</div>
          							</p>       
         							</div>
@@ -170,7 +169,7 @@
          						<div class="two columns alpha"><p>{{ Form::label('photo_workDate', 'Data da obra:') }}</p></div>
          						<div class="two columns omega">         						
           						<p>
-          							{{ Form::text('photo_workDate','',array('id' => 'datePickerWorkDate','placeholder'=>'dd/mm/yyyy')) }} 
+          							{{ Form::text('photo_workDate','',array('id' => 'datePickerWorkDate','placeholder'=>'DD/MM/AAAA')) }} 
          						<br>
          						<div class="error">{{ $errors->first('photo_workDate') }}</div>
          					</p>       

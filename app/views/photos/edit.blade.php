@@ -68,8 +68,8 @@
         	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
             <tr>
               
-			  <div class="two columns alpha omega"><p>{{ Form::label('photo_name', 'Título*:') }}</p></div>
-				<div class="three columns alpha">				
+			  <div class="two columns alpha"><p>{{ Form::label('photo_name', 'Título*:') }}</p></div>
+				<div class="three columns">				
         <p>{{ Form::text('photo_name', $photo->name) }} <br>
 				<div class="error">{{ $errors->first('photo_name') }}</div>
         </p>
@@ -77,8 +77,8 @@
             </tr>
             <tr>
              
-			  <div class="two columns alpha omega"><p>{{ Form::label('photo_imageAuthor', 'Autor da imagem*:') }}</p></div>
-				<div class="three columns alpha">				
+			  <div class="two columns alpha"><p>{{ Form::label('photo_imageAuthor', 'Autor da imagem*:') }}</p></div>
+				<div class="three columns">				
         <p>{{ Form::text('photo_imageAuthor', $photo->imageAuthor) }} <br>
 				  <div class="error">{{ $errors->first('photo_imageAuthor') }}</div>
         </p>
@@ -88,15 +88,14 @@
               
               <td>
               	
-                  <div class="two columns alpha omega"><p>{{ Form::label('tags_input', 'Tags*:') }}</p></div>
-                  <div class="two columns alpha">
+                  <div class="two columns alpha"><p>{{ Form::label('tags_input', 'Tags*:') }}</p></div>
+                  <div class="four columns omega">
                     <p>
-                      {{ Form::text('tags_input') }} <br>
+                      {{ Form::text('tags_input') }}
+                      <button class="btn" id="add_tag" style="font-size: 11px;">ADICIONAR TAG</button>
+                      <br>
                       <div class="error">{{ $errors->first('tags') }}</div>
                     </p>
-                  </div>
-                  <div class="two columns alpha">
-                    <button class="btn alpha" id="add_tag">Adicionar tag</button>
                   </div>
                   <div class="five columns alpha">
                     <textarea name="tags" id="tags" cols="60" rows="1" style="display: none;"></textarea>
