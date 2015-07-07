@@ -14,10 +14,10 @@
 @stop
 
 @section('content')
-@if (Session::get('message'))
+@if (Session::get('msgWelcome'))
       <div class="container">
         <div class="twelve columns">
-          <div class="message">{{ Session::get('message') }}</div>
+          <div class="message">{{ Session::get('msgWelcome') }}</div>
         </div>
       </div>
     @endif
