@@ -184,6 +184,7 @@
               infringente ou danoso por determinação judicial (art.19 da Lei 12.965/14).
             </small>
           </div>
+          <br>
         @endif
         <?php $comments = $photos->comments; ?>
 
