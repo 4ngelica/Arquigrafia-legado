@@ -328,6 +328,8 @@ $(document).ready(function(){
         	</a>
         	<?php } ?>
           </hgroup>
+
+          @if ( $owner->equal(Auth::user()) )
           <div id="image_info_completion">
             <div id="progressbar"></div>
             <script type="text/javascript">
@@ -341,6 +343,8 @@ $(document).ready(function(){
               @endif
             </p>
           </div>
+          @endif 
+          
           		@if ( !empty($photos->description) )
 					<h4>Descrição:</h4>
 					<p>{{ $photos->description }}</p>
