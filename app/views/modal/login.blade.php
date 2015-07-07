@@ -8,10 +8,19 @@
 @stop
 
 @section('content')
-
+@if (Session::get('msgRegister'))
+      <div class="container">
+        <div class="twelve columns">
+         <div class="four columns offset-by-four">
+          <div class="message">{{ Session::get('msgRegister') }}</div>
+        </div>
+       </div>
+      </div>
+@endif
    <div class="container">
       <div class="registration">
          <!-- LOGIN SIMPLES -->
+
          <div class="four columns offset-by-four">
             <h1>Login</h1>
             
@@ -22,7 +31,7 @@
                <div class="two columns alpha">{{ Form::label('login', 'Usuário ou E-mail:', array('class'=>'right')) }}</div>
                <div class="two columns omega">{{ Form::text('login', '', array('class'=>'right') ) }}</div>
                {{ $errors->first('login') }}
-               
+                <p> {{ Form::hidden('firstTime', Session::get('msgRegister')) }}</p>
                <div class="two columns alpha">{{ Form::label('password', 'Senha:', array('class'=>'right')) }}</div>
                <div class="two columns omega">{{ Form::password('password', array('class'=>'right') ) }}</div>
 
@@ -44,7 +53,7 @@
             <p>&nbsp;</p>
 
          </div>
-
+         
          <div class="three columns offset-by-four">
 
             <a href="{{ $fburl }}">
@@ -63,7 +72,8 @@
                   <p> Login com Stoa </p>
                </div>
             </a>
-         </div>         
+         </div>  
+             
       </div>
    </div>
 
