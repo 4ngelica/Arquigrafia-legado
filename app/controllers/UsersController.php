@@ -126,9 +126,9 @@ class UsersController extends \BaseController {
             return Redirect::to('users/verify');
       }else{
           //update data of new user registered 
-          //$newUser->active = 'yes';
-          //$newUser->verify_code = null;
-          //$newUser->save();
+          $newUser->active = 'yes';
+          $newUser->verify_code = null;
+          $newUser->save();
           
           return Redirect::to('/users/login')->with('msgRegister', "<strong>Conta ativada com sucesso!.</strong>");
 
