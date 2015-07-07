@@ -25,7 +25,17 @@ $(document).ready(function(){
 			if ($(this).hasClass('album'))
 				$('#registration_delete p').html('Tem certeza que deseja excluir este álbum?');
 			else
-				$('#registration_delete p').html('Tem certeza que deseja excluir esta imagem?');
+				$('#registration_delete p').html('A imagem pode estar avaliada,tem certeza que deseja excluir esta imagem?');
+			$('#mask').fadeIn('fast');
+			$('#confirmation_window').fadeIn('slow');
+
+		});
+
+		$('#delete_photo').click(function(e){
+			alert(this.href);
+			e.preventDefault();
+			$('#registration_delete form').attr('action', this.href);
+			$('#registration_delete p').html('A imagem pode estar avaliada por outros usuários,tem certeza que deseja excluir esta imagem?');
 			$('#mask').fadeIn('fast');
 			$('#confirmation_window').fadeIn('slow');
 
