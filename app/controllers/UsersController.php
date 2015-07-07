@@ -126,11 +126,11 @@ class UsersController extends \BaseController {
             return Redirect::to('users/verify');
       }else{
           //update data of new user registered 
-          $newUser->active = 'yes';
-          $newUser->verify_code = null;
-          $newUser->save();
-
-          return Redirect::to('users/login');
+          //$newUser->active = 'yes';
+          //$newUser->verify_code = null;
+          //$newUser->save();
+          
+          return Redirect::to('/users/login')->with('msgRegister', "<strong>Conta ativada com sucesso!.</strong>");
 
       }
   }
@@ -209,13 +209,12 @@ class UsersController extends \BaseController {
   }
   
 
-  
-  // validacao do login
+   // validacao do login
   public function login()
   { 
-     $input = Input::all();    
+     $input = Input::all();   
      $user = User::userInformation($input["login"]);    
-
+    
     if ($user != null && $user->oldAccount == 1) 
     {
       if ( User::checkOldAccount($user, $input["password"]) )
@@ -249,11 +248,16 @@ class UsersController extends \BaseController {
           //Redirect when user forget password
           if($url == URL::to('users/forget')){ 
             return Redirect::to('/');
+          }elseif(!empty($input["firstTime"])){ 
+              return Redirect::to('/')->with('msgWelcome', "Bem-vind@ ".ucfirst($user->name).".");
+          
           }else{
             return Redirect::to($url);
           }
 
         }
+
+        
         $source_page = Request::header('referer');
         ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
         return Redirect::to('/');
