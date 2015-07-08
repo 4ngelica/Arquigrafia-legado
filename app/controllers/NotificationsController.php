@@ -14,13 +14,6 @@ class NotificationsController extends \BaseController {
 		return Redirect::action('PagesController@home');
 	}
 
-	public static function verifyUnread($notification, $unreadNotifications) {
-        foreach ($unreadNotifications as $unread) {
-            if ($notification->id == $unread->id) return true;
-        }
-        return false;
-    }
-
     public function read($id) {
 		if (Auth::check()) {
 			$user = Auth::user();
@@ -32,7 +25,6 @@ class NotificationsController extends \BaseController {
 				if($notification->id == $id) $notification->setRead();
 			}
 		}
-		return 0;
 	}
 }
 
