@@ -1,3 +1,4 @@
+var pageRequestRunning = false;
 $(document).ready(function() {
 
 	$("#album_info form").submit(function(e) {
@@ -260,6 +261,11 @@ function changePage(paginator, page, type) {
 function requestPage(page, type, URL, callback, paginator, runInBackground) {
 	var data = { page: page, q: paginator.searchQuery, wp: $('input[name=which_photos]:checked').val() };
 	clearContent(type);
+	if (pageRequestRunning) {
+		return;
+	} else {
+		pageRequestRunning = true;
+	}
 	if (!runInBackground) {
 		fixPageContainerHeight(type);
 		showAndFixElementSpacing(type, $('.' + type + ' .loader'), true);
@@ -271,6 +277,8 @@ function requestPage(page, type, URL, callback, paginator, runInBackground) {
 	}).fail(function() {
 		$("." + type + " .loader").hide();
 		failedRequest(type, 'Aconteceu um erro! Tente novamente mais tarde.');
+	}).always(function() {
+		pageRequestRunning = false;
 	});
 }
 
