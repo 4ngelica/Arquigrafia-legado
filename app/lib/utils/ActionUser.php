@@ -67,26 +67,12 @@ class ActionUser{
         $data = file($file_path);
         $line = $data[count($data)-1];
         sscanf($line, "[%s %s]", $date, $time);
+        list($last_year, $last_month, $last_day) = explode("-", $date);
         list($last_hour, $last_minutes, $last_seconds) = explode(":", $time);
-        $last_seconds = explode("]", $last_seconds);
-        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        list($today, $now) = explode(" ", $date_and_time);
-        list($now_hour, $now_minutes, $now_seconds) = explode(":", $now);
-        if ((int)$now_hour - (int)$last_hour > 1) {
-            $result = "Timeout atingido, novo acesso detectado";
-            $log = new Logger('Timeout_logger');
-            ActionUser::addInfoToLog($log, $file_path, $result);
-            ActionUser::printInitialStatment($file_path, $user_id, $source_page);
-        }
-        elseif ((int)$now_hour - (int)$last_hour == 0) {
-            if(abs((int)$now_minutes - (int)$last_minutes) > 20) {
-                $result = "Timeout atingido, novo acesso detectado";
-                $log = new Logger('Timeout_logger');
-                ActionUser::addInfoToLog($log, $file_path, $result);
-                ActionUser::printInitialStatment($file_path, $user_id, $source_page);
-            }
-        }
-        elseif ((60-(abs((int)$now_minutes - (int)$last_minutes))) > 20) {
+        list($last_seconds, $trash) = explode("]", $last_seconds);
+        $date_and_time_now = Carbon::now('America/Sao_Paulo');
+        $date_and_time_last = Carbon::create($last_year, $last_month, $last_day, $last_hour, $last_minutes, $last_seconds, 'America/Sao_Paulo');
+        if ($date_and_time_now->diffInMinutes($date_and_time_last) > 20) {
             $result = "Timeout atingido, novo acesso detectado";
             $log = new Logger('Timeout_logger');
             ActionUser::addInfoToLog($log, $file_path, $result);
@@ -247,10 +233,14 @@ class ActionUser{
         ActionUser::addInfoToLog($log, $file_path, $info);   
     }
 
-    public static function verifyUnread($notification, $unreadNotifications) {
-        foreach ($unreadNotifications as $unread) {
-            if ($notification->id == $unread->id) return true;
-        }
-        return false;
+    public static function printNotification($user_id, $source_page, $user_or_visitor) {
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        $date_only = date('Y-m-d');
+        $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
+        ActionUser::verifyTimeout($file_path, $user_id, $source_page);
+        $info = sprintf('[%s] Acessou a página de notificações pela página %s', $date_and_time, $source_page);
+
+        $log = new Logger('Notification logger');
+        ActionUser::addInfoToLog($log, $file_path, $info);
     }
 }
