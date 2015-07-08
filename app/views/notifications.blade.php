@@ -33,7 +33,7 @@
                 $info_array = $notification->render(); 
             ?>
     		@if($info_array[0] == "photo_liked")
-    			<div id={{$notification->id}} class="notes<?php if(NotificationsController::verifyUnread($notification, $unreadNotifications)) echo ' not-read'?>" >
+    			<div id={{$notification->id}} class="notes<?php if($notification->read_at == null) echo ' not-read'?>" >
                     <li>
                         <div class="read-button" title="Marcar como lida" onclick="markRead(this);"></div>
                         <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
@@ -43,7 +43,7 @@
                     </li>
                 </div>
     		@elseif($info_array[0] == "comment_liked")
-    			<div id={{$notification->id}} class="notes<?php if(NotificationsController::verifyUnread($notification, $unreadNotifications)) echo ' not-read'?>">
+    			<div id={{$notification->id}} class="notes<?php if($notification->read_at == null) echo ' not-read'?>">
                     <li>
                         <div class="read-button" title="Marcar como lida" onclick="markRead(this);"></div>
                         <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
@@ -53,7 +53,7 @@
                     </li>
                 </div>
     		@elseif($info_array[0] == "comment_posted")
-    			<div id={{$notification->id}} class="notes<?php if(NotificationsController::verifyUnread($notification, $unreadNotifications)) echo ' not-read'?>">
+    			<div id={{$notification->id}} class="notes<?php if($notification->read_at == null) echo ' not-read'?>">
                     <li>
                         <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
                         <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
