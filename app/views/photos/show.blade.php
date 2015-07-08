@@ -325,15 +325,29 @@
             <p>
               <a id="improve_image_data" href="{{ URL::to('/photos/' . $photos->id . '/edit') }}">Deseja melhorar as informações da imagem?</a>
             </p>
-            <div id="information_input" class="four columns alpha omega"></div>
-            {{-- <script type="text/javascript">
+            <div id="information_input" class="four columns alpha omega row" >
+              <p><a href="#" class="close">X</a></p>
+              {{ Form::open( array('url' => 'photos/' . $photos->id . '/update_info') ) }}
+              <div class="four columns alpha omega">
+                <h3>Deseja adicionar uma descrição?</h3>
+                {{ Form::text('teste', null) }}
+              </div>
+              <input type="submit" class="btn" value="SALVAR">
+              <button class="btn" onclick="return false;">PULAR</button>
+              {{ Form::close() }}
+            </div>
+            <script type="text/javascript">
               $(document).ready(function () {
                 $('#improve_image_data').click(function(e) {
                   e.preventDefault();
-                  $("#information_input").animate({ 'height' : '300px', 'border': '1px solid #000' });
+                  $("#information_input").slideToggle('fast');
                 });
+                $('#information_input a.close').click(function(e) {
+                  e.preventDefault();
+                  $('#information_input').slideUp('fast');
+                })
               });
-            </script>  --}}
+            </script> 
           @endif
         </div>
       @endif

@@ -27,6 +27,12 @@ class Photo extends Eloquent {
 		'NO' => ['Não', '-nc']
 	];
 
+	private static $image_info = [
+			'city', 'country', 'dataCriacao', 'description',
+			'district', 'imageAuthor', 'name', 'state',
+			'street', 'workAuthor', 'workdate'
+		];
+
 	public function user()
 	{
 		return $this->belongsTo('User');
@@ -304,11 +310,7 @@ class Photo extends Eloquent {
 	}
 	
 	public function getInformationCompletionAttribute($value) {
-		$image_info = [
-			'city', 'country', 'dataCriacao', 'description',
-			'district', 'imageAuthor', 'name', 'state',
-			'street', 'workAuthor', 'workdate'
-		];
+		$image_info = self::$image_info;
 		$complete = 0;
 		foreach ($image_info as $info) {
 			$complete = ( empty($this->$info) ) ? $complete : $complete + 1;
@@ -317,14 +319,36 @@ class Photo extends Eloquent {
 		return $percentage;
 	}
 
-	public function getEmptyColumns() {
-		$image_info = [
-			'dataCriacao', 'description','district', 'street', 'workAuthor', 'workdate'
-		];
+	public function getEmptyColumns($getFirstEmptyField = false) {
+		$image_info = self::$image_info;
 		foreach ($image_info as $key => $info) {
-			if ( !empty($this->$info) )
+			if ( !empty($this->$info) ) {
 				unset($image_info[$key]);
+			} else if ($getFirstEmptyField) {
+				return $info;
+			}
 		}
 		return $image_info;
+	}
+
+	public function getFieldQuestion($field) {
+		$image_info_questions = [
+			'city' => 'Deseja adicionar a cidade da obra?',
+			'country' => 'Deseja adicionar o país da obra?',
+			'dataCriacao' => 'Qual é a data desta imagem?',
+			'description' => 'Deseja adicionar uma descrição para a imagem?',
+			'district' => 'Qual é o bairro da obra?',
+			'imageAuthor' => 'Quem é o autor desta imagem?',
+			'name' => 'Qual é o nome desta obra?',
+			'state' => 'Qual é o Estado desta arquitetura?',
+			'street' => 'Qual é a rua desta obra?',
+			'workAuthor' => 'Quem é o autor da obra?',
+			'workdate' => 'Quando foi construída a obra?'
+		];
+		try {
+			return $image_info_questions[$field];
+		} catch (Exception $e) {
+			return null;
+		}
 	}
 }

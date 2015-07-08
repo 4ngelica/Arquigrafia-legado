@@ -8,6 +8,8 @@ class PhotosController extends \BaseController {
   {
     $this->beforeFilter('auth', 
       array( 'except' => ['index','show'] ));
+    // $this->beforeFilter('ajax',
+    //   array( 'only' => ['getField', 'setField'] ));
   }
 
   public function index()
@@ -590,6 +592,17 @@ class PhotosController extends \BaseController {
     else
       $commentsMessage = 'Existem '. $commentsCount . ' comentários sobre esta imagem';
     return $commentsMessage;          
+  }
+
+  public function getField($id) {
+    $photo = Photo::find($id);
+    $getFirstField = true;
+    $field = $photo->getEmptyColumns($getFirstField);
+    $question = $photo->getFieldQuestion($field);
+    if ( empty($field) || is_null($question) ) {
+      return Response::json('fail');
+    }
+    return Response::json(['field' => $field, 'question' => $question ]);
   }
 
 }
