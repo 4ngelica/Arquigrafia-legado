@@ -95,8 +95,13 @@ class UsersController extends \BaseController {
       'login' => $login,
       'verify_code' => $verify_code       
       ]);
+
+      $user = User::userInformation($login);
+      $source_page = Request::header('referer');
+      ActionUser::printNewAccount($user->id, $source_page, "arquigrafia", "user"); 
+
         //send email to user created
-        Mail::send('emails.users.verify', array('name' => $name, 'email' => $email, 'login' => $login ,'verifyCode' => $verify_code), 
+       Mail::send('emails.users.verify', array('name' => $name, 'email' => $email, 'login' => $login ,'verifyCode' => $verify_code), 
           function($msg) use($email) {
             $msg->to($email)
                 ->subject('[Arquigrafia]- Cadastro de Usuário');
@@ -126,9 +131,9 @@ class UsersController extends \BaseController {
             return Redirect::to('users/verify');
       }else{
           //update data of new user registered 
-          //$newUser->active = 'yes';
-          //$newUser->verify_code = null;
-          //$newUser->save();
+          $newUser->active = 'yes';
+          $newUser->verify_code = null;
+          $newUser->save();
           
           return Redirect::to('/users/login')->with('msgRegister', "<strong>Conta ativada com sucesso!.</strong>");
 
