@@ -3,20 +3,22 @@
     {
         var settings = $.extend({
             width:'300px',
-            height:'20px',
+            height:'10px',
             padding:'3px',
-            border:'1px solid'
+            border:'1px solid',
+            margin_top: '5px'
         }, options);
  
         //Set css to container
         $(this).css({
             'width':settings.width,
             'border':settings.border,
-            'border-radius':'5px',
+            'border-radius':'2px',
             'overflow':'hidden',
             'display':'inline-block',
-            'padding': settings.padding,
-            'margin':'0'
+            // 'padding': settings.padding,
+            'margin':'0',
+            'margin-top' : settings.margin_top
             });
  
         // add progress bar to container
@@ -26,18 +28,18 @@
         'text-align': 'center',
         'vertical-align':'middle',
         'color': '#fff',
-        'font-size' : '17px',
+        'font-size' : '14px',
         'width': '0px',
-        'border-radius': '3px',
+        // 'border-radius': '2px',
         });
  
         $(this).append(progressbar);
  
         this.progress = function(value)
         {
-            var width = $(this).width() * value/100;
+            var width = $(this).width() * value/100 - 5;
             var progress = getProgressLevel(value);
-            progressbar.width(width).html(value + '% (' + progress[0] + ')');
+            progressbar.width(width);
             this.css({ 'color' : progress[1], 'border-color' : progress[1] });
             progressbar.css({ 'background-color' : progress[1] });
         }
@@ -47,14 +49,10 @@
 }(jQuery));
 
 function getProgressLevel(value) {
-    if (value < 50) {
-        return ['baixo', '#ff8533'];
-    } else if (value < 71) {
-        return ['razoável', '#ecae33'];
-    } else if (value < 81) {
-        return ['bom', '#66CCFF'];
-    } else if (value < 91) {
-        return ['muito bom', '#0ba1b5'];
+    if (value < 60) {
+        return ['Razoável', '#cd7f32'];
+    } else if (value < 80) {
+        return ['bom', '#c0c0c0'];
     }
-    return ['ótimo', '#339933'];
+    return ['ótimo', '#fdd017'];
 }
