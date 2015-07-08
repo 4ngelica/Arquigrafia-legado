@@ -57,8 +57,9 @@ class PhotosController extends \BaseController {
       'architectureName' => Photo::composeArchitectureName($photos->name),
       'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photos->id),
       'photoliked' => $photoliked,
-      'license' =>$license
-
+      'license' => $license,
+      'getFieldURL' => URL::to('/photos/' . $photos->id . '/get/field'),
+      'setFieldURL' => URL::to('/photos/' . $photos->id . '/set/field'),
       ]);
 	}
 	

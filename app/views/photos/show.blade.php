@@ -10,6 +10,10 @@
   <!-- Google Maps API -->
   <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>
   <script type="text/javascript">
+    var getFieldURL = "{{ $getFieldURL }}";
+    var setFieldURL = "{{ $setFieldURL }}";
+  </script>
+  <script type="text/javascript">
   $(document).ready(function(){
 
     //MAP AND GEOREFERENCING CREATION AND SETTING
@@ -329,25 +333,13 @@
               <p><a href="#" class="close">X</a></p>
               {{ Form::open( array('url' => 'photos/' . $photos->id . '/update_info') ) }}
               <div class="four columns alpha omega">
-                <h3>Deseja adicionar uma descrição?</h3>
-                {{ Form::text('teste', null) }}
+                {{-- <h3>Deseja adicionar uma descrição?</h3>
+                {{ Form::text('teste', null) }} --}}
               </div>
               <input type="submit" class="btn" value="SALVAR">
               <button class="btn" onclick="return false;">PULAR</button>
               {{ Form::close() }}
             </div>
-            <script type="text/javascript">
-              $(document).ready(function () {
-                $('#improve_image_data').click(function(e) {
-                  e.preventDefault();
-                  $("#information_input").slideToggle('fast');
-                });
-                $('#information_input a.close').click(function(e) {
-                  e.preventDefault();
-                  $('#information_input').slideUp('fast');
-                })
-              });
-            </script> 
           @endif
         </div>
       @endif

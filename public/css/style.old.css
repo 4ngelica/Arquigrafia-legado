@@ -694,7 +694,7 @@ a.tooltip_license span
 }
 
 #information_input { 
-	/*display: none;*/ padding: 15px 0;
+	display: none; padding: 15px 0;
 	text-align: center; background-color: #fff; border-radius: 5px;
 	-webkit-box-shadow: 0px 0px 22px -8px rgba(0,0,0,0.75);
 	-moz-box-shadow: 0px 0px 22px -8px rgba(0,0,0,0.75);
@@ -712,4 +712,3 @@ a.tooltip_license span
 #information_input .btn { color: #444; }
 
 #information_input a.close { float: right; text-align: center; margin: -10px 10px 0 0;  }
-/*#information_input a.close:hover { text-decoration: underline;  }*/
