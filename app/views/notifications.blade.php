@@ -19,6 +19,7 @@
         if (Auth::check()) {
      
             $user = Auth::user();
+            $notes_size = count($user->notifications);
 	        $unreadNotifications = $user->notifications()->unread()->get();
             $readNotifications = $user->notifications()->read()->get();
 
@@ -28,7 +29,7 @@
 		<p id="no-notifications">Você não possui notificações.</p>
 	@endif
 	<ul>
-    	@foreach($user->notifications as $notification)
+    	@foreach($user->notifications->reverse() as $notification)
     		<?php
                 $info_array = $notification->render(); 
             ?>
