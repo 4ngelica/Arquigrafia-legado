@@ -31,13 +31,11 @@ class Album extends BaseModel {
 		}
 	}
 
-	public static function createAlbum($title, $description, $user, $cover) {
+	public static function createAlbum($info, $user, $cover) {
 		$album = new Album;
-		$album->title = $title;
-		$album->description = $description;
+		$album->updateInfo($info, $cover);
 		$album->creationDate = date('Y-m-d H:i:s');
 		$album->user()->associate($user);
-		$album->cover()->associate($cover);
 		return $album;
 	}
 
@@ -54,6 +52,14 @@ class Album extends BaseModel {
 		}
 	}
 
+	public function attachPhotos($photos = array()) {
+		if ( is_array($photos) ) {
+			$this->photos()->attach($photos);
+		} else {
+			$this->photos()->attach($photos->id);
+		}
+	}
+
 	public function hasCover() {
 		return !is_null($this->cover);
 	}
@@ -63,6 +69,9 @@ class Album extends BaseModel {
 	}
 
 	public function scopeExcept($query, $albums) {
+		if ($albums instanceof Album) {
+			return $query->where('id', '!=', $albums->id);
+		}
 		return $query->whereNotIn('id', $albums->modelKeys());
 	}
 }

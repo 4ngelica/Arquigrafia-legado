@@ -43,7 +43,7 @@ class AlbumsController extends \BaseController {
 		}
 		$photos = $album->photos;
 		$user = $album->user;
-		$other_albums = $user->albums->except($album->id);
+		$other_albums = Album::withUser($user)->except($album)->get();
 		return View::make('albums.show')
 			->with([
 				'photos' => $photos,
