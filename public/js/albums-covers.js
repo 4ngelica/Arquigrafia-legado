@@ -25,10 +25,10 @@ $(document).ready(function() {
 	$(".covers").live("click", function(e) {
 		if ($(this).is(":checked"))
 		{
-			var cover_id = $(".covers:checked").val();
-			$("#_cover").val(cover_id);
-			$("#cover_id").val(cover_id);
-			$("#cover-img").attr("src", "/arquigrafia-images/" + cover_id + "_view.jpg");
+			var cover = $(".covers:checked").val();
+			$("#_cover").val(cover);
+			$("#cover").val(cover);
+			$("#cover-img").attr("src", "/arquigrafia-images/" + cover + "_view.jpg");
 			$('#mask').fadeOut();
 			$('#form_window').fadeOut('fast');
 		}

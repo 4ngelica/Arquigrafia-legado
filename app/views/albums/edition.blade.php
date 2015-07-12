@@ -72,7 +72,7 @@
                       @endif
                     </div>
                     <a class="cover_btn" href="#">Alterar capa</a>
-                    {{ Form::hidden('cover_id', $album->cover_id, ['id' => 'cover_id']) }}
+                    {{ Form::hidden('cover', $album->cover_id, ['id' => 'cover']) }}
                   </div>
                 </div>
                 <div id="info" class="five columns">
