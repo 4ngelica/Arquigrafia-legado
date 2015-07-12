@@ -4,10 +4,18 @@ use League\FactoryMuffin\Facade as FactoryMuffin;
 
 class AlbumTest extends TestCase {
 
-	public static function setupBeforeClass()
+	public static function setUpBeforeClass()
 	{
 		FactoryMuffin::loadFactories(__DIR__ . '/factories');
 		FactoryMuffin::setFakerLocale('pt_BR');
+		FactoryMuffin::setCustomDeleter(function ($object) {
+			if ($object instanceof Photo) {
+				$object->forceDelete();
+				return true;
+			} else {
+				return $object->delete();
+			}
+		});
 	}
 
 	public static function tearDownAfterClass()

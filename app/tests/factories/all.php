@@ -4,20 +4,20 @@ use League\FactoryMuffin\Facade as FactoryMuffin;
 
 FactoryMuffin::define('User', [
 	'name' => 'firstName',
-	'login' => 'text',
+	'login' => 'word',
 	'email' => 'unique:email',
 	'password' => 'password'
 ]);
 
 FactoryMuffin::define('Photo', [
-	'name' => 'text',
+	'name' => 'sentence|5',
 	'imageAuthor' => 'firstName',
-	'nome_arquivo' => 'text',
+	'nome_arquivo' => 'word',
 	'user_id' => 'factory|User',
 ]);
 
 FactoryMuffin::define('Album', [
-	'title' => 'text',
+	'title' => 'sentence|5',
 	'description' => 'sentence|5',
 	'user_id' => 'factory|User',
 	'cover_id' => 'factory|Photo'
