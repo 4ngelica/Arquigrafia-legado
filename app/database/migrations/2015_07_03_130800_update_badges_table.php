@@ -14,7 +14,7 @@ class UpdateBadgesTable extends Migration {
 	{
 		Schema::table('badges', function(Blueprint $table){
 			$table->dropColumn('image');
-			$table->enum('class', array('Gold', 'Silver', 'Bronze'));
+			$table->enum('class', array('Gold', 'Silver', 'Bronze'))->default('Bronze');
 
 		});
 	}
