@@ -88,12 +88,18 @@ $(document).ready(function() {
 					message = photo_count + ' novas imagens foram adicionadas ao seu álbum';
 				}
 				message_type = 'success';
+				$('.cover_btn').removeClass('hidden');
+				$('.cover_btn').parent('span').addClass('visible');
 			} else {
 				message = '1 imagem foi removida do seu álbum';
 				if (photo_count > 1) {
 					message = photo_count + ' imagens foram removidas do seu álbum';
 				}
 				message_type = 'info';
+				if (response['empty']) {
+					$('.cover_btn').addClass('hidden');
+					$('.cover_btn').parent('span').removeClass('visible');
+				}
 			}
 			paginator.selected_photos = 0;
 			updateContent(type, response);

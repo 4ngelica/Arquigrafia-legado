@@ -29,6 +29,8 @@ $(document).ready(function() {
 			$("#_cover").val(cover);
 			$("#cover").val(cover);
 			$("#cover-img").attr("src", "/arquigrafia-images/" + cover + "_view.jpg");
+			$("#cover-img").removeClass('hidden');
+			$('.no_cover').addClass('hidden');
 			$('#mask').fadeOut();
 			$('#form_window').fadeOut('fast');
 		}

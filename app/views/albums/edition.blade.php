@@ -65,13 +65,25 @@
                     <div class="img_container"> 
                       @if( isset($album->cover_id) )
                         <img id="cover-img" src="{{ URL::to('/arquigrafia-images/' . $album->cover_id . '_view.jpg') }}">
+                      @else
+                        <img id="cover-img" class="hidden" 
+                          src="{{ URL::to('/arquigrafia-images/' . $album->cover_id . '_view.jpg') }}">
+                        <div class="no_cover">
+                          <p> Álbum sem capa </p>
+                        </div>
                       @endif
                       <?php $photos = $album_photos; ?>
                       @if ($photos->count() > 0)
+                        <span class="visible"><a class="cover_btn" href="#">Alterar capa</a></span>
+                      @else
                         <span><a class="cover_btn" href="#">Alterar capa</a></span>
                       @endif
                     </div>
-                    <a class="cover_btn" href="#">Alterar capa</a>
+                    @if ($photos->count() > 0)
+                      <a class="cover_btn" href="#">Alterar capa</a>
+                    @else
+                      <a class="cover_btn hidden" href="#">Alterar capa</a>
+                    @endif
                     {{ Form::hidden('cover', $album->cover_id, ['id' => 'cover']) }}
                   </div>
                 </div>
