@@ -8,19 +8,15 @@ class AlbumTest extends TestCase {
 	{
 		FactoryMuffin::loadFactories(__DIR__ . '/factories');
 		FactoryMuffin::setFakerLocale('pt_BR');
-		FactoryMuffin::setCustomDeleter(function ($object) {
-			if ($object instanceof Photo) {
-				$object->forceDelete();
-				return true;
-			} else {
-				return $object->delete();
-			}
-		});
 	}
 
 	public static function tearDownAfterClass()
 	{
-  		FactoryMuffin::deleteSaved();
+		try {
+  			FactoryMuffin::deleteSaved();
+		} catch (Exception $e) {
+			;
+		}
 	}
 
 	private function prepareForTests()

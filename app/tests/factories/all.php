@@ -4,7 +4,7 @@ use League\FactoryMuffin\Facade as FactoryMuffin;
 
 FactoryMuffin::define('User', [
 	'name' => 'firstName',
-	'login' => 'word',
+	'login' => 'unique:word',
 	'email' => 'unique:email',
 	'password' => 'password'
 ]);
