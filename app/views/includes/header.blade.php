@@ -63,7 +63,12 @@
             <li><a href="{{ URL::to("/photos/upload") }}" name="modal" id="upload" title="Enviar uma imagem">&nbsp;</a></li>
             <!-- <li><a href="#" id="messages" title="Você tem 19 mensagens">&nbsp;</a></li> -->
 
-            <li><a href="{{ URL::to("/notifications") }}" id="notification" title="{{'Você tem ' . Auth::user()->notifications()->unread()->count() . ' notificações não lidas'}}">&nbsp;</a></li>
+            <li>
+              <div id="notifications_container">
+                <a href="{{ URL::to("/notifications") }}" id="notification" title="{{'Você tem ' . Auth::user()->notifications()->unread()->count() . ' notificações não lidas'}}">&nbsp;</a>
+                <div id="bubble">{{Auth::user()->notifications()->unread()->count()}}</div>
+              </div>
+            </li>
 
             
           <!-- <li><a href="{{ URL::to("/badges") }}" id="badge" title="Vizualizar badges">&nbsp;</a></li>-->

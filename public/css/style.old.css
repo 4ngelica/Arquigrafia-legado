@@ -645,7 +645,7 @@ i#likes {  background: url("../img/dislikeNB.png"); padding : 2px 10px 0px;   }
 #no-notifications { padding: 15px; font-size:20px; }
 .notes { font-size: 15px; border-bottom: 1px solid black; padding: 20px; position: relative; }
 .notes a { font-weight: bold; z-index: 2; position: relative; }
-.notes .link-block {position:absolute; width:100%; height:100%; top:0; left:0; text-decoration:none; z-index:1; background-color:white; opacity: 0; filter: alpha(opacity=1); }
+.notes .link-block {position: absolute; width: 100%; height: 100%; top: 0; left: 0; text-decoration: none; z-index: 1; background-color: white; opacity: 0; filter: alpha(opacity=1); }
 .notes p { margin: 0px; font-size: 12px }
 .notes:hover { background: rgba(195, 195, 195, 0.2); } 
 .not-read { background: rgba(160, 160, 160, 0.3); }
@@ -653,6 +653,8 @@ i#likes {  background: url("../img/dislikeNB.png"); padding : 2px 10px 0px;   }
 .read-button { position: relative; z-index: 2; float: right; border-radius: 50px/50px; 	border: solid 4px #606060; width: 6px; height: 6px; }
 .read-button:hover { background-color: #606060; border: solid 4px #ffffff }
 .read-button:active { border: solid 4px #606060; background-color: #A0A0A0; }
+#notifications_container { position: relative; }
+#bubble { position: absolute; top: -1px; right: -1px; padding: 1px 2px 1px 2px; background-color: red; color: white; font-weight: bold; font-size: 0.75em; border-radius: 30px; box-shadow: 1px 1px 1px gray; }
 
  /* Badges page */
 .badges { font-size:20px; margin-left: 180px; margin-bottom: 30px; }
