@@ -365,15 +365,6 @@ class PhotosController extends \BaseController {
     }
 
 
-    function debug($data) {
-    if ( is_array( $data ) )
-        $output = "<script>console.log( 'Debug : " . implode( ',', $data) . "' );</script>";
-    else
-        $output = "<script>console.log( 'Debug : " . $data . "' );</script>";
-
-    echo $output;
-}
-
   private function getEvaluation($photoId, $userId, $isOwner) {    
     $photo = Photo::find($photoId);    
     $binomials = Binomial::all()->keyBy('id');
@@ -579,13 +570,8 @@ class PhotosController extends \BaseController {
     return static::getEvaluation($photoId, null, false);
   }
 
-  public function getPhotoInfo($id) {
-    $photo = Photo::find($id);
-    return Response::json(View::make('/photos/get-info')->with('photo', $photo)->render());
-  }
-
   public function createCommentsMessage($commentsCount){
-    $commentsMessage='' ;
+    $commentsMessage = '';
     if($commentsCount == 0)
       $commentsMessage = 'Ninguém comentou ainda esta imagem';
     else if($commentsCount == 1)
