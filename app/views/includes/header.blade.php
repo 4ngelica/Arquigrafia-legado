@@ -66,7 +66,7 @@
             <li>
               <div id="notifications_container">
                 <a href="{{ URL::to("/notifications") }}" id="notification" title="{{'Você tem ' . Auth::user()->notifications()->unread()->count() . ' notificações não lidas'}}">&nbsp;</a>
-                <div id="bubble">{{Auth::user()->notifications()->unread()->count()}}</div>
+                @if (Auth::user()->notifications()->unread()->count() > 0) <div id="bubble"> {{Auth::user()->notifications()->unread()->count()}} </div>  @endif
               </div>
             </li>
 
