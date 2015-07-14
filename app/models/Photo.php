@@ -27,7 +27,7 @@ class Photo extends Eloquent {
 		'NO' => ['Não', '-nc']
 	];
 
-	private static $image_info = [
+	private static $informations = [
 			'city', 'country', 'dataCriacao', 'description',
 			'district', 'imageAuthor', 'name', 'state',
 			'street', 'workAuthor', 'workdate'
@@ -310,29 +310,29 @@ class Photo extends Eloquent {
 	}
 	
 	public function getInformationCompletionAttribute($value) {
-		$image_info = self::$image_info;
+		$informations = self::$informations;
 		$complete = 0;
-		foreach ($image_info as $info) {
+		foreach ($informations as $info) {
 			$complete = ( empty($this->$info) ) ? $complete : $complete + 1;
 		}
-		$percentage = (int) (($complete / count($image_info)) * 100);
+		$percentage = (int) (($complete / count($informations)) * 100);
 		return $percentage;
 	}
 
 	public function getEmptyColumns($getFirstEmptyField = false) {
-		$image_info = self::$image_info;
-		foreach ($image_info as $key => $info) {
+		$informations = self::$informations;
+		foreach ($informations as $key => $info) {
 			if ( !empty($this->$info) ) {
-				unset($image_info[$key]);
+				unset($informations[$key]);
 			} else if ($getFirstEmptyField) {
 				return $info;
 			}
 		}
-		return $image_info;
+		return $informations;
 	}
 
 	public function getFieldQuestion($field) {
-		$image_info_questions = [
+		$information_questions = [
 			'city' => 'Deseja adicionar a cidade da obra?',
 			'country' => 'Deseja adicionar o país da obra?',
 			'dataCriacao' => 'Qual é a data desta imagem?',
@@ -346,7 +346,7 @@ class Photo extends Eloquent {
 			'workdate' => 'Quando foi construída a obra?'
 		];
 		try {
-			return $image_info_questions[$field];
+			return $information_questions[$field];
 		} catch (Exception $e) {
 			return null;
 		}
