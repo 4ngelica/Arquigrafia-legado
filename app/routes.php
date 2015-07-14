@@ -30,8 +30,6 @@ Route::get('/search', 'PagesController@search');
 Route::post('/search', 'PagesController@search');
 Route::get('/search/more', 'PagesController@advancedSearch');
 
-Route::resource('/teste','TesteController');
-
 /* USERS */
 Route::get('/users/account', 'UsersController@account');
 Route::get('/users/register/', 'UsersController@emailRegister');
@@ -67,7 +65,6 @@ Route::get('/albums/{id}/photos/add', 'AlbumsController@paginateByOtherPhotos');
 Route::get('/albums/get/list/{id}', 'AlbumsController@getList');
 Route::post('/albums/photo/add', 'AlbumsController@addPhotoToAlbums');
 Route::delete('/albums/{album_id}/photos/{photo_id}/remove', 'AlbumsController@removePhotoFromAlbum');
-// Route::get('/albums/{id}/edition', 'AlbumsController@edition');
 
 /* ALBUMS - ajax */
 Route::get('/albums/get/cover/{id}', 'AlbumsController@paginateCoverPhotos');
@@ -99,7 +96,6 @@ Route::get('/photos/batch','PhotosController@batch');
 Route::get('/photos/upload','PhotosController@form');
 Route::get('/photos/download/{photo_id}','PhotosController@download');
 Route::resource('/photos','PhotosController');
-Route::get('/photos/{id}/get/info', 'PhotosController@getPhotoInfo');
 Route::get('/photos/{id}/get/field', 'PhotosController@getField');
 Route::get('/photos/{id}/set/field/{fieldname}', 'PhotosController@setField');
 /* TAGS */

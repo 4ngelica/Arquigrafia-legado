@@ -695,10 +695,8 @@ a.tooltip_license span
 
 #information_input { 
 	display: none; padding: 15px 0;
-	text-align: center; background-color: #fff; border-radius: 5px;
-	-webkit-box-shadow: 0px 0px 22px -8px rgba(0,0,0,0.75);
-	-moz-box-shadow: 0px 0px 22px -8px rgba(0,0,0,0.75);
-	box-shadow: 0px 0px 22px -8px rgba(0,0,0,0.75);
+	text-align: center; background-color: #fff; /*border-radius: 5px;*/
+	border: 1px solid rgba(0, 0, 0, 0.3);
 }
 
 #information_input input[type=text], #information_input textarea {
