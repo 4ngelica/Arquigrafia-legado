@@ -7,11 +7,12 @@
 		"laravel/framework": "4.2.*",
 		"intervention/image": ">1",
 		"facebook/php-sdk-v4": "~4.0",
-		"tricki/laravel-notification": "@dev",
-		"doctrine/dbal": "~2.3"
+		"tricki/laravel-notification": "@dev"
 	},
 	"require-dev": {
-		"league/factory-muffin": "~2.1"
+		"league/factory-muffin": "~2.1",
+		"doctrine/dbal": "~2.3",
+		"darsain/laravel-console": "dev-master"
 	},
 	"autoload": {
 		"classmap": [
