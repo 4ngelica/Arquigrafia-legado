@@ -279,6 +279,7 @@ function requestPage(page, type, URL, callback, paginator, runInBackground) {
 	$.get(URL, data)
 	.done(function(data) {
 		$("." + type + " .loader").hide();
+		data = parseData(data);
 		callback(type, data, paginator, page);
 	}).fail(function() {
 		$("." + type + " .loader").hide();
@@ -426,6 +427,7 @@ function detachOrAttachPhotos(photos, callback, type, action) {
 		if (response == 'failed') {
 			failedRequest(type, 'Não foi possível atualizar seu álbum! Tente novamente mais tarde.');
 		} else {
+			response = parseData(response);
 			callback(type, response);
 		}
 	}).fail(function() {
@@ -450,4 +452,8 @@ function updatePages(type) {
 	$('.message_box').message(message, 'info');
 	searchPhotos(type, paginator.searchQuery);
 	update = null;
+}
+
+function parseData(data) {
+	return (typeof data == 'string') ? $.parseJSON(data) : data;
 }
