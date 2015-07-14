@@ -14,7 +14,7 @@ class NotificationsController extends \BaseController {
 			foreach ($user->notifications as $notification) {
 				$time_and_date_note = Carbon::createFromFormat('Y-m-d H:i:s', $notification->updated_at);
 				if ($time_and_date_now->diffInMonths($time_and_date_note) > 6) $notification->delete();
-			}
+			}	
 			return View::make('notifications')->with('user', $user);
 		}
 		return Redirect::action('PagesController@home');
