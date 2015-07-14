@@ -12,6 +12,7 @@
   <script type="text/javascript">
     var getFieldURL = "{{ $getFieldURL }}";
     var setFieldURL = "{{ $setFieldURL }}";
+    var currentField = 0;
   </script>
   <script type="text/javascript">
   $(document).ready(function(){
@@ -333,10 +334,11 @@
             <div id="information_input" class="four columns alpha omega row" >
               <p><a href="#" class="close">X</a></p>
               {{ Form::open( array('url' => 'photos/' . $photos->id . '/update_info') ) }}
-              <div class="four columns alpha omega"></div>
-              <input type="submit" class="btn" value="SALVAR">
-              <button class="btn" onclick="return false;">PULAR</button>
+                <div class="four columns alpha omega"></div>
+                <input type="submit" class="btn" value="SALVAR">
+                <button class="btn" id="skip_question">PULAR</button>
               {{ Form::close() }}
+              <img class="loader" src="{{ URL::to('/img/ajax-loader.gif') }}" />
             </div>
           @endif
         </div>

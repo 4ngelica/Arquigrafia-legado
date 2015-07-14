@@ -98,6 +98,11 @@ $(document).ready(function() {
     $("#information_input").slideToggle('fast');
     loadQuestion();
   });
+
+  $('#skip_question').click(function(e) {
+    e.preventDefault();
+    loadQuestion();
+  });
   
   $('#information_input a.close').click(function(e) {
     e.preventDefault();
@@ -107,12 +112,19 @@ $(document).ready(function() {
   });
 
   function loadQuestion() {
-    url = getFieldURL;
-    $.get(url).done(function (data) {
+    var url = getFieldURL;
+    var parent_container = $('#information_input');
+    var loader = parent_container.children('.loader');
+    loader.siblings().hide();
+    showAndFixElementSpacing(loader, false);
+    $.get(url + '?fp=' + currentField++).done(function (data) {
       var container = $('#information_input div');
       var field = data['field'];
       var question = data['question'];
+      console.log(data);
       container.empty();
+      loader.siblings().show();
+      loader.hide();
       container.append('<h3>' + question + '</h3>');
       if (field == 'description') {
         container.append('<textarea id="' + field + '" name="' + field + '"></textarea>');
@@ -120,8 +132,28 @@ $(document).ready(function() {
         container.append('<input type="text" id="' + field + '" name="' + field + '" value="" />');
       }
     }).fail(function (data) {
+      loader.siblings().show();
+      loader.hide();
       console.log('Erro! Não foi possível consultar o servidor. Tente novamente mais tarde.');
     });
+  }
+
+  function showAndFixElementSpacing(element, adjustMarginLeft) {
+    var container = element.parent();
+    var containerHeight = container.height();
+    var marginTop;
+    if (containerHeight == 0) {
+      container.css({ 'min-height' : 100 });
+      containerHeight = 100;
+    }
+    marginTop = containerHeight / 2 - element.height() / 2;
+    element.css({ 'margin-top' : marginTop });
+    if (adjustMarginLeft) {
+      var containerWidth = container.width();
+      var marginLeft = containerWidth / 2 - element.width() / 2;
+      element.css({ 'margin-left' : marginLeft });
+    }
+    element.show();
   }
 
 });

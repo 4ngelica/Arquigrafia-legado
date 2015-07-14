@@ -4,22 +4,22 @@ use lib\utils\ActionUser;
 
 class PhotosController extends \BaseController {
 
-	public function __construct() 
+  public function __construct()
   {
-    $this->beforeFilter('auth', 
+    $this->beforeFilter('auth',
       array( 'except' => ['index','show'] ));
     // $this->beforeFilter('ajax',
     //   array( 'only' => ['getField', 'setField'] ));
   }
 
   public function index()
-	{
+  {
     $photos = Photo::all();
-		return View::make('/photos/index',['photos' => $photos]);
-	}  
+    return View::make('/photos/index',['photos' => $photos]);
+  }
 
-	public function show($id)
-	{ 
+  public function show($id)
+  {
     $photos = Photo::find($id);
     if ( !isset($photos) ) {
       return Redirect::to('/');
@@ -40,7 +40,7 @@ class PhotosController extends \BaseController {
       }
       $user_id = $user->id;
       $user_or_visitor = "user";
-    } else { 
+    } else {
         $user_or_visitor = "visitor";
         session_start();
         $user_id = session_id();
@@ -54,76 +54,76 @@ class PhotosController extends \BaseController {
     }
 
     $license = Photo::licensePhoto($photos);
-   
+
     return View::make('/photos/show',
-      ['photos' => $photos, 'owner' => $photo_owner, 'follow' => $follow, 'tags' => $tags, 
-      'commentsCount' => $photos->comments->count(), 
+      ['photos' => $photos, 'owner' => $photo_owner, 'follow' => $follow, 'tags' => $tags,
+      'commentsCount' => $photos->comments->count(),
       'commentsMessage' => static::createCommentsMessage($photos->comments->count()),
-      'average' => $average, 'userEvaluations' => $evaluations, 'binomials' => $binomials, 
+      'average' => $average, 'userEvaluations' => $evaluations, 'binomials' => $binomials,
       'architectureName' => Photo::composeArchitectureName($photos->name),
       'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photos->id),
       'photoliked' => $photoliked,
       'license' => $license,
       'getFieldURL' => URL::to('/photos/' . $photos->id . '/get/field'),
       'setFieldURL' => URL::to('/photos/' . $photos->id . '/set/field'),
-      ]);
-	}
-	
+    ]);
+  }
+
   // upload form
-	public function form()
-  {  
-    
+  public function form()
+  {
+
     $pageSource = Request::header('referer');
     if(empty($pageSource)) $pageSource = '';
     $tags = null;
     if ( Session::has('tags') )
-    {   
+    {
       $tags = Session::pull('tags');
       $tags = explode(',', $tags);
     }
     return View::make('/photos/form')->with(['tags', $tags,'pageSource'=>$pageSource]);
-    
-	}
 
-  public function store() {  
-	
-	Input::flashExcept('tags', 'photo');
-	
-	$input = Input::all();
+  }
 
-  if (Input::has('tags')) 
-    $input["tags"] = str_replace(array('\'', '"', '[', ']'), '', $input["tags"]);    
+  public function store() {
+
+  Input::flashExcept('tags', 'photo');
+
+  $input = Input::all();
+
+  if (Input::has('tags'))
+    $input["tags"] = str_replace(array('\'', '"', '[', ']'), '', $input["tags"]);
   else
     $input["tags"] = '';
 //2015-05-25 msy add validate for date image/work end
   //validate for tamnho maximo e tipo de extensao
-    $rules = array(			
+    $rules = array(
       'photo_name' => 'required',
       'photo_imageAuthor' => 'required',
       'tags' => 'required',
       'photo_country' => 'required',
       'photo_state' => 'required',
-	    'photo_city' => 'required',
+      'photo_city' => 'required',
       'photo_authorization_checkbox' => 'required',
       'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',
       'photo_workDate' => 'date_format:"d/m/Y"',
       'photo_imageDate' => 'date_format:"d/m/Y"'
     );
 
-	$validator = Validator::make($input, $rules);
-	    
+  $validator = Validator::make($input, $rules);
+
   if ($validator->fails()) {
       $messages = $validator->messages();
-      //dd($messages); 
+      //dd($messages);
 
-	  return Redirect::to('/photos/upload')->with(['tags' => $input['tags']])->withErrors($messages);
+    return Redirect::to('/photos/upload')->with(['tags' => $input['tags']])->withErrors($messages);
     } else {
 
-    if (Input::hasFile('photo') and Input::file('photo')->isValid()) {      
+    if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
       $file = Input::file('photo');
       $photo = new Photo();
-      
-      if ( !empty($input["photo_aditionalImageComments"]) ) 
+
+      if ( !empty($input["photo_aditionalImageComments"]) )
         $photo->aditionalImageComments = $input["photo_aditionalImageComments"];
       $photo->allowCommercialUses = $input["photo_allowCommercialUses"];
       $photo->allowModifications = $input["photo_allowModifications"];
@@ -133,7 +133,7 @@ class PhotosController extends \BaseController {
         $photo->description = $input["photo_description"];
       if ( !empty($input["photo_district"]) )
         $photo->district = $input["photo_district"];
-      if ( !empty($input["photo_imageAuthor"]) )  
+      if ( !empty($input["photo_imageAuthor"]) )
         $photo->imageAuthor = $input["photo_imageAuthor"];
       $photo->name = $input["photo_name"];
       $photo->state = $input["photo_state"];
@@ -149,31 +149,31 @@ class PhotosController extends \BaseController {
       $photo->nome_arquivo = $file->getClientOriginalName();
 
       $photo->user_id = Auth::user()->id;
-      
+
       $photo->dataUpload = date('Y-m-d H:i:s');
 
       $photo->save();
 
       $ext = $file->getClientOriginalExtension();
       $photo->nome_arquivo = $photo->id.".".$ext;
-      
+
       $photo->save();
 
       $tags_copy = $input['tags'];
       $tags = explode(',', $input['tags']);
-      
-      if (!empty($tags)) { 
-     
-            
+
+      if (!empty($tags)) {
+
+
         $tags = array_map('trim', $tags);
         //$tags = array_map('strtolower', $tags);
-        
-        $tags = array_map('mb_strtolower', $tags); // com suporte para cadeias multibytes        
+
+        $tags = array_map('mb_strtolower', $tags); // com suporte para cadeias multibytes
         // tudo em minusculas, para remover redundancias, como Casa/casa/CASA
         $tags = array_unique($tags); //retira tags repetidas, se houver.
-        foreach ($tags as $t) {          
+        foreach ($tags as $t) {
           $tag = Tag::where('name', $t)->first();
-          
+
           if (is_null($tag)) {
             $tag = new Tag();
             $tag->name = $t;
@@ -183,10 +183,10 @@ class PhotosController extends \BaseController {
             } catch (PDOException $e) {
                 Log::error("Logging exception, error to register tags");
                 $photo->forceDelete();
-                //$messages = array('tags'=>array('invalido')); 
+                //$messages = array('tags'=>array('invalido'));
                 return Redirect::to('/photos/upload')->with(['tags' => $input['tags']]); //->withErrors($messages)
-            }     
-            // 10/05/2015  msy end       
+            }
+            // 10/05/2015  msy end
           }
           $photo->tags()->attach($tag->id);
           if ($tag->count == null)
@@ -211,13 +211,13 @@ class PhotosController extends \BaseController {
       return Redirect::to("/photos/{$photo->id}");
 
     } else {
-	  $messages = $validator->messages();
-      return Redirect::to('/photos/upload')->withErrors($messages);      
+    $messages = $validator->messages();
+      return Redirect::to('/photos/upload')->withErrors($messages);
     }
  }
 }
 
-  
+
   // ORIGINAL
   public function download($id)
   {
@@ -226,14 +226,14 @@ class PhotosController extends \BaseController {
       $originalFileExtension = strtolower(substr(strrchr($photo->nome_arquivo, '.'), 1));
       $filename = $id . '_original.' . $originalFileExtension;
       $path = public_path().'/arquigrafia-images/'. $filename;
-      
+
       if( File::exists($path) ) {
-      
+
         $user_id = Auth::user()->id;
         $pageSource = Request::header('referer');
         ActionUser::printUploadOrDownloadLog($user_id, $id, $pageSource, "Download", "user");
 
-        header('Content-Description: File Transfer');        
+        header('Content-Description: File Transfer');
         header("Content-Disposition: attachment; filename=\"". $filename ."\"");
         header('Content-Type: application/octet-stream');
         header("Content-Transfer-Encoding: binary");
@@ -247,7 +247,7 @@ class PhotosController extends \BaseController {
       return "Você só pode fazer o download se estiver logado, caso tenha usuário e senha, faça novamente o login.";
     }
   }
-  
+
   // COMMENT
   public function comment($id)
   {
@@ -266,7 +266,7 @@ class PhotosController extends \BaseController {
       $user_id = Auth::user()->id;
       $source_page = Request::header('referer');
       ActionUser::printComment($user_id, $source_page, "Inseriu", $comment->id, $id, "user");
-      
+
       $user_note = User::find($photo->user_id);
       $user = User::find($user_id);
       Notification::create('comment_posted', $user, $photo, [$user_note], null);
@@ -275,9 +275,9 @@ class PhotosController extends \BaseController {
 
       return Redirect::to("/photos/{$id}");
     }
-    
+
   }
-  
+
   // EVALUATE
   public function saveEvaluation($id)
   {
@@ -294,7 +294,7 @@ class PhotosController extends \BaseController {
       if ($evaluations->isEmpty()) {
         $insertion_edition = "Inseriu";
         foreach ($binomials as $binomial) {
-        $bid = $binomial->id;        
+        $bid = $binomial->id;
           $newEvaluation = Evaluation::create([
             'photo_id'=> $id,
             'evaluationPosition'=> $input['value-'.$bid],
@@ -302,7 +302,7 @@ class PhotosController extends \BaseController {
             'user_id'=> $user_id
           ]);
           $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
-        } 
+        }
       } else {
         $insertion_edition = "Editou";
         foreach ($evaluations as $evaluation) {
@@ -310,7 +310,7 @@ class PhotosController extends \BaseController {
           $evaluation->evaluationPosition = $input['value-'.$bid];
           $evaluation->save();
           $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
-        } 
+        }
       }
       $user_id = Auth::user()->id;
       $source_page = Request::header('referer');
@@ -321,7 +321,7 @@ class PhotosController extends \BaseController {
       return Redirect::to("/photos/{$id}")->with('message', '<strong>Erro na avaliação</strong><br>Faça login para poder avaliar');
     }
   }
-  
+
   // BATCH RESIZE
   public function batch()
   {
@@ -334,7 +334,7 @@ class PhotosController extends \BaseController {
     return "OK.";
   }
 
-  public function evaluate($photoId ) { 
+  public function evaluate($photoId ) {
     $this->checkEvalCount(5, 'test');
     if(isset($_SERVER['QUERY_STRING'])) parse_str($_SERVER['QUERY_STRING']);
     $user_id = Auth::user()->id;
@@ -345,7 +345,7 @@ class PhotosController extends \BaseController {
     elseif($f == "g") ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "pelo gráfico");
     }
     else ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "diretamente");
-    return static::getEvaluation($photoId, Auth::user()->id, true);    
+    return static::getEvaluation($photoId, Auth::user()->id, true);
   }
 
   private function checkEvalCount($number_assessment, $badge_name){
@@ -361,7 +361,7 @@ class PhotosController extends \BaseController {
 
     private function checkCommentCount($number_comment, $badge_name){
       $user = Auth::user();
-      if(($user->badges()->where('name', $badge_name)->first()) != null){ 
+      if(($user->badges()->where('name', $badge_name)->first()) != null){
         return;
       }
       if (($user->comments->count()) == $number_comment){
@@ -371,44 +371,44 @@ class PhotosController extends \BaseController {
     }
 
 
-  private function getEvaluation($photoId, $userId, $isOwner) {    
-    $photo = Photo::find($photoId);    
+  private function getEvaluation($photoId, $userId, $isOwner) {
+    $photo = Photo::find($photoId);
     $binomials = Binomial::all()->keyBy('id');
-      
-    $average = Evaluation::average($photo->id); 
-    $evaluations = null;  
-    $averageAndEvaluations = null;    
+
+    $average = Evaluation::average($photo->id);
+    $evaluations = null;
+    $averageAndEvaluations = null;
     $user = null;
-    $follow = true; 
-    if ($userId != null) { 
-      $user = User::find($userId); 
-      if (Auth::check()) {      
+    $follow = true;
+    if ($userId != null) {
+      $user = User::find($userId);
+      if (Auth::check()) {
         if (Auth::user()->following->contains($user->id))
           $follow = false;
-        else 
+        else
           $follow = true;
       }
       $averageAndEvaluations= Evaluation::averageAndUserEvaluation($photo->id,$userId);
-      $evaluations =  Evaluation::where("user_id", $user->id)->where("photo_id", $photo->id)->orderBy("binomial_id", "asc")->get();  
+      $evaluations =  Evaluation::where("user_id", $user->id)->where("photo_id", $photo->id)->orderBy("binomial_id", "asc")->get();
     }
-    
+
     return View::make('/photos/evaluate',
       ['photos' => $photo, 'owner' => $user, 'follow' => $follow, 'tags' => $photo->tags, 'commentsCount' => $photo->comments->count(), 'commentsMessage' => static::createCommentsMessage($photo->comments->count()),
       'average' => $average, 'userEvaluations' => $evaluations,'userEvaluationsChart' => $averageAndEvaluations, 'binomials' => $binomials,
       'architectureName' => Photo::composeArchitectureName($photo->name),
-      'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photo->id), 
+      'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photo->id),
       'isOwner' => $isOwner]);
   }
 
 
   public function edit($id) {
     $photo = Photo::find($id);
-    
-    
+
+
     if (Session::has('tags'))
     {
       $tags = Session::pull('tags');
-      $tags = explode(',', $tags);  
+      $tags = explode(',', $tags);
     } else {
       $tags = $photo->tags->lists('name');
     }
@@ -416,17 +416,17 @@ class PhotosController extends \BaseController {
       ->with(['photo' => $photo, 'tags' => $tags] );
   }
 
-  public function update($id) {           
+  public function update($id) {
     $photo = Photo::find($id);
-     Input::flashExcept('tags', 'photo');    
+     Input::flashExcept('tags', 'photo');
      $input = Input::all();
-    
+
     if (Input::has('tags'))
-      $input["tags"] = str_replace(array('\'', '"', '[', ']'), '', $input["tags"]); 
+      $input["tags"] = str_replace(array('\'', '"', '[', ']'), '', $input["tags"]);
     else
       $input["tags"] = '';
-    //2015-05-09 msy add validate for date image/work end     
-    $rules = array(     
+    //2015-05-09 msy add validate for date image/work end
+    $rules = array(
         'photo_name' => 'required',
         'photo_imageAuthor' => 'required',
         'tags' => 'required',
@@ -436,16 +436,16 @@ class PhotosController extends \BaseController {
         'photo_workDate' => 'date_format:"d/m/Y"',
         'photo_imageDate' => 'date_format:"d/m/Y"',
         'photo' => 'max:10240|mimes:jpeg,jpg,png,gif'
-      
-    );  
+
+    );
 
   $validator = Validator::make($input, $rules);
-     
+
   if ($validator->fails()) {
-      $messages = $validator->messages(); 
+      $messages = $validator->messages();
       return Redirect::to('/photos/' . $photo->id . '/edit')->with('tags', $input['tags'])->withErrors($messages);
-    } else {        
-      if ( !empty($input["photo_aditionalImageComments"]) ) 
+    } else {
+      if ( !empty($input["photo_aditionalImageComments"]) )
         $photo->aditionalImageComments = $input["photo_aditionalImageComments"];
       $photo->allowCommercialUses = $input["photo_allowCommercialUses"];
       $photo->allowModifications = $input["photo_allowModifications"];
@@ -465,50 +465,50 @@ class PhotosController extends \BaseController {
         $photo->workdate = null;
       }
 
-      if ( !empty($input["photo_imageDate"]) ){ 
+      if ( !empty($input["photo_imageDate"]) ){
         $photo->dataCriacao = Photo::formatDate($input["photo_imageDate"]);
       }else{
         $photo->dataCriacao = null;
-      }  
-      
+      }
+
     //endmsy
-      if (Input::hasFile('photo') and Input::file('photo')->isValid()) {      
-        $file = Input::file('photo');       
+      if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
+        $file = Input::file('photo');
         $ext = $file->getClientOriginalExtension();
         $photo->nome_arquivo = $photo->id.".".$ext;
       }
       //update o field update_at
       $photo->touch();
-      $photo->save();  
+      $photo->save();
 
       $tags_copy = $input['tags'];
       $tags = explode(',', $input['tags']);
-      
+
       if (!empty($tags)) {
-        $tags = array_map('trim', $tags);               
+        $tags = array_map('trim', $tags);
         $tags = array_map('mb_strtolower', $tags);
-        
+
         $tags_id = [];
         $photo_tags = $photo->tags;
         // tudo em minusculas, para remover redundancias, como Casa/casa/CASA
         $tags = array_unique($tags); //retira tags repetidas, se houver.
-        
-        foreach ($tags as $t) {   
-          
+
+        foreach ($tags as $t) {
+
           $tag = Tag::where('name', $t)->first();
-  
+
           if (is_null($tag)) {
             $tag = new Tag();
             $tag->name = $t;
-           
+
             try{
               $tag->save();
             }catch(PDOException $e) {
               Log::error("Logging exception, error to edit tags 1");
-              
+
               $messages = array('tags'=>array('Erro nos tags'));
               return Redirect::to("/photos/{$photo->id}/edit")->with(['tags' => $input['tags']])->withErrors($messages);
-              
+
             }
           }
           if ( !$photo_tags->contains($tag) )
@@ -527,12 +527,12 @@ class PhotosController extends \BaseController {
           }
           array_push($tags_id, $tag->id);
         }
-        
+
 
         foreach($photo_tags as $tag)
         {
           if (!in_array($tag->id, $tags_id))
-          { 
+          {
             $tag->count--;
             $photo->tags()->detach($tag->id);
             try{
@@ -547,29 +547,29 @@ class PhotosController extends \BaseController {
 
       }
 
-      if (Input::hasFile('photo') and Input::file('photo')->isValid()) {  
+      if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
         $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
         $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
         $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
         $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
         $file->move(public_path().'/arquigrafia-images', $photo->id."_original.".strtolower($ext)); // original
-        $photo->saveMetadata(strtolower($ext)); 
+        $photo->saveMetadata(strtolower($ext));
       }
       $source_page = Request::header('referer');
       ActionUser::printTags($photo->user_id, $id, $tags_copy, $source_page, "user", "Editou");
-      return Redirect::to("/photos/{$photo->id}")->with('message', '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso'); 
-     
-  }  
+      return Redirect::to("/photos/{$photo->id}")->with('message', '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso');
+
+  }
 }
 
   public function destroy($id) {
     $photo = Photo::find($id);
-    $photo->delete();  
+    $photo->delete();
     return Redirect::to('/users/' . $photo->user_id);
   }
 
-  public function viewEvaluation($photoId, $userId ) { 
-    return static::getEvaluation($photoId, $userId, false);  
+  public function viewEvaluation($photoId, $userId ) {
+    return static::getEvaluation($photoId, $userId, false);
   }
 
   public function showSimilarAverage($photoId) {
@@ -584,15 +584,15 @@ class PhotosController extends \BaseController {
       $commentsMessage = 'Existe ' . $commentsCount . ' comentário sobre esta imagem';
     else
       $commentsMessage = 'Existem '. $commentsCount . ' comentários sobre esta imagem';
-    return $commentsMessage;          
+    return $commentsMessage;
   }
 
   public function getField($id) {
     $photo = Photo::find($id);
-    $getFirstField = true;
-    $field = $photo->getEmptyColumns($getFirstField);
-    $question = $photo->getFieldQuestion($field);
-    if ( empty($field) || is_null($question) ) {
+    $empty_fields = $photo->getEmptyFields();
+    $field = $photo->getEmptyField($empty_fields, Input::get('fp'));
+    $question = $photo->getFieldQuestion($empty_fields, $field);
+    if ( empty($field) || empty($question) ) {
       return Response::json('fail');
     }
     return Response::json(['field' => $field, 'question' => $question ]);

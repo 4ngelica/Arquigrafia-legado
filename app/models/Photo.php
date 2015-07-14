@@ -27,11 +27,20 @@ class Photo extends Eloquent {
 		'NO' => ['Não', '-nc']
 	];
 
-	private static $informations = [
-			'city', 'country', 'dataCriacao', 'description',
-			'district', 'imageAuthor', 'name', 'state',
-			'street', 'workAuthor', 'workdate'
+	private static	$information_questions = [
+			'city' => 'Deseja adicionar a cidade da obra?',
+			'country' => 'Deseja adicionar o país da obra?',
+			'dataCriacao' => 'Qual é a data desta imagem?',
+			'description' => 'Deseja adicionar uma descrição para a imagem?',
+			'district' => 'Qual é o bairro da obra?',
+			'imageAuthor' => 'Quem é o autor desta imagem?',
+			'name' => 'Qual é o nome desta obra?',
+			'state' => 'Qual é o Estado desta arquitetura?',
+			'street' => 'Qual é a rua desta obra?',
+			'workAuthor' => 'Quem é o autor da obra?',
+			'workdate' => 'Quando foi construída a obra?'
 		];
+
 
 	public function user()
 	{
@@ -77,8 +86,6 @@ class Photo extends Eloquent {
 	{
 		return Date::formatDatePortugues($date);
 	}
-
-	
 
 	public static function dateDiff($start,$end)
 	{
@@ -310,43 +317,36 @@ class Photo extends Eloquent {
 	}
 	
 	public function getInformationCompletionAttribute($value) {
-		$informations = self::$informations;
-		$complete = 0;
-		foreach ($informations as $info) {
-			$complete = ( empty($this->$info) ) ? $complete : $complete + 1;
-		}
-		$percentage = (int) (($complete / count($informations)) * 100);
+		$informations = self::$information_questions;
+		$incomplete = count($this->getEmptyFields());
+		$total = count($informations);
+		$percentage = (int) (100 * ($total - $incomplete ) / $total) ;
 		return $percentage;
 	}
 
-	public function getEmptyColumns($getFirstEmptyField = false) {
-		$informations = self::$informations;
+	public function getEmptyFields() {
+		$informations = self::$information_questions;
 		foreach ($informations as $key => $info) {
-			if ( !empty($this->$info) ) {
+			if ( !empty($this->$key) ) {
 				unset($informations[$key]);
-			} else if ($getFirstEmptyField) {
-				return $info;
 			}
 		}
 		return $informations;
 	}
 
-	public function getFieldQuestion($field) {
-		$information_questions = [
-			'city' => 'Deseja adicionar a cidade da obra?',
-			'country' => 'Deseja adicionar o país da obra?',
-			'dataCriacao' => 'Qual é a data desta imagem?',
-			'description' => 'Deseja adicionar uma descrição para a imagem?',
-			'district' => 'Qual é o bairro da obra?',
-			'imageAuthor' => 'Quem é o autor desta imagem?',
-			'name' => 'Qual é o nome desta obra?',
-			'state' => 'Qual é o Estado desta arquitetura?',
-			'street' => 'Qual é a rua desta obra?',
-			'workAuthor' => 'Quem é o autor da obra?',
-			'workdate' => 'Quando foi construída a obra?'
-		];
+	public function getEmptyField($empty_fields, $field_position = 0) {
+		$fields = array_keys($empty_fields);
+		$total_fields = count($empty_fields);
 		try {
-			return $information_questions[$field];
+			return $fields[ $field_position % $total_fields ];
+		} catch (Exception $e) {
+			return null;
+		}
+	}
+
+	public function getFieldQuestion($empty_fields, $field) {
+		try {
+			return $empty_fields[$field];
 		} catch (Exception $e) {
 			return null;
 		}
