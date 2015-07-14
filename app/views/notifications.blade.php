@@ -15,7 +15,7 @@
 
 @section('content')
     <div id="content" class="container">
-	<?php use lib\utils\ActionUser;
+	<?php
         if (Auth::check()) {
      
             $user = Auth::user();
@@ -25,9 +25,9 @@
 
 	?>
 	<h2 class="notifications">Suas notificações:</h2>
-	@if ($user->notifications == null)
+	@if ($user->notifications->isEmpty())
 		<p id="no-notifications">Você não possui notificações.</p>
-	@endif
+	@else
 	<ul>
     	@foreach($user->notifications->reverse() as $notification)
     		<?php
@@ -79,6 +79,7 @@
             }
         </script>
 	</ul>
+    @endif
  	<?php } ?> 
     </div>
 @stop
