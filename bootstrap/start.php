@@ -24,13 +24,15 @@ $app = new Illuminate\Foundation\Application;
 |
 */
 
-$env = $app->detectEnvironment(array(
-
-	'local' => array('homestead'),
-	'homolog' => array('pcgerosa-dev'),
-	'prod' => array('IME-001'),
-
-));
+$env = $app->detectEnvironment(function() {
+	$hostname = exec('hostname');
+	if ($hostname == 'pcgerosa-dev') {
+		return 'homolog';
+	} else if ($hostname == 'IME-001') {
+		return 'prod';
+	}
+	return 'local';
+});
 
 /*
 |--------------------------------------------------------------------------
