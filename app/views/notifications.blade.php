@@ -34,6 +34,7 @@
                 $info_array = $notification->render(); 
             ?>
     		@if($info_array[0] == "photo_liked")
+                @if($notification->deleted_at != null) <?php continue; ?> @endif
     			<div id={{$notification->id}} class="notes<?php if($notification->read_at == null) echo ' not-read'?>" >
                     <li>
                         <div class="read-button" title="Marcar como lida" onclick="markRead(this);"></div>
@@ -44,6 +45,7 @@
                     </li>
                 </div>
     		@elseif($info_array[0] == "comment_liked")
+                @if($notification->deleted_at != null) <?php continue; ?> @endif
     			<div id={{$notification->id}} class="notes<?php if($notification->read_at == null) echo ' not-read'?>">
                     <li>
                         <div class="read-button" title="Marcar como lida" onclick="markRead(this);"></div>
@@ -54,6 +56,7 @@
                     </li>
                 </div>
     		@elseif($info_array[0] == "comment_posted")
+                @if($notification->deleted_at != null) <?php continue; ?> @endif
     			<div id={{$notification->id}} class="notes<?php if($notification->read_at == null) echo ' not-read'?>">
                     <li>
                         <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
