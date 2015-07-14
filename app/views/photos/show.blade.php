@@ -46,6 +46,7 @@
       geocoder.geocode( { 'address': address}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
           map.setCenter(results[0].geometry.location);
+          // map.fitBounds(results[0].geometry.bounds);
           var marker = new google.maps.Marker({
             map: map,
             position: results[0].geometry.location
@@ -332,10 +333,7 @@
             <div id="information_input" class="four columns alpha omega row" >
               <p><a href="#" class="close">X</a></p>
               {{ Form::open( array('url' => 'photos/' . $photos->id . '/update_info') ) }}
-              <div class="four columns alpha omega">
-                {{-- <h3>Deseja adicionar uma descrição?</h3>
-                {{ Form::text('teste', null) }} --}}
-              </div>
+              <div class="four columns alpha omega"></div>
               <input type="submit" class="btn" value="SALVAR">
               <button class="btn" onclick="return false;">PULAR</button>
               {{ Form::close() }}
