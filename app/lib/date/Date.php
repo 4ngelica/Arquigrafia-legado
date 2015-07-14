@@ -57,13 +57,9 @@ class Date {
 		return null;
 	}
 
-	public static function formatDatePortugues($dateTime){
-
-		$createDate = new DateTime($dateTime);
-
-		$onlyDate = $createDate->format('Y-m-d');
-
-		$formattedDate = DateTime::createFromFormat('Y-m-d', $onlyDate);
+	public static function formatDatePortugues($dateTime)
+	{
+		$formattedDate = DateTime::createFromFormat('Y-m-d', $dateTime);
 		
 		if ($formattedDate &&
 			DateTime::getLastErrors()["warning_count"] == 0 &&
@@ -89,10 +85,10 @@ class Date {
 		$dates = explode('/', $date);
 		
 		if ( self::isCentury($dates[0]) && self::isCentury($dates[1]) )
-			return 'entre o ' . self::translateDate($dates[0]) . ' e o ' . self::translateDate($dates[1]);
+			return 'entre o ' . self::translateCentury($dates[0]) . ' e o ' . self::translateCentury($dates[1]);
 
 		if ( self::isDecade($dates[0]) && self::isDecade($dates[1]) )
-			return 'entre a ' . self::translateDate($dates[0]) . ' e a ' . self::translateDate($dates[1]);
+			return 'entre a ' . self::translateDecade($dates[0]) . ' e a ' . self::translateDecade($dates[1]);
 
 		return 'entre ' . self::translateDate($dates[0]) . ' e ' . self::translateDate($dates[1]);
 	}
@@ -119,23 +115,23 @@ class Date {
 			return $date; //date = year, neste caso
 		}
 
-		if (preg_match('#\d{3,}#', $date)) {
-			return 'década de ' . (intval($date) * 10);
-		}
-		if (preg_match('#\d{2,}#', $date)) {
-			return 'século ' . self::$centuries[intval($date)];
-		}
-
-
 		return null;
 	}
 
+	public static function translateCentury($century) {
+		return 'século ' . self::$centuries[intval($century)];
+	}
+
+	public static function translateDecade($decade) {
+		return 'década de ' . (intval($decade) * 10);
+	}
+
 	public static function isDecade($date) {
-		return strlen($date) == 3;
+		return strlen($date) == 3 && preg_match('#\d{3,}#', $date);
 	}
 
 	public static function isCentury($date) {
-		return strlen($date) == 2;
+		return strlen($date) == 2 && preg_match('#\d{2,}#', $date);
 	}
 
 	public static function dateDiff($start,$end=false){
