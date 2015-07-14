@@ -13,7 +13,7 @@ class NotificationsController extends \BaseController {
 			$time_and_date_now = Carbon::now('America/Sao_Paulo');
 			foreach ($user->notifications as $notification) {
 				$time_and_date_note = Carbon::createFromFormat('Y-m-d H:i:s', $notification->updated_at);
-				if ($time_and_date_now->diffInMonths($time_and_date_note) > 6) $notification->delete();
+				if ($time_and_date_now->diffInMonths($time_and_date_note) > 6 && $notification->read_at != null) $notification->delete();
 			}	
 			return View::make('notifications')->with('user', $user);
 		}
