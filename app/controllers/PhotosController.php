@@ -31,6 +31,8 @@ class PhotosController extends \BaseController {
     $average = Evaluation::average($photos->id);
     $evaluations = null;
     $photoliked = null;
+    $field = $photos->getEmptyField();
+    $question = $photos->getFieldQuestion($field);
     $follow = true;
     if (Auth::check()) {
       $photoliked = Like::fromUser($user)->withLikable($photos)->first();
@@ -66,6 +68,8 @@ class PhotosController extends \BaseController {
       'license' => $license,
       'getFieldURL' => URL::to('/photos/' . $photos->id . '/get/field'),
       'setFieldURL' => URL::to('/photos/' . $photos->id . '/set/field'),
+      'field' => $field,
+      'question' => $question
     ]);
   }
 
@@ -589,13 +593,36 @@ class PhotosController extends \BaseController {
 
   public function getField($id) {
     $photo = Photo::find($id);
-    $empty_fields = $photo->getEmptyFields();
-    $field = $photo->getEmptyField($empty_fields, Input::get('fp'));
-    $question = $photo->getFieldQuestion($empty_fields, $field);
-    if ( empty($field) || empty($question) ) {
+    if ( is_null($photo) || !$photo->user->equal(Auth::user()) ) {
       return Response::json('fail');
     }
-    return Response::json(['field' => $field, 'question' => $question ]);
+    $field = $photo->getEmptyField(Input::get('fp'));
+    $question = $photo->getFieldQuestion($field);
+    if ( empty($field) && empty($question) ) {
+      return Response::json([
+        'end' => true,
+        'complete' => empty($photo->empty_fields)
+      ]);
+    }
+    return Response::json([ 'end' => false, 'field' => $field, 'question' => $question ]);
+  }
+
+  public function setField($id) {
+    $photo = Photo::find($id);
+    $field = Input::get('field');
+    $value = Input::get($field);
+    if ( is_null($photo) || !$photo->user->equal(Auth::user()) ||
+      empty($value) || !empty($photo->$field) ) {
+        return Response::json('fail');
+    }
+    $photo->$field = $value;
+    $photo->save();
+    return Response::json([
+      'field' => $field,
+      'field_translation' => $photo->translateField($field),
+      'value' => $photo->$field,
+      'information_completion' => $photo->information_completion
+    ]);
   }
 
 }
