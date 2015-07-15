@@ -109,8 +109,7 @@ class Photo extends Eloquent {
 	}
 
 	public static function paginateUserPhotos($user, $perPage = 24) {
-		return Photo::where('user_id', $user->id)
-			->paginate($perPage);
+		return static::withUser($user)->paginate($perPage);
 	}
 
 	public static function paginateAlbumPhotos($album, $perPage = 24) {
@@ -118,13 +117,11 @@ class Photo extends Eloquent {
 	}
 
 	public static function paginateOtherPhotos($user, $photos, $perPage = 24) {
-		return Photo::where('user_id', '=', $user->id)
-			->whereNotIn('id', $photos->modelKeys())
-			->paginate($perPage);
+		return static::withUser($user)->except($photos)->paginate($perPage);
 	}
 
 	public static function paginateUserPhotosNotInAlbum($user, $album, $q = null, $perPage = 24) {
-		$photos = self::photosNotInAlbum($album, $q);
+		$photos = static::photosNotInAlbum($album, $q);
 		$photos = $photos->where('user_id', $user->id);
 		$count = $photos->get()->count();
 		$photos = $photos->paginate($perPage);
@@ -132,17 +129,18 @@ class Photo extends Eloquent {
 	}
 
 	public static function paginateAllPhotosNotInAlbum($album, $q = null, $perPage = 24) {
-		$photos = self::photosNotInAlbum($album, $q);
+		// $photos = static::NotInAlbum($album)->whereMatches($q);
+		$photos = static::photosNotInAlbum($album, $q);
 		$count = $photos->get()->count();
 		$photos = $photos->paginate($perPage);
 		return ['photos' => $photos, 'photos_count' => $count];
 	}
 
 	private static function photosNotInAlbum($album, $q) {
-		$photos = Photo::whereDoesntHave('albums', function($query) use($album) {
+		$photos = static::whereDoesntHave('albums', function($query) use($album) {
 			$query->where('album_id', $album->id);
 		});
-		if (!empty($q)) {
+		if ( !empty($q) ) {
 			$photos = $photos->where(function ($query) use($q) {
 				$query->where('name', 'like', '%' . $q . '%')
 				->orWhere('workAuthor', 'like', '%' . $q . '%');
@@ -351,4 +349,38 @@ class Photo extends Eloquent {
 			return null;
 		}
 	}
+
+	public function scopeWithUser($query, $user) {
+		return $query->where('user_id', $user->id);
+	}
+
+	public function scopeExcept($query, $photos) {
+		if ($albums instanceof Photo) {
+			return $query->where('id', '!=', $photos->id);
+		}
+		//instance of Eloquent\Collection
+		return $query->whereNotIn('id', $photos->modelKeys());
+	}
+
+		public function scopeNotInAlbum($album) {
+		return $query->whereDoesntHave('albums', function ($q) {
+			$q->where('album_id', $album->id);
+		});
+	}
+
+	public function scopeWhereMatches($query, $needle) {
+		if ( empty($needle) ) {
+			return $query;
+		}
+		return $query->where(function ($q) use($needle) {
+			$query->where('name', 'LIKE', '%'. $needle .'%')
+			->orWhere('description', 'LIKE', '%'. $needle .'%')
+			->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%')
+			->orWhere('workAuthor', 'LIKE', '%'. $needle .'%')
+			->orWhere('country', 'LIKE', '%'. $needle .'%')
+			->orWhere('state', 'LIKE', '%'. $needle .'%')
+			->orWhere('city', 'LIKE', '%'. $needle .'%');
+		});
+	}
+
 }
