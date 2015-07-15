@@ -74,7 +74,10 @@
                 var id = object.parentElement.parentElement.id;
                 var url = "/markRead/".concat(id);
                 $.get(url)
-                    .done(function( data ) {     
+                    .done(function( data ) {
+                    var bubble = document.getElementById("bubble");
+                    if (data > 0) bubble.innerHTML = data;
+                    else bubble.style.display = "none";     
                 });
             }
         </script>

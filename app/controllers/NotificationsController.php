@@ -27,6 +27,7 @@ class NotificationsController extends \BaseController {
 			foreach ($unreadNotes as $notification) {
 				if($notification->id == $id) $notification->setRead();
 			}
+			return $user->notifications()->unread()->count();
 		}
 	}
 }
