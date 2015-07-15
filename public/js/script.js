@@ -71,4 +71,10 @@ $(document).ready(function(){
 			$('#form_login_window').fadeIn('slow');
 		});
 
+		$('#institutionLogin').live('click', function (e) {
+			e.preventDefault();
+			$('#mask').fadeIn('fast');
+			$('#form_login_inst_window').fadeIn('slow');
+		});
+
 });
