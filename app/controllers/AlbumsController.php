@@ -76,9 +76,8 @@ class AlbumsController extends \BaseController {
 		$album = Album::find($id);
 		$user = Auth::user();
 		if ( isset($album) && $user->equal($album->user) ) {
-			$title = $album->title;
 			$album->delete();
-			Session::put('album.delete', 'Álbum ' . $title . ' deletado com sucesso.');
+			Session::put('album.delete', 'Álbum ' . $album->title . ' deletado com sucesso.');
 		}
 		return Redirect::to('albums');
 	}
@@ -185,29 +184,31 @@ class AlbumsController extends \BaseController {
 
 	public function addPhotoToAlbums() {
 		$albums_id = Input::get('albums');
-		$photo = Input::get('_photo');
+		$photo = Photo::find(Input::get('_photo'));
 		$albums = Album::findMany($albums_id);
 
 		foreach ($albums as $album)
 		{
-			$album->photos()->sync(array($photo), false);
-			if (!isset($album->cover_id)) {
-				$album->cover_id = $photo;
+			$album->photos()->sync(array($photo->id), false);
+			if ( !isset($album->cover) ) {
+				$album->cover()->associate($photo);
 			}
 		}
-		if (Input::has('create_album'))
-			if ($albums->isEmpty())
+		if (Input::has('create_album')) {
+			if ($albums->isEmpty()) {
 				return Redirect::to('/albums/create')->with('image', $photo);
-			else
+			} else {
 				return Redirect::to('/albums/create')->with([
 					'message' => '<strong>Imagem adicionada com sucesso ao(s) seu(s) álbum(ns)</strong>',
 					'image' => $photo
 				]);
-
-		if ($albums->isEmpty())
+			}
+		}
+		if ($albums->isEmpty()) {
 			return Redirect::to('/photos/' . $photo);
-		else
+		} else {
 			return Redirect::to('/albums')->with('message', '<strong>Imagem adicionada com sucesso ao(s) seu(s) álbum(ns)</strong>');
+		}
 	}
 
 	public function destroy($id) {
