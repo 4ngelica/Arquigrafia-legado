@@ -22,7 +22,13 @@
 	        $unreadNotifications = $user->notifications()->unread()->get();
             $readNotifications = $user->notifications()->read()->get();
 	?>
-	<h2 class="notifications">Suas notificações:</h2>
+	<h2 class="notifications">
+        Suas notificações:
+        <div id="button-all-container">
+            <p id="read-all">Marcar todas como lidas:</p>
+            <div class="read-button" title="Marcar todas como lidas" onclick="readAll();"></div>
+        </div>
+    </h2>
 	@if ($user->notifications->isEmpty())
 		<p id="no-notifications">Você não possui notificações.</p>
 	@else
@@ -36,10 +42,12 @@
     			<div id={{$notification->id}} class="notes<?php if($notification->read_at == null) echo ' not-read'?>" >
                     <li>
                         <div class="read-button" title="Marcar como lida" onclick="markRead(this);"></div>
-                        <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
-                        <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu sua " }} <a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br>
-                        <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
-                        <a class="link-block" href={{"photos/" . $info_array[2]}}></a>
+                        <div onclick="markRead(this);">
+                            <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
+                            <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu sua " }} <a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br>
+                            <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
+                            <a class="link-block" href={{"photos/" . $info_array[2]}}></a>
+                        </div>
                     </li>
                 </div>
     		@elseif($info_array[0] == "comment_liked")
@@ -47,10 +55,12 @@
     			<div id={{$notification->id}} class="notes<?php if($notification->read_at == null) echo ' not-read'?>">
                     <li>
                         <div class="read-button" title="Marcar como lida" onclick="markRead(this);"></div>
-                        <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
-                        <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu seu "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentário"}}</a>{{", na "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{" de "}}<a href={{"users/" . $info_array[6]}}>{{$info_array[7]}}</a>{{"."}}</br>
-                        <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
-                        <a class="link-block" href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}></a>
+                        <div onclick="markRead(this);">
+                            <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
+                            <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu seu "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentário"}}</a>{{", na "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{" de "}}<a href={{"users/" . $info_array[6]}}>{{$info_array[7]}}</a>{{"."}}</br>
+                            <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
+                            <a class="link-block" href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}></a>
+                        </div>
                     </li>
                 </div>
     		@elseif($info_array[0] == "comment_posted")
@@ -58,10 +68,12 @@
     			<div id={{$notification->id}} class="notes<?php if($notification->read_at == null) echo ' not-read'?>">
                     <li>
                         <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
-                        <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
-                        <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" comentou sua "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br>
-                        <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
-                        <a class="link-block" href={{"photos/" . $info_array[2]}}><!--quando clickar, notificação será marcada como vista--></a>
+                        <div onclick="markRead(this);">
+                            <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
+                            <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" comentou sua "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br>
+                            <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
+                            <a class="link-block" href={{"photos/" . $info_array[2]}}><!--quando clickar, notificação será marcada como vista--></a>
+                        </div>
                     </li>
                 </div>
     		@endif
@@ -73,13 +85,26 @@
                 var url = "/markRead/".concat(id);
                 $.get(url)
                     .done(function( data ) {
-                    var bubble = document.getElementById("bubble");
-                    var noteIcon = document.getElementById("notification");
-                    if (data != 1) noteIcon.title = "Você tem " + data + " notificações não lidas";
-                    else noteIcon.title = "Você tem " + data + " notificação não lida";
-                    if (data > 0) bubble.innerHTML = data;
-                    else bubble.style.display = "none";     
-                });
+                        var bubble = document.getElementById("bubble");
+                        var noteIcon = document.getElementById("notification");
+                        if (data != 1) noteIcon.title = "Você tem " + data + " notificações não lidas";
+                        else noteIcon.title = "Você tem " + data + " notificação não lida";
+                        if (data > 0) bubble.innerHTML = data;
+                        else bubble.style.display = "none";     
+                    });
+            }
+            function readAll() {
+                var notes = document.getElementsByClassName("notes");
+                for (i = 0; i < notes.length; i++) {
+                    notes[i].className = "notes";
+                }
+                $.get("/readAll")
+                    .done(function( data ) {
+                        var bubble = document.getElementById("bubble");
+                        var noteIcon = document.getElementById("notification");
+                        noteIcon.title = "Você tem " + data + " notificações não lidas";
+                        bubble.style.display = "none";
+                    });
             }
         </script>
 	</ul>

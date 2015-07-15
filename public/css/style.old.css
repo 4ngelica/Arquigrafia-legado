@@ -642,6 +642,8 @@ i#likes {  background: url("../img/dislikeNB.png"); padding : 2px 10px 0px;   }
 
 /* Notifications page */
 .notifications { margin-bottom: 35px; border-bottom: 1px solid black; padding: 15px; font-size:20px; }
+#button-all-container { display: inline; float: right; }
+#read-all { font-size: 10px; float: left; margin: 2px 0 0; padding-right: 5px;}
 #no-notifications { padding: 15px; font-size:20px; }
 .notes { font-size: 15px; border-bottom: 1px solid black; padding: 20px; position: relative; }
 .notes a { font-weight: bold; z-index: 2; position: relative; }
