@@ -48,18 +48,26 @@ class Album extends \BaseModel {
 	}
 
 	public function detachPhotos($photos = array()) {
-		if ( is_array($photos) ) {
-			$this->photos()->detach($photos);
-		} else {
+		if ($photos instanceof Photo) {
 			$this->photos()->detach($photos->id);
+		} else {
+			$this->photos()->detach($photos);
 		}
 	}
 
 	public function attachPhotos($photos = array()) {
-		if ( is_array($photos) ) {
-			$this->photos()->attach($photos);
-		} else {
+		if ($photos instanceof Photo) {
 			$this->photos()->attach($photos->id);
+		} else {
+			$this->photos()->attach($photos);
+		}
+	}
+
+	public function syncPhotos($photos = array(), $delete = false) {
+		if ($photos instanceof Photo) {
+			$this->photos()->sync(array($photos->id), $delete);
+		} else {
+			$this->photos()->sync($photos, $delete);
 		}
 	}
 

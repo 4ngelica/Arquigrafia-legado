@@ -213,14 +213,13 @@ class AlbumsController extends \BaseController {
 
 	public function destroy($id) {
 		$album = Album::find($id);
-		$album->photos()->detach();
 		$album->delete();
 		return Redirect::to('/albums');
 	}
 
 	public function removePhotoFromAlbum($album_id, $photo_id) {
 		$album = Album::find($album_id);
-		$album->photos()->detach($photo_id);
+		$album->detachPhotos();
 		return Redirect::to('/albums/' . $album->id);
 	}
 
@@ -228,7 +227,7 @@ class AlbumsController extends \BaseController {
 		try {
 			$album = Album::find($id);
 			$photos = Input::get('photos');
-			$album->photos()->detach($photos);
+			$album->detachPhotos($photos);
 		} catch (Exception $e) {
 			return Response::json('failed');
 		}
@@ -239,7 +238,7 @@ class AlbumsController extends \BaseController {
 		try {
 			$album = Album::find($id);
 			$photos = Input::get('photos');
-			$album->photos()->attach($photos);		
+			$album->attachPhotos($photos);
 		} catch (Exception $e) {
 			return Response::json('failed');
 		}
