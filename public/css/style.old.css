@@ -573,6 +573,13 @@ input#login_white_button:hover { background-position: -160px -258px; }
 #form_login_window .columns { display: block; margin: 0 auto; float: none; }
 #form_login_window .error { font-size: 10px; }
 
+#form_login_inst_window { background: #fff; position: fixed; width: 320px; height: 280px;  top: 30%; left: 50%; margin: -150px 0 0 -140px; padding: 20px; -moz-border-radius: 5px; border-radius: 5px; display: none; z-index: 1001; font-size: 14px; }
+#form_login_inst_window input[type="text"], #form_login_window input[type="password"] { margin: 5px 0 10px; width: 198px; font-size: 12px; }
+#form_login_inst_window .columns { display: block; margin: 0 auto; float: none; }
+#form_login_inst_window .error { font-size: 10px; }
+
+#registrationInstitution { width: 320px; height: 270px; margin: 0 auto; }
+
 .message_box { border: 1px solid; margin: 10px 0px; padding:15px 20px; position: fixed; top: 5%; left: 40%; max-width: 400px; margin-left: -75px; font-size: 14px; display: none; z-index: 3;}
 .message_box.success { color: #4F8A10;	background-color: #DFF2BF; }
 .message_box.error { color: #D8000C; background-color: #FFBABA; }
@@ -719,3 +726,4 @@ a.tooltip_license span
 .hidden { display: none; }
 
 #information_input .loader { display: none; margin: 0 auto; }
+.link_institution { margin-left: 2px; }
