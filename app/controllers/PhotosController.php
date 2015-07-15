@@ -50,11 +50,6 @@ class PhotosController extends \BaseController {
     $source_page = Request::header('referer');
     ActionUser::printSelectPhoto($user_id, $id, $source_page, $user_or_visitor);
 
-    foreach ($user->notifications as $notification) {
-      $info = $notification->render();
-      if ($info[2] == $id) $notification->setRead(); 
-    }
-
     $license = Photo::licensePhoto($photos);
 
     return View::make('/photos/show',

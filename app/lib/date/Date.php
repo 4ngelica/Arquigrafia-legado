@@ -59,7 +59,7 @@ class Date {
 
 	public static function formatDatePortugues($dateTime)
 	{
-		$formattedDate = DateTime::createFromFormat('Y-m-d', $dateTime);
+		$formattedDate = DateTime::createFromFormat('Y-m-d H:i:s', $dateTime);
 		
 		if ($formattedDate &&
 			DateTime::getLastErrors()["warning_count"] == 0 &&

@@ -65,8 +65,13 @@
 
             <li>
               <div id="notifications_container">
-                <a href="{{ URL::to("/notifications") }}" id="notification" title="{{'Você tem ' . Auth::user()->notifications()->unread()->count() . ' notificações não lidas'}}">&nbsp;</a>
-                @if (Auth::user()->notifications()->unread()->count() > 0) <div id="bubble"> {{Auth::user()->notifications()->unread()->count()}} </div>  @endif
+                <?php 
+                  $notesCounter = Auth::user()->notifications()->unread()->count();
+                  if ($notesCounter != 1) $title = "Você tem " . $notesCounter . " notificações não lidas";
+                  else $title = "Você tem " . $notesCounter . " notificação não lida"; 
+                ?>
+                <a href="{{ URL::to("/notifications") }}" id="notification" title="{{$title}}">&nbsp;</a>
+                @if ($notesCounter > 0) <div id="bubble"> {{$notesCounter}} </div>  @endif
               </div>
             </li>
 
