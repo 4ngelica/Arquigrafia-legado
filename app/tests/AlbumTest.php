@@ -1,6 +1,7 @@
 <?php
 
 use League\FactoryMuffin\Facade as FactoryMuffin;
+use Mockery as m;
 
 class AlbumTest extends TestCase {
 
@@ -14,6 +15,7 @@ class AlbumTest extends TestCase {
 	{
 		try {
   			FactoryMuffin::deleteSaved();
+  			Album::destroy();
 		} catch (Exception $e) {
 			;
 		}
@@ -30,17 +32,22 @@ class AlbumTest extends TestCase {
 		$this->prepareForTests();
 	}
 
+	public function tearDown()
+	{
+		m::close();
+	}
+
 	public function testIsInvalidWithouATitle()
 	{
 		$album = new Album;
-		$this->assertFalse($album->validate(), 'Album does not pass validation without a title');
+		$this->assertFalse($album->save(), 'Album does not pass validation without a title');
 	}
 
 	public function testIsValidWithATitle()
 	{
 		$album = new Album;
 		$album->title = 'Teste';
-		$this->assertTrue($album->validate(), 'Album does pass validation with a title');
+		$this->assertTrue($album->save(), 'Album does pass validation with a title');
 	}
 
 	public function testReturnsFalseWithoutCover()
@@ -53,6 +60,22 @@ class AlbumTest extends TestCase {
 	{
 		$album = FactoryMuffin::create('Album');
 		$this->assertTrue($album->hasCover());
+	}
+
+	public function testShouldCreateNewAlbum()
+	{
+		$user = FactoryMuffin::create('User');
+		$cover = FactoryMuffin::create('Photo');
+		$attr = [
+			'title' => 'test',
+			'description' => 'test',
+			'user' => $user,
+			'cover' => $cover
+		];
+		$album = Album::create($attr);
+		$this->assertInstanceOf('Album', $album);
+		$this->assertEquals('test', $album->title);
+		$this->assertTrue($user->equal($album->user));
 	}
 
 }
