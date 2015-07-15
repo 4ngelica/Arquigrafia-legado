@@ -28,6 +28,16 @@ class NotificationsController extends \BaseController {
 			return $user->notifications()->unread()->count();
 		}
 	}
+
+	public function readAll() {
+		if (Auth::check()) {
+			$user = Auth::user();
+			foreach ($user->notifications as $note) {
+				$note->setRead();
+			}
+			return $user->notifications()->unread()->count();
+		}
+	}
 }
 
 ?>
