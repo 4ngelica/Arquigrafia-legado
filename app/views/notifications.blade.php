@@ -17,12 +17,10 @@
     <div id="content" class="container">
 	<?php
         if (Auth::check()) {
-     
             $user = Auth::user();
             $notes_size = count($user->notifications);
 	        $unreadNotifications = $user->notifications()->unread()->get();
             $readNotifications = $user->notifications()->read()->get();
-
 	?>
 	<h2 class="notifications">Suas notificações:</h2>
 	@if ($user->notifications->isEmpty())
