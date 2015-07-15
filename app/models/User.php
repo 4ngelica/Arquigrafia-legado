@@ -146,4 +146,19 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	}
 
+	public static function userBelongInstitution($login,$institution){
+
+		
+
+		$belong = DB::table('employees')
+    			->join('users','employees.user_id','=','users.id')
+    			->join('institutions','employees.institution_id','=','institutions.id')
+    			->join('user_id')
+     			->select('instituions.id')
+     			->where('employees.id', $institution)
+     			->get();
+     			return $belong;
+
+	}
+
 }
