@@ -23,10 +23,8 @@ class NotificationsController extends \BaseController {
     public function read($id) {
 		if (Auth::check()) {
 			$user = Auth::user();
-			$unreadNotes = $user->notifications()->unread()->get();
-			foreach ($unreadNotes as $notification) {
-				if($notification->id == $id) $notification->setRead();
-			}
+			$note = $user->notifications()->find($id);
+			$note->setRead();
 			return $user->notifications()->unread()->count();
 		}
 	}
