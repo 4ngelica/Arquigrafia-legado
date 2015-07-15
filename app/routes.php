@@ -46,6 +46,7 @@ Route::post('/users/forget', 'UsersController@forget');
 Route::resource('/users','UsersController');
 Route::resource('/users/stoaLogin','UsersController@stoaLogin');
 
+Route::resource('/users/institutionalLogin','UsersController@institutionalLogin');
 
 
 /* FOLLOW */
