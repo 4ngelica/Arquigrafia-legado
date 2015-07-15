@@ -567,9 +567,11 @@ class UsersController extends \BaseController {
     if ((Auth::attempt(array('login' => $input["login"], 'password' => $input["password"])) == true || 
       Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true) &&
       $booleanExist == true){
-
+      //loga usuario da institution
+      return Redirect::to('/');
     }else{
-
+      Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
+      return Redirect::to('/users/login')->withInput();
     }
 
   }
