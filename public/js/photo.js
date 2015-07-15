@@ -95,8 +95,10 @@ $(document).ready(function() {
   
   $('#improve_image_data').click(function(e) {
     e.preventDefault();
+    if (!hasField) {
+      loadQuestion();
+    }
     $("#information_input").slideToggle('fast');
-    loadQuestion();
   });
 
   $('#skip_question').click(function(e) {
@@ -111,31 +113,46 @@ $(document).ready(function() {
     $('#information_input div textarea').html('');
   });
 
-  function loadQuestion() {
-    var url = getFieldURL;
+  function loadQuestion(callback) {
     var parent_container = $('#information_input');
     var loader = parent_container.children('.loader');
-    loader.siblings().hide();
-    showAndFixElementSpacing(loader, false);
-    $.get(url + '?fp=' + currentField++).done(function (data) {
-      var container = $('#information_input div');
-      var field = data['field'];
-      var question = data['question'];
-      console.log(data);
+    var container = parent_container.children().children('div');
+    showLoader(loader);
+    $.get(getFieldURL + '?fp=' + currentField++).done(function (data) {
+      data = parseData(data);
       container.empty();
-      loader.siblings().show();
-      loader.hide();
-      container.append('<h3>' + question + '</h3>');
-      if (field == 'description') {
-        container.append('<textarea id="' + field + '" name="' + field + '"></textarea>');
+      hideLoader(loader);
+      if (!data['end']) {
+        appendQuestion(container, data['field'], data['question']);
+        hasField = true;
+      } else if (!data['complete']) {
+        currentField = 0;
+        container.empty();
+        hasField = false;
+        loader.siblings().hide();
+        parent_container.fadeOut('fast');
       } else {
-        container.append('<input type="text" id="' + field + '" name="' + field + '" value="" />');
+        hideInformationInputContainer(parent_container);
       }
     }).fail(function (data) {
-      loader.siblings().show();
-      loader.hide();
+      hideLoader(loader);
       console.log('Erro! Não foi possível consultar o servidor. Tente novamente mais tarde.');
     });
+  }
+
+  function hideInformationInputContainer(parent_container) {
+    parent_container.empty().fadeOut('fast');
+    $('#improve_image_data').hide();
+  }
+
+  function appendQuestion(container, field, question) {
+    container.append('<h3>' + question + '</h3>');
+    container.append('<input name="field" type="hidden" value="' + field + '" />')
+    if (field == 'description') {
+      container.append('<textarea name="' + field + '"></textarea>');
+    } else {
+      container.append('<input type="text" name="' + field + '" value="" />');
+    }
   }
 
   function showAndFixElementSpacing(element, adjustMarginLeft) {
@@ -154,6 +171,46 @@ $(document).ready(function() {
       element.css({ 'margin-left' : marginLeft });
     }
     element.show();
+  }
+
+  function parseData(data) {
+    return (typeof data == 'string') ? $.parseJSON(data) : data;
+  }
+
+  function showLoader(loader) {
+    loader.siblings().hide();
+    showAndFixElementSpacing(loader, false);
+  }
+
+  function hideLoader(loader) {
+    loader.siblings().show();
+    loader.hide();
+  }
+
+  $('#information_input form').submit(function(e) {
+    e.preventDefault();
+    var data = $(this).serializeArray();
+    $.post(setFieldURL, data).done(function(data) {
+      data = parseData(data);
+      console.log(data);
+      updateFieldContainer(data);
+      loadQuestion();
+      progressbar.levelUp(data['information_completion']);
+    }).fail(function(data){
+      console.log('Não foi possível atualizar os dados da imagem');
+    });
+  });
+
+  function updateFieldContainer(data) {
+    var field_translation = data['field_translation'];
+    var value = data['value'];
+    var container = $('#' + data['field'] + '_container');
+    container.hide();
+    container.append('<h4>' + field_translation + ':</h4>')
+    container.append('<p>' + value + '</p>');
+    container.css({ 'background-color' : '#ffff99' }).fadeIn(1500, function () {
+      container.css({ 'background-color': '#fff' });
+    });
   }
 
 });

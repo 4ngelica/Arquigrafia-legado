@@ -10,11 +10,6 @@
   <!-- Google Maps API -->
   <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>
   <script type="text/javascript">
-    var getFieldURL = "{{ $getFieldURL }}";
-    var setFieldURL = "{{ $setFieldURL }}";
-    var currentField = 0;
-  </script>
-  <script type="text/javascript">
   $(document).ready(function(){
 
     //MAP AND GEOREFERENCING CREATION AND SETTING
@@ -323,18 +318,22 @@
         <div id="image_info_completion">
           <h4>Completude das informações:</h4>
           <div id="progressbar"></div>
-          <script type="text/javascript">
-            var progressbar = $('#progressbar').progressbar();
-            progressbar.progress( {{ $photos->information_completion }} );
-          </script>
           @if ($photos->information_completion < 100)
             <p>
               <a id="improve_image_data" href="{{ URL::to('/photos/' . $photos->id . '/edit') }}">Deseja melhorar as informações da imagem?</a>
             </p>
             <div id="information_input" class="four columns alpha omega row" >
               <p><a href="#" class="close">X</a></p>
-              {{ Form::open( array('url' => 'photos/' . $photos->id . '/update_info') ) }}
-                <div class="four columns alpha omega"></div>
+              {{ Form::open( array('url' => 'photos/' . $photos->id . '/set/field') ) }}
+                <div class="four columns alpha omega">
+                  <h3>{{ $question }}</h3>
+                  {{ Form::hidden('field', $field) }}
+                  @if ($field == "description")
+                    <textarea name="description"></textarea>
+                  @else
+                    {{ Form::text($field, null) }}
+                  @endif
+                </div>
                 <input type="submit" class="btn" value="SALVAR">
                 <button class="btn" id="skip_question">PULAR</button>
               {{ Form::close() }}
@@ -343,17 +342,17 @@
           @endif
         </div>
       @endif
-
+      <div id="description_container">
       @if ( !empty($photos->description) )
         <h4>Descrição:</h4>
         <p>{{ $photos->description }}</p>
       @endif
-
+      </div>
       @if ( !empty($photos->collection) )
         <h4>Coleção:</h4>
         <p>{{ $photos->collection }}</p>
       @endif
-
+      <div id="imageAuthor_container">
       @if ( !empty($photos->imageAuthor) )
         <h4>Autor da Imagem:</h4>
         <p>
@@ -362,8 +361,9 @@
           </a>
         </p>
       @endif
-
-      @if ( !empty($photos->dataCriacao) && $photos->dataCriacao!= null  )
+      </div>
+      <div id="dataCriacao_container">
+      @if ( !empty($photos->dataCriacao) )
         <h4>Data da Imagem:</h4>
         <p>
           <a href="{{ URL::to("/search?q=".$photos->dataCriacao."&t=img") }}">
@@ -371,7 +371,8 @@
           </a>
         </p>
       @endif
-
+      </div>
+      <div id="workAuthor_container">
       @if ( !empty($photos->workAuthor) )
         <h4>Autor da Obra:</h4>
         <p>
@@ -380,17 +381,17 @@
           </a>
         </p>
       @endif
-
-      @if ( !empty($photos->workdate) && $photos->workdate != null )
+      </div>
+      <div id="workdate_container">
+      @if ( !empty($photos->workdate) )
         <h4>Data da Obra:</h4>
         <p>
           <a href="{{ URL::to("/search?q=".$photos->workdate."&t=work") }}">
             {{ Photo::translate($photos->workdate) }}
           </a>
         </p>
-
       @endif
-
+      </div>
       @if ( !empty($photos->street) || !empty($photos->city) ||
         !empty($photos->state) || !empty($photos->country) )
         <h4>Endereço:</h4>
@@ -635,4 +636,13 @@
       });
     });
   </script>
+  <script type="text/javascript">
+    var getFieldURL = "{{ $getFieldURL }}";
+    var setFieldURL = "{{ $setFieldURL }}";
+    var currentField = 1;
+    var hasField = true;
+    var progressbar = $('#progressbar').progressbar();
+    progressbar.progress( {{ $photos->information_completion }} );
+  </script>
+  
 @stop

@@ -16,7 +16,6 @@
             'border-radius':'2px',
             'overflow':'hidden',
             'display':'inline-block',
-            // 'padding': settings.padding,
             'margin':'0',
             'margin-top' : settings.margin_top
             });
@@ -37,22 +36,42 @@
  
         this.progress = function(value)
         {
-            var width = $(this).width() * value/100 - 5;
+            var width = getProgressWidth( $(this).width(), value );
             var progress = getProgressLevel(value);
+            console.log(value);
+            console.log(progress);
             progressbar.width(width);
-            this.css({ 'color' : progress[1], 'border-color' : progress[1] });
-            progressbar.css({ 'background-color' : progress[1] });
+            this.css({ 'color' : progress, 'border-color' : progress });
+            progressbar.css({ 'background-color' : progress });
+        };
+
+        this.levelUp = function(value) {
+            var newWidth = getProgressWidth( $(this).width(), value );
+            var progress = getProgressLevel(value);
+            console.log(value);
+            console.log(progress);
+            this.css({ 
+                'color' : progress, 
+                'border-color' : progress
+            }, 'slow');
+            progressbar.css({ 'background-color': progress, }).animate({
+                'width': newWidth
+            }, 'slow');
         }
         return this;
     };
  
 }(jQuery));
 
+function getProgressWidth(container_width, value) {
+    return container_width * value/100 - 5;
+}
+
 function getProgressLevel(value) {
     if (value < 60) {
-        return ['Razoável', '#cd7f32'];
+        return '#cd7f32';
     } else if (value < 80) {
-        return ['bom', '#c0c0c0'];
+        return '#c0c0c0';
     }
-    return ['ótimo', '#fdd017'];
+    return '#fdd017';
 }

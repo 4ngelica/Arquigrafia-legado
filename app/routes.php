@@ -97,7 +97,7 @@ Route::get('/photos/upload','PhotosController@form');
 Route::get('/photos/download/{photo_id}','PhotosController@download');
 Route::resource('/photos','PhotosController');
 Route::get('/photos/{id}/get/field', 'PhotosController@getField');
-Route::get('/photos/{id}/set/field/{fieldname}', 'PhotosController@setField');
+Route::post('/photos/{id}/set/field', 'PhotosController@setField');
 /* TAGS */
 Route::get('/tags/json', 'TagsController@index');
 

@@ -28,19 +28,39 @@ class Photo extends Eloquent {
 	];
 
 	private static	$information_questions = [
-			'city' => 'Deseja adicionar a cidade da obra?',
-			'country' => 'Deseja adicionar o país da obra?',
-			'dataCriacao' => 'Qual é a data desta imagem?',
-			'description' => 'Deseja adicionar uma descrição para a imagem?',
-			'district' => 'Qual é o bairro da obra?',
-			'imageAuthor' => 'Quem é o autor desta imagem?',
-			'name' => 'Qual é o nome desta obra?',
-			'state' => 'Qual é o Estado desta arquitetura?',
-			'street' => 'Qual é a rua desta obra?',
-			'workAuthor' => 'Quem é o autor da obra?',
-			'workdate' => 'Quando foi construída a obra?'
-		];
+		'city' => 'Deseja adicionar a cidade da obra?',
+		'country' => 'Deseja adicionar o país da obra?',
+		'dataCriacao' => 'Qual é a data desta imagem?',
+		'description' => 'Deseja adicionar uma descrição para a imagem?',
+		'district' => 'Qual é o bairro da obra?',
+		'imageAuthor' => 'Quem é o autor desta imagem?',
+		'name' => 'Qual é o nome desta obra?',
+		'state' => 'Qual é o Estado desta arquitetura?',
+		'street' => 'Qual é a rua desta obra?',
+		'workAuthor' => 'Quem é o autor da obra?',
+		'workdate' => 'Quando foi construída a obra?'
+	];
 
+	private static $fields_translation = [
+		'city' => 'Cidade',
+		'country' => 'País',
+		'dataCriacao' => 'Data da Imagem',
+		'description' => 'Descrição',
+		'district' => 'Endereço',
+		'imageAuthor' => 'Autor da Imagem',
+		'name' => 'Nome da Obra',
+		'state' => 'Endereço',
+		'street' => 'Endereço',
+		'workAuthor' => 'Autor da Obra',
+		'workdate' => 'Data da Obra'
+	];
+
+	protected $date;
+
+	public function __construct(array $attributes = array(), Date $date = null) {
+		$this->date = !is_null($date) ?: new Date;
+		parent::__construct($attributes);
+	}
 
 	public function user()
 	{
@@ -316,38 +336,41 @@ class Photo extends Eloquent {
 	
 	public function getInformationCompletionAttribute($value) {
 		$informations = self::$information_questions;
-		$incomplete = count($this->getEmptyFields());
+		$incomplete = count($this->empty_fields);
 		$total = count($informations);
 		$percentage = (int) (100 * ($total - $incomplete ) / $total) ;
 		return $percentage;
 	}
 
-	public function getEmptyFields() {
-		$informations = self::$information_questions;
-		foreach ($informations as $key => $info) {
-			if ( !empty($this->$key) ) {
-				unset($informations[$key]);
+	public function getEmptyFieldsAttribute($value) {
+		$empty_fields = array();
+		foreach (self::$information_questions as $field => $question) {
+			if ( empty($this->$field) ) {
+				$empty_fields[$field] = $question;
 			}
 		}
-		return $informations;
+		return $empty_fields;
 	}
 
-	public function getEmptyField($empty_fields, $field_position = 0) {
-		$fields = array_keys($empty_fields);
-		$total_fields = count($empty_fields);
+	public function getEmptyField($field_position = 0) {
+		$fields = array_keys($this->empty_fields);
 		try {
-			return $fields[ $field_position % $total_fields ];
+			return $fields[ $field_position ];
 		} catch (Exception $e) {
 			return null;
 		}
 	}
 
-	public function getFieldQuestion($empty_fields, $field) {
+	public function getFieldQuestion($field) {
 		try {
-			return $empty_fields[$field];
+			return $this->empty_fields[$field];
 		} catch (Exception $e) {
 			return null;
 		}
+	}
+
+	public function translateField($field) {
+		return static::$fields_translation[$field];
 	}
 
 	public function scopeWithUser($query, $user) {
