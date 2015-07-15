@@ -1,12 +1,14 @@
 <?php
 
-class Album extends BaseModel {
+class Album extends \BaseModel {
 
 	public $timestamps = false;
 
 	protected $fillable = ['creationDate', 'description', 'title', 'cover_id', 'user_id'];
 
-	public static $rules = [ 'title' => 'required' ];
+	protected $rules = [
+		'title' => 'required'
+	];
 
 	public function photos()
 	{
@@ -23,19 +25,20 @@ class Album extends BaseModel {
 		return $this->belongsTo('Photo', 'cover_id');
 	}
 
-	public function updateInfo($info, $cover) {
-		$this->title = $info['title'];
-		$this->description = $info['description'];
+	public function updateInfo($title, $description, $cover) {
+		$this->title = $title;
+		$this->description = $description;
 		if (isset($cover)) {
 			$this->cover()->associate($cover);
 		}
 	}
 
-	public static function createAlbum($info, $user, $cover) {
+	public static function create(array $attr) {
 		$album = new Album;
-		$album->updateInfo($info, $cover);
+		$album->updateInfo($attr['title'], $attr['description'], $attr['cover']);
 		$album->creationDate = date('Y-m-d H:i:s');
-		$album->user()->associate($user);
+		$album->user()->associate($attr['user']);
+		$album->save();
 		return $album;
 	}
 
@@ -72,6 +75,7 @@ class Album extends BaseModel {
 		if ($albums instanceof Album) {
 			return $query->where('id', '!=', $albums->id);
 		}
+		//instance of Eloquent\Collection
 		return $query->whereNotIn('id', $albums->modelKeys());
 	}
 }

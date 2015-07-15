@@ -54,30 +54,22 @@ class AlbumsController extends \BaseController {
 	}
 
 	public function store() {
-		$input = Input::only('title', 'description');
 		$photos = Input::get('photos_add');
-		$cover_id = (empty($photos) ? null : array_values($photos)[0]);
-		// validate data
-		$rules = array(
-			'title' => 'required',
-		);
-		$validator = Validator::make($input, $rules);
-
-		if ($validator->fails()) {
-			$messages = $validator->messages();
-			return Redirect::to('/albums/create')->withErrors($messages);
-		}
+		$cover = Photo::find((empty($photos) ? null : array_values($photos)[0]));
+		$user = Auth::user();
 		$album = Album::create([
-				'title' => $input["title"],
-				'description' => $input["description"],
-				'creationDate' => date('Y-m-d H:i:s'),
-				'user_id' => Auth::id(),
-				'cover_id' => $cover_id
-			]);
-		if (!empty($photos)) {
-			$album->photos()->sync($photos);
+			'title' => Input::get('title'),
+			'description' => Input::get('description'),
+			'user' => $user,
+			'cover' => $cover
+		]);
+		if ( $album->isValid() ) {
+			if ( !empty($photos) ) {
+				$album->attachPhotos($photos);
+			}
+			return Redirect::to('/albums/' . $album->id);
 		}
-		return Redirect::to('/albums/' . $album->id);
+		return Redirect::to('/albums/create')->withErrors($album->getErrors());
 	}
 
 	public function delete($id) {
@@ -134,47 +126,17 @@ class AlbumsController extends \BaseController {
 		return Redirect::to('albums/' . $id);
 	}
 
-	// public function update($id) {
-	// 	$album = Album::find($id);
-	// 	$input = Input::only('title', 'description');
-	// 	$rules = array('title' => 'required');
-	// 	$validator = Validator::make($input, $rules);
-
-	// 	if ($validator->fails()) {
-	// 		$messages = $validator->messages();
-	// 		return Redirect::to('/albums/' . $id . '/edit')->withErrors($messages);
-	// 	} else {
-	// 		$photos_add = Input::get('photos_add');
-	// 		$photos_rm = Input::get('photos_rm');
-	// 		$album->title = $input['title'];
-	// 		$album->description = $input['description'];
-	// 		if (Input::has("_cover"))
-	// 			$album->cover_id = Input::get("_cover");
-	// 		if (!isset($album->cover_id)) {
-	// 			if (!empty($photos_add))
-	// 				$album->cover_id = $photos_add[0];
-	// 		}
-	// 		$album->save();
-	// 		if ( !empty($photos_add) )
-	// 			$album->photos()->sync($photos_add, false);
-	// 		if ( !empty($photos_rm) )
-	// 			$album->photos()->detach($photos_rm);
-	// 		return Redirect::to('/albums/' . $album->id);
-	// 	}
-	// }
-
 	public function updateInfo($id) {
 		$album = Album::find($id);
-		if ( is_null($album) ) {
-			return Redirect::to('/');
-		}
+		if ( is_null($album) ) { return Redirect::to('/');	}
+		$title = Input::get('title');
+		$description = Input::get('description');
 		$cover = Photo::find( Input::get('cover') );
-		$album->updateInfo( Input::all(), $cover );
-		if ( $album->validate() ) {
-			$album->save();
+		$album->updateInfo( $title, $description, $cover );
+		if ( $album->save() ) {
 			return Response::json("success");
 		}
-		return Response::json($album->errors);
+		return Response::json($album->getErrors());
 	}
 
 	public function paginateByUser() {

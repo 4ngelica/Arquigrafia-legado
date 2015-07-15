@@ -1,16 +1,16 @@
 <?php
 
-class BaseModel extends Eloquent {
-	
-	public $errors;
+use Watson\Validating\ValidatingTrait;
 
-	public function validate()
-	{
-		$validator = Validator::make($this->attributes, static::$rules);
-		if ($validator->passes()) {
-			return true;
-		}
-		$this->errors = $validator->messages();
-		return false;
-	}
+class BaseModel extends Eloquent {
+  
+  use ValidatingTrait;
+
+  public function equal($object) {
+    if ( is_object($object) && get_class($this) == get_class($object) && $this->id == $object->id ) {
+      return true;
+    }
+    return false;
+  }
+
 }
