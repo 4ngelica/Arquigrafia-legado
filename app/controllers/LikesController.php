@@ -9,8 +9,10 @@ class LikesController extends \BaseController {
     $user = Auth::user();
     $this->logLikeDislike($user, $photo, "a foto", "Curtiu", "user");
     
-    $user_note = User::find($photo->user_id);
-    Notification::create('photo_liked', $user, $photo, [$user_note], null);
+    if ($user->id != $photo->user_id) {
+      $user_note = User::find($photo->user_id);
+      Notification::create('photo_liked', $user, $photo, [$user_note], null);
+    }
 
     return $this->like($photo, $user);
   }
@@ -38,8 +40,10 @@ class LikesController extends \BaseController {
     $response = $this->like($comment, $user);
     $this->checkLikesCount($comment, 5, 'test'); 
 
-    $user_note = User::find($comment->user_id);
-    Notification::create('comment_liked', $user, $comment, [$user_note], null);
+    if ($user->id != $comment->user_id) {
+      $user_note = User::find($comment->user_id);
+      Notification::create('comment_liked', $user, $comment, [$user_note], null);
+    }
 
     return $response;
   }
