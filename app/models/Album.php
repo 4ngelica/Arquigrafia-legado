@@ -75,15 +75,4 @@ class Album extends \BaseModel {
 		return !is_null($this->cover);
 	}
 
-	public function scopeWithUser($query, $user) {
-		return $query->where('user_id', $user->id);
-	}
-
-	public function scopeExcept($query, $albums) {
-		if ($albums instanceof Album) {
-			return $query->where('id', '!=', $albums->id);
-		}
-		//instance of Eloquent\Collection
-		return $query->whereNotIn('id', $albums->modelKeys());
-	}
 }
