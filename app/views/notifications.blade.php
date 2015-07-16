@@ -70,9 +70,9 @@
                         <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
                         <div onclick="markRead(this);">
                             <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
-                            <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" comentou sua "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br>
+                            <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentou"}}</a>{{" sua "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br>
                             <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
-                            <a class="link-block" href={{"photos/" . $info_array[2]}}><!--quando clickar, notificação será marcada como vista--></a>
+                            <a class="link-block" href={{"photos/" . $info_array[2]}}></a>
                         </div>
                     </li>
                 </div>

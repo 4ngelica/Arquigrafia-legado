@@ -269,7 +269,7 @@ class PhotosController extends \BaseController {
       if ($user_id != $photo->user_id) {
         $user_note = User::find($photo->user_id);
         $user = User::find($user_id);
-        Notification::create('comment_posted', $user, $photo, [$user_note], null);
+        Notification::create('comment_posted', $user, $comment, [$user_note], null);
       }
 
       $this->checkCommentCount(5,'test');
