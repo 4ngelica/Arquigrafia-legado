@@ -556,6 +556,26 @@ class UsersController extends \BaseController {
     return Response::json(true);
   }
 
+  public function institutionalLogin(){
+    $account = Input::get('login');    
+    $institution = Input::get('institution');
+    $password = Input::get('password');
+
+    $booleanExist = User::userBelongInstitution($input["login"],$institution);  
+
+    //
+    if ((Auth::attempt(array('login' => $input["login"], 'password' => $input["password"])) == true || 
+      Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true) &&
+      $booleanExist == true){
+      //loga usuario da institution
+      return Redirect::to('/');
+    }else{
+      Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
+      return Redirect::to('/users/login')->withInput();
+    }
+
+  }
+
   private function getStoaAccount($account, $password, $account_type) {
     $ch = curl_init();
     $this->setCurlOptions($ch, $account, $password, $account_type);
