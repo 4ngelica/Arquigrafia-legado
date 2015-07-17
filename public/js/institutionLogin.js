@@ -4,7 +4,7 @@ $(document).ready(function() {
 	 	e.preventDefault();
 		var form = $(this);
 		var data = form.serializeArray();
-		$.post('/users/institucionalLogin', data)
+		$.post('/users/institutionalLogin', data)
 		.done(function(success) {
 			if (success) {
 				window.location.replace('/');
