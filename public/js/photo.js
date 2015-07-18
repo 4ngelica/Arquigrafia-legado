@@ -46,7 +46,7 @@ $(document).ready(function() {
       $("#registration").append(data);
     })
     .fail(function() {
-      console.log("Erro ao tentar carregar álbuns via AJAX!");
+      console.error("Erro ao tentar carregar álbuns via AJAX!");
     });
   });
 
@@ -117,8 +117,10 @@ $(document).ready(function() {
     var parent_container = $('#information_input');
     var loader = parent_container.children('.loader');
     var container = parent_container.children().children('div');
+    var url = getFieldURL + '?fp=' + currentField;
+    currentField++;
     showLoader(loader);
-    $.get(getFieldURL + '?fp=' + currentField++).done(function (data) {
+    $.get(url).done(function (data) {
       data = parseData(data);
       container.empty();
       hideLoader(loader);
@@ -136,7 +138,7 @@ $(document).ready(function() {
       }
     }).fail(function (data) {
       hideLoader(loader);
-      console.log('Erro! Não foi possível consultar o servidor. Tente novamente mais tarde.');
+      console.error('Erro! Não foi possível consultar o servidor. Tente novamente mais tarde.');
     });
   }
 
@@ -194,22 +196,23 @@ $(document).ready(function() {
       data = parseData(data);
       console.log(data);
       updateFieldContainer(data);
+      currentField--;
       loadQuestion();
       progressbar.levelUp(data['information_completion']);
     }).fail(function(data){
-      console.log('Não foi possível atualizar os dados da imagem');
+      console.error('Não foi possível atualizar os dados da imagem');
     });
   });
 
   function updateFieldContainer(data) {
-    var field_translation = data['field_translation'];
-    var value = data['value'];
-    var container = $('#' + data['field'] + '_container');
-    container.hide();
-    container.append('<h4>' + field_translation + ':</h4>')
-    container.append('<p>' + value + '</p>');
-    container.css({ 'background-color' : '#ffff99' }).fadeIn(1500, function () {
-      container.css({ 'background-color': '#fff' });
+    var p;
+    var container = $('#' + ( data['is_address'] ? 'address' : data['field'] ) + '_container' );
+    container.empty().hide();
+    container.append(data['html']);
+    p = container.children('p');
+    p.css({ 'background-color' : '#ffff99' });
+    container.fadeIn(1500, function () {
+      p.css({ 'background-color': '#fff' });
     });
   }
 
