@@ -41,20 +41,6 @@ class Photo extends Eloquent {
 		'workdate' => 'Quando foi construída a obra?'
 	];
 
-	private static $fields_translation = [
-		'city' => 'Cidade',
-		'country' => 'País',
-		'dataCriacao' => 'Data da Imagem',
-		'description' => 'Descrição',
-		'district' => 'Endereço',
-		'imageAuthor' => 'Autor da Imagem',
-		'name' => 'Nome da Obra',
-		'state' => 'Endereço',
-		'street' => 'Endereço',
-		'workAuthor' => 'Autor da Obra',
-		'workdate' => 'Data da Obra'
-	];
-
 	protected $date;
 
 	public function __construct(array $attributes = array(), Date $date = null) {
@@ -367,10 +353,6 @@ class Photo extends Eloquent {
 		} catch (Exception $e) {
 			return null;
 		}
-	}
-
-	public function translateField($field) {
-		return static::$fields_translation[$field];
 	}
 
 	public function scopeWithUser($query, $user) {
