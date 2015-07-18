@@ -392,6 +392,7 @@
         </p>
       @endif
       </div>
+      <div id="address_container">
       @if ( !empty($photos->street) || !empty($photos->city) ||
         !empty($photos->state) || !empty($photos->country) )
         <h4>Endereço:</h4>
@@ -423,7 +424,7 @@
           @endif
         </p>
       @endif
-
+      </div>
       <h4>Licença:</h4>
       <!--
       <a href="http://creativecommons.org/licenses/{{$license[0]}}/3.0/deed.pt_BR" target="_blank"
