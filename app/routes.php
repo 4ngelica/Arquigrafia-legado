@@ -96,8 +96,7 @@ Route::get('/photos/batch','PhotosController@batch');
 Route::get('/photos/upload','PhotosController@form');
 Route::get('/photos/download/{photo_id}','PhotosController@download');
 Route::resource('/photos','PhotosController');
-Route::get('/photos/{id}/get/field', 'PhotosController@getField');
-Route::post('/photos/{id}/set/field', 'PhotosController@setField');
+
 /* TAGS */
 Route::get('/tags/json', 'TagsController@index');
 
@@ -105,3 +104,7 @@ Route::get('/tags/json', 'TagsController@index');
 Route::get('/notifications', 'NotificationsController@show');
 Route::get('/markRead/{id}', 'NotificationsController@read');
 Route::get('/readAll', 'NotificationsController@readAll');
+
+/* GAMIFICATION */
+Route::get('/photos/{id}/get/field', 'QuestionsController@getField');
+Route::post('/photos/{id}/set/field', 'QuestionsController@setField');
