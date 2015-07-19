@@ -27,34 +27,6 @@ class Photo extends Eloquent {
 		'NO' => ['Não', '-nc']
 	];
 
-	private static	$information_questions = [
-		'city' => 'Deseja adicionar a cidade da obra?',
-		'country' => 'Deseja adicionar o país da obra?',
-		'dataCriacao' => 'Qual é a data desta imagem?',
-		'description' => 'Deseja adicionar uma descrição para a imagem?',
-		'district' => 'Qual é o bairro da obra?',
-		'imageAuthor' => 'Quem é o autor desta imagem?',
-		'name' => 'Qual é o nome desta obra?',
-		'state' => 'Qual é o Estado desta arquitetura?',
-		'street' => 'Qual é a rua desta obra?',
-		'workAuthor' => 'Quem é o autor da obra?',
-		'workdate' => 'Quando foi construída a obra?'
-	];
-
-	private static $fields_translation = [
-		'city' => 'Cidade',
-		'country' => 'País',
-		'dataCriacao' => 'Data da Imagem',
-		'description' => 'Descrição',
-		'district' => 'Endereço',
-		'imageAuthor' => 'Autor da Imagem',
-		'name' => 'Nome da Obra',
-		'state' => 'Endereço',
-		'street' => 'Endereço',
-		'workAuthor' => 'Autor da Obra',
-		'workdate' => 'Data da Obra'
-	];
-
 	protected $date;
 
 	public function __construct(array $attributes = array(), Date $date = null) {
@@ -367,10 +339,6 @@ class Photo extends Eloquent {
 		} catch (Exception $e) {
 			return null;
 		}
-	}
-
-	public function translateField($field) {
-		return static::$fields_translation[$field];
 	}
 
 	public function scopeWithUser($query, $user) {
