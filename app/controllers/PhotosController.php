@@ -588,38 +588,4 @@ class PhotosController extends \BaseController {
     return $commentsMessage;
   }
 
-  public function getField($id) {
-    $photo = Photo::find($id);
-    if ( is_null($photo) || !$photo->user->equal(Auth::user()) ) {
-      return Response::json('fail');
-    }
-    $field = $photo->getEmptyField(Input::get('fp'));
-    $question = $photo->getFieldQuestion($field);
-    if ( empty($field) && empty($question) ) {
-      return Response::json([
-        'end' => true,
-        'complete' => empty($photo->empty_fields)
-      ]);
-    }
-    return Response::json([ 'end' => false, 'field' => $field, 'question' => $question ]);
-  }
-
-  public function setField($id) {
-    $photo = Photo::find($id);
-    $field = Input::get('field');
-    $value = Input::get($field);
-    if ( is_null($photo) || !$photo->user->equal(Auth::user()) ||
-      empty($value) || !empty($photo->$field) ) {
-        return Response::json('fail');
-    }
-    $photo->$field = $value;
-    $photo->save();
-    return Response::json([
-      'field' => $field,
-      'field_translation' => $photo->translateField($field),
-      'value' => $photo->$field,
-      'information_completion' => $photo->information_completion
-    ]);
-  }
-
 }
