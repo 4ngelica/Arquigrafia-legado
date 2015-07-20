@@ -4,17 +4,25 @@ use Illuminate\Auth\UserTrait;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
-// begin 12/05/2015 for date msy
 use lib\date\Date;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
+
+	use UserTrait, RemindableTrait;
 	
 	protected $fillable = ['id','name','email','password','login','verify_code'];
 
+	protected $date;
+
+	public function __construct($attributes = array(), Date $date = null) {
+		parent::__construct($attributes);
+		$this->date = $date ?: new Date;
+	}
+
 	public function notifications()
-    {
-        return $this->hasMany('\Tricki\Notification\Models\NotificationUser');
-    }
+  {
+    return $this->hasMany('\Tricki\Notification\Models\NotificationUser');
+  }
 
 	public function photos()
 	{
@@ -61,13 +69,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	{
 		return $this->belongsToMany('User', 'friendship', 'following_id', 'followed_id');
 	}
-	//begin 12/05/2015 format date msy
-	public static function formatDate($date)
-	{
-		return Date::formatDate($date);
-	}
-	//end
-	use UserTrait, RemindableTrait;
 
 	protected $hidden = array('password', 'remember_token');
 
@@ -166,6 +167,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
      			}
      			
 
+	}
+
+	public function setBirthdayAttribute($birthday) {
+		$this->attributes['birthday'] = $this->date->formatDate($birthday);
 	}
 
 }

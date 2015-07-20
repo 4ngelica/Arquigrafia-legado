@@ -8,8 +8,6 @@ class PhotosController extends \BaseController {
   {
     $this->beforeFilter('auth',
       array( 'except' => ['index','show'] ));
-    // $this->beforeFilter('ajax',
-    //   array( 'only' => ['getField', 'setField'] ));
   }
 
   public function index()
@@ -31,8 +29,6 @@ class PhotosController extends \BaseController {
     $average = Evaluation::average($photos->id);
     $evaluations = null;
     $photoliked = null;
-    $field = $photos->getEmptyField();
-    $question = $photos->getFieldQuestion($field);
     $follow = true;
     if (Auth::check()) {
       $photoliked = Like::fromUser($user)->withLikable($photos)->first();
@@ -61,10 +57,6 @@ class PhotosController extends \BaseController {
       'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photos->id),
       'photoliked' => $photoliked,
       'license' => $license,
-      'getFieldURL' => URL::to('/photos/' . $photos->id . '/get/field'),
-      'setFieldURL' => URL::to('/photos/' . $photos->id . '/set/field'),
-      'field' => $field,
-      'question' => $question
     ]);
   }
 
@@ -141,9 +133,9 @@ class PhotosController extends \BaseController {
       if ( !empty($input["photo_workAuthor"]) )
         $photo->workAuthor = $input["photo_workAuthor"];
       if ( !empty($input["photo_workDate"]) )
-        $photo->workdate = Photo::formatDate($input["photo_workDate"]);
+        $photo->workdate = $input["photo_workDate"];
       if ( !empty($input["photo_imageDate"]) )
-      $photo->dataCriacao = Photo::formatDate($input["photo_imageDate"]);
+      $photo->dataCriacao = $input["photo_imageDate"];
 
       $photo->nome_arquivo = $file->getClientOriginalName();
 
@@ -461,14 +453,14 @@ class PhotosController extends \BaseController {
       $photo->workAuthor = $input["photo_workAuthor"];
       //2015-05-09 msy add validate for date image/work end
       if ( !empty($input["photo_workDate"])) {
-        $photo->workdate = Photo::formatDate($input["photo_workDate"]);
-      }else{
+        $photo->workdate = $input["photo_workDate"];
+      }else {
         $photo->workdate = null;
       }
 
       if ( !empty($input["photo_imageDate"]) ){
-        $photo->dataCriacao = Photo::formatDate($input["photo_imageDate"]);
-      }else{
+        $photo->dataCriacao = $input["photo_imageDate"];
+      }else {
         $photo->dataCriacao = null;
       }
 

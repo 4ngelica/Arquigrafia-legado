@@ -29,9 +29,9 @@ class Photo extends Eloquent {
 
 	protected $date;
 
-	public function __construct(array $attributes = array(), Date $date = null) {
-		$this->date = !is_null($date) ?: new Date;
+	public function __construct($attributes = array(), Date $date = null) {
 		parent::__construct($attributes);
+		$this->date = $date ?: new Date;
 	}
 
 	public function user()
@@ -67,25 +67,6 @@ class Photo extends Eloquent {
 	public function evaluations()
 	{
 		return $this->hasMany('Evaluation');
-	}
-
-	public static function formatDate($date)
-	{
-		return Date::formatDate($date);
-	}
-
-	public static function formatDatePortugues($date)
-	{
-		return Date::formatDatePortugues($date);
-	}
-
-	public static function dateDiff($start,$end)
-	{
-		return Date::dateDiff($start,$end);
-	}
-
-	public static function translate($date) {
-		return Date::translate($date);
 	}
 
 	public function saveMetadata($originalFileExtension)
@@ -305,41 +286,6 @@ class Photo extends Eloquent {
 		return $license;
 
 	}
-	
-	public function getInformationCompletionAttribute($value) {
-		$informations = self::$information_questions;
-		$incomplete = count($this->empty_fields);
-		$total = count($informations);
-		$percentage = (int) (100 * ($total - $incomplete ) / $total) ;
-		return $percentage;
-	}
-
-	public function getEmptyFieldsAttribute($value) {
-		$empty_fields = array();
-		foreach (self::$information_questions as $field => $question) {
-			if ( empty($this->$field) ) {
-				$empty_fields[$field] = $question;
-			}
-		}
-		return $empty_fields;
-	}
-
-	public function getEmptyField($field_position = 0) {
-		$fields = array_keys($this->empty_fields);
-		try {
-			return $fields[ $field_position ];
-		} catch (Exception $e) {
-			return null;
-		}
-	}
-
-	public function getFieldQuestion($field) {
-		try {
-			return $this->empty_fields[$field];
-		} catch (Exception $e) {
-			return null;
-		}
-	}
 
 	public function scopeWithUser($query, $user) {
 		return $query->where('user_id', $user->id);
@@ -372,6 +318,26 @@ class Photo extends Eloquent {
 			->orWhere('state', 'LIKE', '%'. $needle .'%')
 			->orWhere('city', 'LIKE', '%'. $needle .'%');
 		});
+	}
+
+	public function getDataUploadAttribute($value) {
+		return $this->date->formatDatePortugues($this->attributes['dataUpload']);
+	}
+
+	public function setDataCriacaoAttribute($raw_date) {
+		$this->attributes['dataCriacao'] = $this->date->formatDate($raw_date);
+	}
+
+	public function setWorkDateAttribute($raw_date) {
+		$this->attributes['workdate'] = $this->date->formatDate($raw_date);
+	}
+
+	public function getTranslatedDataCriacaoAttribute($raw_date) {
+		return $this->date->translate($this->attributes['dataCriacao']);
+	}
+
+	public function getTranslatedWorkdateAttribute($raw_date) {
+		return $this->date->translate($this->attributes['workdate']);
 	}
 
 }

@@ -6,7 +6,6 @@ use Facebook\FacebookRequest;
 use Facebook\FacebookAuthorizationException;
 use Facebook\FacebookRequestException;
 
-
 class UsersController extends \BaseController {
 
   public function __construct()
@@ -500,11 +499,8 @@ class UsersController extends \BaseController {
       $user->scholarity = $input['scholarity'];
       $user->lastName = $input['lastName'];
       $user->site = $input['site'];
-      //begin 12/05/2015 msy
       if ( !empty($input["birthday"]) )
-      $user->birthday = User::formatDate($input["birthday"]);      
-      //$user->birthday = $input['birthday'];
-      //end
+        $user->birthday = $input["birthday"];      
       $user->country = $input['country'];
       $user->state = $input['state'];
       $user->city = $input['city'];  

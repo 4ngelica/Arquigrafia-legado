@@ -1,6 +1,7 @@
 <?php
 
 use lib\utils\ActionUser;
+use lib\date\Date;
 
 class PagesController extends BaseController {
 
@@ -9,6 +10,13 @@ class PagesController extends BaseController {
 	| Default Page Controller
 	|--------------------------------------------------------------------------
 	*/
+
+  protected $date;
+
+  public function __construct(Date $date = null)
+  {
+    $this->date = $date ?: new Date; 
+  }
 
 	public function home()
 	{
@@ -252,21 +260,21 @@ class PagesController extends BaseController {
           if(DateTime::createFromFormat('Y', $workdate)!== FALSE) {
             $query->where('workdate', 'LIKE', '%' . $workdate . '%');
           }else{
-            $query->where('workdate', 'LIKE', '%' . Photo::formatDate($workdate) . '%');
+            $query->where('workdate', 'LIKE', '%' . $this->date->formatDate($workdate) . '%');
           }
        }
        if ($dataCriacao != ''){ 
           if(DateTime::createFromFormat('Y', $dataCriacao)!== FALSE) {
             $query->where('dataCriacao', 'LIKE', '%' . $dataCriacao . '%');
           }else{
-            $query->where('dataCriacao', 'LIKE', '%' . Photo::formatDate($dataCriacao) . '%');
+            $query->where('dataCriacao', 'LIKE', '%' . $this->date->formatDate($dataCriacao) . '%');
           }
        }
        if ($dataUpload != ''){ 
           if(DateTime::createFromFormat('Y', $dataUpload)!== FALSE) {
             $query->where('dataUpload', 'LIKE', '%' . $dataUpload . '%');
           }else{
-            $query->where('dataUpload', 'LIKE', '%' . Photo::formatDate($dataUpload) . '%');
+            $query->where('dataUpload', 'LIKE', '%' . $this->date->formatDate($dataUpload) . '%');
           }
        }
        
