@@ -535,6 +535,7 @@ class UsersController extends \BaseController {
   }
 
   public function stoaLogin() {
+
     $account = Input::get('stoa_account');
     $password = Input::get('password');
     $stoa_user = $this->getStoaAccount($account, $password, 'login');
@@ -552,23 +553,34 @@ class UsersController extends \BaseController {
     return Response::json(true);
   }
 
-  public function institutionalLogin(){
-    $account = Input::get('login');    
+  public function institutionalLogin(){ 
+    
+    $login = Input::get('login');    
     $institution = Input::get('institution');
     $password = Input::get('password');
 
-    $booleanExist = User::userBelongInstitution($input["login"],$institution);  
+    Log::info("Retrieved params login=".$login.", institution=".$institution);
+
+    $booleanExist = User::userBelongInstitution($login,$institution); 
+    
+    Log::info("Result belong institution -> booleanExist=".$booleanExist);
 
     //
-    if ((Auth::attempt(array('login' => $input["login"], 'password' => $input["password"])) == true || 
-      Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true) &&
+    if ((Auth::attempt(array('login' => $login, 'password' => $password)) == true || 
+      Auth::attempt(array('email' => $login, 'password' => $password,'active' => 'yes')) == true) &&
       $booleanExist == true){
+
+      Log::info("Valid access, redirect");
+
       //loga usuario da institution
       return Redirect::to('/');
     }else{
-      Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
-      return Redirect::to('/users/login')->withInput();
+      Log::info("Invalid access, return message");
+      
+      return Response::json(false);
     }
+
+
 
   }
 
