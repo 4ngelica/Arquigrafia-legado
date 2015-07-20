@@ -99,7 +99,7 @@
               <span class="right">
                 <small>Inserido em:</small>
                 <a class="data_upload" href="{{ URL::to("/search?q=".$photos->dataUpload."&t=up") }}">
-                  {{ Photo::formatDatePortugues($photos->dataUpload) }}
+                  {{ $photos->dataUpload }}
                 </a>
               </span>
             @endif
@@ -338,7 +338,7 @@
         <h4>Data da Imagem:</h4>
         <p>
           <a href="{{ URL::to("/search?q=".$photos->dataCriacao."&t=img") }}">
-            {{ Photo::translate($photos->dataCriacao) }}
+            {{ $photos->translated_data_criacao }}
           </a>
         </p>
       @endif
@@ -358,7 +358,7 @@
         <h4>Data da Obra:</h4>
         <p>
           <a href="{{ URL::to("/search?q=".$photos->workdate."&t=work") }}">
-            {{ Photo::translate($photos->workdate) }}
+            {{ $photos->translated_work_date }}
           </a>
         </p>
       @endif
