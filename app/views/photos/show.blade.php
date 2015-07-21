@@ -252,7 +252,7 @@
           <hgroup class="profile_block_title">
             <h3>
               <img src="{{ asset("img/evaluate.png") }}" width="16" height="16"/>
-              Imagens avaliadas com média similar
+              Imagens interpretadas com média similar
             </h3>
             <span>({{count($similarPhotos) }})
               @if(count($similarPhotos)>1)
@@ -428,11 +428,11 @@
       @endif
 
       @if (empty($average))
-        <h4>Avaliação:</h4>
+        <h4>Interpretação da arquitetura:</h4>
         <img src="/img/GraficoFixo.png" />
       @else
         <h4>
-          <center>Média de Avaliações d{{ $architectureName }} </center>
+          <center>Média de Interpretações d{{ $architectureName }} </center>
         </h4>
         <br>
         <div id="evaluation_average"></div>
@@ -463,14 +463,22 @@
         @endif
       @else
         @if (empty($average))
-          <p>
+          <!--<p>
             Faça o <a href="{{ URL::to('/users/login') }}">Login</a> 
             e seja o primeiro a avaliar {{ $architectureName }}
+          </p>-->
+          <p>
+            Faça o <a href="{{ URL::to('/users/login') }}">Login</a> 
+            e seja o primeiro em interpretar {{ $architectureName }}
           </p>
         @else
-          <p>
+          <!--<p>
             Faça o <a href="{{ URL::to('/users/login') }}">Login</a>
             e avalie você também {{ $architectureName }}
+          </p>-->
+          <p>
+            Faça o <a href="{{ URL::to('/users/login') }}">Login</a>
+            e interprete você também {{ $architectureName }}
           </p>
         @endif
       @endif
@@ -597,7 +605,7 @@
                 @endif
               ],
               yAxis: 0,
-              name: 'Sua avaliação',
+              name: 'Sua interpretação',
               marker: {
                 symbol: 'circle',
                 enabled: true
