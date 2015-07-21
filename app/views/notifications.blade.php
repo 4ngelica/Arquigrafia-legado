@@ -37,7 +37,24 @@
                         <div class="read-button" title="Marcar como lida" onclick="markRead(this);"></div>
                         <div onclick="markRead(this);">
                             <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
-                            <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu sua " }} <a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br>
+                            @if($info_array[6] == null)
+                            <a href={{"users/" . $info_array[5]}}>{{$info_array[1]}}</a>{{" curtiu sua " }} <a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}
+                            @else
+                            <?php 
+                                $users = explode(":", $info_array[6]);
+                                $users_size = count($users) - 1;
+                                $names;
+                                for ($i = 0; $i < $users_size; $i++) {
+                                    $user[$i] = User::find($users[$i+1]);
+                                }
+                            ?>
+                            @if($users_size < 2)
+                            <a href={{"users/" . $info_array[5]}}>{{$info_array[1]}}</a>{{" e "}}<a href={{"users/" . $user[0]->id}}>{{$user[0]->name}}</a>{{" curtiram sua " }} <a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}
+                            @else
+                            <a href={{"users/" . $info_array[5]}}>{{$info_array[1]}}</a>{{" e mais " . $users_size . " pessoas curtiram sua "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}
+                            @endif
+                            @endif
+                            </br>
                             <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
                             <a class="link-block" href={{"photos/" . $info_array[2]}}></a>
                         </div>
