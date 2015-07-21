@@ -126,7 +126,7 @@
               <a href="{{ asset('photos/download/'.$photos->id) }}" title="Faça o download" id="download" target="_blank"></a>
             </li>
             <li>
-              <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=sb' )}}" title="Avalie {{$architectureName}}" id="evaluate" ></a>
+              <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=sb' )}}" title="Interprete {{$architectureName}}" id="evaluate" ></a>
             </li>
             <!-- LIKE-->
             @if(is_null($photoliked))
@@ -444,20 +444,23 @@
 
       @if (Auth::check())
         @if (isset($userEvaluations) && !$userEvaluations->isEmpty())
-          <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Avaliar" id="evaluate_button"
+          <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
           class="btn">
-            Clique aqui para alterar sua avaliação
+            <!--Clique aqui para alterar sua avaliação-->
+            Clique aqui para alterar sua interpretação
           </a> &nbsp;
         @else
           @if (empty($average))
-            <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Avaliar" id="evaluate_button"
+            <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
             class="btn">
-              Seja o primeiro a avaliar {{$architectureName}}
+              <!--Seja o primeiro a avaliar {{$architectureName}}-->
+              Seja o primeiro em interpretar {{$architectureName}}
             </a> &nbsp;
           @else
-            <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Avaliar" id="evaluate_button"
+            <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
             class="btn">
-              Avalie você também {{$architectureName}}
+              <!--Avalie você também {{$architectureName}}-->
+              Interprete você também {{$architectureName}}
             </a> &nbsp;
           @endif
         @endif
