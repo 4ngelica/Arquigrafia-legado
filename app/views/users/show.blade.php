@@ -262,9 +262,11 @@
 				<hgroup class="profile_block_title">
 					<h3><img src="{{ asset("img/evaluate.png") }}" width="16" height="16"/>
 						@if (Auth::check() && $user->id == Auth::user()->id)
-							Minhas imagens avaliadas
+							<!--Minhas imagens avaliadas-->
+							Minhas imagens interpretadas
 						@else
-							Imagens avaliadas
+							<!--Imagens avaliadas-->
+							Imagens interpretadas
 						@endif
 					</h3>
 				</hgroup>			

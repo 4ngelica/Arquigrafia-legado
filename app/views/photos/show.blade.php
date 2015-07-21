@@ -447,7 +447,7 @@
           <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
           class="btn">
             <!--Clique aqui para alterar sua avaliação-->
-            Clique aqui para alterar sua interpretação
+            Clique aqui para alterar sua impressão
           </a> &nbsp;
         @else
           @if (empty($average))
@@ -608,7 +608,7 @@
                 @endif
               ],
               yAxis: 0,
-              name: 'Sua interpretação',
+              name: 'Sua impressão',
               marker: {
                 symbol: 'circle',
                 enabled: true

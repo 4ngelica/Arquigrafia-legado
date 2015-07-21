@@ -127,7 +127,7 @@
                 marginRight: 80,          
             },
             title: {
-                text: '<b> Média de Avaliações d{{$architectureName}} </b>'
+                text: '<b> Média de interpretações d{{$architectureName}} </b>'
             },
             tooltip: {
               formatter: function() {
@@ -214,9 +214,9 @@
                 color: '#000000',
                 name: 
                 @if (Auth::check() && $owner->id == Auth::user()->id)
-                  'Sua avaliação' 
+                  'Sua impressão' 
                 @else
-                  'Avaliação de {{$owner->name}}'
+                  'Impressão de {{$owner->name}}'
                 @endif
             }
             @endif
@@ -234,7 +234,7 @@
      
     <hgroup class="profile_block_title">    
       <h3><img src="{{ asset("img/evaluate.png") }}" width="16" height="16"/>
-        Imagens avaliadas com média similar</h3>
+        Imagens interpretadas com média similar</h3>
         <span>({{count($similarPhotos) }})
             @if(count($similarPhotos)>1) 
                Imagens 
@@ -298,10 +298,11 @@
         
         <!-- AVALIAÇÃO -->
                
-        <h3>Avaliação d{{$architectureName}}</h3> 
-        
+        <!--<h3>Avaliação d{{$architectureName}}</h3> -->
+        <h3>Impressões d{{$architectureName}}</h3> 
 			 
-        <p>Avalie a arquitetura apresentada nesta imagem de acordo com seus aspectos, compare também sua avaliação com as dos outros usuários.</p>
+        <!--<p>Avalie a arquitetura apresentada nesta imagem de acordo com seus aspectos, compare também sua avaliação com as dos outros usuários.</p>-->
+        <p>Para cada um dos pares abaixo, quais são as qualidades predominantes na arquitetura presente nesta imagem?</p>
                
         <!-- FORMULÁRIO DE AVALIAÇÃO -->
         <div id="evaluation_box">         
@@ -356,7 +357,7 @@
               
                <a href="{{ URL::previous() }}" class='btn right'>VOLTAR</a>
                @if (Auth::check() && $owner != null && $owner->id == Auth::user()->id)
-                {{ Form::submit('AVALIAR', ['id'=>'evaluation_button','class'=>'btn right']) }} 
+                {{ Form::submit('INTERPRETAR', ['id'=>'evaluation_button','class'=>'btn right']) }} 
                @endif
                 
             {{ Form::close() }}
@@ -364,9 +365,11 @@
             
           <?php } else { ?>
             @if (empty($average)) 
-              <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e seja o primeiro a avaliar {{$architectureName}}</p>
+              <!--<p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e seja o primeiro a avaliar {{$architectureName}}</p>-->
+              <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e seja o primeiro em interpretar {{$architectureName}}</p>
             @else
-              <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e avalie você também {{$architectureName}}</p>
+              <!--<p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e avalie você também {{$architectureName}}</p>-->
+              <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e interprete você também {{$architectureName}}</p>
             @endif            
           <?php } ?>
         
