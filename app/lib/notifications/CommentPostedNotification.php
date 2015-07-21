@@ -11,7 +11,17 @@ class CommentPostedNotification extends \Tricki\Notification\Models\Notification
     public static $type = 'comment_posted';
 
 	public function render() {
-        return array($this->getTypes(), $this->getSender(), $this->getPhotoID(), $this->getDate(), $this->getTime(), $this->getSenderID(), $this->getPhotoOwnerID(), $this->getPhotoOwnerName(), $this->getCommentID());
+        return array($this->getTypes(), 
+                     $this->getSender(), 
+                     $this->getPhotoID(), 
+                     $this->getDate(), 
+                     $this->getTime(), 
+                     $this->getSenderID(), 
+                     $this->getPhotoOwnerID(), 
+                     $this->getPhotoOwnerName(), 
+                     $this->getCommentID(),
+                     $this->getData()
+                     );
     }
 
     public function getDate() {
@@ -60,6 +70,10 @@ class CommentPostedNotification extends \Tricki\Notification\Models\Notification
 
     public function getSender() {
         return User::find($this->sender_id)->name;
+    }
+
+    public function getData() {
+        return $this->data;
     }
 }
 
