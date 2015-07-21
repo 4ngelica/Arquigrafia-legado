@@ -9,7 +9,14 @@ class PhotoLikedNotification extends \Tricki\Notification\Models\Notification
     public static $type = 'photo_liked';
 
     public function render() {
-        return array($this->getTypes(), $this->getSender(), $this->getPhotoID(), $this->getDate(), $this->getTime(), $this->getSenderID());
+        return array($this->getTypes(), 
+                     $this->getSender(), 
+                     $this->getPhotoID(), 
+                     $this->getDate(), 
+                     $this->getTime(), 
+                     $this->getSenderID(), 
+                     $this->getData()
+                     );
     }
 
     public function getDate() {
@@ -44,6 +51,10 @@ class PhotoLikedNotification extends \Tricki\Notification\Models\Notification
 
     public function getSender() {
         return User::find($this->sender_id)->name;
+    }
+
+    public function getData() {
+        return $this->data;
     }
 }
 
