@@ -104,3 +104,4 @@ Route::get('/tags/json', 'TagsController@index');
 Route::get('/notifications', 'NotificationsController@show');
 Route::get('/markRead/{id}', 'NotificationsController@read');
 Route::get('/readAll', 'NotificationsController@readAll');
+Route::get('/refreshBubble', 'NotificationsController@howManyUnread');

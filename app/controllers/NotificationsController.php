@@ -39,6 +39,13 @@ class NotificationsController extends \BaseController {
 		}
 	}
 
+	public function howManyUnread() {
+		if (Auth::check()) {
+			$user = Auth::user();
+			return $user->notifications()->unread()->count();
+		}
+	}
+
 	public static function isNotificationByUser($user_id, $note_sender_id, $note_data){
 		if ($user_id == $note_sender_id) return true;
 		elseif ($note_data != null) {

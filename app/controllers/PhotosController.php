@@ -254,13 +254,12 @@ class PhotosController extends \BaseController {
       $photo = Photo::find($id);
       $photo->comments()->save($comment);
 
-      $user_id = Auth::user()->id;
+      $user = Auth::user();
       $source_page = Request::header('referer');
-      ActionUser::printComment($user_id, $source_page, "Inseriu", $comment->id, $id, "user");
-
-      if ($user_id != $photo->user_id) {
+      ActionUser::printComment($user->id, $source_page, "Inseriu", $comment->id, $id, "user");
+      /*Envio de notificação*/
+      if ($user->id != $photo->user_id) {
         $user_note = User::find($photo->user_id);
-        $user = User::find($user_id);
         Notification::create('comment_posted', $user, $comment, [$user_note], null);
       }
 
