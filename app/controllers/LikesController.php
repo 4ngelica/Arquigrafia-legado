@@ -9,9 +9,21 @@ class LikesController extends \BaseController {
     $user = Auth::user();
     $this->logLikeDislike($user, $photo, "a foto", "Curtiu", "user");
     
+    /*Envio de notificação*/
     if ($user->id != $photo->user_id) {
       $user_note = User::find($photo->user_id);
-      Notification::create('photo_liked', $user, $photo, [$user_note], null);
+      foreach ($user_note->notifications as $notification) {
+        $info = $notification->render();
+        if ($info[0] == "photo_liked" && $info[2] == $id) $note_id = $notification->notification_id;
+      }
+      if (isset($note_id)) {
+        $note = DB::table("notifications")->where("id","=", $note_id)->get();
+        if (NotificationsController::isNotificationByUser($user->id, $note[0]->sender_id, $note[0]->data) == false) {
+          $new_data = $note[0]->data . ":" . $user->id;
+          DB::table("notifications")->where("id","=", $note_id)->update(array("data" => $new_data));  
+        }
+      }
+      else Notification::create('photo_liked', $user, $photo, [$user_note], null);
     }
 
     return $this->like($photo, $user);

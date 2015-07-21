@@ -38,6 +38,17 @@ class NotificationsController extends \BaseController {
 			return $user->notifications()->unread()->count();
 		}
 	}
+
+	public static function isNotificationByUser($user_id, $note_sender_id, $note_data){
+		if ($user_id == $note_sender_id) return true;
+		elseif ($note_data != null) {
+			$users = explode(":", $note_data);
+			foreach ($users as $user) {
+				if ($user == $user_id) return true;
+			}
+		}
+		return false;
+	}
 }
 
 ?>
