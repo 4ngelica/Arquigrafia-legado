@@ -276,30 +276,41 @@ class PhotosController extends \BaseController {
     if (Auth::check()) {
       $evaluations =  Evaluation::where("user_id", Auth::id())->where("photo_id", $id)->get();
       $input = Input::all();
+      
+      if(Input::get('knownArchitecture') == true)
+      {
+        $knownArchitecture = Input::get('knownArchitecture');
+      }else{
+        $knownArchitecture = 'no';
+      }
+
+      
       $evaluation_string = "";
       $evaluation_names = array("Vertical-Horizontal", "Opaca-Translúcida", "Assimétrica-Simétrica", "Simples-Complexa", "Externa-Interna", "Fechada-Aberta");
       $i = 0;
       $user_id = Auth::user()->id;
       // pegar do banco as possives métricas
-      $binomials = Binomial::all();
+      $binomials = Binomial::all();  
       // fazer um loop por cada e salvar como uma avaliação
       if ($evaluations->isEmpty()) {
-        $insertion_edition = "Inseriu";
+         $insertion_edition = "Inseriu";
         foreach ($binomials as $binomial) {
-        $bid = $binomial->id;
+          $bid = $binomial->id;
           $newEvaluation = Evaluation::create([
             'photo_id'=> $id,
             'evaluationPosition'=> $input['value-'.$bid],
             'binomial_id'=> $bid,
-            'user_id'=> $user_id
+            'user_id'=> $user_id,
+            'knownArchitecture'=>$knownArchitecture
           ]);
           $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
         }
-      } else {
-        $insertion_edition = "Editou";
+      } else { 
+          $insertion_edition = "Editou";
         foreach ($evaluations as $evaluation) {
           $bid = $evaluation->binomial_id;
           $evaluation->evaluationPosition = $input['value-'.$bid];
+          $evaluation->knownArchitecture = $knownArchitecture;
           $evaluation->save();
           $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
         }
@@ -326,7 +337,7 @@ class PhotosController extends \BaseController {
     return "OK.";
   }
 
-  public function evaluate($photoId ) {
+  public function evaluate($photoId ) { 
     $this->checkEvalCount(5, 'test');
     if(isset($_SERVER['QUERY_STRING'])) parse_str($_SERVER['QUERY_STRING']);
     $user_id = Auth::user()->id;
@@ -370,6 +381,7 @@ class PhotosController extends \BaseController {
     $average = Evaluation::average($photo->id);
     $evaluations = null;
     $averageAndEvaluations = null;
+    $checkedKnowArchitecture = false;
     $user = null;
     $follow = true;
     if ($userId != null) {
@@ -382,14 +394,17 @@ class PhotosController extends \BaseController {
       }
       $averageAndEvaluations= Evaluation::averageAndUserEvaluation($photo->id,$userId);
       $evaluations =  Evaluation::where("user_id", $user->id)->where("photo_id", $photo->id)->orderBy("binomial_id", "asc")->get();
+      $checkedKnowArchitecture= Evaluation::userKnowsArchitecture($photoId,$userId);
+      
     }
-
+    
     return View::make('/photos/evaluate',
       ['photos' => $photo, 'owner' => $user, 'follow' => $follow, 'tags' => $photo->tags, 'commentsCount' => $photo->comments->count(), 'commentsMessage' => static::createCommentsMessage($photo->comments->count()),
       'average' => $average, 'userEvaluations' => $evaluations,'userEvaluationsChart' => $averageAndEvaluations, 'binomials' => $binomials,
       'architectureName' => Photo::composeArchitectureName($photo->name),
       'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photo->id),
-      'isOwner' => $isOwner]);
+      'isOwner' => $isOwner,
+      'checkedKnowArchitecture' => $checkedKnowArchitecture]);
   }
 
 

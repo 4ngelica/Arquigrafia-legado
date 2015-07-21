@@ -2,7 +2,7 @@
 
 class Evaluation extends Eloquent {
 
-	protected $fillable = ['photo_id','evaluationPosition','binomial_id','user_id'];
+	protected $fillable = ['photo_id','evaluationPosition','binomial_id','user_id','knownArchitecture'];
 
 	protected $table = 'binomial_evaluation';
 
@@ -29,6 +29,20 @@ class Evaluation extends Eloquent {
 			->where('photo_id', $id)
 			->orderBy('binomial_id', 'asc')
 			->groupBy('binomial_id')->get();
+	}
+
+
+	public static function userKnowsArchitecture($photoId,$userId){
+		   $result = DB::table('binomial_evaluation')
+			->select('knownArchitecture')
+			->where('photo_id', $photoId)
+			->where('user_id',$userId)->get();
+		   if($result[0]->knownArchitecture == 'yes'){
+		   		return true;
+		   }else{
+		   		return false;
+		   }
+		   	
 	}
 
 	public static function averageAndUserEvaluation($photoId,$userId){

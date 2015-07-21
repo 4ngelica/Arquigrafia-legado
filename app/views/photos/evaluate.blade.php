@@ -300,7 +300,17 @@
                
         <!--<h3>Avaliação d{{$architectureName}}</h3> -->
         <h3>Impressões d{{$architectureName}}</h3> 
-			 
+	       <br>
+         {{ Form::open(array('url' => "photos/{$photos->id}/saveEvaluation")) }}
+         
+         
+         {{ Form::checkbox('knownArchitecture', 'yes', $checkedKnowArchitecture) }}
+         
+
+         Você conhece pessoalmente esta arquitetura?
+
+         <br><br>
+
         <!--<p>Avalie a arquitetura apresentada nesta imagem de acordo com seus aspectos, compare também sua avaliação com as dos outros usuários.</p>-->
         <p>Para cada um dos pares abaixo, quais são as qualidades predominantes na arquitetura presente nesta imagem?</p>
                
@@ -309,7 +319,7 @@
         
           <?php if (Auth::check()) { ?>
               
-            {{ Form::open(array('url' => "photos/{$photos->id}/saveEvaluation")) }}
+            
 
             <script>
               function outputUpdate(binomio, val) {                        
