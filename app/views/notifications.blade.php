@@ -4,13 +4,6 @@
 
 <title>Arquigrafia - Notificações de {{ $user->name }}</title>
 
-<link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/checkbox.css" />
-
-<link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/jquery.fancybox.css" />
-
-<script type="text/javascript" src="{{ URL::to("/") }}/js/jquery.fancybox.pack.js"></script>
-<script type="text/javascript" src="{{ URL::to("/") }}/js/photo.js"></script>
-
 @stop
 
 @section('content')
@@ -78,35 +71,6 @@
                 </div>
     		@endif
     	@endforeach
-        <script>
-            function markRead(object) {
-                object.parentElement.parentElement.className = "notes";
-                var id = object.parentElement.parentElement.id;
-                var url = "/markRead/".concat(id);
-                $.get(url)
-                    .done(function( data ) {
-                        var bubble = document.getElementById("bubble");
-                        var noteIcon = document.getElementById("notification");
-                        if (data != 1) noteIcon.title = "Você tem " + data + " notificações não lidas";
-                        else noteIcon.title = "Você tem " + data + " notificação não lida";
-                        if (data > 0) bubble.innerHTML = data;
-                        else bubble.style.display = "none";     
-                    });
-            }
-            function readAll() {
-                var notes = document.getElementsByClassName("notes");
-                for (i = 0; i < notes.length; i++) {
-                    notes[i].className = "notes";
-                }
-                $.get("/readAll")
-                    .done(function( data ) {
-                        var bubble = document.getElementById("bubble");
-                        var noteIcon = document.getElementById("notification");
-                        noteIcon.title = "Você tem " + data + " notificações não lidas";
-                        bubble.style.display = "none";
-                    });
-            }
-        </script>
 	</ul>
     @endif
  	<?php } ?> 
