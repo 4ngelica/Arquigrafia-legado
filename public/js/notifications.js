@@ -38,3 +38,9 @@ function refreshBubbleCounter() {
             else bubble.style.display = "none"; 
         })
 }
+
+$(document).ready(function() {
+    
+    $(".fancybox").fancybox({
+    });
+});

@@ -3,6 +3,8 @@
 @section('head')
 
 <title>Arquigrafia - Notificações de {{ $user->name }}</title>
+<link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/jquery.fancybox.css" />
+<script type="text/javascript" src="{{ URL::to("/") }}/js/jquery.fancybox.pack.js"></script>
 
 @stop
 
@@ -36,7 +38,7 @@
                     <li>
                         <div class="read-button" title="Marcar como lida" onclick="markRead(this);"></div>
                         <div onclick="markRead(this);">
-                            <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
+                            <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_home.jpg"}}></a>
                             @if($info_array[6] == null)
                             <a href={{"users/" . $info_array[5]}}>{{$info_array[1]}}</a>{{" curtiu sua " }} <a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}
                             @else
@@ -51,7 +53,14 @@
                             @if($users_size < 2)
                             <a href={{"users/" . $info_array[5]}}>{{$info_array[1]}}</a>{{" e "}}<a href={{"users/" . $user[0]->id}}>{{$user[0]->name}}</a>{{" curtiram sua " }} <a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}
                             @else
-                            <a href={{"users/" . $info_array[5]}}>{{$info_array[1]}}</a>{{" e mais " . $users_size . " pessoas curtiram sua "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}
+                            <a href={{"users/" . $info_array[5]}}>{{$info_array[1]}}</a>{{" e mais " }}<a class="fancybox" href={{"#users-" . $notification->id}}>{{$users_size . " pessoas"}}</a>{{" curtiram sua "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}
+                            <div class="users-note" id={{"users-" . $notification->id}}>
+                                <ul>
+                                    @for($i = 0; $i < $users_size; $i++)
+                                    <li>{{$user[$i]->name}}</li>
+                                    @endfor
+                                </ul>
+                            </div>
                             @endif
                             @endif
                             </br>
@@ -66,7 +75,7 @@
                     <li>
                         <div class="read-button" title="Marcar como lida" onclick="markRead(this);"></div>
                         <div onclick="markRead(this);">
-                            <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
+                            <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_home.jpg"}}></a>
                             <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu seu "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentário"}}</a>{{", na "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{" de "}}<a href={{"users/" . $info_array[6]}}>{{$info_array[7]}}</a>{{"."}}</br>
                             <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
                             <a class="link-block" href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}></a>
@@ -79,7 +88,7 @@
                     <li>
                         <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
                         <div onclick="markRead(this);">
-                            <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_original.jpg"}}></a>
+                            <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_home.jpg"}}></a>
                             <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentou"}}</a>{{" sua "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br>
                             <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
                             <a class="link-block" href={{"photos/" . $info_array[2]}}></a>
