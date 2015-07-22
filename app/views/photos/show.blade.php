@@ -87,9 +87,9 @@
             <span class="right" title="{{ $commentsMessage }}">
               <i id="comments"></i><small>{{ $commentsCount }}</small>
             </span>
-            <span class="right" title="{{ $photos->likes->count() }} pessoas curtiram essa imagem">
+            <!--<span class="right" title="{{ $photos->likes->count() }} pessoas curtiram essa imagem">
               <i id="likes"></i> <small>{{ $photos->likes->count() }}</small>
-            </span>
+            </span>-->
             @if ( $owner->equal(Auth::user()) )
               <span class="right">
                 <a id="delete_button" href="{{ URL::to('/photos/' . $photos->id) }}" title="Excluir imagem"></a>
@@ -129,7 +129,7 @@
               <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=sb' )}}" title="Interprete {{$architectureName}}" id="evaluate" ></a>
             </li>
             <!-- LIKE-->
-            @if(is_null($photoliked))
+            <!--@if(is_null($photoliked))
               <li>
                 <a href="{{ URL::to('/photos/' . $photos->id . '/like' ) }}" id="like_button" title="Curtir"></a>
               </li>
@@ -137,7 +137,7 @@
               <li>
                 <a href="{{ URL::to('/photos/' . $photos->id . '/dislike' ) }}" id="like_button" class="dislike" title="Descurtir"></a>
               </li>
-            @endif
+            @endif -->
           </ul>
         @else
           <div class="six columns alpha">
@@ -229,17 +229,17 @@
               <div class="four columns omega row">
                 <small id={{"$comment->id"}}>
                   {{ $comment->user->name }} - {{ $comment->created_at->format('d/m/Y h:m') }}
-                  <img src="{{ URL::to("/") }}/img/commentNB.png" / ><small class='likes'>{{ $comment->likes->count() }}</small>
+                  <!--<img src="{{ URL::to("/") }}/img/commentNB.png" / ><small class='likes'>{{ $comment->likes->count() }}</small>-->
                 </small>
                 <p>{{ $comment->text }}</p>
 
-                @if (Auth::check())
+                <!--@if (Auth::check())
                   @if(!$comment->isLiked())
                     <p> <a href="{{ URL::to('/comments/' . $comment->id . '/like' ) }}" class='like_comment' >Curtir</a></p>
                   @else
                     <p> <a href="{{ URL::to('/comments/' . $comment->id . '/dislike' ) }}" class='like_comment' class='dislike'>Descurtir</a></p>
                   @endif
-                @endif
+                @endif-->
               </div>
             </div>
           @endforeach
@@ -454,7 +454,7 @@
             <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
             class="btn">
               <!--Seja o primeiro a avaliar {{$architectureName}}-->
-              Seja o primeiro em interpretar {{$architectureName}}
+              Seja o primeiro a interpretar {{$architectureName}}
             </a> &nbsp;
           @else
             <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
@@ -472,7 +472,7 @@
           </p>-->
           <p>
             Faça o <a href="{{ URL::to('/users/login') }}">Login</a> 
-            e seja o primeiro em interpretar {{ $architectureName }}
+            e seja o primeiro a interpretar {{ $architectureName }}
           </p>
         @else
           <!--<p>
