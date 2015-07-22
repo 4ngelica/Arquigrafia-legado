@@ -49,11 +49,11 @@
                </div>   
                <div>&nbsp;</div>
                   
-                  <div class="link_institution">
+                  <!--<div class="link_institution">
                      <a id="institutionLogin" href="/institutionalLogin" id="single_view_contact_add">
                      Login institucional
                      </a> 
-                  </div>
+                  </div>-->
                </div>   
                <p>{{ Form::submit("LOGIN",array('class'=>'btn right')) }}</p>
                
