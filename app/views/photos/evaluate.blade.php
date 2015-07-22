@@ -366,7 +366,7 @@
               
                <a href="{{ URL::previous() }}" class='btn right'>VOLTAR</a>
                @if (Auth::check() && $owner != null && $owner->id == Auth::user()->id)
-                {{ Form::submit('INTERPRETAR', ['id'=>'evaluation_button','class'=>'btn right']) }} 
+                {{ Form::submit('ENVIAR', ['id'=>'evaluation_button','class'=>'btn right']) }} 
                @endif
                 
             {{ Form::close() }}
@@ -375,7 +375,7 @@
           <?php } else { ?>
             @if (empty($average)) 
               <!--<p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e seja o primeiro a avaliar {{$architectureName}}</p>-->
-              <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e seja o primeiro em interpretar {{$architectureName}}</p>
+              <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e seja o primeiro a interpretar {{$architectureName}}</p>
             @else
               <!--<p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e avalie você também {{$architectureName}}</p>-->
               <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e interprete você também {{$architectureName}}</p>
