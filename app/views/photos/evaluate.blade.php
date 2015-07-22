@@ -214,9 +214,9 @@
                 color: '#000000',
                 name: 
                 @if (Auth::check() && $owner->id == Auth::user()->id)
-                  'Sua impressão' 
+                  'Suas impressões' 
                 @else
-                  'Impressão de {{$owner->name}}'
+                  'Impressões de {{$owner->name}}'
                 @endif
             }
             @endif
@@ -296,10 +296,9 @@
         @endif
 				<!--   FIM - USUARIO   -->				
         
-        <!-- AVALIAÇÃO -->
-               
-        <!--<h3>Avaliação d{{$architectureName}}</h3> -->
-        <h3>Impressões d{{$architectureName}}</h3> 
+        <!-- AVALIAÇÃO -->              
+        
+        <h3>Suas impressões d{{$architectureName}}</h3> 
 	       <br>
          {{ Form::open(array('url' => "photos/{$photos->id}/saveEvaluation")) }}
          
