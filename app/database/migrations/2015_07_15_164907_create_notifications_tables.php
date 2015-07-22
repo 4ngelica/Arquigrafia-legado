@@ -47,23 +47,15 @@ class CreateNotificationsTables extends Migration {
 	 */
 	public function down()
 	{
-		//Schema::drop('notifications');
-		//Schema::drop('notification_user');
+		Schema::table('notifications', function(Blueprint $table)
+		{
+			Schema::drop('notifications');
+		});
 
-
-		Schema::table('notifications', function (Blueprint $table) {
-			$table->dropColumn('type');
-			$table->dropColumn('sender');
-			$table->dropColumn('object');			
-			$table->dropColumn('data');
-		}
-
-		Schema::table('notification_user', function (Blueprint $table) {
-			$table->dropColumn('notification_id');
-			$table->dropColumn('user_id');
-			$table->dropColumn('read_at');	
-		}	
-			
+		Schema::table('notification_user', function(Blueprint $table)
+		{
+			Schema::drop('notification_user');
+		});		
 			
 	}
 
