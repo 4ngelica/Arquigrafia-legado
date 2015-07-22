@@ -57,7 +57,7 @@
                             <div class="users-note" id={{"users-" . $notification->id}}>
                                 <ul>
                                     @for($i = 0; $i < $users_size; $i++)
-                                    <li>{{$user[$i]->name}}</li>
+                                    <li class="aditional-user"><a href={{"users/" . $user[$i]->id}}>{{$user[$i]->name}}</a></li>
                                     @endfor
                                 </ul>
                             </div>
