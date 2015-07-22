@@ -37,7 +37,7 @@ class Evaluation extends Eloquent {
 			->select('knownArchitecture')
 			->where('photo_id', $photoId)
 			->where('user_id',$userId)->get();
-		   if($result[0]->knownArchitecture == 'yes'){
+		   if($result != null && $result[0] != null && $result[0]->knownArchitecture == 'yes'){
 		   		return true;
 		   }else{
 		   		return false;
