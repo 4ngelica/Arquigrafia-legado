@@ -1,6 +1,7 @@
 <?php
 
 use lib\utils\ActionUser;
+use Carbon\Carbon;
 
 class LikesController extends \BaseController {
 
@@ -14,13 +15,19 @@ class LikesController extends \BaseController {
       $user_note = User::find($photo->user_id);
       foreach ($user_note->notifications as $notification) {
         $info = $notification->render();
-        if ($info[0] == "photo_liked" && $info[2] == $id) $note_id = $notification->notification_id;
+        if ($info[0] == "photo_liked" && $info[2] == $id) {
+          $note_id = $notification->notification_id;
+          $note_user_id = $notification->id;
+          $note = $notification;
+        }
       }
-      if (isset($note_id)) {
-        $note = DB::table("notifications")->where("id","=", $note_id)->get();
-        if (NotificationsController::isNotificationByUser($user->id, $note[0]->sender_id, $note[0]->data) == false) {
-          $new_data = $note[0]->data . ":" . $user->id;
-          DB::table("notifications")->where("id","=", $note_id)->update(array("data" => $new_data));  
+      if (isset($note_id) && $note->read_at == null) {
+        $note_from_table = DB::table("notifications")->where("id","=", $note_id)->get();
+        if (NotificationsController::isNotificationByUser($user->id, $note_from_table[0]->sender_id, $note_from_table[0]->data) == false) {
+          $new_data = $note_from_table[0]->data . ":" . $user->id;
+          DB::table("notifications")->where("id", "=", $note_id)->update(array("data" => $new_data, "created_at" => Carbon::now('America/Sao_Paulo')));
+          $note->created_at = Carbon::now('America/Sao_Paulo');
+          $note->save();  
         }
       }
       else Notification::create('photo_liked', $user, $photo, [$user_note], null);
