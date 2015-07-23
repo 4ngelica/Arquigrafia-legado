@@ -4,6 +4,14 @@
 <!--   ESTILO GERAL   -->
 {{-- <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/style.css" /> --}}
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/style.old.css" />
+<!-- JQUERRY -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/jquery.fancybox.css" />
+<!-- FANCYBOX -->
+<script type="text/javascript" src="{{ URL::to("/") }}/js/jquery.fancybox.pack.js"></script>
+<!--NOTIFICAÇÕES-->
+<script type="text/javascript" src="{{ URL::to("/") }}/js/notifications.js"></script>
+
 <!--[if lt IE 8]>
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/ie7.css" />
 <![endif]-->
@@ -31,6 +39,3 @@
      fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
 </script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script type="text/javascript" src="{{ URL::to("/") }}/js/notifications.js"></script>
