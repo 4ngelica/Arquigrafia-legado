@@ -42,5 +42,7 @@ function refreshBubbleCounter() {
 $(document).ready(function() {
     
     $(".fancybox").fancybox({
+        'opacity' : true,
+        'margin'  : 2
     });
 });

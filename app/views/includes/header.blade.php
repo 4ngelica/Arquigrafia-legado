@@ -64,7 +64,7 @@
             <!-- <li><a href="#" id="messages" title="Você tem 19 mensagens">&nbsp;</a></li> -->
 
             <li>
-              <div id="notifications_container">
+              <div id="notification-icon-container">
                 <?php 
                   $notesCounter = Auth::user()->notifications()->unread()->count();
                   if ($notesCounter != 1) $title = "Você tem " . $notesCounter . " notificações não lidas";

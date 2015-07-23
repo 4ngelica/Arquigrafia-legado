@@ -647,6 +647,10 @@ z-index:7;
 #like_button.dislike { background-image: url('../img/dislike.png'); }
 i#likes {  background: url("../img/dislikeNB.png"); padding : 2px 10px 0px;   }
 
+/* Notifications area */
+#notification-icon-container { position: relative; }
+#bubble { position: absolute; top: -1px; right: -1px; padding: 1px 2px 1px 2px; background-color: red; color: white; font-weight: bold; font-size: 0.75em; border-radius: 30px; box-shadow: 1px 1px 1px gray; }
+
 /* Notifications page */
 .notifications-title { margin-bottom: 35px; border-bottom: 1px solid black; padding: 15px; font-size:20px; }
 #button-all-container { display: inline; float: right; }
@@ -662,7 +666,6 @@ i#likes {  background: url("../img/dislikeNB.png"); padding : 2px 10px 0px;   }
 .read-button { position: relative; z-index: 2; float: right; border-radius: 50px/50px; 	border: solid 4px #606060; width: 6px; height: 6px; }
 .read-button:hover { background-color: #606060; border: solid 4px #ffffff }
 .read-button:active { border: solid 4px #606060; background-color: #A0A0A0; }
-#bubble { position: absolute; top: -1px; right: -1px; padding: 1px 2px 1px 2px; background-color: red; color: white; font-weight: bold; font-size: 0.75em; border-radius: 30px; box-shadow: 1px 1px 1px gray; }
 .additional-users { display: none; }
 .additional-user { font-size: 15px; }
 .date-and-time {}
