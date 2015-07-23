@@ -3,8 +3,6 @@
 @section('head')
 
 <title>Arquigrafia - Notificações de {{ $user->name }}</title>
-<link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/jquery.fancybox.css" />
-<script type="text/javascript" src="{{ URL::to("/") }}/js/jquery.fancybox.pack.js"></script>
 
 @stop
 
@@ -28,7 +26,7 @@
 		<p id="no-notifications">Você não possui notificações.</p>
 	@else
 	<ul>
-    	@foreach($user->notifications->reverse() as $notification)
+    	@foreach($user->notifications()->orderBy('created_at')->get()->reverse() as $notification)
     		<?php
                 $info_array = $notification->render(); 
             ?>
