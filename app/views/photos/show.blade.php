@@ -453,35 +453,25 @@
           @if (empty($average))
             <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
             class="btn">
-              <!--Seja o primeiro a avaliar {{$architectureName}}-->
-              Seja o primeiro a interpretar {{$architectureName}}
+              Seja o primeiro a registrar impressões sobre {{$architectureName}}
             </a> &nbsp;
           @else
             <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
             class="btn">
-              <!--Avalie você também {{$architectureName}}-->
-              Interprete você também {{$architectureName}}
+              Registre você também impressões sobre {{$architectureName}}
             </a> &nbsp;
           @endif
         @endif
       @else
         @if (empty($average))
-          <!--<p>
-            Faça o <a href="{{ URL::to('/users/login') }}">Login</a> 
-            e seja o primeiro a avaliar {{ $architectureName }}
-          </p>-->
           <p>
             Faça o <a href="{{ URL::to('/users/login') }}">Login</a> 
-            e seja o primeiro a interpretar {{ $architectureName }}
+            e seja o primeiro a registrar impressões sobre {{ $architectureName }}
           </p>
         @else
-          <!--<p>
-            Faça o <a href="{{ URL::to('/users/login') }}">Login</a>
-            e avalie você também {{ $architectureName }}
-          </p>-->
           <p>
             Faça o <a href="{{ URL::to('/users/login') }}">Login</a>
-            e interprete você também {{ $architectureName }}
+            e registre você também impressões sobre {{ $architectureName }}
           </p>
         @endif
       @endif
