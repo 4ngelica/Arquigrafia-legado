@@ -310,8 +310,7 @@
 
          <br><br>
 
-        <!--<p>Avalie a arquitetura apresentada nesta imagem de acordo com seus aspectos, compare também sua avaliação com as dos outros usuários.</p>-->
-        <p>Para cada um dos pares abaixo, quais são as qualidades predominantes na arquitetura presentes nesta imagem?</p>
+        <p>Para cada um dos pares abaixo, quais são as qualidades predominantes na arquitetura e visíveis nesta imagem?</p>
                
         <!-- FORMULÁRIO DE AVALIAÇÃO -->
         <div id="evaluation_box">         
@@ -373,12 +372,10 @@
             
             
           <?php } else { ?>
-            @if (empty($average)) 
-              <!--<p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e seja o primeiro a avaliar {{$architectureName}}</p>-->
-              <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e seja o primeiro a interpretar {{$architectureName}}</p>
-            @else
-              <!--<p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e avalie você também {{$architectureName}}</p>-->
-              <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e interprete você também {{$architectureName}}</p>
+            @if (empty($average))               
+              <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e seja o primeiro a registrar impressões sobre {{$architectureName}}</p>
+            @else              
+              <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e registre você também impressões sobre {{$architectureName}}</p>
             @endif            
           <?php } ?>
         
