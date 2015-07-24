@@ -503,12 +503,12 @@
 			});
 			$('#tagsMaterial_input').keypress(function(e) {
 				var key = e.which || e.keyCode;
-				if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
+				if (key == 44 || key == 46 || key == 59) 
 					e.preventDefault();
 			});
 			$('#tagsElements_input').keypress(function(e) {
 				var key = e.which || e.keyCode;
-				if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
+				if (key == 44 || key == 46 || key == 59) 
 					e.preventDefault();
 			});
 			$('#tagsTypology_input').keypress(function(e) {
@@ -516,13 +516,7 @@
 				if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
 					e.preventDefault();
 			});
-			//input
 			
-			
-			
-			//button
-			  
-			//textarea
 			  
 
 		});
