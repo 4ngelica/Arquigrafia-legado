@@ -131,6 +131,10 @@ ul#top_menu_items li #contact { background: url(../img/sprite.png) no-repeat -78
 #loggin_area #login_button { float: right; margin: 30px 0 0 5px; }
 #loggin_area #registration_button { float: right; margin: 30px 5px 0; }
 #login_registration_bar { float: right; margin: 30px 25px 0 0; }
+
+/*login institutional*/
+#loggin_area_institutional { position: relative; float: right; width: 277px; height: 53px; }
+
 /* registro e login - ON */
 ul#logged_menu { height: 25px; float: left; margin: 7px 0 2px 0; }
 ul#logged_menu li { display: inline-block; margin-left: 5px; width: 22px; height: 22px; zoom: 1; }

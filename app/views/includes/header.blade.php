@@ -36,10 +36,19 @@
 
       
         <!--   ÁREA DO USUARIO   -->
+        @if(Session::get('institutionId'))
+        <div id="loggin_area_institutional">
+        @else
         <div id="loggin_area">
-        
+        @endif
         <?php if (Auth::check()) { ?>
-        
+         
+
+          @if(Session::get('institutionId'))           
+          <a id="user_photo" href="">          
+            <img src="{{ URL::to("/") }}/img/avatar-institution.png" width="48" height="48" class="user_photo_thumbnail"/>
+          </a>
+          @endif
           <a id="user_name" href="{{ URL::to("/users") }}/{{ Auth::user()->id; }}">{{ Auth::user()->name; }}</a>
           
           <a id="user_photo" href="{{ URL::to("/users") }}/{{ Auth::user()->id; }}">
@@ -49,7 +58,8 @@
             <img src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" class="user_photo_thumbnail"/>
           <?php } ?>
           </a>
-          
+
+
           <a href="{{ URL::to("/users/logout/") }}" id="logout" class="btn">SAIR</a><br />
           <ul id="logged_menu">
             @if (Auth::user()->photos->count() > 0)

@@ -77,8 +77,12 @@ class PhotosController extends \BaseController {
   }
 
  public function newForm()
-  {
-
+  {  
+    $user_id = Auth::user()->id;
+    //echo "=>".Session::get('institutionId');
+    
+    //$data = Session::all();
+    //dd($data);
     $tags = null;
     if ( Session::has('tags') )
     {
@@ -87,6 +91,7 @@ class PhotosController extends \BaseController {
     }
     return View::make('/photos/newform')->with(['tags', $tags]);
   }
+
 
 
   public function store() {

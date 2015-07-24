@@ -34,8 +34,9 @@
 					<p></p>
 
 					<br>
-					<div class="seven columns alpha row">
+					<div class="eight columns alpha row">
 						<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
+							@if(Session::get('institutionId'))
 							<tr>
 								<td>
 									<div class="two columns alpha">
@@ -136,7 +137,7 @@
 									</div>
 								</td>
 							</tr>
-
+							@endif
 							<tr>
 								<td>
 									<div class="two columns alpha">
@@ -164,10 +165,10 @@
 							<tr>
 								<td>
 									<div class="two columns alpha"><p>{{ Form::label('tagsMaterial_input', 'Tags de materiais*:') }}</p></div>
-									<div class="four columns">
+									<div class="five columns">
 										<p>
 											{{ Form::text('tagsMaterial_input') }}
-											<button class="btn" id="add_tag_material" style="font-size: 11px;">ADICIONAR TAG</button>
+											<button class="btn" id="add_tag_material" style="font-size: 11px;">ADICIONAR TAG DE MATERIAIS</button>
 											<br>
 											<div class="error">{{ $errors->first('tagsMaterial') }}</div>
 										</p>
@@ -181,10 +182,10 @@
 							<tr>
 								<td>
 									<div class="two columns alpha"><p>{{ Form::label('tagsElements_input', 'Tags de elementos*:') }}</p></div>
-									<div class="four columns">
+									<div class="five columns">
 										<p>
 											{{ Form::text('tagsElements_input') }}
-											<button class="btn" id="add_tag_elementos" style="font-size: 11px;">ADICIONAR TAG</button>
+											<button class="btn" id="add_tag_elements" style="font-size: 11px;">ADICIONAR TAG DE ELEMENTOS</button>
 											<br>
 											<div class="error">{{ $errors->first('tagsElements') }}</div>
 										</p>
@@ -197,17 +198,17 @@
 							</tr>
 							<tr>
 								<td>
-									<div class="two columns alpha"><p>{{ Form::label('tagsElements_input', 'Tags de tipologia*:') }}</p></div>
-									<div class="four columns">
+									<div class="two columns alpha"><p>{{ Form::label('tagsTypology_input', 'Tags de tipologia*:') }}</p></div>
+									<div class="five columns">
 										<p>
-											{{ Form::text('tagTypology_input') }}
-											<button class="btn" id="add_tag_typology" style="font-size: 11px;">ADICIONAR TAG</button>
+											{{ Form::text('tagsTypology_input') }}
+											<button class="btn" id="add_tag_typology" style="font-size: 11px;">ADICIONAR TAG DE TIPOLOGIA</button>
 											<br>
-											<div class="error">{{ $errors->first('tagTypology') }}</div>
+											<div class="error">{{ $errors->first('tagsTypology') }}</div>
 										</p>
 									</div>
 									<div class="five columns alpha">
-										<textarea name="tagTypology" id="tagTypology" cols="60" rows="1" style="display: none;"></textarea>
+										<textarea name="tagsTypology" id="tagsTypology" cols="60" rows="1" style="display: none;"></textarea>
 									</div>
 									
 								</td>
@@ -215,7 +216,7 @@
 							<tr>
 								<td>
 									<div class="two columns alpha"><p>{{ Form::label('tags_input', 'Tags*:') }}</p></div>
-									<div class="four columns">
+									<div class="five columns">
 										<p>
 											{{ Form::text('tags_input') }}
 											<button class="btn" id="add_tag" style="font-size: 11px;">ADICIONAR TAG</button>
@@ -313,15 +314,18 @@
          							<br> <div class="error">{{ $errors->first('photo_imageDate') }}</div>
          							</p>       
         							</div>
-        						</tr>       
+        						</tr>   
+        					
 							<tr>
 								<div class="two columns alpha"><p>{{ Form::label('photo_observation', 'Observações:') }}</p></div>
 								<div class="two columns omega">
 									<p>
-										{{ Form::text('photo_observation', Input::old('photo_observation')) }} <br>
+										{{ Form::textarea('photo_observation', Input::old('photo_observation')) }} <br>
+
 									</p>
 								</div>
 							</tr>
+
 							<tr>
 								<td>&nbsp;</td>
 								<td>&nbsp;</td>
@@ -359,6 +363,7 @@
 							
 						</table>
 					</div>
+					@if(!Session::get('institutionId'))
 					<div class="twelve columns omega row">
 						<div class="form-group">
 							*{{ Form::checkbox('photo_authorization_checkbox', 1, true) }}
@@ -366,10 +371,12 @@
 							<br><div class="error">{{ $errors->first('photo_authorization_checkbox') }}</div>
 						</div>
 					</div>
+					@endif
 					<div class="twelve columns omega row">
 						<label for="terms" generated="true" class="error" style="display: inline-block; "></label>	
 						Escolho a licença <a href="http://creativecommons.org/licenses/?lang=pt_BR" id="creative_commons" target="_blank" style="text-decoration:underline; line-height:16px;">Creative Commons</a>, para publicar a imagem, com as seguintes permissões:			
 					</div>
+
 					<div class="four columns" id="creative_commons_left_form">
 						Permitir o uso comercial da imagem?
 						<br>
@@ -425,12 +432,35 @@
 
 		$(document).ready(function() {
 			$('#tags').textext({ plugins: 'tags' });
+			$('#tagsMaterial').textext({ plugins: 'tags' });
+			$('#tagsElements').textext({ plugins: 'tags' });
+			$('#tagsTypology').textext({ plugins: 'tags' });
 
 			@if (isset($tags))
 				@foreach ( $tags as $tag )
 					$('#tags').textext()[0].tags().addTags([ {{ '"' . $tag . '"' }} ]);
 				@endforeach
 			@endif
+
+
+			@if (isset($tagsMaterial))
+				@foreach ( $tagsMaterial as $tagMaterial )
+					$('#tagsMaterial').textext()[0].tags().addTags([ {{ '"' . $tagMaterial . '"' }} ]);
+				@endforeach
+			@endif
+
+			@if (isset($tagsElements))
+				@foreach ( $tagsElements as $tagElements )
+					$('#tagsElements').textext()[0].tags().addTags([ {{ '"' . $tagElements . '"' }} ]);
+				@endforeach
+			@endif
+
+			@if (isset($tagsTypology))
+				@foreach ( $tagsTypology as $tagTypology )
+					$('#tagsTypology').textext()[0].tags().addTags([ {{ '"' . $tagTypology . '"' }} ]);
+				@endforeach
+			@endif
+
 
 			$('#add_tag').click(function(e) {
 				e.preventDefault();
@@ -440,11 +470,61 @@
 				$('#tags_input').val('');
 			});
 
+			$('#add_tag_material').click(function(e) {
+				e.preventDefault();				
+				var tagMaterial = $('#tagsMaterial_input').val();
+				
+				if (tagMaterial == '') return;
+				$('#tagsMaterial').textext()[0].tags().addTags([ tagMaterial ]);
+				$('#tagsMaterial_input').val('');
+			});
+
+			$('#add_tag_elements').click(function(e) {
+				e.preventDefault();
+				var tagElements = $('#tagsElements_input').val();
+				if (tagElements == '') return;
+				$('#tagsElements').textext()[0].tags().addTags([ tagElements ]);
+				$('#tagsElements_input').val('');
+			});
+
+			$('#add_tag_typology').click(function(e) {
+				e.preventDefault();
+				var tagTypology = $('#tagsTypology_input').val();
+				
+				if (tagTypology == '') return;
+				$('#tagsTypology').textext()[0].tags().addTags([ tagTypology ]);
+				$('#tagsTypology_input').val('');
+			});
+
 			$('#tags_input').keypress(function(e) {
 				var key = e.which || e.keyCode;
 				if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
 					e.preventDefault();
 			});
+			$('#tagsMaterial_input').keypress(function(e) {
+				var key = e.which || e.keyCode;
+				if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
+					e.preventDefault();
+			});
+			$('#tagsElements_input').keypress(function(e) {
+				var key = e.which || e.keyCode;
+				if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
+					e.preventDefault();
+			});
+			$('#tagsTypology_input').keypress(function(e) {
+				var key = e.which || e.keyCode;
+				if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
+					e.preventDefault();
+			});
+			//input
+			
+			
+			
+			//button
+			  
+			//textarea
+			  
+
 		});
 
 		//msy

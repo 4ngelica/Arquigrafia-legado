@@ -283,6 +283,7 @@ class UsersController extends \BaseController {
     ActionUser::printLoginOrLogout($user_id, $source_page, "Logout", "arquigrafia", "user");
 
     Auth::logout();
+    Session::flush();
     return Redirect::to('/');
   }
   
@@ -571,7 +572,7 @@ class UsersController extends \BaseController {
       $booleanExist == true){
 
       Log::info("Valid access, redirect");
-
+      Session::put('institutionId', $institution);
       //loga usuario da institution
       return Redirect::to('/');
     }else{
