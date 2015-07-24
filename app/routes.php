@@ -95,6 +95,7 @@ Route::get('/photos/{id}/dislike', 'LikesController@photodislike');
 Route::resource('/groups','GroupsController');
 Route::get('/photos/batch','PhotosController@batch');
 Route::get('/photos/upload','PhotosController@form');
+Route::get('/photos/newUpload','PhotosController@newForm');
 Route::get('/photos/download/{photo_id}','PhotosController@download');
 Route::resource('/photos','PhotosController');
 /* TAGS */

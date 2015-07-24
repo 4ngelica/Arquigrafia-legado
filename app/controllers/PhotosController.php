@@ -76,6 +76,19 @@ class PhotosController extends \BaseController {
 
   }
 
+ public function newForm()
+  {
+
+    $tags = null;
+    if ( Session::has('tags') )
+    {
+      $tags = Session::pull('tags');
+      $tags = explode(',', $tags);
+    }
+    return View::make('/photos/newform')->with(['tags', $tags]);
+  }
+
+
   public function store() {
 
   Input::flashExcept('tags', 'photo');
@@ -86,7 +99,7 @@ class PhotosController extends \BaseController {
     $input["tags"] = str_replace(array('\'', '"', '[', ']'), '', $input["tags"]);
   else
     $input["tags"] = '';
-//2015-05-25 msy add validate for date image/work end
+
   //validate for tamnho maximo e tipo de extensao
     $rules = array(
       'photo_name' => 'required',
