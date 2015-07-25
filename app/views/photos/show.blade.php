@@ -396,10 +396,6 @@
       @endif
 
       <h4>Licença:</h4>
-      <!--
-      <a href="http://creativecommons.org/licenses/{{$license[0]}}/3.0/deed.pt_BR" target="_blank"
-       title='O proprietário desta imagem "{{ucfirst($owner->name)}}" : "{{$license[1]}}"'>
-      -->
       <a class="tooltip_license"
         href="http://creativecommons.org/licenses/{{$license[0]}}/3.0/deed.pt_BR" target="_blank" >
         <img src="{{ asset('img/ccIcons/'.$license[0].'88x31.png') }}" id="ccicons"
@@ -407,11 +403,14 @@
         <span>
           @if (Auth::check())
             @if( $owner->equal(Auth::user()) )
-              <strong>O proprietário desta imagem "{{ ucfirst($owner->name) }}" </strong><br />
+              <strong>Você é proprietário(a) desta imagem</strong>
+            @else
+              <strong>O proprietário desta imagem "{{ucfirst($owner->name)}}":</strong>
             @endif
           @else
-            <strong>O proprietário desta imagem "{{ ucfirst($owner->name) }}" : </strong><br />
+            <strong>O proprietário desta imagem "{{ucfirst($owner->name)}}":</strong>
           @endif
+          <br/>
           "{{ $license[1] }}"
         </span>
       </a>
