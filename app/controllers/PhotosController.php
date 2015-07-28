@@ -1,6 +1,7 @@
 <?php
 //add
 use lib\utils\ActionUser;
+use Carbon\Carbon;
 
 class PhotosController extends \BaseController {
 
@@ -275,10 +276,28 @@ class PhotosController extends \BaseController {
       $user = Auth::user();
       $source_page = Request::header('referer');
       ActionUser::printComment($user->id, $source_page, "Inseriu", $comment->id, $id, "user");
+      
       /*Envio de notificação*/
       if ($user->id != $photo->user_id) {
         $user_note = User::find($photo->user_id);
-        Notification::create('comment_posted', $user, $comment, [$user_note], null);
+        foreach ($user_note->notifications as $notification) {
+        $info = $notification->render();
+        if ($info[0] == "comment_posted" && $info[2] == $photo->id) {
+          $note_id = $notification->notification_id;
+          $note_user_id = $notification->id;
+          $note = $notification;
+        }
+      }
+      if (isset($note_id) && $note->read_at == null) {
+        $note_from_table = DB::table("notifications")->where("id","=", $note_id)->get();
+        if (NotificationsController::isNotificationByUser($user->id, $note_from_table[0]->sender_id, $note_from_table[0]->data) == false) {
+          $new_data = $note_from_table[0]->data . ":" . $user->id;
+          DB::table("notifications")->where("id", "=", $note_id)->update(array("data" => $new_data, "created_at" => Carbon::now('America/Sao_Paulo')));
+          $note->created_at = Carbon::now('America/Sao_Paulo');
+          $note->save();  
+        }
+      }
+      else Notification::create('comment_posted', $user, $comment, [$user_note], null);
       }
 
       $this->checkCommentCount(5,'test');

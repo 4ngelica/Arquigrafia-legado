@@ -73,7 +73,30 @@
                         <div class="read-button" title="Marcar como lida" onclick="markRead(this);"></div>
                         <div onclick="markRead(this);">
                             <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_home.jpg"}}></a>
-                            <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu seu "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentário"}}</a>{{", na "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{" de "}}<a href={{"users/" . $info_array[6]}}>{{$info_array[7]}}</a>{{"."}}</br>
+                            @if($info_array[9] == null)
+                            <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" curtiu seu "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentário"}}</a>{{", na "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{" de "}}<a href={{"users/" . $info_array[6]}}>{{$info_array[7]}}</a>{{"."}}
+                            @else
+                            <?php 
+                                $users = explode(":", $info_array[9]);
+                                $users_size = count($users) - 1;
+                                for ($i = 0; $i < $users_size; $i++) {
+                                    $user[$i] = User::find($users[$i+1]);
+                                }
+                            ?>
+                            @if($users_size < 2)
+                            <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" e "}}<a href={{"users/" . $user[0]->id}}>{{$user[0]->name}}</a>{{" curtiram seu "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentário"}}</a>{{", na "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{" de "}}<a href={{"users/" . $info_array[6]}}>{{$info_array[7]}}</a>{{"."}}
+                            @else
+                            <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" e mais "}}<a class="fancybox" href={{"#users-from-note-" . $notification->id}}>{{$users_size . " pessoas"}}</a>{{" curtiram seu "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentário"}}</a>{{", na "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{" de "}}<a href={{"users/" . $info_array[6]}}>{{$info_array[7]}}</a>{{"."}}
+                            <div class="additional-users" id={{"users-from-note-" . $notification->id}}>
+                                <ul>
+                                    @for($i = 0; $i < $users_size; $i++)
+                                    <li class="additional-user"><a href={{"users/" . $user[$i]->id}}>{{$user[$i]->name}}</a></li>
+                                    @endfor
+                                </ul>
+                            </div>
+                            @endif
+                            @endif
+                            </br>
                             <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
                             <a class="link-block" href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}></a>
                         </div>
@@ -86,7 +109,30 @@
                         <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
                         <div onclick="markRead(this);">
                             <a href={{"photos/" . $info_array[2]}}><img class="mini" src={{"/arquigrafia-images/" . $info_array[2] . "_home.jpg"}}></a>
-                            <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentou"}}</a>{{" sua "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}</br>
+                            @if($info_array[9] == null)
+                            <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentou"}}</a>{{" sua "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}
+                            @else
+                            <?php 
+                                $users = explode(":", $info_array[9]);
+                                $users_size = count($users) - 1;
+                                for ($i = 0; $i < $users_size; $i++) {
+                                    $user[$i] = User::find($users[$i+1]);
+                                }
+                            ?>
+                            @if($users_size < 2)
+                            <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" e "}}<a href={{"users/" . $user[0]->id}}>{{$user[0]->name}}</a>{{" "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentaram"}}</a>{{" sua "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}
+                            @else
+                            <a href={{"users/" . $info_array[5]}}>{{ $info_array[1]}}</a>{{" e mais "}}<a class="fancybox" href={{"#users-from-note-" . $notification->id}}>{{$users_size . " pessoas"}}</a>{{" "}}<a href={{"photos/" . $info_array[2] . "#" . $info_array[8]}}>{{"comentaram"}}</a>{{" sua "}}<a href={{"photos/" . $info_array[2]}}>{{"foto"}}</a>{{"."}}
+                            <div class="additional-users" id={{"users-from-note-" . $notification->id}}>
+                                <ul>
+                                    @for($i = 0; $i < $users_size; $i++)
+                                    <li class="additional-user"><a href={{"users/" . $user[$i]->id}}>{{$user[$i]->name}}</a></li>
+                                    @endfor
+                                </ul>
+                            </div>
+                            @endif
+                            @endif
+                            </br>
                             <p class="date">{{"$info_array[3], às $info_array[4]."}}</p>
                             <a class="link-block" href={{"photos/" . $info_array[2]}}></a>
                         </div>
