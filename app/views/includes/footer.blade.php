@@ -62,7 +62,7 @@ a.async=true;a.type="text/javascript";b.parentNode.insertBefore(a,b)}, 1);
           <li><a href="http://www.eca.usp.br/" title="ECA" id="eca" target="_blank"></a></li>
         </ul>
         <ul>
-          <li><a href="http://winweb.redealuno.usp.br/quapa/" title="QUAPÁ" id="quapa" target="_blank"></a></li>
+          <li><a href="http://www.quapa.fau.usp.br/quapa_desenv/default.htm" title="QUAPÁ" id="quapa" target="_blank"></a></li>
           <li><a href="http://www.vitruvius.com.br/" title="Vitruvius" id="vitruvius" target="_blank"></a></li>
           <li><a href="http://www.archdaily.com.br/br" title="ArchDaily Brasil" id="archdaily" target="_blank"></a></li>
         </ul>
