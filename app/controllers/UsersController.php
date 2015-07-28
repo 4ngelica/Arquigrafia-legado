@@ -71,7 +71,7 @@ class UsersController extends \BaseController {
     // validate data
     $rules = array(
         'name' => 'required',
-        'login' => 'required|unique:users',
+        'login' => 'required|regex:/^[a-z0-9-_]{3,20}$/|unique:users',
         'password' => 'required|min:6|confirmed',
         'email' => 'required|email|unique:users',
         'terms' => 'required'
