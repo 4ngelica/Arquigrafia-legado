@@ -220,15 +220,17 @@
           @foreach($comments as $comment)
             <div class="clearfix">
               <div class="column alpha omega row">
+                <a href={{"/users/" . $comment->user->id}}>
                 @if ($comment->user->photo != "")
                   <img class="user_thumbnail" src="{{ asset($comment->user->photo); }}" />
                 @else
                   <img class="user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" />
                 @endif
+                </a>
               </div>
               <div class="four columns omega row">
                 <small id={{"$comment->id"}}>
-                  {{ $comment->user->name }} - {{ $comment->created_at->format('d/m/Y h:m') }}
+                  <a href={{"/users/" . $comment->user->id}}>{{ $comment->user->name }}</a> - {{ $comment->created_at->format('d/m/Y h:m') }}
                   <!--<img src="{{ URL::to("/") }}/img/commentNB.png" / ><small class='likes'>{{ $comment->likes->count() }}</small>-->
                 </small>
                 <p>{{ $comment->text }}</p>
