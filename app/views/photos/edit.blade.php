@@ -124,7 +124,7 @@
               </tr>
               <tr>
 
-				<div class="two columns alpha"><p>{{ Form::label('photo_state', 'Estado*:') }}</p></div>
+				<div class="two columns alpha"><p>{{ Form::label('photo_state', 'Estado:') }}</p></div>
 				<div class="two columns omega">
 				<p>{{ Form::select('photo_state', [""=>"Escolha o Estado", "AC"=>"Acre", "AL"=>"Alagoas", "AM"=>"Amazonas", "AP"=>"Amapá", "BA"=>"Bahia", "CE"=>"Ceará", "DF"=>"Distrito Federal", "ES"=>"Espirito Santo", "GO"=>"Goiás", "MA"=>"Maranhão", "MG"=>"Minas Gerais", "MS"=>"Mato Grosso do Sul", "MT"=>"Mato Grosso", "PA"=>"Pará", "PB"=>"Paraíba", "PE"=>"Pernambuco", "PI"=>"Piauí", "PR"=>"Paraná", "RJ"=>"Rio de Janeiro", "RN"=>"Rio Grande do Norte", "RO"=>"Rondônia", "RR"=>"Roraima", "RS"=>"Rio Grande do Sul", "SC"=>"Santa Catarina", "SE"=>"Sergipe", "SP"=>"São Paulo", "TO"=>"Tocantins"], $photo->state) }} <br>
 				  <div class="error">{{ $errors->first('photo_state') }}</div>
@@ -132,7 +132,7 @@
               </tr>
               <tr>
                 
-				<div class="two columns alpha"><p>{{ Form::label('photo_city', 'Cidade*:') }}</p></div>
+				<div class="two columns alpha"><p>{{ Form::label('photo_city', 'Cidade:') }}</p></div>
 				<div class="two columns omega">				
         <p>{{ Form::text('photo_city', $photo->city) }}<br>
 				  <div class="error">{{ $errors->first('photo_city') }}</div>
