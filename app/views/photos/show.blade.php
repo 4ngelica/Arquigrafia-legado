@@ -175,15 +175,7 @@
       <!--   BOX DE COMENTARIOS   -->
       <div id="comments_block" class="eight columns row alpha omega">
         <h3>Comentários</h3>
-        @if(Auth::check()) 
-          <div class="text_comment" >
-            <small>
-              Cada usuário é responsável por seus próprios comentários.
-              O Arquigrafia não se responsabiliza pelos comentários postados,
-              mas apenas por tornar indisponível no site o conteúdo considerado
-              infringente ou danoso por determinação judicial (art.19 da Lei 12.965/14).
-            </small>
-          </div>
+        @if(Auth::check())           
           <br>
         @endif
         <?php $comments = $photos->comments; ?>
@@ -209,6 +201,11 @@
               {{ Form::textarea('text', '', ['id'=>'comment_field']) }}
               {{ Form::hidden('user', $photos->id ) }}
               {{ Form::submit('COMENTAR', ['id'=>'comment_button','class'=>'cursor btn']) }}
+              <br class="clear">
+              </br>
+              <p align="justify" style="font-size: 7pt">
+                  Cada usuário é responsável por seus próprios comentários. O Arquigrafia não se responsabiliza pelos comentários postados, mas apenas por tornar indisponível no site o conteúdo considerado infringente ou danoso por determinação judicial (art.19 da Lei 12.965/14).
+              </p>
             </div>
           {{ Form::close() }}
           <br class="clear">
