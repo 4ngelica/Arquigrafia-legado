@@ -15,7 +15,8 @@
 	</script>
 	<div class="container">
 		<div>
-			{{ Form::open(array('url'=>'photos', 'files'=> true)) }}
+			<!--{{ Form::open(array('url'=>'photos', 'files'=> true)) }}-->
+			{{ Form::open(array('url' => "photos/savePhotoInstitutional", 'files'=> true)) }}
 				<div class="twelve columns row step-1">
 					<h1><span class="step-text">Upload</span></h1>
 					<div class="four columns alpha">
@@ -31,7 +32,7 @@
 				<div id="registration" class="twelve columns row step-2">
 					<h1><span class="step-text">Dados da imagem</span></h1>
 					<p>(*) Campos obrigatórios.</p>
-					<p></p>
+					<p>{{ Form::hidden('pageSource', $pageSource) }} </p>
 
 					<br>
 					<div class="eight columns alpha row">
@@ -301,7 +302,8 @@
 									<div class="two columns alpha"><p>{{ Form::label('photo_imageAuthor', 'Autor da imagem*:') }}</p></div>
 									<div class="two columns omega">
 										<p>
-											{{ Form::text('photo_imageAuthor', Input::old('photo_imageAuthor')) }} <br>
+											{{ Form::text('photo_imageAuthor', $user->name) }} 
+											 <br>
 											<div class="error">{{ $errors->first('photo_imageAuthor') }}</div>
 										</p>
 									</div>
