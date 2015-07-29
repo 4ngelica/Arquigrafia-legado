@@ -152,7 +152,7 @@
                                 @endif
                             </a>
                             @if($info_array[5] == null)
-                            <a href={{"users/" . $info_array[4]}}>{{ $info_array[1]}}</a>{{" começou a seguir você.}}
+                            <a href={{"users/" . $info_array[4]}}>{{ $info_array[1]}}</a>{{" começou a seguir você."}}
                             @else
                             <?php 
                                 $users = explode(":", $info_array[5]);
@@ -162,9 +162,9 @@
                                 }
                             ?>
                             @if($users_size < 2)
-                            <a href={{"users/" . $info_array[4]}}>{{ $info_array[1]}}</a>{{" e "}}<a href={{"users/" . $user[0]->id}}>{{$user[0]->name}}</a>{{" começaram a seguir você.}}
+                            <a href={{"users/" . $info_array[4]}}>{{ $info_array[1]}}</a>{{" e "}}<a href={{"users/" . $user[0]->id}}>{{$user[0]->name}}</a>{{" começaram a seguir você."}}
                             @else
-                            <a href={{"users/" . $info_array[4]}}>{{ $info_array[1]}}</a>{{" e mais "}}<a class="fancybox" href={{"#users-from-note-" . $notification->id}}>{{$users_size . " pessoas"}}</a>{{" começaram a seguir você.}}
+                            <a href={{"users/" . $info_array[4]}}>{{ $info_array[1]}}</a>{{" e mais "}}<a class="fancybox" href={{"#users-from-note-" . $notification->id}}>{{$users_size . " pessoas"}}</a>{{" começaram a seguir você."}}
                             <div class="additional-users" id={{"users-from-note-" . $notification->id}}>
                                 <ul>
                                     @for($i = 0; $i < $users_size; $i++)
