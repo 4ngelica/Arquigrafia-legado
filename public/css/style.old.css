@@ -109,10 +109,10 @@ input[type="range"] {width: 220px;}
 .form-table td {vertical-align: top; padding-bottom: 5px;}
 .form-table label {line-height: 20px;}
 
-::-webkit-input-placeholder { color:#ddd; }
-::-moz-placeholder { color:#ddd; } /* firefox 19+ */
-:-ms-input-placeholder { color:#ddd; } /* ie */
-input:-moz-placeholder { color:#ddd; }
+::-webkit-input-placeholder { color:#bbb; }
+::-moz-placeholder { color:#bbb; } /* firefox 19+ */
+:-ms-input-placeholder { color:#bbb; } /* ie */
+input:-moz-placeholder { color:#bbb; }
 
 /* --- HEADER --- */
 .header { height: auto; margin: 25px auto 35px; }
