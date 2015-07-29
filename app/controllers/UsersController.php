@@ -13,18 +13,22 @@ class UsersController extends \BaseController {
   {
     $this->beforeFilter('auth',
       array('only' => ['follow', 'unfollow']));
+    $this->beforeFilter('ajax',
+      array( 'only' => array(
+        'getScores'
+      )));
   }
   
-	public function index()
-	{
-		$users = User::all();
+  public function index()
+  {
+    $users = User::all();
 
-		return View::make('/users/index',['users' => $users]);
-	}
+    return View::make('/users/index',['users' => $users]);
+  }
 
-	public function show($id)
-	{
-		$user = User::whereid($id)->first();
+  public function show($id)
+  {
+    $user = User::whereid($id)->first();
     $photos = $user->photos()->get()->reverse();
     if (Auth::check()) {      
       if (Auth::user()->following->contains($user->id))
@@ -52,7 +56,7 @@ class UsersController extends \BaseController {
       'lastDateUpdatePhoto' => Photo::getLastUpdatePhotoByUser($id),
       'lastDateUploadPhoto' => Photo::getLastUploadPhotoByUser($id)
       ]);
-	}
+  }
   
   // show create account form
   public function account()
@@ -199,7 +203,7 @@ class UsersController extends \BaseController {
     if (Auth::check())
       return Redirect::to('/');
 
-		session_start();
+    session_start();
     $fb_config = Config::get('facebook');
     FacebookSession::setDefaultApplication($fb_config["id"], $fb_config["secret"]);
     $helper = new FacebookRedirectLoginHelper(url('/users/login/fb/callback'));
@@ -271,7 +275,7 @@ class UsersController extends \BaseController {
       ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
       return Redirect::to('/');
     } else {
-			Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
+      Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
       return Redirect::to('/users/login')->withInput();
     }
   }
@@ -299,10 +303,10 @@ class UsersController extends \BaseController {
     );
     return Redirect::to($facebook->getLoginUrl($params));
   }
-	
-	// facebook login callback
-	public function callback() 
-	{
+    
+    // facebook login callback
+    public function callback() 
+   {
     session_start();
     
     $fb_config = Config::get('facebook');
@@ -398,7 +402,7 @@ class UsersController extends \BaseController {
     }
     
     
-	}
+  }
 
   public function follow($user_id)
   {
@@ -576,5 +580,32 @@ class UsersController extends \BaseController {
         ])
     );    
   }
+
+
+  function getScores(){
+      if (Request::ajax()) {
+      $users = array();
+      $u = User::orderBy('nb_eval','DESC')->get();
+      $i=0;
+      foreach ($u as $user) {
+        $users[$i] = array();
+        $users[$i]['id'] = $user->id ;
+        $users[$i]['score'] = $user->nb_eval;
+        $users[$i]['image'] = $user->photo;
+        $users[$i]['name'] = $user->name;
+        
+
+        $i=$i+1;
+        if($i==10){
+          break;
+        }
+
+      }
+   
+      return Response::json($users);
+       }
+     
+    }
+
 
 }

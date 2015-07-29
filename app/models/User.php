@@ -7,6 +7,7 @@ use Illuminate\Auth\Reminders\RemindableInterface;
 // begin 12/05/2015 for date msy
 use lib\date\Date;
 
+
 class User extends Eloquent implements UserInterface, RemindableInterface {
 	
 	protected $fillable = ['id','name','email','password','login','verify_code'];
@@ -145,5 +146,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         return $newUser;
 
 	}
+
+	public function getPostionRank()
+{
+    return ($this->newQuery()->where('nb_eval', '>=', $this->nb_eval)->count());
+}
+
 
 }

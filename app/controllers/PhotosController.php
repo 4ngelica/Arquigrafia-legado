@@ -337,6 +337,11 @@ class PhotosController extends \BaseController {
 
   public function evaluate($photoId ) {
     $this->checkEvalCount(5, 'test');
+    $user = Auth::user();
+    $nb = $user->evaluations->groupBy("photo_id")->count();
+    $user->nb_eval = $nb;
+    $user->save();
+    $this->debug($nb);
     if(isset($_SERVER['QUERY_STRING'])) parse_str($_SERVER['QUERY_STRING']);
     $user_id = Auth::user()->id;
     $source_page = Request::header('referer');
