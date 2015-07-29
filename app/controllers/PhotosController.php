@@ -139,7 +139,7 @@ class PhotosController extends \BaseController {
   }
 
 
-  public function store() {
+  public function storeInsitutional() {
     Input::flashExcept('tags','tagsTypology','tagsElements','tagsMaterial', 'photo'); //tagsTypology tagsElements tagsMaterial
     $input = Input::all();
     if (Input::has('tags') && Input::has('tagsTypology') && Input::has('tagsElements') && Input::has('tagsMaterial') ){
@@ -305,7 +305,7 @@ class PhotosController extends \BaseController {
 
   } 
 
-  public function oKstore() {
+  public function store() {
 
 
   Input::flashExcept('tags', 'photo');
