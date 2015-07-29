@@ -39,9 +39,9 @@
 }*/
 
 .search-bar-info-theme {
-	border-radius: 5px; 
+	/*border-radius: 5px; */
 	border: 1px solid;
-	background: #FEEFB3;
+	background: #fff; /*#FEEFB3*/
 	color: #9F6000;
 }
 
