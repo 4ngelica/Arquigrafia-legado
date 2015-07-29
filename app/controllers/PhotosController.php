@@ -84,6 +84,7 @@ class PhotosController extends \BaseController {
  public function newForm()
   {  
     $user_id = Auth::user()->id;
+     $pageSource = Request::header('referer');
     //echo "=>".Session::get('institutionId');
     
     //$data = Session::all();
@@ -94,7 +95,7 @@ class PhotosController extends \BaseController {
       $tags = Session::pull('tags');
       $tags = explode(',', $tags);
     }
-    return View::make('/photos/newform')->with(['tags', $tags]);
+    return View::make('/photos/newform')->with(['tags'=> $tags,'pageSource'=>$pageSource, 'user'=>Auth::user()]);
   }
 
   public static function formatTags($tagsType){
@@ -139,7 +140,7 @@ class PhotosController extends \BaseController {
   }
 
 
-  public function storeInstitutional() {
+  public function saveFormInstitutional() {
     Input::flashExcept('tags','tagsTypology','tagsElements','tagsMaterial', 'photo'); //tagsTypology tagsElements tagsMaterial
     $input = Input::all();
     if (Input::has('tags') && Input::has('tagsTypology') && Input::has('tagsElements') && Input::has('tagsMaterial') ){
@@ -197,7 +198,7 @@ class PhotosController extends \BaseController {
 
   $validator = Validator::make($input, $rules);
 
-  if ($validator->fails()) {
+  if ($validator->fails()) { 
       $messages = $validator->messages();
       return Redirect::to('/photos/newUpload')->with(['tags' => $input['tags'], 
         'tagsMaterial' => $input['tagsMaterial'],'tagsElements' => $input['tagsElements'],
@@ -279,13 +280,13 @@ class PhotosController extends \BaseController {
               if(!$tagsSaved || !$tagsSaved || !$tagsElementsSaved || !$tagsTypologySaved){
                   $photo->forceDelete();
                   //$messages = array('tags'=>array('invalido'));
-                  return Redirect::to('/photos/upload')->with(['tags' => $input['tags']]); //->withErrors($messages)
+                  return Redirect::to('/photos/newUpload')->with(['tags' => $input['tags']]); //->withErrors($messages)
               }
 
-            } //ToDo
-          //$source_page = $input["pageSource"]; //get url of the source page through form
-          //ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $source_page, "Upload", "user");
-          //ActionUser::printTags($photo->user_id, $photo->id, $tags_copy, $source_page, "user", "Inseriu");
+            }
+          $sourcePage = $input["pageSource"]; //get url of the source page through form
+          ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "Upload", "user");
+          ActionUser::printTags($photo->user_id, $photo->id, $tagsCopy, $sourcePage, "user", "Inseriu");
 
           $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
           $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');

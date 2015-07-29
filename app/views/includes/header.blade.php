@@ -70,7 +70,11 @@
               @endif
             @endif
             <!-- <li><a href="#" id="comunities" title="Comunidades">&nbsp;</a></li> -->
+            @if(Session::get('institutionId'))
+            <li><a href="{{ URL::to("/photos/newUpload") }}" name="modal" id="upload" title="Enviar uma imagem">&nbsp;</a></li>
+            @else
             <li><a href="{{ URL::to("/photos/upload") }}" name="modal" id="upload" title="Enviar uma imagem">&nbsp;</a></li>
+            @endif
             <!-- <li><a href="#" id="messages" title="Você tem 19 mensagens">&nbsp;</a></li> -->
 
             <li>

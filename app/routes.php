@@ -97,6 +97,8 @@ Route::get('/photos/batch','PhotosController@batch');
 Route::get('/photos/upload','PhotosController@form');
 Route::get('/photos/newUpload','PhotosController@newForm');
 Route::get('/photos/download/{photo_id}','PhotosController@download');
+Route::get('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');
+Route::post('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');
 Route::resource('/photos','PhotosController');
 /* TAGS */
 Route::get('/tags/json', 'TagsController@index');
