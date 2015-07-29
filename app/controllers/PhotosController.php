@@ -139,7 +139,7 @@ class PhotosController extends \BaseController {
   }
 
 
-  public function storeInsitutional() {
+  public function storeInstitutional() {
     Input::flashExcept('tags','tagsTypology','tagsElements','tagsMaterial', 'photo'); //tagsTypology tagsElements tagsMaterial
     $input = Input::all();
     if (Input::has('tags') && Input::has('tagsTypology') && Input::has('tagsElements') && Input::has('tagsMaterial') ){
@@ -199,7 +199,7 @@ class PhotosController extends \BaseController {
 
   if ($validator->fails()) {
       $messages = $validator->messages();
-      return Redirect::to('/photos/upload')->with(['tags' => $input['tags'], 
+      return Redirect::to('/photos/newUpload')->with(['tags' => $input['tags'], 
         'tagsMaterial' => $input['tagsMaterial'],'tagsElements' => $input['tagsElements'],
         'tagsTypology' => $input['tagsTypology']])->withErrors($messages);
 
@@ -209,15 +209,16 @@ class PhotosController extends \BaseController {
           $photo = new Photo();
           $photo->nome_arquivo = $file->getClientOriginalName();
 
-          $photo->support = $input["support"];
-          $photo->tombo = $input["tombo"];
-          $photo->subject = $input["subject"];
-          $photo->hygieneDate = $input["hygieneDate"];
-          $photo->backupDate = $input["backupDate"];
-          $photo->characterization = $input["backupDate"];
-          $photo->cataloguingTime = date('Y-m-d H:i:s');
-          $photo->UserResponsible = $input["userResponsible"];
-
+          if(Session::has('institutionId')){
+            $photo->support = $input["support"];
+            $photo->tombo = $input["tombo"];
+            $photo->subject = $input["subject"];
+            $photo->hygieneDate = $input["hygieneDate"];
+            $photo->backupDate = $input["backupDate"];
+            $photo->characterization = $input["backupDate"];
+            $photo->cataloguingTime = date('Y-m-d H:i:s');
+            $photo->UserResponsible = $input["userResponsible"];
+          }
           $photo->name = $input["photo_name"];
           if ( !empty($input["photo_description"]) )
                $photo->description = $input["photo_description"];
@@ -271,10 +272,10 @@ class PhotosController extends \BaseController {
               $tagsElements = static::formatTags($tagsElements);
               $tagsTypology = static::formatTags($tagsTypology);
 
-              $tagsSaved = static::SaveTags($tags,'general');
-              $tagsMaterialSaved = static::SaveTags($tagsMaterial,'material');
-              $tagsElementsSaved = static::SaveTags($tagsElements,'elements');
-              $tagsTypologySaved = static::SaveTags($tagsTypology,'typology');         
+              $tagsSaved = static::SaveTags($tags,$photo,'general');
+              $tagsMaterialSaved = static::SaveTags($tagsMaterial,$photo,'material');
+              $tagsElementsSaved = static::SaveTags($tagsElements,$photo,'elements');
+              $tagsTypologySaved = static::SaveTags($tagsTypology,$photo,'typology');         
               if(!$tagsSaved || !$tagsSaved || !$tagsElementsSaved || !$tagsTypologySaved){
                   $photo->forceDelete();
                   //$messages = array('tags'=>array('invalido'));
@@ -282,9 +283,9 @@ class PhotosController extends \BaseController {
               }
 
             } //ToDo
-          $source_page = $input["pageSource"]; //get url of the source page through form
-          ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $source_page, "Upload", "user");
-          ActionUser::printTags($photo->user_id, $photo->id, $tags_copy, $source_page, "user", "Inseriu");
+          //$source_page = $input["pageSource"]; //get url of the source page through form
+          //ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $source_page, "Upload", "user");
+          //ActionUser::printTags($photo->user_id, $photo->id, $tags_copy, $source_page, "user", "Inseriu");
 
           $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
           $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
@@ -298,7 +299,7 @@ class PhotosController extends \BaseController {
 
       }else{
          $messages = $validator->messages();
-          return Redirect::to('/photos/upload')->withErrors($messages);
+          return Redirect::to('/photos/newUpload')->withErrors($messages);
       }
   
     }
