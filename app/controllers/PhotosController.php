@@ -493,13 +493,13 @@ class PhotosController extends \BaseController {
         $user_note = User::find($photo->user_id);
         foreach ($user_note->notifications as $notification) {
         $info = $notification->render();
-        if ($info[0] == "comment_posted" && $info[2] == $photo->id) {
+        if ($info[0] == "comment_posted" && $info[2] == $photo->id && $notification->read_at == null) {
           $note_id = $notification->notification_id;
           $note_user_id = $notification->id;
           $note = $notification;
         }
       }
-      if (isset($note_id) && $note->read_at == null) {
+      if (isset($note_id)) {
         $note_from_table = DB::table("notifications")->where("id","=", $note_id)->get();
         if (NotificationsController::isNotificationByUser($user->id, $note_from_table[0]->sender_id, $note_from_table[0]->data) == false) {
           $new_data = $note_from_table[0]->data . ":" . $user->id;
