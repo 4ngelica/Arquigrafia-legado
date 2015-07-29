@@ -27,9 +27,9 @@
             
             {{ Form::open() }}
 
-               <p>Entre com seu usuário ou e-mail e em seguida digite sua senha:</p>
+               <p>Entre com seu login ou e-mail e em seguida digite sua senha:</p>
                <br>
-               <div class="two columns alpha">{{ Form::label('login', 'Usuário ou E-mail:', array('class'=>'right')) }}</div>
+               <div class="two columns alpha">{{ Form::label('login', 'Login ou E-mail:', array('class'=>'right')) }}</div>
                <div class="two columns omega">{{ Form::text('login', '', array('class'=>'right') ) }}</div>
                {{ $errors->first('login') }}
                 <p> {{ Form::hidden('firstTime', Session::get('msgRegister')) }}</p>

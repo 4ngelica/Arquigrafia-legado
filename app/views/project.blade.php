@@ -59,8 +59,7 @@
           <li><small><a href="http://www.usp.br/fau/fau/secoes/biblio/index.html" target="_blank">Rejane Alves - Biblioteca FAUUSP</a></small></li>
           <li><small><a href="http://www.cristianomascaro.com.br/" target="_blank">Prof. Dr. Cristiano Mascaro - Consultor de fotografia</a></small></li>
           <li><small><a href="http://www2.nelsonkon.com.br/" target="_blank">Arq. Nelson Kon - Consultor de fotografia</a></small></li>
-          <li><small><a href="http://lattes.cnpq.br/9781300883115022" target="_blank">Arq. Rodrigo Luiz Minot Gutierrez - SENAC / UNIUBE</a></small></li>
-          <li><small><a href="http://lattes.cnpq.br/6686522394728149" target="_blank">Arq. Leandro Lopes - ECAUSP</a></small></li>
+          <li><small><a href="http://lattes.cnpq.br/9781300883115022" target="_blank">Arq. Rodrigo Luiz Minot Gutierrez - SENAC / UNIUBE</a></small></li>          
         </ul>
         <br>
         
@@ -115,6 +114,7 @@
         
         <h3>Parceiros de desenvolvimento</h3>
         <ul>
+          <li><small><a href="http://lattes.cnpq.br/6686522394728149" target="_blank">Arq. Leandro Lopes - L3 Conserv. de Acervos</a></small></li>
           <li><small><a href="http://www.bench.com.br/" target="_blank">Jean Pierre Chamouton - Benchmark Design Total</a></small></li>
           <li><small><a href="http://www.rckt.com.br/" target="_blank">Pedro Emilio Guglielmo - RCKT</a></small></li>
           <li><small><a href="http://www.rckt.com.br/" target="_blank">André Chou - RCKT</a></small></li>
