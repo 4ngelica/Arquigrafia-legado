@@ -139,7 +139,7 @@ class PhotosController extends \BaseController {
   }
 
 
-  public function storeInstitutional() {
+  public function store() {
     Input::flashExcept('tags','tagsTypology','tagsElements','tagsMaterial', 'photo'); //tagsTypology tagsElements tagsMaterial
     $input = Input::all();
     if (Input::has('tags') && Input::has('tagsTypology') && Input::has('tagsElements') && Input::has('tagsMaterial') ){
@@ -155,7 +155,8 @@ class PhotosController extends \BaseController {
     $input["tagsTypology"] = '';
     }
 
-    if(isset(Session::get('institutionId'))){
+    if(Session::has('institutionId')){
+      //isset(Session::get('institutionId'))){
 
       $rules = array(
       'support' => 'required',
@@ -210,7 +211,7 @@ class PhotosController extends \BaseController {
 
           $photo->support = $input["support"];
           $photo->tombo = $input["tombo"];
-          $photo->subject = $input["subject"]
+          $photo->subject = $input["subject"];
           $photo->hygieneDate = $input["hygieneDate"];
           $photo->backupDate = $input["backupDate"];
           $photo->characterization = $input["backupDate"];
@@ -304,7 +305,7 @@ class PhotosController extends \BaseController {
 
   } 
 
-  public function store() {
+  public function oKstore() {
 
 
   Input::flashExcept('tags', 'photo');
