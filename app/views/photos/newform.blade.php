@@ -242,17 +242,23 @@
 								</div>
 								</td>
 							</tr>
-
+							<!--<tr>
+								<td>@include('photos.includes.datepicker')
+								</td>
+							</tr>-->
+							
 							<tr>  <td>              
          						<div class="two columns alpha"><p>{{ Form::label('photo_workDate', 'Data da obra:') }}</p></div>
-         						<div class="two columns omega">         						
+         						<div class="two columns omega">     
+         						
+
           						<p>
           							{{ Form::text('photo_workDate','',array('id' => 'datePickerWorkDate','placeholder'=>'DD/MM/AAAA')) }} 
          						<br>
          						<div class="error">{{ $errors->first('photo_workDate') }}</div>
          					</p>       
         					</div></td>
-        					</tr>
+        					</tr> 
 
 							
 							
