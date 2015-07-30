@@ -673,7 +673,10 @@ i#likes {  background: url("../img/dislikeNB.png"); padding : 2px 10px 0px;   }
 .additional-users { display: none; }
 .additional-user { font-size: 15px; }
 .date-and-time {}
-#notes-box { position: absolute; right: -260px; top: 50px; width: 660px; height: 400px; background: #DDD; opacity: 0; transition: opacity 0.3s linear 0s, right 0s linear 0s; z-index: 5; }
+#notes-box { position: absolute; right: -260px; top: 50px; width: 660px; height: 400px; background: #DDD; opacity: 0; transition: opacity 0.3s linear 0s, right 0s linear 0s; z-index: 5; display: none; }
+#notes-header { position: absolute; top: 0px; background: rgba(160, 160, 160, 0.3); }
+#notes-footer { position: absolute; bottom: 0px; background: rgba(160, 160, 160, 0.7); }
+#notes-container {  }
 
  /* Badges page */
 .badges { font-size:20px; margin-left: 180px; margin-bottom: 30px; }
