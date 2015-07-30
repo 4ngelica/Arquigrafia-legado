@@ -97,6 +97,7 @@
           
           <div id="notes-box">
             <div id="notes-header"></div>
+            <div id="notes-container"></div>
             <div id="notes-footer"> Ver todas </div>
           </div>
 
