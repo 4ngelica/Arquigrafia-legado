@@ -39,6 +39,17 @@ function refreshBubbleCounter() {
         })
 }
 
+function toggleNotes(){
+    var notes_box = document.getElementById("notes-box");
+    if(notes_box.style.opacity == 1){
+        notes_box.style.opacity = 0;
+        notes_box.style.right = "-260px"; // remove it from active screen space
+    } else {
+        notes_box.style.right = "0px"; // return it to active screen space
+        notes_box.style.opacity = 1;
+    }
+}
+
 $(document).ready(function() {
     
     $(".fancybox").fancybox({

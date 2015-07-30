@@ -85,16 +85,21 @@
                   else $title = "Você tem " . $notesCounter . " notificação não lida"; 
                 ?>
                 <a href="{{ URL::to("/notifications") }}" id="notification" title="{{$title}}">&nbsp;</a>
+                <!--onclick="toggleNotes()"-->
                 @if ($notesCounter > 0) <div id="bubble"> {{$notesCounter}} </div>  @endif
               </div>
             </li>
 
-            
           <!-- <li><a href="{{ URL::to("/badges") }}" id="badge" title="Vizualizar badges">&nbsp;</a></li>-->
           
 
           </ul>
-         
+          
+          <div id="notes-box">
+            <div id="notes-header"></div>
+            <div id="notes-footer"> Ver todas </div>
+          </div>
+
         <?php } else { ?>
         
           <!--   BOTÃO DE LOGIN   -->
