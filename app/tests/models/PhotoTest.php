@@ -7,7 +7,7 @@ class PhotoTest extends TestCase {
 
 	public static function setUpBeforeClass()
 	{
-		FactoryMuffin::loadFactories(__DIR__ . '/factories');
+		FactoryMuffin::loadFactories(app_path() . '/tests/factories');
 		FactoryMuffin::setFakerLocale('pt_BR');
 	}
 
