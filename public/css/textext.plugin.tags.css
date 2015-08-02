@@ -23,8 +23,10 @@
   box-sizing: border-box;
   position: relative;
   float: left;
-  border: 1px solid #9daccc;
-  background: #e2e6f0;
+  /*orig border: 1px solid #9daccc;*/
+  border: 1px solid #ccc;
+  /*background: #e2e6f0;*/
+  background: #fff;
   color: #000;
   padding: 0px 17px 0px 3px;
   margin: 0 2px 2px 0;
