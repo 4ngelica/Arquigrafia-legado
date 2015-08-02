@@ -2,13 +2,17 @@
 //add
 use lib\utils\ActionUser;
 use Carbon\Carbon;
+use lib\date\Date;
 
 class PhotosController extends \BaseController {
 
-  public function __construct()
+  protected $date;
+
+  public function __construct(Date $date = null)
   {
     $this->beforeFilter('auth',
       array( 'except' => ['index','show'] ));
+    $this->date = $date ?: new Date; 
   }
 
   public function index()
@@ -177,8 +181,8 @@ class PhotosController extends \BaseController {
       'tagsElementsArea' => 'required',
       'tagsTypologyArea' => 'required',
       'country' => 'required',
-      'imageAuthor' => 'required',
-      'authorization_checkbox' => 'required'
+      'imageAuthor' => 'required'
+     // 'authorization_checkbox' => 'required'
       
       //'photo_workDate' => 'date_format:"d/m/Y"',
       //'photo_imageDate' => 'date_format:"d/m/Y"'
@@ -218,9 +222,9 @@ class PhotosController extends \BaseController {
             $photo->support = $input["support"];
             $photo->tombo = $input["tombo"];
             $photo->subject = $input["subject"];
-            $photo->hygieneDate = $input["hygieneDate"];
-            $photo->backupDate = $input["backupDate"];
-            $photo->characterization = $input["backupDate"];
+            $photo->hygieneDate = $this->date->formatDate($input["hygieneDate"]);
+            $photo->backupDate = $this->date->formatDate($input["backupDate"]);
+            $photo->characterization = $input["characterization"];
             $photo->cataloguingTime = date('Y-m-d H:i:s');
             $photo->UserResponsible = $input["userResponsible"];
           }
