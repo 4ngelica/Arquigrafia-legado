@@ -208,8 +208,7 @@ class PhotosController extends \BaseController {
       'tagsElementsArea' => 'required',
       'tagsTypologyArea' => 'required',
       'country' => 'required',
-      'imageAuthor' => 'required'
-     // 'authorization_checkbox' => 'required'
+      'imageAuthor' => 'required'     
       
       //'photo_workDate' => 'date_format:"d/m/Y"',
       //'photo_imageDate' => 'date_format:"d/m/Y"'
