@@ -184,7 +184,7 @@
 										   </div>
 											
 											<br>
-											<div class="error">{{ $errors->first('tags_input') }}</div>
+											<div class="error">{{ $errors->first('tagsArea') }}</div>
 										</p>
 									</div>
 									<div>
@@ -200,6 +200,7 @@
 
 							<tr>
 								<td>
+									<br/>
 									<div class="two columns alpha"><p>{{ Form::label('tagsMaterial', 'Tags Material:') }}</p></div>
 									<div class="two columns">
 										<p>
@@ -207,11 +208,11 @@
 										   
 											
 											<br>
-											<div class="error">{{ $errors->first('tagsMaterial') }}</div>
+											<div class="error">{{ $errors->first('tagsMaterialArea') }}</div>
 										</p>
 									</div>
 									<div>
-										<button class="btn" id="addTagMaterial" style="font-size: 11px;">ADICIONAR TAG MATERIAL</button>
+										<button class="btn" id="addTagMaterial" style="font-size: 11px;">ADICIONAR MATERIAL</button>
 									</div>
 									<div class="five columns alpha">
 										<textarea name="tagsMaterialArea" id="tagsMaterialArea" cols="60" rows="1" style="display: none;"></textarea>
@@ -220,6 +221,7 @@
 							</tr>
 							<tr>
 								<td>
+									<br/>
 									<div class="two columns alpha"><p>{{ Form::label('tagsElements', 'Tags de elementos:') }}</p></div>
 									<div class="two columns">
 										<p><div style="max-width:150px;">
@@ -227,11 +229,11 @@
 										   </div>
 											
 											<br>
-											<div class="error">{{ $errors->first('tagsElements') }}</div>
+											<div class="error">{{ $errors->first('tagsElementsArea') }}</div>
 										</p>
 									</div>
 									<div>
-										<button class="btn" id="addTagElements" style="font-size: 11px;">ADICIONAR TAG DE ELEMENTOS</button>
+										<button class="btn" id="addTagElements" style="font-size: 11px;">ADICIONAR ELEMENTOS</button>
 									</div>
 									<div class="five columns alpha">
 										<textarea name="tagsElementsArea" id="tagsElementsArea" cols="60" rows="1" style="display: none;"></textarea>
@@ -240,6 +242,7 @@
 							</tr>
 							<tr>
 								<td>
+									<br/>
 									<div class="two columns alpha"><p>{{ Form::label('tagsElements', 'Tags de tipologia:') }}</p></div>
 									<div class="two columns">
 										<p><div style="max-width:150px;">
@@ -247,11 +250,11 @@
 										   </div>
 											
 											<br>
-											<div class="error">{{ $errors->first('tagsTypology') }}</div>
+											<div class="error">{{ $errors->first('tagsTypologyArea') }}</div>
 										</p>
 									</div>
 									<div>
-										<button class="btn" id="addTagTypology" style="font-size: 11px;">ADICIONAR TAG DE TIPOLOGIA</button>
+										<button class="btn" id="addTagTypology" style="font-size: 11px;">ADICIONAR TIPOLOGIA</button>
 									</div>
 									<div class="five columns alpha">
 										<textarea name="tagsTypologyArea" id="tagsTypologyArea" cols="60" rows="1" style="display: none;"></textarea>
@@ -261,6 +264,7 @@
 
 							<tr>
 								<td>
+									<br/>
 								<div class="two columns alpha"><p>{{ Form::label('workAuthor', 'Autor da obra:') }}</p></div>
 								<div class="two columns omega">
 									<p>
@@ -416,8 +420,10 @@
 						</div>
 					</div>
 					<div class="twelve columns omega row">
-						<h4>Álbum do acervo {{$institution->name}} </h4>
+						<h4>Álbuns do {{$institution->name}} </h4>
 						<div>
+							@include('photos.includes.institutional_albums')
+							
 						</div>
 					</div>
 
@@ -430,53 +436,15 @@
 		</div>
 
 	</div>
+
 <script type="text/javascript">
 	$(document).ready(function() {
-	$('#tagsArea').textext({ plugins: 'tags' });
-
-			@if (isset($tagsArea))
-				@foreach ( $tagsArea as $tagArea )
-					$('#tagsArea').textext()[0].tags().addTags([ {{ '"' . $tagArea . '"' }} ]);
-				@endforeach
-			@endif
-			$('#tags_input').val('');
-
-
-	$('#tagsMaterialArea').textext({ plugins: 'tags' });
-
-			@if (isset($tagsMaterialArea))
-				@foreach ( $tagsMaterialArea as $tagMaterialArea )
-					$('#tagsMaterialArea').textext()[0].tags().addTags([ {{ '"' . $tagMaterialArea . '"' }} ]);
-				@endforeach
-			@endif
-	$('#tagsMaterial').val('');
-
-
-	$('#tagsElementsArea').textext({ plugins: 'tags' });
-
-		@if (isset($tagsElementsArea))
-				@foreach ( $tagsElementsArea as $tagElementsArea )
-					$('#tagsElementsArea').textext()[0].tags().addTags([ {{ '"' . $tagElementsArea . '"' }} ]);
-				@endforeach
-		@endif
-	$('#tagsElements').val('');
-
-
-	$('#tagsTypologyArea').textext({ plugins: 'tags' });
-
-			@if (isset($tagsTypologyArea))
-				@foreach ( $tagsTypologyArea as $tagTypologyArea )
-					$('#tagsTypologyArea').textext()[0].tags().addTags([ {{ '"' . $tagTypologyArea . '"' }} ]);
-				@endforeach
-			@endif
-	$('#tagsTypology').val('');
-
-
-
+		/* Methods to be called when all html document be ready */
+		showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));
+		showTags({{json_encode($tagsMaterialArea)}},$('#tagsMaterialArea'),$('#tagsMaterial'));
+		showTags({{json_encode($tagsElementsArea)}},$('#tagsElementsArea'),$('#tagsElements'));
+		showTags({{json_encode($tagsTypologyArea)}},$('#tagsTypologyArea'),$('#tagsTypology'));
    });
-
-
-
 </script>
 
 

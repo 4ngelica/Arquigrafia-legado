@@ -88,22 +88,49 @@ class PhotosController extends \BaseController {
  public function newForm()
   {  
     $user_id = Auth::user()->id;
+    $albumsInstitutional = NULL;
+
     if(Session::has('institutionId')){
       $institution = Institution::find(Session::get('institutionId'));
-      
+      $this->album = new Album();
+      $albumsInstitutional = $this->album->showAlbumsInstitutional($institution);
     }
-     $pageSource = Request::header('referer');
-    //echo "=>".Session::get('institutionId');
+
+    $pageSource = Request::header('referer');
     
-    //$data = Session::all();
-    //dd($data);
     $tagsArea = null;
+    $tagsMaterialArea = null;
+    $tagsElementsArea = null;
+    $tagsTypologyArea = null;
+
     if ( Session::has('tagsArea') )
     {  
       $tagsArea = Session::pull('tagsArea');
       $tagsArea = explode(',', $tagsArea); 
     }
-    return View::make('/photos/newform')->with(['tagsArea'=> $tagsArea,'pageSource'=>$pageSource, 'user'=>Auth::user(), 'institution'=>$institution]);
+     if ( Session::has('tagsMaterialArea') )
+    {  
+      $tagsMaterialArea = Session::pull('tagsMaterialArea');
+      $tagsMaterialArea = explode(',', $tagsMaterialArea); 
+    }
+    if ( Session::has('tagsElementsArea') )
+    {  
+      $tagsElementsArea = Session::pull('tagsElementsArea');
+      $tagsElementsArea = explode(',', $tagsElementsArea); 
+    }
+    if ( Session::has('tagsTypologyArea') )
+    {  
+      $tagsTypologyArea = Session::pull('tagsTypologyArea');
+      $tagsTypologyArea = explode(',', $tagsTypologyArea); 
+    }
+
+    return View::make('/photos/newform')->with(['tagsArea'=> $tagsArea,
+      'tagsMaterialArea' => $tagsMaterialArea ,
+      'tagsElementsArea' => $tagsElementsArea,
+      'tagsTypologyArea' => $tagsTypologyArea,
+      'pageSource'=>$pageSource, 'user'=>Auth::user(), 
+      'institution'=>$institution,
+      'albumsInstitutional'=>$albumsInstitutional]);
   }
 
   public static function formatTags($tagsType){
@@ -288,11 +315,25 @@ class PhotosController extends \BaseController {
               $tagsTypologySaved = static::SaveTags($tagsTypology,$photo,'typology');         
               if(!$tagsSaved || !$tagsSaved || !$tagsElementsSaved || !$tagsTypologySaved){
                   $photo->forceDelete();
-                  //$messages = array('tags'=>array('invalido'));
-                  return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea']]); //->withErrors($messages)
+                  $messages = array('tagsArea'=>array('Inserir pelo menos uma tag'),'tagsMaterialArea'=>array('Inserir pelo menos uma tag material'),
+                    'tagsElementsArea'=>array('Inserir pelo menos uma tag de elementos'),'tagsTypologyArea'=>array('Inserir pelo menos uma tag tipologia')
+                    );
+                  //return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea']]); //->withErrors($messages)
+                  return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'], 
+                 'tagsMaterialArea' => $input['tagsMaterialArea'],'tagsElementsArea' => $input['tagsElementsArea'],
+                 'tagsTypologyArea' => $input['tagsTypologyArea']])->withErrors($messages);
               }
 
             }
+
+           //add Album
+            if (Input::has("albums_institution")) {              
+                $album = new Album();
+                $album->id = $input["albums_institution"];
+                $album->attachPhotos($photo->id);               
+            }
+            
+
           $sourcePage = $input["pageSource"]; //get url of the source page through form
           ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "Upload", "user");
           ActionUser::printTags($photo->user_id, $photo->id, $tagsCopy, $sourcePage, "user", "Inseriu");

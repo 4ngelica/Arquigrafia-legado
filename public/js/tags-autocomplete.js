@@ -13,18 +13,29 @@ function readURL(input) {
 }
 
 
+/**
+ * Method to show the retrieved tags in the form 
+ * @param {String} tagsJson 
+ * @param {textarea} containerText
+ * @param {input type} tagInput
+ */
+function showTags(tagsJson, containerText, tagInput){
 
+//    console.log(tagsJson);
+
+    if(tagsJson != null && tagsJson != ''){
+        containerText.textext({ plugins: 'tags' });
+        var array = eval(tagsJson);  // convert string to array  
+        for(i=0; i< array.length; i++){
+            containerText.textext()[0].tags().addTags([ array[i] ]);
+        }
+    }
+    tagInput.val('');
+}
 
 $(document).ready(function() {
 
 
-//@if(isset($tagsArea))
-        
-       // @foreach ( $tagsArea as $tagArea )
-         //   $('#tagsArea').textext()[0].tags().addTags([ {{ '"' . $tagArea . '"' }} ]);
-       // @endforeach
-//@endif
- //alert(tagsArea);
 
 //tags
     $('#tags_input').textext({ plugins : 'autocomplete'})
@@ -144,26 +155,7 @@ $('#tagsTypology').textext({ plugins : 'autocomplete'}) //input
    
 
 
-function retrieveTagsArea(arrayTag){
-    alert("ok");
-    for(i=0; i<arrayTag.length; i++){
-        var tag = arrayTag[i];
-        if(tag!= ""){
-            $('#tagsArea').textext()[0].tags().addTags([ tag ]);
-            
-        }       
-    }
-
-    $('#tags_input').val('');  
-    
-}
-
-
-
-
-
-
-$(function() {
+    $(function() {
         $( "#datePickerWorkDate" ).datepicker({
             dateFormat:'dd/mm/yy'
         }

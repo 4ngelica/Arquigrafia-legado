@@ -156,16 +156,16 @@ return array(
         'password' => array(
             'confirmed' => 'A confirmação para o campo senha não coincide.',
         ),
-         'tags' => array(
+         'tagsArea' => array(
             'required' => 'É obrigatório inserir um valor para tags.',
         ),
-        'tagsTypology' => array(
+        'tagsTypologyArea' => array(
             'required' => 'É obrigatório inserir um valor para tags de tipologia.',
         ),        
-        'tagsElements' => array(
+        'tagsElementsArea' => array(
             'required' => 'É obrigatório inserir um valor para tags de elementos.',
         ),
-        'tagsMaterial' => array(
+        'tagsMaterialArea' => array(
             'required' => 'É obrigatório inserir um valor para tags de materiais.',
         ),
         'support' => array(
