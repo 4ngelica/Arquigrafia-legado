@@ -1,5 +1,5 @@
 <?php
-
+/*
 use League\FactoryMuffin\Facade as FactoryMuffin;
 use Mockery as m;
 
@@ -38,3 +38,4 @@ class PhotoTest extends TestCase {
 	}
 
 }
+*/
