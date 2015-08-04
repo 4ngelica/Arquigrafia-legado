@@ -49,11 +49,11 @@
                </div>   
                <div>&nbsp;</div>
                   
-                  <!--<div class="link_institution">
+                  <div class="link_institution">
                      <a id="institutionLogin" href="/institutionalLogin" id="single_view_contact_add">
                      Login institucional
                      </a> 
-                  </div>-->
+                  </div>
                </div>   
                <p>{{ Form::submit("LOGIN",array('class'=>'btn right')) }}</p>
                
@@ -119,16 +119,21 @@
             {{ Form::open(array( 'url' => '/users/institutionalLogin')) }}
 
                <div class="three columns">{{ Form::label('login', 'Login ou email:') }}</div>
-               <div class="three columns">{{ Form::text('login', '', ['class' => 'right']) }}</div>
+               <div class="three columns">{{ Form::text('login', '', ['class' => 'left']) }}</div>
                {{ $errors->first('login') }}
                
                <div class="three columns">{{ Form::label('institution', 'Acervo:') }}</div>
                <div class="three columns">
-               {{ Form::select('institution', [""=>"Escolha o acervo", "1"=>"Quapá", "2"=>"FAU-USP"], "",array('class' => 'right')) }} </div>
-               {{ $errors->first('login') }}
                <br>
+                  @if(!is_null($institutions))
+                    {{ Form::select('institution', $institutions , Input::old('institution')) }}
+                  @else
+                      {{ Form::select('institution', [""=>"Escolha o acervo institutional"], "",array('class' => 'left')) }} 
+                  @endif
+               </div>
+               <br><br>
                <div class="three columns">{{ Form::label('password', 'Senha:') }}</div>
-               <div class="three columns">{{ Form::password('password', ['class' => 'right']) }}</div>
+               <div class="three columns">{{ Form::password('password', ['class' => 'left']) }}</div>
                <br>
                <br>
                <div class="three columns">
