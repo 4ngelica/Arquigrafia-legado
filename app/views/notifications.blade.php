@@ -11,7 +11,7 @@
 	<?php
         if (Auth::check()) {
             $user = Auth::user();
-            $notes_size = count($user->notifications);
+            $max = count($user->notifications);
 	        $unreadNotifications = $user->notifications()->unread()->get();
             $readNotifications = $user->notifications()->read()->get();
 	?>
@@ -25,7 +25,7 @@
 	@if ($user->notifications->isEmpty())
 		<p id="no-notifications">Você não possui notificações.</p>
 	@else
-	   @include("includes.notes", ['user' => $user])
+	   @include("includes.notes", ['user' => $user, 'max' => $max])
     @endif
  	<?php } ?> 
     </div>

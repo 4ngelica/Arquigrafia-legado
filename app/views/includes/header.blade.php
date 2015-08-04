@@ -84,8 +84,7 @@
                   if ($notesCounter != 1) $title = "Você tem " . $notesCounter . " notificações não lidas";
                   else $title = "Você tem " . $notesCounter . " notificação não lida"; 
                 ?>
-                <a href="{{ URL::to("/notifications") }}" id="notification" title="{{$title}}">&nbsp;</a>
-                <!-- onclick="toggleNotes()"-->
+                <a onclick="toggleNotes()" id="notification" title="{{$title}}">&nbsp;</a>
                 @if ($notesCounter > 0) <div id="bubble"> {{$notesCounter}} </div>  @endif
               </div>
             </li>
@@ -98,12 +97,13 @@
           <div id="notes-box">
             <div id="notes-header">
               <p id="box-title"> Notificações </p>
-              <p id="read-all"><a onclick=""> Marcar todas como lidas </a></p>
+              <p id="read-all"><a onclick="readAll()"> Marcar todas como lidas </a></p>
             </div>
             <div id="notes-container">
               @if(Auth::user()->notifications->isEmpty())
                 <p id="no-notes">Você não possui notificações</p>
               @else
+                @include("includes.notes", ['user' => Auth::user(), 'max' => 5])
               @endif
             </div>
             <div id="notes-footer">

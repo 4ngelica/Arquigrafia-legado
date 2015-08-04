@@ -1,6 +1,9 @@
 function markRead(object) {
-    object.parentElement.parentElement.className = "notes";
     var id = object.parentElement.parentElement.id;
+    var notes = document.getElementsByClassName(id);
+    for (i = 0; i < notes.length; i++) {
+        notes[i].className = "notes " + id;
+    }
     var url = "/markRead/".concat(id);
     $.get(url)
         .done(function( data ) {
