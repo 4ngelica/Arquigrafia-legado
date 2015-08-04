@@ -3,11 +3,10 @@
 <head>
   <meta charset="utf8">
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/checkbox-edition.css" />
-
-
-
-
-
+ 
+     <script type="text/javascript" src="{{ URL::to('/js/institutionalAlbum.js') }}"></script>
+  <script type="text/javascript" src="{{ URL::to('/js/script.js') }}"></script>
+  <script type="text/javascript" src="{{ URL::to('/js/stoaLogin.js') }}"></script>
 
 </head>
 <body>
@@ -17,10 +16,6 @@
       margin-top: 20px;
     }
   </style>
-
-
-
-
 
     
     <div class="twelve columns">
@@ -41,10 +36,6 @@
             </div>
             <div id="add" class="eleven columns add">
               
-              <?php 
-                //$photos = $other_photos; //if-$photos->count() > 0
-                //$type = 'add';
-              ?>
               @if ($albumsInstitutional->count() > 0) 
 
               <?php $count = 0; ?>
@@ -55,8 +46,12 @@
                       @endif 
                       @if ($count == 0)
                         <td width="143" class="add" >    
-                          <span> Adicionar Album</span>                  
-                          <img src="{{ URL::to('/img/create_album.png') }}"> 
+                          <!--<span> Adicionar Album</span>                  
+                          <img src="{{ URL::to('/img/create_album.png') }}"> -->
+                          <!--<a id="newInstitutionalAlbum" href="/institutionalAlbum" id="single_view_contact_add">
+                            <span> Adicionar Album</span> </a>-->
+                          <a id="newInstitutionalAlbum" href="/institutionalAlbum" id="single_view_contact_add">                   
+                          <img src="{{ URL::to('/img/create_album.png') }}">  </a>
                         </td>
                       <?php $count++; ?>
                       @endif
@@ -102,9 +97,12 @@
               @else
               <table>
                 <tr>
-                  <td width="143" class="add" >    
-                          <span> Adicionar Album</span>                  
-                          <img src="{{ URL::to('/img/create_album.png') }}"> 
+                  <td width="143" class="add" > 
+                          
+                          <!--<a id="newInstitutionalAlbum" href="/institutionalAlbum" id="single_view_contact_add">
+                            <span> Adicionar Album</span> </a>-->
+                          <a id="newInstitutionalAlbum" href="/institutionalAlbum" id="single_view_contact_add">                   
+                          <img src="{{ URL::to('/img/create_album.png') }}">  </a>
                   </td>
                 </tr>
               </table>
@@ -115,24 +113,38 @@
       
     
   </div>
-  <div id="mask"></div>
-  <div id="form_window" class="form window">
-    <a class="close" href="#" title="FECHAR">Fechar</a>
-    <div id="covers_registration"></div>
-  </div>
-  <div class="message_box"></div> 
-  <script type="text/javascript">
-   /* $(document).ready(function() {
-      $('.tabs .tab-links a').on('click', function(e) {
-        var currentAttrValue = $(this).attr('href');
-        $('.tabs ' + currentAttrValue).fadeIn('slow').siblings().hide();
-        $(this).parent('li').addClass('active').siblings().removeClass('active');
-        e.preventDefault();
-        if (update && $('.tabs ' + currentAttrValue).hasClass(update)) {
-          updatePages(update);
-        }
-      });
-    });*/
-  </script>    
+<br>
+<br>
+<div></div>
+<div id="mask"></div> 
+<div id="form_inst_album_window" class="container columns form window">
+      <a class="close" href="#" title="FECHAR">Fechar</a>
+      <div id="registInstAlbum" class="registInstAlbum">
+         <br>
+         <div class="four columns">
+            {{ Form::open(array( 'url' => '/albums/institutionalAlbum')) }}
+                <p></p>
+                <br> <br>
+               <div class="three columns">{{ Form::label('title','Titulo do álbum:') }}</div>
+               <div class="three columns">{{ Form::text('title') }}</div>
+               {{ $errors->first('title') }}
+               
+               <div class="three columns">{{ Form::label('description', 'Descrição:') }}</div>
+               <div class="three columns">
+               {{ Form::textarea('description',null, ['size' => '40x6'])}} </div>
+               {{ $errors->first('description') }}
+               <br>
+               
+               <div class="three columns">
+                  <p>{{ Form::submit("CRIAR ÁLBUM",array('class'=>'btn right')) }}</p>
+                  <!--<p class="error">titulo e/ou descrição vazios.</p>-->
+               </div>
+            {{ Form::close() }}
+         </div>
+      </div>
+</div>
+
+
+   
 </body>
 </html>
