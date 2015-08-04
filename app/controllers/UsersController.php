@@ -206,11 +206,13 @@ class UsersController extends \BaseController {
     $fburl = $helper->getLoginUrl(array(
         'scope' => 'email',
     ));
+      
+    $institutions = Institution::institutionsList();
 
     if (!Session::has('filter.login') && !Session::has('login.message')) //nao foi acionado pelo filtro, retornar para pagina anterior
       Session::put('url.previous', URL::previous());
     
-    return View::make('/modal/login')->with(['fburl' => $fburl]);
+    return View::make('/modal/login')->with(['fburl' => $fburl,'institutions' => $institutions]);
   }
   
 

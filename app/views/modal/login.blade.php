@@ -49,11 +49,11 @@
                </div>   
                <div>&nbsp;</div>
                   
-                  <!--<div class="link_institution">
+                  <div class="link_institution">
                      <a id="institutionLogin" href="/institutionalLogin" id="single_view_contact_add">
                      Login institucional
                      </a> 
-                  </div>-->
+                  </div>
                </div>   
                <p>{{ Form::submit("LOGIN",array('class'=>'btn right')) }}</p>
                
@@ -124,8 +124,10 @@
                
                <div class="three columns">{{ Form::label('institution', 'Acervo:') }}</div>
                <div class="three columns">
-               {{ Form::select('institution', [""=>"Escolha o acervo", "1"=>"Quapá", "2"=>"FAU-USP"], "",array('class' => 'right')) }} </div>
-               {{ $errors->first('login') }}
+               <br>  
+                  {{ Form::select('institution', $institutions , Input::old('institution')) }}
+               
+               </div>
                <br>
                <div class="three columns">{{ Form::label('password', 'Senha:') }}</div>
                <div class="three columns">{{ Form::password('password', ['class' => 'right']) }}</div>
