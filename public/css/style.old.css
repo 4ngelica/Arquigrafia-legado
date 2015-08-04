@@ -748,3 +748,11 @@ a.tooltip_license span
 .date_container p, .date_container input[type="text"], .date_container select { margin: 5px; }
 .date_container input[type="radio"], .date_container input[type="checkbox"] { margin-left: 3px; -ms-transform: translate(0,2px); -webkit-transform: translate(0,2px); transform: translate(0,2px); display: inline-block; }
 .date_container input[type="radio"] { margin-right: 0px; }
+
+/** inst album **/
+#form_inst_album_window { background: #fff; position: fixed; width: 320px; height: 280px;  top: 30%; left: 50%; margin: -150px 0 0 -140px; padding: 20px; -moz-border-radius: 5px; border-radius: 5px; display: none; z-index: 1001; font-size: 14px; }
+#form_inst_album_window input[type="text"], #form_login_window input[type="password"] { margin: 5px 0 10px; width: 198px; font-size: 12px; }
+#form_inst_album_window .columns { display: block; margin: 0 auto; float: none; }
+#form_inst_album_window .error { font-size: 10px; }
+
+#registInstAlbum { width: 320px; height: 270px; margin: 0 auto; }
