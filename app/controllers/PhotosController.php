@@ -336,12 +336,11 @@ class PhotosController extends \BaseController {
   }
 
   public function evaluate($photoId ) {
-    $this->checkEvalCount(5, 'test');
     $user = Auth::user();
     $nb = $user->evaluations->groupBy("photo_id")->count();
     $user->nb_eval = $nb;
     $user->save();
-    $this->debug($nb);
+    $this->checkEvalCount();
     if(isset($_SERVER['QUERY_STRING'])) parse_str($_SERVER['QUERY_STRING']);
     $user_id = Auth::user()->id;
     $source_page = Request::header('referer');
@@ -354,17 +353,47 @@ class PhotosController extends \BaseController {
     return static::getEvaluation($photoId, Auth::user()->id, true);
   }
 
-  private function checkEvalCount($number_assessment, $badge_name){
+  private function checkEvalCount(){
     $user = Auth::user();
-    if(($user->badges()->where('name', $badge_name)->first()) != null){
-        return;
-      }
-    if (($user->evaluations->groupBy('photo_id')->count()) == $number_assessment){
-        $badge=Badge::where('name', $badge_name)->first();
-        $user->badges()->attach($badge);
-      }
+    $number_assessment = $user->nb_eval; 
+    if(2<=$number_assessment && $number_assessment<5 && $user->badges()->where("name",'Iniciante')->first() ==null){
+         $title='Iniciante';
+         $badge=Badge::where('name', $title)->first();
+         $user->badges()->attach($badge);
+    }
+    if(5<=$number_assessment && $number_assessment<10 && $user->badges()->where("name","=",'Veterano')->first() ==null){
+           $title='Veterano';
+           $badge=Badge::where('name', $title)->first();
+           $user->badges()->attach($badge);
+    }
+    if(10<=$number_assessment && $number_assessment<20 && $user->badges()->where("name",'Arquiteto')->first() == null){
+          $title='Arquiteto';
+          $badge=Badge::where('name', $title)->first();
+          $user->badges()->attach($badge);
+    }
+    if(20<=$number_assessment && $number_assessment<50 && $user->badges()->where("name",'Especialista')->first() ==null){
+          $title='Especialista';
+          $badge=Badge::where('name', $title)->first();
+          $user->badges()->attach($badge);
+    }
+    if(50<=$number_assessment && $number_assessment<100 && $user->badges()->where("name",'Professor')->first() ==null){
+          $title='Professor';
+          $badge=Badge::where('name', $title)->first();
+          $user->badges()->attach($badge);
+    }
+     if($number_assessment==100 &&  $user->badges()->where("name",'Master')->first() ==null){
+          $title='Master';
+          $badge=Badge::where('name', $title)->first();
+          $user->badges()->attach($badge);
+    }
+    if($number_assessment>=100 &&  $user->badges()->where("name",'Rei')->first() ==null){
+          $title='Rei';
+          $badge=Badge::where('name', $title)->first();
+          $user->badges()->attach($badge);
+    }
     }
 
+// need to be modified
     private function checkCommentCount($number_comment, $badge_name){
       $user = Auth::user();
       if(($user->badges()->where('name', $badge_name)->first()) != null){

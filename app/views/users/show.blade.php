@@ -4,6 +4,7 @@
 
 <title>Arquigrafia - Seu universo de imagens de arquitetura</title>
 
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <!-- ISOTOPE -->
 <script src="{{ URL::to("/") }}/js/jquery.isotope.min.js"></script>
 
@@ -45,10 +46,40 @@
             			<img class="avatar" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
           			<?php } ?>
             <?php } ?>
+
 	        <div class="info">
 
-	          <h1>{{ $user->name}} {{ $user->secondName}}</h1>	          
 
+	          <h1>{{ $user->name}} {{ $user->secondName}}</h1>
+
+	          <?php
+	          	$rank = $user->getPostionRank();
+	          	$number_assessment = $user->nb_eval;  
+	          	$title = $user->getDignity($number_assessment);
+	          	$counts=array_count_values($user->badges->lists("class"));
+	          	if (!array_key_exists("Gold", $counts)){
+	          		$counts["Gold"]=0;
+	          	}
+	          	if (!array_key_exists("Silver", $counts)){
+	          		$counts["Silver"]=0;
+	          	}
+	          	if (!array_key_exists("Bronze", $counts)){
+	          		$counts["Bronze"]=0;
+	          	}
+	          	
+
+	          ?>
+	          <b><font size="2"><span title= "realizou {{$number_assessment}} avaliações"id="dignity"> {{$title}}</span></font></b>       
+	          <table>
+	          	<tr>
+	          		<td><span  id"ranking"><b><font size="4">{{$rank}}</font></b></span></td>	
+	          		<td><span title ="{{$counts['Gold']}} gold badges"><span  id="badges_gold"></span><span class="number_badge">{{$counts["Gold"]}}</span></span></td>
+	          		<td> <span title ="{{$counts['Silver']}} silver badges"> <span  id="badges_silver"></span><span class="number_badge">{{$counts["Silver"]}}</span></span></td>
+	          		<td><span title ="{{$counts['Bronze']}} bronze badges"> <span  id="badges_bronze"></span><span class="number_badge">{{$counts["Bronze"]}}</span></span></td>
+	          	</tr>
+
+	         </table> 			
+	         
 			 @if ( !empty($user->city) )
 				<p>{{ $user->city }}</p>
 			  @endif
@@ -303,17 +334,12 @@
 						@endif
 						</p>
 					@endif
-
-
-
-	
    
 
 				</div>
 			
 			</div>
-	
-	
+
 
 				<script>
 
@@ -343,7 +369,74 @@
 
 	</div>
 
-    
+	<br>
+	<br>
+
+	<div class="container">
+		<div class="twelve columns albums">
+				<hgroup class="profile_block_title">
+					<h3><img src="{{ asset("img/badge.png") }}" width="16" height="16"/>
+						Badges <font color="#BBBFBE">({{$user->badges->count()}})</font></h3>
+				</hgroup>
+				<div class="profile_box">
+				<!--	<table>
+							<table>
+					<tr>
+			<td><span class="show_badge" id="show_gold">totoejqfdfsdfjdfjsfjdjfjefjdhfj</span></td>
+			<td><span class="show_badge" id="show_silver">tutu</span></td>
+			<td><span class="show_badge" id="show_bronze">titi</span></td>
+			</tr>
+
+				</table>	
+					<tr>
+						<td><span id="gold_button"><a href="javascript:showOnlyOne('show_gold');">Gold badges</a></span></td>
+						
+					</tr>
+					<br>
+					<tr>
+						<td><span id="silver_button"><a href="javascript:showOnlyOne('show_silver');">Silver badges</a></span></td>
+						
+					</tr>
+					<br>
+					<tr>
+						<td><span id="bronze_button"><a href="javascript:showOnlyOne('show_bronze');">Bronze badges</a></span></td>		
+						</tr>
+
+				</table>	
+				</div>-->
+			
+	</div>
+
+	
+	</div>
+
+<button class="leaderboard">leaderboard</button>
+</div>
+ <script type="text/javascript">
+
+
+ function showOnlyOne(thechosenone) {
+     $('.show_badge').each(function(index) {
+          if ($(this).attr("id") == thechosenone) {
+          	 // Set the effect type
+    var effect = 'slide';
+ 
+    // Set the options for the effect type chosen
+    var options = { direction: 'left' };
+               $(this).toggle(effect,options,400);
+          }
+          else {
+               $(this).hide(0);
+          }
+     });
+}
+
+
+</script>
+
+				
+
+
 		<!--   MODAL   -->
 	<div id="mask"></div>
 	<div id="form_window" class="form window">
@@ -361,5 +454,9 @@
 			{{ Form::close() }}
 		</div>
 	</div>
+</div>
 
+
+   <div id="leaderboard">
+	</div>
 @stop

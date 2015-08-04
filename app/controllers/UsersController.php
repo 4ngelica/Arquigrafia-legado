@@ -583,7 +583,7 @@ class UsersController extends \BaseController {
 
 
   function getScores(){
-      if (Request::ajax()) {
+     
       $users = array();
       $u = User::orderBy('nb_eval','DESC')->get();
       $i=0;
@@ -603,7 +603,7 @@ class UsersController extends \BaseController {
       }
    
       return Response::json($users);
-       }
+       
      
     }
 

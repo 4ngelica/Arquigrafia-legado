@@ -733,3 +733,4 @@ a.tooltip_license span
 #badges_silver { background:#CECECE; border:2px solid #CECECE;  }
 #badges_bronze { background:#B36700; border:2px solid #B36700;}
 .number_badge, .number_badge , .number_badge{margin-left:3px;}
+#show_gold, #show_silver, #show_bronze{display: block;padding: 5px;width:600px;border: 1px solid black;z-index: 200; display: none;}
