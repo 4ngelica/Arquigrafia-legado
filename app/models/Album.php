@@ -44,7 +44,7 @@ class Album extends \BaseModel {
 		$album->updateInfo($attr['title'], $attr['description'], $attr['cover']);
 		$album->creationDate = date('Y-m-d H:i:s');
 		$album->user()->associate($attr['user']);
-		if(!is_null($attr['institution'])){ 
+		if ( array_key_exists($attr, 'institution') && !empty($attr['institution']) ) {
 			$album->institution()->associate($attr['institution']);
 		}		
 		$album->save();
