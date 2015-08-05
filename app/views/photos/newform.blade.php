@@ -199,69 +199,7 @@
 								</td>
 							</tr>
 
-							<tr>
-								<td>
-									<br/>
-									<div class="two columns alpha"><p>{{ Form::label('tagsMaterial', 'Tags Material:') }}</p></div>
-									<div class="two columns">
-										<p>
-											{{ Form::text('tagsMaterial',null, array('id' => 'tagsMaterial','style'=>'height:24px; border:solid 1px #ccc')) }}
-										   
-											
-											<br>
-											<div class="error">{{ $errors->first('tagsMaterialArea') }}</div>
-										</p>
-									</div>
-									<div>
-										<button class="btn" id="addTagMaterial" style="font-size: 11px;">ADICIONAR MATERIAL</button>
-									</div>
-									<div class="five columns alpha">
-										<textarea name="tagsMaterialArea" id="tagsMaterialArea" cols="60" rows="1" style="display: none;"></textarea>
-									</div>									
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<br/>
-									<div class="two columns alpha"><p>{{ Form::label('tagsElements', 'Tags de elementos:') }}</p></div>
-									<div class="two columns">
-										<p><div style="max-width:150px;">
-											{{ Form::text('tagsElements',null, array('id' => 'tagsElements','style'=>'height:24px; border:solid 1px #ccc')) }}
-										   </div>
-											
-											<br>
-											<div class="error">{{ $errors->first('tagsElementsArea') }}</div>
-										</p>
-									</div>
-									<div>
-										<button class="btn" id="addTagElements" style="font-size: 11px;">ADICIONAR ELEMENTOS</button>
-									</div>
-									<div class="five columns alpha">
-										<textarea name="tagsElementsArea" id="tagsElementsArea" cols="60" rows="1" style="display: none;"></textarea>
-									</div>									
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<br/>
-									<div class="two columns alpha"><p>{{ Form::label('tagstypology', 'Tags de tipologia:') }}</p></div>
-									<div class="two columns">
-										<p><div style="max-width:150px;">
-											{{ Form::text('tagsTypology',null, array('id' => 'tagsTypology','style'=>'height:24px; border:solid 1px #ccc')) }}
-										   </div>
-											
-											<br>
-											<div class="error">{{ $errors->first('tagsTypologyArea') }}</div>
-										</p>
-									</div>
-									<div>
-										<button class="btn" id="addTagTypology" style="font-size: 11px;">ADICIONAR TIPOLOGIA</button>
-									</div>
-									<div class="five columns alpha">
-										<textarea name="tagsTypologyArea" id="tagsTypologyArea" cols="60" rows="1" style="display: none;"></textarea>
-									</div>									
-								</td>
-							</tr>
+				
 
 							<tr>
 								<td>
