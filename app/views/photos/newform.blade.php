@@ -15,6 +15,7 @@
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.suggestions.js" charset="utf-8"></script>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.filter.js" charset="utf-8"></script>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/tags-autocomplete.js" charset="utf-8"></script>
+	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.ajax.js" charset="utf-8"></script>
 
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 	<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
@@ -243,7 +244,7 @@
 							<tr>
 								<td>
 									<br/>
-									<div class="two columns alpha"><p>{{ Form::label('tagsElements', 'Tags de tipologia:') }}</p></div>
+									<div class="two columns alpha"><p>{{ Form::label('tagstypology', 'Tags de tipologia:') }}</p></div>
 									<div class="two columns">
 										<p><div style="max-width:150px;">
 											{{ Form::text('tagsTypology',null, array('id' => 'tagsTypology','style'=>'height:24px; border:solid 1px #ccc')) }}
@@ -265,6 +266,29 @@
 							<tr>
 								<td>
 									<br/>
+									<div class="two columns alpha"><p>{{ Form::label('workAuthor', 'Autor da obra:') }}</p></div>
+									<div class="two columns">
+										<p><div style="max-width:150px;">
+											{{ Form::text('workAuthor',Input::old('workAuthor'), array('id' => 'workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:24px; width:290px; border:solid 1px #ccc')) }}
+										   	
+										   </div>
+											
+											<br>
+											<div class="error">{{ $errors->first('workAuthor') }}</div>
+										</p>
+									</div>
+									<!--<div>
+										<button class="btn" id="addWorkAuthor" style="font-size: 11px;">ADICIONAR att</button>
+									</div>
+									<div class="five columns alpha">
+										<textarea name="workAuthorArea" id="workAuthorArea" cols="60" rows="1" style="display: none;"></textarea>
+									</div>-->									
+								</td>
+							</tr>
+
+							<!--<tr>
+								<td>
+									<br/>
 								<div class="two columns alpha"><p>{{ Form::label('workAuthor', 'Autor da obra:') }}</p></div>
 								<div class="two columns omega">
 									<p>
@@ -272,7 +296,7 @@
 									</p>
 								</div>
 								</td>
-							</tr>
+							</tr> -->
 							<!--<tr>
 								<td>@include('photos.includes.datepicker')
 								</td>

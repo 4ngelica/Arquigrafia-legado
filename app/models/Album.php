@@ -40,11 +40,13 @@ class Album extends \BaseModel {
 	}
 
 	public static function create(array $attr) {
+		//dd($attr['user']);
 		$album = new Album;
 		$album->updateInfo($attr['title'], $attr['description'], $attr['cover']);
 		$album->creationDate = date('Y-m-d H:i:s');
 		$album->user()->associate($attr['user']);
-		if ( array_key_exists($attr, 'institution') && !empty($attr['institution']) ) {
+		 
+		if ( array_key_exists('institution',$attr) && !empty($attr['institution']) ) {
 			$album->institution()->associate($attr['institution']);
 		}		
 		$album->save();
@@ -65,7 +67,7 @@ class Album extends \BaseModel {
 	}
 
 	public function attachPhotos($photos = array()) {
-		Log::info("log of attachPhotos".$photos);
+		Log::info("log of attachPhotos");
 		if ($photos instanceof Photo) {
 			$this->photos()->attach($photos->id);
 		} else {

@@ -41,7 +41,7 @@ $(document).ready(function() {
     $('#tags_input').textext({ plugins : 'autocomplete'})
     .bind('getSuggestions', function(e, data)
          {
-            var list = [ 'geral','getty', 'praça'  ],            
+            var list = [ 'armonioso','elegante', 'pequeno'  ],            
                 textext = $(e.target).textext()[0],
                 query = (data ? data.query : '') || ''
                 ;
@@ -78,7 +78,7 @@ $(document).ready(function() {
 $('#tagsMaterial').textext({ plugins : 'autocomplete'}) //input
     .bind('getSuggestions', function(e, data)
          {
-            var list = [ 'tijolo','concreto', 'vidro'  ],            
+            var list = [ 'tijolo','concreto', 'concreto armado', 'vidro'  ],            
                 textext = $(e.target).textext()[0],
                 query = (data ? data.query : '') || ''
                 ;
@@ -87,7 +87,7 @@ $('#tagsMaterial').textext({ plugins : 'autocomplete'}) //input
                 'setSuggestions',
                 { result : textext.itemManager().filter(list, query) }            
             );                            
-    });
+ });
     $('#tagsMaterialArea').textext({ plugins: 'tags' });
 
 
@@ -130,7 +130,7 @@ $('#tagsElements').textext({ plugins : 'autocomplete'}) //input
 $('#tagsTypology').textext({ plugins : 'autocomplete'}) //input
     .bind('getSuggestions', function(e, data)
          {
-            var list = [ 'igreja','catedral', 'praça'  ],            
+            var list = ['igreja','catedral','praça','hospital','edificio' ],            
                 textext = $(e.target).textext()[0],
                 query = (data ? data.query : '') || ''
                 ;
@@ -140,6 +140,7 @@ $('#tagsTypology').textext({ plugins : 'autocomplete'}) //input
                 { result : textext.itemManager().filter(list, query) }            
             );                            
     });
+
     $('#tagsTypologyArea').textext({ plugins: 'tags' });
     
 
@@ -152,7 +153,43 @@ $('#tagsTypology').textext({ plugins : 'autocomplete'}) //input
                 $('#tagsTypologyArea').textext()[0].tags().addTags([ tag ]);
                 $('#tagsTypology').val('');
     });   
-   
+   //authors
+  /* $('#workAuthor').textext({ plugins : 'autocomplete'}) //input
+    .bind('getSuggestions', function(e, data)
+         {
+            var list = ['carlos Armando','ricardo','mary','osvaldo','tomas' ],            
+                textext = $(e.target).textext()[0],
+                query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }            
+            );                            
+    }); */
+
+
+    $('#workAuthor').textext({ plugins : 'autocomplete ajax',
+            ajax : {
+                url : '/js/autor.json',
+                dataType : 'json',
+                cacheResults : true
+            }
+        })
+    ;
+
+
+  /* $('#workAuthorArea').textext({ plugins: 'tags' });    
+
+    $('#addWorkAuthor').click(function(e) {
+                e.preventDefault();
+                var tag = $('#workAuthor').val();
+               // alert(tag);
+                if (tag == '') return;
+                $('#workAuthorArea').textext()[0].tags().addTags([ tag ]);
+                $('#workAuthor').val('');
+    });   */
+
 
 
     $(function() {
