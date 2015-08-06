@@ -22,3 +22,8 @@ FactoryMuffin::define('Album', [
 	'user_id' => 'factory|User',
 	'cover_id' => 'factory|Photo'
 ]);
+
+FactoryMuffin::define('Tag', [
+	'name' => 'word',
+	'count' => 'randomNumber'
+]);

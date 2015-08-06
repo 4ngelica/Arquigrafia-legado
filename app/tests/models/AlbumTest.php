@@ -3,7 +3,7 @@
 use League\FactoryMuffin\Facade as FactoryMuffin;
 use Mockery as m;
 
-class AlbumTest extends TestCase {
+class AlbumTest extends \TestCase {
 
 	public static function setUpBeforeClass()
 	{

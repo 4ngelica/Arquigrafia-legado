@@ -69,4 +69,12 @@ class SheetReaderTest extends TestCase {
     $this->assertEquals( array(1,1,1,1,1), $return);
   }
 
+  /**
+  * @expectedException PHPExcel_Reader_Exception
+  */
+  public function testShouldThrowExceptionWithInvalidFile() {
+    $return = $this->reader->read('invalid');
+    $this->assertNull($return);
+  }
+
 }
