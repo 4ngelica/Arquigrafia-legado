@@ -340,4 +340,28 @@ class Photo extends Eloquent {
 		return $this->date->translate($this->attributes['workdate']);
 	}
 
+	public function saveImages($image_file) {
+    $image = Image::make($image_file)->encode('jpg', 80);
+    $image->widen(600)->save(public_path().'/arquigrafia-images/'.$this->id.'_view.jpg');
+    $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$this->id.'_200h.jpg');
+    $image->fit(186, 124)->encode('jpg', 70)
+    	->save(public_path().'/arquigrafia-images/'.$this->id.'_home.jpg');
+    $file->move(public_path().'/arquigrafia-images', $this->id."_original.".strtolower($ext));
+	}
+
+	public function createOrFail($attributes, $basepath) {
+		$photo_file = $this->getFile($attributes['tombo'], $basepath);
+		$photo = $this->whereTombo($attributes['tombo'])->first();
+		if ( !file_exists($photo_file) || !is_null($photo) ) {
+			return null;
+		}
+		$photo = $this->create($attributes);
+		$photo->saveImages($photo_file);
+		return $photo;		
+	}
+
+	public function getFile($tombo, $basepath) {
+		return File::glob( $basepath . $tombo . '.*');
+	}
+
 }

@@ -49,5 +49,13 @@ class ColumnMapper {
       ( isset($attrs['tags_tipologia']) ? $attrs['tags_tipologia']: null )
     );
     $attributes['tags'] = implode(', ', array_filter($tags_array));
+
+    /*
+      $attributes['tags'] = array(
+        'elementos' => $attrs['tags_elementos'],
+        'materiais' => $attrs['tags_materiais'],
+        'tipologia' => $attrs['tags_tipologia']
+      );
+    */
   }
 }

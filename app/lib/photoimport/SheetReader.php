@@ -24,13 +24,13 @@ class SheetReader {
   }
 
   public function read($file) {
-    $raw_photos = array();
     $document = $this->load($file);
     $sheet = $this->getSheet($document);
+    $rows = array();
     foreach ($sheet as $row) {
-      array_push($raw_photos, $this->readRow($row));
+      array_push($rows, $this->readRow($row));
     }
-    return $raw_photos;
+    return $rows;
   }
 
 }
