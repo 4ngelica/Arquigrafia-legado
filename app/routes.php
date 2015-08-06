@@ -12,8 +12,11 @@
 */
 
 Route::get('/test', function () { 
-	//testes
+  //testes
 });
+
+/* IMPORTS */
+Route::get('/photos/import', 'ImportsController@import');
 
 /* phpinfo() */
 Route::get('/info/', function(){ return View::make('i'); });
@@ -108,3 +111,4 @@ Route::get('/notifications', 'NotificationsController@show');
 Route::get('/markRead/{id}', 'NotificationsController@read');
 Route::get('/readAll', 'NotificationsController@readAll');
 Route::get('/refreshBubble', 'NotificationsController@howManyUnread');
+
