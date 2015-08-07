@@ -727,6 +727,8 @@ a.tooltip_license span
 .user:hover {background: #eee;}
 .user { vertical-align: top;list-style: none;    line-height: 1; font-family: Helvetica, arial, sans-serif; margin:5pt; }
 
+.leaderboard{cursor: pointer;}
+
 /*badges*/
 #badges_gold, #badges_silver,#badges_bronze {border-radius:50%;width:6px;height:6px;float:left; margin-top:2px;}
  #badges_gold{ background:#EFD807; border:2px solid #EFD807; margin-left: 5px;}

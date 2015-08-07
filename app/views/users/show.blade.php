@@ -69,10 +69,10 @@
 	          	
 
 	          ?>
-	          <b><font size="2"><span title= "realizou {{$number_assessment}} avaliações"id="dignity"> {{$title}}</span></font></b>       
+	          <b><font size="2"><span  title= "realizou {{$number_assessment}} avaliações" id="dignity"> {{$title}}</span></font></b>       
 	          <table>
 	          	<tr>
-	          		<td><span  id"ranking"><b><font size="4">{{$rank}}</font></b></span></td>	
+	          		<td><span class="leaderboard"  id"ranking"><b><font size="4">{{$rank}}</font></b></span></td>	
 	          		<td><span title ="{{$counts['Gold']}} gold badges"><span  id="badges_gold"></span><span class="number_badge">{{$counts["Gold"]}}</span></span></td>
 	          		<td> <span title ="{{$counts['Silver']}} silver badges"> <span  id="badges_silver"></span><span class="number_badge">{{$counts["Silver"]}}</span></span></td>
 	          		<td><span title ="{{$counts['Bronze']}} bronze badges"> <span  id="badges_bronze"></span><span class="number_badge">{{$counts["Bronze"]}}</span></span></td>
@@ -407,11 +407,11 @@
 			
 	</div>
 
-	
+	<!--<button class="leaderboard">leaderboard</button>-->
+</div>
 	</div>
 
-<button class="leaderboard">leaderboard</button>
-</div>
+
  <script type="text/javascript">
 
 
@@ -457,6 +457,4 @@
 </div>
 
 
-   <div id="leaderboard">
-	</div>
 @stop

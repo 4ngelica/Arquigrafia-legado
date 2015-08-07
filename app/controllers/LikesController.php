@@ -13,15 +13,33 @@ class LikesController extends \BaseController {
       $user_note = User::find($photo->user_id);
       Notification::create('photo_liked', $user, $photo, [$user_note], null);
     }
-
-    return $this->like($photo, $user);
+    $like = Like::getLike($photo, $user);
+    Badge::checkBadgeLike($photo, $user);
+    if (is_null($photo)) {
+      return Response::json('fail');
+    }
+    return Response::json([ 
+      'url' => URL::to('/photos/' . $photo->id . '/' . 'dislike'),
+      'likes_count' => $photo->likes->count()]);
   }
 
   public function photodislike($id) {
     $photo = Photo::find($id);
     $user = Auth::user();
     $this->logLikeDislike($user, $photo, "a foto", "Descurtiu", "user");
-    return $this->dislike($photo, $user);
+    try {
+      $like = Like::fromUser($user)->withLikable($photo)->first();
+      $likable_type = strtolower(get_class($photo));
+      $like->delete();
+    } catch (Exception $e) {
+      //
+    }
+    if (is_null($photo)) {
+      return Response::json('fail');
+    }
+    return Response::json([ 
+      'url' => URL::to('/photos/' . $photo->id . '/' . 'like'),
+      'likes_count' => $photo->likes->count()]);
   }
 
   public function commentdislike($id) {
@@ -29,65 +47,44 @@ class LikesController extends \BaseController {
     $user = Auth::user();
     $source_page = Request::header('referer');
     $this->logLikeDislike($user, $comment, "o comentário", "Descurtiu", "user");
-    return $this->dislike($comment, $user);
+    try {
+      $like = Like::fromUser($user)->withLikable($comment)->first();
+      $likable_type = strtolower(get_class($comment));
+      $like->delete();
+    } catch (Exception $e) {
+      //
+    }
+    if (is_null($comment)) {
+      return Response::json('fail');
+    }
+    return Response::json([ 
+      'url' => URL::to('/comments/' . $comment->id . '/' . 'like'),
+      'likes_count' => $comment->likes->count()]);
   }
+
+  
 
 
   public function commentlike($id) {
     $comment = Comment::find($id);
     $user = Auth::user();
     $this->logLikeDislike($user, $comment, "o comentário", "Curtiu", "user");
-    $response = $this->like($comment, $user);
-    $this->checkLikesCount($comment, 5, 'test'); 
-
+    
     if ($user->id != $comment->user_id) {
       $user_note = User::find($comment->user_id);
       Notification::create('comment_liked', $user, $comment, [$user_note], null);
     }
 
-    return $response;
-  }
-
-  private function like($likable, $user) {
-    try {
-      $like = Like::getLike($likable, $user);
-      $likable_type = strtolower(get_class($likable));
-    } catch (Exception $e) {
-      //
-    }
-    return $this->getLikeResponse($likable_type, $likable, 'dislike');
-  }
-  
-  private function dislike($likable, $user) {
-    try {
-      $like = Like::fromUser($user)->withLikable($likable)->first();
-      $likable_type = strtolower(get_class($likable));
-      $like->delete();
-    } catch (Exception $e) {
-      //
-    }
-    return $this->getLikeResponse($likable_type, $likable, 'like');
-  }
-
-  private function getLikeResponse($likable_type, $likable, $like_or_dislike) {
-    if (is_null($likable)) {
+    $like = Like::getLike($comment, $user);
+    Badge::checkBadgeLike($comment, $user);
+    if (is_null($comment)) {
       return Response::json('fail');
     }
     return Response::json([ 
-      'url' => URL::to('/' . $likable_type . 's/' . $likable->id . '/' . $like_or_dislike),
-      'likes_count' => $likable->likes->count()]);
+      'url' => URL::to('/comments/' . $comment->id . '/' . 'dislike'),
+      'likes_count' => $comment->likes->count()]);
   }
 
-  private function checkLikesCount($likable, $number_likes, $badge_name) {
-    if ($likable->badge) {
-      return ;
-    }
-    if ($likable->likes->count() == $number_likes) {
-      $badge = Badge::where('name', $badge_name)->first();
-      $likable->user->badges()->attach($badge);
-      $likable->attachBadge($badge);
-    }
-  }
 
   private function logLikeDislike($user, $likable, $photo_or_comment, $like_or_dislike, $user_or_visitor) {
     $source_page = Request::header('referer');

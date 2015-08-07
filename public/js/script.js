@@ -79,6 +79,7 @@ $(document).ready(function(){
 			url: "../rank/get" ,
 		})
 		.done(function( o ) {
+			$("body").prepend("<div id ='leaderboard'></div>")
 			$("#leaderboard").append('<div style="border:5px solid #000000;" id="leaderboard_content"></div>');
 			$("#leaderboard_content").append('<center><h1> Leaderboard (Top 10) </h1></center>');
 			$("#leaderboard_content").append('<a class="close" title="FECHAR">Fechar</a>');
@@ -87,7 +88,7 @@ $(document).ready(function(){
 					o[i].image="/img/avatar.png"
 				} 
 				if ($('#user-'+o[i].id).length == 0) {
-					$("#leaderboard_content").append('<div class="user"><li><h1 style="display:inline" id="user-' + o[i].id + '">' + o[i].score + '</h1> <img style="height:45px" src=' + (o[i].image) + '/> ' +'<a href="users/' + o[i].id + '">' + o[i].name + "</a>" + '</li></div>');
+					$("#leaderboard_content").append('<div class="user"><li><h1 style="display:inline" id="user-' + o[i].id + '">' + o[i].score + '</h1> <img style="height:45px" src=' + (o[i].image) + '/> ' +'<a href="' + o[i].id + '">' + o[i].name + "</a>" + '</li></div>');
 				} else {
 					$('#user-'+o[i].id).html(o[i].score);
 				}
@@ -103,8 +104,8 @@ $(document).ready(function(){
     			$("#leaderboard_content").empty();
     		
     		});
-		}).fail(function (jqXHR, textStatus) {
-			console.log(textStatus);	
+		}).fail(function (jqXHR, textStatus,errorThrown) {
+			console.log(errorThrown);	
 		});
 
 		return false;

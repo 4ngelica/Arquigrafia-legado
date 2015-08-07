@@ -38,4 +38,12 @@ class Badge extends Eloquent {
                 ->where('user_id', '=', $id);
         });
     }
+
+    public static function checkBadgeLike($likable,$user){
+    	if( is_null($likable->badge) && $likable->likes->count() == 1) {
+    		$badge = Badge::where('name', 'TestLike_' . get_class($likable))->first();
+      		$likable->user->badges()->attach($badge->id);
+      		$likable->attachBadge($badge);
+    	}
+    }
 }

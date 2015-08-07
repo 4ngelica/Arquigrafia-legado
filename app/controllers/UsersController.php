@@ -582,8 +582,7 @@ class UsersController extends \BaseController {
   }
 
 
-  function getScores(){
-     
+  function getRankEval(){
       $users = array();
       $u = User::orderBy('nb_eval','DESC')->get();
       $i=0;
