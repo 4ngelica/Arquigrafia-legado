@@ -296,7 +296,11 @@
           @if (!empty($follow) && $follow == true )
             <a href="{{ URL::to("/friends/follow/" . $owner->id) }}" id="single_view_contact_add">Seguir</a><br />
           @else
-            <div>Seguindo</div>
+            <div id="unfollow-button">
+              <a href="{{ URL::to("/friends/unfollow/" . $owner->id) }}">
+                  <p class="label success new-label"><span>Seguindo</span></p>
+              </a>
+            </div>
           @endif
         @endif
       </div>
