@@ -99,16 +99,16 @@ class PhotosController extends \BaseController {
     $pageSource = Request::header('referer');
     
     $tagsArea = null;
-    $tagsMaterialArea = null;
+    /*$tagsMaterialArea = null;
     $tagsElementsArea = null;
-    $tagsTypologyArea = null;
+    $tagsTypologyArea = null;*/
 
     if ( Session::has('tagsArea') )
     {  
       $tagsArea = Session::pull('tagsArea');
       $tagsArea = explode(',', $tagsArea); 
     }
-     if ( Session::has('tagsMaterialArea') )
+    /* if ( Session::has('tagsMaterialArea') )
     {  
       $tagsMaterialArea = Session::pull('tagsMaterialArea');
       $tagsMaterialArea = explode(',', $tagsMaterialArea); 
@@ -122,12 +122,13 @@ class PhotosController extends \BaseController {
     {  
       $tagsTypologyArea = Session::pull('tagsTypologyArea');
       $tagsTypologyArea = explode(',', $tagsTypologyArea); 
-    }
+    }*/
 
-    return View::make('/photos/newform')->with(['tagsArea'=> $tagsArea,
-      'tagsMaterialArea' => $tagsMaterialArea ,
+    /*'tagsMaterialArea' => $tagsMaterialArea ,
       'tagsElementsArea' => $tagsElementsArea,
-      'tagsTypologyArea' => $tagsTypologyArea,
+      'tagsTypologyArea' => $tagsTypologyArea, */
+    return View::make('/photos/newform')->with(['tagsArea'=> $tagsArea,
+      
       'pageSource'=>$pageSource, 'user'=>Auth::user(), 
       'institution'=>$institution,
       'albumsInstitutional'=>$albumsInstitutional]);
@@ -176,21 +177,28 @@ class PhotosController extends \BaseController {
 
 
   public function saveFormInstitutional() {   
-    Input::flashExcept('tagsArea','tagsTypologyArea','tagsElementsArea','tagsMaterialArea', 'photo'); //tagsTypology tagsElements tagsMaterial
+    //Input::flashExcept('tagsArea','tagsTypologyArea','tagsElementsArea','tagsMaterialArea', 'photo'); //tagsTypology tagsElements tagsMaterial
+    Input::flashExcept('tagsArea');
     $input = Input::all();
      
-    if (Input::has('tagsArea') && Input::has('tagsTypologyArea') && Input::has('tagsElementsArea') && Input::has('tagsMaterialArea') ){
-    $input["tagsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsArea"]);    
-    $input["tagsMaterialArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsMaterialArea"]);
-    $input["tagsElementsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsElementsArea"]);
-    $input["tagsTypologyArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsTypologyArea"]);
+    /*if (Input::has('tagsArea') && Input::has('tagsTypologyArea') && Input::has('tagsElementsArea') && Input::has('tagsMaterialArea') ){
+      $input["tagsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsArea"]);    
+      $input["tagsMaterialArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsMaterialArea"]);
+      $input["tagsElementsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsElementsArea"]);
+      $input["tagsTypologyArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsTypologyArea"]); 
     
     }else{
-    $input["tagsArea"] = '';
-    $input["tagsMaterialArea"] = '';
-    $input["tagsElementsArea"] = '';
-    $input["tagsTypologyArea"] = '';
-    }
+      $input["tagsArea"] = '';
+      $input["tagsMaterialArea"] = '';
+      $input["tagsElementsArea"] = '';
+      $input["tagsTypologyArea"] = ''; 
+    } */
+
+    if (Input::has('tagsArea')){
+      $input["tagsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsArea"]); 
+    }else{
+      $input["tagsArea"] = '';
+    }       
 
     if(Session::has('institutionId')){     
       $rules = array(
@@ -204,9 +212,9 @@ class PhotosController extends \BaseController {
       'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',
       'name' => 'required',
       'tagsArea' => 'required',
-      'tagsMaterialArea' => 'required',
+      /*'tagsMaterialArea' => 'required',
       'tagsElementsArea' => 'required',
-      'tagsTypologyArea' => 'required',
+      'tagsTypologyArea' => 'required', */
       'country' => 'required',
       'imageAuthor' => 'required'     
       
@@ -220,9 +228,9 @@ class PhotosController extends \BaseController {
       'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',
       'name' => 'required',
       'tagsArea' => 'required',
-      'tagsMaterialArea' => 'required',
+      /*'tagsMaterialArea' => 'required',
       'tagsElementsArea' => 'required',
-      'tagsTypologyArea' => 'required',
+      'tagsTypologyArea' => 'required',*/
       'country' => 'required',
       'imageAuthor' => 'required',
       'authorization_checkbox' => 'required'
@@ -234,9 +242,11 @@ class PhotosController extends \BaseController {
   if ($validator->fails()) { 
       $messages = $validator->messages();
 
-      return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'], 
+      /*return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'], 
         'tagsMaterialArea' => $input['tagsMaterialArea'],'tagsElementsArea' => $input['tagsElementsArea'],
-        'tagsTypologyArea' => $input['tagsTypologyArea']])->withErrors($messages);
+        'tagsTypologyArea' => $input['tagsTypologyArea']])->withErrors($messages); */
+      return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'] 
+        ])->withErrors($messages);
 
     }else{
       if(Input::hasFile('photo') and Input::file('photo')->isValid()) {
@@ -292,57 +302,64 @@ class PhotosController extends \BaseController {
           $photo->save();
           
           $tagsCopy = $input['tagsArea'];
-          $tagsCopyMaterial = $input['tagsMaterialArea'];
+          /*$tagsCopyMaterial = $input['tagsMaterialArea'];
           $tagsCopyElements = $input['tagsElementsArea'];
-          $tagsCopyTypology = $input['tagsTypologyArea'];
+          $tagsCopyTypology = $input['tagsTypologyArea'];*/
 
           $tags = explode(',', $input['tagsArea']);
-          $tagsMaterial = explode(',', $input['tagsMaterialArea']);
+          /*$tagsMaterial = explode(',', $input['tagsMaterialArea']);
           $tagsElements = explode(',', $input['tagsElementsArea']);
-          $tagsTypology = explode(',', $input['tagsTypologyArea']);
+          $tagsTypology = explode(',', $input['tagsTypologyArea']);*/
       
-          if (!empty($tags) && !empty($tagsMaterial)  && !empty($tagsElements) && 
-            !empty($tagsTypology) ) {
+          /*if (!empty($tags) && !empty($tagsMaterial)  && !empty($tagsElements) && 
+            !empty($tagsTypology) ) { */
+          if (!empty($tags)) {
               $tags = static::formatTags($tags);
-              $tagsMaterial = static::formatTags($tagsMaterial);
+              /*$tagsMaterial = static::formatTags($tagsMaterial);
               $tagsElements = static::formatTags($tagsElements);
-              $tagsTypology = static::formatTags($tagsTypology);
+              $tagsTypology = static::formatTags($tagsTypology);*/
 
               $tagsSaved = static::SaveTags($tags,$photo,'general');
-              $tagsMaterialSaved = static::SaveTags($tagsMaterial,$photo,'material');
+              /*$tagsMaterialSaved = static::SaveTags($tagsMaterial,$photo,'material');
               $tagsElementsSaved = static::SaveTags($tagsElements,$photo,'elements');
-              $tagsTypologySaved = static::SaveTags($tagsTypology,$photo,'typology');         
-              if(!$tagsSaved || !$tagsSaved || !$tagsElementsSaved || !$tagsTypologySaved){
+              $tagsTypologySaved = static::SaveTags($tagsTypology,$photo,'typology'); */
+
+              /*if(!$tagsSaved || !$tagsSaved || !$tagsElementsSaved || !$tagsTypologySaved){    */
+              if(!$tagsSaved){
                   $photo->forceDelete();
-                  $messages = array('tagsArea'=>array('Inserir pelo menos uma tag'),'tagsMaterialArea'=>array('Inserir pelo menos uma tag material'),
+                  /*$messages = array('tagsArea'=>array('Inserir pelo menos uma tag'),'tagsMaterialArea'=>array('Inserir pelo menos uma tag material'),
                     'tagsElementsArea'=>array('Inserir pelo menos uma tag de elementos'),'tagsTypologyArea'=>array('Inserir pelo menos uma tag tipologia')
-                    );
-                  //return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea']]); //->withErrors($messages)
-                  return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'], 
+                    );*/
+                  $messages = array('tagsArea'=>array('Inserir pelo menos uma tag') );
+
+                  /*return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'], 
                  'tagsMaterialArea' => $input['tagsMaterialArea'],'tagsElementsArea' => $input['tagsElementsArea'],
-                 'tagsTypologyArea' => $input['tagsTypologyArea']])->withErrors($messages);
+                 'tagsTypologyArea' => $input['tagsTypologyArea']])->withErrors($messages);*/
+
+                  return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea']])->withErrors($messages);
               }
 
             }
 
            //add Album
-            if (Input::has("albums_institution")) {              
+           /* if (Input::has("albums_institution")) {              
                 $album = new Album();
                 $album->id = $input["albums_institution"];
                 $album->attachPhotos($photo->id);               
-            }
+            }*/
             
 
           $sourcePage = $input["pageSource"]; //get url of the source page through form
           ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "Upload", "user");
           ActionUser::printTags($photo->user_id, $photo->id, $tagsCopy, $sourcePage, "user", "Inseriu");
-
+          
           $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
+
           $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
           $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
           $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
           $file->move(public_path().'/arquigrafia-images', $photo->id."_original.".strtolower($ext)); // original
-
+          dd($image);
           $photo->saveMetadata(strtolower($ext));
 
           return Redirect::to("/photos/{$photo->id}");
