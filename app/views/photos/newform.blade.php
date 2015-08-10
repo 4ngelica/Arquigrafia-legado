@@ -381,13 +381,13 @@
 							<label for="question_3-5">Não</label><br class="clear">
 						</div>
 					</div>
-					<div class="twelve columns omega row">
+					<!--<div class="twelve columns omega row">
 						<h4>Álbuns do {{$institution->name}} </h4>
 						<div>
-							@include('photos.includes.institutional_albums')
+							include('photos.includes.institutional_albums')
 							
 						</div>
-					</div>
+					</div>-->
 
 					<div class="twelve columns">
 						<input name="enviar" type="submit" class="btn" value="ENVIAR">
@@ -403,9 +403,7 @@
 	$(document).ready(function() {
 		/* Methods to be called when all html document be ready */
 		showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));
-		showTags({{json_encode($tagsMaterialArea)}},$('#tagsMaterialArea'),$('#tagsMaterial'));
-		showTags({{json_encode($tagsElementsArea)}},$('#tagsElementsArea'),$('#tagsElements'));
-		showTags({{json_encode($tagsTypologyArea)}},$('#tagsTypologyArea'),$('#tagsTypology'));
+		 
    });
 </script>
 
