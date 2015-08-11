@@ -74,7 +74,6 @@ class SheetReaderTest extends TestCase {
   */
   public function testShouldThrowExceptionWithInvalidFile() {
     $return = $this->reader->read('invalid');
-    $this->assertNull($return);
   }
 
 }
