@@ -207,7 +207,8 @@
 									<div class="two columns alpha"><p>{{ Form::label('workAuthor', 'Autor da obra:') }}</p></div>
 									<div class="two columns">
 										<p><div style="max-width:150px;">
-											{{ Form::text('workAuthor',Input::old('workAuthor'), array('id' => 'workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:24px; width:290px; border:solid 1px #ccc')) }}
+
+											{{ Form::text('workAuthor', $workAuthorInput, array('id' => 'workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:24px; width:290px; border:solid 1px #ccc')) }}
 										   	
 										   </div>
 											
@@ -400,6 +401,8 @@
 	</div>
 
 <script type="text/javascript">
+
+
 	$(document).ready(function() {
 		/* Methods to be called when all html document be ready */
 		showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));
