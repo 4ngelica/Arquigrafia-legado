@@ -1,5 +1,5 @@
 <?php
-/*
+
 use League\FactoryMuffin\Facade as FactoryMuffin;
 use Mockery as m;
 
@@ -37,5 +37,56 @@ class PhotoTest extends TestCase {
 		m::close();
 	}
 
+	/**
+	* @expectedException Intervention\Image\Exception\NotReadableException
+	*/
+	public function testShouldNotMakeImage() {
+		$photo = FactoryMuffin::create('Photo');
+		$photo->makeImage('non_existing_image_path');
+	}
+
+	/**
+	* @expectedException Exception
+	*/
+	public function testShouldRaiseExceptionWithouTombo() {
+		$photo = new Photo;
+		$photo->findImageByTombo('fake_basepath');
+	}
+
+	public function testShouldDeletePhotoAfterException() {
+		$photo_mock = m::mock('Photo');
+
+		$photo = m::mock('Photo[findImageByTombo, getOriginalImageExtension, updateOrCreate]');
+
+		$photo->shouldReceive('findImageByTombo')
+			->with('basepath', 'tombo')
+			->andReturn('image');
+
+		$photo->shouldReceive('getOriginalImageExtension')
+			->andReturn('jpg');
+
+		$photo->shouldReceive('updateOrCreate')
+			->andReturn($photo_mock);
+
+		$photo_mock->shouldReceive('saveImages')
+			->andThrow('Exception');
+
+		$photo_mock->shouldReceive('delete')->once();
+
+		$exceptionRaised = false;
+		
+		try {
+			$photo->updateOrCreateByTombo(
+				array('tombo' => 'tombo'),
+				'basepath'
+			);
+		} catch (Exception $e) {
+			$exceptionRaised = true;
+		}
+		
+		$this->assertTrue($exceptionRaised);
+		
+	}
+
+
 }
-*/

@@ -4,6 +4,7 @@ use lib\date\Date;
 use lib\metadata\Exiv2;
 use lib\license\CreativeCommons_3_0;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use Illuminate\Database\Eloquent\Collection as Collection;
 
 class Photo extends Eloquent {
 
@@ -13,8 +14,27 @@ class Photo extends Eloquent {
 
 	protected $dates = ['deleted_at'];
 
-	protected $fillable = ['user_id','name', 'description', 'nome_arquivo','state','street', 'tombo',
-		'workAuthor', 'workdate', 'dataUpload', 'dataCriacao', 'country', 'collection', 'city'];
+	protected $fillable = [
+		'aditionalImageComments',
+		'allowCommercialUses',
+		'allowModifications',
+		'characterization',
+		'city',
+		'collection',
+		'country',
+		'dataCriacao',
+		'dataUpload',
+		'description',
+		'district',
+		'name',
+		'nome_arquivo',
+		'state',
+		'street',
+		'tombo',
+		'user_id',
+		'workAuthor',
+		'workdate',
+	];
 
 	static $allowModificationsList = [
 		'YES' => ['Sim', ''],
@@ -340,28 +360,51 @@ class Photo extends Eloquent {
 		return $this->date->translate($this->attributes['workdate']);
 	}
 
-	public function saveImages($image_file) {
-    $image = Image::make($image_file)->encode('jpg', 80);
-    $image->widen(600)->save(public_path().'/arquigrafia-images/'.$this->id.'_view.jpg');
-    $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$this->id.'_200h.jpg');
-    $image->fit(186, 124)->encode('jpg', 70)
-    	->save(public_path().'/arquigrafia-images/'.$this->id.'_home.jpg');
-    $file->move(public_path().'/arquigrafia-images', $this->id."_original.".strtolower($ext));
+	public function saveImages($image, $extension = 'jpg') {
+		$prefix = public_path().'/arquigrafia-images/' . $this->id;
+    $image->widen(600)->save($prefix . '_view.jpg');
+    $image->heighten(220)->save($prefix . '_200h.jpg');
+    $image->fit(186, 124)->encode('jpg', 70)->save($prefix . '_home.jpg');
+    $file->move( $prefix . "_original." . $extension );
 	}
 
-	public function createOrFail($attributes, $basepath) {
-		$photo_file = $this->getFile($attributes['tombo'], $basepath);
-		$photo = $this->whereTombo($attributes['tombo'])->first();
-		if ( !file_exists($photo_file) || !is_null($photo) ) {
-			return null;
+	public function updateOrCreateByTombo($attributes, $basepath) {
+		$tombo = $attributes['tombo'];
+		$image = $this->findImageByTombo($basepath, $tombo);
+		$image_extension = $this->getOriginalImageExtension($image);
+		$attributes['nome_arquivo'] = $tombo . $image_extension;
+		$attributes['deleted_at'] = null;
+		$photo = $this->updateOrCreate( array('tombo' => $tombo), $attributes );
+		try {
+			$photo->saveImages( $photo_file, $image_extension );
+		} catch (Exception $e) {
+			$photo->delete(); //não deleta do disco
+			throw $e;
 		}
-		$photo = $this->create($attributes);
-		$photo->saveImages($photo_file);
-		return $photo;		
+		return $photo;
 	}
 
-	public function getFile($tombo, $basepath) {
-		return File::glob( $basepath . $tombo . '.*');
+	public function findImageByTombo($basepath, $tombo = null) {
+		$tombo = is_null($tombo) ? $this->tombo : $tombo;
+		$file_path = File::glob( $basepath . '/' . $tombo . '.*')[0];
+		return $this->makeImage($file_path);
+	}
+
+	public function makeImage($file) {
+		return Image::make($file)->encode('jpg', 80);
+	}
+
+	public function getOriginalImageExtension($image) {
+		return File::extension($image->basePath());
+	}
+
+	public function syncTags($tags) {
+		if ( $tags instanceof Collection ) {
+			$tags = $tags->modelKeys();
+		} else if ( !is_array($tags) ) {
+			$tags = array( $tags );
+		}
+		$this->tags()->sync($tags);
 	}
 
 }
