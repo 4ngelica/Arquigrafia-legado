@@ -40,4 +40,12 @@ class BaseModel extends Eloquent {
 		return $query->where('user_id', $user->id);
 	}
 
+  public function setAttributes($input) {
+    foreach($this->fillable as $attribute) {
+      if ( array_key_exists($attribute, $input) && !empty($input[$attribute]) ) {
+        $this->$attribute = $input[$attribute];
+      }
+    }
+  }
+
 }
