@@ -365,7 +365,8 @@ class PhotosController extends \BaseController {
                 $album->id = $input["albums_institution"];
                 $album->attachPhotos($photo->id);               
             }*/
-            
+           
+          $input['autoOpenModal'] = 'true';  
 
           $sourcePage = $input["pageSource"]; //get url of the source page through form
           ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "Upload", "user");
@@ -380,7 +381,8 @@ class PhotosController extends \BaseController {
 
           $photo->saveMetadata(strtolower($ext));
           
-          return Redirect::to("/photos/{$photo->id}");
+          //return Redirect::to("/photos/{$photo->id}");
+          Redirect::back()->withInput($input);
 
       }else{
          $messages = $validator->messages();

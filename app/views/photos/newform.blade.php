@@ -17,8 +17,21 @@
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/tags-autocomplete.js" charset="utf-8"></script>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.ajax.js" charset="utf-8"></script>
 
+
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 	<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+	<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>-->
+	 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<!--<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>	-->
+	<script type="text/javascript" src="{{ URL::to("/") }}/js/repopulateForm.js" charset="utf-8"></script>
+
+
+	 
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<link rel="stylesheet" href="/resources/demos/style.css">
+
 @stop
 @section('content')
 	<script type="text/javascript">
@@ -28,8 +41,8 @@
 	</script>
 	<div class="container">
 		<div>
-			<!--{{ Form::open(array('url'=>'photos', 'files'=> true)) }}-->
-			{{ Form::open(array('url' => "photos/savePhotoInstitutional", 'files'=> true)) }}
+			<!--{{ Form::open(array('url'=>'photos', 'files'=> true)) }} -->
+			{{ Form::open(array('url' => "photos/savePhotoInstitutional", 'files'=> true , 'id'=>"formInstitutional")) }}
 				<div class="twelve columns row step-1">
 					<h1><span class="step-text">Upload</span></h1>
 					<div class="four columns alpha">
@@ -383,15 +396,22 @@
 						</div>
 					</div>
 					<!--<div class="twelve columns omega row">
-						<h4>Álbuns do {{$institution->name}} </h4>
+						<h4>Álbuns do  </h4>
 						<div>
 							include('photos.includes.institutional_albums')
 							
 						</div>
 					</div>-->
-
+					<!--<div class="twelve columns omega row">						
+						<div>
+							include('photos.includes.repopulate_photos');
+							
+						</div>
+					</div>-->
 					<div class="twelve columns">
 						<input name="enviar" type="submit" class="btn" value="ENVIAR">
+						<!--<input type="button" id="btnOpenDialogRepopulate" value="ENVIAR" class="btn">-->
+						<div id="dialog-confirm" title="mmm?"></div>
 					</div>
 				</div>
 			{{ Form::close() }}
@@ -400,10 +420,28 @@
 
 	</div>
 
+	
 <script type="text/javascript">
 
 
 	$(document).ready(function() {
+		if({{Input::old('autoOpenModal','false')}}){
+			$( "#dialog-confirm" ).html("confirm");
+			 $( "#dialog-confirm" ).dialog({
+				resizable: false,
+				height:140,
+				modal: true,
+				buttons: {
+				"Sim": function() {
+					$( this ).dialog( "close" );
+					},
+					"Não": function() {
+						//$( this ).dialog( "close" );
+						window.location.replace('{{ URL::to("/") }}/photos/');
+					}
+				}
+			});
+		}
 		/* Methods to be called when all html document be ready */
 		showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));
 		 
