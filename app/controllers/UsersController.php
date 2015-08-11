@@ -394,7 +394,6 @@ class UsersController extends \BaseController {
         $source_page = Request::header('referer');
         ActionUser::printLoginOrLogout($user->id, $source_page, "login", "arquigrafia", "user");
 
-        // return $user;
         return Redirect::to('/')->with('message', 'Sua conta foi criada com sucesso!');
       }
             
@@ -574,7 +573,7 @@ class UsersController extends \BaseController {
     }
     $user = User::stoa($stoa_user);
     Auth::loginUsingId($user->id);
-    //$user_id = Auth::user()->id;
+    
     $source_page = Request::header('referer');
     ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "stoa", "user");
     return Response::json(true);
