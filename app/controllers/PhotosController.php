@@ -99,6 +99,7 @@ class PhotosController extends \BaseController {
     $pageSource = Request::header('referer');
     
     $tagsArea = null;
+    $workAuthorInput = null;
     /*$tagsMaterialArea = null;
     $tagsElementsArea = null;
     $tagsTypologyArea = null;*/
@@ -107,6 +108,11 @@ class PhotosController extends \BaseController {
     {  
       $tagsArea = Session::pull('tagsArea');
       $tagsArea = explode(',', $tagsArea); 
+    }
+    if ( Session::has('workAuthorInput') )
+    {  
+      $workAuthorInput = Session::pull('workAuthorInput');
+      
     }
     /* if ( Session::has('tagsMaterialArea') )
     {  
@@ -128,7 +134,7 @@ class PhotosController extends \BaseController {
       'tagsElementsArea' => $tagsElementsArea,
       'tagsTypologyArea' => $tagsTypologyArea, */
     return View::make('/photos/newform')->with(['tagsArea'=> $tagsArea,
-      
+       'workAuthorInput' => $workAuthorInput,
       'pageSource'=>$pageSource, 'user'=>Auth::user(), 
       'institution'=>$institution,
       'albumsInstitutional'=>$albumsInstitutional]);
@@ -178,7 +184,8 @@ class PhotosController extends \BaseController {
 
   public function saveFormInstitutional() {   
     //Input::flashExcept('tagsArea','tagsTypologyArea','tagsElementsArea','tagsMaterialArea', 'photo'); //tagsTypology tagsElements tagsMaterial
-    Input::flashExcept('tagsArea');
+    Input::flashExcept('tagsArea', 'photo','workAuthor');
+
     $input = Input::all();
      
     /*if (Input::has('tagsArea') && Input::has('tagsTypologyArea') && Input::has('tagsElementsArea') && Input::has('tagsMaterialArea') ){
@@ -198,7 +205,12 @@ class PhotosController extends \BaseController {
       $input["tagsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsArea"]); 
     }else{
       $input["tagsArea"] = '';
-    }       
+    }   
+
+    if (Input::has('workAuthor')){
+      //dd($input["workAuthor"] );
+      $input["workAuthor"] = str_replace(array('\'', '"'), '', $input["workAuthor"]);       
+    }    
 
     if(Session::has('institutionId')){     
       $rules = array(
@@ -241,14 +253,17 @@ class PhotosController extends \BaseController {
 
   if ($validator->fails()) { 
       $messages = $validator->messages();
-
+      
       /*return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'], 
         'tagsMaterialArea' => $input['tagsMaterialArea'],'tagsElementsArea' => $input['tagsElementsArea'],
         'tagsTypologyArea' => $input['tagsTypologyArea']])->withErrors($messages); */
-      return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'] 
+      return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'] ,
+        'workAuthorInput'=>$input["workAuthor"]
+        
         ])->withErrors($messages);
 
     }else{
+      
       if(Input::hasFile('photo') and Input::file('photo')->isValid()) {
         $file = Input::file('photo');
           $photo = new Photo();
@@ -258,8 +273,10 @@ class PhotosController extends \BaseController {
             $photo->support = $input["support"];
             $photo->tombo = $input["tombo"];
             $photo->subject = $input["subject"];
-            $photo->hygieneDate = $this->date->formatDate($input["hygieneDate"]);
-            $photo->backupDate = $this->date->formatDate($input["backupDate"]);
+            if ( !empty($input["hygieneDate"]) )
+              $photo->hygieneDate = $this->date->formatDate($input["hygieneDate"]);
+            if ( !empty($input["backupDate"]) )
+              $photo->backupDate = $this->date->formatDate($input["backupDate"]);
             $photo->characterization = $input["characterization"];
             $photo->cataloguingTime = date('Y-m-d H:i:s');
             $photo->UserResponsible = $input["userResponsible"];
@@ -295,7 +312,7 @@ class PhotosController extends \BaseController {
           $photo->dataUpload = date('Y-m-d H:i:s');
           $photo->institution_id = Session::get('institutionId');
           $photo->save();
-
+          
           $ext = $file->getClientOriginalExtension();
           $photo->nome_arquivo = $photo->id.".".$ext;
 
@@ -313,13 +330,14 @@ class PhotosController extends \BaseController {
       
           /*if (!empty($tags) && !empty($tagsMaterial)  && !empty($tagsElements) && 
             !empty($tagsTypology) ) { */
-          if (!empty($tags)) {
+          if (!empty($tags)) { 
               $tags = static::formatTags($tags);
               /*$tagsMaterial = static::formatTags($tagsMaterial);
               $tagsElements = static::formatTags($tagsElements);
               $tagsTypology = static::formatTags($tagsTypology);*/
 
               $tagsSaved = static::SaveTags($tags,$photo,'general');
+
               /*$tagsMaterialSaved = static::SaveTags($tagsMaterial,$photo,'material');
               $tagsElementsSaved = static::SaveTags($tagsElements,$photo,'elements');
               $tagsTypologySaved = static::SaveTags($tagsTypology,$photo,'typology'); */
@@ -359,9 +377,9 @@ class PhotosController extends \BaseController {
           $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
           $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
           $file->move(public_path().'/arquigrafia-images', $photo->id."_original.".strtolower($ext)); // original
-          dd($image);
-          $photo->saveMetadata(strtolower($ext));
 
+          $photo->saveMetadata(strtolower($ext));
+          
           return Redirect::to("/photos/{$photo->id}");
 
       }else{
