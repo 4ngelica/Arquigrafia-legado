@@ -248,7 +248,8 @@ $(document).ready(function() {
 });
 
   function applyMasks() {
-    $('.day').inputmask("99/99/9999", 
+    try {
+      $('.day').inputmask("99/99/9999", 
       { 
         'oncomplete' : function() {
           console.log($(this).val())
@@ -260,7 +261,7 @@ $(document).ready(function() {
           }
          }
       });
-    $('.month').inputmask("99/9999", 
+      $('.month').inputmask("99/9999", 
       { 
         'oncomplete' : function() {
           console.log($(this).val())
@@ -272,7 +273,7 @@ $(document).ready(function() {
           }
          }
       });
-    $('.year').inputmask("9999", 
+      $('.year').inputmask("9999", 
       { 
         'oncomplete' : function() {
           var t = translateYear( $(this).val() );
@@ -283,6 +284,10 @@ $(document).ready(function() {
           }
          }
       });
+    } catch(err) {
+      console.log("Não foi possível utilizar inputmask");
+    }
+
   }
 
   var translator = {
