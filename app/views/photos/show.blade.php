@@ -1,6 +1,6 @@
-  @extends('layouts.default')
+@extends('layouts.default')
 
-  @section('head')
+@section('head')
 
   <title>Arquigrafia - {{ $photos->name }}</title>
 
@@ -60,6 +60,7 @@
   <script type="text/javascript" src="{{ URL::to("/") }}/js/jquery.fancybox.pack.js"></script>
   <script type="text/javascript" src="{{ URL::to("/") }}/js/photo.js"></script>
 @stop
+
 @section('content')
 
   @if (Session::get('message'))
@@ -479,23 +480,22 @@
       @endif
     <!--   FIM - SIDEBAR   -->
     </div>
-
+  </div>
     <!--   MODAL   -->
-    <div id="mask"></div>
-    <div id="form_window" class="form window">
-      <a class="close" href="#" title="FECHAR">Fechar</a>
-      <div id="registration"></div>
-    </div>
-    <div id="confirmation_window" class="window">
-      <div id="registration_delete">
-        <p></p>
-        {{ Form::open(array('url' => '', 'method' => 'delete')) }}
-          <div id="registration_buttons">
-            <input type="submit" class="btn" value="Confirmar" />
-            <a class="btn close" href="#">Cancelar</a>
-          </div>
-        {{ Form::close() }}
-      </div>
+  <div id="mask"></div>
+  <div id="form_window" class="form window">
+    <a class="close" href="#" title="FECHAR">Fechar</a>
+    <div id="registration"></div>
+  </div>
+  <div id="confirmation_window" class="window">
+    <div id="registration_delete">
+      <p></p>
+      {{ Form::open(array('url' => '', 'method' => 'delete')) }}
+        <div id="registration_buttons">
+          <input type="submit" class="btn" value="Confirmar" />
+          <a class="btn close" href="#">Cancelar</a>
+        </div>
+      {{ Form::close() }}
     </div>
   </div>
   <script src="http://code.highcharts.com/highcharts.js"></script>
