@@ -222,7 +222,7 @@ class AlbumsController extends \BaseController {
 			}
 		}
 		if ($albums->isEmpty()) {
-			return Redirect::to('/photos/' . $photo);
+			return Redirect::to('/photos/' . $photo->id);
 		} else {
 			return Redirect::to('/albums')->with('message', '<strong>Imagem adicionada com sucesso ao(s) seu(s) álbum(ns)</strong>');
 		}
