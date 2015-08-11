@@ -14,6 +14,7 @@ FactoryMuffin::define('Photo', [
 	'imageAuthor' => 'firstName',
 	'nome_arquivo' => 'word',
 	'user_id' => 'factory|User',
+	'tombo' => 'word',
 ]);
 
 FactoryMuffin::define('Album', [
