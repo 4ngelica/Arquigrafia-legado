@@ -36,29 +36,36 @@
 
       
         <!--   ÁREA DO USUARIO   -->
-        @if(Session::get('institutionId'))
-        <div id="loggin_area_institutional">
-        @else
+
+<!--        <div id="loggin_area_institutional">-->
+        
         <div id="loggin_area">
-        @endif
+        
         <?php if (Auth::check()) { ?>
          
 
-          @if(Session::get('institutionId'))           
+          @if(!Session::get('institutionId'))           
+          
+        
+          
+          <a id="user_name" href="{{ URL::to("/users") }}/{{ Auth::user()->id; }}">{{ Auth::user()->name; }}</a>
+          @endif
+
+          @if(!Session::get('institutionId'))
+          <a id="user_photo" href="{{ URL::to("/users") }}/{{ Auth::user()->id; }}">
+            
+            <?php if (Auth::user()->photo != "") { ?>
+              <img  src="{{ asset(Auth::user()->photo); }}" class="user_photo_thumbnail"/>
+            <?php } else { ?>
+              <img src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" class="user_photo_thumbnail"/>
+            <?php } ?>
+            
+          </a>
+          @else
           <a id="user_photo" href="">          
             <img src="{{ URL::to("/") }}/img/avatar-institution.png" width="48" height="48" class="user_photo_thumbnail"/>
           </a>
           @endif
-          <a id="user_name" href="{{ URL::to("/users") }}/{{ Auth::user()->id; }}">{{ Auth::user()->name; }}</a>
-          
-          <a id="user_photo" href="{{ URL::to("/users") }}/{{ Auth::user()->id; }}">
-          <?php if (Auth::user()->photo != "") { ?>
-            <img  src="{{ asset(Auth::user()->photo); }}" class="user_photo_thumbnail"/>
-          <?php } else { ?>
-            <img src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" class="user_photo_thumbnail"/>
-          <?php } ?>
-          </a>
-
 
           <a href="{{ URL::to("/users/logout/") }}" id="logout" class="btn">SAIR</a><br />
           <ul id="logged_menu">
