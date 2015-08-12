@@ -329,6 +329,7 @@ class UsersController extends \BaseController {
       $response = $request->execute();
       $fbuser = $response->getGraphObject();
       $fbid = $fbuser->getProperty('id');
+      $fbmail = $fbuser->getProperty('email');
       
       //usuarios antigos tem campo id_facebook null, mas existe login = $fbid;
       $user = User::where('id_facebook', '=', $fbid)->orWhere('login', '=', $fbid)->first();
@@ -363,7 +364,12 @@ class UsersController extends \BaseController {
         return Redirect::to('/')->with('message', "Bem-vindo {$user->name}!");
         
       } else {
-        // cria um novo usuário
+        $query = User::where('email', '=', $fbmail)->first();
+        if (!is_null($query)) {
+          Auth::loginUsingId($user->id);
+          return Redirect::to('/')->with('message', "Bem-vindo {$user->name}!");
+        }
+        else {
         $user = new User;
         $user->name = $fbuser->getProperty('name');
         $user->login = $fbuser->getProperty('id');
@@ -395,6 +401,7 @@ class UsersController extends \BaseController {
         ActionUser::printLoginOrLogout($user->id, $source_page, "login", "arquigrafia", "user");
 
         return Redirect::to('/')->with('message', 'Sua conta foi criada com sucesso!');
+      }
       }
             
     }
