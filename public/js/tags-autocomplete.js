@@ -109,13 +109,19 @@ $(document).ready(function() {
     $(function() {
         $( "#datePickerWorkDate" ).datepicker({
             dateFormat:'dd/mm/yy'
-        }
-        );
-        $( "#datePickerImageDate" ).datepicker({
-        dateFormat:'dd/mm/yy'
-        }
-        );
         });
+        $( "#datePickerImageDate" ).datepicker({
+            dateFormat:'dd/mm/yy'
+        });
+
+        $( "#datePickerHygieneDate" ).datepicker({
+            dateFormat:'dd/mm/yy'
+        });
+        $( "#datePickerBackupDate" ).datepicker({
+            dateFormat:'dd/mm/yy'
+        });
+        
+    });
 
 });
 

@@ -106,9 +106,13 @@
 										<p>{{ Form::label('hygieneDateTxt', 'Data de higienização:') }}</p>
 									</div>
 									<div class="three columns omega">
-										<p>{{ Form::text('hygieneDate', Input::old('hygieneDate')) }} <br>
+										<p>
+											{{ Form::text('hygieneDate','',array('id' => 'datePickerHygieneDate','placeholder'=>'DD/MM/AAAA')) }} 
+											
+											<br>
 											<div class="error">{{ $errors->first('hygieneDate') }}</div>
-										</p>
+										</p> 
+
 									</div>
 								</td>
 							</tr>
@@ -119,7 +123,9 @@
 										<p>{{ Form::label('backupDateTxt', 'Data de backup:') }}</p>
 									</div>
 									<div class="three columns omega">
-										<p>{{ Form::text('backupDate', Input::old('backupDate')) }} <br>
+										<p>
+											{{ Form::text('backupDate','',array('id' => 'datePickerBackupDate','placeholder'=>'DD/MM/AAAA')) }}	
+											<br>
 											<div class="error">{{ $errors->first('backupDate') }}</div>
 										</p>
 									</div>
