@@ -366,7 +366,7 @@ class UsersController extends \BaseController {
       } else {
         $query = User::where('email', '=', $fbmail)->first();
         if (!is_null($query)) {
-          Auth::loginUsingId($user->id);
+          Auth::loginUsingId($query->id);
           return Redirect::to('/')->with('message', "Bem-vindo {$user->name}!");
         }
         else {
