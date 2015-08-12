@@ -1,22 +1,4 @@
-jQuery(document).ready(function(){
-	jQuery('#ajax_formInstitutional').submit(function(){
-		var dados = jQuery( this ).serialize();
- 
-		jQuery.ajax({
-			type: "POST",
-			url: "photos/savePhotoInstitutional",
-			data: dados,
-			success: function( data )
-			{
-				alert( "ok" );
-			}
-			}); alert("ppp");
-				return false;
-	});
-});
 
-
- 
 
 
 $(document).ready(function(){
