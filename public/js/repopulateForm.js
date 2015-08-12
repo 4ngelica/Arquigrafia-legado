@@ -16,32 +16,7 @@ jQuery(document).ready(function(){
 });
 
 
-window.onload = function () {
-
-	/*document.getElementById('btnYes').onclick = function () {
-         //document.getElementById('modal').style.display = "none"
-          window.location.replace('#');
-           $(this).dialog("close"); 
-    };
-    document.getElementById('btnNo').onclick = function () {
-       window.location.replace('/photos/');
-    };*/ 
-    
-    $( "#dialog-confirm" ).html("confirm");
-			 $( "#dialog-confirm" ).dialog({
-				resizable: false,
-				height:140,
-				modal: true,
-				buttons: {
-				"Sim": function() {
-					$( this ).dialog( "close" );
-					},
-				"Não": function() {
-						$( this ).dialog( "close" );
-					}
-				}
-			});
-}; 
+ 
 
 
 $(document).ready(function(){
@@ -72,87 +47,11 @@ $(document).ready(function(){
 
 
 
-	/*function fnOpenNormalDialog(){
-		alert("ok");
-		document.forms["formInstitutional"].submit();
-
-		$("#dialog-confirm").html("Deseja utilizar a informação do formulario anterior");
-
-		$("#dialog-confirm").dialog({
-			resizable:false,
-			modal:true,
-			title:"Modal",
-			height:250,
-			width:400,
-			buttons:{
-				"Yes": function(){
-					$(this).dialog('close');
-					//callback(true);
-					//window.location.replace('/photos/savePhotoInstitutional');
-					document.forms["formInstitutional"].submit();
-				},
-				"No": function(){
-					$(this).dialog('close');
-					alert("show");
-
-				}
-			}
-		})
-	} */
 	
-	//$("#btnOpenDialogRepopulate").click(fnOpenNormalDialog);
 
-	/*$("#btnOpenDialogRepopulate").click(function(e) {
-		alert("ddd");
-                e.preventDefault();
-                $("#dialog-confirm").dialog({
-				resizable:false,
-				modal:true,
-				title:"Modal",
-				height:250,
-				width:400,
-				buttons:{
-				"Yes": function(){
-					$(this).dialog('close');
-					alert("hi");
-					//callback(true);
-					//window.location.replace('/photos/savePhotoInstitutional');
-					//document.forms["formInstitutional"].submit();
-				},
-				"No": function(){
-					$(this).dialog('close');
-					alert("show");
-
-				}
-			}
-		})
-    });*/
-
-	 
-	/*function callback(value){
-		if(value){
-
-		}else{
-
-		}
-	}*/
 
 });
 
-$(function() {
-		$( "#btnOpenDialogRepopulate" ).dialog({
-		resizable: false,
-		height:140,
-		modal: true,
-		buttons: {
-			"Delete all items": function() {
-				$( this ).dialog( "close" );
-			},
-			Cancel: function() {
-				$( this ).dialog( "close" );
-			}
-			}
-		});
-	});
+
 
 

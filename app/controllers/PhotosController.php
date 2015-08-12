@@ -381,8 +381,9 @@ class PhotosController extends \BaseController {
 
           $photo->saveMetadata(strtolower($ext));
           
+          $input['photoId'] = $photo->id;
           //return Redirect::to("/photos/{$photo->id}");
-          Redirect::back()->withInput($input);
+          return Redirect::back()->withInput($input);
 
       }else{
          $messages = $validator->messages();

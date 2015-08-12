@@ -28,9 +28,9 @@
 
 
 	 
-	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<!--<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-	<link rel="stylesheet" href="/resources/demos/style.css">
+	<link rel="stylesheet" href="/resources/demos/style.css">-->
 
 @stop
 @section('content')
@@ -402,16 +402,18 @@
 							
 						</div>
 					</div>-->
+					
 					<!--<div class="twelve columns omega row">						
 						<div>
 							include('photos.includes.repopulate_photos');
 							
 						</div>
 					</div>-->
+					
 					<div class="twelve columns">
 						<input name="enviar" type="submit" class="btn" value="ENVIAR">
 						<!--<input type="button" id="btnOpenDialogRepopulate" value="ENVIAR" class="btn">-->
-						<div id="dialog-confirm" title="mmm?"></div>
+						<div id="dialog-confirm" title=" "></div>
 					</div>
 				</div>
 			{{ Form::close() }}
@@ -426,7 +428,8 @@
 
 	$(document).ready(function() {
 		if({{Input::old('autoOpenModal','false')}}){
-			$( "#dialog-confirm" ).html("confirm");
+			alert("abc");
+			$( "#dialog-confirm" ).html("Deseja utilizar a informação do photo anterior?");
 			 $( "#dialog-confirm" ).dialog({
 				resizable: false,
 				height:140,
@@ -437,11 +440,13 @@
 					},
 					"Não": function() {
 						//$( this ).dialog( "close" );
-						window.location.replace('{{ URL::to("/") }}/photos/');
+						window.location.replace('{{ URL::to("/") }}/photos/{{Input::old('photoId')}}');
 					}
 				}
-			});
-		}
+			}); 
+		  }
+
+		
 		/* Methods to be called when all html document be ready */
 		showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));
 		 
