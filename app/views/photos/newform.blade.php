@@ -427,12 +427,11 @@
 
 
 	$(document).ready(function() {
-		if({{Input::old('autoOpenModal','false')}}){
-			alert("abc");
-			$( "#dialog-confirm" ).html("Deseja utilizar a informação do photo anterior?");
+		if({{Input::old('autoOpenModal','false')}}){ 					
+			$( "#dialog-confirm" ).html("<b>Cadastro de imagem realizado com sucesso!</b> <br><br> Gostaria de utilizar os dados da imagem cadastrada para o próximo upload?");
 			 $( "#dialog-confirm" ).dialog({
 				resizable: false,
-				height:140,
+				height:180,
 				modal: true,
 				buttons: {
 				"Sim": function() {
