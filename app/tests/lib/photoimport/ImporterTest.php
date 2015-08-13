@@ -1,8 +1,8 @@
 <?php
 
 use Mockery as m;
-use lib\photoimport\Importer;
-use lib\photoimport\SheetReader;
+use lib\photoimport\import\Importer;
+use lib\photoimport\ods\SheetReader;
 
 class ImporterTest extends TestCase {
 
@@ -21,8 +21,8 @@ class ImporterTest extends TestCase {
     parent::setUp();
     $this->photo = $this->mock('Photo');
     $this->tag = $this->mock('Tag');
-    $this->reader = $this->mock('lib\photoimport\SheetReader');
-    $this->importer = App::make('lib\photoimport\Importer');
+    $this->reader = $this->mock('lib\photoimport\ods\SheetReader');
+    $this->importer = App::make('lib\photoimport\import\Importer');
   }
 
   public function mock($class)

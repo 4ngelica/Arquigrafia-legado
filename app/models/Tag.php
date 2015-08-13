@@ -25,40 +25,36 @@ class Tag extends Eloquent {
     return $photos;
   }
 
-  public function getMany($raw_tags, $tag_type = null) {
-    if ( empty($raw_tags) ) {
-      return null;
-    }
-    $tags = $this->split($raw_tags);
-    $all_tags = array();
+  public function getMany($raw_tags, &$tag_count, $tag_type = null) {
+    $tags = $this->transform($raw_tags);
+    $tag_count = count($tags);
+    $found_tags = array();
     foreach ($tags as $tag_name) {
-      if ( empty($tag) ) {
-        continue;
-      }
-      try {
-        $tag = $this->getOrCreate($tag_name, $tag_type);
-        array_push($all_tags, $tag);
-      } catch (PDOException $e) {
-        Log::error("Logging exception, error to register tags");
-        return null;
+      if ( !empty($tag_name) ) { 
+        try {
+          $tag = $this->getOrCreate($tag_name, $tag_type);
+          array_push( $found_tags,  $tag);
+        } catch (Exception $e) { }
       }
     }
-    return $all_tags;
+    return $found_tags;
   }
 
   public function getOrCreate($name, $type) {
-    $tag = $this->firstOrCreate(['name' => $name]);
+    $tag = $this->firstOrNew(['name' => $name]);
     $tag->type = $type;
     $tag->incrementReferences();
     $this->save();    
   }
 
-  public function split($tags) {
+  public function transform($tags) {
+    if ( is_array($tags) ) {
+      return $tags;
+    }
     $tags = explode(',', $tags);
     $tags = array_map('trim', $tags);
     $tags = array_map('mb_strtolower', $tags);
     return array_unique($tags);
-
   }
 
   public function incrementReferences() {

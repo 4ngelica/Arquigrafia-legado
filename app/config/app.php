@@ -125,6 +125,7 @@ return array(
     'Intervention\Image\ImageServiceProvider',
     'Tricki\Notification\NotificationServiceProvider',
     'Maatwebsite\Excel\ExcelServiceProvider',
+    'lib\image\ImageManagerServiceProvider',
 	),
 
 	/*
@@ -193,6 +194,7 @@ return array(
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
 		'Excel'           => 'Maatwebsite\Excel\Facades\Excel',
+		'ImageManager'    => 'lib\image\facade\ImageManager',
 	),
 
 );

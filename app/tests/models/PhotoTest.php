@@ -74,7 +74,7 @@ class PhotoTest extends TestCase {
 		$photo_mock->shouldReceive('delete')->once();
 
 		$exceptionRaised = false;
-		
+
 		try {
 			$photo->updateOrCreateByTombo(
 				array('tombo' => 'tombo'),
@@ -83,9 +83,22 @@ class PhotoTest extends TestCase {
 		} catch (Exception $e) {
 			$exceptionRaised = true;
 		}
-		
+
 		$this->assertTrue($exceptionRaised);
-		
+	}
+
+	public function testShouldUpdateAndRestoreTrashed() {
+		$photo = FactoryMuffin::create('Photo');
+		$photo->delete(); //soft deleted
+		Photo::updateOrCreateWithTrashed( 
+			array( 'tombo' => $photo->tombo),
+			array( 'tombo' => 'new_tombo')
+		);
+		/* objeto antigo não está sincronizado com o banco de dados, puxar novamente do banco */
+		$photo = Photo::withTrashed()->find($photo->id);
+
+		$this->assertEquals('new_tombo', $photo->tombo);
+		$this->assertFalse( $photo->trashed() );
 	}
 
 

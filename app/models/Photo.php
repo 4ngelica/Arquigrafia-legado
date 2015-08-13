@@ -68,7 +68,7 @@ class Photo extends Eloquent {
 	{
 		return $this->belongsToMany('Tag', 'tag_assignments');
 	}
-	
+
 	public function comments()
 	{
 		return $this->hasMany('Comment');
@@ -92,13 +92,13 @@ class Photo extends Eloquent {
 	public function saveMetadata($originalFileExtension)
 	{
 		$user = $this->user;
-		$exiv2 = new Exiv2($originalFileExtension, $this->id, public_path() . '/arquigrafia-images/');	
+		$exiv2 = new Exiv2($originalFileExtension, $this->id, public_path() . '/arquigrafia-images/');
 		$exiv2->setImageAuthor($this->workAuthor);
 		$exiv2->setArtist($this->workAuthor, $user->name);
 		$exiv2->setCopyRight($this->workAuthor,
 			new CreativeCommons_3_0($this->allowCommercialUses, $this->allowModifications));
 		$exiv2->setDescription($this->description);
-		$exiv2->setUserComment($this->aditionalImageComments);		
+		$exiv2->setUserComment($this->aditionalImageComments);
 	}
 
 	public static function paginateUserPhotos($user, $perPage = 24) {
@@ -157,14 +157,14 @@ class Photo extends Eloquent {
 			});
 			$count = $photos->get()->count();
 			$photos = $photos->paginate($perPage);
-		} 
+		}
 		return ['photos' => $photos, 'photos_count' => $count];
 	}
 
 	public static function composeArchitectureName($name) {
 		$array = explode(" ", $name);
-		$architectureName = "";			
-		if (!is_null($array) && !is_null($array[0])) {		
+		$architectureName = "";
+		if (!is_null($array) && !is_null($array[0])) {
 			if (ends_with($array[0], 'a') || ends_with($array[0], 'dade')
 				|| ends_with($array[0], 'ção') || ends_with($array[0], 'ase')
 				|| ends_with($array[0], 'ede') || ends_with($array[0], 'dral')
@@ -173,7 +173,7 @@ class Photo extends Eloquent {
 				|| $array[0] == "Ponte")
 				$architectureName = 'a ';
 			else if (ends_with($array[0], 's'))
-				$architectureName = 'a arquitetura de ';	
+				$architectureName = 'a arquitetura de ';
 			else
 				$architectureName = 'o ';
 		}
@@ -181,49 +181,49 @@ class Photo extends Eloquent {
 	}
 
 	public static function getEvaluatedPhotosByUser($user) {
-		$evaluations =  Evaluation::where("user_id", $user->id)->groupBy('photo_id')->distinct()->get();
-    	return Photo::whereIn('id', $evaluations->lists('photo_id'))->get();
+		$evaluations = Evaluation::where("user_id", $user->id)->groupBy('photo_id')->distinct()->get();
+		return Photo::whereIn('id', $evaluations->lists('photo_id'))->get();
 	}
 
 
-	public static function getLastUpdatePhotoByUser($user_id) { 
-		//select user_id,id,dataUpload, created_at, updated_at 
+	public static function getLastUpdatePhotoByUser($user_id) {
+		//select user_id,id,dataUpload, created_at, updated_at
 		//from photos
 		//where user_id=1 order by updated_at desc limit 5;
 		//return $id;
-		
+
 		return $dataUpdate = Photo::where("user_id", $user_id)->orderBy('updated_at','desc')->first();
 		//return Date::dateDiff(date("Y-m-d H:i:s"),$dataUpdate->updated_at);
 		//date("Y-m-d H:i:s")
-		
+
 	}
-	public static function getLastUploadPhotoByUser($user_id) { 
+	public static function getLastUploadPhotoByUser($user_id) {
 		return Photo::where("user_id", $user_id)->orderBy('dataUpload','desc')->first();
 		//return Date::dateDiff(date("Y-m-d H:i:s"),$dataUpload->dataUpload
 	}
 
-	public static function photosWithSimilarEvaluation($average,$idPhotoSelected) { 		
+	public static function photosWithSimilarEvaluation($average,$idPhotoSelected) {
 		Log::info("Logging function Similar evaluation");
 		$similarPhotos = array();
 		$arrayPhotosId = array();
-		$arrayPhotosDB = array();		
+		$arrayPhotosDB = array();
 		$i=0;
 
 		if (!empty($average)) {
-			foreach ($average as $avg) {                   
+			foreach ($average as $avg) {
 				Log::info("Logging params ".$avg->binomial_id." ".$avg->avgPosition);
 				//average of photo by each binomial(media de fotos x binomio)
 				$avgPhotosBinomials = DB::table('binomial_evaluation')
 				->select('photo_id', DB::raw('avg(evaluationPosition) as avgPosition'))
 				->where('binomial_id', $avg->binomial_id)
-				->where('photo_id','<>' ,$idPhotoSelected)				
+				->where('photo_id','<>' ,$idPhotoSelected)
 				->groupBy('photo_id')->get();
 
 				//clean array for news id photo
 				$arrayPhotosId = array();
 				$flag=false;
 				//dd($avgPhotosBinomials);
-				foreach ($avgPhotosBinomials as $avgPhotoBinomial) { 
+				foreach ($avgPhotosBinomials as $avgPhotoBinomial) {
 				//Log::info("Logging iterate avgPhotoBinomial pos ".$avgPhotoBinomial->avgPosition." param ".$avg->avgPosition);
 					if(abs($avgPhotoBinomial->avgPosition - $avg->avgPosition)<=5){
 						$flag=true;
@@ -232,21 +232,21 @@ class Photo extends Eloquent {
 						array_push($arrayPhotosId,$avgPhotoBinomial->photo_id);
 					}
 				}
-				
+
 				//dd($arrayPhotosId);
 				if($flag == false){
-					Log::info("Logging break "); 
+					Log::info("Logging break ");
 					$similarPhotos = array();
 					break;
 				}
 
-				if($i==0){				
-					$similarPhotos = $arrayPhotosId;			
+				if($i==0){
+					$similarPhotos = $arrayPhotosId;
 				}
 
 			$similarPhotos = array_intersect($similarPhotos, $arrayPhotosId);
 			$i++;
-			
+
 			}
 			//To remove repeted values
 			$similarPhotos = array_unique($similarPhotos);
@@ -254,20 +254,20 @@ class Photo extends Eloquent {
 
 
 			//To obtain name of similarPhotos
-			foreach ($similarPhotos  as $similarPhotosId ) {
+			foreach ($similarPhotos as $similarPhotosId ) {
 
 				$similarPhotosDB = DB::table('photos')
 				->select('id', 'name')
-				->where('id',$similarPhotosId )				
-				->get(); 
+				->where('id',$similarPhotosId )
+				->get();
 
 				array_push($arrayPhotosDB,$similarPhotosDB[0]);
 
 			}
 		}
 
-		
-    	return $arrayPhotosDB;
+
+			return $arrayPhotosDB;
 	}
 
 	public function attachBadge($badge) {
@@ -276,7 +276,7 @@ class Photo extends Eloquent {
 	}
 
 	public static function licensePhoto($photo){
-		$license = array();		
+		$license = array();
 		if($photo->allowCommercialUses == 'YES'){
 			$textAllowCommercial = 'Permite o uso comercial da imagem ';
 			if($photo->allowModifications == 'YES'){
@@ -288,7 +288,7 @@ class Photo extends Eloquent {
 			}else {
 				 $license[0] = 'by-sa';
 				 $license[1] = $textAllowCommercial.'e permite modificações contato que os outros compartilhem de forma semelhante.';
-			}	
+			}
 		}else{
 			$textAllowCommercial = 'NÃO permite o uso comercial da imagem ';
 			if($photo->allowModifications == 'YES'){
@@ -300,7 +300,7 @@ class Photo extends Eloquent {
 			}else {
 				$license[0] = 'by-nc-sa';
 				$license[1] = $textAllowCommercial.'mas permite modificações contato que os outros compartilhem de forma semelhante.';
-			}	
+			}
 		}
 
 		return $license;
@@ -360,42 +360,43 @@ class Photo extends Eloquent {
 		return $this->date->translate($this->attributes['workdate']);
 	}
 
-	public function saveImages($image, $extension = 'jpg') {
-		$prefix = public_path().'/arquigrafia-images/' . $this->id;
-    $image->widen(600)->save($prefix . '_view.jpg');
-    $image->heighten(220)->save($prefix . '_200h.jpg');
-    $image->fit(186, 124)->encode('jpg', 70)->save($prefix . '_home.jpg');
-    $file->move( $prefix . "_original." . $extension );
-	}
+	public static function updateOrCreateByTombo($attributes, $basepath) {
 
-	public function updateOrCreateByTombo($attributes, $basepath) {
 		$tombo = $attributes['tombo'];
-		$image = $this->findImageByTombo($basepath, $tombo);
-		$image_extension = $this->getOriginalImageExtension($image);
+
+		$image = ImageManager::find($basepath . '/' . $tombo . '.*');
+
+		$image_extension = ImageManager::getOriginalImageExtension($image);
+
 		$attributes['nome_arquivo'] = $tombo . $image_extension;
-		$attributes['deleted_at'] = null;
-		$photo = $this->updateOrCreate( array('tombo' => $tombo), $attributes );
+
+		$photo = static::updateOrCreate( array('tombo' => $tombo), $attributes );
+
 		try {
+
 			$photo->saveImages( $photo_file, $image_extension );
+
 		} catch (Exception $e) {
-			$photo->delete(); //não deleta do disco
+
+			$photo->delete();
+
 			throw $e;
+
 		}
+
 		return $photo;
 	}
 
-	public function findImageByTombo($basepath, $tombo = null) {
-		$tombo = is_null($tombo) ? $this->tombo : $tombo;
-		$file_path = File::glob( $basepath . '/' . $tombo . '.*')[0];
-		return $this->makeImage($file_path);
+	public static function updateOrCreateWithTrashed($attributes, $values) {
+		$photo = static::withTrashed()->where($attributes)->first();
+		$photo = $photo ?: static::newInstance();
+		$photo->fill($values);
+		return $photo->trashed() ? $photo->restore() : $photo->save();
 	}
 
-	public function makeImage($file) {
-		return Image::make($file)->encode('jpg', 80);
-	}
-
-	public function getOriginalImageExtension($image) {
-		return File::extension($image->basePath());
+	public function saveImages($image, $extension = 'jpg') {
+		$prefix = public_path().'/arquigrafia-images/' . $this->id;
+		ImageManager::makeAll($image, $prefix, $extension);
 	}
 
 	public function syncTags($tags) {

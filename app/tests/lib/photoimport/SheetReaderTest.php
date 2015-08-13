@@ -1,7 +1,7 @@
 <?php
 
-use lib\photoimport\SheetReader;
-use lib\photoimport\ColumnMapper;
+use lib\photoimport\ods\SheetReader;
+use lib\photoimport\ods\ColumnMapper;
 use Mockery as m;
 
 class SheetReaderTest extends TestCase {
@@ -18,8 +18,8 @@ class SheetReaderTest extends TestCase {
   public function setUp()
   {
     parent::setUp();
-    $this->mapper_mock = $this->mock('lib\photoimport\ColumnMapper');
-    $this->reader = App::make('lib\photoimport\SheetReader');
+    $this->mapper_mock = $this->mock('lib\photoimport\ods\ColumnMapper');
+    $this->reader = App::make('lib\photoimport\ods\SheetReader');
   }
 
   public function mock($class)
@@ -32,7 +32,7 @@ class SheetReaderTest extends TestCase {
   public function testShouldLoadGivenFileAndReturnDocument() {
     $loader = m::mock('loader');
     $loader->shouldReceive('load')->once()->with('file_path')->andReturn('document');
-    Excel::shouldReceive('selectSheetsByIndex')->with(0)->andReturn($loader);
+    Excel::shouldReceive('selectSheetsByIndex')->once()->with(0)->andReturn($loader);
     $return = $this->reader->load('file_path');
 
     $this->assertEquals('document', $return);
@@ -40,8 +40,8 @@ class SheetReaderTest extends TestCase {
 
   public function testShouldReturnSheet() {
     $document = m::mock('document');
-    $document->shouldReceive('formatDates')->with(true, 'Y-m-d');
-    $document->shouldReceive('get')->andReturn('sheet');
+    $document->shouldReceive('formatDates')->once()->with(true, 'Y-m-d');
+    $document->shouldReceive('get')->once()->andReturn('sheet');
     $return = $this->reader->getSheet($document);
 
     $this->assertEquals('sheet', $return);
@@ -59,10 +59,10 @@ class SheetReaderTest extends TestCase {
 
   public function testShouldReadAllRowsInsideSheet() {
     $sheet = array(1, 2, 3, 4, 5);
-    $reader = Mockery::mock('lib\photoimport\SheetReader[load, getSheet, readRow]',
+    $reader = Mockery::mock('lib\photoimport\ods\SheetReader[load, getSheet, readRow]',
       [$this->mapper_mock]);
-    $reader->shouldReceive('load')->with('file')->andReturn('document');
-    $reader->shouldReceive('getSheet')->with('document')->andReturn($sheet);
+    $reader->shouldReceive('load')->once()->with('file')->andReturn('document');
+    $reader->shouldReceive('getSheet')->once()->with('document')->andReturn($sheet);
     $reader->shouldReceive('readRow')->times(5)->andReturn(1);
     $return = $reader->read('file');
 

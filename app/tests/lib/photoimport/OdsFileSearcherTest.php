@@ -1,16 +1,6 @@
-<?php namespace lib\photoimport;
+<?php
 
 use Mockery as m;
-use File;
-use App;
-use \TestCase;
-
-function file_exists($file) {
-  if ($file == 'file_log_exists.log') {
-    return true;
-  }
-  return false;
-}
 
 class OdsFileSearcherTest extends TestCase {
 
@@ -24,7 +14,7 @@ class OdsFileSearcherTest extends TestCase {
   public function setUp()
   {
     parent::setUp();
-    $this->searcher = App::make('lib\photoimport\OdsFileSearcher');
+    $this->searcher = App::make('lib\photoimport\ods\OdsFileSearcher');
   }
 
   public function testGetAllFiles() {
@@ -36,8 +26,10 @@ class OdsFileSearcherTest extends TestCase {
     $this->assertEquals($allFiles, $return);
   }
 
+
+
   public function testSearchReturnsAllValidOdsFiles() {
-    $searcher = m::mock('lib\photoimport\OdsFileSearcher[getAllFiles]');
+    $searcher = m::mock('lib\photoimport\ods\OdsFileSearcher[getAllFiles]');
     $root = m::mock('odsFilesRootPath');
 
     $file1 = m::mock('odsFile');
@@ -52,9 +44,12 @@ class OdsFileSearcherTest extends TestCase {
 
     $files = array( $file1, $file2 );
 
+    File::shouldReceive('exists')->once()->with('file_log_doesnt_exist.log')->andReturn(false);
+    File::shouldReceive('exists')->once()->with('file_log_exists.log')->andReturn(true);
+
     $searcher->shouldReceive('getAllFiles')->with($root)->andReturn($files);
     $return = $searcher->search($root);
-
+    
     $this->assertEquals( array($file1), $return );
   }
 }

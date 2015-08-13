@@ -1,4 +1,4 @@
-<?php namespace lib\photoimport;
+<?php namespace lib\photoimport\ods;
 
 use Excel;
 

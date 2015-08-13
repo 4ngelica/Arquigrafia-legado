@@ -1,7 +1,7 @@
 <?php
 
 use Mockery as m;
-use lib\photoimport\ColumnMapper;
+use lib\photoimport\ods\ColumnMapper;
 
 class ColumnMapperTest extends TestCase {
 
@@ -15,7 +15,7 @@ class ColumnMapperTest extends TestCase {
   public function setUp()
   {
     parent::setUp();
-    $this->mapper = App::make('lib\photoimport\ColumnMapper');
+    $this->mapper = App::make('lib\photoimport\ods\ColumnMapper');
   }
 
   public function testShouldAttachLicenseToAttributes()

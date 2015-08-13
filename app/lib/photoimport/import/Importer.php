@@ -1,52 +1,50 @@
-<?php namespace lib\photoimport;
+<?php namespace lib\photoimport\import;
 
 use Photo;
 use Tag;
+use lib\photoimport\ods\SheetReader;
 
 class Importer {
 
   protected $tag;
   protected $photo;
   protected $reader;
+  protected $logger;
 
-  public function __construct (Photo $photo, Tag $tag, SheetReader $sr) {
+  public function __construct (Photo $photo, Tag $tag, SheetReader $sr, ImportLogger $logger) {
     $this->photo = $photo;
     $this->tag = $tag;
     $this->reader = $sr;
+    $this->logger = $logger;
   } 
 
   public function importPhoto($basepath, $attributes) {
-    try {
-      $new_photo = $this->photo->createOrFail($attributes, $basepath);
-    } catch (Exception $e) {
-      return null;
-    }
-    return $new_photo;
+    return $this->photo->updateOrCreateByTombo($attributes, $basepath);
   }
 
   public function importTags($raw_tags) {
-    $tags = array();
-    if ( is_array($raw_tags) ) {
-      foreach ($raw_tags as $type => $rt) {
-        $tags = array_merge( $tags, $this->tag->getMany($rt, $type) );
-      }
-    } else {
-      array_push( $tags, $this->tag->getMany($raw_tags) );
+    $tags = $this->tag->getMany($raw_tags, $tag_count);
+    if ( count($tags) != $tag_count ) {
+
     }
+
     return $tags;
   }
 
   public function import($basepath, $raw_photo, $raw_tags) {
     $photo = $this->importPhoto($basepath, $raw_photo);
     $tags = $this->importTags($raw_tags);
+    $photo->syncTags($tags);
+    return $photo;
   }
 
   public function importFromFile($file) {
     $photos = array();
+    $basepath = $file->getPath();
     try {
-      $basepath = $file->getPath();
       $raw_photos = $this->getContent($file);
-    } catch (Exception $e) {
+    } catch (PHPExcel_Reader_Exception $e) {
+      
       return null;
     }
     foreach ($raw_photos as $raw_photo) {
