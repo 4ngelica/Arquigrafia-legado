@@ -499,10 +499,15 @@ class UsersController extends \BaseController {
  * @return Response
  */
   public function edit($id) {     
-    $user = User::find($id);   
-    return View::make('users.edit')
-      ->with(
-        ['user' => $user] );
+    $user = User::find($id);
+    $logged_user = Auth::User();
+    if ($logged_user == null) {
+      return Redirect::action('PagesController@home');  
+    } 
+    elseif ($logged_user->id == $user->id) { 
+      return View::make('users.edit')->with( ['user' => $user] );
+    }
+    return Redirect::action('PagesController@home');
   }
 
   public function update($id) {              
