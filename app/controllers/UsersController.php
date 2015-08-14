@@ -369,6 +369,8 @@ class UsersController extends \BaseController {
           $query->id_facebook = $fbid;
           $query->save();
           Auth::loginUsingId($query->id);
+          $source_page = Request::header('referer');
+          ActionUser::printLoginOrLogout($query->id, $source_page, "Login", "facebook", "user");
           return Redirect::to('/')->with('message', "Bem-vindo {$query->name}!");
         }
         else {
