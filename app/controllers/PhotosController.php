@@ -745,8 +745,11 @@ class PhotosController extends \BaseController {
 
   public function edit($id) {
     $photo = Photo::find($id);
-
-
+    $logged_user = Auth::User();
+    if ($logged_user == null) {
+      return Redirect::action('PagesController@home');
+    }
+    elseif ($logged_user->id == $photo->user_id) {
     if (Session::has('tags'))
     {
       $tags = Session::pull('tags');
@@ -756,6 +759,8 @@ class PhotosController extends \BaseController {
     }
     return View::make('photos.edit')
       ->with(['photo' => $photo, 'tags' => $tags] );
+    }
+    return Redirect::action('PagesController@home');
   }
 
   public function update($id) {
