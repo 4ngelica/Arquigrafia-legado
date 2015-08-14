@@ -400,7 +400,7 @@ class UsersController extends \BaseController {
         $user->save();
         
         $source_page = Request::header('referer');
-        ActionUser::printLoginOrLogout($user->id, $source_page, "login", "arquigrafia", "user");
+        ActionUser::printNewAccount($user->id, $source_page, "facebook", "user");
 
         return Redirect::to('/')->with('message', 'Sua conta foi criada com sucesso!');
       }
