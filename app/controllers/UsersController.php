@@ -166,7 +166,7 @@ class UsersController extends \BaseController {
     }else{
 
       $user = User::userInformationObtain($email);
-
+      
       if(!empty($user)){
         $randomPassword = strtolower(Str::quickRandom(8)); 
         $user->password = Hash::make($randomPassword);
