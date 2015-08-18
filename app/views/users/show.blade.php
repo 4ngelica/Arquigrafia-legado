@@ -32,7 +32,7 @@
           
              <!-- Avatar with edit profile -->
 			<?php if (Auth::check() && Auth::user()->id == $user->id) { ?>
-			  <a href= '{{"/users/" . $user->id . "/edit" }}' title="Editar perfil" >
+			  <a href= '{{ url("users/" . $user->id . "/edit") }}' title="Editar perfil" >
 				<?php if ($user->photo != "") { ?>
             	 <img class="avatar" src="{{ asset($user->photo) }}" class="user_photo_thumbnail"/>          
           		<?php } else { ?>
@@ -70,15 +70,14 @@
 
 	          ?>
 	          <b><font size="2"><span  title= "realizou {{$number_assessment}} avaliações" id="dignity"> {{$title}}</span></font></b>       
-	          <table>
-	          	<tr>
-	          		<td><span class="leaderboard"  id"ranking"><b><font size="4">{{$rank}}</font></b></span></td>	
-	          		<td><span title ="{{$counts['Gold']}} gold badges"><span  class="badges_gold"></span><span class="number_badge">{{$counts["Gold"]}}</span></span></td>
-	          		<td> <span title ="{{$counts['Silver']}} silver badges"> <span  class="badges_silver"></span><span class="number_badge">{{$counts["Silver"]}}</span></span></td>
-	          		<td><span title ="{{$counts['Bronze']}} bronze badges"> <span  class="badges_bronze"></span><span class="number_badge">{{$counts["Bronze"]}}</span></span></td>
-	          	</tr>
-
-	         </table> 			
+	          
+            <!-- remoção da tabela -->
+            <div>
+              <span class="leaderboard" id"ranking"><strong>{{$rank}}</strong></span>
+              <span class="badges-counter" title ="{{$counts['Gold']}} gold badges"><span  class="badges_gold"></span><span class="number_badge">{{$counts["Gold"]}}</span></span>
+              <span class="badges-counter" title ="{{$counts['Silver']}} silver badges"> <span  class="badges_silver"></span><span class="number_badge">{{$counts["Silver"]}}</span></span>
+              <span class="badges-counter" title ="{{$counts['Bronze']}} bronze badges"> <span  class="badges_bronze"></span><span class="number_badge">{{$counts["Bronze"]}}</span></span>
+            </div>
 	         
 			 @if ( !empty($user->city) )
 				<p>{{ $user->city }}</p>

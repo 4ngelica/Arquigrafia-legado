@@ -727,14 +727,15 @@ a.tooltip_license span
 .user:hover {background: #eee;}
 .user { vertical-align: top;list-style: none;    line-height: 1; font-family: Helvetica, arial, sans-serif; margin:5pt; }
 
-.leaderboard{cursor: pointer;}
+.leaderboard{cursor: pointer; font-size: 1.2em; color: #000;}
 
 /* badges - dar sempre preferencia a classes e não ids */
 #badges_gold, #badges_silver,#badges_bronze,
-.badges_gold, .badges_silver, .badges_bronze {border-radius:50%;width:6px;height:6px;float:left; margin-top:2px;}
+.badges_gold, .badges_silver, .badges_bronze {border-radius:50%;width:6px;height:6px; display: inline-block; margin-top:2px;}
 #badges_gold, .badges_gold { background:#EFD807; border:2px solid #EFD807; margin-left: 5px;}
 #badges_silver, .badges_silver { background:#CECECE; border:2px solid #CECECE;  }
 #badges_bronze, .badges_bronze { background:#B36700; border:2px solid #B36700;}
 .number_badge, .number_badge , .number_badge{margin-left:3px;}
 #show_gold, #show_silver, #show_bronze,
 .show_gold, .show_silver, .show_bronze {display: block;padding: 5px;width:600px;border: 1px solid black;z-index: 200; display: none;}
+.badges-counter {display: inline-block; margin-right: 6px;}
