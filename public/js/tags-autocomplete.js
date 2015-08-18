@@ -93,18 +93,88 @@ $(document).ready(function() {
     ;
 
 
-  /* $('#workAuthorArea').textext({ plugins: 'tags' });    
+ /////
+//tags material
+$('#tagsMaterial').textext({ plugins : 'autocomplete'}) //input
+    .bind('getSuggestions', function(e, data)
+         {
+            var list = [ 'tijolo','concreto', 'concreto armado', 'vidro'  ],            
+                textext = $(e.target).textext()[0],
+                query = (data ? data.query : '') || ''
+                ;
 
-    $('#addWorkAuthor').click(function(e) {
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }            
+            );                            
+ });
+    $('#tagsMaterialArea').textext({ plugins: 'tags' });
+
+
+    $('#addTagMaterial').click(function(e) {
                 e.preventDefault();
-                var tag = $('#workAuthor').val();
+                var tagMaterial = $('#tagsMaterial').val();
+               // alert(tag);
+                if (tagMaterial == '') return;
+                $('#tagsMaterialArea').textext()[0].tags().addTags([ tagMaterial ]);
+                $('#tagsMaterial').val('');
+    });
+
+ //tags elements
+$('#tagsElements').textext({ plugins : 'autocomplete'}) //input
+    .bind('getSuggestions', function(e, data)
+         {
+            var list = [ 'pilar','coluna', 'pilotis'  ],            
+                textext = $(e.target).textext()[0],
+                query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }            
+            );                            
+    });
+    $('#tagsElementsArea').textext({ plugins: 'tags' });
+
+
+    $('#addTagElements').click(function(e) {
+                e.preventDefault();
+                var tag = $('#tagsElements').val();
                // alert(tag);
                 if (tag == '') return;
-                $('#workAuthorArea').textext()[0].tags().addTags([ tag ]);
-                $('#workAuthor').val('');
-    });   */
+                $('#tagsElementsArea').textext()[0].tags().addTags([ tag ]);
+                $('#tagsElements').val('');
+    });    
+    
+//tags tipology
+$('#tagsTypology').textext({ plugins : 'autocomplete'}) //input
+    .bind('getSuggestions', function(e, data)
+         {
+            var list = ['igreja','catedral','praça','hospital','edificio' ],            
+                textext = $(e.target).textext()[0],
+                query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }            
+            );                            
+    });
+
+    $('#tagsTypologyArea').textext({ plugins: 'tags' });
+    
 
 
+    $('#addTagTypology').click(function(e) {
+                e.preventDefault();
+                var tag = $('#tagsTypology').val();
+               // alert(tag);
+                if (tag == '') return;
+                $('#tagsTypologyArea').textext()[0].tags().addTags([ tag ]);
+                $('#tagsTypology').val('');
+    }); 
+
+////
 
     $(function() {
         $( "#datePickerWorkDate" ).datepicker({
