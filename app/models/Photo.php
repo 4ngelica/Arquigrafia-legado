@@ -319,7 +319,7 @@ class Photo extends Eloquent {
 		return $query->whereNotIn('id', $photos->modelKeys());
 	}
 
-		public function scopeNotInAlbum($album) {
+	public function scopeNotInAlbum($album) {
 		return $query->whereDoesntHave('albums', function ($q) {
 			$q->where('album_id', $album->id);
 		});
@@ -361,29 +361,17 @@ class Photo extends Eloquent {
 	}
 
 	public static function updateOrCreateByTombo($attributes, $basepath) {
-
 		$tombo = $attributes['tombo'];
-
 		$image = ImageManager::find($basepath . '/' . $tombo . '.*');
-
 		$image_extension = ImageManager::getOriginalImageExtension($image);
-
 		$attributes['nome_arquivo'] = $tombo . $image_extension;
-
 		$photo = static::updateOrCreate( array('tombo' => $tombo), $attributes );
-
 		try {
-
-			$photo->saveImages( $photo_file, $image_extension );
-
+			$photo->saveImages( $image, $image_extension );
 		} catch (Exception $e) {
-
 			$photo->delete();
-
 			throw $e;
-
 		}
-
 		return $photo;
 	}
 

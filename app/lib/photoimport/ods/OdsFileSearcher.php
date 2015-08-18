@@ -12,7 +12,7 @@ class OdsFileSearcher {
     $ods_files = array();
     foreach( $this->getAllFiles($root) as $file ) {
       if ( $this->isOds($file) && ! $this->logExists($file) ) {            
-        $ods_files[] = $file;
+        $ods_files[] = $this->newOds($file);
       }
     }
     return $ods_files;
@@ -25,6 +25,10 @@ class OdsFileSearcher {
   public function logExists($file) {
     $file_log = $file->getPathname() . '.log';
     return File::exists($file_log);
+  }
+
+  public function newOds($file) {
+    return new OdsFile($file);
   }
 
 }

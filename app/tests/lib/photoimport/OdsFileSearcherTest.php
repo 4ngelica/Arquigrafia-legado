@@ -29,18 +29,19 @@ class OdsFileSearcherTest extends TestCase {
 
 
   public function testSearchReturnsAllValidOdsFiles() {
-    $searcher = m::mock('lib\photoimport\ods\OdsFileSearcher[getAllFiles]');
+    $searcher = m::mock('lib\photoimport\ods\OdsFileSearcher[getAllFiles, newOds]');
     $root = m::mock('odsFilesRootPath');
 
-    $file1 = m::mock('odsFile');
+    $file1 = m::mock('SplFileInfo');
     $file1->shouldReceive('isFile')->once()->andReturn(true);
     $file1->shouldReceive('getExtension')->once()->andReturn('ods');
     $file1->shouldReceive('getPathname')->once()->andReturn('file_log_doesnt_exist');
 
-    $file2 = m::mock('odsFile');
+    $file2 = m::mock('SplFileInfo');
     $file2->shouldReceive('isFile')->once()->andReturn(true);
     $file2->shouldReceive('getExtension')->once()->andReturn('ods');
     $file2->shouldReceive('getPathname')->once()->andReturn('file_log_exists');
+    
 
     $files = array( $file1, $file2 );
 
@@ -48,6 +49,7 @@ class OdsFileSearcherTest extends TestCase {
     File::shouldReceive('exists')->once()->with('file_log_exists.log')->andReturn(true);
 
     $searcher->shouldReceive('getAllFiles')->with($root)->andReturn($files);
+    $searcher->shouldReceive('newOds')->once()->with($file1)->andReturn($file1);
     $return = $searcher->search($root);
     
     $this->assertEquals( array($file1), $return );
