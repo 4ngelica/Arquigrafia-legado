@@ -15,8 +15,7 @@ class PhotoTest extends TestCase {
 	{
 		try {
   			FactoryMuffin::deleteSaved();
-  			Album::destroy();
-		} catch (Exception $e) {
+  	} catch (Exception $e) {
 			;
 		}
 	}
@@ -37,54 +36,26 @@ class PhotoTest extends TestCase {
 		m::close();
 	}
 
-	/**
-	* @expectedException Intervention\Image\Exception\NotReadableException
-	*/
-	public function testShouldNotMakeImage() {
-		$photo = FactoryMuffin::create('Photo');
-		$photo->makeImage('non_existing_image_path');
-	}
-
-	/**
-	* @expectedException Exception
-	*/
-	public function testShouldRaiseExceptionWithouTombo() {
-		$photo = new Photo;
-		$photo->findImageByTombo('fake_basepath');
-	}
-
 	public function testShouldDeletePhotoAfterException() {
-		$photo_mock = m::mock('Photo');
-
-		$photo = m::mock('Photo[findImageByTombo, getOriginalImageExtension, updateOrCreate]');
-
-		$photo->shouldReceive('findImageByTombo')
-			->with('basepath', 'tombo')
-			->andReturn('image');
-
-		$photo->shouldReceive('getOriginalImageExtension')
-			->andReturn('jpg');
-
-		$photo->shouldReceive('updateOrCreate')
-			->andReturn($photo_mock);
-
-		$photo_mock->shouldReceive('saveImages')
-			->andThrow('Exception');
-
-		$photo_mock->shouldReceive('delete')->once();
-
-		$exceptionRaised = false;
-
+		$photo = FactoryMuffin::create('Photo');
+		ImageManager::shouldReceive('find')->once()->andReturn('image');
+		ImageManager::shouldReceive('getOriginalImageExtension')->once()->andReturn('extension');
+		ImageManager::shouldReceive('makeAll')->once()->andThrow('Intervention\Image\Exception\NotWritableException');
 		try {
-			$photo->updateOrCreateByTombo(
-				array('tombo' => 'tombo'),
+			Photo::updateOrCreateByTombo(
+				array(
+					'tombo' => $photo->tombo,
+					'name' => 'new name'
+				),
 				'basepath'
 			);
 		} catch (Exception $e) {
-			$exceptionRaised = true;
+			$exceptionClass = get_class($e);
 		}
-
-		$this->assertTrue($exceptionRaised);
+		$updatedPhoto = Photo::withTrashed()->whereTombo($photo->tombo)->first();
+		$this->assertEquals('new name', $updatedPhoto->name);
+		$this->assertTrue($updatedPhoto->trashed());
+		$this->assertEquals('Intervention\Image\Exception\NotWritableException', $exceptionClass);
 	}
 
 	public function testShouldUpdateAndRestoreTrashed() {

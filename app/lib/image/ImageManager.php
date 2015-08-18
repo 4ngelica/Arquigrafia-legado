@@ -6,7 +6,11 @@ use File;
 class ImageManager {
 
   public function makeImage($file) {
-    return Image::make($file)->encode('jpg', 80);
+    try {
+      return Image::make($file)->encode('jpg', 80);
+    } catch (Exception $e) {
+      throw new \Exception("Não foi possível ler imagem '{$file}'.");
+    }
   }
 
   public function getOriginalImageExtension($image) {
@@ -33,8 +37,16 @@ class ImageManager {
   }
 
   public function find($pattern) {
-    $file = File::glob( $pattern )[0];
-    return File::isFile($file) ? $this->makeImage($file) : null;
+    $file = $this->getFile($pattern);
+    return $this->makeImage($file);
+  }
+
+  public function getFile($pattern) {
+    $files = File::glob( $pattern );
+    if ( empty($files) || ! File::isFile($files[0]) ) {
+      throw new \Exception("Nenhum arquivo encontrado pelo padrão {$pattern}");
+    }
+    return $files[0];
   }
 
 }

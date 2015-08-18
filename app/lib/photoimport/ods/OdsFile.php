@@ -1,6 +1,8 @@
 <?php namespace lib\photoimport\ods;
 
-class OdsFile extends \SplFileInfo {
+class OdsFile {
+
+  protected $file;
 
   protected $basepath;
 
@@ -10,11 +12,18 @@ class OdsFile extends \SplFileInfo {
 
   protected $logger;
 
-  public function __construct(OdsFileLogger $logger) {
-    $this->logger = $logger;
+  public function __construct(\SplFileInfo $file, OdsFileLogger $logger = null) {
+    $this->file = $file;
+    $this->basepath = $file->getPath();
+    $this->file_name = $file->getFilename();
+    $this->logger = $logger ?: new OdsFileLogger;
   }
 
   public function logPhotoException($exception, $photo) {
+
+  }
+
+  public function logTagException($exception, $tag) {
 
   }
 

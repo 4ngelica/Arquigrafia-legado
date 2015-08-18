@@ -15,7 +15,7 @@ class AlbumTest extends \TestCase {
 	{
 		try {
   			FactoryMuffin::deleteSaved();
-  			Album::destroy();
+  			// Album::destroy();
 		} catch (Exception $e) {
 			;
 		}

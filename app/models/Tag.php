@@ -25,14 +25,16 @@ class Tag extends Eloquent {
     return $photos;
   }
 
-  public function getMany($raw_tags, &$tag_count, $tag_type = null) {
-    $tags = $this->transform($raw_tags);
+  public static function getMany($raw_tags, &$tag_count, $tag_type = null) {
+    $instance = new static;
+    
+    $tags = $instance->transform($raw_tags);
     $tag_count = count($tags);
     $found_tags = array();
     foreach ($tags as $tag_name) {
       if ( !empty($tag_name) ) { 
         try {
-          $tag = $this->getOrCreate($tag_name, $tag_type);
+          $tag = $instance->getOrCreate($tag_name, $tag_type);
           array_push( $found_tags,  $tag);
         } catch (Exception $e) { }
       }
@@ -40,20 +42,21 @@ class Tag extends Eloquent {
     return $found_tags;
   }
 
-  public function getOrCreate($name, $type) {
+  public static function getOrCreate($name, $type) {
     $tag = $this->firstOrNew(['name' => $name]);
     $tag->type = $type;
     $tag->incrementReferences();
     $this->save();    
   }
 
-  public function transform($tags) {
+  public static function transform($tags) {
     if ( is_array($tags) ) {
       return $tags;
     }
     $tags = explode(',', $tags);
     $tags = array_map('trim', $tags);
     $tags = array_map('mb_strtolower', $tags);
+    $tags = array_filter($tags);
     return array_unique($tags);
   }
 
