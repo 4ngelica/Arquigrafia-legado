@@ -73,9 +73,9 @@
 	          <table>
 	          	<tr>
 	          		<td><span class="leaderboard"  id"ranking"><b><font size="4">{{$rank}}</font></b></span></td>	
-	          		<td><span title ="{{$counts['Gold']}} gold badges"><span  id="badges_gold"></span><span class="number_badge">{{$counts["Gold"]}}</span></span></td>
-	          		<td> <span title ="{{$counts['Silver']}} silver badges"> <span  id="badges_silver"></span><span class="number_badge">{{$counts["Silver"]}}</span></span></td>
-	          		<td><span title ="{{$counts['Bronze']}} bronze badges"> <span  id="badges_bronze"></span><span class="number_badge">{{$counts["Bronze"]}}</span></span></td>
+	          		<td><span title ="{{$counts['Gold']}} gold badges"><span  class="badges_gold"></span><span class="number_badge">{{$counts["Gold"]}}</span></span></td>
+	          		<td> <span title ="{{$counts['Silver']}} silver badges"> <span  class="badges_silver"></span><span class="number_badge">{{$counts["Silver"]}}</span></span></td>
+	          		<td><span title ="{{$counts['Bronze']}} bronze badges"> <span  class="badges_bronze"></span><span class="number_badge">{{$counts["Bronze"]}}</span></span></td>
 	          	</tr>
 
 	         </table> 			
