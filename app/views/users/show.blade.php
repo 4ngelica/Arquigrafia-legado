@@ -375,7 +375,7 @@
 		<div class="twelve columns albums">
 				<hgroup class="profile_block_title">
 					<h3><img src="{{ asset("img/badge.png") }}" width="16" height="16"/>
-						Badges <font color="#BBBFBE">({{$user->badges->count()}})</font></h3>
+						Badges ({{$user->badges->count()}})</h3>
 				</hgroup>
 				<div class="profile_box">
 				<!--	<table>
