@@ -52,8 +52,8 @@
           <li><small><a href="http://lattes.cnpq.br/7471111924336519" target="_blank">Prof. Dr. Magnos Martinello - Informática UFES</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/3498148304153540" target="_blank">Prof. Dr. Juliano Maranhão - FDUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/4531433505351729" target="_blank">Profa. Dra. Vania Mara Alves Lima - ECAUSP</a></small></li>
-          <li><small><a href="http://lattes.cnpq.br/8548608291351316" target="_blank">Profa. Dra. Renata Wassermann - IMEUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/0348490713417429" target="_blank">Profa. Dra. Leliane Nunes de Barros - IMEUSP</a></small></li>
+          <li><small><a href="http://lattes.cnpq.br/8548608291351316" target="_blank">Profa. Dra. Renata Wassermann - IMEUSP</a></small></li>          
           <li><small><a href="http://www.usp.br/fau/fau/secoes/biblio/index.html" target="_blank">Dina Uliana - Diretora biblioteca FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/4131992141506749" target="_blank">Eliana de Azevedo Marques - Biblioteca FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/7542993440465891" target="_blank">Elizabete da Cruz Neves - Biblioteca FAUUSP</a></small></li>
