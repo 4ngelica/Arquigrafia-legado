@@ -493,7 +493,8 @@
 
 
 	$(document).ready(function() {
-		if({{Input::old('autoOpenModal','false')}}){ 					
+		if({{Input::old('autoOpenModal','false')}}){ 	
+					
 			$( "#dialog-confirm" ).html("<b>Cadastro de imagem realizado com sucesso!</b> <br><br> Gostaria de utilizar os dados da imagem cadastrada para o próximo upload?");
 			 $( "#dialog-confirm" ).dialog({
 				resizable: false,
@@ -509,14 +510,31 @@
 					}
 				}
 			}); 
-		  }
+		}
 
-		
+		/* //if({{Input::old('autoOpenModal','false')}}){ */
+		@if(Input::old('tagsArea')!= null)	
+			
+			var tagsArea = {{"'".Input::old('tagsArea') ."'"}}.split(',');
+			showTags(tagsArea,$('#tagsArea'),$('#tags_input'));
+			
+			var tagsMaterialArea = {{"'".Input::old('tagsMaterialArea') ."'"}}.split(',');
+			showTags(tagsMaterialArea,$('#tagsMaterialArea'),$('#tagsMaterial'));
+
+			var tagsElementsArea = {{"'".Input::old('tagsElementsArea') ."'"}}.split(',');
+			showTags(tagsElementsArea,$('#tagsElementsArea'),$('#tagsElements'));
+
+			var tagsTypologyArea = {{"'".Input::old('tagsTypologyArea') ."'"}}.split(',');
+			showTags(tagsTypologyArea,$('#tagsTypologyArea'),$('#tagsTypology'));
+		@else
+			showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));
+			showTags({{json_encode($tagsMaterialArea)}},$('#tagsMaterialArea'),$('#tagsMaterial'));
+			showTags({{json_encode($tagsElementsArea)}},$('#tagsElementsArea'),$('#tagsElements'));
+			showTags({{json_encode($tagsTypologyArea)}},$('#tagsTypologyArea'),$('#tagsTypology'));
+		@endif
+
 		/* Methods to be called when all html document be ready */
-		showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));
-		showTags({{json_encode($tagsMaterialArea)}},$('#tagsMaterialArea'),$('#tagsMaterial'));
-		showTags({{json_encode($tagsElementsArea)}},$('#tagsElementsArea'),$('#tagsElements'));
-		showTags({{json_encode($tagsTypologyArea)}},$('#tagsTypologyArea'),$('#tagsTypology'));
+		
    });
 </script>
 
