@@ -38,7 +38,7 @@ $(document).ready(function() {
 
 
 //tags
-    $('#tags_input').textext({ plugins : 'autocomplete'})
+    /*$('#tags_input').textext({ plugins : 'autocomplete'})
 
     .bind('getSuggestions', function(e, data)
          {
@@ -51,7 +51,20 @@ $(document).ready(function() {
                 'setSuggestions',
                 { result : textext.itemManager().filter(list, query) }            
             );                            
-    });
+    }); */
+
+    $('#tags_input').textext({ plugins : 'autocomplete ajax',
+            ajax : {
+                url : '/js/tagList.json',
+                dataType : 'json',
+                cacheResults : true
+            }
+        })
+    ;
+
+
+
+
     $('#tagsArea').textext({ plugins: 'tags' });
 
     
