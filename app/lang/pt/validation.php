@@ -90,6 +90,7 @@ return array(
         ),
     ), */
     'custom' => array(
+
         //To photo
         'photo_name' => array(
             'required' => 'É obrigatório inserir um valor para o título da imagem.',
@@ -155,6 +156,32 @@ return array(
         'password' => array(
             'confirmed' => 'A confirmação para o campo senha não coincide.',
         ),
+         'tagsArea' => array(
+            'required' => 'É obrigatório inserir um valor para tags.',
+        ),
+        'tagsTypologyArea' => array(
+            'required' => 'É obrigatório inserir um valor para tags de tipologia.',
+        ),        
+        'tagsElementsArea' => array(
+            'required' => 'É obrigatório inserir um valor para tags de elementos.',
+        ),
+        'tagsMaterialArea' => array(
+            'required' => 'É obrigatório inserir um valor para tags de materiais.',
+        ),
+        'support' => array(
+            'required' => 'É obrigatório inserir um valor para o campo suporte.',
+        ),
+        'tombo' => array(
+            'required' => 'É obrigatório inserir um valor para o campo tombo.',
+        ),
+        'subject' => array(
+            'required' => 'É obrigatório inserir um valor para o campo assunto.',
+        ),
+        
+        'characterization' => array(
+            'required' => 'É obrigatório inserir um valor para o campo de caracterização.',
+        ),
+        
 
         
     ), 

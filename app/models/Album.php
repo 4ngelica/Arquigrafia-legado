@@ -4,7 +4,7 @@ class Album extends \BaseModel {
 
 	public $timestamps = false;
 
-	protected $fillable = ['creationDate', 'description', 'title', 'cover_id', 'user_id'];
+	protected $fillable = ['creationDate', 'description', 'title', 'cover_id', 'user_id','institution_id'];
 
 	protected $rules = [
 		'title' => 'required'
@@ -25,19 +25,30 @@ class Album extends \BaseModel {
 		return $this->belongsTo('Photo', 'cover_id');
 	}
 
+	public function institution()
+	{
+		return $this->belongsTo('Institution');
+	}
+
 	public function updateInfo($title, $description, $cover) {
 		$this->title = $title;
 		$this->description = $description;
 		if (isset($cover)) {
 			$this->cover()->associate($cover);
 		}
+		
 	}
 
 	public static function create(array $attr) {
+		//dd($attr['user']);
 		$album = new Album;
 		$album->updateInfo($attr['title'], $attr['description'], $attr['cover']);
 		$album->creationDate = date('Y-m-d H:i:s');
 		$album->user()->associate($attr['user']);
+		 
+		if ( array_key_exists('institution',$attr) && !empty($attr['institution']) ) {
+			$album->institution()->associate($attr['institution']);
+		}		
 		$album->save();
 		return $album;
 	}
@@ -56,6 +67,7 @@ class Album extends \BaseModel {
 	}
 
 	public function attachPhotos($photos = array()) {
+		Log::info("log of attachPhotos");
 		if ($photos instanceof Photo) {
 			$this->photos()->attach($photos->id);
 		} else {
@@ -74,5 +86,11 @@ class Album extends \BaseModel {
 	public function hasCover() {
 		return !is_null($this->cover);
 	}
+
+	public function showAlbumsInstitutional($institution){
+		return Album::where("institution_id", $institution->id)->get();     	
+	}
+
+
 
 }

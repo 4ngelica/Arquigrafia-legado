@@ -1,6 +1,6 @@
-  @extends('layouts.default')
+@extends('layouts.default')
 
-  @section('head')
+@section('head')
 
   <title>Arquigrafia - {{ $photos->name }}</title>
 
@@ -60,6 +60,7 @@
   <script type="text/javascript" src="{{ URL::to("/") }}/js/jquery.fancybox.pack.js"></script>
   <script type="text/javascript" src="{{ URL::to("/") }}/js/photo.js"></script>
 @stop
+
 @section('content')
 
   @if (Session::get('message'))
@@ -227,7 +228,7 @@
               </div>
               <div class="four columns omega row">
                 <small id={{"$comment->id"}}>
-                  <a href={{"/users/" . $comment->user->id}}>{{ $comment->user->name }}</a> - {{ $comment->created_at->format('d/m/Y h:m') }}
+                  <a href={{"/users/" . $comment->user->id}}>{{ $comment->user->name }}</a> - {{ $comment->created_at->format('d/m/Y h:i') }}
                   <!--<img src="{{ URL::to("/") }}/img/commentNB.png" / ><small class='likes'>{{ $comment->likes->count() }}</small>-->
                 </small>
                 <p>{{ $comment->text }}</p>
@@ -292,11 +293,15 @@
           @endif
         </a>
         <h1 id="single_view_owner_name"><a href="{{ URL::to("/users/".$owner->id) }}" id="name">{{ $owner->name }}</a></h1>
-        @if ( $owner->equal(Auth::user()) )
+        @if ( !$owner->equal(Auth::user()) )
           @if (!empty($follow) && $follow == true )
             <a href="{{ URL::to("/friends/follow/" . $owner->id) }}" id="single_view_contact_add">Seguir</a><br />
           @else
-            <div>Seguindo</div>
+            <div id="unfollow-button">
+              <a href="{{ URL::to("/friends/unfollow/" . $owner->id) }}">
+                  <p class="label success new-label"><span>Seguindo</span></p>
+              </a>
+            </div>
           @endif
         @endif
       </div>
@@ -306,9 +311,15 @@
         <h3><i class="info"></i> Informações</h3>
           &nbsp; &nbsp;
         @if ($owner->equal(Auth::user()))
+          @if(Session::get('institutionId'))
+          <a href= '{{"/photos/" . $photos->id . "/editInstitutional" }}' title="Editar informações da imagem">
+          <img src="{{ asset("img/edit.png") }}" width="16" height="16"/>
+          </a>
+          @else
           <a href= '{{"/photos/" . $photos->id . "/edit" }}' title="Editar informações da imagem">
           <img src="{{ asset("img/edit.png") }}" width="16" height="16"/>
           </a>
+          @endif
         @endif
       </hgroup>
 
@@ -475,23 +486,22 @@
       @endif
     <!--   FIM - SIDEBAR   -->
     </div>
-
+  </div>
     <!--   MODAL   -->
-    <div id="mask"></div>
-    <div id="form_window" class="form window">
-      <a class="close" href="#" title="FECHAR">Fechar</a>
-      <div id="registration"></div>
-    </div>
-    <div id="confirmation_window" class="window">
-      <div id="registration_delete">
-        <p></p>
-        {{ Form::open(array('url' => '', 'method' => 'delete')) }}
-          <div id="registration_buttons">
-            <input type="submit" class="btn" value="Confirmar" />
-            <a class="btn close" href="#">Cancelar</a>
-          </div>
-        {{ Form::close() }}
-      </div>
+  <div id="mask"></div>
+  <div id="form_window" class="form window">
+    <a class="close" href="#" title="FECHAR">Fechar</a>
+    <div id="registration"></div>
+  </div>
+  <div id="confirmation_window" class="window">
+    <div id="registration_delete">
+      <p></p>
+      {{ Form::open(array('url' => '', 'method' => 'delete')) }}
+        <div id="registration_buttons">
+          <input type="submit" class="btn" value="Confirmar" />
+          <a class="btn close" href="#">Cancelar</a>
+        </div>
+      {{ Form::close() }}
     </div>
   </div>
   <script src="http://code.highcharts.com/highcharts.js"></script>

@@ -1,6 +1,9 @@
 function markRead(object) {
-    object.parentElement.parentElement.className = "notes";
     var id = object.parentElement.parentElement.id;
+    var notes = document.getElementsByClassName(id);
+    for (i = 0; i < notes.length; i++) {
+        notes[i].className = "notes " + id;
+    }
     var url = "/markRead/".concat(id);
     $.get(url)
         .done(function( data ) {
@@ -37,6 +40,17 @@ function refreshBubbleCounter() {
             if (data > 0) bubble.innerHTML = data;
             else bubble.style.display = "none"; 
         })
+}
+
+function toggleNotes(){
+    var notes_box = document.getElementById("notes-box");
+    if(notes_box.style.opacity == 1){
+        notes_box.style.opacity = 0;
+        notes_box.style.display = "none"; // remove it from active screen space
+    } else {
+        notes_box.style.display = "block"; // return it to active screen space
+        notes_box.style.opacity = 1;
+    }
 }
 
 $(document).ready(function() {

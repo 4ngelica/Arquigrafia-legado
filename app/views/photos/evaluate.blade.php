@@ -443,7 +443,7 @@
 
               </div>
               <div class="four columns omega row">
-                <small>{{$comment->user->name}} - {{$comment->created_at->format('d/m/Y h:m') }}</small>
+                <small>{{$comment->user->name}} - {{$comment->created_at->format('d/m/Y h:i') }}</small>
                 <p>{{ $comment->text }}</p>
               </div>        
             </div>       

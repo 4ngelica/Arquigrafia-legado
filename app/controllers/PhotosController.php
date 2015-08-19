@@ -2,13 +2,17 @@
 //add
 use lib\utils\ActionUser;
 use Carbon\Carbon;
+use lib\date\Date;
 
 class PhotosController extends \BaseController {
 
-  public function __construct()
+  protected $date;
+
+  public function __construct(Date $date = null)
   {
     $this->beforeFilter('auth',
       array( 'except' => ['index','show'] ));
+    $this->date = $date ?: new Date; 
   }
 
   public function index()
@@ -77,25 +81,410 @@ class PhotosController extends \BaseController {
 
   }
 
- public function newForm()
+
+
+
+
+  public function newForm()
   {  
     $user_id = Auth::user()->id;
-    //echo "=>".Session::get('institutionId');
-    
-    //$data = Session::all();
-    //dd($data);
-    $tags = null;
-    if ( Session::has('tags') )
-    {
-      $tags = Session::pull('tags');
-      $tags = explode(',', $tags);
+    $albumsInstitutional = NULL;
+
+    if(Session::has('institutionId')){
+      $institution = Institution::find(Session::get('institutionId'));
+      $this->album = new Album();
+      $albumsInstitutional = $this->album->showAlbumsInstitutional($institution);
     }
-    return View::make('/photos/newform')->with(['tags', $tags]);
+
+    $pageSource = Request::header('referer');
+    
+    $tagsArea = null;
+    $workAuthorInput = null;
+
+    $tagsMaterialArea = null;
+    $tagsElementsArea = null;
+    $tagsTypologyArea = null;
+
+    if ( Session::has('tagsArea') )
+    {  
+      $tagsArea = Session::pull('tagsArea');
+      $tagsArea = explode(',', $tagsArea); 
+    }
+    if ( Session::has('workAuthorInput') )
+    {  
+      $workAuthorInput = Session::pull('workAuthorInput');
+      
+    }
+     if ( Session::has('tagsMaterialArea') )
+    {  
+      $tagsMaterialArea = Session::pull('tagsMaterialArea');
+      $tagsMaterialArea = explode(',', $tagsMaterialArea); 
+    }
+    if ( Session::has('tagsElementsArea') )
+    {  
+      $tagsElementsArea = Session::pull('tagsElementsArea');
+      $tagsElementsArea = explode(',', $tagsElementsArea); 
+    }
+    if ( Session::has('tagsTypologyArea') )
+    {  
+      $tagsTypologyArea = Session::pull('tagsTypologyArea');
+      $tagsTypologyArea = explode(',', $tagsTypologyArea); 
+    }
+
+    $input['autoOpenModal'] = null;  
+    /* */
+    return View::make('/photos/newform')->with(['tagsArea'=> $tagsArea,
+       'workAuthorInput' => $workAuthorInput,
+       'tagsMaterialArea' => $tagsMaterialArea ,
+      'tagsElementsArea' => $tagsElementsArea,
+      'tagsTypologyArea' => $tagsTypologyArea,
+      'pageSource'=>$pageSource, 'user'=>Auth::user(), 
+      'institution'=>$institution,
+      'albumsInstitutional'=>$albumsInstitutional,
+      'autoOpenModal'=>$input['autoOpenModal'] 
+      ]);
+  }
+
+  public static function formatTags($tagsType){
+    $tagsType = array_map('trim', $tagsType);
+    $tagsType = array_map('mb_strtolower', $tagsType); 
+    $tagsType = array_unique($tagsType);    
+    return $tagsType;
+  }
+
+  public static function SaveTags($tags,$photo,$typeTags){
+    
+    try{
+          foreach ($tags as $t) {
+              $tag = Tag::where('name', $t)->first();
+              if(is_null($tag)){
+                $tag = new Tag();
+                $tag->name = $t;
+                $tag->save();
+              }
+
+              $photo->tags()->attach($tag->id);
+              if($typeTags == 'material'){
+                $tag->type = 'Material';
+              }elseif ($typeTags == 'elements') {
+                $tag->type = 'Elements';
+              }else{
+                $tag->type = 'Typology';
+              }
+
+              if($tag->count == null)
+                  $tag->count = 0;
+              $tag->count++;
+              $tag->save();    
+          }
+          $saved = true;
+
+          }catch(PDOException $e){
+            Log::error("Logging exception, error to register tags");           
+            $saved = false;
+          }
+      return $saved;  
   }
 
 
+  public function saveFormInstitutional() {   
+    Input::flashExcept('tagsArea','tagsTypologyArea','tagsElementsArea','tagsMaterialArea', 'photo','workAuthor'); //tagsTypology tagsElements tagsMaterial
+   // Input::flashExcept('tagsArea', 'photo','workAuthor');
+
+    $input = Input::all();
+     
+    if (Input::has('tagsArea') && Input::has('tagsTypologyArea') && Input::has('tagsElementsArea') && Input::has('tagsMaterialArea') ){
+      $input["tagsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsArea"]);    
+      $input["tagsMaterialArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsMaterialArea"]);
+      $input["tagsElementsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsElementsArea"]);
+      $input["tagsTypologyArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsTypologyArea"]); 
+    
+    }else{
+      $input["tagsArea"] = '';
+      $input["tagsMaterialArea"] = '';
+      $input["tagsElementsArea"] = '';
+      $input["tagsTypologyArea"] = ''; 
+    } 
+
+    /*if (Input::has('tagsArea')){
+      $input["tagsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsArea"]); 
+    }else{
+      $input["tagsArea"] = '';
+    } */  
+
+    if (Input::has('workAuthor')){
+      //dd($input["workAuthor"] );
+      $input["workAuthor"] = str_replace(array('\'', '"'), '', $input["workAuthor"]);       
+    }    
+
+    if(Session::has('institutionId')){     
+      $rules = array(
+      'support' => 'required',
+      'tombo' => 'required',
+      'subject' => 'required',      
+      'hygieneDate' => 'date_format:"d/m/Y"',
+      'backupDate' => 'date_format:"d/m/Y"',
+      'characterization' => 'required',
+      
+      'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',
+      'name' => 'required',
+      'tagsArea' => 'required',
+      'tagsMaterialArea' => 'required',
+      'tagsElementsArea' => 'required',
+      'tagsTypologyArea' => 'required', 
+      'country' => 'required',
+      'imageAuthor' => 'required'     
+      
+      //'photo_workDate' => 'date_format:"d/m/Y"',
+      //'photo_imageDate' => 'date_format:"d/m/Y"'
+      );
+
+
+    }else{
+      $rules = array(
+      'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',
+      'name' => 'required',
+      'tagsArea' => 'required',
+      'tagsMaterialArea' => 'required',
+      'tagsElementsArea' => 'required',
+      'tagsTypologyArea' => 'required',
+      'country' => 'required',
+      'imageAuthor' => 'required',
+      'authorization_checkbox' => 'required'
+        );
+    }
+
+  $validator = Validator::make($input, $rules);
+
+  if ($validator->fails()) { 
+      $messages = $validator->messages();
+      
+      return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'], 
+        'tagsMaterialArea' => $input['tagsMaterialArea'],'tagsElementsArea' => $input['tagsElementsArea'],
+        'tagsTypologyArea' => $input['tagsTypologyArea'],
+        'workAuthorInput'=>$input["workAuthor"]
+        ])->withErrors($messages); 
+      /*return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'] ,
+        'workAuthorInput'=>$input["workAuthor"]        
+        ])->withErrors($messages); */
+
+    }else{ 
+      
+      if(Input::hasFile('photo') and Input::file('photo')->isValid()) {
+        $file = Input::file('photo');
+          $photo = new Photo();
+          $photo->nome_arquivo = $file->getClientOriginalName();
+
+          if(Session::has('institutionId')){
+            $photo->support = $input["support"];
+            $photo->tombo = $input["tombo"];
+            $photo->subject = $input["subject"];
+            if ( !empty($input["hygieneDate"]) )
+              $photo->hygieneDate = $this->date->formatDate($input["hygieneDate"]);
+            if ( !empty($input["backupDate"]) )
+              $photo->backupDate = $this->date->formatDate($input["backupDate"]);
+            $photo->characterization = $input["characterization"];
+            $photo->cataloguingTime = date('Y-m-d H:i:s');
+            $photo->UserResponsible = $input["userResponsible"];
+          }
+          $photo->name = $input["name"];
+          if ( !empty($input["description"]) )
+               $photo->description = $input["description"];
+          if ( !empty($input["workAuthor"]) )
+          $photo->workAuthor = $input["workAuthor"];
+          if ( !empty($input["workDate"]) )
+            $photo->workdate = $input["workDate"];
+
+          $photo->country = $input["country"];
+          if ( !empty($input["state"]) )
+            $photo->state = $input["state"];
+          if ( !empty($input["city"]) )
+              $photo->city = $input["city"];
+          if ( !empty($input["street"]) )
+               $photo->street = $input["street"];
+          if ( !empty($input["imageAuthor"]) )
+              $photo->imageAuthor = $input["imageAuthor"];
+          if ( !empty($input["imageDate"]) )
+              $photo->dataCriacao = $input["imageDate"];
+          if ( !empty($input["observation"]) )  
+              $photo->observation = $input["observation"];
+
+          if ( !empty($input["aditionalImageComments"]) )
+              $photo->aditionalImageComments = $input["aditionalImageComments"];
+          $photo->allowCommercialUses = $input["allowCommercialUses"];
+          $photo->allowModifications = $input["allowModifications"];
+
+          $photo->user_id = Auth::user()->id;
+          $photo->dataUpload = date('Y-m-d H:i:s');
+          $photo->institution_id = Session::get('institutionId');
+          $photo->save();
+          
+          $ext = $file->getClientOriginalExtension();
+          $photo->nome_arquivo = $photo->id.".".$ext;
+
+          $photo->save();
+          
+          $tagsCopy = $input['tagsArea'];
+          $tagsCopyMaterial = $input['tagsMaterialArea'];
+          $tagsCopyElements = $input['tagsElementsArea'];
+          $tagsCopyTypology = $input['tagsTypologyArea'];
+
+          $tags = explode(',', $input['tagsArea']);
+          $tagsMaterial = explode(',', $input['tagsMaterialArea']);
+          $tagsElements = explode(',', $input['tagsElementsArea']);
+          $tagsTypology = explode(',', $input['tagsTypologyArea']);
+      
+          if (!empty($tags) && !empty($tagsMaterial)  && !empty($tagsElements) && 
+            !empty($tagsTypology) ) { 
+          /*if (!empty($tags)) { */
+              $tags = static::formatTags($tags);
+              $tagsMaterial = static::formatTags($tagsMaterial);
+              $tagsElements = static::formatTags($tagsElements);
+              $tagsTypology = static::formatTags($tagsTypology);
+
+              $tagsSaved = static::SaveTags($tags,$photo,'general');
+
+              $tagsMaterialSaved = static::SaveTags($tagsMaterial,$photo,'material');
+              $tagsElementsSaved = static::SaveTags($tagsElements,$photo,'elements');
+              $tagsTypologySaved = static::SaveTags($tagsTypology,$photo,'typology'); 
+
+              if(!$tagsSaved || !$tagsSaved || !$tagsElementsSaved || !$tagsTypologySaved){    
+              /*if(!$tagsSaved){ */
+                  $photo->forceDelete();
+                  $messages = array('tagsArea'=>array('Inserir pelo menos uma tag'),'tagsMaterialArea'=>array('Inserir pelo menos uma tag material'),
+                    'tagsElementsArea'=>array('Inserir pelo menos uma tag de elementos'),'tagsTypologyArea'=>array('Inserir pelo menos uma tag tipologia')
+                    );
+                  //$messages = array('tagsArea'=>array('Inserir pelo menos uma tag') );
+
+                  return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'], 
+                 'tagsMaterialArea' => $input['tagsMaterialArea'],'tagsElementsArea' => $input['tagsElementsArea'],
+                 'tagsTypologyArea' => $input['tagsTypologyArea']])->withErrors($messages);
+
+                  //return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea']])->withErrors($messages);
+              }
+
+            }
+
+           //add Album
+           /* if (Input::has("albums_institution")) {              
+                $album = new Album();
+                $album->id = $input["albums_institution"];
+                $album->attachPhotos($photo->id);               
+            }*/
+           
+          $input['autoOpenModal'] = 'true';  
+
+          $sourcePage = $input["pageSource"]; //get url of the source page through form
+          ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "Upload", "user");
+          ActionUser::printTags($photo->user_id, $photo->id, $tagsCopy, $sourcePage, "user", "Inseriu");
+          
+          $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
+
+          $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
+          $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
+          $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
+          $file->move(public_path().'/arquigrafia-images', $photo->id."_original.".strtolower($ext)); // original
+
+          $photo->saveMetadata(strtolower($ext));
+          
+          $input['photoId'] = $photo->id; //dd($input);
+          //return Redirect::to("/photos/{$photo->id}");
+          return Redirect::back()->withInput($input);
+        
+
+      }else{
+         $messages = $validator->messages();
+          return Redirect::to('/photos/newUpload')->withErrors($messages);
+      }
+  
+    }
+
+  } 
+  /* Edição do formulario institutional*/
+  public function editFormInstitutional($id) {
+    $photo = Photo::find($id);
+    $logged_user = Auth::User();
+
+    if ($logged_user == null) {
+      return Redirect::action('PagesController@home');
+    }elseif ($logged_user->id == $photo->user_id) { 
+      $institution = null;
+    if(Session::has('institutionId')){
+      $institution = Institution::find(Session::get('institutionId'));
+      //$this->album = new Album();
+      //$albumsInstitutional = $this->album->showAlbumsInstitutional($institution);
+    }
+
+    if (Session::has('tagsArea'))
+    {
+      $tagsArea = Session::pull('tagsArea');
+      $tagsArea = explode(',', $tagsArea);
+    } else {
+      $tagsArea = $photo->tags->lists('name');
+    }
+
+    if ( Session::has('tagsMaterialArea') )
+    {  
+      $tagsMaterialArea = Session::pull('tagsMaterialArea');
+      $tagsMaterialArea = explode(',', $tagsMaterialArea); 
+    }else {
+      //$tagsMaterialArea = $photo->tags->lists('name','Type = "Typology"'); //->list('name','type');
+      //$tagsMaterialArea = $photo->tagsType("Material");
+      $tagsMaterialArea = $photo->tags;
+
+      $new = $tagsMaterialArea->filter(function ($tags) {
+            if($tags->type == 'Material'){
+                return TRUE;
+            }else{
+              return FALSE;
+            }
+
+           // return $key = "Type";
+          });
+
+      print_r($new); die();
+    }
+
+    if ( Session::has('tagsElementsArea') )
+    {  
+      $tagsElementsArea = Session::pull('tagsElementsArea');
+      $tagsElementsArea = explode(',', $tagsElementsArea); 
+    }else {
+      $tagsElementsArea = $photo->tags->lists('name');
+    }
+
+    if ( Session::has('tagsTypologyArea') )
+    {  
+      $tagsTypologyArea = Session::pull('tagsTypologyArea');
+      $tagsTypologyArea = explode(',', $tagsTypologyArea); 
+    }else {
+      $tagsTypologyArea = $photo->tags->lists('name');
+    }
+
+    if ( Session::has('workAuthorInput') )
+    {  
+      $workAuthorInput = Session::pull('workAuthorInput');      
+    }else{
+      $workAuthorInput = "";
+    }
+  
+    return View::make('photos.edit-institutional')
+      ->with(['photo' => $photo, 'tagsArea' => $tagsArea,
+          'tagsMaterialArea' => $tagsMaterialArea,
+          'tagsElementsArea' => $tagsElementsArea,
+          'tagsTypologyArea' => $tagsTypologyArea,
+          'institution'=>$institution,
+          'workAuthorInput' => $workAuthorInput,
+          'user'=>$logged_user
+        ] );
+
+    }
+    
+    return Redirect::action('PagesController@home');  
+  }
 
   public function store() {
+
 
   Input::flashExcept('tags', 'photo');
 
@@ -280,13 +669,13 @@ class PhotosController extends \BaseController {
         $user_note = User::find($photo->user_id);
         foreach ($user_note->notifications as $notification) {
         $info = $notification->render();
-        if ($info[0] == "comment_posted" && $info[2] == $photo->id) {
+        if ($info[0] == "comment_posted" && $info[2] == $photo->id && $notification->read_at == null) {
           $note_id = $notification->notification_id;
           $note_user_id = $notification->id;
           $note = $notification;
         }
       }
-      if (isset($note_id) && $note->read_at == null) {
+      if (isset($note_id)) {
         $note_from_table = DB::table("notifications")->where("id","=", $note_id)->get();
         if (NotificationsController::isNotificationByUser($user->id, $note_from_table[0]->sender_id, $note_from_table[0]->data) == false) {
           $new_data = $note_from_table[0]->data . ":" . $user->id;

@@ -14,34 +14,29 @@
 @stop
 
 @section('content')
-@if (Session::get('msgWelcome'))
-      <div class="container">
-        <div class="twelve columns">
-          <div class="message">{{ Session::get('msgWelcome') }}</div>
-        </div>
+  @if (Session::get('msgWelcome'))
+    <div class="container">
+      <div class="twelve columns">
+        <div class="message">{{ Session::get('msgWelcome') }}</div>
       </div>
-    @endif
-    <!--   MEIO DO SITE - ÁREA DE NAVEGAÇÃO   -->
-    <div id="content">
-    
-      <!--   PAINEL DE IMAGENS - GALERIA - CARROSSEL   -->  
-      <div class="wrap">
-        <div id="panel">
-          
-          @include('includes.panel')
-          
-        </div>
-        <div class="panel-back"></div>
-        <div class="panel-next"></div>
-      </div>
-      <!--   FIM - PAINEL DE IMAGENS  -->
-
     </div>
-    <!--   FIM - MEIO DO SITE   -->
-
+  @endif
+  <!--   MEIO DO SITE - ÁREA DE NAVEGAÇÃO   -->
+  <div id="content">
+  
+    <!--   PAINEL DE IMAGENS - GALERIA - CARROSSEL   -->  
+    <div class="wrap">
+      <div id="panel"> 
+        @include('includes.panel')
+      </div>
+      <div class="panel-back"></div>
+      <div class="panel-next"></div>
+    </div>
+    <!--   FIM - PAINEL DE IMAGENS  -->
 
   </div>
-  <!--   FIM - CONTAINER   -->
+  <!--   FIM - MEIO DO SITE   -->
+
   <!--   MODAL   -->
     <div id="mask"></div>
     <div id="form_window" class="form window">

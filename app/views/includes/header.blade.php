@@ -36,29 +36,36 @@
 
       
         <!--   ÁREA DO USUARIO   -->
-        @if(Session::get('institutionId'))
-        <div id="loggin_area_institutional">
-        @else
+
+<!--        <div id="loggin_area_institutional">-->
+        
         <div id="loggin_area">
-        @endif
+        
         <?php if (Auth::check()) { ?>
          
 
-          @if(Session::get('institutionId'))           
+          @if(!Session::get('institutionId'))           
+          
+        
+          
+          <a id="user_name" href="{{ URL::to("/users") }}/{{ Auth::user()->id; }}">{{ Auth::user()->name; }}</a>
+          @endif
+
+          @if(!Session::get('institutionId'))
+          <a id="user_photo" href="{{ URL::to("/users") }}/{{ Auth::user()->id; }}">
+            
+            <?php if (Auth::user()->photo != "") { ?>
+              <img  src="{{ asset(Auth::user()->photo); }}" class="user_photo_thumbnail"/>
+            <?php } else { ?>
+              <img src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" class="user_photo_thumbnail"/>
+            <?php } ?>
+            
+          </a>
+          @else
           <a id="user_photo" href="">          
             <img src="{{ URL::to("/") }}/img/avatar-institution.png" width="48" height="48" class="user_photo_thumbnail"/>
           </a>
           @endif
-          <a id="user_name" href="{{ URL::to("/users") }}/{{ Auth::user()->id; }}">{{ Auth::user()->name; }}</a>
-          
-          <a id="user_photo" href="{{ URL::to("/users") }}/{{ Auth::user()->id; }}">
-          <?php if (Auth::user()->photo != "") { ?>
-            <img  src="{{ asset(Auth::user()->photo); }}" class="user_photo_thumbnail"/>
-          <?php } else { ?>
-            <img src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" class="user_photo_thumbnail"/>
-          <?php } ?>
-          </a>
-
 
           <a href="{{ URL::to("/users/logout/") }}" id="logout" class="btn">SAIR</a><br />
           <ul id="logged_menu">
@@ -70,7 +77,11 @@
               @endif
             @endif
             <!-- <li><a href="#" id="comunities" title="Comunidades">&nbsp;</a></li> -->
+            @if(Session::get('institutionId'))
+            <li><a href="{{ URL::to("/photos/newUpload") }}" name="modal" id="upload" title="Enviar uma imagem">&nbsp;</a></li>
+            @else
             <li><a href="{{ URL::to("/photos/upload") }}" name="modal" id="upload" title="Enviar uma imagem">&nbsp;</a></li>
+            @endif
             <!-- <li><a href="#" id="messages" title="Você tem 19 mensagens">&nbsp;</a></li> -->
 
             <li>
@@ -80,17 +91,33 @@
                   if ($notesCounter != 1) $title = "Você tem " . $notesCounter . " notificações não lidas";
                   else $title = "Você tem " . $notesCounter . " notificação não lida"; 
                 ?>
-                <a href="{{ URL::to("/notifications") }}" id="notification" title="{{$title}}">&nbsp;</a>
+                <a onclick="toggleNotes()" id="notification" title="{{$title}}">&nbsp;</a>
                 @if ($notesCounter > 0) <div id="bubble"> {{$notesCounter}} </div>  @endif
               </div>
             </li>
 
-            
           <!-- <li><a href="{{ URL::to("/badges") }}" id="badge" title="Vizualizar badges">&nbsp;</a></li>-->
           
 
           </ul>
-         
+          
+          <div id="notes-box">
+            <div id="notes-header">
+              <p id="box-title"> Notificações </p>
+              <p id="read-all"><a onclick="readAll()"> Marcar todas como lidas </a></p>
+            </div>
+            <div id="notes-container">
+              @if(Auth::user()->notifications->isEmpty())
+                <p id="no-notes">Você não possui notificações</p>
+              @else
+                @include("includes.notes", ['user' => Auth::user(), 'max' => 5])
+              @endif
+            </div>
+            <div id="notes-footer">
+              <p><a href="{{ URL::to("/notifications") }}">Ver todas</a></p>
+            </div>
+          </div>
+
         <?php } else { ?>
         
           <!--   BOTÃO DE LOGIN   -->

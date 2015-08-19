@@ -53,13 +53,19 @@
 				<p>{{ $user->city }}</p>
 			  @endif
 
-			  @if (Auth::check() && $user->id != Auth::user()->id)
+			@if (Auth::check() && $user->id != Auth::user()->id)
     			@if (!empty($follow) && $follow == true )
 	    			<a href="{{ URL::to("/friends/follow/" . $user->id) }}" id="single_view_contact_add">Seguir</a><br />
- 				  @else
-            		<div>Seguindo</div>
+ 				@else
+            		<div id="unfollow-button">
+					    <a href="{{ URL::to("/friends/unfollow/" . $user->id) }}">
+         					<p class="label success new-label"><span>Seguindo</span></p>
+    					</a>
+					</div>
  				@endif
-			 @endif	
+ 			@else
+ 				<a href="{{ URL::to("/users/" . $user->id . "/edit") }}" id="single_view_contact_add" title="Edite o seu perfil">Editar perfil</a><br />
+			@endif	
 			  
 	        </div>
 	      	<div class="count">Imagens compartilhadas ({{ count($photos) }})</div>

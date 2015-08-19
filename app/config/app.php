@@ -39,7 +39,7 @@ return array(
 	|
 	*/
 
-	//'timezone' => 'UTC',
+	// 'timezone' => 'UTC',
 	'timezone' => 'America/Sao_Paulo',
 
 	/*
@@ -124,7 +124,8 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
     'Intervention\Image\ImageServiceProvider',
     'Tricki\Notification\NotificationServiceProvider',
-
+    'Maatwebsite\Excel\ExcelServiceProvider',
+    'lib\image\ImageManagerServiceProvider',
 	),
 
 	/*
@@ -192,7 +193,8 @@ return array(
 		'URL'             => 'Illuminate\Support\Facades\URL',
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
-
+		'Excel'           => 'Maatwebsite\Excel\Facades\Excel',
+		'ImageManager'    => 'lib\image\facade\ImageManager',
 	),
 
 );

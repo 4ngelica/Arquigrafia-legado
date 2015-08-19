@@ -3,11 +3,11 @@
 use League\FactoryMuffin\Facade as FactoryMuffin;
 use Mockery as m;
 
-class AlbumTest extends TestCase {
+class AlbumTest extends \TestCase {
 
 	public static function setUpBeforeClass()
 	{
-		FactoryMuffin::loadFactories(__DIR__ . '/factories');
+		FactoryMuffin::loadFactories(app_path() . '/tests/factories');
 		FactoryMuffin::setFakerLocale('pt_BR');
 	}
 
@@ -15,7 +15,7 @@ class AlbumTest extends TestCase {
 	{
 		try {
   			FactoryMuffin::deleteSaved();
-  			Album::destroy();
+  			// Album::destroy();
 		} catch (Exception $e) {
 			;
 		}

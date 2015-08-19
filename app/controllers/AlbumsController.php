@@ -18,7 +18,16 @@ class AlbumsController extends \BaseController {
 	}
 
 	public function index() {
-		$albums = Auth::user()->albums;
+		
+		if(Session::has('institutionId')){ 
+      		$institution = Institution::find(Session::get('institutionId'));      		
+      		$this->album = new Album();
+      		$albums = $this->album->showAlbumsInstitutional($institution);       		
+
+   		 }else{
+   		 	$albums = Auth::user()->albums;
+   		 }
+   		 
 		return View::make('albums.index')->with('albums', $albums);
 	}
 
@@ -53,15 +62,23 @@ class AlbumsController extends \BaseController {
 			]);
 	}
 
-	public function store() {
+	public function store() { 
 		$photos = Input::get('photos_add');
 		$cover = Photo::find((empty($photos) ? null : array_values($photos)[0]));
 		$user = Auth::user();
+		
+		if(Session::has('institutionId')){
+			$institutionData = Institution::find(Session::get('institutionId'));
+			//$institution = $institutionData->id;
+		}else{
+			$institutionData = NULL;
+		} 
 		$album = Album::create([
 			'title' => Input::get('title'),
 			'description' => Input::get('description'),
 			'user' => $user,
-			'cover' => $cover
+			'cover' => $cover,
+			'institution' => $institutionData
 		]);
 		if ( $album->isValid() ) {
 			if ( !empty($photos) ) {
@@ -205,7 +222,7 @@ class AlbumsController extends \BaseController {
 			}
 		}
 		if ($albums->isEmpty()) {
-			return Redirect::to('/photos/' . $photo);
+			return Redirect::to('/photos/' . $photo->id);
 		} else {
 			return Redirect::to('/albums')->with('message', '<strong>Imagem adicionada com sucesso ao(s) seu(s) álbum(ns)</strong>');
 		}
@@ -235,7 +252,7 @@ class AlbumsController extends \BaseController {
 	}
 
 	public function attachPhotos($id) {
-		try {
+		try { dd($id);
 			$album = Album::find($id);
 			$photos = Input::get('photos');
 			$album->attachPhotos($photos);

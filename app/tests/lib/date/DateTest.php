@@ -55,7 +55,7 @@ class DateTest extends TestCase {
 		$this->assertEquals($translation, $this->date->translate($raw_date));
 
 		$raw_date = '197/198';
-		$translation = 'Entre a década de 1970 e década de 1980';
+		$translation = 'Entre a década de 1970 e a década de 1980';
 		$this->assertEquals($translation, $this->date->translate($raw_date));
 
 		$raw_date = '18/19';

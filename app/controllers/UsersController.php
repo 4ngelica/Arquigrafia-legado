@@ -1,5 +1,6 @@
 <?php
 use lib\utils\ActionUser;
+use Carbon\Carbon; 
 use Facebook\FacebookSession;
 use Facebook\FacebookRedirectLoginHelper;
 use Facebook\FacebookRequest;
@@ -165,7 +166,7 @@ class UsersController extends \BaseController {
     }else{
 
       $user = User::userInformationObtain($email);
-
+      
       if(!empty($user)){
         $randomPassword = strtolower(Str::quickRandom(8)); 
         $user->password = Hash::make($randomPassword);
@@ -205,11 +206,13 @@ class UsersController extends \BaseController {
     $fburl = $helper->getLoginUrl(array(
         'scope' => 'email',
     ));
+      
+    $institutions = Institution::institutionsList();
 
     if (!Session::has('filter.login') && !Session::has('login.message')) //nao foi acionado pelo filtro, retornar para pagina anterior
       Session::put('url.previous', URL::previous());
     
-    return View::make('/modal/login')->with(['fburl' => $fburl]);
+    return View::make('/modal/login')->with(['fburl' => $fburl,'institutions' => $institutions]);
   }
   
 
@@ -326,6 +329,7 @@ class UsersController extends \BaseController {
       $response = $request->execute();
       $fbuser = $response->getGraphObject();
       $fbid = $fbuser->getProperty('id');
+      $fbmail = $fbuser->getProperty('email');
       
       //usuarios antigos tem campo id_facebook null, mas existe login = $fbid;
       $user = User::where('id_facebook', '=', $fbid)->orWhere('login', '=', $fbid)->first();
@@ -360,7 +364,16 @@ class UsersController extends \BaseController {
         return Redirect::to('/')->with('message', "Bem-vindo {$user->name}!");
         
       } else {
-        // cria um novo usuário
+        $query = User::where('email', '=', $fbmail)->first();
+        if (!is_null($query)) {
+          $query->id_facebook = $fbid;
+          $query->save();
+          Auth::loginUsingId($query->id);
+          $source_page = Request::header('referer');
+          ActionUser::printLoginOrLogout($query->id, $source_page, "Login", "facebook", "user");
+          return Redirect::to('/')->with('message', "Bem-vindo {$query->name}!");
+        }
+        else {
         $user = new User;
         $user->name = $fbuser->getProperty('name');
         $user->login = $fbuser->getProperty('id');
@@ -389,10 +402,10 @@ class UsersController extends \BaseController {
         $user->save();
         
         $source_page = Request::header('referer');
-        ActionUser::printLoginOrLogout($user->id, $source_page, "login", "arquigrafia", "user");
+        ActionUser::printNewAccount($user->id, $source_page, "facebook", "user");
 
-        // return $user;
         return Redirect::to('/')->with('message', 'Sua conta foi criada com sucesso!');
+      }
       }
             
     }
@@ -413,8 +426,31 @@ class UsersController extends \BaseController {
     if ($user_id != $logged_user->id && !$following->contains($user_id)) {
       $logged_user->following()->attach($user_id);
 
+      /*Envio de notificação*/
+      if ($user_id != $logged_user->id) {
+      $user_note = User::find($user_id);
+      foreach ($user_note->notifications as $notification) {
+        $info = $notification->render();
+        if ($info[0] == "follow" && $notification->read_at == null) {
+          $note_id = $notification->notification_id;
+          $note_user_id = $notification->id;
+          $note = $notification;
+        }
+      }
+      if (isset($note_id)) {
+        $note_from_table = DB::table("notifications")->where("id","=", $note_id)->get();
+        if (NotificationsController::isNotificationByUser($logged_user->id, $note_from_table[0]->sender_id, $note_from_table[0]->data) == false) {
+          $new_data = $note_from_table[0]->data . ":" . $logged_user->id;
+          DB::table("notifications")->where("id", "=", $note_id)->update(array("data" => $new_data, "created_at" => Carbon::now('America/Sao_Paulo')));
+          $note->created_at = Carbon::now('America/Sao_Paulo');
+          $note->save();  
+        }
+      }
+      else Notification::create('follow', $logged_user, $user_note, [$user_note], null);
+    }
+
       $logged_user_id = Auth::user()->id;
-      $pageSource = Request::header('referer'); //get url of the source page
+      $pageSource = Request::header('referer');
       ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "passou a seguir", "user");
     }
 
@@ -553,7 +589,7 @@ class UsersController extends \BaseController {
     }
     $user = User::stoa($stoa_user);
     Auth::loginUsingId($user->id);
-    //$user_id = Auth::user()->id;
+    
     $source_page = Request::header('referer');
     ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "stoa", "user");
     return Response::json(true);

@@ -100,20 +100,16 @@ class Date {
 	}
 
 	public function translateDate($date) {
-		if (preg_match('#\d{4,}-\d{2,}-\d{2,}#', $date, $match)) {
-			$datetimeObj = DateTime::createFromFormat('Y-m-d', $match[0]);
-			$day = $datetimeObj->format('d');
-			$monthNumber = intval($datetimeObj->format('m'));
-			$year = $datetimeObj->format('Y');
-			$month = self::$months[$monthNumber - 1];
+		if (preg_match('#(\d{4,})-(\d{2,})-(\d{2,})#', $date, $match)) {
+			$year = $match[1];
+			$month = self::$months[( intval($match[2]) ) - 1];
+			$day = $match[3];
 			return $day . ' de ' . $month . ' de ' . $year;
 		}
 
-		if (preg_match('#\d{4,}-\d{2,}#', $date)) {
-			$datetimeObj = DateTime::createFromFormat('Y-m', $date);
-			$monthNumber = intval($datetimeObj->format('m'));
-			$year = $datetimeObj->format('Y');
-			$month = self::$months[$monthNumber - 1];
+		if (preg_match('#(\d{4,})-(\d{2,})#', $date, $match)) {
+			$year = $match[1];
+			$month = self::$months[( intval($match[2]) ) - 1];
 			return $month . ' de ' . $year;
 		}
 

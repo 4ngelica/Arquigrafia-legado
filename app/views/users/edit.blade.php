@@ -75,12 +75,16 @@
             </p>
           </div>
 
-          <div class="two columns alpha"><p>{{ Form::label('login', 'Login*:') }}</p></div>
-          <div class="two columns omega">
-            <p>{{ Form::text('login', $user->login) }}<br>
-            <div class="error">{{ $errors->first('login') }} </div>
-            </p>
-          </div>
+          @if($user->login != $user->id_facebook)
+            @if($user->login != $user->id_stoa)
+              <div class="two columns alpha"><p>{{ Form::label('login', 'Login*:') }}</p></div>
+              <div class="two columns omega">
+                <p>{{ Form::text('login', $user->login) }}<br>
+                <div class="error">{{ $errors->first('login') }} </div>
+                </p>
+              </div>
+            @endif
+          @endif
           
           <div class="two columns alpha"><p>{{ Form::label('email', 'E-mail*:') }}</p></div>
           <div class="two columns omega">

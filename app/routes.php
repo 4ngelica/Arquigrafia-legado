@@ -12,8 +12,11 @@
 */
 
 Route::get('/test', function () { 
-	//testes
+  //testes
 });
+
+/* IMPORTS */
+Route::get('/photos/import', 'ImportsController@import');
 
 /* phpinfo() */
 Route::get('/info/', function(){ return View::make('i'); });
@@ -96,7 +99,10 @@ Route::resource('/groups','GroupsController');
 Route::get('/photos/batch','PhotosController@batch');
 Route::get('/photos/upload','PhotosController@form');
 Route::get('/photos/newUpload','PhotosController@newForm');
+Route::get('/photos/{photo_id}/editInstitutional','PhotosController@editFormInstitutional');
 Route::get('/photos/download/{photo_id}','PhotosController@download');
+Route::get('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');
+Route::post('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');
 Route::resource('/photos','PhotosController');
 /* TAGS */
 Route::get('/tags/json', 'TagsController@index');
@@ -106,3 +112,4 @@ Route::get('/notifications', 'NotificationsController@show');
 Route::get('/markRead/{id}', 'NotificationsController@read');
 Route::get('/readAll', 'NotificationsController@readAll');
 Route::get('/refreshBubble', 'NotificationsController@howManyUnread');
+
