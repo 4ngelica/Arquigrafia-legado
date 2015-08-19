@@ -131,6 +131,7 @@ class PhotosController extends \BaseController {
       $tagsTypologyArea = explode(',', $tagsTypologyArea); 
     }
 
+    $input['autoOpenModal'] = null;  
     /* */
     return View::make('/photos/newform')->with(['tagsArea'=> $tagsArea,
        'workAuthorInput' => $workAuthorInput,
@@ -139,7 +140,9 @@ class PhotosController extends \BaseController {
       'tagsTypologyArea' => $tagsTypologyArea,
       'pageSource'=>$pageSource, 'user'=>Auth::user(), 
       'institution'=>$institution,
-      'albumsInstitutional'=>$albumsInstitutional]);
+      'albumsInstitutional'=>$albumsInstitutional,
+      'autoOpenModal'=>$input['autoOpenModal'] 
+      ]);
   }
 
   public static function formatTags($tagsType){
@@ -265,7 +268,7 @@ class PhotosController extends \BaseController {
         'workAuthorInput'=>$input["workAuthor"]        
         ])->withErrors($messages); */
 
-    }else{
+    }else{ 
       
       if(Input::hasFile('photo') and Input::file('photo')->isValid()) {
         $file = Input::file('photo');
@@ -384,9 +387,10 @@ class PhotosController extends \BaseController {
 
           $photo->saveMetadata(strtolower($ext));
           
-          $input['photoId'] = $photo->id;
+          $input['photoId'] = $photo->id; //dd($input);
           //return Redirect::to("/photos/{$photo->id}");
           return Redirect::back()->withInput($input);
+        
 
       }else{
          $messages = $validator->messages();
@@ -429,8 +433,10 @@ class PhotosController extends \BaseController {
       $tagsMaterialArea = $photo->tags;
 
       $new = $tagsMaterialArea->filter(function ($tags) {
-            if($tags->type == 'Typology'){
+            if($tags->type == 'Material'){
                 return TRUE;
+            }else{
+              return FALSE;
             }
 
            // return $key = "Type";
