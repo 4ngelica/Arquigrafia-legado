@@ -82,7 +82,7 @@ class SimpleLoggerTest extends TestCase {
     $logger->shouldReceive('createRootFolder')->once();
 
     $logger->init('logger_name', 'log_folder');
-    $logger->pushHandler('file_name');
+    $logger->logToFile('file_name');
 
   }
 

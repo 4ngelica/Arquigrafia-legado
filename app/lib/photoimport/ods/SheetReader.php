@@ -28,7 +28,7 @@ class SheetReader {
     $sheet = $this->getSheet($document);
     $rows = array();
     foreach ($sheet as $row) {
-      array_push($rows, $this->readRow($row));
+      $rows[] = $this->readRow($row);
     }
     return $rows;
   }

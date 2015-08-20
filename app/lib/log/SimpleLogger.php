@@ -31,7 +31,7 @@ class SimpleLogger {
     if ( $in_storage ) {
       $this->root = storage_path() . '/logs/' . $log_folder . '/';
     } else {
-      $this->root = $log_folder;
+      $this->root = $log_folder . '/';
     }
   }
 
@@ -55,7 +55,7 @@ class SimpleLogger {
     return $this->root . $file . '.log';
   }
 
-  public function pushHandler($file_name) {
+  public function logToFile($file_name) {
     $file_path = $this->getFilePath($file_name);
     $this->createFileLog($file_path);
     $handler = $this->newHandler($file_path);
