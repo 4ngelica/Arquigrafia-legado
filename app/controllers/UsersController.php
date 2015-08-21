@@ -414,6 +414,7 @@ class UsersController extends \BaseController {
   public function getFacebookPicture() {
     if (Auth::check()) {
     $user = Auth::user();
+    session_start();
     $fb_config = Config::get('facebook');
     FacebookSession::setDefaultApplication($fb_config["id"], $fb_config["secret"]);
     $helper = new FacebookRedirectLoginHelper(url('/users/login/fb/callback'));
