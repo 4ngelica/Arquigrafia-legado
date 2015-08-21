@@ -417,7 +417,7 @@ class UsersController extends \BaseController {
     session_start();
     $fb_config = Config::get('facebook');
     FacebookSession::setDefaultApplication($fb_config["id"], $fb_config["secret"]);
-    $helper = new FacebookRedirectLoginHelper(url('/users/login/fb/callback'));
+    $helper = new FacebookRedirectLoginHelper(url('/getPicture'));
     try {
       $session = $helper->getSessionFromRedirect();
     } catch(FacebookRequestException $ex) {
