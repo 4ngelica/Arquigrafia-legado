@@ -40,7 +40,7 @@
         <div class="four columns alpha">          
           <p>{{ Form::label('photo','Alterar foto:') }}
           @if($user->id_facebook != null)
-            <a class="btn import-face">
+            <a class="btn import-face" onclick="importPicture()">
               <img class="facebook-logo" src="{{ asset('/img/Facebook_logo_square.png') }}">
               <span>Importar foto do facebook</span>
             </a>
