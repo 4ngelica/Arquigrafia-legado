@@ -215,13 +215,11 @@ class UsersController extends \BaseController {
     return View::make('/modal/login')->with(['fburl' => $fburl,'institutions' => $institutions]);
   }
   
-
    // validacao do login
   public function login()
   { 
      $input = Input::all();   
      $user = User::userInformation($input["login"]);    
-    
     if ($user != null && $user->oldAccount == 1) 
     {
       if ( User::checkOldAccount($user, $input["password"]) )
@@ -235,7 +233,7 @@ class UsersController extends \BaseController {
       }
     }
 
-    if (Auth::attempt(array('login' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true || Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true  )
+    if (Auth::attempt(array('login' => $user->login, 'password' => $input["password"],'active' => 'yes')) == true || Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true  )
         { 
       if ( Session::has('filter.login') ) //acionado pelo login
       {  
