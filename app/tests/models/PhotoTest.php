@@ -39,6 +39,7 @@ class PhotoTest extends TestCase {
 	public function testShouldDeletePhotoAfterException() {
 		$photo = FactoryMuffin::create('Photo');
 		ImageManager::shouldReceive('makeAll')->once()->andThrow('Intervention\Image\Exception\NotWritableException');
+		$exception_class = null;
 		try {
 			$photo->saveImages('image');
 		} catch (Exception $e) {

@@ -8,7 +8,7 @@ class ImageManager {
   public function makeImage($file) {
     try {
       return Image::make($file)->encode('jpg', 80);
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
       throw new \Exception("Could not read file: '{$file}'");
     }
   }
