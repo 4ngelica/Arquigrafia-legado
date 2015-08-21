@@ -9,7 +9,7 @@ class ImageManager {
     try {
       return Image::make($file)->encode('jpg', 80);
     } catch (Exception $e) {
-      throw new \Exception("Não foi possível ler imagem '{$file}'.");
+      throw new \Exception("Could not read file: '{$file}'");
     }
   }
 
@@ -44,7 +44,7 @@ class ImageManager {
   public function getFile($pattern) {
     $files = File::glob( $pattern );
     if ( empty($files) || ! File::isFile($files[0]) ) {
-      throw new \Exception("Nenhum arquivo encontrado pelo padrão {$pattern}");
+      throw new \Exception("File pattern not found: {$pattern}");
     }
     return $files[0];
   }

@@ -25,35 +25,16 @@ class Tag extends Eloquent {
     return $photos;
   }
 
-  public static function getMany($raw_tags, &$tag_count, $tag_type = null) {
-    $instance = new static;
-    
-    $tags = $instance->transform($raw_tags);
-    $tag_count = count($tags);
-    $found_tags = array();
-    foreach ($tags as $tag_name) {
-      if ( !empty($tag_name) ) { 
-        try {
-          $tag = $instance->getOrCreate($tag_name, $tag_type);
-          array_push( $found_tags,  $tag);
-        } catch (Exception $e) { }
-      }
-    }
-    return $found_tags;
-  }
-
-  public static function getOrCreate($name, $type) {
-    $tag = $this->firstOrNew(['name' => $name]);
+  public static function getOrCreate($name, $type = null) {
+    $tag = static::firstOrNew(['name' => $name]);
     $tag->type = $type;
     $tag->incrementReferences();
-    $this->save();    
+    $tag->save();
+    return $tag;
   }
 
-  public static function transform($tags) {
-    if ( is_array($tags) ) {
-      return $tags;
-    }
-    $tags = explode(',', $tags);
+  public static function transform($raw_tags) {
+    $tags = explode(',', $raw_tags);
     $tags = array_map('trim', $tags);
     $tags = array_map('mb_strtolower', $tags);
     $tags = array_filter($tags);
@@ -61,9 +42,6 @@ class Tag extends Eloquent {
   }
 
   public function incrementReferences() {
-    if ($this->count == null) {
-      $this->count = 0;
-    }
-    $this->count++;
+    $this->count = $this->count == null ? 1 : $this->count + 1;
   }
 }

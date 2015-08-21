@@ -215,13 +215,11 @@ class UsersController extends \BaseController {
     return View::make('/modal/login')->with(['fburl' => $fburl,'institutions' => $institutions]);
   }
   
-
    // validacao do login
   public function login()
   { 
      $input = Input::all();   
      $user = User::userInformation($input["login"]);    
-    
     if ($user != null && $user->oldAccount == 1) 
     {
       if ( User::checkOldAccount($user, $input["password"]) )
@@ -235,7 +233,7 @@ class UsersController extends \BaseController {
       }
     }
 
-    if (Auth::attempt(array('login' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true || Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true  )
+    if (Auth::attempt(array('login' => $user->login, 'password' => $input["password"],'active' => 'yes')) == true || Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true  )
         { 
       if ( Session::has('filter.login') ) //acionado pelo login
       {  
@@ -412,6 +410,41 @@ class UsersController extends \BaseController {
     
     
 	}
+
+  public function getFacebookPicture() {
+    if (Auth::check()) {
+    $user = Auth::user();
+    $fb_config = Config::get('facebook');
+    FacebookSession::setDefaultApplication($fb_config["id"], $fb_config["secret"]);
+    $helper = new FacebookRedirectLoginHelper(url('/users/login/fb/callback'));
+    try {
+      $session = $helper->getSessionFromRedirect();
+    } catch(FacebookRequestException $ex) {
+      dd($ex);
+    } catch(\Exception $ex) {
+      dd($ex);
+    }
+    if ($session) {
+      $request = new FacebookRequest(
+          $session,
+          'GET',
+          '/me/picture',
+          array (
+            'redirect' => false,
+            'height' => '200',
+            'type' => 'normal',
+            'width' => '200',
+          )
+        );
+        $response = $request->execute();
+        $pic = $response->getGraphObject();
+        $image = Image::make($pic->getProperty('url'))->save(public_path().'/arquigrafia-avatars/'.$user->id.'.jpg'); 
+        $user->photo = '/arquigrafia-avatars/'.$user->id.'.jpg';
+        $user->save();
+      }
+      return $user->photo;
+    } 
+  }
 
   public function follow($user_id)
   {
