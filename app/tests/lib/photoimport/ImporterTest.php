@@ -12,7 +12,7 @@ class ImporterTest extends TestCase {
   protected $tag;
   protected $reader;
   protected $logger;
-  protected $depencies;
+  protected $dependencies;
 
   public static function setUpBeforeClass()
   {
@@ -41,7 +41,7 @@ class ImporterTest extends TestCase {
     $this->tag = m::mock('Tag');
     $this->reader = m::mock('lib\photoimport\ods\SheetReader');
     $this->logger = m::mock('lib\photoimport\import\ImportLogger');
-    $this->depencies = array(
+    $this->dependencies = array(
         $this->photo,
         $this->tag,
         $this->reader,
@@ -83,7 +83,7 @@ class ImporterTest extends TestCase {
 
     $ods = m::mock('lib\photoimport\ods\OdsFile');
     $ods->shouldReceive('getPathname')->once()->andReturn('ods_pathname');
-    $importer = m::mock( 'lib\photoimport\import\Importer[logError]', $this->depencies );
+    $importer = m::mock( 'lib\photoimport\import\Importer[logError]', $this->dependencies );
     $importer->setOds($ods);
     $importer->shouldReceive('logError')->times(3)->with(m::any());
 
@@ -93,11 +93,14 @@ class ImporterTest extends TestCase {
   }
 
   public function testShouldImportTags() {
-    $importer = App::make('lib\photoimport\import\Importer');
+    $importer = m::mock('lib\photoimport\import\Importer[logImportedTag]',
+      array(
+          $this->photo, new Tag, $this->reader, $this->logger
+        ));
     $tag_data = 'tag1, ,, tag2, tag3, ,,';
-    
     $tag1 = new Tag; $tag1->name = 'tag1'; $tag1->save();
-
+    $importer->shouldReceive('logImportedTag')->times(3)
+      ->with(m::type('Tag'));
     $result = $importer->importTags($tag_data);
 
     $this->assertTrue( is_array($result) );
@@ -145,7 +148,6 @@ class ImporterTest extends TestCase {
         'user_id' => $user->id
       );
     $this->setUpImportPhoto($user, $attributes);
-
   }
 
   public function testShouldImportDeletedPhotoAndLogIt() {
@@ -162,5 +164,127 @@ class ImporterTest extends TestCase {
     $result = $this->setUpImportPhoto($user, $attributes);
     $this->assertFalse($result->trashed());
   }
+
+  public function testShouldImportPhotoAndTags() {
+    $photo = m::mock('Photo');
+    $tags = array( m::mock('Tag'), m::mock('Tag') );
+    $photo->shouldReceive('syncTags')->once()->with($tags);
+    $importer = m::mock('lib\photoimport\import\Importer' .
+      '[importPhoto, importTags]', $this->dependencies);
+    $importer->shouldReceive('importPhoto')
+      ->once()->with('photo_data', 'basepath')->andReturn($photo);
+    $importer->shouldReceive('importTags')
+      ->once()->with('tag_data')->andReturn($tags);
+
+    $result = $importer->import('basepath', 'photo_data', 'tag_data');
+
+    $this->assertTrue($result instanceof Photo);
+  }
+
+  public function testSouldImportAllPhotosFromContent() {
+    
+    $tag1 = FactoryMuffin::instance('Tag')->name;
+    $tag2 = FactoryMuffin::instance('Tag')->name;
+    $tag3 = FactoryMuffin::instance('Tag')->name;
+    $tag4 = FactoryMuffin::instance('Tag')->name;
+    $photo_data1 = FactoryMuffin::instance('Photo')->attributesToArray();
+    $photo_data2 = FactoryMuffin::instance('Photo')->attributesToArray();
+    unset($photo_data1['nome_arquivo']);
+    unset($photo_data1['user_id']);
+    unset($photo_data2['nome_arquivo']);
+    unset($photo_data2['user_id']);
+
+    $user = FactoryMuffin::create('User');
+    $photo_data1['tags'] = $tag1 . ',' . $tag2;
+    $photo_data2['tags'] = $tag3 . ',' . $tag4;
+    $content = array($photo_data1, $photo_data2);
+    ImageManager::shouldReceive('find')->times(2)
+      ->with(m::type('string'))->andReturn('image');
+    ImageManager::shouldReceive('getOriginalImageExtension')->times(2)
+      ->with('image')->andReturn('extension');
+    ImageManager::shouldReceive('makeAll')->times(2)
+      ->with('image', m::type('string'), 'extension');
+    $importer = m::mock('lib\photoimport\import\Importer' .
+        '[logError, logInfo]', array(
+            new Photo, new Tag, $this->reader, $this->logger
+          ));
+    $importer->shouldReceive('logInfo')->times(6)
+      ->with(m::type('string'));
+    $importer->shouldReceive('logError')->times(0);
+    $ods = m::mock('lib\photoimport\ods\OdsFile');
+    $ods->shouldReceive('getBasePath')->once()->andReturn('basepath');
+    $importer->setUser($user);
+    $importer->setOds($ods);
+
+    $result = $importer->importContent($content);
+
+    $this->assertEquals(2, count($result));
+    $this->assertTrue($result[0] instanceof Photo);
+    $this->assertTrue($result[1] instanceof Photo);
+    $tags1 = $result[0]->tags->keyBy('name');
+    $tags2 = $result[1]->tags->keyBy('name');
+    $this->assertEquals(2, $tags1->count());
+    $this->assertEquals(2, $tags2->count());
+    $this->assertTrue($tags1->has($tag1));
+    $this->assertTrue($tags1->has($tag2));
+    $this->assertTrue($tags2->has($tag3));
+    $this->assertTrue($tags2->has($tag4));
+  }
+
+  public function testSouldImportJustOnePhotoFromContent() {
+    $tag1 = FactoryMuffin::instance('Tag')->name;
+    $tag2 = FactoryMuffin::instance('Tag')->name;
+    $tag3 = FactoryMuffin::instance('Tag')->name;
+    $tag4 = FactoryMuffin::instance('Tag')->name;
+    $photo_data1 = FactoryMuffin::instance('Photo')->attributesToArray();
+    $photo_data2 = FactoryMuffin::instance('Photo')->attributesToArray();
+    unset($photo_data1['nome_arquivo']);
+    unset($photo_data1['user_id']);
+    unset($photo_data2['nome_arquivo']);
+    unset($photo_data2['user_id']);
+
+    $user = FactoryMuffin::create('User');
+    $photo_data1['tags'] = $tag1 . ',' . $tag2;
+    $photo_data2['tags'] = $tag3 . ',' . $tag4;
+    $content = array($photo_data1, $photo_data2);
+    
+    ImageManager::shouldReceive('find')->once()
+      ->with('basepath/' . $photo_data1['tombo'] . '.*')->andReturn('image');
+    
+    ImageManager::shouldReceive('find')->once()
+      ->with('basepath/' . $photo_data2['tombo'] . '.*')->andReturn('image2');
+    
+    ImageManager::shouldReceive('getOriginalImageExtension')->times(2)
+      ->with(m::type('string'))->andReturn('extension');
+    
+    ImageManager::shouldReceive('makeAll')->once()
+      ->with('image', m::type('string'), 'extension');
+    
+    ImageManager::shouldReceive('makeAll')->once()
+      ->with('image2', m::type('string'), 'extension')
+      ->andThrow('Intervention\Image\Exception\NotWritableException');
+    
+    $importer = m::mock('lib\photoimport\import\Importer' .
+        '[logError, logInfo]', array(
+            new Photo, new Tag, $this->reader, $this->logger
+          ));
+    $importer->shouldReceive('logInfo')->times(3)
+      ->with(m::type('string'));
+    $importer->shouldReceive('logError')->once();
+    $ods = m::mock('lib\photoimport\ods\OdsFile');
+    $ods->shouldReceive('getBasePath')->once()->andReturn('basepath');
+    $importer->setUser($user);
+    $importer->setOds($ods);
+
+    $result = $importer->importContent($content);
+
+    $this->assertEquals(1, count($result));
+    $this->assertTrue($result[0] instanceof Photo);
+    $tags1 = $result[0]->tags->keyBy('name');
+    $this->assertEquals(2, $tags1->count());
+    $this->assertTrue($tags1->has($tag1));
+    $this->assertTrue($tags1->has($tag2));
+  }
+
 
 }

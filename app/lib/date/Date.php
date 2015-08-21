@@ -143,7 +143,7 @@ class Date {
       			$start = new DateTime($start);
       			$end = new DateTime($end);
       			$form = $start->diff($end);
-   			} catch (Exception $e){
+   			} catch (\Exception $e){
       			return $e->getMessage();
    			}
    

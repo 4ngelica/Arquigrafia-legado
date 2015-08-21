@@ -404,6 +404,10 @@ class Photo extends Eloquent {
 	}
 
 	public function syncTags(array $tags) {
+		$get_ids = function( $tag ) {
+			return $tag instanceof Tag ? $tag->id : $tag;
+		};
+		$tags = array_map($get_ids, $tags);
 		$this->tags()->sync($tags);
 	}
 

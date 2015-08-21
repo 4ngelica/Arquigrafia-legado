@@ -64,21 +64,13 @@ class Importer {
     return $this->importContent($content);
   }
 
-  public function import($basepath, $photo_data, $tag_data) {
-    $photo = $this->importPhoto($raw_photo, $basepath);
-    $tags = $this->importTags($tag_data);
-    if ( $photo != null) {
-      $photo->syncTags($tags);
-    }
-    return $photo;
-  }
-
   public function importContent($content) {
     $photos = array();
+    $ods_basepath = $this->ods->getBasePath();
     foreach ($content as $photo_data) {
       $photo_data['user_id'] = $this->user->id;
       $tag_data = array_pull( $photo_data, 'tags' );
-      $new_photo = $this->import($this->ods->getBasePath(), $photo_data, $tag_data);
+      $new_photo = $this->import($ods_basepath, $photo_data, $tag_data);
       if ( $new_photo != null ) {
         $photos[] = $new_photo;
       }
@@ -89,16 +81,25 @@ class Importer {
   public function getContent() {
     try {
       return $this->reader->read($this->ods);
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
       $this->logOdsReadingException($e, $this->ods);
       return null;
     }
   }
 
+  public function import($basepath, $photo_data, $tag_data) {
+    $photo = $this->importPhoto($photo_data, $basepath);
+    if ( $photo != null) {
+      $tags = $this->importTags($tag_data);
+      $photo->syncTags($tags);
+    }
+    return $photo;
+  }
+
   public function importPhoto($attributes, $basepath) {
     try {
        $photo = $this->photo->import($attributes, $basepath);
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
       $this->logPhotoException($e, $attributes['tombo']);
       return null;
     }
@@ -112,6 +113,7 @@ class Importer {
     foreach($raw_tags as $rt) {
       if ( ($tag = $this->getTag($rt)) != null ) {
         $tags[] = $tag;
+        $this->logImportedTag($tag);
       }
     }
     return $tags;
@@ -120,57 +122,53 @@ class Importer {
   public function getTag($tag_name) {
     try {
       return $this->tag->getOrCreate($tag_name);
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
       $this->logTagException($e, $tag_name);
       return null;
     }
   }
 
   public function logOdsReadingException($exception) {
-    $message = "ods_reading_exception: {$this->ods->getPathname()}" . PHP_EOL;
-    $message .= "\t\--> exception_message: '" . $exception->getMessage() . "'";
+    $message = "ods_reading_exception: {$this->ods->getPathname()}";
+    $message .= ", exception_message: '" . $exception->getMessage() . "'";
     $this->logError($message);
   }
 
   public function logPhotoException($exception, $photo_tombo) {
-    $message = "photo_import_exception: {$photo_tombo}" . PHP_EOL;
-    $message .= "\t\--> exception_message: '" . $exception->getMessage() . "'";
+    $message = "photo_import_exception: {$photo_tombo}";
+    $message .= ", exception_message: '" . $exception->getMessage() . "'";
     $this->logError($message);
   }
 
   public function logTagException($exception, $tag_name) {
-    $message = "tag_import_exception: {$tag_name}" . PHP_EOL;
-    $message .= "\t\--> exception_message: '{$exception->getMessage()}'";
+    $message = "tag_import_exception: {$tag_name}";
+    $message .= ", exception_message: '{$exception->getMessage()}'";
     $this->logError($message);
   }
 
   public function logUndefinedUser() {
-    $message = "undefined_user: {$this->user}" . PHP_EOL;
-    $message .= "\t\--> ods_file: {$this->ods->getPathname()}";
+    $message = "undefined_user: {$this->user}";
+    $message .= ",ods_file: {$this->ods->getPathname()}";
     $this->logger->addError($message);
   }
 
   public function logError($message) {
-    $time = date('Y-m-d H:i:s');
-    $message = $time . ' ' . $message;
     $this->logger->addError($message);
     $this->ods->logError($message);
   }
 
   public function logInfo($message) {
-    $time = date('Y-m-d H:i:s');
-    $message = $time . ' ' . $message;
     $this->logger->addInfo($message);
     $this->ods->logInfo($message);
   }
 
   public function logImportedPhoto($photo) {
-    $message = "photo_imported: {$photo->tombo}";
+    $message = "imported_photo: {$photo->tombo}";
     $this->logInfo($message);
   }
 
   public function logImportedTag($tag) {
-    $message = "tag_imported: {$tag->name}";
+    $message = "imported_tag: {$tag->name}";
     $this->logInfo($message);
   }
 
