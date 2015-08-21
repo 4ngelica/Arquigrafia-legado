@@ -45,6 +45,7 @@ Route::get('users/login/fb', 'UsersController@facebook');
 Route::get('users/login/fb/callback', 'UsersController@callback');
 Route::get('/users/forget', 'UsersController@forgetForm');
 Route::post('/users/forget', 'UsersController@forget');
+Route::get('/getPicture', 'UsersController@getFacebookPicture');
 
 Route::resource('/users','UsersController');
 Route::resource('/users/stoaLogin','UsersController@stoaLogin');

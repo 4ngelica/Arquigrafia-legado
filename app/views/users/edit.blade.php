@@ -22,9 +22,9 @@
         <p>   
         <div>            
             <?php if ($user->photo != "") { ?>
-              <img class="avatar" src="{{ asset($user->photo) }}" class="user_photo_thumbnail" width="60" height="60" />
+              <img class="avatar profile-picture" src="{{ asset($user->photo) }}" class="user_photo_thumbnail" width="60" height="60" />
             <?php } else { ?>
-              <img class="avatar" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
+              <img class="avatar profile-picture" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
             <?php } ?>
           </div>     
         </p>
@@ -38,12 +38,31 @@
         
                 
         <div class="four columns alpha">          
-          <p>{{ Form::label('photo','Alterar foto:') }} {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}</p>
+          <p>{{ Form::label('photo','Alterar foto:') }}
+          @if($user->id_facebook != null)
+            <a class="btn import-face">
+              <img class="facebook-logo" src="{{ asset('/img/Facebook_logo_square.png') }}">
+              <span>Importar foto do facebook</span>
+            </a>
+          @endif 
+          {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}</p>
           <br>
           <img src="" id="preview_photo">
           <br>
         </div>
       </div>
+
+      <script type="text/javascript">
+        function importPicture() {
+          $.get("/getPicture")
+            .done(function( data ) {
+              var pic = document.getElementsByClassName("profile-picture");
+              for (i = 0; i < notes.length; i++) {
+                pic[i].src = data;
+              }
+            });
+        }
+      </script>
 
      <script type="text/javascript">
         function readURL(input) {
