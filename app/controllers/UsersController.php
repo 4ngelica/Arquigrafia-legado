@@ -417,7 +417,7 @@ class UsersController extends \BaseController {
     session_start();
     $fb_config = Config::get('facebook');
     FacebookSession::setDefaultApplication($fb_config["id"], $fb_config["secret"]);
-    $helper = new FacebookRedirectLoginHelper(url('/getPicture'));
+    $helper = new FacebookRedirectLoginHelper(url('/'));
     try {
       $session = $helper->getSessionFromRedirect();
     } catch(FacebookRequestException $ex) {
@@ -425,6 +425,8 @@ class UsersController extends \BaseController {
     } catch(\Exception $ex) {
       dd($ex);
     }
+    echo var_dump($session);
+    echo var_dump($helper);
     if ($session) {
       $request = new FacebookRequest(
           $session,
@@ -442,7 +444,10 @@ class UsersController extends \BaseController {
         $image = Image::make($pic->getProperty('url'))->save(public_path().'/arquigrafia-avatars/'.$user->id.'.jpg'); 
         $user->photo = '/arquigrafia-avatars/'.$user->id.'.jpg';
         $user->save();
+        echo dd($request);
+        echo dd($response);
       }
+      echo var_dump($user->photo);
       return $user->photo;
     } 
   }
