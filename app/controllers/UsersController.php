@@ -414,42 +414,17 @@ class UsersController extends \BaseController {
   public function getFacebookPicture() {
     if (Auth::check()) {
     $user = Auth::user();
-    session_start();
-    $fb_config = Config::get('facebook');
-    FacebookSession::setDefaultApplication($fb_config["id"], $fb_config["secret"]);
-    $helper = new FacebookRedirectLoginHelper(url('/getPicture'));
-    try {
-      $session = $helper->getSessionFromRedirect();
-    } catch(FacebookRequestException $ex) {
-      dd($ex);
-    } catch(\Exception $ex) {
-      dd($ex);
-    }
-    echo var_dump($session);
-    echo var_dump($helper);
-    if ($session) {
-      $request = new FacebookRequest(
-          $session,
-          'GET',
-          '/me/picture',
-          array (
-            'redirect' => false,
-            'height' => '200',
-            'type' => 'normal',
-            'width' => '200',
-          )
-        );
-        $response = $request->execute();
-        $pic = $response->getGraphObject();
-        $image = Image::make($pic->getProperty('url'))->save(public_path().'/arquigrafia-avatars/'.$user->id.'.jpg'); 
+    if ($user->id_facebook != null) {
+        $image = file_get_contents('https://graph.facebook.com/'.$user->id_facebook.'/picture?type=large');
+        $file_name = public_path().'/arquigrafia-avatars/'.$user->id.'.jpg';
+        $file = fopen($file_name, 'w+');
+        fputs($file, $image);
+        fclose($file);
         $user->photo = '/arquigrafia-avatars/'.$user->id.'.jpg';
         $user->save();
-        echo dd($request);
-        echo dd($response);
       }
-      echo var_dump($user->photo);
-      return $user->photo;
-    } 
+    }
+    return $user->photo;
   }
 
   public function follow($user_id)

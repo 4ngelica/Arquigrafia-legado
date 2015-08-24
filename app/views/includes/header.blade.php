@@ -55,9 +55,9 @@
           <a id="user_photo" href="{{ URL::to("/users") }}/{{ Auth::user()->id; }}">
             
             <?php if (Auth::user()->photo != "") { ?>
-              <img  src="{{ asset(Auth::user()->photo); }}" class="user_photo_thumbnail"/>
+              <img  src="{{ asset(Auth::user()->photo); }}" class="user_photo_thumbnail profile-picture"/>
             <?php } else { ?>
-              <img src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" class="user_photo_thumbnail"/>
+              <img src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" class="user_photo_thumbnail profile-picture"/>
             <?php } ?>
             
           </a>
