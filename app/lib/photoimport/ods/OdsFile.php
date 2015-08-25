@@ -12,7 +12,8 @@ class OdsFile {
     $this->file = $file;
     $this->logger = $logger ?: new OdsFileLogger;
     $filename = $this->getFilename();
-    $this->logger->init($filename . '_logger', $this->getBasePath(), $filename);
+    $this->logger->init($filename . '_logger', $this->getBasePath(), false);
+    $this->logger->logToFile($filename);
   }
 
   public function getBasePath() {

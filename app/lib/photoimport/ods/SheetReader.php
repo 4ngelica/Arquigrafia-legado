@@ -3,7 +3,7 @@
 use Excel;
 
 class SheetReader {
-  
+
   protected $mapper;
 
   public function __construct(ColumnMapper $cm) {

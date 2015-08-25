@@ -37,9 +37,9 @@ class ColumnMapper {
   public function getPermissions($license, &$attributes) {
     $license = trim(str_replace(' ', '', $license));
     $break_pos = strpos($license, ',');
-    $break_pos = $break_pos === false ? strpos($license, '-') : $break_pos; 
+    $break_pos = $break_pos === false ? strpos($license, '-') : $break_pos;
     $attributes['allowCommercialUses'] = substr($license, 0, $break_pos);
-    $attributes['allowModifications'] = substr($license, $break_pos + 1);    
+    $attributes['allowModifications'] = substr($license, $break_pos + 1);
   }
 
   public function getTags($attrs, &$attributes) {

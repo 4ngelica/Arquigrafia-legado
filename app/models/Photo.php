@@ -365,9 +365,11 @@ class Photo extends Eloquent {
 	public static function import($attributes, $basepath) {
 		$tombo = $attributes['tombo'];
 		list( $image, $image_extension ) = static::getImage( $basepath, $tombo );
+		$image_extension = strtolower($image_extension);
 		$attributes['nome_arquivo'] = $tombo . '.' . $image_extension;
 		$photo = static::updateOrCreateByTombo( $tombo, $attributes );
 		$photo->saveImages( $image, $image_extension );
+		$photo->saveMetadata($image_extension);
 		return $photo;
 	}
 
