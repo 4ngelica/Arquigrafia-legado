@@ -168,8 +168,10 @@ class PhotosController extends \BaseController {
                 $tag->type = 'Material';
               }elseif ($typeTags == 'elements') {
                 $tag->type = 'Elements';
-              }else{
+              }elseif($typeTags == 'Typology'){
                 $tag->type = 'Typology';
+              }else{
+                $tag->type = 'General';
               }
 
               if($tag->count == null)
@@ -399,7 +401,21 @@ class PhotosController extends \BaseController {
   
     }
 
+  }
+  /**/
+  public static function filterTagByType($photo,$tagType){
+      $tagsArea = $photo->tags->toJson();
+      $jsonTagsArea=json_decode($tagsArea);      
+      $arrayTags = array_filter($jsonTagsArea,function($item) use ($tagType){
+        return $item->type == $tagType;
+      });
+      $tagsTypeList = array(); 
+      foreach ($arrayTags as $value) {
+        array_push($tagsTypeList, $value->name);
+      }
+      return $tagsTypeList;
   } 
+
   /* Edição do formulario institutional*/
   public function editFormInstitutional($id) {
     $photo = Photo::find($id);
@@ -421,6 +437,8 @@ class PhotosController extends \BaseController {
       $tagsArea = explode(',', $tagsArea);
     } else {
       $tagsArea = $photo->tags->lists('name');
+      $tagsArea = static::filterTagByType($photo,"General");
+      
     }
 
     if ( Session::has('tagsMaterialArea') )
@@ -428,21 +446,19 @@ class PhotosController extends \BaseController {
       $tagsMaterialArea = Session::pull('tagsMaterialArea');
       $tagsMaterialArea = explode(',', $tagsMaterialArea); 
     }else {
-      //$tagsMaterialArea = $photo->tags->lists('name','Type = "Typology"'); //->list('name','type');
-      //$tagsMaterialArea = $photo->tagsType("Material");
-      $tagsMaterialArea = $photo->tags;
-
-      $new = $tagsMaterialArea->filter(function ($tags) {
-            if($tags->type == 'Material'){
-                return TRUE;
-            }else{
-              return FALSE;
-            }
-
-           // return $key = "Type";
-          });
-
-      print_r($new); die();
+      
+      /*$tagsArea = $photo->tags->toJson();
+      $jsonTagsArea=json_decode($tagsArea);
+      $arrayTags = array_filter($jsonTagsArea,function($item){
+        return $item->type == "Material";
+      });
+      $tagsMaterialArea = array(); 
+      foreach ($arrayTags as $value) {
+        array_push($tagsMaterialArea, $value->name);
+      }*/
+      $tagsMaterialArea = static::filterTagByType($photo,"Material");
+      
+      
     }
 
     if ( Session::has('tagsElementsArea') )
@@ -450,7 +466,8 @@ class PhotosController extends \BaseController {
       $tagsElementsArea = Session::pull('tagsElementsArea');
       $tagsElementsArea = explode(',', $tagsElementsArea); 
     }else {
-      $tagsElementsArea = $photo->tags->lists('name');
+      //$tagsElementsArea = $photo->tags->lists('name');
+      $tagsElementsArea = static::filterTagByType($photo,"Elements");
     }
 
     if ( Session::has('tagsTypologyArea') )
@@ -458,7 +475,7 @@ class PhotosController extends \BaseController {
       $tagsTypologyArea = Session::pull('tagsTypologyArea');
       $tagsTypologyArea = explode(',', $tagsTypologyArea); 
     }else {
-      $tagsTypologyArea = $photo->tags->lists('name');
+      $tagsTypologyArea = static::filterTagByType($photo,"Typology");
     }
 
     if ( Session::has('workAuthorInput') )
