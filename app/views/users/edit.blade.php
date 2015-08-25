@@ -56,9 +56,8 @@
         function importPicture() {
           $.get("/getPicture")
             .done(function( data ) {
-              var pic = document.getElementsByClassName("profile-picture");
-              for (i = 0; i < pic.length; i++) {
-                pic[i].src = data;
+               {
+                $('.profile-picture').attr('src', data);
               }
             });
         }
