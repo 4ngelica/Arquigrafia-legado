@@ -4,6 +4,7 @@ use Photo;
 use Tag;
 use User;
 use lib\photoimport\ods\SheetReader;
+use lib\photoimport\ods\OdsFileSearcher;
 
 class Importer {
 
@@ -19,11 +20,12 @@ class Importer {
 
   protected $user;
 
-  public function __construct (Photo $photo, Tag $tag, SheetReader $sr, ImportLogger $logger) {
-    $this->photo = $photo;
-    $this->tag = $tag;
+  protected $ods_searcher;
+
+  public function __construct (SheetReader $sr, ImportLogger $logger, OdsFileSearcher $ofs) {
     $this->reader = $sr;
     $this->logger = $logger;
+    $this->ods_searcher = $ofs;
   }
 
   public function init() {
@@ -41,15 +43,23 @@ class Importer {
 
   public function fire($job, $data) {
     $this->init();
-    $ods = $data['ods'];
-    $user = $data['user'];
-    $this->setOds($ods);
-    $this->setUser($user);
+    $root = $data['root'];
+    $user = User::find( $data['user'] );
+    $this->setUser( $user );
     if ( $this->checkUserExists() ) {
-      $this->importFromFile();
+      $this->importFromAllFiles($root);
     } else {
       $this->logUndefinedUser();
-      return;
+    }
+    $job->delete();
+  }
+
+  public function importFromAllFiles($root) {
+    $all_files = $this->ods_searcher->search($root);
+
+    foreach ($all_files as $file) {
+      $this->setOds($file);
+      $this->importFromFile();
     }
   }
 
@@ -58,9 +68,10 @@ class Importer {
   }
 
   public function importFromFile() {
-    if ( ( $content = $this->getContent() ) == null ) { 
+    if ( ( $content = $this->getContent() ) == null ) {
       return;
     }
+    $this->logStartedToImportFile();
     return $this->importContent($content);
   }
 
@@ -69,6 +80,7 @@ class Importer {
     $ods_basepath = $this->ods->getBasePath();
     foreach ($content as $photo_data) {
       $photo_data['user_id'] = $this->user->id;
+      $photo_data['dataUpload'] = date('Y-m-d H:i:s');
       $tag_data = array_pull( $photo_data, 'tags' );
       $new_photo = $this->import($ods_basepath, $photo_data, $tag_data);
       if ( $new_photo != null ) {
@@ -80,7 +92,7 @@ class Importer {
 
   public function getContent() {
     try {
-      return $this->reader->read($this->ods);
+      return $this->reader->read($this->ods->getPathname());
     } catch (\Exception $e) {
       $this->logOdsReadingException($e, $this->ods);
       return null;
@@ -89,7 +101,7 @@ class Importer {
 
   public function import($basepath, $photo_data, $tag_data) {
     $photo = $this->importPhoto($photo_data, $basepath);
-    if ( $photo != null) {
+    if ( $photo != null ) {
       $tags = $this->importTags($tag_data);
       $photo->syncTags($tags);
     }
@@ -98,7 +110,7 @@ class Importer {
 
   public function importPhoto($attributes, $basepath) {
     try {
-       $photo = $this->photo->import($attributes, $basepath);
+       $photo = Photo::import($attributes, $basepath);
     } catch (\Exception $e) {
       $this->logPhotoException($e, $attributes['tombo']);
       return null;
@@ -109,7 +121,7 @@ class Importer {
 
   public function importTags($tag_data) {
     $tags = array();
-    $raw_tags = $this->tag->transform($tag_data);
+    $raw_tags = Tag::transform($tag_data);
     foreach($raw_tags as $rt) {
       if ( ($tag = $this->getTag($rt)) != null ) {
         $tags[] = $tag;
@@ -121,7 +133,7 @@ class Importer {
 
   public function getTag($tag_name) {
     try {
-      return $this->tag->getOrCreate($tag_name);
+      return Tag::getOrCreate($tag_name);
     } catch (\Exception $e) {
       $this->logTagException($e, $tag_name);
       return null;
@@ -148,18 +160,21 @@ class Importer {
 
   public function logUndefinedUser() {
     $message = "undefined_user: {$this->user}";
-    $message .= ",ods_file: {$this->ods->getPathname()}";
-    $this->logger->addError($message);
+    $this->logError($message, false);
   }
 
-  public function logError($message) {
+  public function logError($message, $logToOds = true) {
     $this->logger->addError($message);
-    $this->ods->logError($message);
+    if ( $logToOds ) {
+      $this->ods->logError($message);
+    }
   }
 
-  public function logInfo($message) {
+  public function logInfo($message, $logToOds = true) {
     $this->logger->addInfo($message);
-    $this->ods->logInfo($message);
+    if ( $logToOds ) {
+      $this->ods->logInfo($message);
+    }
   }
 
   public function logImportedPhoto($photo) {
@@ -170,6 +185,11 @@ class Importer {
   public function logImportedTag($tag) {
     $message = "imported_tag: {$tag->name}";
     $this->logInfo($message);
+  }
+
+  public function logStartedToImportFile() {
+    $message = "Started to import file '{$this->ods->getPathname()}'";
+    $this->logInfo($message, false);
   }
 
 }

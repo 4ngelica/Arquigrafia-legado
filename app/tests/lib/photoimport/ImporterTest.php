@@ -5,13 +5,13 @@ use Mockery as m;
 use lib\photoimport\import\Importer;
 use lib\photoimport\import\ImportLogger;
 use lib\photoimport\ods\SheetReader;
+use lib\photoimport\ods\OdsFileSearcher;
 
 class ImporterTest extends TestCase {
 
-  protected $photo;
-  protected $tag;
   protected $reader;
   protected $logger;
+  protected $ods_searcher;
   protected $dependencies;
 
   public static function setUpBeforeClass()
@@ -37,15 +37,13 @@ class ImporterTest extends TestCase {
   private function prepareForTests()
   {
     Artisan::call('migrate');
-    $this->photo = m::mock('Photo');
-    $this->tag = m::mock('Tag');
     $this->reader = m::mock('lib\photoimport\ods\SheetReader');
     $this->logger = m::mock('lib\photoimport\import\ImportLogger');
+    $this->ods_searcher = m::mock('lib\photoimport\ods\OdsFileSearcher');
     $this->dependencies = array(
-        $this->photo,
-        $this->tag,
         $this->reader,
-        $this->logger
+        $this->logger,
+        $this->ods_searcher
       );
   }
 
@@ -94,9 +92,7 @@ class ImporterTest extends TestCase {
 
   public function testShouldImportTags() {
     $importer = m::mock('lib\photoimport\import\Importer[logImportedTag]',
-      array(
-          $this->photo, new Tag, $this->reader, $this->logger
-        ));
+      $this->dependencies );
     $tag_data = 'tag1, ,, tag2, tag3, ,,';
     $tag1 = new Tag; $tag1->name = 'tag1'; $tag1->save();
     $importer->shouldReceive('logImportedTag')->times(3)
@@ -122,12 +118,7 @@ class ImporterTest extends TestCase {
     ImageManager::shouldReceive('makeAll')->once()
       ->with('image', m::any(), 'extension');
     $importer = m::mock('lib\photoimport\import\Importer[logImportedPhoto]',
-      array(
-        new Photo,
-        $this->tag,
-        $this->reader,
-        $this->logger
-      ));
+      $this->dependencies);
     $importer->shouldReceive('logImportedPhoto')->once()
       ->with( m::type('Photo') );
     $result = $importer->importPhoto($attributes, 'basepath');
@@ -205,9 +196,7 @@ class ImporterTest extends TestCase {
     ImageManager::shouldReceive('makeAll')->times(2)
       ->with('image', m::type('string'), 'extension');
     $importer = m::mock('lib\photoimport\import\Importer' .
-        '[logError, logInfo]', array(
-            new Photo, new Tag, $this->reader, $this->logger
-          ));
+        '[logError, logInfo]', $this->dependencies);
     $importer->shouldReceive('logInfo')->times(6)
       ->with(m::type('string'));
     $importer->shouldReceive('logError')->times(0);
@@ -265,9 +254,7 @@ class ImporterTest extends TestCase {
       ->andThrow('Intervention\Image\Exception\NotWritableException');
     
     $importer = m::mock('lib\photoimport\import\Importer' .
-        '[logError, logInfo]', array(
-            new Photo, new Tag, $this->reader, $this->logger
-          ));
+        '[logError, logInfo]', $this->dependencies);
     $importer->shouldReceive('logInfo')->times(3)
       ->with(m::type('string'));
     $importer->shouldReceive('logError')->once();

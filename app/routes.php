@@ -101,6 +101,9 @@ Route::get('/photos/batch','PhotosController@batch');
 Route::get('/photos/upload','PhotosController@form');
 Route::get('/photos/newUpload','PhotosController@newForm');
 Route::get('/photos/{photo_id}/editInstitutional','PhotosController@editFormInstitutional');
+Route::post('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');
+Route::get('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');
+
 Route::get('/photos/download/{photo_id}','PhotosController@download');
 Route::get('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');
 Route::post('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');

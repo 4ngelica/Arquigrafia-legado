@@ -25,6 +25,34 @@ class Tag extends Eloquent {
     return $photos;
   }
 
+  public static function allTagsPhoto($photo_id){     
+    $photosTagAssignment = DB::table('tag_assignments')
+      ->select('tag_id')
+      ->where('photo_id',$photo_id)
+      ->lists('tag_id');
+
+    $listTags = array();
+    
+     $tags = Tag::wherein('id',$photosTagAssignment)->get(); 
+     
+     return $tags;
+  }
+
+  public static function allTagsPhotoByType($photo_id,$type){     
+
+    $photosTagType = DB::table('tag_assignments')
+            ->join('tags', 'tag_assignments.tag_id', '=', 'tags.id')
+            ->select('tags.id')
+            ->where('tag_assignments.photo_id',$photo_id)
+            ->where('tags.type',$type)
+            ->lists('tags.id');
+
+
+     $tags = Tag::wherein('id',$photosTagType)->get(); 
+     
+     return $tags;
+  }
+
   public static function getOrCreate($name, $type = null) {
     $tag = static::firstOrNew(['name' => $name]);
     $tag->type = $type;

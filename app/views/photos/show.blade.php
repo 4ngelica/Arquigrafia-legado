@@ -293,7 +293,7 @@
           @endif
         </a>
         <h1 id="single_view_owner_name"><a href="{{ URL::to("/users/".$owner->id) }}" id="name">{{ $owner->name }}</a></h1>
-        @if ( !$owner->equal(Auth::user()) )
+        @if ( Auth::check() && !$owner->equal(Auth::user()) )
           @if (!empty($follow) && $follow == true )
             <a href="{{ URL::to("/friends/follow/" . $owner->id) }}" id="single_view_contact_add">Seguir</a><br />
           @else
@@ -310,16 +310,17 @@
       <hgroup class="profile_block_title">
         <h3><i class="info"></i> Informações</h3>
           &nbsp; &nbsp;
-        @if ($owner->equal(Auth::user()))
-          @if(Session::get('institutionId'))
+          @if($belongInstitution)
           <a href= '{{"/photos/" . $photos->id . "/editInstitutional" }}' title="Editar informações da imagem">
           <img src="{{ asset("img/edit.png") }}" width="16" height="16"/>
           </a>
-          @else
+          @endif
+          @if($owner->equal(Auth::user()) && $hasInstitution == false && !Session::get('institutionId'))
+
           <a href= '{{"/photos/" . $photos->id . "/edit" }}' title="Editar informações da imagem">
           <img src="{{ asset("img/edit.png") }}" width="16" height="16"/>
           </a>
-          @endif
+        
         @endif
       </hgroup>
 

@@ -18,7 +18,7 @@ class ImageManager {
   }
 
   public function makeOriginal($image, $prefix, $extension) {
-    $image->save($prefix . '_original' . $extension);
+    $image->save($prefix . '_original.' . $extension);
   }
 
   public function make200h($image, $prefix) {
@@ -27,6 +27,10 @@ class ImageManager {
 
   public function makeHome($image, $prefix) {
     $image->fit(186, 124)->encode('jpg', 70)->save($prefix . '_home.jpg');
+  }
+
+  public function makeView($image, $prefix) {
+    $image->widen(600)->save($prefix . '_view.jpg');
   }
 
   public function makeAll($image, $prefix, $extension) {
