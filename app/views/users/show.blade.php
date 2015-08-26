@@ -63,7 +63,7 @@
     					</a>
 					</div>
  				@endif
- 			@else
+ 			@elseif (Auth::check() && $user->id == Auth::user()->id)
  				<a href="{{ URL::to("/users/" . $user->id . "/edit") }}" id="single_view_contact_add" title="Edite o seu perfil">Editar perfil</a><br />
 			@endif	
 			  
