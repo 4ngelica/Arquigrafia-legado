@@ -23,8 +23,8 @@ $(window).load(function(e) {
   imgcounter = 0;
   function changeImage() {
     var $item = $("#panel .item").eq(imgcounter);
-    $item.addClass('sharpen');
 	$item.find("img").attr("src", $item.find("img").data("src") );
+	$item.find("img").bind("load", function(){$item.addClass('sharpen');});
     imgcounter++;
   }
   setInterval(changeImage, 10);
