@@ -19,6 +19,16 @@ $(window).load(function(e) {
 		}
 	});
 	
+	// teste de carregamento
+  imgcounter = 0;
+  function changeImage() {
+    var $item = $("#panel .item").eq(imgcounter);
+    $item.addClass('sharpen');
+	$item.find("img").attr("src", $item.find("img").data("src") );
+    imgcounter++;
+  }
+  setInterval(changeImage, 10);
+	
 	// pan by depth
 	/* $("body").mousemove(function(e) {
     var ww = $(window).width();
