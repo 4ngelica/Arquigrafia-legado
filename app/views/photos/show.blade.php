@@ -293,7 +293,7 @@
           @endif
         </a>
         <h1 id="single_view_owner_name"><a href="{{ URL::to("/users/".$owner->id) }}" id="name">{{ $owner->name }}</a></h1>
-        @if ( !$owner->equal(Auth::user()) )
+        @if ( Auth::check() && !$owner->equal(Auth::user()) )
           @if (!empty($follow) && $follow == true )
             <a href="{{ URL::to("/friends/follow/" . $owner->id) }}" id="single_view_contact_add">Seguir</a><br />
           @else
