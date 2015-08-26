@@ -33,14 +33,22 @@ class Tag extends Eloquent {
 
     $listTags = array();
     
-    //dd($photosTagAssignment);
-
-    foreach ($photosTagAssignment as $value) {
-          $listTags[] = $value;
-    }
-    //dd($listTags);
-    // $listTags=$photosTagAssignment->lists('tag_id'); //dd($listTags);
      $tags = Tag::wherein('id',$photosTagAssignment)->get(); 
+     
+     return $tags;
+  }
+
+  public static function allTagsPhotoByType($photo_id,$type){     
+
+    $photosTagType = DB::table('tag_assignments')
+            ->join('tags', 'tag_assignments.tag_id', '=', 'tags.id')
+            ->select('tags.id')
+            ->where('tag_assignments.photo_id',$photo_id)
+            ->where('tags.type',$type)
+            ->lists('tags.id');
+
+
+     $tags = Tag::wherein('id',$photosTagType)->get(); 
      
      return $tags;
   }
