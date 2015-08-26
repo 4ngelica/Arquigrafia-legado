@@ -22,7 +22,7 @@ class PhotosController extends \BaseController {
   }
 
   public function show($id)
-  {
+  { 
     $photos = Photo::find($id);
     if ( !isset($photos) ) {
       return Redirect::to('/');
@@ -35,7 +35,16 @@ class PhotosController extends \BaseController {
     $evaluations = null;
     $photoliked = null;
     $follow = true;
+    $belongInstitution = false;
+    $hasInstitution = false; 
     if (Auth::check()) {
+      if(Session::has('institutionId')){
+        $belongInstitution = Institution::belongInstitution($photos->id,Session::get('institutionId'));
+        $hasInstitution = Institution::belongSomeInstitution($photos->id);
+      } else{
+        $hasInstitution = Institution::belongSomeInstitution($photos->id);
+      }
+      
       $photoliked = Like::fromUser($user)->withLikable($photos)->first();
       $evaluations =  Evaluation::where("user_id", $user->id)->where("photo_id", $id)->orderBy("binomial_id", "asc")->get();
       if ($user->following->contains($photo_owner->id)) {
@@ -62,6 +71,8 @@ class PhotosController extends \BaseController {
       'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photos->id),
       'photoliked' => $photoliked,
       'license' => $license,
+      'belongInstitution' => $belongInstitution,
+      'hasInstitution' => $hasInstitution
     ]);
   }
 
@@ -416,47 +427,41 @@ class PhotosController extends \BaseController {
       return $tagsTypeList;
   } 
 
-  public static function updateTags2($tags,$photo,$typeTags){
-  $tags2= $tags;
+  public static function updateTags($newTags,$photo,$typeTags){
+  
   $photo_tags = $photo->tags;
-  $allTags = Tag::allTagsPhoto($photo->id);
-  //print_r($allTags[0]); die();
-  foreach ($allTags as $alltag) {
-    $photo->tags()->detach($alltag->id);
-  }
-  try{
-  foreach($photo_tags as $tag){
+  $allTags = Tag::allTagsPhotoByType($photo->id,$typeTags); 
+  //dd($allTags);
+  foreach ($allTags as $tag){
+  //foreach($photo_tags as $tag){
     $tag->count--;
     $tag->save();                
   }
 
-      foreach ($tags2 as $t) {
-              $tag = Tag::where('name', $t)->first();
+  foreach ($allTags as $alltag) {
+    $photo->tags()->detach($alltag->id);
+  }
+
+  try{
+      foreach ($newTags as $t) {
+              $tag = Tag::where('name', $t)
+                    ->where('type', $typeTags)
+              ->first();
 
               if(is_null($tag)){
                 $tag = new Tag();
                 $tag->name = $t;
+                $tag->type = $typeTags;
                 $tag->save();
               }
 
               $photo->tags()->attach($tag->id);
-
-              if($typeTags == 'material'){
-                $tag->type = 'Material';
-              }elseif ($typeTags == 'elements') {
-                $tag->type = 'Elements';
-              }elseif($typeTags == 'Typology'){
-                $tag->type = 'Typology';
-              }else{
-                $tag->type = 'General';
-              }
 
               if($tag->count == null)
                   $tag->count = 0;
               $tag->count++;
               $tag->save(); 
 
-              if($typeTags == 'Typology') dd($tag);
           }
 
           $saved = true;
@@ -468,7 +473,7 @@ class PhotosController extends \BaseController {
       return $saved;  
   }
 
-  public static function updateTags($tags,$photo,$typeTags){
+  public static function updateTags2($tags,$photo,$typeTags){
     $tags_id = [];
     $photo_tags = $photo->tags;
     //dd($photo_tags);
@@ -491,14 +496,7 @@ class PhotosController extends \BaseController {
               if(is_null($tag)){
                   $tag = new Tag();
                   $tag->name = $t;
-                  $tag->type = 'General';
-                  if($typeTags == 'material'){
-                      $tag->type = 'Material';
-                  }elseif ($typeTags == 'elements') {
-                      $tag->type = 'Elements';
-                  }elseif($typeTags == 'typology'){
-                      $tag->type = 'Typology';
-                  }
+                  $tag->type = $typeTags;                  
                   $tag->save();
               }
 
@@ -541,10 +539,10 @@ class PhotosController extends \BaseController {
   public function editFormInstitutional($id) {
     $photo = Photo::find($id);
     $logged_user = Auth::User();
-
+    //dd($logged_user->id == $photo->user_id);
     if ($logged_user == null) {
       return Redirect::action('PagesController@home');
-    }elseif ($logged_user->id == $photo->user_id) { 
+    }elseif (Session::get('institutionId') == $photo->institution_id) { 
       $institution = null;
     if(Session::has('institutionId')){
       $institution = Institution::find(Session::get('institutionId'));
@@ -724,11 +722,11 @@ class PhotosController extends \BaseController {
               $tagsMaterial = static::formatTags($tagsMaterial);
               $tagsElements = static::formatTags($tagsElements);
               $tagsTypology = static::formatTags($tagsTypology);
-              //dd($tagsTypology);
-              $tagsSaved = static::updateTags($tags,$photo,'general');
-              $tagsMaterialSaved = static::updateTags($tagsMaterial,$photo,'material');
-              $tagsElementsSaved = static::updateTags($tagsElements,$photo,'elements');
-              $tagsTypologySaved = static::updateTags($tagsTypology,$photo,'typology');
+              
+              $tagsSaved = static::updateTags($tags,$photo,'General');
+              $tagsMaterialSaved = static::updateTags($tagsMaterial,$photo,'Material');
+              $tagsElementsSaved = static::updateTags($tagsElements,$photo,'Elements');
+              $tagsTypologySaved = static::updateTags($tagsTypology,$photo,'Typology');
 
               if(!$tagsSaved || !$tagsSaved || !$tagsElementsSaved || !$tagsTypologySaved){             
                   $photo->forceDelete();
