@@ -45,10 +45,11 @@ class Date {
 		'XXIII'
 	];
 
-	public function formatDate($date)
-	{
+	public function formatDate($date) {
+		if ( $this->isFormatted($date) ) {
+			return $date;
+		}
 		$formattedDate = DateTime::createFromFormat('d/m/Y', $date);
-		
 		if ($formattedDate &&
 			DateTime::getLastErrors()["warning_count"] == 0 &&
 			DateTime::getLastErrors()["error_count"] == 0)
@@ -57,39 +58,37 @@ class Date {
 		return null;
 	}
 
-	public function formatDatePortugues($dateTime)
-	{
+	public function formatDatePortugues($dateTime) {
 		$formattedDate = DateTime::createFromFormat('Y-m-d H:i:s', $dateTime);
-		
+
 		if ($formattedDate &&
 			DateTime::getLastErrors()["warning_count"] == 0 &&
 			DateTime::getLastErrors()["error_count"] == 0)
 				return $formattedDate->format('d/m/Y');
 
 		return null;
-
 	}
 
 	public function translate($date) {
-		
+
 		if ($date == null) return null;
 
 		//verifica se é um intervalo
-		if (strpos($date, '/') !== false) {
+		if ( $this->isInterval($date) ) {
 			return ucfirst($this->translateInterval($date));
 		}
 		if ( $this->isCentury($date) ) {
 			return ucfirst($this->translateCentury($date));
 		}
 		if ( $this->isDecade($date) ) {
-			return ucfirst($this->translateDecade($date));	
+			return ucfirst($this->translateDecade($date));
 		}
-		return ucfirst($this->translateDate($date));	
+		return ucfirst($this->translateDate($date));
 	}
 
 	public function translateInterval($date) {
 		$dates = explode('/', $date);
-		
+
 		if ( $this->isCentury($dates[0]) && $this->isCentury($dates[1]) )
 			return 'entre o ' . $this->translateCentury($dates[0]) . ' e o ' . $this->translateCentury($dates[1]);
 
@@ -128,17 +127,48 @@ class Date {
 		return 'década de ' . (intval($decade) * 10);
 	}
 
-	public function isDecade($date) {
-		return strlen($date) == 3 && preg_match('#\d{3,}#', $date);
-	}
-
 	public function isCentury($date) {
 		return strlen($date) == 2 && preg_match('#\d{2,}#', $date);
 	}
 
+	public function isDecade($date) {
+		return strlen($date) == 3 && preg_match('#\d{3,}#', $date);
+	}
+
+	public function isYear($date) {
+		return strlen($date) == 4 && preg_match('#(\d{4,})#', $date);
+	}
+
+	public function isFullDate($date) {
+		return strlen($date) == 10 && preg_match('#(\d{4,})-(\d{2,})-(\d{2,})#', $date);
+	}
+
+	public function isPartialDate($date) {
+		if ( strlen($date) == 7 && preg_match('#(\d{4,})-(\d{2,})#', $date) ) {
+			return true;
+		}
+		return $this->isYear($date);
+	}
+
+	public function isDate($date) {
+		return $this->isFullDate($date) ?: $this->isPartialDate($date);
+	}
+
+	public function isInterval($date) {
+		return strpos($date, '/') !== false;
+	}
+
+	public function isFormatted($date) {
+		if ( $this->isInterval($date) && count($dates = explode('/', $date)) == 2 ) {
+			return $this->isFormatted($dates[0]) && $this->isFormatted($dates[1]);
+		}
+		return ( $this->isCentury($date) || $this->isDecade($date)
+			|| $this->isDate($date) );
+	}
+
 	public function dateDiff($start, $end = false){
 		$stringDate = array();
-   
+
    		try {
       			$start = new DateTime($start);
       			$end = new DateTime($end);
@@ -146,7 +176,7 @@ class Date {
    			} catch (\Exception $e){
       			return $e->getMessage();
    			}
-   
+
    			$display = array('y'=>'ano',
                'm'=>'mês',
                'd'=>'dia',
@@ -159,7 +189,8 @@ class Date {
          			$stringDate[] = $form->$key.' '.($form->$key > 1 ? $value.'s' : $value);
       			}
    			}
-   
+
    			return implode($stringDate, ', ');
 	}
+
 }
