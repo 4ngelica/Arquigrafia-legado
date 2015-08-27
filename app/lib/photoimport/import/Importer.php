@@ -72,7 +72,9 @@ class Importer {
       return;
     }
     $this->logStartedToImportFile();
-    return $this->importContent($content);
+    $photos = $this->importContent($content);
+    $this->logFoundPhotos($content);
+    $this->logImportedPhotosCount($photos);
   }
 
   public function importContent($content) {
@@ -125,9 +127,11 @@ class Importer {
     foreach($raw_tags as $rt) {
       if ( ($tag = $this->getTag($rt)) != null ) {
         $tags[] = $tag;
-        $this->logImportedTag($tag);
+        // $this->logImportedTag($tag);
       }
     }
+    $this->logFoundTags($raw_tags);
+    $this->logImportedTagsCount($tags);
     return $tags;
   }
 
@@ -190,6 +194,26 @@ class Importer {
   public function logStartedToImportFile() {
     $message = "Started to import file '{$this->ods->getPathname()}'";
     $this->logInfo($message, false);
+  }
+
+  public function logFoundTags($tags) {
+    $message = "total_found_tags: " . count($tags);
+    $this->logInfo($message);
+  }
+
+  public function logImportedTagsCount($tags) {
+    $message = "total_imported_tags: " . count($tags);
+    $this->logInfo($message);
+  }
+
+  public function logFoundPhotos($photos) {
+    $message = "total_found_photos: " . count($photos);
+    $this->logInfo($message);
+  }
+
+  public function logImportedPhotosCount($photos) {
+    $message = "total_imported_photos: " . count($photos);
+    $this->logInfo($message);
   }
 
 }

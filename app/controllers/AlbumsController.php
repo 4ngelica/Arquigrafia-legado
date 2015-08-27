@@ -186,7 +186,7 @@ class AlbumsController extends \BaseController {
 		$photos = Photo::paginateAlbumPhotos($album, 48);
 		$photos_ids = [];
 		foreach ($photos as $photo) {
-			array_push($photos_ids, $photo->id);
+			$photos_ids[] = $photo->id;
 		}
 		return $photos_ids;
 	}

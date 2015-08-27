@@ -14,7 +14,7 @@ class ImportsController extends \BaseController {
 
     $acervoquapa = User::whereLogin('acervoquapa')->first();
     $this->importOdsFiles($acervoquapa, $root . 'acervoquapa');
-
+    return Redirect::to('/');
   }
 
   public function importOdsFiles($user, $root) {

@@ -45,6 +45,10 @@ class ImporterTest extends TestCase {
         $this->logger,
         $this->ods_searcher
       );
+    $exiv2 = m::mock('lib\metadata\Exiv2');
+    Exiv2::shouldReceive('getInstance')->andReturn($exiv2);
+    $exiv2->shouldReceive('saveMetadata');
+
   }
 
   public function setUp()
@@ -72,7 +76,6 @@ class ImporterTest extends TestCase {
 
     $importer->logError('message');
   }
-
   public function testExceptionsAreLogged() {
     $exception = m::mock('fake_exception');
     $exception->shouldReceive('getMessage')
@@ -91,12 +94,14 @@ class ImporterTest extends TestCase {
   }
 
   public function testShouldImportTags() {
-    $importer = m::mock('lib\photoimport\import\Importer[logImportedTag]',
+    $importer = m::mock('lib\photoimport\import\Importer[logFoundTags, logImportedTagsCount]',
       $this->dependencies );
     $tag_data = 'tag1, ,, tag2, tag3, ,,';
     $tag1 = new Tag; $tag1->name = 'tag1'; $tag1->save();
-    $importer->shouldReceive('logImportedTag')->times(3)
-      ->with(m::type('Tag'));
+    $importer->shouldReceive('logFoundTags')->once()
+      ->with(m::type('array'));
+    $importer->shouldReceive('logImportedTagsCount')->once()
+      ->with(m::type('array'));
     $result = $importer->importTags($tag_data);
 
     $this->assertTrue( is_array($result) );
@@ -121,8 +126,10 @@ class ImporterTest extends TestCase {
       $this->dependencies);
     $importer->shouldReceive('logImportedPhoto')->once()
       ->with( m::type('Photo') );
+
     $result = $importer->importPhoto($attributes, 'basepath');
-        $this->assertTrue($result instanceof Photo);
+    
+    $this->assertTrue($result instanceof Photo);
     $this->assertEquals('new photo', $result->name);
     $this->assertEquals('new author', $result->imageAuthor);
     $this->assertEquals($user->id, $result->user_id);
@@ -272,6 +279,5 @@ class ImporterTest extends TestCase {
     $this->assertTrue($tags1->has($tag1));
     $this->assertTrue($tags1->has($tag2));
   }
-
 
 }
