@@ -2,6 +2,7 @@
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Formatter\LineFormatter;
 use File;
 
 class SimpleLogger {
@@ -63,7 +64,13 @@ class SimpleLogger {
   }
 
   public function newHandler($file) {
-    return new StreamHandler($file);
+    $handler = new StreamHandler($file);
+    $handler->setFormatter($this->newFormatter());
+    return $handler;
+  }
+
+  public function newFormatter() {
+    return new LineFormatter(null, null, false, true);
   }
 
   public function addInfo($message, array $context = array())
