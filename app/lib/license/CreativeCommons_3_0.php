@@ -21,7 +21,7 @@ class CreativeCommons_3_0 {
 				// Nothing
 				break;
 			case 'NO':
-				$result += '-NC';
+				$result .= '-NC';
 				break;
 		}
 		switch ($this->allowModifications) {
@@ -29,10 +29,10 @@ class CreativeCommons_3_0 {
 				// Nothing
 				break;
 			case 'YES_SA':
-				$result += '-SA';
+				$result .= '-SA';
 				break;
 			case 'NO':
-				$result += '-ND';
+				$result .= '-ND';
 				break;
 		}
 		return $result;

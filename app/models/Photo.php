@@ -1,8 +1,6 @@
 <?php
 
 use lib\date\Date;
-use lib\metadata\Exiv2;
-use lib\license\CreativeCommons_3_0;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Illuminate\Database\Eloquent\Collection as Collection;
 
@@ -94,13 +92,8 @@ class Photo extends Eloquent {
 	public function saveMetadata($originalFileExtension)
 	{
 		$user = $this->user;
-		$exiv2 = new Exiv2($originalFileExtension, $this->id, public_path() . '/arquigrafia-images/');
-		$exiv2->setImageAuthor($this->workAuthor);
-		$exiv2->setArtist($this->workAuthor, $user->name);
-		$exiv2->setCopyRight($this->workAuthor,
-			new CreativeCommons_3_0($this->allowCommercialUses, $this->allowModifications));
-		$exiv2->setDescription($this->description);
-		$exiv2->setUserComment($this->aditionalImageComments);
+		$exiv2 = Exiv2::getInstance($originalFileExtension, $this, public_path() . '/arquigrafia-images/');
+		$exiv2->saveMetadata();
 	}
 
 	public static function paginateUserPhotos($user, $perPage = 24) {
