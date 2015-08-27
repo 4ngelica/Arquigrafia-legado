@@ -82,7 +82,7 @@ class Importer {
     $ods_basepath = $this->ods->getBasePath();
     foreach ($content as $photo_data) {
       $photo_data['user_id'] = $this->user->id;
-      $photo_data['dataUpload'] = date('Y-m-d H:i:s');
+      // $photo_data['dataUpload'] = date('Y-m-d H:i:s');
       $tag_data = array_pull( $photo_data, 'tags' );
       $new_photo = $this->import($ods_basepath, $photo_data, $tag_data);
       if ( $new_photo != null ) {

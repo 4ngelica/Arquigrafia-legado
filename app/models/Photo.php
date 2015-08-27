@@ -383,6 +383,9 @@ class Photo extends Eloquent {
 		if ( $photo->trashed() ) {
 			$photo->restore();
 		} else {
+			if ( ! $photo->exists ) {
+				$photo->dataUpload = date('Y-m-d H:i:s');
+			}
 			$photo->save();
 		}
 		return $photo;
