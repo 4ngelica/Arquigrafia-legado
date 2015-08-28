@@ -339,7 +339,7 @@
 			
 			</div>
 
-
+{{-- 
 				<script>
 
 					FB.init({
@@ -358,7 +358,7 @@
 							});
 						}
 				</script>
-
+ --}}
 
 
 		<div id="fb-root"></div>
