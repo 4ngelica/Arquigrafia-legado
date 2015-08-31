@@ -351,6 +351,7 @@ class UsersController extends \BaseController {
         Auth::loginUsingId($user->id);
         if(is_null($user->id_facebook)) {
           $user->id_facebook = $fbid;
+          $user->save();
         }
         // pega avatar
         $request = new FacebookRequest(
