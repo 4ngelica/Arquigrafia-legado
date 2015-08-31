@@ -35,24 +35,6 @@ function showTags(tagsJson, containerText, tagInput){
 
 $(document).ready(function() {
 
-
-
-//tags
-    /*$('#tags_input').textext({ plugins : 'autocomplete'})
-
-    .bind('getSuggestions', function(e, data)
-         {
-            var list = [ 'tijolo','bloque', 'madeira'  ],            
-                textext = $(e.target).textext()[0],
-                query = (data ? data.query : '') || ''
-                ;
-
-            $(this).trigger(
-                'setSuggestions',
-                { result : textext.itemManager().filter(list, query) }            
-            );                            
-    }); */
-
     $('#tags_input').textext({ plugins : 'autocomplete ajax',
             ajax : {
                 url : '/js/tagList.json',
@@ -63,11 +45,7 @@ $(document).ready(function() {
     ;
 
 
-
-
     $('#tagsArea').textext({ plugins: 'tags' });
-
-    
 
     $('#add_tag').click(function(e) {
                 e.preventDefault();
@@ -78,7 +56,6 @@ $(document).ready(function() {
                 $('#tags_input').val('');
     });
 
-
     $('#workAuthor').textext({ plugins : 'autocomplete ajax',
             ajax : {
                 url : '/js/autor.json',
@@ -87,93 +64,7 @@ $(document).ready(function() {
             }
         })
     ;
-
-
- /////
-//tags material
-/*
-$('#tagsMaterial').textext({ plugins : 'autocomplete'}) //input
-    .bind('getSuggestions', function(e, data)
-         {
-            var list = [ 'tijolo','concreto', 'concreto armado', 'vidro'  ],            
-                textext = $(e.target).textext()[0],
-                query = (data ? data.query : '') || ''
-                ;
-
-            $(this).trigger(
-                'setSuggestions',
-                { result : textext.itemManager().filter(list, query) }            
-            );                            
- }); */
-
-    $('#tagsMaterial').textext({ plugins : 'autocomplete ajax',
-            ajax : {
-                url : '/js/tagListMaterial.json',
-                dataType : 'json',
-                cacheResults : true
-            }
-        })
-    ;
-
-    $('#tagsMaterialArea').textext({ plugins: 'tags' });
-
-
-    $('#addTagMaterial').click(function(e) {
-                e.preventDefault();
-                var tagMaterial = $('#tagsMaterial').val();
-               // alert(tag);
-                if (tagMaterial == '') return;
-                $('#tagsMaterialArea').textext()[0].tags().addTags([ tagMaterial ]);
-                $('#tagsMaterial').val('');
-    });
-
- //tags elements
-
-    $('#tagsElements').textext({ plugins : 'autocomplete ajax',
-            ajax : {
-                url : '/js/tagListElements.json',
-                dataType : 'json',
-                cacheResults : true
-            }
-        })
-    ;
-
-    $('#tagsElementsArea').textext({ plugins: 'tags' });
-
-
-    $('#addTagElements').click(function(e) {
-                e.preventDefault();
-                var tag = $('#tagsElements').val();
-               // alert(tag);
-                if (tag == '') return;
-                $('#tagsElementsArea').textext()[0].tags().addTags([ tag ]);
-                $('#tagsElements').val('');
-    });    
-    
-//tags tipology
-
-    $('#tagsTypology').textext({ plugins : 'autocomplete ajax',
-            ajax : {
-                url : '/js/tagListTypology.json',
-                dataType : 'json',
-                cacheResults : true
-            }
-        })
-    ;
-
-    $('#tagsTypologyArea').textext({ plugins: 'tags' });
-    
-
-
-    $('#addTagTypology').click(function(e) {
-                e.preventDefault();
-                var tag = $('#tagsTypology').val();
-               // alert(tag);
-                if (tag == '') return;
-                $('#tagsTypologyArea').textext()[0].tags().addTags([ tag ]);
-                $('#tagsTypology').val('');
-    }); 
-
+ 
 ////
 
     $(function() {
