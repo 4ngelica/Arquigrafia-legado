@@ -220,7 +220,7 @@ class UsersController extends \BaseController {
   { 
      $input = Input::all();   
      $user = User::userInformation($input["login"]);
-     //UsersController::integrateAccounts($user->email);    
+     $integration_message = UsersController::integrateAccounts($user->email);
     if ($user != null && $user->oldAccount == 1) 
     {
       if ( User::checkOldAccount($user, $input["password"]) )
@@ -241,6 +241,9 @@ class UsersController extends \BaseController {
         Session::forget('filter.login');
         $source_page = Request::header('referer');
         ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+        if (isset($integration_message)) {
+          return Redirect::to('/')->with('msgWelcome', $integration_message);  
+        }
         return Redirect::intended('/');
       }
         
@@ -266,10 +269,16 @@ class UsersController extends \BaseController {
         
         $source_page = Request::header('referer');
         ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+        if (isset($integration_message)) {
+          return Redirect::to('/')->with('msgWelcome', $integration_message);  
+        }
         return Redirect::to('/');
       }
       $source_page = Request::header('referer');
       ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+      if (isset($integration_message)) {
+        return Redirect::to('/')->with('msgWelcome', $integration_message);  
+      }
       return Redirect::to('/');
     } else {
 			Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
@@ -333,6 +342,7 @@ class UsersController extends \BaseController {
       $fbid = $fbuser->getProperty('id');
       $fbmail = $fbuser->getProperty('email');
       
+      $integration_message = UsersController::integrateAccounts($fbmail);
       //usuarios antigos tem campo id_facebook null, mas existe login = $fbid;
       $user = User::where('id_facebook', '=', $fbid)->orWhere('login', '=', $fbid)->first();
       
@@ -364,8 +374,10 @@ class UsersController extends \BaseController {
 
         $source_page = Request::header('referer');
         ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "facebook", "user");
-        
-        return Redirect::to('/')->with('message', "Bem-vindo {$user->name}!");
+        if (isset($integration_message)) {
+          return Redirect::to('/')->with('msgWelcome', $integration_message);  
+        }
+        return Redirect::to('/')->with('msgWelcome', "Bem-vindo {$user->name}!");
         
       } else {
         $query = User::where('email', '=', $fbmail)->first();
@@ -375,7 +387,10 @@ class UsersController extends \BaseController {
           Auth::loginUsingId($query->id);
           $source_page = Request::header('referer');
           ActionUser::printLoginOrLogout($query->id, $source_page, "Login", "facebook", "user");
-          return Redirect::to('/')->with('message', "Bem-vindo {$query->name}!");
+          if (isset($integration_message)) {
+            return Redirect::to('/')->with('msgWelcome', $integration_message);  
+          }
+          return Redirect::to('/')->with('msgWelcome', "Bem-vindo {$query->name}!");
         }
         else {
         $user = new User;
