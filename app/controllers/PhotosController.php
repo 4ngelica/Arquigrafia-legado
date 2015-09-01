@@ -112,10 +112,6 @@ class PhotosController extends \BaseController {
     $tagsArea = null;
     $workAuthorInput = null;
 
-    $tagsMaterialArea = null;
-    $tagsElementsArea = null;
-    $tagsTypologyArea = null;
-
     if ( Session::has('tagsArea') )
     {  
       $tagsArea = Session::pull('tagsArea');
@@ -126,29 +122,11 @@ class PhotosController extends \BaseController {
       $workAuthorInput = Session::pull('workAuthorInput');
       
     }
-     if ( Session::has('tagsMaterialArea') )
-    {  
-      $tagsMaterialArea = Session::pull('tagsMaterialArea');
-      $tagsMaterialArea = explode(',', $tagsMaterialArea); 
-    }
-    if ( Session::has('tagsElementsArea') )
-    {  
-      $tagsElementsArea = Session::pull('tagsElementsArea');
-      $tagsElementsArea = explode(',', $tagsElementsArea); 
-    }
-    if ( Session::has('tagsTypologyArea') )
-    {  
-      $tagsTypologyArea = Session::pull('tagsTypologyArea');
-      $tagsTypologyArea = explode(',', $tagsTypologyArea); 
-    }
-
+    
     $input['autoOpenModal'] = null;  
     /* */
     return View::make('/photos/newform')->with(['tagsArea'=> $tagsArea,
-       'workAuthorInput' => $workAuthorInput,
-       'tagsMaterialArea' => $tagsMaterialArea ,
-      'tagsElementsArea' => $tagsElementsArea,
-      'tagsTypologyArea' => $tagsTypologyArea,
+      'workAuthorInput' => $workAuthorInput,      
       'pageSource'=>$pageSource, 'user'=>Auth::user(), 
       'institution'=>$institution,
       'albumsInstitutional'=>$albumsInstitutional,
@@ -163,28 +141,22 @@ class PhotosController extends \BaseController {
     return $tagsType;
   }
 
-  public static function SaveTags($tags,$photo,$typeTags){
+  public static function saveTags($tags,$photo){
     
     try{
-          foreach ($tags as $t) {
-              $tag = Tag::where('name', $t)->first();
+          foreach ($tags as $t) {               
+              $tag = Tag::where('name', $t)
+                     ->whereIn('type', array('Acervo','Livre'))->first();
+              //dd($tag);
               if(is_null($tag)){
                 $tag = new Tag();
                 $tag->name = $t;
+                $tag->type = 'Livre';
                 $tag->save();
               }
 
               $photo->tags()->attach($tag->id);
-              if($typeTags == 'material'){
-                $tag->type = 'Material';
-              }elseif ($typeTags == 'elements') {
-                $tag->type = 'Elements';
-              }elseif($typeTags == 'Typology'){
-                $tag->type = 'Typology';
-              }else{
-                $tag->type = 'General';
-              }
-
+             
               if($tag->count == null)
                   $tag->count = 0;
               $tag->count++;
@@ -201,36 +173,20 @@ class PhotosController extends \BaseController {
 
 
   public function saveFormInstitutional() {   
-    Input::flashExcept('tagsArea','tagsTypologyArea','tagsElementsArea','tagsMaterialArea', 'photo','workAuthor'); //tagsTypology tagsElements tagsMaterial
-   // Input::flashExcept('tagsArea', 'photo','workAuthor');
-
+    Input::flashExcept('tagsArea', 'photo','workAuthor');
     $input = Input::all();
      
-    if (Input::has('tagsArea') && Input::has('tagsTypologyArea') && Input::has('tagsElementsArea') && Input::has('tagsMaterialArea') ){
-      $input["tagsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsArea"]);    
-      $input["tagsMaterialArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsMaterialArea"]);
-      $input["tagsElementsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsElementsArea"]);
-      $input["tagsTypologyArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsTypologyArea"]); 
-    
-    }else{
-      $input["tagsArea"] = '';
-      $input["tagsMaterialArea"] = '';
-      $input["tagsElementsArea"] = '';
-      $input["tagsTypologyArea"] = ''; 
-    } 
-
-    /*if (Input::has('tagsArea')){
+    if (Input::has('tagsArea')){
       $input["tagsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsArea"]); 
     }else{
       $input["tagsArea"] = '';
-    } */  
-
+    } 
     if (Input::has('workAuthor')){
       //dd($input["workAuthor"] );
       $input["workAuthor"] = str_replace(array('\'', '"'), '', $input["workAuthor"]);       
     }    
 
-    if(Session::has('institutionId')){     
+     
       $rules = array(
       'support' => 'required',
       'tombo' => 'required',
@@ -242,64 +198,37 @@ class PhotosController extends \BaseController {
       'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',
       'name' => 'required',
       'tagsArea' => 'required',
-      'tagsMaterialArea' => 'required',
-      'tagsElementsArea' => 'required',
-      'tagsTypologyArea' => 'required', 
       'country' => 'required',
-      'imageAuthor' => 'required'     
-      
+      'imageAuthor' => 'required'
+      //'authorization_checkbox' => 'required'
       //'photo_workDate' => 'date_format:"d/m/Y"',
       //'photo_imageDate' => 'date_format:"d/m/Y"'
       );
+    
 
+    $validator = Validator::make($input, $rules);
 
-    }else{
-      $rules = array(
-      'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',
-      'name' => 'required',
-      'tagsArea' => 'required',
-      'tagsMaterialArea' => 'required',
-      'tagsElementsArea' => 'required',
-      'tagsTypologyArea' => 'required',
-      'country' => 'required',
-      'imageAuthor' => 'required',
-      'authorization_checkbox' => 'required'
-        );
-    }
-
-  $validator = Validator::make($input, $rules);
-
-  if ($validator->fails()) { 
-      $messages = $validator->messages();
-      
-      return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'], 
-        'tagsMaterialArea' => $input['tagsMaterialArea'],'tagsElementsArea' => $input['tagsElementsArea'],
-        'tagsTypologyArea' => $input['tagsTypologyArea'],
-        'workAuthorInput'=>$input["workAuthor"]
-        ])->withErrors($messages); 
-      /*return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'] ,
-        'workAuthorInput'=>$input["workAuthor"]        
-        ])->withErrors($messages); */
-
-    }else{ 
-      
+    if($validator->fails()) { 
+          $messages = $validator->messages();       
+          return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'] ,
+          'workAuthorInput'=>$input["workAuthor"]        
+          ])->withErrors($messages); 
+    }else{       
       if(Input::hasFile('photo') and Input::file('photo')->isValid()) {
-        $file = Input::file('photo');
+          $file = Input::file('photo');
           $photo = new Photo();
           $photo->nome_arquivo = $file->getClientOriginalName();
 
-          if(Session::has('institutionId')){
-            $photo->support = $input["support"];
-            $photo->tombo = $input["tombo"];
-            $photo->subject = $input["subject"];
-            if ( !empty($input["hygieneDate"]) )
+          $photo->support = $input["support"];
+          $photo->tombo = $input["tombo"];
+          $photo->subject = $input["subject"];
+          if(!empty($input["hygieneDate"]))
               $photo->hygieneDate = $this->date->formatDate($input["hygieneDate"]);
-            if ( !empty($input["backupDate"]) )
+          if(!empty($input["backupDate"]) )
               $photo->backupDate = $this->date->formatDate($input["backupDate"]);
-            $photo->characterization = $input["characterization"];
-            $photo->cataloguingTime = date('Y-m-d H:i:s');
-            $photo->UserResponsible = $input["userResponsible"];
-          }
+          $photo->characterization = $input["characterization"];
+          $photo->cataloguingTime = date('Y-m-d H:i:s');
+          $photo->UserResponsible = $input["userResponsible"];          
           $photo->name = $input["name"];
           if ( !empty($input["description"]) )
                $photo->description = $input["description"];
@@ -307,7 +236,6 @@ class PhotosController extends \BaseController {
           $photo->workAuthor = $input["workAuthor"];
           if ( !empty($input["workDate"]) )
             $photo->workdate = $input["workDate"];
-
           $photo->country = $input["country"];
           if ( !empty($input["state"]) )
             $photo->state = $input["state"];
@@ -321,7 +249,6 @@ class PhotosController extends \BaseController {
               $photo->dataCriacao = $input["imageDate"];
           if ( !empty($input["observation"]) )  
               $photo->observation = $input["observation"];
-
           if ( !empty($input["aditionalImageComments"]) )
               $photo->aditionalImageComments = $input["aditionalImageComments"];
           $photo->allowCommercialUses = $input["allowCommercialUses"];
@@ -338,42 +265,16 @@ class PhotosController extends \BaseController {
           $photo->save();
           
           $tagsCopy = $input['tagsArea'];
-          $tagsCopyMaterial = $input['tagsMaterialArea'];
-          $tagsCopyElements = $input['tagsElementsArea'];
-          $tagsCopyTypology = $input['tagsTypologyArea'];
-
           $tags = explode(',', $input['tagsArea']);
-          $tagsMaterial = explode(',', $input['tagsMaterialArea']);
-          $tagsElements = explode(',', $input['tagsElementsArea']);
-          $tagsTypology = explode(',', $input['tagsTypologyArea']);
-      
-          if (!empty($tags) && !empty($tagsMaterial)  && !empty($tagsElements) && 
-            !empty($tagsTypology) ) { 
-          /*if (!empty($tags)) { */
-              $tags = static::formatTags($tags);
-              $tagsMaterial = static::formatTags($tagsMaterial);
-              $tagsElements = static::formatTags($tagsElements);
-              $tagsTypology = static::formatTags($tagsTypology);
-
-              $tagsSaved = static::SaveTags($tags,$photo,'general');
-
-              $tagsMaterialSaved = static::SaveTags($tagsMaterial,$photo,'material');
-              $tagsElementsSaved = static::SaveTags($tagsElements,$photo,'elements');
-              $tagsTypologySaved = static::SaveTags($tagsTypology,$photo,'typology'); 
-
-              if(!$tagsSaved || !$tagsSaved || !$tagsElementsSaved || !$tagsTypologySaved){    
-              /*if(!$tagsSaved){ */
+          
+          if (!empty($tags)) {           
+              $tags = static::formatTags($tags);              
+              $tagsSaved = static::saveTags($tags,$photo);
+              
+              if(!$tagsSaved){ 
                   $photo->forceDelete();
-                  $messages = array('tagsArea'=>array('Inserir pelo menos uma tag'),'tagsMaterialArea'=>array('Inserir pelo menos uma tag material'),
-                    'tagsElementsArea'=>array('Inserir pelo menos uma tag de elementos'),'tagsTypologyArea'=>array('Inserir pelo menos uma tag tipologia')
-                    );
-                  //$messages = array('tagsArea'=>array('Inserir pelo menos uma tag') );
-
-                  return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'], 
-                 'tagsMaterialArea' => $input['tagsMaterialArea'],'tagsElementsArea' => $input['tagsElementsArea'],
-                 'tagsTypologyArea' => $input['tagsTypologyArea']])->withErrors($messages);
-
-                  //return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea']])->withErrors($messages);
+                  $messages = array('tagsArea'=>array('Inserir pelo menos uma tag'));                  
+                  return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea']])->withErrors($messages);
               }
 
             }
@@ -388,8 +289,8 @@ class PhotosController extends \BaseController {
           $input['autoOpenModal'] = 'true';  
 
           $sourcePage = $input["pageSource"]; //get url of the source page through form
-          ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "Upload", "user");
-          ActionUser::printTags($photo->user_id, $photo->id, $tagsCopy, $sourcePage, "user", "Inseriu");
+          //ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "UploadInstitutional", "user");
+          //ActionUser::printTags($photo->user_id, $photo->id, $tagsCopy, $sourcePage, "user", "Inseriu");
           
           $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
 
@@ -408,10 +309,8 @@ class PhotosController extends \BaseController {
       }else{
          $messages = $validator->messages();
           return Redirect::to('/photos/newUpload')->withErrors($messages);
-      }
-  
+      }  
     }
-
   }
   /**/
   public static function filterTagByType($photo,$tagType){
@@ -427,113 +326,55 @@ class PhotosController extends \BaseController {
       return $tagsTypeList;
   } 
 
-  public static function updateTags($newTags,$photo,$typeTags){
+  public static function updateTags($newTags,$photo){
   
-  $photo_tags = $photo->tags;
-  $allTags = Tag::allTagsPhotoByType($photo->id,$typeTags); 
-  //dd($allTags);
-  foreach ($allTags as $tag){
-  //foreach($photo_tags as $tag){
-    $tag->count--;
-    $tag->save();                
-  }
+      $photo_tags = $photo->tags;
+      $allTags = Tag::allTagsPhoto($photo->id); 
+      //dd($allTags);
+      foreach ($allTags as $tag){   
+        $tag->count--;
+        $tag->save();                
+      }
 
-  foreach ($allTags as $alltag) {
-    $photo->tags()->detach($alltag->id);
-  }
+      foreach ($allTags as $alltag) {
+        $photo->tags()->detach($alltag->id);
+      }
 
-  try{
-      foreach ($newTags as $t) {
-              $tag = Tag::where('name', $t)
-                    ->where('type', $typeTags)
-              ->first();
-
-              if(is_null($tag)){
+      try{    // dd($newTags); 
+        foreach ($newTags as $t) {            
+            $t = strtolower($t);           
+             
+            $tag = Tag::where('name', $t)
+                     ->whereIn('type', array('Acervo','Livre'))->first();
+             //        ->orWhere('type', 'Livre')
+                    // ->first();
+             //dd($tag);       
+            if(is_null($tag)){
                 $tag = new Tag();
                 $tag->name = $t;
-                $tag->type = $typeTags;
+                $tag->type = 'Livre';
                 $tag->save();
-              }
+            }  
 
-              $photo->tags()->attach($tag->id);
+            
+            
+            $photo->tags()->attach($tag->id);
 
-              if($tag->count == null)
-                  $tag->count = 0;
-              $tag->count++;
-              $tag->save(); 
+            if($tag->count == null)
+                $tag->count = 0;
+            $tag->count++;
+            $tag->save(); 
+        }
+        $saved = true;
 
-          }
-
-          $saved = true;
-
-          }catch(PDOException $e){
-            Log::error("Logging exception, error to register tags");           
-            $saved = false;
-          }
+      }catch(PDOException $e){
+          Log::error("Logging exception, error to register tags");           
+          $saved = false;
+      }
       return $saved;  
   }
 
-  public static function updateTags2($tags,$photo,$typeTags){
-    $tags_id = [];
-    $photo_tags = $photo->tags;
-    //dd($photo_tags);
-   // print_r($photo_tags);
-    try{
-        //if($typeTags == 'typology'){
-               // echo "tb";
-              // dd($tags);
-       // } 
-          foreach ($tags as $t) {
-              $tag = Tag::where('name', $t)->first();
-                          //->where('type',$typeTags)->first();
-              
-             // if($typeTags == 'typology'){
-               // echo "ok";
-                //dd($photo_tags->contains($tag));
-                //dd($tag);
-             // } 
-
-              if(is_null($tag)){
-                  $tag = new Tag();
-                  $tag->name = $t;
-                  $tag->type = $typeTags;                  
-                  $tag->save();
-              }
-
-             /* */
-             //if($typeTags == 'typology') dd($tag); // dd($photo_tags->contains($tag));
-              if(!$photo_tags->contains($tag)){
-                  if ($tag->count == null) $tag->count = 0;                   
-                  $tag->count++;
-                  //if($typeTags == 'typology') dd($tag->id);
-                  $photo->tags()->attach($tag->id);
-                  $tag->save();            
-              }
-              array_push($tags_id, $tag->id);  
-             // if($typeTags == 'typology') dd($tags_id);              
-          }
-
-          foreach($photo_tags as $tag){
-             /*if($typeTags == 'general')  { echo "geral<br>"; print_r($tag->id); print_r($tags_id); echo "<br>";}
-             if($typeTags == 'material') { echo "mater<br>"; print_r($tag->id); print_r($tags_id); echo "<br>";}
-             if($typeTags == 'elements') { echo "elem<br>"; print_r($tag->id); print_r($tags_id); echo "<br>";} 
-             if($typeTags == 'typology') { echo "tipo<br>"; print_r($tag->id); print_r($tags_id);}*/
-
-             if (!in_array($tag->id, $tags_id)){
-                  $tag->count--;
-                  $photo->tags()->detach($tag->id);
-                  $tag->save(); 
-              }  
-            }
-          //die();
-          $saved = true;
-
-          }catch(PDOException $e){
-            Log::error("Logging exception, error to register tags");           
-            $saved = false;
-          }
-      return $saved;  
-  }
+  
 
   /* Edição do formulario institutional*/
   public function editFormInstitutional($id) {
@@ -541,95 +382,58 @@ class PhotosController extends \BaseController {
     $logged_user = Auth::User();
     //dd($logged_user->id == $photo->user_id);
     if ($logged_user == null) {
-      return Redirect::action('PagesController@home');
+        return Redirect::action('PagesController@home');
     }elseif (Session::get('institutionId') == $photo->institution_id) { 
-      $institution = null;
-    if(Session::has('institutionId')){
-      $institution = Institution::find(Session::get('institutionId'));
-      //$this->album = new Album();
-      //$albumsInstitutional = $this->album->showAlbumsInstitutional($institution);
-    }
+        $institution = null;
+        if(Session::has('institutionId')){
+            $institution = Institution::find(Session::get('institutionId'));
+            //$this->album = new Album();
+          //$albumsInstitutional = $this->album->showAlbumsInstitutional($institution);
+        }
 
-    if (Session::has('tagsArea'))
-    {
-      $tagsArea = Session::pull('tagsArea');
-      $tagsArea = explode(',', $tagsArea);
-    } else {
-      $tagsArea = $photo->tags->lists('name');
-      $tagsArea = static::filterTagByType($photo,"General");
-      
-    }
+        if (Session::has('tagsArea'))
+        {
+            $tagsArea = Session::pull('tagsArea');
+            $tagsArea = explode(',', $tagsArea);
+        } else {
+            $tagsArea = $photo->tags->lists('name');
+            //$tagsArea = static::filterTagByType($photo,"Acervo");      
+        }
 
-    if ( Session::has('tagsMaterialArea') )
-    {  
-      $tagsMaterialArea = Session::pull('tagsMaterialArea');
-      $tagsMaterialArea = explode(',', $tagsMaterialArea); 
-    }else {
-      $tagsMaterialArea = static::filterTagByType($photo,"Material");
-    }
 
-    if ( Session::has('tagsElementsArea') )
-    {  
-      $tagsElementsArea = Session::pull('tagsElementsArea');
-      $tagsElementsArea = explode(',', $tagsElementsArea); 
-    }else {
-      //$tagsElementsArea = $photo->tags->lists('name');
-      $tagsElementsArea = static::filterTagByType($photo,"Elements");
-    }
-
-    if ( Session::has('tagsTypologyArea') )
-    {  
-      $tagsTypologyArea = Session::pull('tagsTypologyArea');
-      $tagsTypologyArea = explode(',', $tagsTypologyArea); 
-    }else {
-      $tagsTypologyArea = static::filterTagByType($photo,"Typology");
-    }
-
-    if ( Session::has('workAuthorInput') )
-    {  
-      $workAuthorInput = Session::pull('workAuthorInput');      
-    }else{
-      $workAuthorInput = "";
-    }
+        if ( Session::has('workAuthorInput') )
+        {  
+            $workAuthorInput = Session::pull('workAuthorInput');      
+        }else{
+            $workAuthorInput = "";
+        }
   
-    return View::make('photos.edit-institutional')
-      ->with(['photo' => $photo, 'tagsArea' => $tagsArea,
-          'tagsMaterialArea' => $tagsMaterialArea,
-          'tagsElementsArea' => $tagsElementsArea,
-          'tagsTypologyArea' => $tagsTypologyArea,
+        return View::make('photos.edit-institutional')
+          ->with(['photo' => $photo, 'tagsArea' => $tagsArea,
           'institution'=>$institution,
           'workAuthorInput' => $workAuthorInput,
           'user'=>$logged_user
-        ] );
-
-    }
-    
+          ] ); 
+    }    
     return Redirect::action('PagesController@home');  
   }
 
   public function updateInstitutional($id){ 
-     $photo = Photo::find($id); 
-     Input::flashExcept('tagsArea','tagsTypologyArea','tagsElementsArea','tagsMaterialArea', 'photo','workAuthor'); 
-     $input = Input::all(); 
-     if (Input::has('tagsArea') && Input::has('tagsTypologyArea') && Input::has('tagsElementsArea') && Input::has('tagsMaterialArea') ){
-      $input["tagsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsArea"]);    
-      $input["tagsMaterialArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsMaterialArea"]);
-      $input["tagsElementsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsElementsArea"]);
-      $input["tagsTypologyArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsTypologyArea"]); 
-    
-    }else{
-      $input["tagsArea"] = '';
-      $input["tagsMaterialArea"] = '';
-      $input["tagsElementsArea"] = '';
-      $input["tagsTypologyArea"] = ''; 
-    } 
-    if (Input::has('workAuthor')){ 
-      $input["workAuthor"] = str_replace(array('\'', '"'), '', $input["workAuthor"]);       
-    }else{
-      $input["workAuthor"] ='';
-    } 
+      $photo = Photo::find($id); 
+      Input::flashExcept('tagsArea','photo','workAuthor'); 
+      $input = Input::all(); 
+      if(Input::has('tagsArea')){
+        $input["tagsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsArea"]);              
+      }else{
+        $input["tagsArea"] = '';      
+      } 
+      if(Input::has('workAuthor')){ 
+        $input["workAuthor"] = str_replace(array('\'', '"'), '', $input["workAuthor"]);       
+      }else{
+        $input["workAuthor"] ='';
+      } 
 
-       $rules = array(
+      $rules = array(
       'support' => 'required',
       'tombo' => 'required',
       'subject' => 'required',      
@@ -639,45 +443,40 @@ class PhotosController extends \BaseController {
       
       'name' => 'required',
       'tagsArea' => 'required',
-      'tagsMaterialArea' => 'required',
-      'tagsElementsArea' => 'required',
-      'tagsTypologyArea' => 'required', 
       'country' => 'required',
       'imageAuthor' => 'required'           
       //'photo_workDate' => 'date_format:"d/m/Y"',
       //'photo_imageDate' => 'date_format:"d/m/Y"'
       );
-       $validator = Validator::make($input, $rules);
 
-       if ($validator->fails()) { 
+      $validator = Validator::make($input, $rules);
+
+      if($validator->fails()) { 
           $messages = $validator->messages();          
-          return Redirect::to('/photos/'.$photo->id.'/editInstitutional')->with(['tagsArea' => $input['tagsArea'], 
-        'tagsMaterialArea' => $input['tagsMaterialArea'],'tagsElementsArea' => $input['tagsElementsArea'],
-        'tagsTypologyArea' => $input['tagsTypologyArea'],
-        'workAuthorInput'=>$input["workAuthor"]
-        ])->withErrors($messages); 
-    }else{ 
-        if ( !empty($input["aditionalImageComments"]) )
-            $photo->aditionalImageComments = $input["aditionalImageComments"];
-        $photo->support = $input["support"];
-        $photo->tombo = $input["tombo"];
-        $photo->subject = $input["subject"];
-        if ( !empty($input["hygieneDate"]) )
+          return Redirect::to('/photos/'.$photo->id.'/editInstitutional')->with([
+          'tagsArea' => $input['tagsArea'], 
+          'workAuthorInput'=>$input["workAuthor"] ])->withErrors($messages); 
+      }else{ 
+          if(!empty($input["aditionalImageComments"]) )
+              $photo->aditionalImageComments = $input["aditionalImageComments"];
+          $photo->support = $input["support"];
+          $photo->tombo = $input["tombo"];
+          $photo->subject = $input["subject"];
+          if ( !empty($input["hygieneDate"]) )
               $photo->hygieneDate = $this->date->formatDate($input["hygieneDate"]);
-        if ( !empty($input["backupDate"]) )
+          if ( !empty($input["backupDate"]) )
               $photo->backupDate = $this->date->formatDate($input["backupDate"]);
-        $photo->characterization = $input["characterization"];
-        $photo->cataloguingTime = date('Y-m-d H:i:s');
-        $photo->UserResponsible = $input["userResponsible"];
-        $photo->name = $input["name"];
+          $photo->characterization = $input["characterization"];
+          $photo->cataloguingTime = date('Y-m-d H:i:s');
+          $photo->UserResponsible = $input["userResponsible"];
+          $photo->name = $input["name"];
           if ( !empty($input["description"]) )
                $photo->description = $input["description"];
           if ( !empty($input["workAuthor"]) )
                $photo->workAuthor = $input["workAuthor"];
           if ( !empty($input["workDate"]) )
                $photo->workdate = $input["workDate"];
-
-        $photo->country = $input["country"];
+          $photo->country = $input["country"];
           if ( !empty($input["state"]) )
                $photo->state = $input["state"];
           if ( !empty($input["city"]) )
@@ -697,7 +496,7 @@ class PhotosController extends \BaseController {
           $photo->dataUpload = date('Y-m-d H:i:s');
           $photo->institution_id = Session::get('institutionId');
 
-          if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
+          if(Input::hasFile('photo') and Input::file('photo')->isValid()) {
               $file = Input::file('photo');
               $ext = $file->getClientOriginalExtension();
               $photo->nome_arquivo = $photo->id.".".$ext;
@@ -706,41 +505,21 @@ class PhotosController extends \BaseController {
           $photo->save();
           //tags
           $tagsCopy = $input['tagsArea'];
-          $tagsCopyMaterial = $input['tagsMaterialArea'];
-          $tagsCopyElements = $input['tagsElementsArea'];
-          $tagsCopyTypology = $input['tagsTypologyArea'];
-
           $tags = explode(',', $input['tagsArea']);
-          $tagsMaterial = explode(',', $input['tagsMaterialArea']);
-          $tagsElements = explode(',', $input['tagsElementsArea']);
-          $tagsTypology = explode(',', $input['tagsTypologyArea']);
 
+          if(!empty($tags)) { 
+              $tags = static::formatTags($tags);              
+              $tagsSaved = static::updateTags($tags,$photo);
 
-          if (!empty($tags) && !empty($tagsMaterial)  && !empty($tagsElements) && 
-            !empty($tagsTypology) ) { 
-              $tags = static::formatTags($tags);
-              $tagsMaterial = static::formatTags($tagsMaterial);
-              $tagsElements = static::formatTags($tagsElements);
-              $tagsTypology = static::formatTags($tagsTypology);
-              
-              $tagsSaved = static::updateTags($tags,$photo,'General');
-              $tagsMaterialSaved = static::updateTags($tagsMaterial,$photo,'Material');
-              $tagsElementsSaved = static::updateTags($tagsElements,$photo,'Elements');
-              $tagsTypologySaved = static::updateTags($tagsTypology,$photo,'Typology');
-
-              if(!$tagsSaved || !$tagsSaved || !$tagsElementsSaved || !$tagsTypologySaved){             
+              if(!$tagsSaved){
                   $photo->forceDelete();
-                  $messages = array('tagsArea'=>array('Inserir pelo menos uma tag'),'tagsMaterialArea'=>array('Inserir pelo menos uma tag material'),
-                  'tagsElementsArea'=>array('Inserir pelo menos uma tag de elementos'),'tagsTypologyArea'=>array('Inserir pelo menos uma tag tipologia')
-                  );
+                  $messages = array('tagsArea'=>array('Inserir pelo menos uma tag') );
                 
-                  return Redirect::to('/photos/'.$photo->id.'/editInstitutional')->with(['tagsArea' => $input['tagsArea'], 
-                  'tagsMaterialArea' => $input['tagsMaterialArea'],'tagsElementsArea' => $input['tagsElementsArea'],
-                  'tagsTypologyArea' => $input['tagsTypologyArea']])->withErrors($messages);
-            }
+                  return Redirect::to('/photos/'.$photo->id.'/editInstitutional')->with([
+                  'tagsArea' => $input['tagsArea'] ])->withErrors($messages);
+              }
           }
-          
-          
+                    
           if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
               $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
               $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
@@ -1027,8 +806,28 @@ class PhotosController extends \BaseController {
     $photos = Photo::all();
     foreach ($photos as $photo) {
       $path = public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg';
-      $new = public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg';
-      if (is_file($path) && !is_file($new)) $image = Image::make($path)->fit(186, 124)->save($new);
+      // novo tamanho para home, o micro, para pré carregamento.
+	  $new = public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg';
+      if (is_file($path) && !is_file($new)) $image = Image::make($path)->fit(32,20)->save($new);
+	  /*
+	  $image = Image::make($path)->save(public_path().'/arquigrafia-images/'.$newid.'_view.jpg');
+	  $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$newid.'_200h.jpg');
+	  $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$newid.'_home.jpg');
+	  */
+    }
+    return "OK.";
+  }
+  
+  // BATCH REGENERATE
+  public function batchRegenerate()
+  {
+    $photos = Photo::all();
+    foreach ($photos as $photo) {
+      $path = public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg';
+	  $image = Image::make($path);
+	  $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg');
+	  $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
+	  $image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
     }
     return "OK.";
   }

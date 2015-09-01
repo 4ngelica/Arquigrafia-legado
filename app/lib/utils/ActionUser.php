@@ -8,17 +8,15 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
 use Illuminate\Filesystem\Filesystem;
 
-class ActionUser{
-
-    public static function convertArrayObjectToString($array,$atribute){
-
+class ActionUser {
+    public static function convertArrayObjectToString($array, $atribute) {
         $string = "";
         $numElement = count($array);
         $i = 1;
         $separator = ', ';
         if(!empty($array)) {             
             foreach ($array as $value) {
-                if($numElement == $i){
+                if($numElement == $i) {
                     $separator = '';
                 }
                 $string = $string.''.$value->$atribute.$separator;
