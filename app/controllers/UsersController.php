@@ -718,11 +718,11 @@ class UsersController extends \BaseController {
         UsersController::getAttributesFromTo($fb_acc, $arq_acc);
       }
       /* Existe uma conta Stoa? */
-      if (!is_null($stoa_acc)) {
+      /*if (!is_null($stoa_acc)) {
         $stoa_boolean = true;
-        /* Associa as contas */
+        // Associa as contas 
         DB::table('users')->where('id', '=', $arq_acc->id)->update(array('id_stoa' => $stoa_acc->id));
-        /* Se uma foto já não foi importada, verifica se a conta Stoa tem uma foto e pega ela */
+        // Se uma foto já não foi importada, verifica se a conta Stoa tem uma foto e pega ela 
         if (!isset($has_photo)) {
           if ($stoa_acc->photo == "/arquigrafia-avatars/" . $stoa_acc->id . ".jpg") {
             if (rename("/arquigrafia-avatars/" . $stoa_acc->id . ".jpg", "/arquigrafia-avatars/" . $arq_acc->id . ".jpg")) {
@@ -731,9 +731,9 @@ class UsersController extends \BaseController {
             }
           }
         }
-        /* Importa Photos, Comments, Evaluations, follows e followers, se existirem */
+        // Importa Photos, Comments, Evaluations, follows e followers, se existirem 
         UsersController::getAttributesFromTo($stoa_acc, $arq_acc);
-      }
+      }*/
       /* Retorna uma mensagem dizendo quais contas foram integradas */
       $result = "Sua(s) conta(s): ";
       if (isset($fb_boolean)) {
@@ -756,17 +756,17 @@ class UsersController extends \BaseController {
       return $result;
     }
     /* Existe uma conta Facebook mas não uma Arquigrafia? */
-    if (!is_null($fb_acc) && is_null($arq_acc)) {
-      /* A conta Facebook tem foto? */
+    /*if (!is_null($fb_acc) && is_null($arq_acc)) {
+      // A conta Facebook tem foto?
       if ($fb_acc->photo == "/arquigrafia-avatars/" . $fb_acc->id . ".jpg") {
         $has_photo = true;
       }
-      /* Existe uma conta Stoa? */
+      // Existe uma conta Stoa? 
       if (!is_null($stoa_acc)) {
         $stoa_boolean = true;
-        /* Associa as contas */
+        // Associa as contas 
         DB::table('users')->where('id', '=', $fb_acc->id)->update(array('id_stoa' => $stoa_acc->id));
-        /* Se a conta Facebook não possuir foto e a conta Stoa possuir foto, pega essa foto */
+        // Se a conta Facebook não possuir foto e a conta Stoa possuir foto, pega essa foto
         if (!isset($has_photo)) {
           if ($stoa_acc->photo == "/arquigrafia-avatars/" . $stoa_acc->id . ".jpg") {
             if (rename("/arquigrafia-avatars/" . $stoa_acc->id . ".jpg", "/arquigrafia-avatars/" . $fb_acc->id . ".jpg")) {
@@ -775,21 +775,21 @@ class UsersController extends \BaseController {
             }
           }
         }
-        /* Importa Photos, Comments, Evaluations, follows e followers, se existirem */
+        // Importa Photos, Comments, Evaluations, follows e followers, se existirem 
         UsersController::getAttributesFromTo($stoa_acc, $fb_acc);
       }
-      /* Retorna uma mensagem dizendo quais contas foram integradas */
+      // Retorna uma mensagem dizendo quais contas foram integradas 
       $result = "Sua conta: ";
       if ($stoa_boolean) {
         $result = $result . "Stoa";
       }
       $result = $result . " foi integrada à sua conta Facebook";
-      /* Exclui a conta paralela do banco */
+      // Exclui a conta paralela do banco 
       if (isset($stoa_boolean)) {
         DB::table('users')->where('id', '=', $stoa_acc->id)->delete();
       }
       return $result;
-    }
+    }*/
   }
 
   private static function getAttributesFromTo($accountFrom, $accountTo) {
