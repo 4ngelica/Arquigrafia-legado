@@ -285,14 +285,25 @@
       <!--   USUARIO   -->
       <div id="single_user" class="clearfix row">
         <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
-          @if ($owner->photo != "")
+          @if(!is_null($ownerInstitution))
+              @if($ownerInstitution->photo != "")              
+                <img id="single_view_user_thumbnail" src="{{ asset($ownerInstitution->photo) }}" class="user_photo_thumbnail"/>
+              @else
+                <img id="single_view_user_thumbnail" src="{{ URL::to("/") }}/img/avatar-institution.png" class="user_photo_thumbnail"/>
+              @endif  
+          @elseif ($owner->photo != "")
             <img id="single_view_user_thumbnail" src="{{ asset($owner->photo) }}" class="user_photo_thumbnail"/>
           @else
             <img id="single_view_user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png"
               width="48" height="48" class="user_photo_thumbnail"/>
           @endif
         </a>
+        @if(!is_null($ownerInstitution))
+        <h1 id="single_view_owner_name"><a href="#" id="name">{{ $ownerInstitution->name }}</a></h1>
+        @else
         <h1 id="single_view_owner_name"><a href="{{ URL::to("/users/".$owner->id) }}" id="name">{{ $owner->name }}</a></h1>
+        @endif
+        
         @if ( Auth::check() && !$owner->equal(Auth::user()) )
           @if (!empty($follow) && $follow == true )
             <a href="{{ URL::to("/friends/follow/" . $owner->id) }}" id="single_view_contact_add">Seguir</a><br />

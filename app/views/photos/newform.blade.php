@@ -25,8 +25,23 @@
 
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/repopulateForm.js" charset="utf-8"></script>
 
-
-
+	<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-list.js" charset="utf-8"></script>
+	<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-autocomplete-part.js" charset="utf-8"></script>
+<style>
+  .ui-autocomplete {
+    max-height: 100px;
+    font-size: 12px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+  }
+  /* IE 6 doesn't support max-height
+   * we use height instead, but this forces the menu to always be this tall
+   */
+  * html .ui-autocomplete {
+    height: 100px;
+  }
+  </style>
 @stop
 @section('content')
 	<script type="text/javascript">
@@ -193,9 +208,9 @@
 							<tr>
 								<td>
 									<div class="two columns alpha"><p>{{ Form::label('tags_input', 'Tags*:') }}</p></div>
-									<div class="two columns">
+									<div class="three columns">
 										<p><div style="max-width:150px;">
-											{{ Form::text('tags_input',null,array('id' => 'tags_input','style'=>'height:24px; border:solid 1px #ccc')) }}
+											{{ Form::text('tags_input',null,array('id' => 'tags_input','style'=>'width: 200px; height:15px; border:solid 1px #ccc')) }}
 										   </div>
 											
 											<br>
@@ -220,7 +235,7 @@
 									<div class="two columns">
 										<p><div style="max-width:150px;">
 
-											{{ Form::text('workAuthor', $workAuthorInput, array('id' => 'workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:24px; width:290px; border:solid 1px #ccc')) }}
+											{{ Form::text('workAuthor', $workAuthorInput, array('id' => 'workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:15px; width:290px; font-size:12px; border:solid 1px #ccc')) }}
 										   	
 										   </div>
 											

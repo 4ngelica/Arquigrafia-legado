@@ -45,17 +45,15 @@ class Evaluation extends Eloquent {
 		   	
 	}
 
-	public static function averageAndUserEvaluation($photoId,$userId){
+	public static function averageAndUserEvaluation($photoId,$userId) {
+		$avgPhotosBinomials = DB::table('binomial_evaluation')
+		->select('binomial_id', DB::raw('avg(evaluationPosition) as avgPosition'))
+		->where('photo_id', $photoId)
+		->orderBy('binomial_id', 'asc')
+		->groupBy('binomial_id')->get();
 
-			$avgPhotosBinomials = DB::table('binomial_evaluation')
-			->select('binomial_id', DB::raw('avg(evaluationPosition) as avgPosition'))
-			->where('photo_id', $photoId)
-			->orderBy('binomial_id', 'asc')
-			->groupBy('binomial_id')->get();
-			//dd($avgPhotosBinomials);
-	
-			$evaluations = null;
-			if($userId != null){
+		$evaluations = null;
+		if ($userId != null) {
 			$evaluations = DB::table('binomial_evaluation')
 			->select('id','photo_id','evaluationPosition','binomial_id','user_id')
 			->where('user_id', $userId)
@@ -67,19 +65,25 @@ class Evaluation extends Eloquent {
 
 			foreach ($evaluations as $valuesEvaluation) {
 				foreach ($avgPhotosBinomials as $avgBinomials) {
-					if($avgBinomials->binomial_id == $valuesEvaluation->binomial_id){
+					if ($avgBinomials->binomial_id == $valuesEvaluation->binomial_id) {
 						$valuesEvaluation->avg = $avgBinomials->avgPosition;
 						break;
 					}
-					
 				}
 			}
-
 		}
-			//dd($evaluations);
-			return $evaluations;			
+		return $evaluations;			
 	}
 
-
-
+	public static function getPhotosByBinomial( $binomial, $operator ) {
+		$list = static::select('photo_id')
+			->distinct()
+			->where('binomial_id', $binomial->id)
+			->groupBy('photo_id')
+			->having(DB::raw('avg(evaluationPosition)'), $operator, $binomial->defaultValue)
+			->orderBy(DB::raw('count(user_id)'), 'desc')
+			->get()
+			->lists('photo_id');
+		return Photo::findMany($list)->all();
+	}
 }

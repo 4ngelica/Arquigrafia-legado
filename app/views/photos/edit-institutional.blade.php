@@ -5,7 +5,7 @@
 <title>Arquigrafia - Fotos - Update</title>
 
 
-<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
+<!--<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />-->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.plugin.autocomplete.css" />
@@ -19,12 +19,31 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.core.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.tags.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.autocomplete.js" charset="utf-8"></script>
+
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.ajax.js" charset="utf-8"></script>
 
 <script type="text/javascript" src="{{ URL::to("/") }}/js/tags-autocomplete.js" charset="utf-8"></script>
-<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<!--<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>-->
 
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-list.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-autocomplete-part.js" charset="utf-8"></script>
 
+<style>
+  .ui-autocomplete {
+    max-height: 100px;
+    font-size: 12px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+  }
+  /* IE 6 doesn't support max-height
+   * we use height instead, but this forces the menu to always be this tall
+   */
+  * html .ui-autocomplete {
+    height: 100px;
+  }
+  </style>
 
 @stop
 
@@ -33,7 +52,7 @@
   <div class="container">
   
 	<div id="registration">      
-      {{ Form::open(array('url'=>'photos/'.$photo->id.'/update/Institutional', 'files'=> true)) }}           
+      {{ Form::open(array('url'=>'photos/'.$photo->id.'/update/Institutional', 'method' => 'put', 'files'=> true)) }}           
   
       <div class="twelve columns row step-1">
       	<h1><span class="step-text">Edição de informações da imagem {{$photo->name}}</span></h1>
@@ -54,24 +73,7 @@
            <br>
            <img src="" id="preview_photo">
            <br>
-        </div>  
-
-        <script type="text/javascript">
-          function readURL(input) {
-            $("#preview_photo").hide();
-            if (input.files && input.files[0]) {
-              var reader = new FileReader();
-              reader.onload = function (e) {
-                $('#preview_photo')
-                  .attr('src', e.target.result)
-                  .width(600);
-                  $("#preview_photo").show();
-              };
-              reader.readAsDataURL(input.files[0]);
-            }
-          }
-       </script>      
-           
+        </div>   
 
       </div> 
 
@@ -81,7 +83,7 @@
           
           <h4>Campos obrigatórios (*)</h4>
           <br class="clear">
-          <h4>Campos complementares</h4>
+         <!-- <h4>Campos complementares</h4>-->
           
  
           
@@ -215,9 +217,9 @@
               <tr>
                 <td>
                   <div class="two columns alpha"><p>{{ Form::label('tags_input', 'Tags*:') }}</p></div>
-                  <div class="two columns">
-                    <p><div style="max-width:150px;">
-                      {{ Form::text('tags_input',null,array('id' => 'tags_input','style'=>'height:24px; border:solid 1px #ccc')) }}
+                  <div class="three columns">
+                    <p><div style="max-width:180px;">
+                      {{ Form::text('tags_input',null,array('id' => 'tags_input','style'=>'width: 200px; height:15px; border:solid 1px #ccc')) }}
                        </div>
                       
                       <br>
@@ -229,7 +231,7 @@
                   </div>
                   <div class="five columns alpha">
 
-                    <textarea name="tagsArea" id="tagsArea" cols="60" rows="1" style="display: none;">
+                    <textarea name="tagsArea" id="tagsArea" cols="79" rows="2" style="display: none;">
                     </textarea>
                   </div>                  
                 </td>
@@ -239,32 +241,32 @@
               
               <tr>
                 <td>
-                  <br/>
+                  <br/><br/>
                   <div class="two columns alpha"><p>{{ Form::label('workAuthor', 'Autor da obra:') }}</p></div>
-                  <div class="two columns">
-                    <p><div style="max-width:150px;">
+                  <div class="ui-widget two columns">
+                    <p>
 
-                      {{ Form::text('workAuthor', $workAuthorInput, array('id' => 'workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:24px; width:290px; border:solid 1px #ccc')) }}
+                      {{ Form::text('workAuthor', $workAuthorInput, array('id' => 'workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:15px; width:290px; font-size:11px; border:solid 1px #ccc')) }}
                         
-                       </div>
-                      
+                                             
                       <br>
                       <div class="error">{{ $errors->first('workAuthor') }}</div>
                     </p>
                   </div>               
                 </td>
               </tr>
-              <tr>                
+              <tr> <td>              
                 <div class="two columns alpha"><p>{{ Form::label('workDate', 'Data da obra:') }}</p></div>
                  <div class="two columns omega">
                  @if (($photo->workdate)!= null )
-                  <p>{{ Form::text('workDate',date("d/m/Y",strtotime($photo->workdate)),array('id' => 'datePickerWorkDate','placeholder'=>'dd/mm/yyyy')) }} 
+                  <p>{{ Form::text('workDate',date("d/m/Y",strtotime($photo->workdate)),array('id' => 'datePickerWorkDate','placeholder'=>'dd/mm/yyyy')) }}
                  @else
                   <p>{{ Form::text('workDate','',array('id' => 'datePickerWorkDate','placeholder'=>'dd/mm/yyyy')) }} 
                  @endif  
                   <br> <div class="error">{{ $errors->first('workDate') }}</div>
-                </p>       
-        </div>
+                    </p>   
+                </div>
+              </td>
             </tr>
             </table>
           </div>
@@ -396,7 +398,5 @@
     showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));
     
    });
-
-
   </script>
 @stop

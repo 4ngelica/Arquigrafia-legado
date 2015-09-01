@@ -20,9 +20,7 @@ function readURL(input) {
  * @param {input type} tagInput
  */
 function showTags(tagsJson, containerText, tagInput){
-
 //    console.log(tagsJson);
-
     if(tagsJson != null && tagsJson != ''){
         containerText.textext({ plugins: 'tags' });
         var array = eval(tagsJson);  // convert string to array  
@@ -34,7 +32,7 @@ function showTags(tagsJson, containerText, tagInput){
 }
 
 $(document).ready(function() {
-
+    /*
     $('#tags_input').textext({ plugins : 'autocomplete ajax',
             ajax : {
                 url : '/js/tagList.json',
@@ -42,7 +40,7 @@ $(document).ready(function() {
                 cacheResults : true
             }
         })
-    ;
+    ; */
 
 
     $('#tagsArea').textext({ plugins: 'tags' });
@@ -56,14 +54,14 @@ $(document).ready(function() {
                 $('#tags_input').val('');
     });
 
-    $('#workAuthor').textext({ plugins : 'autocomplete ajax',
+    /*$('#workAuthor').textext({ plugins : 'autocomplete ajax',
             ajax : {
                 url : '/js/autor.json',
                 dataType : 'json',
                 cacheResults : true
             }
         })
-    ;
+    ;*/
  
 ////
 

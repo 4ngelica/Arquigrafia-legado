@@ -17,7 +17,7 @@ class PhotosController extends \BaseController {
 
   public function index()
   {
-    $photos = Photo::all();
+    $photos = Photo::all(); dd($photos);
     return View::make('/photos/index',['photos' => $photos]);
   }
 
@@ -29,6 +29,8 @@ class PhotosController extends \BaseController {
     }
     $user = Auth::user();
     $photo_owner = $photos->user;
+
+    $photo_institution = $photos->institution;      
     $tags = $photos->tags;
     $binomials = Binomial::all()->keyBy('id');
     $average = Evaluation::average($photos->id);
@@ -72,7 +74,8 @@ class PhotosController extends \BaseController {
       'photoliked' => $photoliked,
       'license' => $license,
       'belongInstitution' => $belongInstitution,
-      'hasInstitution' => $hasInstitution
+      'hasInstitution' => $hasInstitution,
+      'ownerInstitution' => $photo_institution
     ]);
   }
 
@@ -444,7 +447,8 @@ class PhotosController extends \BaseController {
       'name' => 'required',
       'tagsArea' => 'required',
       'country' => 'required',
-      'imageAuthor' => 'required'           
+      'imageAuthor' => 'required',
+      'photo' => 'max:10240|mimes:jpeg,jpg,png,gif'           
       //'photo_workDate' => 'date_format:"d/m/Y"',
       //'photo_imageDate' => 'date_format:"d/m/Y"'
       );
@@ -495,9 +499,11 @@ class PhotosController extends \BaseController {
           $photo->user_id = Auth::user()->id;
           $photo->dataUpload = date('Y-m-d H:i:s');
           $photo->institution_id = Session::get('institutionId');
-
+          //dd(Input::hasFile('photo'));
+          //dd(Input::file('photo')->isValid());
           if(Input::hasFile('photo') and Input::file('photo')->isValid()) {
               $file = Input::file('photo');
+            //  dd($file);
               $ext = $file->getClientOriginalExtension();
               $photo->nome_arquivo = $photo->id.".".$ext;
           }
@@ -963,7 +969,7 @@ class PhotosController extends \BaseController {
       $photo->state = $input["photo_state"];
       $photo->street = $input["photo_street"];
       $photo->workAuthor = $input["photo_workAuthor"];
-      //2015-05-09 msy add validate for date image/work end
+      
       if ( !empty($input["photo_workDate"])) {
         $photo->workdate = $input["photo_workDate"];
       }else {
@@ -976,7 +982,6 @@ class PhotosController extends \BaseController {
         $photo->dataCriacao = null;
       }
 
-    //endmsy
       if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
         $file = Input::file('photo');
         $ext = $file->getClientOriginalExtension();
