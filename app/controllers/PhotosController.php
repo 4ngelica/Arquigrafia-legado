@@ -17,7 +17,7 @@ class PhotosController extends \BaseController {
 
   public function index()
   {
-    $photos = Photo::all(); dd($photos);
+    $photos = Photo::all();
     return View::make('/photos/index',['photos' => $photos]);
   }
 
@@ -184,9 +184,8 @@ class PhotosController extends \BaseController {
     }else{
       $input["tagsArea"] = '';
     } 
-    if (Input::has('workAuthor')){
-      //dd($input["workAuthor"] );
-      $input["workAuthor"] = str_replace(array('\'', '"'), '', $input["workAuthor"]);       
+    if (Input::has('workAuthor')){  
+      $input["workAuthor"] = str_replace(array('"'), '', $input["workAuthor"]);    
     }    
 
      
@@ -403,12 +402,12 @@ class PhotosController extends \BaseController {
             //$tagsArea = static::filterTagByType($photo,"Acervo");      
         }
 
-
-        if ( Session::has('workAuthorInput') )
+        
+        if (Session::has('workAuthorInput')  )
         {  
             $workAuthorInput = Session::pull('workAuthorInput');      
         }else{
-            $workAuthorInput = "";
+            $workAuthorInput = $photo->workAuthor;
         }
   
         return View::make('photos.edit-institutional')
@@ -431,7 +430,7 @@ class PhotosController extends \BaseController {
         $input["tagsArea"] = '';      
       } 
       if(Input::has('workAuthor')){ 
-        $input["workAuthor"] = str_replace(array('\'', '"'), '', $input["workAuthor"]);       
+        $input["workAuthor"] = str_replace(array('"'), '', $input["workAuthor"]);       
       }else{
         $input["workAuthor"] ='';
       } 
