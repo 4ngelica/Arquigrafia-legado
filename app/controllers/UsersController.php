@@ -697,7 +697,9 @@ class UsersController extends \BaseController {
     /* Existe uma conta Arquigrafia? */
     if (!is_null($arq_acc)) {
       /* Essa conta já tem uma foto? */
-      if ($arq_acc->photo != null) $has_photo = true;
+      if ($arq_acc->photo == "/arquigrafia-avatars/" . $arq_acc->id . ".jpg") {
+        $has_photo = true;
+      }
       /* Existe uma conta Facebook? */
       if (!is_null($fb_acc)) {
         $fb_boolean = true;
@@ -756,7 +758,9 @@ class UsersController extends \BaseController {
     /* Existe uma conta Facebook mas não uma Arquigrafia? */
     if (!is_null($fb_acc) && is_null($arq_acc)) {
       /* A conta Facebook tem foto? */
-      if ($fb_acc->photo != null) $has_photo = true;
+      if ($fb_acc->photo == "/arquigrafia-avatars/" . $fb_acc->id . ".jpg") {
+        $has_photo = true;
+      }
       /* Existe uma conta Stoa? */
       if (!is_null($stoa_acc)) {
         $stoa_boolean = true;
