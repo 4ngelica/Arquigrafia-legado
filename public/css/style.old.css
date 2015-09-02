@@ -187,20 +187,6 @@ input.search_bar_button { background: url(../img/sprite.png) -330px 0; height: 2
 #user_gallery .panel-back, #user_gallery .panel-next {height: 220px;}
 .wrap .item { position: relative; }
 .wrap .item a { display: block; position: relative; width: 100%; height: 100%; }
-.wrap .item img {
-  -webkit-filter: blur(10px);
-  -moz-filter: blur(10px);
-  -o-filter: blur(10px);
-  -ms-filter: blur(10px);
-  filter: blur(10px);
-}
-.wrap .item.sharpen img {
-  -webkit-filter: none;
-  -moz-filter: none;
-  -o-filter: none;
-  -ms-filter: none;
-  filter: none;
-}
 .wrap .layer { position: absolute; top: 0; left: 0; overflow: hidden; }
 .wrap .h1, .wrap .h2, .wrap .h3, .wrap .v1 { float: left; margin: 5px; }
 #panel .h1, #panel .h1 .layer { width: 156px; height: 104px; }
