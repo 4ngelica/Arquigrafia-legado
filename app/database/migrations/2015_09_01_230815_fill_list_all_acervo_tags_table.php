@@ -294,7 +294,6 @@ class FillListAllAcervoTagsTable extends Migration {
     		array("name" =>"orfanato", "count" => 0, "type" =>"Acervo"),
     		array("name" =>"ornamento", "count" => 0, "type" =>"Acervo"),
     		array("name" =>"painel", "count" => 0, "type" =>"Acervo"),
-    		array("name" =>"painel", "count" => 0, "type" =>"Acervo"),
     		array("name" =>"palacete", "count" => 0, "type" =>"Acervo"),
     		array("name" =>"palha", "count" => 0, "type" =>"Acervo"),
     		array("name" =>"papel de parede", "count" => 0, "type" =>"Acervo"),
