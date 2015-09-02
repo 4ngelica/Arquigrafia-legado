@@ -320,52 +320,69 @@
             
 
             <script>
+              var baseURL = '{{ URL::to('/search') }}';
               function outputUpdate(binomio, val) {                        
-                document.querySelector('#leftBinomialValue'+binomio).value = 100 - val;
-                document.querySelector('#rightBinomialValue'+binomio).value = val;                                         
+                var left, right;
+                left = document.querySelector('#leftBinomialValue'+binomio);
+                right = document.querySelector('#rightBinomialValue'+binomio);
+                left.value = 100 - val;
+                right.value = val;
+                makeSearchURL(binomio, val);
+              }
+              function makeSearchURL(binomio, val) {
+                var left = document.querySelector('.output.first');
+                var right = document.querySelector('.output.second');
+                left.href = baseURL + '/?bin=' + binomio + '&opt=1&val=' + val;
+                right.href = baseURL + '/?bin=' + binomio + '&opt=2&val=' + val;
               }
             </script>
             <?php $count = $binomials->count() - 1; ?>
-              @foreach($binomials->reverse() as $binomial)
-                <?php
-                  if ( isset($userEvaluations) && ! $userEvaluations->isEmpty() ) {
-                    $userEvaluation = $userEvaluations->get($count);
-                    $diff = $userEvaluation->evaluationPosition;
-                  } else {
-                    $diff = $binomial->defaultValue;
-                  }
-                ?>
-                <p>
-                  <table border="0" width="230">
-                    <tr>
-                      <td width="110">
-                        <a href="{{ URL::to('/search?binomial=' . $binomial->id . '&option=1') }}">
-                          {{ $binomial->firstOption }}
-                        </a>
+            @foreach($binomials->reverse() as $binomial)
+              <?php
+                if ( isset($userEvaluations) && ! $userEvaluations->isEmpty() ) {
+                  $userEvaluation = $userEvaluations->get($count);
+                  $diff = $userEvaluation->evaluationPosition;
+                } else {
+                  $diff = $binomial->defaultValue;
+                }
+              ?>
+              <p>
+                <table border="0" width="230">
+                  <tr>
+                    <td width="110">
+                      <a href="{{ URL::to('/search?bin=' . $binomial->id . '&opt=1') }}">
+                        {{ $binomial->firstOption }}
+                      </a>
+                      <a class="output first"
+                        href="{{ URL::to('/search?bin=' . $binomial->id . '&opt=1&val=' . $diff) }}">
                         (<output for="fader{{ $binomial->id }}"
                           id="leftBinomialValue{{ $binomial->id }}">
                           {{100 - $diff }}
                         </output>%)
-                      </td>
-                      <td align="right">
-                        <a href="{{ URL::to('/search?binomial=' . $binomial->id . '&option=2') }}">
-                          {{ $binomial->secondOption }}
-                        </a>
+                      </a>
+                    </td>
+                    <td align="right">
+                      <a href="{{ URL::to('/search?bin=' . $binomial->id . '&opt=2') }}">
+                        {{ $binomial->secondOption }}
+                      </a>
+                      <a class="output second"
+                        href="{{ URL::to('/search?bin=' . $binomial->id . '&opt=2&val=' . $diff) }}">
                         (<output for="fader{{ $binomial->id }}"
                           id="rightBinomialValue{{ $binomial->id }}">
                           {{ $diff }}
                         </output>%)
-                      </td>
-                    </tr>
-                  </table>
-                  {{ Form::input('range', 'value-'.$binomial->id, $diff,
-                    [ 'min' => '0',
-                      'max' => '100',
-                      'oninput' => 'outputUpdate(' . $binomial->id . ', value)' ])
-                  }}
-                </p>
-                <?php $count-- ?>
-              @endforeach
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+                {{ Form::input('range', 'value-'.$binomial->id, $diff,
+                  [ 'min' => '0',
+                    'max' => '100',
+                    'oninput' => 'outputUpdate(' . $binomial->id . ', value)' ])
+                }}
+              </p>
+              <?php $count-- ?>
+            @endforeach
               
                <a href="{{ URL::previous() }}" class='btn right'>VOLTAR</a>
                @if (Auth::check() && $owner != null && $owner->id == Auth::user()->id)

@@ -21,7 +21,11 @@
           @if ($city != "") 
               Resultados encontrados para: "{{ ucwords($query) }}" da cidade de "{{ucwords($city)}}"
           @elseif ( isset($binomial_option) )
-            Resultados encontrados para arquiteturas com característica: {{ $binomial_option }}
+            Resultados encontrados para arquiteturas com característica: 
+            @if ( isset($value) )
+              {{ $value }}%
+            @endif
+            {{ $binomial_option }}
           @else
             Resultados encontrados para: {{ $query }}
           @endif
