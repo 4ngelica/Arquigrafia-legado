@@ -25,8 +25,23 @@
 
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/repopulateForm.js" charset="utf-8"></script>
 
-
-
+	<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-list.js" charset="utf-8"></script>
+	<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-autocomplete-part.js" charset="utf-8"></script>
+<style>
+  .ui-autocomplete {
+    max-height: 100px;
+    font-size: 12px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+  }
+  /* IE 6 doesn't support max-height
+   * we use height instead, but this forces the menu to always be this tall
+   */
+  * html .ui-autocomplete {
+    height: 100px;
+  }
+  </style>
 @stop
 @section('content')
 	<script type="text/javascript">
@@ -193,9 +208,9 @@
 							<tr>
 								<td>
 									<div class="two columns alpha"><p>{{ Form::label('tags_input', 'Tags*:') }}</p></div>
-									<div class="two columns">
+									<div class="three columns">
 										<p><div style="max-width:150px;">
-											{{ Form::text('tags_input',null,array('id' => 'tags_input','style'=>'height:24px; border:solid 1px #ccc')) }}
+											{{ Form::text('tags_input',null,array('id' => 'tags_input','style'=>'width: 200px; height:15px; border:solid 1px #ccc')) }}
 										   </div>
 											
 											<br>
@@ -213,73 +228,6 @@
 								</td>
 							</tr>
 
-														<tr>
-								<td>
-									<br/>
-									<div class="two columns alpha"><p>{{ Form::label('tagsMaterial', 'Tags de materiais:') }}</p></div>
-									<div class="two columns">
-										<p>
-											{{ Form::text('tagsMaterial',null, array('id' => 'tagsMaterial','style'=>'height:24px; border:solid 1px #ccc')) }}
-										   
-											
-											<br>
-											<div class="error">{{ $errors->first('tagsMaterialArea') }}</div>
-										</p>
-									</div>
-									<div>
-										<button class="btn" id="addTagMaterial" style="font-size: 11px;">ADICIONAR MATERIAL</button>
-									</div>
-									<div class="five columns alpha">
-										<textarea name="tagsMaterialArea" id="tagsMaterialArea" cols="60" rows="1" style="display: none;"></textarea>
-									</div>									
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<br/>
-									<div class="two columns alpha"><p>{{ Form::label('tagsElements', 'Tags de elementos:') }}</p></div>
-									<div class="two columns">
-										<p><div style="max-width:150px;">
-											{{ Form::text('tagsElements',null, array('id' => 'tagsElements','style'=>'height:24px; border:solid 1px #ccc')) }}
-										   </div>
-											
-											<br>
-											<div class="error">{{ $errors->first('tagsElementsArea') }}</div>
-										</p>
-									</div>
-									<div>
-										<button class="btn" id="addTagElements" style="font-size: 11px;">ADICIONAR ELEMENTOS</button>
-									</div>
-									<div class="five columns alpha">
-										<textarea name="tagsElementsArea" id="tagsElementsArea" cols="60" rows="1" style="display: none;"></textarea>
-									</div>									
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<br/>
-									<div class="two columns alpha"><p>{{ Form::label('tagstypology', 'Tags de tipologia:') }}</p></div>
-									<div class="two columns">
-										<p><div style="max-width:150px;">
-											{{ Form::text('tagsTypology',null, array('id' => 'tagsTypology','style'=>'height:24px; border:solid 1px #ccc')) }}
-										   </div>
-											
-											<br>
-											<div class="error">{{ $errors->first('tagsTypologyArea') }}</div>
-										</p>
-									</div>
-									<div>
-										<button class="btn" id="addTagTypology" style="font-size: 11px;">ADICIONAR TIPOLOGIA</button>
-									</div>
-									<div class="five columns alpha">
-										<textarea name="tagsTypologyArea" id="tagsTypologyArea" cols="60" rows="1" style="display: none;"></textarea>
-									</div>									
-								</td>
-							</tr> 
-
-
-				
-
 							<tr>
 								<td>
 									<br/>
@@ -287,7 +235,7 @@
 									<div class="two columns">
 										<p><div style="max-width:150px;">
 
-											{{ Form::text('workAuthor', $workAuthorInput, array('id' => 'workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:24px; width:290px; border:solid 1px #ccc')) }}
+											{{ Form::text('workAuthor', $workAuthorInput, array('id' => 'workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:15px; width:290px; font-size:12px; border:solid 1px #ccc')) }}
 										   	
 										   </div>
 											
@@ -513,24 +461,11 @@
 		}
 
 		/* //if({{Input::old('autoOpenModal','false')}}){ */
-		@if(Input::old('tagsArea')!= null)	
-			
+		@if(Input::old('tagsArea')!= null)				
 			var tagsArea = {{"'".Input::old('tagsArea') ."'"}}.split(',');
-			showTags(tagsArea,$('#tagsArea'),$('#tags_input'));
-			
-			var tagsMaterialArea = {{"'".Input::old('tagsMaterialArea') ."'"}}.split(',');
-			showTags(tagsMaterialArea,$('#tagsMaterialArea'),$('#tagsMaterial'));
-
-			var tagsElementsArea = {{"'".Input::old('tagsElementsArea') ."'"}}.split(',');
-			showTags(tagsElementsArea,$('#tagsElementsArea'),$('#tagsElements'));
-
-			var tagsTypologyArea = {{"'".Input::old('tagsTypologyArea') ."'"}}.split(',');
-			showTags(tagsTypologyArea,$('#tagsTypologyArea'),$('#tagsTypology'));
+			showTags(tagsArea,$('#tagsArea'),$('#tags_input'));			
 		@else
-			showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));
-			showTags({{json_encode($tagsMaterialArea)}},$('#tagsMaterialArea'),$('#tagsMaterial'));
-			showTags({{json_encode($tagsElementsArea)}},$('#tagsElementsArea'),$('#tagsElements'));
-			showTags({{json_encode($tagsTypologyArea)}},$('#tagsTypologyArea'),$('#tagsTypology'));
+			showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));		
 		@endif
 
 		/* Methods to be called when all html document be ready */

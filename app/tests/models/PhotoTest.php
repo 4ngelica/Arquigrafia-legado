@@ -22,7 +22,7 @@ class PhotoTest extends TestCase {
 
 	private function prepareForTests()
 	{
-   	Artisan::call('migrate');
+		Artisan::call('migrate');
 	}
 
 	public function setUp()
@@ -38,24 +38,17 @@ class PhotoTest extends TestCase {
 
 	public function testShouldDeletePhotoAfterException() {
 		$photo = FactoryMuffin::create('Photo');
-		ImageManager::shouldReceive('find')->once()->andReturn('image');
-		ImageManager::shouldReceive('getOriginalImageExtension')->once()->andReturn('extension');
 		ImageManager::shouldReceive('makeAll')->once()->andThrow('Intervention\Image\Exception\NotWritableException');
+		$exception_class = null;
 		try {
-			Photo::updateOrCreateByTombo(
-				array(
-					'tombo' => $photo->tombo,
-					'name' => 'new name'
-				),
-				'basepath'
-			);
+			$photo->saveImages('image');
 		} catch (Exception $e) {
-			$exceptionClass = get_class($e);
+			$exception_class = get_class($e);
 		}
-		$updatedPhoto = Photo::withTrashed()->whereTombo($photo->tombo)->first();
-		$this->assertEquals('new name', $updatedPhoto->name);
-		$this->assertTrue($updatedPhoto->trashed());
-		$this->assertEquals('Intervention\Image\Exception\NotWritableException', $exceptionClass);
+		$deleted_photo = Photo::onlyTrashed()->find($photo->id);
+
+		$this->assertEquals('Intervention\Image\Exception\NotWritableException', $exception_class);
+		$this->assertNotNull( $deleted_photo );
 	}
 
 	public function testShouldUpdateAndRestoreTrashed() {
@@ -72,5 +65,29 @@ class PhotoTest extends TestCase {
 		$this->assertFalse( $photo->trashed() );
 	}
 
+	public function testShouldCretePhotoAndSaveImages() {
+		$user = FactoryMuffin::create('User');
+		ImageManager::shouldReceive('find')
+			->once()->with('basepath/tombo.*')->andReturn('image');
+		ImageManager::shouldReceive('getOriginalImageExtension')
+			->once()->with('image')->andReturn('jpg');
+		$prefix = public_path() . '/arquigrafia-images/1';
+		ImageManager::shouldReceive('makeAll')->once()
+			->with('image', $prefix, 'jpg');
+		$attributes = array(
+			'name' => 'name',
+			'imageAuthor' => 'author',
+			'user_id' => $user->id,
+			'tombo' => 'tombo',
+		);
+		$photo = Photo::import($attributes, 'basepath');
+
+		$this->assertTrue($photo instanceof Photo);
+		$this->assertEquals('name', $photo->name);
+		$this->assertEquals('author', $photo->imageAuthor);
+		$this->assertEquals($user->id, $photo->user_id);
+		$this->assertEquals('tombo', $photo->tombo);
+		$this->assertEquals('tombo.jpg', $photo->nome_arquivo);
+	}
 
 }

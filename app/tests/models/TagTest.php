@@ -52,4 +52,40 @@ class TagTest extends TestCase {
     $this->assertTrue(empty($return));
   }
 
+  public function testShouldCreateTag() {
+    $all_tags = Tag::all();
+    $result = Tag::getOrCreate('new_tag');
+    $all_new_tags = Tag::all();
+
+    $this->assertTrue( $all_tags->isEmpty() );
+    $this->assertTrue( $result instanceof Tag );
+    $this->assertEquals( 'new_tag', $result->name );
+    $this->assertEquals( 1, $all_new_tags->count() );
+  }
+
+  public function testShouldRetrieveExistingTag() {
+    $existing_tag = FactoryMuffin::create('Tag');
+    $all_tags = Tag::all();
+    $result = Tag::getOrCreate($existing_tag->name);
+    $all_new_tags = Tag::all();
+
+    $this->assertTrue( $result instanceof Tag );
+    $this->assertEquals( $result->name, $existing_tag->name);
+    $this->assertEquals( $all_tags->count(), $all_new_tags->count() );
+  }
+
+  public function testShouldIncrementTagReferenceCount() {
+    $tag = FactoryMuffin::create('Tag');
+    $first_count = $tag->count;
+    $tag->incrementReferences();
+    $second_count = $tag->count;
+
+    $this->assertEquals($first_count + 1, $second_count);
+
+    $tag = new Tag;
+    $tag->incrementReferences();
+
+    $this->assertEquals(1, $tag->count);
+  }
+
 }

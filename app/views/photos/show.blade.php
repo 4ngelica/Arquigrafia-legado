@@ -285,15 +285,26 @@
       <!--   USUARIO   -->
       <div id="single_user" class="clearfix row">
         <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
-          @if ($owner->photo != "")
+          @if(!is_null($ownerInstitution))
+              @if($ownerInstitution->photo != "")              
+                <img id="single_view_user_thumbnail" src="{{ asset($ownerInstitution->photo) }}" class="user_photo_thumbnail"/>
+              @else
+                <img id="single_view_user_thumbnail" src="{{ URL::to("/") }}/img/avatar-institution.png" class="user_photo_thumbnail"/>
+              @endif  
+          @elseif ($owner->photo != "")
             <img id="single_view_user_thumbnail" src="{{ asset($owner->photo) }}" class="user_photo_thumbnail"/>
           @else
             <img id="single_view_user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png"
               width="48" height="48" class="user_photo_thumbnail"/>
           @endif
         </a>
+        @if(!is_null($ownerInstitution))
+        <h1 id="single_view_owner_name"><a href="#" id="name">{{ $ownerInstitution->name }}</a></h1>
+        @else
         <h1 id="single_view_owner_name"><a href="{{ URL::to("/users/".$owner->id) }}" id="name">{{ $owner->name }}</a></h1>
-        @if ( !$owner->equal(Auth::user()) )
+        @endif
+        
+        @if ( Auth::check() && !$owner->equal(Auth::user()) )
           @if (!empty($follow) && $follow == true )
             <a href="{{ URL::to("/friends/follow/" . $owner->id) }}" id="single_view_contact_add">Seguir</a><br />
           @else
@@ -310,16 +321,17 @@
       <hgroup class="profile_block_title">
         <h3><i class="info"></i> Informações</h3>
           &nbsp; &nbsp;
-        @if ($owner->equal(Auth::user()))
-          @if(Session::get('institutionId'))
+          @if($belongInstitution)
           <a href= '{{"/photos/" . $photos->id . "/editInstitutional" }}' title="Editar informações da imagem">
           <img src="{{ asset("img/edit.png") }}" width="16" height="16"/>
           </a>
-          @else
+          @endif
+          @if($owner->equal(Auth::user()) && $hasInstitution == false && !Session::get('institutionId'))
+
           <a href= '{{"/photos/" . $photos->id . "/edit" }}' title="Editar informações da imagem">
           <img src="{{ asset("img/edit.png") }}" width="16" height="16"/>
           </a>
-          @endif
+        
         @endif
       </hgroup>
 

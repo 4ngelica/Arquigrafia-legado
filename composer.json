@@ -10,7 +10,8 @@
 		"tricki/laravel-notification": "@dev",
 		"watson/validating": "0.10.*",
 		"maatwebsite/excel": "1.*",
-		"jaybizzle/crawler-detect" :"1.*"
+		"jaybizzle/crawler-detect" :"1.*",
+		"pda/pheanstalk": "2.1.*"
 	},
 	"require-dev": {
 		"league/factory-muffin": "~2.1",

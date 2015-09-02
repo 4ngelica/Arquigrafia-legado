@@ -1,8 +1,6 @@
 <?php
 
 use lib\date\Date;
-use lib\metadata\Exiv2;
-use lib\license\CreativeCommons_3_0;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Illuminate\Database\Eloquent\Collection as Collection;
 
@@ -18,6 +16,7 @@ class Photo extends Eloquent {
 		'aditionalImageComments',
 		'allowCommercialUses',
 		'allowModifications',
+		'cataloguingTime',
 		'characterization',
 		'city',
 		'collection',
@@ -26,6 +25,7 @@ class Photo extends Eloquent {
 		'dataUpload',
 		'description',
 		'district',
+		'imageAuthor',
 		'name',
 		'nome_arquivo',
 		'state',
@@ -57,6 +57,11 @@ class Photo extends Eloquent {
 	public function user()
 	{
 		return $this->belongsTo('User');
+	}
+
+	public function institution()
+	{
+		return $this->belongsTo('Institution');
 	}
 
 	public function badge()
@@ -92,13 +97,8 @@ class Photo extends Eloquent {
 	public function saveMetadata($originalFileExtension)
 	{
 		$user = $this->user;
-		$exiv2 = new Exiv2($originalFileExtension, $this->id, public_path() . '/arquigrafia-images/');
-		$exiv2->setImageAuthor($this->workAuthor);
-		$exiv2->setArtist($this->workAuthor, $user->name);
-		$exiv2->setCopyRight($this->workAuthor,
-			new CreativeCommons_3_0($this->allowCommercialUses, $this->allowModifications));
-		$exiv2->setDescription($this->description);
-		$exiv2->setUserComment($this->aditionalImageComments);
+		$exiv2 = Exiv2::getInstance($originalFileExtension, $this, public_path() . '/arquigrafia-images/');
+		$exiv2->saveMetadata();
 	}
 
 	public static function paginateUserPhotos($user, $perPage = 24) {
@@ -360,39 +360,57 @@ class Photo extends Eloquent {
 		return $this->date->translate($this->attributes['workdate']);
 	}
 
-	public static function updateOrCreateByTombo($attributes, $basepath) {
+	public static function import($attributes, $basepath) {
 		$tombo = $attributes['tombo'];
-		$image = ImageManager::find($basepath . '/' . $tombo . '.*');
-		$image_extension = ImageManager::getOriginalImageExtension($image);
-		$attributes['nome_arquivo'] = $tombo . $image_extension;
-		$photo = static::updateOrCreate( array('tombo' => $tombo), $attributes );
-		try {
-			$photo->saveImages( $image, $image_extension );
-		} catch (Exception $e) {
-			$photo->delete();
-			throw $e;
+		list( $image, $image_extension ) = static::getImage( $basepath, $tombo );
+		$image_extension = strtolower($image_extension);
+		$attributes['nome_arquivo'] = $tombo . '.' . $image_extension;
+		$photo = static::updateOrCreateByTombo( $tombo, $attributes );
+		$photo->saveImages( $image, $image_extension );
+		$photo->saveMetadata($image_extension);
+		return $photo;
+	}
+
+	public static function getImage($basepath, $tombo) {
+		$image = ImageManager::find( $basepath . '/' . $tombo . '.*' );
+		$image_extension = ImageManager::getOriginalImageExtension( $image );
+		return array( $image, $image_extension );
+	}
+
+	public static function updateOrCreateByTombo($tombo, $newValues) {
+		return static::updateOrCreateWithTrashed( array( 'tombo' => $tombo ), $newValues );
+	}
+
+	public static function updateOrCreateWithTrashed($attributes, $newValues) {
+		$photo = static::withTrashed()->where( $attributes )->first();
+		$photo = $photo ?: new static;
+		$photo->fill( $newValues );
+		if ( $photo->trashed() ) {
+			$photo->restore();
+		} else {
+			if ( ! $photo->exists ) {
+				$photo->dataUpload = date('Y-m-d H:i:s');
+			}
+			$photo->save();
 		}
 		return $photo;
 	}
 
-	public static function updateOrCreateWithTrashed($attributes, $values) {
-		$photo = static::withTrashed()->where($attributes)->first();
-		$photo = $photo ?: static::newInstance();
-		$photo->fill($values);
-		return $photo->trashed() ? $photo->restore() : $photo->save();
-	}
-
 	public function saveImages($image, $extension = 'jpg') {
-		$prefix = public_path().'/arquigrafia-images/' . $this->id;
-		ImageManager::makeAll($image, $prefix, $extension);
+		try {
+			$prefix = public_path() . '/arquigrafia-images/' . $this->id;
+			ImageManager::makeAll( $image, $prefix, $extension );
+		} catch (Exception $e) {
+			$this->delete();
+			throw $e;
+		}
 	}
 
-	public function syncTags($tags) {
-		if ( $tags instanceof Collection ) {
-			$tags = $tags->modelKeys();
-		} else if ( !is_array($tags) ) {
-			$tags = array( $tags );
-		}
+	public function syncTags(array $tags) {
+		$get_ids = function( $tag ) {
+			return $tag instanceof Tag ? $tag->id : $tag;
+		};
+		$tags = array_map($get_ids, $tags);
 		$this->tags()->sync($tags);
 	}
 

@@ -11,8 +11,9 @@ class ColumnMapper {
     'district' => 'bairro',
     'street' => 'rua',
     'collection' => 'colecao',
-    'workAuthor' => 'autor_da_imagem',
+    'imageAuthor' => 'autor_da_imagem',
     'dataCriacao' => 'data_da_imagem',
+    'workAuthor' => 'autor_da_obra',
     'workdate' => 'data_da_obra',
     'description' => 'descricao',
     'aditionalImageComments' => 'observacoes',
@@ -37,9 +38,9 @@ class ColumnMapper {
   public function getPermissions($license, &$attributes) {
     $license = trim(str_replace(' ', '', $license));
     $break_pos = strpos($license, ',');
-    $break_pos = $break_pos === false ? strpos($license, '-') : $break_pos; 
+    $break_pos = $break_pos === false ? strpos($license, '-') : $break_pos;
     $attributes['allowCommercialUses'] = substr($license, 0, $break_pos);
-    $attributes['allowModifications'] = substr($license, $break_pos + 1);    
+    $attributes['allowModifications'] = substr($license, $break_pos + 1);
   }
 
   public function getTags($attrs, &$attributes) {

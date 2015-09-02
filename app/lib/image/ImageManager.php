@@ -8,8 +8,8 @@ class ImageManager {
   public function makeImage($file) {
     try {
       return Image::make($file)->encode('jpg', 80);
-    } catch (Exception $e) {
-      throw new \Exception("Não foi possível ler imagem '{$file}'.");
+    } catch (\Exception $e) {
+      throw new \Exception("Could not read file: '{$file}'");
     }
   }
 
@@ -18,7 +18,7 @@ class ImageManager {
   }
 
   public function makeOriginal($image, $prefix, $extension) {
-    $image->save($prefix . '_original' . $extension);
+    $image->save($prefix . '_original.' . $extension);
   }
 
   public function make200h($image, $prefix) {
@@ -27,6 +27,10 @@ class ImageManager {
 
   public function makeHome($image, $prefix) {
     $image->fit(186, 124)->encode('jpg', 70)->save($prefix . '_home.jpg');
+  }
+
+  public function makeView($image, $prefix) {
+    $image->widen(600)->save($prefix . '_view.jpg');
   }
 
   public function makeAll($image, $prefix, $extension) {
@@ -44,7 +48,7 @@ class ImageManager {
   public function getFile($pattern) {
     $files = File::glob( $pattern );
     if ( empty($files) || ! File::isFile($files[0]) ) {
-      throw new \Exception("Nenhum arquivo encontrado pelo padrão {$pattern}");
+      throw new \Exception("File pattern not found: {$pattern}");
     }
     return $files[0];
   }

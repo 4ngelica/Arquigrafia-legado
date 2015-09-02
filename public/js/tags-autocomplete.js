@@ -20,9 +20,7 @@ function readURL(input) {
  * @param {input type} tagInput
  */
 function showTags(tagsJson, containerText, tagInput){
-
 //    console.log(tagsJson);
-
     if(tagsJson != null && tagsJson != ''){
         containerText.textext({ plugins: 'tags' });
         var array = eval(tagsJson);  // convert string to array  
@@ -34,25 +32,7 @@ function showTags(tagsJson, containerText, tagInput){
 }
 
 $(document).ready(function() {
-
-
-
-//tags
-    /*$('#tags_input').textext({ plugins : 'autocomplete'})
-
-    .bind('getSuggestions', function(e, data)
-         {
-            var list = [ 'tijolo','bloque', 'madeira'  ],            
-                textext = $(e.target).textext()[0],
-                query = (data ? data.query : '') || ''
-                ;
-
-            $(this).trigger(
-                'setSuggestions',
-                { result : textext.itemManager().filter(list, query) }            
-            );                            
-    }); */
-
+    /*
     $('#tags_input').textext({ plugins : 'autocomplete ajax',
             ajax : {
                 url : '/js/tagList.json',
@@ -60,14 +40,10 @@ $(document).ready(function() {
                 cacheResults : true
             }
         })
-    ;
-
-
+    ; */
 
 
     $('#tagsArea').textext({ plugins: 'tags' });
-
-    
 
     $('#add_tag').click(function(e) {
                 e.preventDefault();
@@ -78,115 +54,15 @@ $(document).ready(function() {
                 $('#tags_input').val('');
     });
 
-
-  
-   //authors
-  /* $('#workAuthor').textext({ plugins : 'autocomplete'}) //input
-    .bind('getSuggestions', function(e, data)
-         {
-            var list = ['carlos Armando','ricardo','mary','osvaldo','tomas' ],            
-                textext = $(e.target).textext()[0],
-                query = (data ? data.query : '') || ''
-                ;
-
-            $(this).trigger(
-                'setSuggestions',
-                { result : textext.itemManager().filter(list, query) }            
-            );                            
-    }); */
-
-
-    $('#workAuthor').textext({ plugins : 'autocomplete ajax',
+    /*$('#workAuthor').textext({ plugins : 'autocomplete ajax',
             ajax : {
                 url : '/js/autor.json',
                 dataType : 'json',
                 cacheResults : true
             }
         })
-    ;
-
-
- /////
-//tags material
-$('#tagsMaterial').textext({ plugins : 'autocomplete'}) //input
-    .bind('getSuggestions', function(e, data)
-         {
-            var list = [ 'tijolo','concreto', 'concreto armado', 'vidro'  ],            
-                textext = $(e.target).textext()[0],
-                query = (data ? data.query : '') || ''
-                ;
-
-            $(this).trigger(
-                'setSuggestions',
-                { result : textext.itemManager().filter(list, query) }            
-            );                            
- });
-    $('#tagsMaterialArea').textext({ plugins: 'tags' });
-
-
-    $('#addTagMaterial').click(function(e) {
-                e.preventDefault();
-                var tagMaterial = $('#tagsMaterial').val();
-               // alert(tag);
-                if (tagMaterial == '') return;
-                $('#tagsMaterialArea').textext()[0].tags().addTags([ tagMaterial ]);
-                $('#tagsMaterial').val('');
-    });
-
- //tags elements
-$('#tagsElements').textext({ plugins : 'autocomplete'}) //input
-    .bind('getSuggestions', function(e, data)
-         {
-            var list = [ 'pilar','coluna', 'pilotis'  ],            
-                textext = $(e.target).textext()[0],
-                query = (data ? data.query : '') || ''
-                ;
-
-            $(this).trigger(
-                'setSuggestions',
-                { result : textext.itemManager().filter(list, query) }            
-            );                            
-    });
-    $('#tagsElementsArea').textext({ plugins: 'tags' });
-
-
-    $('#addTagElements').click(function(e) {
-                e.preventDefault();
-                var tag = $('#tagsElements').val();
-               // alert(tag);
-                if (tag == '') return;
-                $('#tagsElementsArea').textext()[0].tags().addTags([ tag ]);
-                $('#tagsElements').val('');
-    });    
-    
-//tags tipology
-$('#tagsTypology').textext({ plugins : 'autocomplete'}) //input
-    .bind('getSuggestions', function(e, data)
-         {
-            var list = ['igreja','catedral','praça','hospital','edificio' ],            
-                textext = $(e.target).textext()[0],
-                query = (data ? data.query : '') || ''
-                ;
-
-            $(this).trigger(
-                'setSuggestions',
-                { result : textext.itemManager().filter(list, query) }            
-            );                            
-    });
-
-    $('#tagsTypologyArea').textext({ plugins: 'tags' });
-    
-
-
-    $('#addTagTypology').click(function(e) {
-                e.preventDefault();
-                var tag = $('#tagsTypology').val();
-               // alert(tag);
-                if (tag == '') return;
-                $('#tagsTypologyArea').textext()[0].tags().addTags([ tag ]);
-                $('#tagsTypology').val('');
-    }); 
-
+    ;*/
+ 
 ////
 
     $(function() {

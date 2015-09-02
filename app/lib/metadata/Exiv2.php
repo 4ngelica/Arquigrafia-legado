@@ -2,6 +2,7 @@
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use lib\license\CreativeCommons_3_0;
 
 class Exiv2 {
 
@@ -9,11 +10,23 @@ class Exiv2 {
 	private $imageId;
 	private $imagesPath;
 	private $log;
+	private $photo;
 
-	public function __construct($originalFileExtension, $imageId, $imagesPath) {
+	public function __construct($originalFileExtension, $photo, $imagesPath) {
 		$this->originalFileExtension = $originalFileExtension;
-		$this->imageId = $imageId;
+		$this->photo = $photo;
+		$this->imageId = $photo->id;
 		$this->imagesPath = $imagesPath;
+	}
+
+	public function saveMetadata() {
+		$photo = $this->photo;
+		$this->setImageAuthor($photo->workAuthor);
+		$this->setArtist($photo->workAuthor, $photo->user->name);
+		$this->setCopyRight($photo->workAuthor,
+			new CreativeCommons_3_0($photo->allowCommercialUses, $photo->allowModifications));
+		$this->setDescription($photo->description);
+		$this->setUserComment($photo->aditionalImageComments);
 	}
 
 	public function setImageAuthor($author)
@@ -63,7 +76,6 @@ class Exiv2 {
 	private function runExif2_internal($sufix, $extension, $command) {
 		$fileName = sprintf("%s%s%s.%s", $this->imagesPath, $this->imageId, $sufix, $extension);
 		$cmd = 'exiv2 -M "set ' . $command . '" ' . $fileName;
-		$cmd;
 		system($cmd, $retval);
 		if ($retval != 0) {
 			$this->log_error($cmd, $retval);

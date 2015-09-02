@@ -126,9 +126,29 @@ class PagesController extends BaseController {
         
   }
 
+  public function searchBinomial($binomial_id, $option) {
+    $binomial = Binomial::find($binomial_id);
+    if ( $option == 1 ) {
+      $binomial_option = $binomial->firstOption;
+      $operator = '<';
+    } else {
+      $binomial_option = $binomial->secondOption;
+      $operator = '>';
+    }
+    $photos = Evaluation::getPhotosByBinomial($binomial, $operator);
+    return View::make('/search',
+      [ 'tags' => [], 'photos' => $photos, 'query' => '',
+        'city' => '', 'dateFilter' => [],
+        'binomial_option' => $binomial_option,
+      ]
+    );
+  }
 	
 	public function search()
 	{
+    if ( Input::has('binomial') && Input::has('option') ) {
+      return $this->searchBinomial(Input::get('binomial'), Input::get('option'));
+    }
     //2015-05-06 msy begin, add param city
     $needle = Input::get("q");
     $txtcity = Input::get("city"); 

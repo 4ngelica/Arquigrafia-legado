@@ -2,6 +2,7 @@
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Formatter\LineFormatter;
 use File;
 
 class SimpleLogger {
@@ -31,7 +32,7 @@ class SimpleLogger {
     if ( $in_storage ) {
       $this->root = storage_path() . '/logs/' . $log_folder . '/';
     } else {
-      $this->root = $log_folder;
+      $this->root = $log_folder . '/';
     }
   }
 
@@ -55,7 +56,7 @@ class SimpleLogger {
     return $this->root . $file . '.log';
   }
 
-  public function pushHandler($file_name) {
+  public function logToFile($file_name) {
     $file_path = $this->getFilePath($file_name);
     $this->createFileLog($file_path);
     $handler = $this->newHandler($file_path);
@@ -63,7 +64,13 @@ class SimpleLogger {
   }
 
   public function newHandler($file) {
-    return new StreamHandler($file);
+    $handler = new StreamHandler($file);
+    $handler->setFormatter($this->newFormatter());
+    return $handler;
+  }
+
+  public function newFormatter() {
+    return new LineFormatter(null, null, false, true);
   }
 
   public function addInfo($message, array $context = array())

@@ -126,6 +126,7 @@ return array(
     'Tricki\Notification\NotificationServiceProvider',
     'Maatwebsite\Excel\ExcelServiceProvider',
     'lib\image\ImageManagerServiceProvider',
+    'lib\metadata\Exiv2ServiceProvider',
 	),
 
 	/*
@@ -195,6 +196,7 @@ return array(
 		'View'            => 'Illuminate\Support\Facades\View',
 		'Excel'           => 'Maatwebsite\Excel\Facades\Excel',
 		'ImageManager'    => 'lib\image\facade\ImageManager',
+		'Exiv2'           => 'lib\metadata\facade\Exiv2',
 	),
 
 );
