@@ -35,13 +35,19 @@ class AlbumsController extends \BaseController {
 		$url = URL::to('/albums/photos/add');
 		$photos = Photo::paginateUserPhotos(Auth::user());
 		$image = Session::has('image') ? Session::get('image') : null;
+		if(Session::has('institutionId')){
+      		$institution = Institution::find(Session::get('institutionId')); 
+    	}else{
+      		$institution = null;
+    	}
 		return View::make('albums.form')
 			->with(['photos' => $photos,
 				'url' => $url,
 				'maxPage' => $photos->getLastPage(),
 				'page' => 1,
 				'type' => 'add',
-				'image' => $image
+				'image' => $image,
+				'institution' => $institution
 			]);
 	}
 

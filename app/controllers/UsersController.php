@@ -170,9 +170,9 @@ class UsersController extends \BaseController {
       if(!empty($user)){
         $randomPassword = strtolower(Str::quickRandom(8)); 
         $user->password = Hash::make($randomPassword);
-        
-        $user->touch();
-        $user->save();
+        $user->oldAccount = 0; // usuário já tem senha nova
+        $user->touch(); // touch já salva
+        // $user->save();
         Mail::send('emails.users.reset-password', array('user' => $user,'email' => $email,'randomPassword' => $randomPassword),
          function($message) use($email) {  
                $message->to($email)

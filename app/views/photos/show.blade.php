@@ -464,19 +464,19 @@
       @endif
 
       @if (Auth::check())
-        @if (isset($userEvaluations) && !$userEvaluations->isEmpty())
+        @if (isset($userEvaluations) && !$userEvaluations->isEmpty() && !Session::get('institutionId'))
           <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
           class="btn">
             <!--Clique aqui para alterar sua avaliação-->
             Clique aqui para alterar sua impressão
           </a> &nbsp;
         @else
-          @if (empty($average))
+          @if (empty($average) && !Session::get('institutionId'))
             <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
             class="btn">
               Seja o primeiro a registrar impressões sobre {{$architectureName}}
             </a> &nbsp;
-          @else
+          @elseif(!Session::get('institutionId'))
             <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
             class="btn">
               Registre você também impressões sobre {{$architectureName}}
@@ -484,7 +484,7 @@
           @endif
         @endif
       @else
-        @if (empty($average))
+        @if (empty($average) && !Session::get('institutionId'))
           <p>
             Faça o <a href="{{ URL::to('/users/login') }}">Login</a> 
             e seja o primeiro a registrar impressões sobre {{ $architectureName }}
