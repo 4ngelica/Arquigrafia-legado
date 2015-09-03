@@ -39,6 +39,7 @@ class PhotosController extends \BaseController {
     $follow = true;
     $belongInstitution = false;
     $hasInstitution = false; 
+    $institution = null;
     if (Auth::check()) {
       if(Session::has('institutionId')){
         $belongInstitution = Institution::belongInstitution($photos->id,Session::get('institutionId'));
@@ -46,7 +47,6 @@ class PhotosController extends \BaseController {
         $institution = Institution::find(Session::get('institutionId')); 
       } else{
         $hasInstitution = Institution::belongSomeInstitution($photos->id);
-        $institution = null;
       }
       
       $photoliked = Like::fromUser($user)->withLikable($photos)->first();
