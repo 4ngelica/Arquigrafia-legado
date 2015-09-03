@@ -31,6 +31,11 @@ class PagesController extends BaseController {
       session_start();
       $user_id = session_id();
     }
+    if(Session::has('institutionId')){
+      $institution = Institution::find(Session::get('institutionId')); 
+    }else{
+      $institution = null;
+    }
     $source_page = Request::header('referer');
     ActionUser::printHomePage($user_id, $source_page, $user_or_visitor);
 
