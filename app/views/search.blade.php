@@ -64,7 +64,8 @@
         @else
           <p>Foram encontradas {{ count($photos) }} imagens.</p>
         @endif
-        <p>Faça uma <a href="{{ URL::to('/search/more') }}">busca avançada</a>.</p>
+        <p>Faça uma <a href="{{ URL::to('/search/more') }}">busca avançada aqui</a>.</p>
+        <p><a href="{{ URL::previous() }}">Voltar para página anterior</a></p>
       </div>
     </div>
 
