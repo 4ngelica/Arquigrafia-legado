@@ -39,10 +39,12 @@ class PhotosController extends \BaseController {
     $follow = true;
     $belongInstitution = false;
     $hasInstitution = false; 
+    $institution = null;
     if (Auth::check()) {
       if(Session::has('institutionId')){
         $belongInstitution = Institution::belongInstitution($photos->id,Session::get('institutionId'));
         $hasInstitution = Institution::belongSomeInstitution($photos->id);
+        $institution = Institution::find(Session::get('institutionId')); 
       } else{
         $hasInstitution = Institution::belongSomeInstitution($photos->id);
       }
@@ -75,7 +77,8 @@ class PhotosController extends \BaseController {
       'license' => $license,
       'belongInstitution' => $belongInstitution,
       'hasInstitution' => $hasInstitution,
-      'ownerInstitution' => $photo_institution
+      'ownerInstitution' => $photo_institution,
+      'institution' => $institution
     ]);
   }
 
@@ -402,7 +405,7 @@ class PhotosController extends \BaseController {
             //$tagsArea = static::filterTagByType($photo,"Acervo");      
         }
 
-        
+
         if (Session::has('workAuthorInput')  )
         {  
             $workAuthorInput = Session::pull('workAuthorInput');      
