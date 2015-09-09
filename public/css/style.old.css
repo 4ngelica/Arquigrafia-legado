@@ -778,7 +778,7 @@ a.tooltip_license span
 
 #information_input a.close { float: right; text-align: center; margin: -10px 10px 0 0;  }
 
-.hidden { display: none; }
+.hidden { display: none !important; }
 
 #information_input .loader { display: none; margin: 0 auto; }
 .link_institution { margin-left: 2px; }

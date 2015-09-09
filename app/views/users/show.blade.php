@@ -263,92 +263,56 @@
 	<br>
 	<!-- MINHAS AVALIAÇÕES -->
 	<div class="container">
-				
-			<div class="twelve columns albums">
-				<hgroup class="profile_block_title">
-					<h3><img src="{{ asset("img/evaluate.png") }}" width="16" height="16"/>
-						@if (Auth::check() && $user->id == Auth::user()->id)
-							<!--Minhas imagens avaliadas-->
-							Minhas imagens interpretadas
-						@else
-							<!--Imagens avaliadas-->
-							Imagens interpretadas
-						@endif
-					</h3>
-				</hgroup>			
-				
-				<div class="profile_box">
-					@if ($evaluatedPhotos->count() > 0)
-						@foreach($evaluatedPhotos as $evaluatedPhoto)
-							@if (Auth::check() && $user->id == Auth::user()->id)
-								<div class="gallery_box">
-									<a href='{{"/photos/" . $evaluatedPhoto->id . "/evaluate/" }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">									
-										<img src="{{ URL::to("/arquigrafia-images/" . $evaluatedPhoto->id . "_home.jpg") }}" class="gallery_photo" />									
-									</a>
-									<a href='{{"/photos/" . $evaluatedPhoto->id . "/evaluate/" }}' class="name">
-										{{ $evaluatedPhoto->name  }}
-									</a>
-									<br />
-								</div>
-							@else
-								<div class="gallery_box">
-									<a href='{{"/photos/" . $evaluatedPhoto->id . "/viewEvaluation/" . $user->id }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">									
-										<img src="{{ URL::to("/arquigrafia-images/" . $evaluatedPhoto->id . "_home.jpg") }}" class="gallery_photo" />									
-									</a>
-									<a href='{{"/photos/" . $evaluatedPhoto->id . "/viewEvaluation/" . $user->id }}' class="name">
-										{{ $evaluatedPhoto->name  }}
-									</a>
-									<br />
-								</div>
-							@endif
-						@endforeach
+		<div class="twelve columns albums">
+			<hgroup class="profile_block_title">
+				<h3><img src="{{ asset("img/evaluate.png") }}" width="16" height="16"/>
+					@if (Auth::check() && $user->id == Auth::user()->id)
+						<!--Minhas imagens avaliadas-->
+						Minhas imagens interpretadas
 					@else
-						<p>
+						<!--Imagens avaliadas-->
+						Imagens interpretadas
+					@endif
+				</h3>
+			</hgroup>			
+			
+			<div class="profile_box">
+				@if ($evaluatedPhotos->count() > 0)
+					@foreach($evaluatedPhotos as $evaluatedPhoto)
 						@if (Auth::check() && $user->id == Auth::user()->id)
-							Você ainda não realizou nenhuma avaliação. <a href="{{ URL::to('/') }}">Selecione</a> uma imagem e avalie a arquitetura apresentada nela.
+							<div class="gallery_box">
+								<a href='{{"/photos/" . $evaluatedPhoto->id . "/evaluate/" }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">									
+									<img src="{{ URL::to("/arquigrafia-images/" . $evaluatedPhoto->id . "_home.jpg") }}" class="gallery_photo" />
+								</a>
+								<a href='{{"/photos/" . $evaluatedPhoto->id . "/evaluate/" }}' class="name">
+									{{ $evaluatedPhoto->name }}
+								</a>
+								<br />
+							</div>
+						@else
+							<div class="gallery_box">
+								<a href='{{"/photos/" . $evaluatedPhoto->id . "/viewEvaluation/" . $user->id }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">									
+									<img src="{{ URL::to("/arquigrafia-images/" . $evaluatedPhoto->id . "_home.jpg") }}" class="gallery_photo" />
+								</a>
+								<a href='{{"/photos/" . $evaluatedPhoto->id . "/viewEvaluation/" . $user->id }}' class="name">
+									{{ $evaluatedPhoto->name }}
+								</a>
+								<br />
+							</div>
+						@endif
+					@endforeach
+				@else
+					<p>
+						@if (Auth::check() && $user->id == Auth::user()->id)
+							Você ainda não realizou nenhuma avaliação.
+              <a href="{{ URL::to('/') }}">Selecione</a> uma imagem e avalie a arquitetura apresentada nela.
 						@else
 							Não possui avaliações.
 						@endif
-						</p>
-					@endif
-
-
-
-	
-   
-
-				</div>
-			
+					</p>
+				@endif
 			</div>
-	
-	
-
-				<script>
-
-					FB.init({
-						appId:'229061013858132',
-						cookie:true,
-						status:true,
-						xfbml:true
-					});
-
-
-					function FacebookInviteFriends()
-						{
-							FB.ui({
-								method: 'apprequests',
-								message: 'Your Message diaolog'
-							});
-						}
-				</script>
-
-
-
-		<div id="fb-root"></div>
-				<!--<a href='#' onclick="FacebookInviteFriends();"> 
-						Facebook Invite Friends Link
-				</a>-->
-
+		</div>
 	</div>
 
     
