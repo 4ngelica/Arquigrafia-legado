@@ -316,9 +316,6 @@
         <div id="evaluation_box">         
         
           <?php if (Auth::check()) { ?>
-              
-            
-
             <script>
               var baseURL = '{{ URL::to('/search') }}';
               function outputUpdate(binomio, val) {                        
@@ -330,8 +327,8 @@
                 makeSearchURL(binomio, val);
               }
               function makeSearchURL(binomio, val) {
-                var left = document.querySelector('.output.first');
-                var right = document.querySelector('.output.second');
+                var left = document.querySelector('.output#first_' + binomio);
+                var right = document.querySelector('.output#second_' + binomio);
                 left.href = baseURL + '/?bin=' + binomio + '&opt=1&val=' + val;
                 right.href = baseURL + '/?bin=' + binomio + '&opt=2&val=' + val;
               }
@@ -353,24 +350,26 @@
                       <a href="{{ URL::to('/search?bin=' . $binomial->id . '&opt=1') }}">
                         {{ $binomial->firstOption }}
                       </a>
-                      <a class="output first"
+                      <a class="output" id="first_{{ $binomial->id }}"
                         href="{{ URL::to('/search?bin=' . $binomial->id . '&opt=1&val=' . $diff) }}">
                         (<output for="fader{{ $binomial->id }}"
                           id="leftBinomialValue{{ $binomial->id }}">
-                          {{100 - $diff }}
-                        </output>%)
+                          {{100 - $diff }}%
+                        </output>
+                        )
                       </a>
                     </td>
                     <td align="right">
                       <a href="{{ URL::to('/search?bin=' . $binomial->id . '&opt=2') }}">
                         {{ $binomial->secondOption }}
                       </a>
-                      <a class="output second"
+                      <a class="output" id="second_{{ $binomial->id }}"
                         href="{{ URL::to('/search?bin=' . $binomial->id . '&opt=2&val=' . $diff) }}">
                         (<output for="fader{{ $binomial->id }}"
                           id="rightBinomialValue{{ $binomial->id }}">
-                          {{ $diff }}
-                        </output>%)
+                          {{ $diff }}%
+                        </output>
+                        )
                       </a>
                     </td>
                   </tr>
