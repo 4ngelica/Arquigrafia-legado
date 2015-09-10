@@ -62,16 +62,22 @@
             
           </a>
           @else
-          <a id="user_photo" href="">          
-            <img src="{{ URL::to("/") }}/img/avatar-institution.png" width="48" height="48" class="user_photo_thumbnail"/>
-          </a>
+            @if($institution->id == Session::get('institutionId'))
+                <a id="user_photo" href="">          
+                  <img src="{{ asset($institution->photo) }}" width="48" height="48" class="user_photo_thumbnail"/>
+                </a>
+            @else
+                <a id="user_photo" href="">          
+                  <img src="{{ URL::to("/") }}/img/avatar-institution.png" width="48" height="48" class="user_photo_thumbnail"/>
+                </a>
+            @endif
           @endif
 
           <a href="{{ URL::to("/users/logout/") }}" id="logout" class="btn">SAIR</a><br />
           <ul id="logged_menu">
-            @if (Auth::user()->photos->count() > 0)
-              @if(Auth::user()->albums->count() > 0)
-                <li><a href="{{ URL::to('/albums') }}" id="users" title="Meus álbuns">&nbsp;</a></li>
+            @if (Auth::user()->photos->count() > 0 && !Session::get('institutionId'))
+              @if(Auth::user()->albums->count() > 0)                 
+                  <li><a href="{{ URL::to('/albums') }}" id="users" title="Meus álbuns">&nbsp;</a></li>                 
               @else
                 <li><a href="{{ URL::to('/albums/create') }}" id="users" title="Crie seu álbum personalizado">&nbsp;</a></li>
               @endif

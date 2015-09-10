@@ -21,7 +21,11 @@
           @if ($city != "") 
               Resultados encontrados para: "{{ ucwords($query) }}" da cidade de "{{ucwords($city)}}"
           @elseif ( isset($binomial_option) )
-            Resultados encontrados para arquiteturas com característica: {{ $binomial_option }}
+            Resultados encontrados para arquiteturas com característica: 
+            @if ( isset($value) )
+              {{ $value }}%
+            @endif
+            {{ $binomial_option }}
           @else
             Resultados encontrados para: {{ $query }}
           @endif
@@ -60,7 +64,8 @@
         @else
           <p>Foram encontradas {{ count($photos) }} imagens.</p>
         @endif
-        <p>Faça uma <a href="{{ URL::to('/search/more') }}">busca avançada</a>.</p>
+        <p>Faça uma <a href="{{ URL::to('/search/more') }}">busca avançada aqui</a>.</p>
+        <p><a href="{{ URL::previous() }}">Voltar para página anterior</a></p>
       </div>
     </div>
 

@@ -4,11 +4,32 @@
 
 <title>Arquigrafia - Fotos - Update</title>
 
+<!-- AUTOCOMPLETE -->
+<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
+<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.core.css" />
+<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.plugin.autocomplete.css" />
+<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.plugin.tags.css" />
+<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/styletags.css" />
+
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.core.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.tags.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.autocomplete.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.suggestions.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.filter.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/tags-autocomplete.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.ajax.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-list.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-autocomplete-part.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/city-autocomplete.js" charset="utf-8"></script>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+{{-- <script src="//code.jquery.com/jquery-1.10.2.js"></script> --}}
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
 
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 @stop
 
 @section('content')

@@ -31,6 +31,11 @@ class PagesController extends BaseController {
       session_start();
       $user_id = session_id();
     }
+    if(Session::has('institutionId')){
+      $institution = Institution::find(Session::get('institutionId')); 
+    }else{
+      $institution = null;
+    }
     $source_page = Request::header('referer');
     ActionUser::printHomePage($user_id, $source_page, $user_or_visitor);
 
@@ -126,28 +131,25 @@ class PagesController extends BaseController {
         
   }
 
-  public function searchBinomial($binomial_id, $option) {
-    $binomial = Binomial::find($binomial_id);
-    if ( $option == 1 ) {
-      $binomial_option = $binomial->firstOption;
-      $operator = '<';
-    } else {
-      $binomial_option = $binomial->secondOption;
-      $operator = '>';
-    }
-    $photos = Evaluation::getPhotosByBinomial($binomial, $operator);
+  public function searchBinomial($binomial_id, $option, $value = null) {
+    $bin = Binomial::find($binomial_id);
+    $bi_opt = $option == 1 ? $bin->firstOption : $bin->secondOption;
+    $photos = Evaluation::getPhotosByBinomial($bin, $option, $value);
+    $value = $option == 1 ? 100 - $value : $value;
     return View::make('/search',
-      [ 'tags' => [], 'photos' => $photos, 'query' => '',
-        'city' => '', 'dateFilter' => [],
-        'binomial_option' => $binomial_option,
-      ]
-    );
+      [
+        'tags' => [], 'photos' => $photos, 'query' => '',
+        'city' => '', 'dateFilter' => [], 'binomial_option' => $bi_opt,
+        'value' => $value
+      ]);
   }
 	
 	public function search()
 	{
-    if ( Input::has('binomial') && Input::has('option') ) {
-      return $this->searchBinomial(Input::get('binomial'), Input::get('option'));
+    if ( Input::has('bin') ) {
+      return $this->searchBinomial(
+          Input::get('bin'), Input::get('opt'), Input::get('val')
+        );
     }
     //2015-05-06 msy begin, add param city
     $needle = Input::get("q");
