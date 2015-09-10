@@ -5643,9 +5643,10 @@ $(function() {
 "Wanderlândia",
 "Xambioá",
 ];
-
+    
     $('#city').focus(function(){
     	var estado = document.getElementById("state");
+        if (estado == null) estado = document.getElementById("photo_state");
     	var selected = estado.options[estado.selectedIndex].value;
     	if (selected == "AC") {
             $("#city" ).autocomplete({
@@ -5779,6 +5780,147 @@ $(function() {
         }
         else if (selected == "TO") {
             $("#city" ).autocomplete({
+                source: tocantins
+            });
+        }
+    });
+
+    $('#photo_city').focus(function(){
+        var estado = document.getElementById("state");
+        if (estado == null) estado = document.getElementById("photo_state");
+        var selected = estado.options[estado.selectedIndex].value;
+        if (selected == "AC") {
+            $("#photo_city" ).autocomplete({
+                source: acre
+            });
+        }
+        else if (selected == "AL") {
+            $("#photo_city" ).autocomplete({
+                source: alagoas
+            });
+        }
+        else if (selected == "AM") {
+            $("#photo_city" ).autocomplete({
+                source: amazonas
+            });
+        }
+        else if (selected == "AP") {
+            $("#photo_city" ).autocomplete({
+                source: amapa
+            });
+        }
+        else if (selected == "BA") {
+            $("#photo_city" ).autocomplete({
+                source: bahia
+            });
+        }
+        else if (selected == "CE") {
+            $("#photo_city" ).autocomplete({
+                source: ceara
+            });
+        }
+        else if (selected == "DF") {
+            $("#photo_city" ).autocomplete({
+                source: distritofederal
+            });
+        }
+        else if (selected == "ES") {
+            $("#photo_city" ).autocomplete({
+                source: espiritosanto
+            });
+        }
+        else if (selected == "GO") {
+            $("#photo_city" ).autocomplete({
+                source: goias
+            });
+        }
+        else if (selected == "MA") {
+            $("#photo_city" ).autocomplete({
+                source: maranhao
+            });
+        }
+        else if (selected == "MG") {
+            $("#photo_city" ).autocomplete({
+                source: minasgerais
+            });
+        }
+        else if (selected == "MS") {
+            $("#photo_city" ).autocomplete({
+                source: matogrossodosul
+            });
+        }
+        else if (selected == "MT") {
+            $("#photo_city" ).autocomplete({
+                source: matogrosso
+            });
+        }
+        else if (selected == "PA") {
+            $("#photo_city" ).autocomplete({
+                source: para
+            });
+        }
+        else if (selected == "PB") {
+            $("#photo_city" ).autocomplete({
+                source: paraiba
+            });
+        }
+        else if (selected == "PE") {
+            $("#photo_city" ).autocomplete({
+                source: pernanbuco
+            });
+        }
+        else if (selected == "PI") {
+            $("#photo_city" ).autocomplete({
+                source: piaui
+            });
+        }
+        else if (selected == "PR") {
+            $("#photo_city" ).autocomplete({
+                source: parana
+            });
+        }
+        else if (selected == "RJ") {
+            $("#photo_city" ).autocomplete({
+                source: riodejaneiro
+            });
+        }
+        else if (selected == "RN") {
+            $("#photo_city" ).autocomplete({
+                source: riograndedonorte
+            });
+        }
+        else if (selected == "RO") {
+            $("#photo_city" ).autocomplete({
+                source: rondonia
+            });
+        }
+        else if (selected == "RR") {
+            $("#photo_city" ).autocomplete({
+                source: roraima
+            });
+        }
+        else if (selected == "RS") {
+            $("#photo_city" ).autocomplete({
+                source: riograndedosul
+            });
+        }
+        else if (selected == "SC") {
+            $("#photo_city" ).autocomplete({
+                source: santacatarina
+            });
+        }
+        else if (selected == "SE") {
+            $("#photo_city" ).autocomplete({
+                source: sergipe
+            });
+        }
+        else if (selected == "SP") {
+            $("#photo_city" ).autocomplete({
+                source: saopaulo
+            });
+        }
+        else if (selected == "TO") {
+            $("#photo_city" ).autocomplete({
                 source: tocantins
             });
         }

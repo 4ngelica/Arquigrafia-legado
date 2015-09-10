@@ -50,7 +50,12 @@ $(document).ready(function() {
                 var tag = $('#tags_input').val();
                // alert(tag);
                 if (tag == '') return;
-                $('#tagsArea').textext()[0].tags().addTags([ tag ]);
+                if ($('#tagsArea').textext()[0] == null) {
+                    $('#tags').textext()[0].tags().addTags([ tag ]);
+                }
+                else {
+                    $('#tagsArea').textext()[0].tags().addTags([ tag ]);
+                }
                 $('#tags_input').val('');
     });
 
