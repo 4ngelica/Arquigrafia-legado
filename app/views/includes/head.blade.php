@@ -1,5 +1,5 @@
 <!--   FAVICON   -->
-<link rel="icon" href="{{ URL::to("/") }}/img/favicon.ico" type="image/x-icon" />
+<link rel="icon" href="{{ URL::to("/") }}/img/arquigrafia_icon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="{{ URL::to("/") }}/img/favicon.ico" type="image/x-icon" />
 <!--   ESTILO GERAL   -->
 {{-- <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/style.css" /> --}}
