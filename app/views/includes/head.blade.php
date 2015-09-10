@@ -1,6 +1,6 @@
 <!--   FAVICON   -->
 <link rel="icon" href="{{ URL::to("/") }}/img/arquigrafia_icon.ico" type="image/x-icon" />
-<link rel="shortcut icon" href="{{ URL::to("/") }}/img/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="{{ URL::to("/") }}/img/arquigrafia_icon.ico" type="image/x-icon" />
 <!--   ESTILO GERAL   -->
 {{-- <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/style.css" /> --}}
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/style.old.css" />
@@ -25,7 +25,6 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.autocomplete.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.suggestions.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.filter.js" charset="utf-8"></script>
-<script type="text/javascript" src="{{ URL::to("/") }}/js/tags-autocomplete.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.ajax.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/search-autocomplete.js" charset="utf-8"></script>
 
@@ -35,7 +34,6 @@
 
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
-
 
 <!--[if lt IE 8]>
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/ie7.css" />

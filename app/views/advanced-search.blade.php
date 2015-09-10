@@ -38,9 +38,6 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
 
-
-
-
 @stop
 
 @section('content')
