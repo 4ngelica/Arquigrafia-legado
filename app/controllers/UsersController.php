@@ -218,9 +218,11 @@ class UsersController extends \BaseController {
    // validacao do login
   public function login()
   { 
-     $input = Input::all();   
-     $user = User::userInformation($input["login"]);
-     $integration_message = UsersController::integrateAccounts($user->email);
+    $input = Input::all();   
+    $user = User::userInformation($input["login"]);
+    if (isset($user)) {
+      $integration_message = UsersController::integrateAccounts($user->email);
+    }
     if ($user != null && $user->oldAccount == 1) 
     {
       if ( User::checkOldAccount($user, $input["password"]) )
