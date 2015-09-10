@@ -697,7 +697,7 @@ i#likes {  background: url("../img/dislikeNB.png"); padding : 2px 10px 0px;   }
 .additional-user { font-size: 15px; }
 .date-and-time {}
 #notification { cursor: pointer; }
-#notes-box { border: solid black 1px; position: absolute; right: 0px; top: 60px; width: 340px; height: auto; background: #FFF; opacity: 0; transition: opacity 0.3s linear 0s, right 0s linear 0s; z-index: 5; display: none; }
+#notes-box { border: solid black 1px; position: absolute; right: 0px; top: 60px; width: 340px; height: auto; background: #FFF; opacity: 0; transition: opacity 0.3s linear 0s, right 0s linear 0s; z-index: 1000; display: none; }
 #notes-header { background: rgba(160, 160, 160, 0.7); width: inherit; height: 20px; line-height: 20px; }
 #notes-header p { margin: 0px 10px; height: inherit; }
 #box-title { float: left; font-weight: bold; }

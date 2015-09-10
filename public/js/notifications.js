@@ -59,4 +59,29 @@ $(document).ready(function() {
         'opacity' : true,
         'margin'  : 2
     });
+
+    $('body').click(function(e){
+        var notes_box = document.getElementById("notes-box");
+        var icon = document.getElementById("notification");
+        var target = e.target;
+        var in_or_out = 0;
+        if (typeof icon != null) {
+            if ( target == icon ) {
+                return;
+            }
+            while ( target !=  document.body) {
+                if ( target == notes_box ) {
+                    in_or_out = 1;
+                    break;
+                }
+                target = target.parentElement;
+            }
+            if (notes_box != null) {
+                if (in_or_out == 0) {
+                    notes_box.style.display = "none";
+                    notes_box.style.opacity = 0;
+                }
+            }
+        }
+    });
 });
