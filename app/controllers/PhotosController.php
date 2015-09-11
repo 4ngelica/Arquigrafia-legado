@@ -825,6 +825,20 @@ class PhotosController extends \BaseController {
     }
     return "OK.";
   }
+  
+  // BATCH REGENERATE
+  public function batchRegenerate()
+  {
+    $photos = Photo::all();
+    foreach ($photos as $photo) {
+      $path = public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg';
+	  $image = Image::make($path);
+	  $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg');
+	  $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
+	  $image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
+    }
+    return "OK.";
+  }
 
   public function evaluate($photoId ) { 
     $this->checkEvalCount(5, 'test');

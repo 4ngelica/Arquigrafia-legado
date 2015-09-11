@@ -20,7 +20,7 @@ class PagesController extends BaseController {
 
 	public function home()
 	{
-    $photos = Photo::orderByRaw("RAND()")->take(160)->get();
+    $photos = Photo::orderByRaw("RAND()")->take(1000)->get();
 
     if (Auth::check()) {
       $user_id = Auth::user()->id;
@@ -44,7 +44,7 @@ class PagesController extends BaseController {
   
   public function panel()
 	{
-    $photos = Photo::orderByRaw("RAND()")->take(160)->get();
+    $photos = Photo::orderByRaw("RAND()")->take(1000)->get();
 		return View::make('api.panel', ['photos' => $photos]);
 	}
 
