@@ -19,7 +19,7 @@ class PagesController extends BaseController {
   }
 
 	public function home()
-	{
+	{ 
     $photos = Photo::orderByRaw("RAND()")->take(1000)->get();
 
     if (Auth::check()) {
@@ -33,17 +33,17 @@ class PagesController extends BaseController {
     }
     if(Session::has('institutionId')){
       $institution = Institution::find(Session::get('institutionId')); 
-    }else{
+    }else{ 
       $institution = null;
     }
     $source_page = Request::header('referer');
     ActionUser::printHomePage($user_id, $source_page, $user_or_visitor);
 
-		return View::make('index', ['photos' => $photos]);
+		return View::make('index', ['photos' => $photos, 'institution' => $institution]);
 	}
   
   public function panel()
-	{
+	{ 
     $photos = Photo::orderByRaw("RAND()")->take(1000)->get();
 		return View::make('api.panel', ['photos' => $photos]);
 	}
