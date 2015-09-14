@@ -235,7 +235,7 @@ class UsersController extends \BaseController {
         return Redirect::to('/users/login')->withInput();
       }
     }
-
+    if (isset($user)) {
     if (Auth::attempt(array('login' => $user->login, 'password' => $input["password"],'active' => 'yes')) == true || Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true  )
         { 
       if ( Session::has('filter.login') ) //acionado pelo login
@@ -282,7 +282,7 @@ class UsersController extends \BaseController {
         return Redirect::to('/')->with('msgWelcome', $integration_message);  
       }
       return Redirect::to('/');
-    } else {
+    } } else {
 			Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
       return Redirect::to('/users/login')->withInput();
     }
