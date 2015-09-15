@@ -306,7 +306,7 @@
          {{ Form::checkbox('knownArchitecture', 'yes', $checkedKnowArchitecture) }}
          
 
-         Você conhece pessoalmente esta arquitetura?
+         Eu conheço pessoalmente esta arquitetura.
 
          <br><br>
 
