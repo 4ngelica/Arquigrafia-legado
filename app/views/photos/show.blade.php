@@ -127,7 +127,7 @@
               <a href="{{ asset('photos/download/'.$photos->id) }}" title="Faça o download" id="download" target="_blank"></a>
             </li>
             <li>
-              <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=sb' )}}" title="Interprete {{$architectureName}}" id="evaluate" ></a>
+              <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=sb' )}}" title="Registre suas impressões sobre {{$architectureName}}" id="evaluate" ></a>
             </li>
             <!-- LIKE-->
             <!--@if(is_null($photoliked))
@@ -449,7 +449,7 @@
       @endif
 
       @if (empty($average))
-        <h4>Interpretação da arquitetura:</h4>
+        <h4>Interpretações da arquitetura:</h4>
         <img src="/img/GraficoFixo.png" />
       @else
         <h4>
@@ -467,8 +467,7 @@
         @if (isset($userEvaluations) && !$userEvaluations->isEmpty() && !Session::get('institutionId'))
           <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
           class="btn">
-            <!--Clique aqui para alterar sua avaliação-->
-            Clique aqui para alterar sua impressão
+            Clique aqui para alterar suas impressões
           </a> &nbsp;
         @else
           @if (empty($average) && !Session::get('institutionId'))
