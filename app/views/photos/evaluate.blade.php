@@ -306,7 +306,13 @@
          {{ Form::checkbox('knownArchitecture', 'yes', $checkedKnowArchitecture) }}
          
 
-         Você conhece pessoalmente esta arquitetura?
+         Eu conheço pessoalmente esta arquitetura.
+
+	       <br><br>
+         {{ Form::checkbox('areArchitecture', 'yes', $checkedAreArchitecture) }}
+         
+
+         Estou no local.
 
          <br><br>
 
@@ -354,9 +360,9 @@
                         href="{{ URL::to('/search?bin=' . $binomial->id . '&opt=1&val=' . $diff) }}">
                         (<output for="fader{{ $binomial->id }}"
                           id="leftBinomialValue{{ $binomial->id }}">
-                          {{100 - $diff }}%
+                          {{100 - $diff }}
                         </output>
-                        )
+                        %)
                       </a>
                     </td>
                     <td align="right">
@@ -367,9 +373,9 @@
                         href="{{ URL::to('/search?bin=' . $binomial->id . '&opt=2&val=' . $diff) }}">
                         (<output for="fader{{ $binomial->id }}"
                           id="rightBinomialValue{{ $binomial->id }}">
-                          {{ $diff }}%
+                          {{ $diff }}
                         </output>
-                        )
+                        %)
                       </a>
                     </td>
                   </tr>

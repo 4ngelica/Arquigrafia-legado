@@ -510,6 +510,10 @@ $(function() {
       source: availableTags
     });
 
+    $("#photo_workAuthor" ).autocomplete({
+      source: availableTags
+    });
+    
   });
 
 
