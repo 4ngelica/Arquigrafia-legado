@@ -202,13 +202,13 @@
               {{ Form::textarea('text', '', ['id'=>'comment_field']) }}
               {{ Form::hidden('user', $photos->id ) }}
               {{ Form::submit('COMENTAR', ['id'=>'comment_button','class'=>'cursor btn']) }}
-              <br class="clear">
-              </br>
-              <p align="justify" style="font-size: 7pt">
-                  Cada usuário é responsável por seus próprios comentários. O Arquigrafia não se responsabiliza pelos comentários postados, mas apenas por tornar indisponível no site o conteúdo considerado infringente ou danoso por determinação judicial (art.19 da Lei 12.965/14).
-              </p>
             </div>
           {{ Form::close() }}
+          <br class="clear">
+          </br>
+          <p align="justify" style="font-size: 7pt">
+                  Cada usuário é responsável por seus próprios comentários. O Arquigrafia não se responsabiliza pelos comentários postados, mas apenas por tornar indisponível no site o conteúdo considerado infringente ou danoso por determinação judicial (art.19 da Lei 12.965/14).
+          </p>
           <br class="clear">
         @else
           <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e comente sobre {{ $architectureName }}</p>
