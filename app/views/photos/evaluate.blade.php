@@ -387,7 +387,7 @@
               <?php $count-- ?>
             @endforeach
               
-               <a href="{{ URL::previous() }}" class='btn right'>VOLTAR</a>
+               <a href="{{ URL::to('/photos/' . $photos->id) }}" class='btn right'>VOLTAR</a>
                @if (Auth::check() && $owner != null && $owner->id == Auth::user()->id)
                 {{ Form::submit('ENVIAR', ['id'=>'evaluation_button','class'=>'btn right']) }} 
                @endif
