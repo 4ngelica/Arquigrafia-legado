@@ -361,8 +361,7 @@
                         (<output for="fader{{ $binomial->id }}"
                           id="leftBinomialValue{{ $binomial->id }}">
                           {{100 - $diff }}
-                        </output>
-                        %)
+                        </output>%)
                       </a>
                     </td>
                     <td align="right">
@@ -374,8 +373,7 @@
                         (<output for="fader{{ $binomial->id }}"
                           id="rightBinomialValue{{ $binomial->id }}">
                           {{ $diff }}
-                        </output>
-                        %)
+                        </output>%)
                       </a>
                     </td>
                   </tr>
