@@ -2,7 +2,7 @@
 
 class Evaluation extends Eloquent {
 
-	protected $fillable = ['photo_id','evaluationPosition','binomial_id','user_id','knownArchitecture'];
+	protected $fillable = ['photo_id','evaluationPosition','binomial_id','user_id','knownArchitecture', 'areArchitecture'];
 
 	protected $table = 'binomial_evaluation';
 
@@ -44,6 +44,18 @@ class Evaluation extends Eloquent {
 		   }
 		   	
 	}
+    
+    public static function userAreArchitecture($photoId,$userId){
+        $result = DB::table('binomial_evaluation')
+            ->select('areArchitecture')
+            ->where('photo_id', $photoId)
+            ->where('user_id',$userId)->get();
+        if($result != null && $result[0] != null && $result[0]->areArchitecture == 'yes'){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
 	public static function averageAndUserEvaluation($photoId,$userId) {
 		$avgPhotosBinomials = DB::table('binomial_evaluation')

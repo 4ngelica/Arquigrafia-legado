@@ -160,7 +160,7 @@ class PagesController extends BaseController {
 
 		if ($needle != "") {
       
-      $query = Tag::where('name', 'LIKE', '%' . $needle . '%');  
+      $query = Tag::where('name', 'LIKE', '%' . $needle . '%')->where('count', '>', 0);  
       $tags = $query->get();
 
       if ($txtcity != "") {  
