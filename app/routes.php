@@ -118,3 +118,5 @@ Route::get('/markRead/{id}', 'NotificationsController@read');
 Route::get('/readAll', 'NotificationsController@readAll');
 Route::get('/refreshBubble', 'NotificationsController@howManyUnread');
 
+/* INSTITUTIONS */
+Route::get('/institutions/{id}', 'InstitutionsController@show');
