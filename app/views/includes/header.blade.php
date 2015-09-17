@@ -44,10 +44,10 @@
         <?php if (Auth::check()) { ?>
          
 
-          @if(!Session::get('institutionId')) 
+          @if(!Session::get('institutionId')) u
           <a id="user_name" href="{{ URL::to("/users") }}/{{ Auth::user()->id; }}">{{ Auth::user()->name; }}</a>
           @else
-          <a id="user_name" href="{{ URL::to("/users") }}/{{ Auth::user()->id; }}">{{ $institution->name; }}</a>
+          <a id="user_name" href="{{ URL::to("/institutions") }}/{{ Auth::user()->id; }}">{{ $institution->name; }}</a>
           @endif
 
           @if(!Session::get('institutionId'))
@@ -62,7 +62,7 @@
           </a>
           @else
             @if($institution->id == Session::get('institutionId'))
-                <a id="user_photo" href="">          
+                <a id="user_photo" href="{{ URL::to("/institutions") }}/{{ Session::get('institutionId'); }}">          
                   <img src="{{ asset($institution->photo) }}" width="48" height="48" class="user_photo_thumbnail"/>
                 </a>
             @else
