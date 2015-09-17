@@ -1,15 +1,15 @@
 function readURL(input) {
-                $("#preview_photo").hide();
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
-                    reader.onload = function (e) {
-                        $('#preview_photo')
-                            .attr('src', e.target.result)
-                            .width(600);
-                            $("#preview_photo").show();
-                    };
-                    reader.readAsDataURL(input.files[0]);
-                }
+    $("#preview_photo").hide();
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#preview_photo')
+                .attr('src', e.target.result)
+                .width(600);
+                $("#preview_photo").show();
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
 }
 
 
@@ -20,7 +20,7 @@ function readURL(input) {
  * @param {input type} tagInput
  */
 function showTags(tagsJson, containerText, tagInput){
-//    console.log(tagsJson);
+
     if(tagsJson != null && tagsJson != ''){
         containerText.textext({ plugins: 'tags' });
         var array = eval(tagsJson);  // convert string to array  
@@ -41,23 +41,24 @@ $(document).ready(function() {
             }
         })
     ; */
-
-
     $('#tagsArea').textext({ plugins: 'tags' });
-
     $('#add_tag').click(function(e) {
-                e.preventDefault();
-                var tag = $('#tags_input').val();
-               // alert(tag);
-                if (tag == '') return;
-                if ($('#tagsArea').textext()[0] == null) {
-                    $('#tags').textext()[0].tags().addTags([ tag ]);
-                }
-                else {
-                    $('#tagsArea').textext()[0].tags().addTags([ tag ]);
-                }
+        e.preventDefault();
+        var tag = $('#tags_input').val();
+        if (tag == '') return;
+        if ($('#tagsArea').textext()[0] == null) {
+            var sizeTags = $('#tags').textext()[0].tags()._formData.length;
+            if (sizeTags < 5) {
+                $('#tags').textext()[0].tags().addTags([ tag ]);
                 $('#tags_input').val('');
+            }
+        }
+        else {
+            $('#tagsArea').textext()[0].tags().addTags([ tag ]);
+            $('#tags_input').val('');
+        }
     });
+
 
     /*$('#workAuthor').textext({ plugins : 'autocomplete ajax',
             ajax : {
@@ -68,8 +69,6 @@ $(document).ready(function() {
         })
     ;*/
  
-////
-
     $(function() {
         $( "#datePickerWorkDate" ).datepicker({
             dateFormat:'dd/mm/yy'
@@ -84,7 +83,6 @@ $(document).ready(function() {
         $( "#datePickerBackupDate" ).datepicker({
             dateFormat:'dd/mm/yy'
         });
-        
     });
 
 });
