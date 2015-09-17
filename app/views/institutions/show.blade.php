@@ -21,13 +21,22 @@
     <!--   HEADER DO USUÁRIO   -->
   <div class="container">
     <div id="user_header" class="twelve columns">
-      @if ( !empty($institution->photo) )
-        <img class="avatar" src="{{ asset($institution->photo) }}"
-          class="user_photo_thumbnail"/>
-      @else
-        <img class="avatar" src="{{ asset("img/avatar-institution.png") }}"
-          width="60" height="60" class="user_photo_thumbnail"/>
-      @endif
+    <!-- Avatar with edit profile -->
+      <?php if (Auth::check() && Session::get('institutionId') == $institution->id) { ?>
+        <a href= '{{"/institutions/" . $institution->id . "/edit" }}' title="Editar perfil" >
+        <?php if ($institution->photo != "") { ?>
+               <img class="avatar" src="{{ asset($institution->photo) }}" class="user_photo_thumbnail"/>          
+              <?php } else { ?>
+               <img class="avatar" src="{{ asset("img/avatar-institution.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
+              <?php } ?>
+              </a>
+            <?php }else{ ?>
+                <?php if ($institution->photo != "") { ?>
+                  <img class="avatar" src="{{ asset($institution->photo) }}" class="user_photo_thumbnail"/>          
+                <?php } else { ?>
+                  <img class="avatar" src="{{ asset("img/avatar-institution.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
+                <?php } ?>
+            <?php } ?>
       <div class="info">
         <h1>{{ $institution->name}}</h1>
         @if ( !empty($user->city) )
