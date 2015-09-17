@@ -120,3 +120,4 @@ Route::get('/refreshBubble', 'NotificationsController@howManyUnread');
 
 /* INSTITUTIONS */
 Route::get('/institutions/{id}', 'InstitutionsController@show');
+Route::resource('/institutions','InstitutionsController');
