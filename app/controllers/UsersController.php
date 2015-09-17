@@ -633,19 +633,14 @@ class UsersController extends \BaseController {
     return Response::json(true);
   }
 
-  public function institutionalLogin(){ 
-    
+  public function institutionalLogin() { 
     $login = Input::get('login');    
     $institution = Input::get('institution');
     $password = Input::get('password');
-
     Log::info("Retrieved params login=".$login.", institution=".$institution);
-
     $booleanExist = User::userBelongInstitution($login,$institution); 
-    
     Log::info("Result belong institution -> booleanExist=".$booleanExist);
 
-    //
     if ((Auth::attempt(array('login' => $login, 'password' => $password)) == true || 
       Auth::attempt(array('email' => $login, 'password' => $password,'active' => 'yes')) == true) &&
       $booleanExist == true){
@@ -654,14 +649,10 @@ class UsersController extends \BaseController {
       Session::put('institutionId', $institution);
       //loga usuario da institution
       return Redirect::to('/');
-    }else{
+    } else {
       Log::info("Invalid access, return message");
-      
       return Response::json(false);
     }
-
-
-
   }
 
   private function getStoaAccount($account, $password, $account_type) {
@@ -710,9 +701,11 @@ class UsersController extends \BaseController {
         /* Se a conta Arquigrafia não possuir foto e a conta Facebook possuir foto, pega essa foto */
         if (!isset($has_photo)) {
           if ($fb_acc->photo == "/arquigrafia-avatars/" . $fb_acc->id . ".jpg") {
-            if (rename("/arquigrafia-avatars/" . $fb_acc->id . ".jpg", "/arquigrafia-avatars/" . $arq_acc->id . ".jpg")) {
-            $arq_acc->photo = "/arquigrafia-avatars/" . $arq_acc->id . ".jpg";
-            $has_photo = true;
+            $old_filename = public_path() . $fb_acc->photo;
+            $new_filename = public_path() . "/arquigrafia-avatars/" . $arq_acc->id . ".jpg";
+            if (rename($old_filename, $new_filename)) {
+              $arq_acc->photo = "/arquigrafia-avatars/" . $arq_acc->id . ".jpg";
+              $has_photo = true;
             }
           }
         }
