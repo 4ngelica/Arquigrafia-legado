@@ -4,24 +4,24 @@ class Institution extends Eloquent {
 
 	protected $fillable = ['name','country'];
 
-	public $timestamps = false;
+	// public $timestamps = false;
 
 	public function employees()
 	{
 		return $this->hasMany('Employee');
 	}
 
-	public function institutions()
+	public function photos()
 	{
-		return $this->hasMany('Institution');
+		return $this->hasMany('Photo');
 	}
 
-	public static function  institutionsList()
+	public static function institutionsList()
 	{
 		return DB::table('institutions')->orderBy('name', 'asc')->lists('name','id');
 	}
 
-	public static function belongInstitution($photo_id,$institution_id){
+	public static function belongInstitution($photo_id,$institution_id) {
 		$belong = false;
 		$photoInstitution = DB::table('photos')->where('id',$photo_id)
 		->where('institution_id',$institution_id)->get();
@@ -34,7 +34,7 @@ class Institution extends Eloquent {
 		return $belong;
 	}
 
-	public static function belongSomeInstitution($photo_id){
+	public static function belongSomeInstitution($photo_id) {
 		$exist = false;
 	  	$valueInstitution = DB::table('photos')
       	  ->select('institution_id')
@@ -46,6 +46,5 @@ class Institution extends Eloquent {
 		}
 		//dd($exist);
 		return $exist;
-
 	}
 }

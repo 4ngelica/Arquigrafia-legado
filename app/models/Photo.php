@@ -414,4 +414,22 @@ class Photo extends Eloquent {
 		$this->tags()->sync($tags);
 	}
 
+	public static function search($input) {
+		foreach (['workdate', 'dataCriacao', 'dataUpload'] as $date) {
+			if ( isset($input[$date])
+					&& DateTime::createFromFormat('Y', $input[$date]) == FALSE ) {
+				$input[$date] = $this->date->formatDate($input[$date]);
+			}
+		}
+		$query = static::query();
+		foreach (['allowCommercialUses', 'allowModifications'] as $license) {
+			if ( isset($input[$license]) ) {
+				$query->where($license, array_pull($input, $license) );
+			}
+		}
+		foreach ( $input as $column => $value) {
+			$query->where($column, 'LIKE', '%' . $value . '%');
+		}
+    return $query->get();
+	}
 }
