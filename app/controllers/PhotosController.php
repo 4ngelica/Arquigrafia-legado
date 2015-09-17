@@ -30,7 +30,7 @@ class PhotosController extends \BaseController {
     $user = Auth::user();
     $photo_owner = $photos->user;
 
-    $photo_institution = $photos->institution;      
+    $photo_institution = $photos->institution;
     $tags = $photos->tags;
     $binomials = Binomial::all()->keyBy('id');
     $average = Evaluation::average($photos->id);
@@ -103,15 +103,15 @@ class PhotosController extends \BaseController {
 
 
   public function newForm()
-  {  
-    $user_id = Auth::user()->id;
-    $albumsInstitutional = NULL;
-
-    if(Session::has('institutionId')){
-      $institution = Institution::find(Session::get('institutionId'));
-      $this->album = new Album();
-      $albumsInstitutional = $this->album->showAlbumsInstitutional($institution);
+  {
+    if ( ! Session::has('institutionId') ) {
+      return Redirect::to('/');
     }
+    $user_id = Auth::user()->id;
+
+    $institution = Institution::find(Session::get('institutionId'));
+    $albumsInstitutional = Album::withInstitution($institution)->get();
+    
 
     $pageSource = Request::header('referer');
     
@@ -134,9 +134,9 @@ class PhotosController extends \BaseController {
     return View::make('/photos/newform')->with(['tagsArea'=> $tagsArea,
       'workAuthorInput' => $workAuthorInput,      
       'pageSource'=>$pageSource, 'user'=>Auth::user(), 
-      'institution'=>$institution,
+      'institution' => $institution,
       'albumsInstitutional'=>$albumsInstitutional,
-      'autoOpenModal'=>$input['autoOpenModal'] 
+      'autoOpenModal'=>$input['autoOpenModal']
       ]);
   }
 
@@ -385,17 +385,10 @@ class PhotosController extends \BaseController {
   public function editFormInstitutional($id) {
     $photo = Photo::find($id);
     $logged_user = Auth::User();
-    //dd($logged_user->id == $photo->user_id);
-    if ($logged_user == null) {
-        return Redirect::action('PagesController@home');
-    }elseif (Session::get('institutionId') == $photo->institution_id) { 
-        $institution = null;
-        if(Session::has('institutionId')){
-            $institution = Institution::find(Session::get('institutionId'));
-            //$this->album = new Album();
-          //$albumsInstitutional = $this->album->showAlbumsInstitutional($institution);
-        }
-
+    $institution_id = Session::get('institutionId');
+    if ($logged_user == null || $institution_id == null) {
+        return Redirect::to('/');
+    } elseif ($institution_id == $photo->institution_id) {
         if (Session::has('tagsArea'))
         {
             $tagsArea = Session::pull('tagsArea');
@@ -404,8 +397,6 @@ class PhotosController extends \BaseController {
             $tagsArea = $photo->tags->lists('name');
             //$tagsArea = static::filterTagByType($photo,"Acervo");      
         }
-
-
         if (Session::has('workAuthorInput')  )
         {  
             $workAuthorInput = Session::pull('workAuthorInput');      
@@ -415,12 +406,12 @@ class PhotosController extends \BaseController {
   
         return View::make('photos.edit-institutional')
           ->with(['photo' => $photo, 'tagsArea' => $tagsArea,
-          'institution'=>$institution,
           'workAuthorInput' => $workAuthorInput,
-          'user'=>$logged_user
+          'user' => $logged_user,
+          'institution' => $photo->institution
           ] ); 
     }    
-    return Redirect::action('PagesController@home');  
+    return Redirect::to('/');
   }
 
   public function updateInstitutional($id){ 

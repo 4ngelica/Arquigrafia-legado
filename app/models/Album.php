@@ -87,10 +87,9 @@ class Album extends \BaseModel {
 		return !is_null($this->cover);
 	}
 
-	public function showAlbumsInstitutional($institution){
-		return Album::where("institution_id", $institution->id)->get();     	
+	public function scopeWithInstitution( $query, $institution ) {
+		$id = $institution instanceof Institution ? $institution_id : $institution;
+		return $query->where('institution_id', $id);
 	}
-
-
 
 }

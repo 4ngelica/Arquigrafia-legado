@@ -18,16 +18,11 @@ class AlbumsController extends \BaseController {
 	}
 
 	public function index() {
-		
-		if(Session::has('institutionId')){ 
-      		$institution = Institution::find(Session::get('institutionId'));      		
-      		$this->album = new Album();
-      		$albums = $this->album->showAlbumsInstitutional($institution);       		
-
-   		 }else{
-   		 	$albums = Auth::user()->albums;
-   		 }
-   		 
+		if(Session::has('institutionId')) {
+			$albums = Album::withInstitution(Session::get('institutionId'))->get();
+		} else {
+			$albums = Auth::user()->albums;
+		}
 		return View::make('albums.index')->with('albums', $albums);
 	}
 
@@ -35,11 +30,6 @@ class AlbumsController extends \BaseController {
 		$url = URL::to('/albums/photos/add');
 		$photos = Photo::paginateUserPhotos(Auth::user());
 		$image = Session::has('image') ? Session::get('image') : null;
-		if(Session::has('institutionId')){
-      		$institution = Institution::find(Session::get('institutionId')); 
-    	}else{
-      		$institution = null;
-    	}
 		return View::make('albums.form')
 			->with(['photos' => $photos,
 				'url' => $url,
@@ -47,7 +37,6 @@ class AlbumsController extends \BaseController {
 				'page' => 1,
 				'type' => 'add',
 				'image' => $image,
-				'institution' => $institution
 			]);
 	}
 
@@ -73,18 +62,17 @@ class AlbumsController extends \BaseController {
 		$cover = Photo::find((empty($photos) ? null : array_values($photos)[0]));
 		$user = Auth::user();
 		
-		if(Session::has('institutionId')){
-			$institutionData = Institution::find(Session::get('institutionId'));
-			//$institution = $institutionData->id;
+		if( Session::has('institutionId') ) {
+			$institution = Institution::find(Session::get('institutionId'));
 		}else{
-			$institutionData = NULL;
+			$institution = NULL;
 		} 
 		$album = Album::create([
 			'title' => Input::get('title'),
 			'description' => Input::get('description'),
 			'user' => $user,
 			'cover' => $cover,
-			'institution' => $institutionData
+			'institution' => $institution
 		]);
 		if ( $album->isValid() ) {
 			if ( !empty($photos) ) {
@@ -258,7 +246,7 @@ class AlbumsController extends \BaseController {
 	}
 
 	public function attachPhotos($id) {
-		try { dd($id);
+		try {
 			$album = Album::find($id);
 			$photos = Input::get('photos');
 			$album->attachPhotos($photos);
