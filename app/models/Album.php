@@ -88,8 +88,12 @@ class Album extends \BaseModel {
 	}
 
 	public function scopeWithInstitution( $query, $institution ) {
-		$id = $institution instanceof Institution ? $institution_id : $institution;
+		$id = $institution instanceof Institution ? $institution->id : $institution;
 		return $query->where('institution_id', $id);
+	}
+
+	public function scopeWithoutInstitutions($query) {
+		return $query->whereNull('institution_id');
 	}
 
 }

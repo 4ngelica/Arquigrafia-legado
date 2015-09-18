@@ -60,8 +60,6 @@ Route::get('/friends/unfollow/{user_id}', 'UsersController@unfollow');
 // AVATAR 
 Route::get('/profile/10/showphotoprofile/{profile_id}', 'UsersController@profile');
 
-Route::resource('/profile','ProfileController'); // lixo ?
-
 /* ALBUMS */
 Route::resource('/albums','AlbumsController');
 Route::get('/albums/photos/add', 'AlbumsController@paginateByUser');

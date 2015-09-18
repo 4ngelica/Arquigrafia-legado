@@ -16,6 +16,11 @@ class Institution extends Eloquent {
 		return $this->hasMany('Photo');
 	}
 
+	public function albums()
+	{
+		return $this->hasMany('Album');	
+	}
+
 	public static function institutionsList()
 	{
 		return DB::table('institutions')->orderBy('name', 'asc')->lists('name','id');
@@ -46,5 +51,14 @@ class Institution extends Eloquent {
 		}
 		//dd($exist);
 		return $exist;
+	}
+
+	public function equal($institution) {
+		try {
+			return $institution instanceof Institution &&
+				$this->id == $institution->id;
+		} catch (Exception $e) {
+			return false;
+		}
 	}
 }

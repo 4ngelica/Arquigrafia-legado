@@ -102,7 +102,12 @@ class Photo extends Eloquent {
 	}
 
 	public static function paginateUserPhotos($user, $perPage = 24) {
-		return static::withUser($user)->paginate($perPage);
+		return static::withUser($user)
+			->withoutInstitutions()->paginate($perPage);
+	}
+
+	public static function paginateInstitutionPhotos($institution, $perPage = 24) {
+		return static::withInstitution($institution)->paginate($perPage);
 	}
 
 	public static function paginateAlbumPhotos($album, $perPage = 24) {
@@ -110,22 +115,33 @@ class Photo extends Eloquent {
 	}
 
 	public static function paginateOtherPhotos($user, $photos, $perPage = 24) {
-		return static::withUser($user)->except($photos)->paginate($perPage);
+		if ( Session::has('institutionId') ) {
+			return static::withInstitution($user)->except($photos)->paginate($perPage);
+		} else {
+			return static::withUser($user)->withoutInstitutions()
+				->except($photos)->paginate($perPage);
+		}
 	}
 
 	public static function paginateUserPhotosNotInAlbum($user, $album, $q = null, $perPage = 24) {
-		$photos = static::photosNotInAlbum($album, $q);
-		$photos = $photos->where('user_id', $user->id);
-		$count = $photos->get()->count();
+		$photos = static::photosNotInAlbum($album, $q)
+			->withUser($user)->withoutInstitutions();
 		$photos = $photos->paginate($perPage);
+		$count = $photos->getTotal();
 		return ['photos' => $photos, 'photos_count' => $count];
 	}
 
-	public static function paginateAllPhotosNotInAlbum($album, $q = null, $perPage = 24) {
-		// $photos = static::NotInAlbum($album)->whereMatches($q);
-		$photos = static::photosNotInAlbum($album, $q);
-		$count = $photos->get()->count();
+	public static function paginateInstitutionPhotosNotInAlbum($inst, $album, $q = null, $perPage = 24) {
+		$photos = static::photosNotInAlbum($album, $q)->withInstitution($inst);
 		$photos = $photos->paginate($perPage);
+		$count = $photos->getTotal();
+		return ['photos' => $photos, 'photos_count' => $count];	
+	}
+
+	public static function paginateAllPhotosNotInAlbum($album, $q = null, $perPage = 24) {
+		$photos = static::photosNotInAlbum($album, $q);
+		$photos = $photos->paginate($perPage);
+		$count = $photos->getTotal();
 		return ['photos' => $photos, 'photos_count' => $count];
 	}
 
@@ -133,13 +149,7 @@ class Photo extends Eloquent {
 		$photos = static::whereDoesntHave('albums', function($query) use($album) {
 			$query->where('album_id', $album->id);
 		});
-		if ( !empty($q) ) {
-			$photos = $photos->where(function ($query) use($q) {
-				$query->where('name', 'like', '%' . $q . '%')
-				->orWhere('workAuthor', 'like', '%' . $q . '%');
-			});
-		}
-		return $photos;
+		return	$photos->whereMatches($q);
 	}
 
 	public static function paginateFromAlbumWithQuery($album, $q, $perPage = 24) {
@@ -307,12 +317,22 @@ class Photo extends Eloquent {
 
 	}
 
+	public function scopeWithoutInstitutions($query) {
+		return $query->whereNull('institution_id');
+	}
+
+	public function scopeWithInstitution($query, $institution) {
+		$id = $institution instanceof Institution ? $institution->id : $institution;
+		return $query->where('institution_id', $id);
+	}
+
 	public function scopeWithUser($query, $user) {
-		return $query->where('user_id', $user->id);
+		$id = $user instanceof User ? $user->id : $user;
+		return $query->where('user_id', $id);
 	}
 
 	public function scopeExcept($query, $photos) {
-		if ($albums instanceof Photo) {
+		if ($photos instanceof Photo) {
 			return $query->where('id', '!=', $photos->id);
 		}
 		//instance of Eloquent\Collection
@@ -330,7 +350,7 @@ class Photo extends Eloquent {
 			return $query;
 		}
 		return $query->where(function ($q) use($needle) {
-			$query->where('name', 'LIKE', '%'. $needle .'%')
+			$q->where('name', 'LIKE', '%'. $needle .'%')
 			->orWhere('description', 'LIKE', '%'. $needle .'%')
 			->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%')
 			->orWhere('workAuthor', 'LIKE', '%'. $needle .'%')
