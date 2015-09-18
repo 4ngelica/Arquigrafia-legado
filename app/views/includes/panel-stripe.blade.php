@@ -1,7 +1,6 @@
 <div id="panel" class="stripe">
 
 	@foreach($photos as $photo)
-
 		<div class="item h2">
 			<div class="layer" data-depth="0.2">
 				<a href='{{ URL::to("/photos/{$photo->id}") }}'>
