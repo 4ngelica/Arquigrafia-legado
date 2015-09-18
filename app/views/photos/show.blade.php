@@ -284,16 +284,19 @@
     <div id="sidebar" class="four columns">
       <!--   USUARIO   -->
       <div id="single_user" class="clearfix row">
-        <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
+        <!--<a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">-->
           @if(!is_null($ownerInstitution))
+           <a href="{{ URL::to("/institutions/".$ownerInstitution->id) }}" id="user_name">
               @if($ownerInstitution->photo != "")              
                 <img id="single_view_user_thumbnail" src="{{ asset($ownerInstitution->photo) }}" class="user_photo_thumbnail"/>
               @else
                 <img id="single_view_user_thumbnail" src="{{ URL::to("/") }}/img/avatar-institution.png" class="user_photo_thumbnail"/>
               @endif  
           @elseif ($owner->photo != "")
+            <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
             <img id="single_view_user_thumbnail" src="{{ asset($owner->photo) }}" class="user_photo_thumbnail"/>
           @else
+            <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
             <img id="single_view_user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png"
               width="48" height="48" class="user_photo_thumbnail"/>
           @endif
