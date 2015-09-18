@@ -348,11 +348,16 @@ class PagesController extends BaseController {
     } //2015-05-21 msy end
     //dd($photos->count());
     if($tags == '') $tags = [];
-    if($photos->count()) { // retorna resultado da busca       
-      return View::make('/advanced-search',['tags' => $tags, 'photos' => $photos]); //tagsResult
+    if($photos->count()) { // retorna resultado da busca 
+      if(count($photos) == 1)
+        $message = 'Foi encontrada ' . count($photos) . ' imagem.'; 
+      else
+        $message = 'Foram encontradas ' . count($photos) . ' imagens.';
+      return View::make('/advanced-search',['tags' => $tags, 'photos' => $photos, 'message' => $message]); //tagsResult
     } else {
       // busca sem resultados
-      return View::make('/advanced-search',['tags' => $tags, 'photos' => []]); //tagsResult
+      $message = 'A busca não retornou resultados.';
+      return View::make('/advanced-search',['tags' => $tags, 'photos' => [], 'message' => $message]); //tagsResult
     }
     
 	}
