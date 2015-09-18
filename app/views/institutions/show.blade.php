@@ -24,7 +24,6 @@
     <!-- Avatar with edit profile -->
       <?php if (Auth::check() && Session::get('institutionId') == $institution->id) { ?>
         <!-- <a href= '{{"/institutions/" . $institution->id . "/edit" }}' title="Editar perfil" >-->
-
         <?php if ($institution->photo != "") { ?>
                <img class="avatar" src="{{ asset($institution->photo) }}" class="user_photo_thumbnail"/>          
               <?php } else { ?>
