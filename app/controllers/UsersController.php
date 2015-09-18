@@ -239,55 +239,55 @@ class UsersController extends \BaseController {
       }
     }
     if (isset($user)) {
-    if (Auth::attempt(array('login' => $user->login, 'password' => $input["password"],'active' => 'yes')) == true || Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true  )
-        { 
-      if ( Session::has('filter.login') ) //acionado pelo login
-      {  
-        Session::forget('filter.login');
-        $source_page = Request::header('referer');
-        ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
-        if (isset($integration_message)) {
-          return Redirect::to('/')->with('msgWelcome', $integration_message);  
-        }
-        return Redirect::intended('/');
-      }
-        
-      if ( Session::has('url.previous') )
-      {
-        $url = Session::pull('url.previous'); 
-        
-        if (!empty($url)) {
+      if ( Auth::attempt(array('login' => $user->login, 'password' => $input["password"],'active' => 'yes')) == true || 
+          Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true  ) { 
+        if ( Session::has('filter.login') ) //acionado pelo login
+        {  
+          Session::forget('filter.login');
           $source_page = Request::header('referer');
           ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
-          //Redirect when user forget password
-          if($url == URL::to('users/forget')){ 
-            return Redirect::to('/');
-          }elseif(!empty($input["firstTime"])){ 
-              return Redirect::to('/')->with('msgWelcome', "Bem-vind@ ".ucfirst($user->name).".");
+          if (isset($integration_message)) {
+            return Redirect::to('/')->with('msgWelcome', $integration_message);  
+          }
+          return Redirect::intended('/');
+        }
+        if ( Session::has('url.previous') )
+        {
+          $url = Session::pull('url.previous'); 
           
-          }else{
-            return Redirect::to($url);
+          if (!empty($url)) {
+            $source_page = Request::header('referer');
+            ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+            //Redirect when user forget password
+            if($url == URL::to('users/forget')){ 
+              return Redirect::to('/');
+            }elseif(!empty($input["firstTime"])){ 
+                return Redirect::to('/')->with('msgWelcome', "Bem-vind@ ".ucfirst($user->name).".");
+            
+            }else{
+              return Redirect::to($url);
+            }
+
           }
 
+          
+          $source_page = Request::header('referer');
+          ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+          if (isset($integration_message)) {
+            return Redirect::to('/')->with('msgWelcome', $integration_message);  
+          }
+          return Redirect::to('/');
         }
-
-        
         $source_page = Request::header('referer');
         ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
         if (isset($integration_message)) {
           return Redirect::to('/')->with('msgWelcome', $integration_message);  
         }
         return Redirect::to('/');
+      } else {
+  			Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
+        return Redirect::to('/users/login')->withInput();
       }
-      $source_page = Request::header('referer');
-      ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
-      if (isset($integration_message)) {
-        return Redirect::to('/')->with('msgWelcome', $integration_message);  
-      }
-      return Redirect::to('/');
-    } } else {
-			Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
-      return Redirect::to('/users/login')->withInput();
     }
   }
   
