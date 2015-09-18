@@ -25,7 +25,10 @@ class UsersController extends \BaseController {
 	public function show($id)
 	{
 		$user = User::whereid($id)->first();
-    $photos = $user->photos()->get()->reverse();
+   //$photos = $user->photos()->get()->reverse();    
+    $photos = $user->userPhotos($id)->get()->reverse();
+    //dd($photos);
+
     if (Auth::check()) {      
       if (Auth::user()->following->contains($user->id))
         $follow = false;
