@@ -14,6 +14,7 @@ class InstitutionsController extends \BaseController {
       return Redirect::to('/');
     }
     $photos = $institution->photos()->get()->reverse();
+
     /*
     if(Session::has('institutionId')){
         if(Session::get('institutionId') == $id)
@@ -40,10 +41,8 @@ class InstitutionsController extends \BaseController {
       */
 
     return View::make('institutions.show', [
-      'institution' => $institution, 'photos' => $photos,
-      // 'evaluatedPhotos' => Photo::getEvaluatedPhotosByUser($user),
-      // 'lastDateUpdatePhoto' => Photo::getLastUpdatePhotoByUser($id),
-      // 'lastDateUploadPhoto' => Photo::getLastUploadPhotoByUser($id)
-      ]);
+      'institution' => $institution,
+      'photos' => $photos
+    ]);
   }
 }
