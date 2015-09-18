@@ -23,13 +23,14 @@
     <div id="user_header" class="twelve columns">
     <!-- Avatar with edit profile -->
       <?php if (Auth::check() && Session::get('institutionId') == $institution->id) { ?>
-        <a href= '{{"/institutions/" . $institution->id . "/edit" }}' title="Editar perfil" >
+        <!-- <a href= '{{"/institutions/" . $institution->id . "/edit" }}' title="Editar perfil" >-->
+
         <?php if ($institution->photo != "") { ?>
                <img class="avatar" src="{{ asset($institution->photo) }}" class="user_photo_thumbnail"/>          
               <?php } else { ?>
                <img class="avatar" src="{{ asset("img/avatar-institution.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
               <?php } ?>
-              </a>
+           <!--   </a>-->
             <?php }else{ ?>
                 <?php if ($institution->photo != "") { ?>
                   <img class="avatar" src="{{ asset($institution->photo) }}" class="user_photo_thumbnail"/>          
@@ -39,8 +40,8 @@
             <?php } ?>
       <div class="info">
         <h1>{{ $institution->name}}</h1>
-        @if ( !empty($user->city) )
-          <p>{{ $user->city }}</p>
+        @if ( !empty($institution->city) )
+          <p>{{ $institution->city }}</p>
         @endif
         {{--
         @if (Auth::check() && $user->id != Auth::user()->id)
