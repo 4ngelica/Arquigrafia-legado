@@ -45,8 +45,8 @@
             @endif
           </a>
         @else
-          <a id="user_name" href="{{ URL::to('/users' . Auth::id()) }}">{{ Auth::user()->name; }}</a>
-          <a id="user_photo" href="{{ URL::to('/users' . Auth::id()) }}">
+          <a id="user_name" href="{{ URL::to('/users/' . Auth::id()) }}">{{ Auth::user()->name; }}</a>
+          <a id="user_photo" href="{{ URL::to('/users/' . Auth::id()) }}">
             @if ( ! empty(Auth::user()->photo) )
               <img  src="{{ asset(Auth::user()->photo) }}"
                 class="user_photo_thumbnail profile-picture"/>
