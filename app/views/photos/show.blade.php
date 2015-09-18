@@ -302,7 +302,7 @@
           @endif
         </a>
         @if(!is_null($ownerInstitution))
-        <h1 id="single_view_owner_name"><a href="#" id="name">{{ $ownerInstitution->name }}</a></h1>
+        <h1 id="single_view_owner_name"><a href="{{ URL::to("/institutions/".$ownerInstitution->id) }}" id="name">{{ $ownerInstitution->name }}</a></h1>
         @else
         <h1 id="single_view_owner_name"><a href="{{ URL::to("/users/".$owner->id) }}" id="name">{{ $owner->name }}</a></h1>
         @endif
