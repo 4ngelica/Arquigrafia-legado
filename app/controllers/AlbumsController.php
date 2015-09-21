@@ -7,10 +7,10 @@ class AlbumsController extends \BaseController {
 			array( 'except' => 'show' ));
 		$this->beforeFilter('ajax',
 			array( 'only' => array(
-				'paginateAlbumPhotos',
 				'updateInfo',
 				'detachPhotos',
 				'attachPhotos',
+				'paginateAlbumPhotos',
 				'paginatePhotosNotInAlbum',
 				'paginateCoverPhotos',
 				'getList'
@@ -115,9 +115,11 @@ class AlbumsController extends \BaseController {
 		}
 		$album_photos = Photo::paginateAlbumPhotos($album);
 		if ( isset($institution) ) {
-			$other_photos = Photo::paginateOtherPhotos($institution, $album->photos);
+			// $other_photos = Photo::paginateOtherPhotos($institution, $album->photos);
+			$other_photos = Photo::paginateInstitutionPhotosNotInAlbum($institution, $album);
 		} else {
-			$other_photos = Photo::paginateOtherPhotos($user, $album->photos);
+			// $other_photos = Photo::paginateOtherPhotos($user, $album->photos);
+			$other_photos = Photo::paginateUserPhotosNotInAlbum($user, $album);
 		}
 		$other_photos_count = $other_photos->getTotal();
 		$maxPage = $other_photos->getLastPage();
@@ -204,6 +206,7 @@ class AlbumsController extends \BaseController {
 			$photos_ids[] = $photo->id;
 		}
 		return $photos_ids;
+		// return $photos->getCollection()->lists('id');
 	}
 
 	public function getList($id) {
@@ -302,7 +305,7 @@ class AlbumsController extends \BaseController {
 		$query = Input::has('q') ? Input::get('q') : '';
 		$which_photos = Input::get('wp');
 		$pagination = null;
-		if (strcmp($which_photos, 'user') == 0) {
+		if ( $which_photos == 'user' ) {
 			if ( isset($inst) ) {
 				$pagination = Photo::paginateInstitutionPhotosNotInAlbum($inst, $album, $query);
 			} else {
@@ -314,9 +317,8 @@ class AlbumsController extends \BaseController {
 		return $this->paginationResponse($pagination, 'add');
 	}
 
-	private function paginationResponse($pagination, $type) {
-		$photos = $pagination['photos'];
-		$count = $pagination['photos_count'];
+	private function paginationResponse($photos, $type) {
+		$count = $photos->getTotal();
 		$page = $photos->getCurrentPage();
 		$response = [];
 		$response['content'] = View::make('albums.includes.album-photos-edit')
