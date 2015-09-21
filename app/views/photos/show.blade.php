@@ -341,7 +341,7 @@
       <div id="description_container">
       @if ( !empty($photos->description) )
         <h4>Descrição:</h4>
-        <p>{{ $photos->description }}</p>
+        <p>{{ htmlspecialchars($photos->description, ENT_COMPAT | ENT_HTML5, 'UTF-8') }}</p>
       @endif
       </div>
       @if ( !empty($photos->collection) )
