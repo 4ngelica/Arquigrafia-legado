@@ -202,13 +202,13 @@
               {{ Form::textarea('text', '', ['id'=>'comment_field']) }}
               {{ Form::hidden('user', $photos->id ) }}
               {{ Form::submit('COMENTAR', ['id'=>'comment_button','class'=>'cursor btn']) }}
-              <br class="clear">
-              </br>
-              <p align="justify" style="font-size: 7pt">
-                  Cada usuário é responsável por seus próprios comentários. O Arquigrafia não se responsabiliza pelos comentários postados, mas apenas por tornar indisponível no site o conteúdo considerado infringente ou danoso por determinação judicial (art.19 da Lei 12.965/14).
-              </p>
             </div>
           {{ Form::close() }}
+          <br class="clear">
+          </br>
+          <p align="justify" style="font-size: 7pt">
+                  Cada usuário é responsável por seus próprios comentários. O Arquigrafia não se responsabiliza pelos comentários postados, mas apenas por tornar indisponível no site o conteúdo considerado infringente ou danoso por determinação judicial (art.19 da Lei 12.965/14).
+          </p>
           <br class="clear">
         @else
           <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e comente sobre {{ $architectureName }}</p>
@@ -284,22 +284,25 @@
     <div id="sidebar" class="four columns">
       <!--   USUARIO   -->
       <div id="single_user" class="clearfix row">
-        <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
+        <!--<a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">-->
           @if(!is_null($ownerInstitution))
+           <a href="{{ URL::to("/institutions/".$ownerInstitution->id) }}" id="user_name">
               @if($ownerInstitution->photo != "")              
                 <img id="single_view_user_thumbnail" src="{{ asset($ownerInstitution->photo) }}" class="user_photo_thumbnail"/>
               @else
                 <img id="single_view_user_thumbnail" src="{{ URL::to("/") }}/img/avatar-institution.png" class="user_photo_thumbnail"/>
               @endif  
           @elseif ($owner->photo != "")
+            <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
             <img id="single_view_user_thumbnail" src="{{ asset($owner->photo) }}" class="user_photo_thumbnail"/>
           @else
+            <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
             <img id="single_view_user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png"
               width="48" height="48" class="user_photo_thumbnail"/>
           @endif
         </a>
         @if(!is_null($ownerInstitution))
-        <h1 id="single_view_owner_name"><a href="#" id="name">{{ $ownerInstitution->name }}</a></h1>
+        <h1 id="single_view_owner_name"><a href="{{ URL::to("/institutions/".$ownerInstitution->id) }}" id="name">{{ $ownerInstitution->name }}</a></h1>
         @else
         <h1 id="single_view_owner_name"><a href="{{ URL::to("/users/".$owner->id) }}" id="name">{{ $owner->name }}</a></h1>
         @endif
@@ -338,7 +341,7 @@
       <div id="description_container">
       @if ( !empty($photos->description) )
         <h4>Descrição:</h4>
-        <p>{{ $photos->description }}</p>
+        <p>{{ htmlspecialchars($photos->description, ENT_COMPAT | ENT_HTML5, 'UTF-8') }}</p>
       @endif
       </div>
       @if ( !empty($photos->collection) )

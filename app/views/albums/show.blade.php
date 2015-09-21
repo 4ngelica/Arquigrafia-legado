@@ -55,7 +55,11 @@
 				@endif
 			</hgroup>
 			<ul>
-				<li><strong>Autor: </strong> <a href="{{ URL::to('/users/' . $user->id) }}">{{ $user->name }}</a></li>			
+				@if ( Session::has('institutionId') )
+					<li><strong>Autor: </strong> <a href="{{ URL::to('/institutions/' . $user->id) }}">{{ $user->name }}</a></li>
+				@else
+					<li><strong>Autor: </strong> <a href="{{ URL::to('/users/' . $user->id) }}">{{ $user->name }}</a></li>
+				@endif
 				<li><strong>Título: </strong> {{ $album->title }} </li>
 				<br>
 				@if ( !empty($album->description) )

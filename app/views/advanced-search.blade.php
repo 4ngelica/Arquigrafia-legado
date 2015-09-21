@@ -41,7 +41,13 @@
 @stop
 
 @section('content')
-
+    @if (isset($message))
+    <div class="container">
+      <div class="twelve columns">
+        <div class="message">{{ $message }}</div>
+      </div>
+    </div>
+  @endif
     <!--   MEIO DO SITE - ÁREA DE NAVEGAÇÃO   -->
     <div id="content">
     	
@@ -151,13 +157,6 @@
         </div>
         {{ Form::close() }}
 
-        @if(count($photos) < 1)
-         <p>Não encontramos nenhuma imagem.</p> 
-        @elseif(count($photos) == 1) 
-          <p>Foi encontrada {{ count($photos) }} imagem.</p>
-        @else  
-          <p>Foram encontradas {{ count($photos) }} imagens.</p> 
-        @endif
       </div>
       
       

@@ -28,7 +28,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	{
 		return $this->hasMany('Photo');
 	}
-
+	public function userPhotos($user_id){
+		return $this->hasMany('Photo')->where('user_id', $user_id)->whereNull('institution_id');
+	}
 	public function comments()
 	{
 		return $this->hasMany('Comment');
@@ -120,7 +122,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	public function equal($user) {
 		try {
-			return ($this->id == $user->id);
+			return $user instanceof User &&
+				$this->id == $user->id;
 		} catch (Exception $e) {
 			return false;
 		}
@@ -169,5 +172,5 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	public function setBirthdayAttribute($birthday) {
 		$this->attributes['birthday'] = $this->date->formatDate($birthday);
 	}
-
+ 
 }
