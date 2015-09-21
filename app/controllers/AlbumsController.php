@@ -207,11 +207,13 @@ class AlbumsController extends \BaseController {
 	}
 
 	public function getList($id) {
+		//
 		$albums_with_photo = Photo::find($id)->albums; // albums que já têm essa foto
+		
 		if(Session::has('institutionId')) { //dd($albums_with_photo);
 			$albums = Album::withInstitution(Session::get('institutionId'))->except($albums_with_photo)->get();
 		}else{
-			$albums = Album::withUser( Auth::user() )->except($albums_with_photo)->get();
+			$albums = Album::withUser( Auth::user() )->whereNull('institution_id')->except($albums_with_photo)->get();
 		}
 		
 		return Response::json(View::make('albums.get-albums')

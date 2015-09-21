@@ -16,8 +16,13 @@ class Album extends \BaseModel {
 	}
 
 	public function user()
-	{
+	{	
 		return $this->belongsTo('User');
+	}
+
+	public function onlyUser()
+	{
+		return $this->belongsTo('User')->whereNull('institution_id');
 	}
 
 	public function cover()

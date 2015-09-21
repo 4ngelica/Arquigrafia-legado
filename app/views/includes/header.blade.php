@@ -59,7 +59,7 @@
 
         <a href="{{ URL::to("/users/logout/") }}" id="logout" class="btn">SAIR</a><br />
         <ul id="logged_menu">
-          @if (Auth::user()->photos->count() > 0 && !Session::has('institutionId'))
+          @if (Auth::user()->photos->count() > 0 )
             @if(Auth::user()->albums->count() > 0)
               <li><a href="{{ URL::to('/albums') }}" id="users" title="Meus álbuns">&nbsp;</a></li>
             @else
