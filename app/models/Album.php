@@ -30,6 +30,11 @@ class Album extends \BaseModel {
 		return $this->belongsTo('Institution');
 	}
 
+	public function onlyInstitution()
+	{
+		return $this->belongsTo('Institution')->whereNull('user_id');
+	}
+
 	public function updateInfo($title, $description, $cover) {
 		$this->title = $title;
 		$this->description = $description;
