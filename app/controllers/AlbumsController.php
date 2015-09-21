@@ -115,17 +115,9 @@ class AlbumsController extends \BaseController {
 		}
 		$album_photos = Photo::paginateAlbumPhotos($album);
 		if ( isset($institution) ) {
-<<<<<<< HEAD
-			$other_photos = Photo::paginateOtherPhotos($institution, $album->photos);
-		} else {
-			$other_photos = Photo::paginateOtherPhotos($user, $album->photos);
-=======
-			// $other_photos = Photo::paginateOtherPhotos($institution, $album->photos);
 			$other_photos = Photo::paginateInstitutionPhotosNotInAlbum($institution, $album);
 		} else {
-			// $other_photos = Photo::paginateOtherPhotos($user, $album->photos);
 			$other_photos = Photo::paginateUserPhotosNotInAlbum($user, $album);
->>>>>>> e89f1882a6009fe744834f7722df3e97e7a9a864
 		}
 		$other_photos_count = $other_photos->getTotal();
 		$maxPage = $other_photos->getLastPage();
@@ -311,11 +303,7 @@ class AlbumsController extends \BaseController {
 		$query = Input::has('q') ? Input::get('q') : '';
 		$which_photos = Input::get('wp');
 		$pagination = null;
-<<<<<<< HEAD
-		if (strcmp($which_photos, 'user') == 0) {
-=======
 		if ( $which_photos == 'user' ) {
->>>>>>> e89f1882a6009fe744834f7722df3e97e7a9a864
 			if ( isset($inst) ) {
 				$pagination = Photo::paginateInstitutionPhotosNotInAlbum($inst, $album, $query);
 			} else {

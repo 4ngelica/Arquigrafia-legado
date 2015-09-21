@@ -124,34 +124,7 @@ class Photo extends Eloquent {
 	}
 
 	public static function paginateUserPhotosNotInAlbum($user, $album, $q = null, $perPage = 24) {
-<<<<<<< HEAD
-		$photos = static::photosNotInAlbum($album, $q)
-			->withUser($user)->withoutInstitutions();
-		$photos = $photos->paginate($perPage);
-		$count = $photos->getTotal();
-		return ['photos' => $photos, 'photos_count' => $count];
-	}
 
-	public static function paginateInstitutionPhotosNotInAlbum($inst, $album, $q = null, $perPage = 24) {
-		$photos = static::photosNotInAlbum($album, $q)->withInstitution($inst);
-		$photos = $photos->paginate($perPage);
-		$count = $photos->getTotal();
-		return ['photos' => $photos, 'photos_count' => $count];	
-	}
-
-	public static function paginateAllPhotosNotInAlbum($album, $q = null, $perPage = 24) {
-		$photos = static::photosNotInAlbum($album, $q);
-		$photos = $photos->paginate($perPage);
-		$count = $photos->getTotal();
-		return ['photos' => $photos, 'photos_count' => $count];
-	}
-
-	private static function photosNotInAlbum($album, $q) {
-		$photos = static::whereDoesntHave('albums', function($query) use($album) {
-			$query->where('album_id', $album->id);
-		});
-		return	$photos->whereMatches($q);
-=======
 		return static::notInAlbum($album, $q)->withUser($user)
 			->withoutInstitutions()->paginate($perPage);
 		
@@ -164,7 +137,6 @@ class Photo extends Eloquent {
 
 	public static function paginateAllPhotosNotInAlbum($album, $q = null, $perPage = 24) {
 		return static::notInAlbum($album, $q)->paginate($perPage);
->>>>>>> e89f1882a6009fe744834f7722df3e97e7a9a864
 	}
 
 	public static function paginateFromAlbumWithQuery($album, $q, $perPage = 24) {
@@ -355,10 +327,6 @@ class Photo extends Eloquent {
 		if ( empty($needle) ) {
 			return $query;
 		}
-<<<<<<< HEAD
-		return $query->where(function ($q) use($needle) {
-			$q->where('name', 'LIKE', '%'. $needle .'%')
-=======
 		return $query->where( function($q) use($needle) {
 			$q->withTags($needle)->orWhere( function ($q) use($needle) {
 				$q->withAttributes($needle);
@@ -374,7 +342,6 @@ class Photo extends Eloquent {
 
 	public function scopeWithAttributes($query, $needle) {
 		return $query->where('name', 'LIKE', '%'. $needle .'%')
->>>>>>> e89f1882a6009fe744834f7722df3e97e7a9a864
 			->orWhere('description', 'LIKE', '%'. $needle .'%')
 			->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%')
 			->orWhere('workAuthor', 'LIKE', '%'. $needle .'%')
