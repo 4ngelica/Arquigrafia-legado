@@ -46,16 +46,18 @@ class AlbumsController extends \BaseController {
 
 	public function show($id) {
 		$album = Album::find($id);
+		
+		
 		if (is_null($album)) {
 			return Redirect::to('/');
 		}
 		$photos = $album->photos;
-		if ( Session::has('institutionId') ) {
+		if (!is_null($album->institution)){			
 			$user = $album->institution;
 			$other_albums = Album::withInstitution($user)->except($album)->get();
 		} else {
-			$user = $album->user;
-			$other_albums = Album::withUser($user)->except($album)->get();
+			$user = $album->user;				
+			$other_albums = Album::withUser($user)->whereNull('institution_id')->except($album)->get();
 		}
 		return View::make('albums.show')
 			->with([

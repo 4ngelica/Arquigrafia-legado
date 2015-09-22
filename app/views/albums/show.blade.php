@@ -75,8 +75,10 @@
 		<div class="twelve columns albums">
 			<hgroup class="profile_block_title">
 				<h3><i class="photos"></i> Outros álbuns
-					@if($album->user_id != Auth::id())
+					@if(Session::get('institutionId')!= $album->institution_id)
 						de {{ $user->name }}
+					@elseif(($album->user_id != Auth::id()))
+						de {{ $user->name }}			
 					@endif
 				</h3>
 			</hgroup>
