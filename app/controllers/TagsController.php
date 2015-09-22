@@ -10,12 +10,15 @@ class TagsController extends \BaseController {
 
 	public function refreshCount() {
 		$photos = Photo::all();
+		echo "processando...\r\n";
 		DB::update('update tags set count = 0');
 		foreach ($photos as $photo) {
 			$photo_tags = $photo->tags;
+			echo "Foto de ID = " . $photo->id . ":\r\n";
 			foreach ($photo_tags as $tag) {
 				$tag->count = $tag->count + 1;
 				$tag->save();
+				echo "Tag atualizada: " . $tag->name . "\r\n";
 			}
 		}
 		$deleted = Photo::onlyTrashed()->get();
