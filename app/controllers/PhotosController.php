@@ -592,6 +592,7 @@ class PhotosController extends \BaseController {
         $photo->workdate = $input["photo_workDate"];
       if ( !empty($input["photo_imageDate"]) )
       $photo->dataCriacao = $input["photo_imageDate"];
+      //$input["photo_album"]; retorna ID do album
 
       $photo->nome_arquivo = $file->getClientOriginalName();
 

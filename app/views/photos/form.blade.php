@@ -148,6 +148,18 @@
 								</div>
 							</tr>
 							<tr>
+								<?php
+									$albuns[""] = "Escolha o album";
+									foreach (Auth::user()->albums as $k => $album) {
+										$albuns[$k]	= $album->title;
+									} 
+								?>
+								<div class="two columns alpha"><p>{{ Form::label('photo_album', 'Adicionar ao álbum:') }}</p></div>
+								<div class="two columns omega">
+									<p>
+										{{ Form::select('photo_album', $albuns, "") }} <br>
+									</p>
+								</div>
 								<td>&nbsp;</td>
 								<td>&nbsp;</td>
 							</tr>
