@@ -53,7 +53,7 @@
 				<p>{{ $user->city }}</p>
 			  @endif
 
-			@if (Auth::check() && $user->id != Auth::user()->id)
+			@if (Auth::check() && $user->id != Auth::user()->id && !Session::has('institutionId'))
     			@if (!empty($follow) && $follow == true )
 	    			<a href="{{ URL::to("/friends/follow/" . $user->id) }}" id="single_view_contact_add">Seguir</a><br />
  				@else
@@ -261,6 +261,7 @@
 
 	<br>
 	<br>
+	@if(!Session::has('institutionId'))
 	<!-- MINHAS AVALIAÇÕES -->
 	<div class="container">
 		<div class="twelve columns albums">
@@ -314,7 +315,7 @@
 			</div>
 		</div>
 	</div>
-
+	@endif
     
 		<!--   MODAL   -->
 	<div id="mask"></div>
