@@ -133,6 +133,57 @@
   --}}
   </div>
 
+<!-- MEUS ALBUNS -->
+  <div class="container">        
+      <div class="twelve columns albums">
+        <hgroup class="profile_block_title">
+          <h3><i class="photos"></i>
+            @if (Auth::check() && Session::get('institutionId') == $institution->id)
+              Meus álbuns
+            @else
+              Álbuns
+            @endif
+          </h3>
+        </hgroup>
+        <?php $albums = $institution->albums; ?>
+        
+        <div class="profile_box">
+          @if ($albums->count() > 0)
+            @foreach($albums as $album)
+              <div class="gallery_box">
+                <a href="{{ URL::to("/albums/" . $album->id) }}" class="gallery_photo" title="{{ $album->title }}">
+                  @if (isset($album->cover_id))
+                    <img src="{{ URL::to("/arquigrafia-images/" . $album->cover_id . "_home.jpg") }}" class="gallery_photo" />
+                  @else
+                    <div class="gallery_photo">
+                      <div class="no_cover">
+                        <p> Álbum sem capa </p>
+                      </div>
+                    </div>
+                  @endif
+                </a>
+                <a href="{{ URL::to("/albums/" . $album->id) }}" class="name">
+                  {{ $album->title . ' ' . '(' . $album->photos->count() . ')' }}
+                </a>
+                <br />
+              </div>
+            @endforeach
+          @else
+            <p>
+            @if (Auth::check() && Session::get('institutionId') == $institution->id)
+              Você ainda não tem nenhum álbum. Crie um <a href="{{ URL::to('/albums/create') }}">aqui</a>
+            @else
+              Não possui álbuns.
+            @endif
+            </p>
+          @endif
+        </div>
+      
+      </div>
+  
+  </div>
+
+
     <!--   MODAL   -->
   <div id="mask"></div>
   <div id="form_window" class="form window">
