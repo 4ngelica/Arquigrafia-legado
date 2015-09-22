@@ -350,9 +350,9 @@ class PagesController extends BaseController {
     if($tags == '') $tags = [];
     if($photos->count()) { // retorna resultado da busca 
       if(count($photos) == 1)
-        $message = 'Foi encontrada ' . count($photos) . ' imagem.'; 
+        $message = 'Verifique abaixo a imagem encontrada'; 
       else
-        $message = 'Foram encontradas ' . count($photos) . ' imagens.';
+        $message = 'Verifique abaixo as ' . count($photos) . ' imagens encontradas.';
       return View::make('/advanced-search',['tags' => $tags, 'photos' => $photos, 'message' => $message]); //tagsResult
     } else {
       // busca sem resultados
