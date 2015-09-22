@@ -103,7 +103,7 @@
         @if ( !empty($institution->site) )
           <li>
             <strong>Site pessoal: </strong>
-            <a href="{{ $institution->site }}">{{ $institution->site }}</a>
+            <a href="{{ $institution->site }}" target="_blank">{{ $institution->site }}</a>
           </li>
         @endif
       </ul>
