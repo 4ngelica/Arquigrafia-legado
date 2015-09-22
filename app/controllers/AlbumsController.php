@@ -115,10 +115,8 @@ class AlbumsController extends \BaseController {
 		}
 		$album_photos = Photo::paginateAlbumPhotos($album);
 		if ( isset($institution) ) {
-			// $other_photos = Photo::paginateOtherPhotos($institution, $album->photos);
 			$other_photos = Photo::paginateInstitutionPhotosNotInAlbum($institution, $album);
 		} else {
-			// $other_photos = Photo::paginateOtherPhotos($user, $album->photos);
 			$other_photos = Photo::paginateUserPhotosNotInAlbum($user, $album);
 		}
 		$other_photos_count = $other_photos->getTotal();
