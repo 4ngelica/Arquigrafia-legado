@@ -102,7 +102,7 @@ class PhotosController extends \BaseController {
 
 
 
-  public function newForm()
+  public function formInstitutional()
   {
     if ( ! Session::has('institutionId') ) {
       return Redirect::to('/');
@@ -131,7 +131,7 @@ class PhotosController extends \BaseController {
     
     $input['autoOpenModal'] = null;  
     /* */
-    return View::make('/photos/newform')->with(['tagsArea'=> $tagsArea,
+    return View::make('/photos/form-institutional')->with(['tagsArea'=> $tagsArea,
       'workAuthorInput' => $workAuthorInput,      
       'pageSource'=>$pageSource, 'user'=>Auth::user(), 
       'institution' => $institution,
@@ -195,13 +195,13 @@ class PhotosController extends \BaseController {
       $rules = array(
       'support' => 'required',
       'tombo' => 'required',
-      'subject' => 'required',      
+      'subject' => 'required', 
       'hygieneDate' => 'date_format:"d/m/Y"',
       'backupDate' => 'date_format:"d/m/Y"',
       'characterization' => 'required',
       
       'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',
-      'name' => 'required',
+      'photo_name' => 'required',
       'tagsArea' => 'required',
       'country' => 'required',
       'imageAuthor' => 'required'
@@ -215,7 +215,7 @@ class PhotosController extends \BaseController {
 
     if($validator->fails()) { 
           $messages = $validator->messages();       
-          return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'] ,
+          return Redirect::to('/photos/uploadInstitutional')->with(['tagsArea' => $input['tagsArea'] ,
           'workAuthorInput'=>$input["workAuthor"]        
           ])->withErrors($messages); 
     }else{       
@@ -234,7 +234,7 @@ class PhotosController extends \BaseController {
           $photo->characterization = $input["characterization"];
           $photo->cataloguingTime = date('Y-m-d H:i:s');
           $photo->UserResponsible = $input["userResponsible"];          
-          $photo->name = $input["name"];
+          $photo->name = $input["photo_name"];
           if ( !empty($input["description"]) )
                $photo->description = $input["description"];
           if ( !empty($input["workAuthor"]) )
@@ -279,7 +279,7 @@ class PhotosController extends \BaseController {
               if(!$tagsSaved){ 
                   $photo->forceDelete();
                   $messages = array('tagsArea'=>array('Inserir pelo menos uma tag'));                  
-                  return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea']])->withErrors($messages);
+                  return Redirect::to('/photos/uploadInstitutional')->with(['tagsArea' => $input['tagsArea']])->withErrors($messages);
               }
 
             }
@@ -313,7 +313,7 @@ class PhotosController extends \BaseController {
 
       }else{
          $messages = $validator->messages();
-          return Redirect::to('/photos/newUpload')->withErrors($messages);
+          return Redirect::to('/photos/uploadInstitutional')->withErrors($messages);
       }  
     }
   }
@@ -437,7 +437,7 @@ class PhotosController extends \BaseController {
       'backupDate' => 'date_format:"d/m/Y"',
       'characterization' => 'required',
       
-      'name' => 'required',
+      'photo_name' => 'required',
       'tagsArea' => 'required',
       'country' => 'required',
       'imageAuthor' => 'required',
@@ -466,7 +466,7 @@ class PhotosController extends \BaseController {
           $photo->characterization = $input["characterization"];
           $photo->cataloguingTime = date('Y-m-d H:i:s');
           $photo->UserResponsible = $input["userResponsible"];
-          $photo->name = $input["name"];
+          $photo->name = $input["photo_name"];
           if ( !empty($input["description"]) )
                $photo->description = $input["description"];
           if ( !empty($input["workAuthor"]) )

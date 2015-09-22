@@ -68,7 +68,7 @@
           @endif
           <!-- <li><a href="#" id="comunities" title="Comunidades">&nbsp;</a></li> -->
           @if(Session::has('institutionId'))
-            <li><a href="{{ URL::to("/photos/newUpload") }}" name="modal" id="upload" title="Enviar uma imagem">&nbsp;</a></li>
+            <li><a href="{{ URL::to("/photos/uploadInstitutional") }}" name="modal" id="upload" title="Enviar uma imagem">&nbsp;</a></li>
           @else
             <li><a href="{{ URL::to("/photos/upload") }}" name="modal" id="upload" title="Enviar uma imagem">&nbsp;</a></li>
           @endif

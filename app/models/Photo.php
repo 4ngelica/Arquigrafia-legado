@@ -124,51 +124,23 @@ class Photo extends Eloquent {
 	}
 
 	public static function paginateUserPhotosNotInAlbum($user, $album, $q = null, $perPage = 24) {
-		$photos = static::photosNotInAlbum($album, $q)
-			->withUser($user)->withoutInstitutions();
-		$photos = $photos->paginate($perPage);
-		$count = $photos->getTotal();
-		return ['photos' => $photos, 'photos_count' => $count];
+
+		return static::notInAlbum($album, $q)->withUser($user)
+			->withoutInstitutions()->paginate($perPage);
+		
 	}
 
 	public static function paginateInstitutionPhotosNotInAlbum($inst, $album, $q = null, $perPage = 24) {
-		$photos = static::photosNotInAlbum($album, $q)->withInstitution($inst);
-		$photos = $photos->paginate($perPage);
-		$count = $photos->getTotal();
-		return ['photos' => $photos, 'photos_count' => $count];	
+		return static::notInAlbum($album, $q)
+			->withInstitution($inst)->paginate($perPage);
 	}
 
 	public static function paginateAllPhotosNotInAlbum($album, $q = null, $perPage = 24) {
-		$photos = static::photosNotInAlbum($album, $q);
-		$photos = $photos->paginate($perPage);
-		$count = $photos->getTotal();
-		return ['photos' => $photos, 'photos_count' => $count];
-	}
-
-	private static function photosNotInAlbum($album, $q) {
-		$photos = static::whereDoesntHave('albums', function($query) use($album) {
-			$query->where('album_id', $album->id);
-		});
-		return	$photos->whereMatches($q);
+		return static::notInAlbum($album, $q)->paginate($perPage);
 	}
 
 	public static function paginateFromAlbumWithQuery($album, $q, $perPage = 24) {
-		if ($q == '' || is_null($q)) {
-			$photos = Photo::paginateAlbumPhotos($album);
-			$count = $album->photos->count();
-		}
-		else {
-			$photos = Photo::where(function ($query) use($q) {
-				$query->where('name', 'like', '%' . $q . '%')
-					->orWhere('workAuthor', 'like', '%' . $q . '%');
-			})
-			->whereHas('albums', function($query) use($album) {
-				$query->where('album_id', $album->id);
-			});
-			$count = $photos->get()->count();
-			$photos = $photos->paginate($perPage);
-		}
-		return ['photos' => $photos, 'photos_count' => $count];
+		return static::inAlbum($album, $q)->paginate($perPage);
 	}
 
 	public static function composeArchitectureName($name) {
@@ -339,25 +311,65 @@ class Photo extends Eloquent {
 		return $query->whereNotIn('id', $photos->modelKeys());
 	}
 
-	public function scopeNotInAlbum($album) {
-		return $query->whereDoesntHave('albums', function ($q) {
-			$q->where('album_id', $album->id);
-		});
+	public function scopeNotInAlbum($query, $album, $q = null) {
+		return $query->whereDoesntHave('albums', function($query) use($album) {
+			$query->where('album_id', $album->id);
+		})->whereMatches($q);
+	}
+
+	public function scopeInAlbum($query, $album, $q = null) {
+		return $query->whereHas('albums', function($query) use($album) {
+			$query->where('album_id', $album->id);
+		})->whereMatches($q);	
 	}
 
 	public function scopeWhereMatches($query, $needle) {
 		if ( empty($needle) ) {
 			return $query;
 		}
-		return $query->where(function ($q) use($needle) {
-			$q->where('name', 'LIKE', '%'. $needle .'%')
+		return $query->where( function($q) use($needle) {
+			$q->withTag($needle)->orWhere( function ($q) use($needle) {
+				$q->withAttributes($needle);
+			});
+		});
+	}
+
+	public function scopeWithTag($query, $needle) {
+		return $query->whereHas('tags', function($q) use($needle) {
+			$q->where('name', 'LIKE', '%' . $needle . '%');
+		});
+	}
+
+	public function scopeWithAttributes($query, $needle) {
+		return $query->where('name', 'LIKE', '%'. $needle .'%')
 			->orWhere('description', 'LIKE', '%'. $needle .'%')
 			->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%')
 			->orWhere('workAuthor', 'LIKE', '%'. $needle .'%')
 			->orWhere('country', 'LIKE', '%'. $needle .'%')
 			->orWhere('state', 'LIKE', '%'. $needle .'%')
 			->orWhere('city', 'LIKE', '%'. $needle .'%');
-		});
+	}
+
+	public function scopeWithBinomials($query, $binomials) {
+		foreach($binomials as $binomial => $avg) {
+			$query->whereIn('id', function ($sub_query) use ($binomial, $avg) {
+				$sub_query->select('photo_id')->from('binomial_evaluation')
+					->whereRaw('binomial_id = ' . $binomial)
+					->groupBy('photo_id')
+					->havingRaw('avg(evaluationPosition) >= ' . ($avg - 5))
+					->havingRaw('avg(evaluationPosition) <= ' . ($avg + 5));
+			});
+		}
+		return $query;
+	}
+
+	public function scopeWithTags($query, $tags) {
+		if ( ! empty($tags) ) {
+			$query->whereHas('tags', function($sub_query) use ($tags) {
+				$sub_query->whereIn('name', $tags);
+			});
+		}
+		return $query;
 	}
 
 	public function getDataUploadAttribute($value) {
@@ -434,7 +446,7 @@ class Photo extends Eloquent {
 		$this->tags()->sync($tags);
 	}
 
-	public static function search($input) {
+	public static function search($input, $tags, $binomials) {
 		foreach (['workdate', 'dataCriacao', 'dataUpload'] as $date) {
 			if ( isset($input[$date])
 					&& DateTime::createFromFormat('Y', $input[$date]) == FALSE ) {
@@ -450,6 +462,8 @@ class Photo extends Eloquent {
 		foreach ( $input as $column => $value) {
 			$query->where($column, 'LIKE', '%' . $value . '%');
 		}
+		$query->withTags($tags);
+		$query->withBinomials($binomials);
     return $query->get();
 	}
 }

@@ -23,7 +23,7 @@ class UsersController extends \BaseController {
 	}
 
 	public function show($id)
-	{
+	{ 
 		$user = User::whereid($id)->first();
    //$photos = $user->photos()->get()->reverse();    
     $photos = $user->userPhotos($id)->get()->reverse();
@@ -47,13 +47,16 @@ class UsersController extends \BaseController {
         session_start();
         $user_id = session_id();
     }
+    //
+    $albums = $user->userAlbums; 
     $source_page = Request::header('referer');
     ActionUser::printSelectUser($user_id, $id, $source_page, $user_or_visitor);
 
     return View::make('/users/show',['user' => $user, 'photos' => $photos, 'follow' => $follow,
       'evaluatedPhotos' => Photo::getEvaluatedPhotosByUser($user),
       'lastDateUpdatePhoto' => Photo::getLastUpdatePhotoByUser($id),
-      'lastDateUploadPhoto' => Photo::getLastUploadPhotoByUser($id)
+      'lastDateUploadPhoto' => Photo::getLastUploadPhotoByUser($id),
+      'albums' => $albums,
       ]);
 	}
   
