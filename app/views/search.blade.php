@@ -45,7 +45,7 @@
         @endif
        <!-- -->
         @if( count($tags) != 0 )            
-          <p>
+          <p style="display: inline">
             Tags contendo o termo: 
             @foreach($tags as $k => $tag)
               @if ($k != count($tags)-1 )
