@@ -39,7 +39,20 @@
 		</div>
 		<p>{{ Form::submit("ADICIONAR AOS ÁLBUNS", array('class'=>'btn')) }}</p>
 	{{ Form::close() }}
-
+	<script type="text/javascript">
+		var albums_list = $('#albums_list');
+		var form = albums_list.parent();
+		form.submit(function(e) {
+			var checked = albums_list.find('.albums:checked');
+			if (checked.length > 0) {
+				return true; //continua evento
+			}
+			form.find('p.error').remove();
+			var message = "Por favor, selecione um álbum existente ou crie um novo para adicionar a imagem selecionada.";
+			form.append('<p class="error">' + message + '</p>');
+			e.preventDefault();
+		});
+	</script>
 	<style>
 		#create_album + label {
 			background: url('/img/create_album.png');

@@ -16,8 +16,13 @@ class Album extends \BaseModel {
 	}
 
 	public function user()
-	{
+	{	
 		return $this->belongsTo('User');
+	}
+
+	public function onlyUser()
+	{
+		return $this->belongsTo('User')->whereNull('institution_id');
 	}
 
 	public function cover()
@@ -28,6 +33,11 @@ class Album extends \BaseModel {
 	public function institution()
 	{
 		return $this->belongsTo('Institution');
+	}
+
+	public function onlyInstitution()
+	{
+		return $this->belongsTo('Institution')->whereNull('user_id');
 	}
 
 	public function updateInfo($title, $description, $cover) {
@@ -87,10 +97,13 @@ class Album extends \BaseModel {
 		return !is_null($this->cover);
 	}
 
-	public function showAlbumsInstitutional($institution){
-		return Album::where("institution_id", $institution->id)->get();     	
+	public function scopeWithInstitution( $query, $institution ) {
+		$id = $institution instanceof Institution ? $institution->id : $institution;
+		return $query->where('institution_id', $id);
 	}
 
-
+	public function scopeWithoutInstitutions($query) {
+		return $query->whereNull('institution_id');
+	}
 
 }

@@ -23,9 +23,12 @@ class UsersController extends \BaseController {
 	}
 
 	public function show($id)
-	{
+	{ 
 		$user = User::whereid($id)->first();
-    $photos = $user->photos()->get()->reverse();
+   //$photos = $user->photos()->get()->reverse();    
+    $photos = $user->userPhotos($id)->get()->reverse();
+    //dd($photos);
+
     if (Auth::check()) {      
       if (Auth::user()->following->contains($user->id))
         $follow = false;
@@ -44,13 +47,16 @@ class UsersController extends \BaseController {
         session_start();
         $user_id = session_id();
     }
+    //
+    $albums = $user->userAlbums; 
     $source_page = Request::header('referer');
     ActionUser::printSelectUser($user_id, $id, $source_page, $user_or_visitor);
 
     return View::make('/users/show',['user' => $user, 'photos' => $photos, 'follow' => $follow,
       'evaluatedPhotos' => Photo::getEvaluatedPhotosByUser($user),
       'lastDateUpdatePhoto' => Photo::getLastUpdatePhotoByUser($id),
-      'lastDateUploadPhoto' => Photo::getLastUploadPhotoByUser($id)
+      'lastDateUploadPhoto' => Photo::getLastUploadPhotoByUser($id),
+      'albums' => $albums,
       ]);
 	}
   
@@ -236,55 +242,55 @@ class UsersController extends \BaseController {
       }
     }
     if (isset($user)) {
-    if (Auth::attempt(array('login' => $user->login, 'password' => $input["password"],'active' => 'yes')) == true || Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true  )
-        { 
-      if ( Session::has('filter.login') ) //acionado pelo login
-      {  
-        Session::forget('filter.login');
-        $source_page = Request::header('referer');
-        ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
-        if (isset($integration_message)) {
-          return Redirect::to('/')->with('msgWelcome', $integration_message);  
-        }
-        return Redirect::intended('/');
-      }
-        
-      if ( Session::has('url.previous') )
-      {
-        $url = Session::pull('url.previous'); 
-        
-        if (!empty($url)) {
+      if ( Auth::attempt(array('login' => $user->login, 'password' => $input["password"],'active' => 'yes')) == true || 
+          Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true  ) { 
+        if ( Session::has('filter.login') ) //acionado pelo login
+        {  
+          Session::forget('filter.login');
           $source_page = Request::header('referer');
           ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
-          //Redirect when user forget password
-          if($url == URL::to('users/forget')){ 
-            return Redirect::to('/');
-          }elseif(!empty($input["firstTime"])){ 
-              return Redirect::to('/')->with('msgWelcome', "Bem-vind@ ".ucfirst($user->name).".");
+          if (isset($integration_message)) {
+            return Redirect::to('/')->with('msgWelcome', $integration_message);  
+          }
+          return Redirect::intended('/');
+        }
+        if ( Session::has('url.previous') )
+        {
+          $url = Session::pull('url.previous'); 
           
-          }else{
-            return Redirect::to($url);
+          if (!empty($url)) {
+            $source_page = Request::header('referer');
+            ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+            //Redirect when user forget password
+            if($url == URL::to('users/forget')){ 
+              return Redirect::to('/');
+            }elseif(!empty($input["firstTime"])){ 
+                return Redirect::to('/')->with('msgWelcome', "Bem-vind@ ".ucfirst($user->name).".");
+            
+            }else{
+              return Redirect::to($url);
+            }
+
           }
 
+          
+          $source_page = Request::header('referer');
+          ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+          if (isset($integration_message)) {
+            return Redirect::to('/')->with('msgWelcome', $integration_message);  
+          }
+          return Redirect::to('/');
         }
-
-        
         $source_page = Request::header('referer');
         ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
         if (isset($integration_message)) {
           return Redirect::to('/')->with('msgWelcome', $integration_message);  
         }
         return Redirect::to('/');
+      } else {
+  			Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
+        return Redirect::to('/users/login')->withInput();
       }
-      $source_page = Request::header('referer');
-      ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
-      if (isset($integration_message)) {
-        return Redirect::to('/')->with('msgWelcome', $integration_message);  
-      }
-      return Redirect::to('/');
-    } } else {
-			Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
-      return Redirect::to('/users/login')->withInput();
     }
   }
   
@@ -633,19 +639,14 @@ class UsersController extends \BaseController {
     return Response::json(true);
   }
 
-  public function institutionalLogin(){ 
-    
+  public function institutionalLogin() { 
     $login = Input::get('login');    
     $institution = Input::get('institution');
     $password = Input::get('password');
-
     Log::info("Retrieved params login=".$login.", institution=".$institution);
-
     $booleanExist = User::userBelongInstitution($login,$institution); 
-    
     Log::info("Result belong institution -> booleanExist=".$booleanExist);
 
-    //
     if ((Auth::attempt(array('login' => $login, 'password' => $password)) == true || 
       Auth::attempt(array('email' => $login, 'password' => $password,'active' => 'yes')) == true) &&
       $booleanExist == true){
@@ -654,14 +655,10 @@ class UsersController extends \BaseController {
       Session::put('institutionId', $institution);
       //loga usuario da institution
       return Redirect::to('/');
-    }else{
+    } else {
       Log::info("Invalid access, return message");
-      
       return Response::json(false);
     }
-
-
-
   }
 
   private function getStoaAccount($account, $password, $account_type) {
@@ -710,9 +707,11 @@ class UsersController extends \BaseController {
         /* Se a conta Arquigrafia não possuir foto e a conta Facebook possuir foto, pega essa foto */
         if (!isset($has_photo)) {
           if ($fb_acc->photo == "/arquigrafia-avatars/" . $fb_acc->id . ".jpg") {
-            if (rename("/arquigrafia-avatars/" . $fb_acc->id . ".jpg", "/arquigrafia-avatars/" . $arq_acc->id . ".jpg")) {
-            $arq_acc->photo = "/arquigrafia-avatars/" . $arq_acc->id . ".jpg";
-            $has_photo = true;
+            $old_filename = public_path() . $fb_acc->photo;
+            $new_filename = public_path() . "/arquigrafia-avatars/" . $arq_acc->id . ".jpg";
+            if (rename($old_filename, $new_filename)) {
+              $arq_acc->photo = "/arquigrafia-avatars/" . $arq_acc->id . ".jpg";
+              $has_photo = true;
             }
           }
         }

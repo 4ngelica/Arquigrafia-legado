@@ -30,7 +30,7 @@ class PhotosController extends \BaseController {
     $user = Auth::user();
     $photo_owner = $photos->user;
 
-    $photo_institution = $photos->institution;      
+    $photo_institution = $photos->institution;
     $tags = $photos->tags;
     $binomials = Binomial::all()->keyBy('id');
     $average = Evaluation::average($photos->id);
@@ -102,16 +102,16 @@ class PhotosController extends \BaseController {
 
 
 
-  public function newForm()
-  {  
-    $user_id = Auth::user()->id;
-    $albumsInstitutional = NULL;
-
-    if(Session::has('institutionId')){
-      $institution = Institution::find(Session::get('institutionId'));
-      $this->album = new Album();
-      $albumsInstitutional = $this->album->showAlbumsInstitutional($institution);
+  public function formInstitutional()
+  {
+    if ( ! Session::has('institutionId') ) {
+      return Redirect::to('/');
     }
+    $user_id = Auth::user()->id;
+
+    $institution = Institution::find(Session::get('institutionId'));
+    $albumsInstitutional = Album::withInstitution($institution)->get();
+    
 
     $pageSource = Request::header('referer');
     
@@ -131,12 +131,12 @@ class PhotosController extends \BaseController {
     
     $input['autoOpenModal'] = null;  
     /* */
-    return View::make('/photos/newform')->with(['tagsArea'=> $tagsArea,
+    return View::make('/photos/form-institutional')->with(['tagsArea'=> $tagsArea,
       'workAuthorInput' => $workAuthorInput,      
       'pageSource'=>$pageSource, 'user'=>Auth::user(), 
-      'institution'=>$institution,
+      'institution' => $institution,
       'albumsInstitutional'=>$albumsInstitutional,
-      'autoOpenModal'=>$input['autoOpenModal'] 
+      'autoOpenModal'=>$input['autoOpenModal']
       ]);
   }
 
@@ -195,13 +195,13 @@ class PhotosController extends \BaseController {
       $rules = array(
       'support' => 'required',
       'tombo' => 'required',
-      'subject' => 'required',      
+      'subject' => 'required', 
       'hygieneDate' => 'date_format:"d/m/Y"',
       'backupDate' => 'date_format:"d/m/Y"',
       'characterization' => 'required',
       
       'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',
-      'name' => 'required',
+      'photo_name' => 'required',
       'tagsArea' => 'required',
       'country' => 'required',
       'imageAuthor' => 'required'
@@ -215,7 +215,7 @@ class PhotosController extends \BaseController {
 
     if($validator->fails()) { 
           $messages = $validator->messages();       
-          return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea'] ,
+          return Redirect::to('/photos/uploadInstitutional')->with(['tagsArea' => $input['tagsArea'] ,
           'workAuthorInput'=>$input["workAuthor"]        
           ])->withErrors($messages); 
     }else{       
@@ -234,7 +234,7 @@ class PhotosController extends \BaseController {
           $photo->characterization = $input["characterization"];
           $photo->cataloguingTime = date('Y-m-d H:i:s');
           $photo->UserResponsible = $input["userResponsible"];          
-          $photo->name = $input["name"];
+          $photo->name = $input["photo_name"];
           if ( !empty($input["description"]) )
                $photo->description = $input["description"];
           if ( !empty($input["workAuthor"]) )
@@ -279,7 +279,7 @@ class PhotosController extends \BaseController {
               if(!$tagsSaved){ 
                   $photo->forceDelete();
                   $messages = array('tagsArea'=>array('Inserir pelo menos uma tag'));                  
-                  return Redirect::to('/photos/newUpload')->with(['tagsArea' => $input['tagsArea']])->withErrors($messages);
+                  return Redirect::to('/photos/uploadInstitutional')->with(['tagsArea' => $input['tagsArea']])->withErrors($messages);
               }
 
             }
@@ -313,7 +313,7 @@ class PhotosController extends \BaseController {
 
       }else{
          $messages = $validator->messages();
-          return Redirect::to('/photos/newUpload')->withErrors($messages);
+          return Redirect::to('/photos/uploadInstitutional')->withErrors($messages);
       }  
     }
   }
@@ -385,17 +385,10 @@ class PhotosController extends \BaseController {
   public function editFormInstitutional($id) {
     $photo = Photo::find($id);
     $logged_user = Auth::User();
-    //dd($logged_user->id == $photo->user_id);
-    if ($logged_user == null) {
-        return Redirect::action('PagesController@home');
-    }elseif (Session::get('institutionId') == $photo->institution_id) { 
-        $institution = null;
-        if(Session::has('institutionId')){
-            $institution = Institution::find(Session::get('institutionId'));
-            //$this->album = new Album();
-          //$albumsInstitutional = $this->album->showAlbumsInstitutional($institution);
-        }
-
+    $institution_id = Session::get('institutionId');
+    if ($logged_user == null || $institution_id == null) {
+        return Redirect::to('/');
+    } elseif ($institution_id == $photo->institution_id) {
         if (Session::has('tagsArea'))
         {
             $tagsArea = Session::pull('tagsArea');
@@ -404,8 +397,6 @@ class PhotosController extends \BaseController {
             $tagsArea = $photo->tags->lists('name');
             //$tagsArea = static::filterTagByType($photo,"Acervo");      
         }
-
-
         if (Session::has('workAuthorInput')  )
         {  
             $workAuthorInput = Session::pull('workAuthorInput');      
@@ -415,12 +406,12 @@ class PhotosController extends \BaseController {
   
         return View::make('photos.edit-institutional')
           ->with(['photo' => $photo, 'tagsArea' => $tagsArea,
-          'institution'=>$institution,
           'workAuthorInput' => $workAuthorInput,
-          'user'=>$logged_user
+          'user' => $logged_user,
+          'institution' => $photo->institution
           ] ); 
     }    
-    return Redirect::action('PagesController@home');  
+    return Redirect::to('/');
   }
 
   public function updateInstitutional($id){ 
@@ -446,7 +437,7 @@ class PhotosController extends \BaseController {
       'backupDate' => 'date_format:"d/m/Y"',
       'characterization' => 'required',
       
-      'name' => 'required',
+      'photo_name' => 'required',
       'tagsArea' => 'required',
       'country' => 'required',
       'imageAuthor' => 'required',
@@ -475,7 +466,7 @@ class PhotosController extends \BaseController {
           $photo->characterization = $input["characterization"];
           $photo->cataloguingTime = date('Y-m-d H:i:s');
           $photo->UserResponsible = $input["userResponsible"];
-          $photo->name = $input["name"];
+          $photo->name = $input["photo_name"];
           if ( !empty($input["description"]) )
                $photo->description = $input["description"];
           if ( !empty($input["workAuthor"]) )
