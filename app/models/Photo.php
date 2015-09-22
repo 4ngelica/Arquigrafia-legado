@@ -328,13 +328,13 @@ class Photo extends Eloquent {
 			return $query;
 		}
 		return $query->where( function($q) use($needle) {
-			$q->withTags($needle)->orWhere( function ($q) use($needle) {
+			$q->withTag($needle)->orWhere( function ($q) use($needle) {
 				$q->withAttributes($needle);
 			});
 		});
 	}
 
-	public function scopeWithTags($query, $needle) {
+	public function scopeWithTag($query, $needle) {
 		return $query->whereHas('tags', function($q) use($needle) {
 			$q->where('name', 'LIKE', '%' . $needle . '%');
 		});
@@ -348,6 +348,28 @@ class Photo extends Eloquent {
 			->orWhere('country', 'LIKE', '%'. $needle .'%')
 			->orWhere('state', 'LIKE', '%'. $needle .'%')
 			->orWhere('city', 'LIKE', '%'. $needle .'%');
+	}
+
+	public function scopeWithBinomials($query, $binomials) {
+		foreach($binomials as $binomial => $avg) {
+			$query->whereIn('id', function ($sub_query) use ($binomial, $avg) {
+				$sub_query->select('photo_id')->from('binomial_evaluation')
+					->whereRaw('binomial_id = ' . $binomial)
+					->groupBy('photo_id')
+					->havingRaw('avg(evaluationPosition) >= ' . ($avg - 5))
+					->havingRaw('avg(evaluationPosition) <= ' . ($avg + 5));
+			});
+		}
+		return $query;
+	}
+
+	public function scopeWithTags($query, $tags) {
+		if ( ! empty($tags) ) {
+			$query->whereHas('tags', function($sub_query) use ($tags) {
+				$sub_query->whereIn('name', $tags);
+			});
+		}
+		return $query;
 	}
 
 	public function getDataUploadAttribute($value) {
@@ -424,7 +446,7 @@ class Photo extends Eloquent {
 		$this->tags()->sync($tags);
 	}
 
-	public static function search($input) {
+	public static function search($input, $tags, $binomials) {
 		foreach (['workdate', 'dataCriacao', 'dataUpload'] as $date) {
 			if ( isset($input[$date])
 					&& DateTime::createFromFormat('Y', $input[$date]) == FALSE ) {
@@ -440,6 +462,8 @@ class Photo extends Eloquent {
 		foreach ( $input as $column => $value) {
 			$query->where($column, 'LIKE', '%' . $value . '%');
 		}
+		$query->withTags($tags);
+		$query->withBinomials($binomials);
     return $query->get();
 	}
 }
