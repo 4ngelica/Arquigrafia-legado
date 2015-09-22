@@ -158,18 +158,30 @@
         <h3>Tags:</h3>
         <p>
           @if (isset($tags))
-            @foreach($tags as $tag)
+            @foreach($tags as $k => $tag)
               @if ($tag->id == $tags->last()->id)
-                <a style="" href="{{ URL::to("/search?q=".$tag->name) }}">
-                  {{ $tag->name }}
-                </a>
+                <form id="{{$k}}" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" style="display: inline">
+                  <input type="hidden" name="q" value="{{$tag->name}}"/>
+                    <a style="" href="javascript: submitform({{$k}});">
+                      {{ $tag->name }}
+                    </a>
+                </form>
               @else
-                <a href="{{ URL::to("/search?q=".$tag->name) }}">
-                  {{ $tag->name }}
-                </a>,
+                <form id="{{$k}}" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" style="display: inline">
+                  <input type="hidden" name="q" value="{{$tag->name}}"/>
+                    <a href="javascript: submitform({{$k}});">
+                      {{ $tag->name }}
+                    </a>,
+                </form>
               @endif
             @endforeach
           @endif
+          <script type="text/javascript">
+            function submitform(object)
+            {
+              document.getElementById(object).submit();
+            }
+          </script>
         </p>
       </div>
 
