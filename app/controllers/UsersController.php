@@ -709,7 +709,7 @@ class UsersController extends \BaseController {
           if ($fb_acc->photo == "/arquigrafia-avatars/" . $fb_acc->id . ".jpg") {
             $old_filename = public_path() . $fb_acc->photo;
             $new_filename = public_path() . "/arquigrafia-avatars/" . $arq_acc->id . ".jpg";
-            if (rename($old_filename, $new_filename)) {
+            if (File::exists($old_filename) && rename($old_filename, $new_filename)) {
               $arq_acc->photo = "/arquigrafia-avatars/" . $arq_acc->id . ".jpg";
               $has_photo = true;
             }
