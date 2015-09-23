@@ -256,9 +256,9 @@ class PagesController extends BaseController {
     if( ($count_photos = $photos->count()) == 0 ) {
       $message = 'A busca não retornou resultados.';
     } elseif ( $count_photos == 1 ) {
-      $message = 'Foi encontrada ' . $count_photos . ' imagem.';
+      $message = 'Verifique abaixo a ' . $count_photos . ' imagem encontrada.';
     } else {
-      $message = 'Foram encontradas ' . $count_photos . ' imagens.';
+      $message = 'Verifique abaixo as ' . $count_photos . ' imagens encontradas.';
     }
     $tags = $tags == '' ? [] : $tags;
     $photos = $photos->count() == 0 ? [] : $photos;
