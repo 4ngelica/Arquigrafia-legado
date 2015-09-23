@@ -240,17 +240,17 @@
           <div class="four columns alpha row">
             <div class="four columns alpha omega">
               <h3>Interpretação das imagens</h3>
-              <p style="text-align: justify">
-                Ao indicar valores nos binômios abaixo,
-                você fará uma busca por imagens que possuem resultados semelhantes,
-                considerando um intervalo de 5 pontos acima
-                e abaixo do valor que você selecionar.
-              </p>
-              <br>
               {{ Form::checkbox('binomial_check', 1, false) }}
-              {{ Form::label('binomial_check', 'Utilizar binômios na pesquisa') }}
+              {{ Form::label('binomial_check', 'Utilizar características da imagem na pesquisa') }}
               <br><br>
               <div id="binomial_container" class="four columns alpha row hidden">
+                <p style="text-align: justify">
+                  Ao indicar valores nos binômios abaixo,
+                  você fará uma busca por imagens que possuem resultados semelhantes,
+                  considerando um intervalo de 5 pontos acima
+                  e abaixo do valor que você selecionar.
+                </p>
+                <br>
                 <?php $count = $binomials->count() - 1; ?>
                 @foreach($binomials->reverse() as $binomial)
                   <?php $diff = $binomial->defaultValue ?>
