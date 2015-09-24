@@ -105,24 +105,51 @@ class Evaluation extends Eloquent {
 			->withBinomial($binomial);
 		if ( $avg ) {
 			$query = $query->groupBy('photo_id')
-				->withAverage($value, $operator);
+				->withAverage($operator, $value);
 		} else {
-			$query = $query->withValue($value, $operator);
+			$query = $query->withValue($operator, $value);
 		}
 		return $query->get()->lists('photo_id');
 	}
 
 	public function scopeWithBinomial($query, $binomial) {
-		return $query->where('binomial_id', $binomial->id);
+		$binomial_id = $binomial instanceof Binomial ? $binomial->id : $binomial;
+		return $query->where('binomial_id', $binomial_id);
 	}
 
-	public function scopeWithValue($query, $value, $operator) {
+	public function scopeWithValue($query, $operator, $value) {
 		return $query->where('evaluationPosition', $operator, $value);
 	}
 
-	public function scopeWithAverage($query, $value, $operator) {
+	public function scopeWithAverage($query, $operator, $value) {
 		$aggregate = DB::raw('avg(evaluationPosition)');
 		return $query->having($aggregate, $operator, $value);
+	}
+
+	public static function searchByBinomialValues($binomial_values) {
+		$query = "select distinct photo_id from binomial_evaluation where";
+		$values = [];
+		$and = 0;
+		foreach ($binomial_values as $binomial => $value) {
+			$min = intval($value) - 5; $max = intval($value) + 5;
+			$query .= static::getEvaluationInRangeQuery($and++);
+			array_push($values, $binomial, $min, $max);
+		}
+		$list_of_photos = array_map(function ($object) {
+				return $object->photo_id;
+			}, DB::select($query, $values));
+		return Photo::findMany($list_of_photos)->toArray();
+
+	}
+
+	public static function getEvaluationInRangeQuery($and) {
+		$query = $and ? " and" : "";
+		$innerQuery = "select photo_id from binomial_evaluation";
+		$innerQuery .= " where binomial_id = ?";
+		$innerQuery .= " group by photo_id";
+		$innerQuery .= " having avg(evaluationPosition) >= ?";
+		$innerQuery .= " and avg(evaluationPosition) <= ?";
+		return $query . " photo_id in ({$innerQuery})";
 	}
 
 }

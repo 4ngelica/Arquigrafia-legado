@@ -224,137 +224,46 @@ class PagesController extends BaseController {
 	}  
 
   private static function searchTags($t) {
-
     $query = Tag::where('name','=', $t);    
     $tagList = $query->get();    
     return $tagList->lists('id');
   }
   
   public function advancedSearch()
-	{ 
-
-
-    $fields = array(
-        'name',
-        'description',
-        'city',
-        'state',
-        'country',
-        'workAuthor',
-        'imageAuthor',
-        'dataCriacao',
-        'dataUpload',
-        'workdate',
-        'district',
-        'street',
-        'tags',
-        'allowCommercialUses',
-        'allowModifications'
-
-    );
-
-    
-    foreach($fields as $field) $$field = trim(Input::get($field));
-    
-    if(empty($name) && empty($description) && empty($city) && empty($state) && empty($country) && empty($workAuthor) 
-      && empty($imageAuthor) && empty($dataCriacao) && empty($dataUpload) && empty($workdate) && empty($district)
-      && empty($street)&& empty($tags) && empty($allowModifications) && empty($allowCommercialUses)) {
-       // busca vazia
-       return View::make('/advanced-search',['tags' => [], 'photos' => [], 'query' => ""]);
-    } else {
-      
-      
-
-      $query = Photo::where('id', '>', 0);       
-      if ($name != '') $query->where('name', 'LIKE', '%'. $name .'%');
-      if ($description != '') $query->where('description', 'LIKE', '%'. $description .'%');  
-      if ($city != '') $query->where('city', 'LIKE', '%'. $city .'%');  
-      if ($state != '') $query->where('state', 'LIKE', '%'. $state .'%'); 
-      if ($country != '') $query->where('country', 'LIKE', '%'. $country .'%'); 
-      if ($workAuthor  != '') $query->where('workAuthor', 'LIKE', '%'. $workAuthor .'%');  
-      if ($imageAuthor  != '') $query->where('imageAuthor', 'LIKE', '%'. $imageAuthor .'%');
-      if ($district  != '') $query->where('district', 'LIKE', '%'. $district .'%');
-      if ($street  != '') $query->where('street', 'LIKE', '%'. $street .'%');
-      if ($allowModifications  != '') $query->where('allowModifications', '=', $allowModifications);
-      if ($allowCommercialUses  != '') $query->where('allowCommercialUses', '=', $allowCommercialUses);
-
-       if ($workdate != ''){ 
-          if(DateTime::createFromFormat('Y', $workdate)!== FALSE) {
-            $query->where('workdate', 'LIKE', '%' . $workdate . '%');
-          }else{
-            $query->where('workdate', 'LIKE', '%' . $this->date->formatDate($workdate) . '%');
-          }
-       }
-       if ($dataCriacao != ''){ 
-          if(DateTime::createFromFormat('Y', $dataCriacao)!== FALSE) {
-            $query->where('dataCriacao', 'LIKE', '%' . $dataCriacao . '%');
-          }else{
-            $query->where('dataCriacao', 'LIKE', '%' . $this->date->formatDate($dataCriacao) . '%');
-          }
-       }
-       if ($dataUpload != ''){ 
-          if(DateTime::createFromFormat('Y', $dataUpload)!== FALSE) {
-            $query->where('dataUpload', 'LIKE', '%' . $dataUpload . '%');
-          }else{
-            $query->where('dataUpload', 'LIKE', '%' . $this->date->formatDate($dataUpload) . '%');
-          }
-       }
-       
-      $query->whereNull('deleted_at'); 
-      $photos = $query->get();
-      
-      //Adding search by tags
-
-        if (Input::has('tags')) 
-           $tags = str_replace(array('\'', '"', '[', ']'), '', $tags);    
-        else
-           $tags= '';  
-
-        
-        if (!empty($tags)) { 
-
-          $tags_copy = $tags;
-          $tags = explode(',', $tags); 
-
-          $tags = array_map('trim', $tags);
-          $tags = array_map('mb_strtolower', $tags);
-          $tags = array_unique($tags);
-          $tagString = implode(",", $tags);
-          
-          
-
-          $query = Tag::whereIn('name', $tags);
-          $tagsResult = $query->get();  
-
-          //commnet
-          $arrayPhotoId = array();
-          foreach ($tagsResult as $tagResult) {
-            $photosRelated = $tagResult->photos;
-            foreach ($photosRelated as $photoRel) {
-              array_push($arrayPhotoId, $photoRel->id);  
-            }
-            
-          }
-          //dd($arrayTemp);
-
-          $photos = $photos->filter(
-            function($photo) use ($arrayPhotoId){
-              if(in_array($photo->id, $arrayPhotoId)){
-                return true;
-              }
-            });
-            
-        }
-    } //2015-05-21 msy end
-    //dd($photos->count());
-    if($tags == '') $tags = [];
-    if($photos->count()) { // retorna resultado da busca       
-      return View::make('/advanced-search',['tags' => $tags, 'photos' => $photos]); //tagsResult
-    } else {
-      // busca sem resultados
-      return View::make('/advanced-search',['tags' => $tags, 'photos' => []]); //tagsResult
+	{
+    $fields = Input::only( array(
+        'name', 'description', 'city', 'state', 'country', 'workAuthor',
+        'imageAuthor', 'dataCriacao', 'dataUpload', 'workdate', 'district',
+        'street', 'tags', 'allowCommercialUses', 'allowModifications'
+      ));
+    $fields = array_filter(array_map('trim', $fields));
+    if( count($fields) == 0 ) { // busca vazia
+       return View::make('/advanced-search',
+        ['tags' => [], 'photos' => [], 'query' => "", 'binomials' => Binomial::all() ]);
     }
-    
+    $binomials = array();
+    if ( Input::has('binomial_check') ) {
+      foreach (Binomial::all() as $binomial) {
+        if ( Input::has('value-' . $binomial->id) ) {
+          $binomials[$binomial->id] = Input::get('value-' . $binomial->id);
+        }
+      }
+    }
+    //Adding search by tags
+    $tags = str_replace(array('\'', '"', '[', ']'), '', $fields['tags']);
+    $tags = Tag::transform($tags);
+    $photos = Photo::search(array_except($fields, 'tags'), $tags, $binomials);
+    if( ($count_photos = $photos->count()) == 0 ) {
+      $message = 'A busca não retornou resultados.';
+    } elseif ( $count_photos == 1 ) {
+      $message = 'Verifique abaixo a ' . $count_photos . ' imagem encontrada.';
+    } else {
+      $message = 'Verifique abaixo as ' . $count_photos . ' imagens encontradas.';
+    }
+    $tags = $tags == '' ? [] : $tags;
+    $photos = $photos->count() == 0 ? [] : $photos;
+    return View::make('/advanced-search',
+      ['tags' => $tags, 'photos' => $photos,
+       'binomials' => Binomial::all(), 'message' => $message]); //tagsResult
 	}
-
 }

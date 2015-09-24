@@ -53,7 +53,7 @@
 				<p>{{ $user->city }}</p>
 			  @endif
 
-			@if (Auth::check() && $user->id != Auth::user()->id)
+			@if (Auth::check() && $user->id != Auth::user()->id && !Session::has('institutionId'))
     			@if (!empty($follow) && $follow == true )
 	    			<a href="{{ URL::to("/friends/follow/" . $user->id) }}" id="single_view_contact_add">Seguir</a><br />
  				@else
@@ -63,7 +63,7 @@
     					</a>
 					</div>
  				@endif
- 			@elseif (Auth::check() && $user->id == Auth::user()->id)
+ 			@elseif (Auth::check() && $user->id == Auth::user()->id && !Session::has('institutionId'))
  				<a href="{{ URL::to("/users/" . $user->id . "/edit") }}" id="single_view_contact_add" title="Edite o seu perfil">Editar perfil</a><br />
 			@endif	
 			  
@@ -83,7 +83,7 @@
       	<div class="container row">
       		<div class="six columns">
 	      		<p>
-	      			@if (Auth::check() && $user->id == Auth::user()->id)
+	      			@if (Auth::check() && $user->id == Auth::user()->id && !Session::has('institutionId'))
 	      				Você ainda não possui imagens no seu perfil. Faça o upload de uma imagem 
 	      				<a href="{{ URL::to('/photos/upload') }}">aqui</a>
 	      			@else
@@ -104,8 +104,8 @@
     	<div class="four columns">
       	<hgroup class="profile_block_title">
         	<h3><i class="profile"></i>Perfil</h3> &nbsp; &nbsp;
-        	<?php if (Auth::check() && Auth::user()->id == $user->id) { ?>
-        	<a href= '{{"/users/" . $user->id . "/edit" }}' title="Editar perfil" >
+        	<?php if (Auth::check() && Auth::user()->id == $user->id && !Session::has('institutionId')) { ?>
+               	<a href= '{{"/users/" . $user->id . "/edit" }}' title="Editar perfil" >
         		<img src="{{ asset("img/edit.png") }}" width="16" height="16" />
         	</a>
         	<?php } ?>
@@ -151,7 +151,7 @@
 				<li><strong>Ocupação: </strong>{{ $user->occupation->occupation}}</li>
 			@endif
 			@if ( !empty($user->site) )
-				<li><strong>Site pessoal: </strong> <a href="{{ $user->site }}">{{ $user->site }}</a></li>
+				<li><strong>Site pessoal: </strong> <a href="{{ $user->site }}" target="_blank">{{ $user->site }}</a></li>
 			@endif	
 			</br>
 
@@ -214,14 +214,14 @@
 			<div class="twelve columns albums">
 				<hgroup class="profile_block_title">
 					<h3><i class="photos"></i>
-						@if (Auth::check() && $user->id == Auth::user()->id)
+						@if (Auth::check() && $user->id == Auth::user()->id && !Session::has('institutionId'))
 							Meus álbuns
 						@else
 							Álbuns
 						@endif
 					</h3>
 				</hgroup>
-				<?php $albums = $user->albums; ?>
+				<?php //$albums = $user->albums; ?>
 				
 				<div class="profile_box">
 					@if ($albums->count() > 0)
@@ -261,12 +261,13 @@
 
 	<br>
 	<br>
+	@if(!Session::has('institutionId'))
 	<!-- MINHAS AVALIAÇÕES -->
 	<div class="container">
 		<div class="twelve columns albums">
 			<hgroup class="profile_block_title">
 				<h3><img src="{{ asset("img/evaluate.png") }}" width="16" height="16"/>
-					@if (Auth::check() && $user->id == Auth::user()->id)
+					@if (Auth::check() && $user->id == Auth::user()->id &&!Session::has('institutionId'))
 						<!--Minhas imagens avaliadas-->
 						Minhas imagens interpretadas
 					@else
@@ -314,7 +315,7 @@
 			</div>
 		</div>
 	</div>
-
+	@endif
     
 		<!--   MODAL   -->
 	<div id="mask"></div>

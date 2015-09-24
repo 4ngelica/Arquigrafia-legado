@@ -195,8 +195,8 @@
                     <p>{{ Form::label('name', 'Título*:') }}</p>
                   </div>
                   <div class="three columns omega">
-                    <p>{{ Form::text('name', $photo->name) }} <br>
-                      <div class="error">{{ $errors->first('name') }}</div>
+                    <p>{{ Form::text('photo_name', $photo->name) }} <br>
+                      <div class="error">{{ $errors->first('photo_name') }}</div>
                     </p>
                   </div>
                 </td>
