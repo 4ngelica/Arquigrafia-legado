@@ -182,18 +182,4 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		$this->save();
 	}
 
-	public static function getSeparateAccounts($all) {
-		$accounts = array();
-		$accounts[] = $all->first(function ($key, $acc){
-			return ( (is_null($acc->id_stoa) || $acc->id_stoa != $acc->login) &&
-				(is_null($acc->id_facebook) || $acc->id_facebook != $acc->login) );
-		});
-		$accounts[] = $all->first(function ($key, $acc) {
-			return $acc->id_facebook = $acc->login;
-		});
-		$accounts[] = $all->first(function ($key, $acc) {
-			return $acc->id_stoa = $acc->login;
-		});
-		return $accounts;
-	}
 }
