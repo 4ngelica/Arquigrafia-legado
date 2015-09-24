@@ -227,15 +227,13 @@ class UsersController extends \BaseController {
     $input = Input::all();   
     $user = User::userInformation($input["login"]);
     if (isset($user)) {
-      $integration_message = UsersController::integrateAccounts($user->email);
+      $integration_message = $this->integrateAccounts($user->email);
     }
     if ($user != null && $user->oldAccount == 1) 
     {
       if ( User::checkOldAccount($user, $input["password"]) )
       {
-        $user->oldAccount = 0;
-        $user->password = Hash::make($input["password"]);
-        $user->save();
+        $user->updateAccount($input['password']);
       } else {
         Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
         return Redirect::to('/users/login')->withInput();
@@ -291,6 +289,9 @@ class UsersController extends \BaseController {
   			Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
         return Redirect::to('/users/login')->withInput();
       }
+    } else {
+      Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
+      return Redirect::to('/users/login')->withInput();
     }
   }
   
@@ -350,7 +351,7 @@ class UsersController extends \BaseController {
       $fbid = $fbuser->getProperty('id');
       $fbmail = $fbuser->getProperty('email');
       
-      $integration_message = UsersController::integrateAccounts($fbmail);
+      $integration_message = $this->integrateAccounts($fbmail);
       //usuarios antigos tem campo id_facebook null, mas existe login = $fbid;
       $user = User::where('id_facebook', '=', $fbid)->orWhere('login', '=', $fbid)->first();
       
@@ -682,7 +683,7 @@ class UsersController extends \BaseController {
     );    
   }
 
-  private static function integrateAccounts($email) {
+  private function integrateAccounts($email) {
     /* Verifica quantas contas com o mesmo e-mail existem */
     $all_acc = User::where('email','=',$email)->get();
     /* Se existir somente uma, não há o que integrar */
@@ -709,14 +710,14 @@ class UsersController extends \BaseController {
           if ($fb_acc->photo == "/arquigrafia-avatars/" . $fb_acc->id . ".jpg") {
             $old_filename = public_path() . $fb_acc->photo;
             $new_filename = public_path() . "/arquigrafia-avatars/" . $arq_acc->id . ".jpg";
-            if (File::exists($old_filename) && rename($old_filename, $new_filename)) {
+            if (File::exists($old_filename) && File::move($old_filename, $new_filename)) {
               $arq_acc->photo = "/arquigrafia-avatars/" . $arq_acc->id . ".jpg";
               $has_photo = true;
             }
           }
         }
         /* Importa Photos, Comments, Evaluations, follows e followers, se existirem */
-        UsersController::getAttributesFromTo($fb_acc, $arq_acc);
+        $this->getAttributesFromTo($fb_acc, $arq_acc);
       }
       /* Existe uma conta Stoa? */
       /*if (!is_null($stoa_acc)) {
@@ -793,7 +794,7 @@ class UsersController extends \BaseController {
     }*/
   }
 
-  private static function getAttributesFromTo($accountFrom, $accountTo) {
+  private function getAttributesFromTo($accountFrom, $accountTo) {
     DB::table('friendship')->where('following_id', '=', $accountFrom->id)->update(array('following_id' => $accountTo->id));
     DB::table('friendship')->where('followed_id', '=', $accountFrom->id)->update(array('followed_id' => $accountTo->id));  
     DB::table('photos')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
@@ -801,12 +802,14 @@ class UsersController extends \BaseController {
     DB::table('comments')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
     DB::table('albums')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
     DB::table('notifications')->where('sender_id', '=', $accountFrom->id)->update(array('sender_id' => $accountTo->id));
-    DB::table('notifications_user')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
+    DB::table('notification_user')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
     DB::table('likes')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
     DB::table('occupations')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
     DB::table('scores')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
     DB::table('users_roles')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
     DB::table('user_badges')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
     DB::table('employees')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
+    DB::table('friendship_institution')->where('following_user_id', '=', $accountFrom->id)
+      ->update(array('following_user_id' => $accountTo->id));
   }
 }
