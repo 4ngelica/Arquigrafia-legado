@@ -592,8 +592,7 @@ class PhotosController extends \BaseController {
         $photo->workdate = $input["photo_workDate"];
       if ( !empty($input["photo_imageDate"]) )
       $photo->dataCriacao = $input["photo_imageDate"];
-      //$input["photo_album"]; retorna ID do album
-
+      
       $photo->nome_arquivo = $file->getClientOriginalName();
 
       $photo->user_id = Auth::user()->id;
@@ -601,6 +600,10 @@ class PhotosController extends \BaseController {
       $photo->dataUpload = date('Y-m-d H:i:s');
 
       $photo->save();
+
+      if ( !empty($input["photo_album"]) ) {
+        DB::insert('insert into album_elements (album_id, photo_id) values (?, ?)', array($input["photo_album"], $photo->id));
+      }
 
       $ext = $file->getClientOriginalExtension();
       $photo->nome_arquivo = $photo->id.".".$ext;
