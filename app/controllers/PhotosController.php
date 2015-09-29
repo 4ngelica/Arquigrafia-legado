@@ -426,7 +426,8 @@ class PhotosController extends \BaseController {
       if(Input::has('workAuthor')){ 
         $input["workAuthor"] = str_replace(array('"'), '', $input["workAuthor"]);       
       }else{
-        $input["workAuthor"] ='';
+        $input["workAuthor"] ="";
+
       } 
 
       $rules = array(
@@ -461,31 +462,50 @@ class PhotosController extends \BaseController {
           $photo->subject = $input["subject"];
           if ( !empty($input["hygieneDate"]) )
               $photo->hygieneDate = $this->date->formatDate($input["hygieneDate"]);
+          else $photo->hygieneDate = null;
+
           if ( !empty($input["backupDate"]) )
               $photo->backupDate = $this->date->formatDate($input["backupDate"]);
+          else   $photo->backupDate = null;
           $photo->characterization = $input["characterization"];
           $photo->cataloguingTime = date('Y-m-d H:i:s');
           $photo->UserResponsible = $input["userResponsible"];
           $photo->name = $input["photo_name"];
+
           if ( !empty($input["description"]) )
                $photo->description = $input["description"];
+          else $photo->description = null;
+
           if ( !empty($input["workAuthor"]) )
                $photo->workAuthor = $input["workAuthor"];
+          else $photo->workAuthor = null;
+             
           if ( !empty($input["workDate"]) )
                $photo->workdate = $input["workDate"];
+          else  $photo->workdate = null;
+             
           $photo->country = $input["country"];
           if ( !empty($input["state"]) )
                $photo->state = $input["state"];
+          else $photo->state = null;   
+
           if ( !empty($input["city"]) )
                $photo->city = $input["city"];
+          else $photo->city = null;   
           if ( !empty($input["street"]) )
                $photo->street = $input["street"];
+          else $photo->street = null;
+         
           if ( !empty($input["imageAuthor"]) )
                $photo->imageAuthor = $input["imageAuthor"];
+
           if ( !empty($input["imageDate"]) )
                $photo->dataCriacao = $input["imageDate"];
+          else $photo->dataCriacao = null;
+             
           if ( !empty($input["observation"]) )  
                $photo->observation = $input["observation"];
+          else $photo->observation = null;
           $photo->allowCommercialUses = $input["allowCommercialUses"];
           $photo->allowModifications = $input["allowModifications"];
 
