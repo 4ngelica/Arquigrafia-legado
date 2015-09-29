@@ -35,6 +35,9 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
 
+<link rel="stylesheet" type="text/css" href="{{ URL::to('/css/tabs.css') }}">
+{{-- tabs para albums --}}
+
 <!--[if lt IE 8]>
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/ie7.css" />
 <![endif]-->
