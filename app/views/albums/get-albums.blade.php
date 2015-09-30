@@ -10,7 +10,7 @@
         {{ Form::open(array('url' => URL::to('/albums/photo/add'))) }}
           {{ Form::hidden('_photo', $photo_id) }}
           <div id="albums_list" class="list">
-            <p class="row">Selecione um ou mais álbuns em que a imagem será inserida.</p>
+            <p class="row">Selecione um ou mais álbuns em que a imagem será adicionada.</p>
             <table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
               <?php $album_counter = 0; ?>
@@ -39,7 +39,7 @@
               @endif
             </table>
           </div>
-          <p>{{ Form::submit("ADICIONAR AOS ÁLBUNS", array('class'=>'btn')) }}</p>
+          <p>{{ Form::submit("ADICIONAR", array('class'=>'btn')) }}</p>
         {{ Form::close() }}
       </div>
       <div id="create_album" class="tab row">
