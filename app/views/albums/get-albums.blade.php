@@ -1,7 +1,7 @@
-  <h4>Crie um novo álbum ou selecione um existente para adicionar a imagem selecionada.</h4>
+  <h4>Selecione dentre seus álbuns ou crie um novo álbum para adicionar a imagem selecionada.</h4>
   <div class="tabs">
     <ul class="tab-links">
-      <li class="active"><a href="#your_albums">Álbuns existentes</a></li>
+      <li class="active"><a href="#your_albums">Seus álbuns</a></li>
       <li><a href="#create_album">Novo álbum</a></li>
     </ul>
     <div class="tab-content">
@@ -10,8 +10,7 @@
         {{ Form::open(array('url' => URL::to('/albums/photo/add'))) }}
           {{ Form::hidden('_photo', $photo_id) }}
           <div id="albums_list" class="list">
-            {{-- <h2> Seus Álbuns </h2> --}}
-            <p class="row"> Selecione os álbuns em que a imagem será inserida.</p>
+            <p class="row">Selecione um ou mais álbuns em que a imagem será inserida.</p>
             <table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
               <?php $album_counter = 0; ?>
