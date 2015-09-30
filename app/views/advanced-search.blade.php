@@ -70,7 +70,7 @@
                       {{ Form::label('name', 'Título da imagem:') }}
                     </td>
                     <td>
-                      {{ Form::text('name', Input::get("name"), array('style' => "width: 168px")) }}
+                      {{ Form::text('name', Input::get("name"), array('style' => "width: 90%")) }}
                     </td>
                   </tr>
                   <tr>
@@ -81,7 +81,7 @@
                   <tr>
                     <td colspan="2">
                       {{ Form::textarea('description', Input::get("description"),
-                        array('cols' => 38, 'rows' => 3)) }}
+                        array('style' => "width: 95.5%", 'rows' => 3)) }}
                     </td>
                   </tr>
                   <tr>
@@ -90,8 +90,8 @@
                       <p style="font-size: 7pt">Máximo 5 tags</p>
                     </td>
                     <td>
-                      <div class="two columns alpha" style="width: 178px !important;">
-                        {{ Form::text('tags_input', null, array('style' => "width: 168px")) }} <br>
+                      <div class="two columns alpha" style="width: 95% !important;">
+                        {{ Form::text('tags_input', null, array('style' => "width: 95%")) }} <br>
                         <p>
                           <button class="btn right" id="add_tag">ADICIONAR TAG</button>
                         </p>
