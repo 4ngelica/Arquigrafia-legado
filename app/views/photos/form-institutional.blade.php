@@ -28,6 +28,7 @@
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-list.js" charset="utf-8"></script>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-autocomplete-part.js" charset="utf-8"></script>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/city-autocomplete.js" charset="utf-8"></script>
+	<script type="text/javascript" src="{{ URL::to("/") }}/js/date-work.js" charset="utf-8"></script>
 <style>
   .ui-autocomplete {
     max-height: 100px;
@@ -268,19 +269,25 @@
 								<td>@include('photos.includes.datepicker')
 								</td>
 							</tr>-->
-							
-							<tr>  <td>              
-         						<div class="two columns alpha"><p>{{ Form::label('workDate', 'Data da obra:') }}</p></div>
-         						<div class="two columns omega">     
-         						
-
+														 
+        					<tr>  <td>              
+         						<div class="two columns alpha"><p>{{ Form::label('workDate', 'Ano de conclusão da obra:') }}</p></div>
+         						<div class="six columns omega">  
           						<p>
-          							{{ Form::text('workDate','',array('id' => 'datePickerWorkDate','placeholder'=>'DD/MM/AAAA')) }} 
+          							{{form::Select('workDate',[""=>"Escolha o ano","1500"=>"1500","1950"=>"1950","1951"=>"1951"])}}
+          							<!--{{ Form::text('workDate','',array('id' => 'datePickerWorkDate','placeholder'=>'DD/MM/AAAA')) }} -->
+         						<span>Não possui uma data precisa? 
+         							<a  onclick="date_visibility('otherDate');" >Clique aqui.</a></span>
+         						<div id="otherDate" style="display:none;">
+         							
+         							@include('photos.includes.dateWork')
+         						</div>		
          						<br>
          						<div class="error">{{ $errors->first('workDate') }}</div>
-         					</p>       
+         					</p>      
         					</div></td>
-        					</tr> 
+        					
+        					</tr>
 
 							
 							
