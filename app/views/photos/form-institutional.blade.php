@@ -355,12 +355,64 @@
 									</p>
 								</div>
 							</tr>
-
+							<tr>
+								<?php
+									$albuns[""] = "Escolha o album";
+									$institution = Institution::find(Session::get('institutionId'));
+    								$albumsInstitutional = Album::withInstitution($institution)->get();
+									foreach ($albumsInstitutional as $k => $album) {
+										$albuns[$album->id]	= $album->title;
+									} 
+								?>
+								<div class="two columns alpha select-album"><p>{{ Form::label('photo_album', 'Adicionar ao álbum:') }}</p></div>
+								<div class="two columns omega">
+									<p class="select-album">
+										{{ Form::select('photo_album', $albuns, "") }} <br>
+									</p>
+										<div class="btn select-album" onclick="newAlbumInput()" style="font-size: 11px; width: 76px">NOVO ÁLBUM</div>	
+								</div>
+							</tr>
+							<tr>
+								<div class="two columns alpha new-album-name" style="display: none"><p>{{ Form::label('new_album-name', 'Digite o nome do novo álbum:') }}</p></div>
+								<div class="two columns omega">
+									<p class="new-album-name" style="display: none;">
+										{{ Form::text('new_album-name', Input::old('new_album-name')) }} <br>
+									</p>
+									<div class="btn new-album-name" onclick="selectAlbumInput()" style="font-size: 11px; width: 104px; display: none">ESCOLHER ÁLBUM</div>
+								</div>
+							</tr>
 							<tr>
 								<td>&nbsp;</td>
 								<td>&nbsp;</td>
 							</tr>
 						</table>
+						<script type="text/javascript">
+							function newAlbumInput() {
+								var select_album = document.getElementsByClassName('select-album');
+								var new_album = document.getElementsByClassName('new-album-name');
+								var i;
+								for (i = 0; i < select_album.length; i++) {
+    								select_album[i].style.display = "none";
+								}
+								for (i = 0; i < new_album.length; i++) {
+    								new_album[i].style.display = "block";
+								}
+								document.getElementById("photo_album").value = "";
+							}
+
+							function selectAlbumInput() {
+								var select_album = document.getElementsByClassName('select-album');
+								var new_album = document.getElementsByClassName('new-album-name');
+								var i;
+								for (i = 0; i < select_album.length; i++) {
+    								select_album[i].style.display = "block";
+								}
+								for (i = 0; i < new_album.length; i++) {
+    								new_album[i].style.display = "none";
+								}
+								document.getElementById("new_album-name").value = "";
+							}
+						</script>
 					</div>
 					<div class="five columns omega row">
 						<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">

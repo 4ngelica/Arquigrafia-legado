@@ -283,7 +283,21 @@ class PhotosController extends \BaseController {
               }
 
             }
-
+            if ( !empty($input["new_album-name"]) ) {
+              $album = Album::create([
+                'title' => $input["new_album-name"],
+                'description' => "",
+                'user' => Auth::user(),
+                'cover' => null,
+                'institution' => Institution::find(Session::get('institutionId')),
+              ]);
+              if ( $album->isValid() ) {
+                DB::insert('insert into album_elements (album_id, photo_id) values (?, ?)', array($album->id, $photo->id));
+             }
+            }
+            elseif ( !empty($input["photo_album"]) ) {
+              DB::insert('insert into album_elements (album_id, photo_id) values (?, ?)', array($input["photo_album"], $photo->id));
+            }
            //add Album
            /* if (Input::has("albums_institution")) {              
                 $album = new Album();
