@@ -301,10 +301,9 @@
          						<span>Não sabe a data precisa? 
          							<a  onclick="date_visibility('otherDate');" >Clique aqui.</a> </span>
          						</fieldset>	
-         						<div id="otherDate" style="display:none;">
-         							
+         						<div id="otherDate" style="display:none;">         							
          							@include('photos.includes.dateWork')
-         							<a onclick="close_other_date('otherDate');">OK</a>
+         						    <!--<a onclick="close_other_date('otherDate');" class="btn right" >OK</a>-->
          						</div>
          						<label id="answer_date"></label>		
          						<br>
@@ -342,8 +341,6 @@
 							<tr><td>
 								<div class="two columns alpha"><p>{{ Form::label('state', 'Estado:') }}</p></div>
 								<div class="two columns omega">
-								
-									
 									{{ Form::select('state', [""=>"Escolha o Estado", "AC"=>"Acre", "AL"=>"Alagoas", "AM"=>"Amazonas", "AP"=>"Amapá", "BA"=>"Bahia", "CE"=>"Ceará", "DF"=>"Distrito Federal", "ES"=>"Espirito Santo", "GO"=>"Goiás", "MA"=>"Maranhão", "MG"=>"Minas Gerais", "MS"=>"Mato Grosso do Sul", "MT"=>"Mato Grosso", "PA"=>"Pará", "PB"=>"Paraíba", "PE"=>"Pernambuco", "PI"=>"Piauí", "PR"=>"Paraná", "RJ"=>"Rio de Janeiro", "RN"=>"Rio Grande do Norte", "RO"=>"Rondônia", "RR"=>"Roraima", "RS"=>"Rio Grande do Sul", "SC"=>"Santa Catarina", "SE"=>"Sergipe", "SP"=>"São Paulo", "TO"=>"Tocantins"], "") }} <br>
 									
 									<div class="error">{{ $errors->first('state') }}</div>
@@ -570,7 +567,21 @@
 		@endif
 
 		/* Methods to be called when all html document be ready */
+			//alert({{Input::get('century')}});
+		//var e = document.getElementById("ddlViewBy");
+		//var strUser = e.options[e.selectedIndex].value;	
+		//alert("opa!{{$centuryInput}}");
+		//alert("{{Input::old('century')}}");
+		@if( Input::old('century'))				
+			var centuryInput = "{{Input::old('century')}}";
+			showPeriodCentury(centuryInput);
+			retrieveCentury(centuryInput);			
+		@endif
 		
+		@if( Input::old('decade_select'))	
+			var decadeInput = "{{Input::old('decade_select')}}";
+			retrieveDecade(decadeInput);			
+		@endif
    });
 </script>
 

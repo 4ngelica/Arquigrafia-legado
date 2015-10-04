@@ -116,6 +116,8 @@ class PhotosController extends \BaseController {
     $pageSource = Request::header('referer');
     
     $tagsArea = null;
+    $centuryInput =  null;
+    $decadeInput = null;
     $workAuthorInput = null;
 
     if ( Session::has('tagsArea') )
@@ -124,15 +126,20 @@ class PhotosController extends \BaseController {
       $tagsArea = explode(',', $tagsArea); 
     }
     if ( Session::has('workAuthorInput') )
-    {  
-      $workAuthorInput = Session::pull('workAuthorInput');
-      
-    }
+       $workAuthorInput = Session::pull('workAuthorInput');
+    if ( Session::has('centuryInput') ) {
+       $centuryInput = Session::pull('centuryInput');
+      //dd($century);
+      }
+    if ( Session::has('decadeInput') )
+       $decadeInput = Session::pull('decadeInput');
     
     $input['autoOpenModal'] = null;  
     /* */
     return View::make('/photos/form-institutional')->with(['tagsArea'=> $tagsArea,
-      'workAuthorInput' => $workAuthorInput,      
+      'workAuthorInput' => $workAuthorInput, 
+      'centuryInput'=> $centuryInput,
+      'decadeInput' =>  $decadeInput,
       'pageSource'=>$pageSource, 'user'=>Auth::user(), 
       'institution' => $institution,
       'albumsInstitutional'=>$albumsInstitutional,
@@ -179,7 +186,7 @@ class PhotosController extends \BaseController {
 
 
   public function saveFormInstitutional() {   
-    Input::flashExcept('tagsArea', 'photo','workAuthor');
+    Input::flashExcept('tagsArea', 'photo','workAuthor'); 
     $input = Input::all();
      
     if (Input::has('tagsArea')){
@@ -189,9 +196,9 @@ class PhotosController extends \BaseController {
     } 
     if (Input::has('workAuthor')){  
       $input["workAuthor"] = str_replace(array('"'), '', $input["workAuthor"]);    
-    }    
+    }  
 
-     
+    
       $rules = array(
       'support' => 'required',
       'tombo' => 'required',
@@ -206,8 +213,7 @@ class PhotosController extends \BaseController {
       'country' => 'required',
       'imageAuthor' => 'required'
       //'authorization_checkbox' => 'required'
-      //'photo_workDate' => 'date_format:"d/m/Y"',
-      //'photo_imageDate' => 'date_format:"d/m/Y"'
+      
       );
     
 
@@ -216,7 +222,9 @@ class PhotosController extends \BaseController {
     if($validator->fails()) { 
           $messages = $validator->messages();       
           return Redirect::to('/photos/uploadInstitutional')->with(['tagsArea' => $input['tagsArea'] ,
-          'workAuthorInput'=>$input["workAuthor"]        
+          'workAuthorInput'=>$input["workAuthor"],
+          'decadeInput'=>$input["decade_select"],
+          'centuryInput'=>$input["century"]        
           ])->withErrors($messages); 
     }else{       
       if(Input::hasFile('photo') and Input::file('photo')->isValid()) {
@@ -239,8 +247,20 @@ class PhotosController extends \BaseController {
                $photo->description = $input["description"];
           if ( !empty($input["workAuthor"]) )
           $photo->workAuthor = $input["workAuthor"];
-          if ( !empty($input["workDate"]) )
+          
+          if(!empty($input["workDate"])){             
             $photo->workdate = $input["workDate"];
+          }elseif(!empty($input["decade_select"])){             
+            $photo->workdate = "Década do ".$input["decade_select"];
+          }elseif (!empty($input["century"]) && $input["century"]!="NS" && $input["century"]!="Before" ) { 
+            $photo->workdate = "Século ".$input["century"];
+          }elseif ($input["century"]=="Before") { 
+            $photo->workdate = "Antes do século XV";
+          }else{ 
+            $photo->workdate = NULL;
+          }
+
+
           $photo->country = $input["country"];
           if ( !empty($input["state"]) )
             $photo->state = $input["state"];
@@ -320,8 +340,8 @@ class PhotosController extends \BaseController {
 
           $photo->saveMetadata(strtolower($ext));
           
-          $input['photoId'] = $photo->id; //dd($input);
-          //return Redirect::to("/photos/{$photo->id}");
+          $input['photoId'] = $photo->id;
+          //return Redirect::to("/photos/{$photo->id}");        
           return Redirect::back()->withInput($input);
         
 

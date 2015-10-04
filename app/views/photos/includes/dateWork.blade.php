@@ -14,10 +14,13 @@
     <?php $date_field = 'dataCriacao' ?>
     <div class="twelve columns">
       <p>
+        <div class="four columns">
         <label for="{{ $date_field }}">
-         Indique apenas o século e década que tenha certeza. Nenhum campo é obrigatório.<br>
+         Indique apenas o século e década que tenha certeza.<br>
+          Nenhum campo é obrigatório.<br>
          <span style="font-size:9px">O Arquigrafia preza pela qualidade da informação e preferimos que o campo fique sem a data a conter informações incorretas.</span>          
         </label>
+       </div> 
         <!--<img src="{{ URL::to('/img/Help-14.png') }}" class="date_help"/>-->
       </p>
     </div>
