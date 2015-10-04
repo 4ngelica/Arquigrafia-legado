@@ -43,6 +43,25 @@
   * html .ui-autocomplete {
     height: 100px;
   }
+  /* Style select*/
+
+    fieldset {
+      border: 0;
+      margin: 0 0 0px -10px;
+      font-size: 10px;
+    }
+    label {
+      display: block;
+      margin: 30px 0 0 0;
+    }
+    select {
+      width: 160px;
+    }
+    .overflow {
+      height: 350px;
+    }
+  
+
   </style>
 @stop
 @section('content')
@@ -274,16 +293,22 @@
          						<div class="two columns alpha"><p>{{ Form::label('workDate', 'Ano de conclusão da obra:') }}</p></div>
          						<div class="six columns omega">  
           						<p>
-          							{{form::Select('workDate',[""=>"Escolha o ano","1500"=>"1500","1950"=>"1950","1951"=>"1951"])}}
+          						<fieldset>
+
+          							@include('photos.includes.dateList')
+          							
           							<!--{{ Form::text('workDate','',array('id' => 'datePickerWorkDate','placeholder'=>'DD/MM/AAAA')) }} -->
-         						<span>Não possui uma data precisa? 
-         							<a  onclick="date_visibility('otherDate');" >Clique aqui.</a></span>
+         						<span>Não sabe a data precisa? 
+         							<a  onclick="date_visibility('otherDate');" >Clique aqui.</a> </span>
+         						</fieldset>	
          						<div id="otherDate" style="display:none;">
          							
          							@include('photos.includes.dateWork')
-         						</div>		
+         							<a onclick="close_other_date('otherDate');">OK</a>
+         						</div>
+         						<label id="answer_date"></label>		
          						<br>
-         						<div class="error">{{ $errors->first('workDate') }}</div>
+         						
          					</p>      
         					</div></td>
         					
@@ -296,24 +321,35 @@
 					<br class="clear">
 					<div class="five columns alpha row">
 						<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
+							<tr><td>
 								<div class="two columns alpha"><p>{{ Form::label('country', 'País*:') }}</p></div>
 								<div class="two columns omega">
 									<p>
+										
 										{{ Form::select('country', [ "Afeganistão"=>"Afeganistão", "África do Sul"=>"África do Sul", "Albânia"=>"Albânia", "Alemanha"=>"Alemanha", "América Samoa"=>"América Samoa", "Andorra"=>"Andorra", "Angola"=>"Angola", "Anguilla"=>"Anguilla", "Antartida"=>"Antartida", "Antigua"=>"Antigua", "Antigua e Barbuda"=>"Antigua e Barbuda", "Arábia Saudita"=>"Arábia Saudita", "Argentina"=>"Argentina", "Aruba"=>"Aruba", "Australia"=>"Australia", "Austria"=>"Austria", "Bahamas"=>"Bahamas", "Bahrain"=>"Bahrain", "Barbados"=>"Barbados", "Bélgica"=>"Bélgica", "Belize"=>"Belize", "Bermuda"=>"Bermuda", "Bhutan"=>"Bhutan", "Bolívia"=>"Bolívia", "Botswana"=>"Botswana", "Brasil"=>"Brasil", "Brunei"=>"Brunei", "Bulgária"=>"Bulgária", "Burundi"=>"Burundi", "Cabo Verde"=>"Cabo Verde", "Camboja"=>"Camboja", "Canadá"=>"Canadá", "Chade"=>"Chade", "Chile"=>"Chile", "China"=>"China", "Cingapura"=>"Cingapura", "Colômbia"=>"Colômbia", "Djibouti"=>"Djibouti", "Dominicana"=>"Dominicana", "Emirados Árabes"=>"Emirados Árabes", "Equador"=>"Equador", "Espanha"=>"Espanha", "Estados Unidos"=>"Estados Unidos", "Fiji"=>"Fiji", "Filipinas"=>"Filipinas", "Finlândia"=>"Finlândia", "França"=>"França", "Gabão"=>"Gabão", "Gaza Strip"=>"Gaza Strip", "Ghana"=>"Ghana", "Gibraltar"=>"Gibraltar", "Granada"=>"Granada", "Grécia"=>"Grécia", "Guadalupe"=>"Guadalupe", "Guam"=>"Guam", "Guatemala"=>"Guatemala", "Guernsey"=>"Guernsey", "Guiana"=>"Guiana", "Guiana Francesa"=>"Guiana Francesa", "Haiti"=>"Haiti", "Holanda"=>"Holanda", "Honduras"=>"Honduras", "Hong Kong"=>"Hong Kong", "Hungria"=>"Hungria", "Ilha Cocos (Keeling)"=>"Ilha Cocos (Keeling)", "Ilha Cook"=>"Ilha Cook", "Ilha Marshall"=>"Ilha Marshall", "Ilha Norfolk"=>"Ilha Norfolk", "Ilhas Turcas e Caicos"=>"Ilhas Turcas e Caicos", "Ilhas Virgens"=>"Ilhas Virgens", "Índia"=>"Índia", "Indonésia"=>"Indonésia", "Inglaterra"=>"Inglaterra", "Irã"=>"Irã", "Iraque"=>"Iraque", "Irlanda"=>"Irlanda", "Irlanda do Norte"=>"Irlanda do Norte", "Islândia"=>"Islândia", "Israel"=>"Israel", "Itália"=>"Itália", "Iugoslávia"=>"Iugoslávia", "Jamaica"=>"Jamaica", "Japão"=>"Japão", "Jersey"=>"Jersey", "Kirgizstão"=>"Kirgizstão", "Kiribati"=>"Kiribati", "Kittsnev"=>"Kittsnev", "Kuwait"=>"Kuwait", "Laos"=>"Laos", "Lesotho"=>"Lesotho", "Líbano"=>"Líbano", "Líbia"=>"Líbia", "Liechtenstein"=>"Liechtenstein", "Luxemburgo"=>"Luxemburgo", "Maldivas"=>"Maldivas", "Malta"=>"Malta", "Marrocos"=>"Marrocos", "Mauritânia"=>"Mauritânia", "Mauritius"=>"Mauritius", "México"=>"México", "Moçambique"=>"Moçambique", "Mônaco"=>"Mônaco", "Mongólia"=>"Mongólia", "Namíbia"=>"Namíbia", "Nepal"=>"Nepal", "Netherlands Antilles"=>"Netherlands Antilles", "Nicarágua"=>"Nicarágua", "Nigéria"=>"Nigéria", "Noruega"=>"Noruega", "Nova Zelândia"=>"Nova Zelândia", "Omã"=>"Omã", "Panamá"=>"Panamá", "Paquistão"=>"Paquistão", "Paraguai"=>"Paraguai", "Peru"=>"Peru", "Polinésia Francesa"=>"Polinésia Francesa", "Polônia"=>"Polônia", "Portugal"=>"Portugal", "Qatar"=>"Qatar", "Quênia"=>"Quênia", "República Dominicana"=>"República Dominicana", "Romênia"=>"Romênia", "Rússia"=>"Rússia", "Santa Helena"=>"Santa Helena", "Santa Kitts e Nevis"=>"Santa Kitts e Nevis", "Santa Lúcia"=>"Santa Lúcia", "São Vicente"=>"São Vicente", "Singapura"=>"Singapura", "Síria"=>"Síria", "Spiemich"=>"Spiemich", "Sudão"=>"Sudão", "Suécia"=>"Suécia", "Suiça"=>"Suiça", "Suriname"=>"Suriname", "Swaziland"=>"Swaziland", "Tailândia"=>"Tailândia", "Taiwan"=>"Taiwan", "Tchecoslováquia"=>"Tchecoslováquia", "Tonga"=>"Tonga", "Trinidad e Tobago"=>"Trinidad e Tobago", "Turksccai"=>"Turksccai", "Turquia"=>"Turquia", "Tuvalu"=>"Tuvalu", "Uruguai"=>"Uruguai", "Vanuatu"=>"Vanuatu", "Wallis e Fortuna"=>"Wallis e Fortuna", "West Bank"=>"West Bank", "Yémen"=>"Yémen", "Zaire"=>"Zaire", "Zimbabwe"=>"Zimbabwe"], "Brasil") }}<br>
+										
+
 										<div class="error">{{ $errors->first('country') }}</div>
 									</p>
 								</div>
+							</td>
 							</tr>
+							<!--
 							<tr>
+								<div class="two columns omega"><p></p></div>
+								<div class="two columns omega"><p><br></p></div>
+							</tr>	-->
+							<tr><td>
 								<div class="two columns alpha"><p>{{ Form::label('state', 'Estado:') }}</p></div>
 								<div class="two columns omega">
-								<p>
+								
+									
 									{{ Form::select('state', [""=>"Escolha o Estado", "AC"=>"Acre", "AL"=>"Alagoas", "AM"=>"Amazonas", "AP"=>"Amapá", "BA"=>"Bahia", "CE"=>"Ceará", "DF"=>"Distrito Federal", "ES"=>"Espirito Santo", "GO"=>"Goiás", "MA"=>"Maranhão", "MG"=>"Minas Gerais", "MS"=>"Mato Grosso do Sul", "MT"=>"Mato Grosso", "PA"=>"Pará", "PB"=>"Paraíba", "PE"=>"Pernambuco", "PI"=>"Piauí", "PR"=>"Paraná", "RJ"=>"Rio de Janeiro", "RN"=>"Rio Grande do Norte", "RO"=>"Rondônia", "RR"=>"Roraima", "RS"=>"Rio Grande do Sul", "SC"=>"Santa Catarina", "SE"=>"Sergipe", "SP"=>"São Paulo", "TO"=>"Tocantins"], "") }} <br>
+									
 									<div class="error">{{ $errors->first('state') }}</div>
-								</p>
+								</td>
 							</tr>
-							<tr>
+							<tr><td>
 								<div class="two columns alpha"><p>{{ Form::label('city', 'Cidade:') }}</p></div>
 								<div class="two columns omega">
 									<p>
@@ -321,18 +357,20 @@
 										<div class="error">{{ $errors->first('city') }}</div>
 									</p>
 								</div>
+								</td>
 							</tr>
 							
-							<tr>
+							<tr><td>
 								<div class="two columns alpha"><p>{{ Form::label('street', 'Endereço:') }}</p></div>
 								<div class="two columns omega">
 									<p>
 										{{ Form::text('street', Input::old('street')) }} <br>
 									</p>
 								</div>
+								<td>
 							</tr>
 
-							<tr>
+							<tr><td>
 								
 									<div class="two columns alpha"><p>{{ Form::label('imageAuthor', 'Autor da imagem*:') }}</p></div>
 									<div class="two columns omega">
@@ -342,9 +380,9 @@
 											<div class="error">{{ $errors->first('imageAuthor') }}</div>
 										</p>
 									</div>
-								
+								</td>
 							</tr>
-							<tr>                
+							<tr> <td>               
          						<div class="two columns alpha"><p>{{ Form::label('imageDate', 'Data da imagem:') }}</p></div>
          						<div class="two columns omega">
           						   <p>{{ Form::text('imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }} 
@@ -352,8 +390,8 @@
          							</p>       
         							</div>
         						</tr>   
-        					
-							<tr>
+        						</td>
+							<tr><td>
 								<div class="two columns alpha"><p>{{ Form::label('observation', 'Observações:') }}</p></div>
 								<div class="two columns omega">
 									<p>
@@ -361,8 +399,9 @@
 
 									</p>
 								</div>
+								</td>
 							</tr>
-							<tr>
+							<tr><td>
 								<?php
 									$albuns[""] = "Escolha o album";
 									$institution = Institution::find(Session::get('institutionId'));
@@ -378,8 +417,9 @@
 									</p>
 										<div class="btn select-album" onclick="newAlbumInput()" style="font-size: 11px; width: 76px">NOVO ÁLBUM</div>	
 								</div>
+								</td>
 							</tr>
-							<tr>
+							<tr><td>
 								<div class="two columns alpha new-album-name" style="display: none"><p>{{ Form::label('new_album-name', 'Digite o nome do novo álbum:') }}</p></div>
 								<div class="two columns omega">
 									<p class="new-album-name" style="display: none;">
@@ -387,6 +427,7 @@
 									</p>
 									<div class="btn new-album-name" onclick="selectAlbumInput()" style="font-size: 11px; width: 104px; display: none">ESCOLHER ÁLBUM</div>
 								</div>
+							</td>
 							</tr>
 							<tr>
 								<td>&nbsp;</td>

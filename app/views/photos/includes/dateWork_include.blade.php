@@ -15,18 +15,20 @@
       </select>
            
       <span id="period_select" name="period_select"></span>
-      <!--<select id="period_select" name="period_select" placeholder="Ano">        
+      <!--<span id="period_select2" name="period_select2"></span>
+      <select id="period_select" name="period_select" placeholder="Ano">        
       </select>-->
       <br>
       <br>
       <label>Decada:</label>
       <select id="decade_select" name="decade_select" placeholder="Decada">
             <option >Escolha a Década</option>
-            <option value="a">1501 a 1510</option>
-            <option value="b">1511 a 1520</option>
-            <option value="c">1521 a 1530</option>
+            <option value="1501 a 1510">1501 a 1510</option>
+            <option value="1511 a 1520">1511 a 1520</option>
+            <option value="1521 a 1530">1521 a 1530</option>
       </select>      
         <br>
+
       <!--<span>
       Você sabe o mês específico de conclusão da obra? <br>
       </span>

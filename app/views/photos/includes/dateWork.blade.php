@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf8">
   <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/style.old.css" />
-  <script type="text/javascript" src="{{ URL::to('/js/jquery.min.js') }}"></script>
+ <!-- <script type="text/javascript" src="{{ URL::to('/js/jquery.min.js') }}"></script>
   <script type="text/javascript" src="{{ URL::to('/js/inputmask.min.js') }}"></script>
   <script type="text/javascript" src="{{ URL::to('/js/jquery.inputmask.min.js') }}"></script>
   <script type="text/javascript" src="{{ URL::to('/js/photo.js') }}"></script>
-  <script src="{{ URL::to('/js/jquery.tooltipster.min.js') }}"></script>
+  <script src="{{ URL::to('/js/jquery.tooltipster.min.js') }}"></script>-->
 </head>
 <body>
   <div class="container">
@@ -22,7 +22,7 @@
       </p>
     </div>
     @include('photos.includes.dateWork_include')
-    
+     
     
   </div>
   <style>
