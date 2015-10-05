@@ -380,9 +380,9 @@ class Photo extends Eloquent {
 		$this->attributes['dataCriacao'] = $this->date->formatDate($raw_date);
 	}
 
-	public function setWorkDateAttribute($raw_date) {
+	/*public function setWorkDateAttribute($raw_date) {
 		$this->attributes['workdate'] = $this->date->formatDate($raw_date);
-	}
+	}*/
 
 	public function getTranslatedDataCriacaoAttribute($raw_date) {
 		return $this->date->translate($this->attributes['dataCriacao']);
