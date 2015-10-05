@@ -581,7 +581,8 @@
 		
 		@if( Input::old('decade_select'))	
 			var decadeInput = "{{Input::old('decade_select')}}";
-			retrieveDecade(decadeInput);			
+			retrieveDecade(decadeInput);	
+			getCenturyOfDecade(decadeInput); 		
 		@endif
    });
 </script>

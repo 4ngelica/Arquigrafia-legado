@@ -19,6 +19,7 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/tag-list.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/tag-autocomplete-part.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/city-autocomplete.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/date-work.js" charset="utf-8"></script>
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 {{-- <script src="//code.jquery.com/jquery-1.10.2.js"></script> --}}
@@ -34,6 +35,28 @@
 			$("#preview_photo").hide();
 		});
 	</script>
+
+<style>
+  /* Style select*/
+
+    fieldset {
+      border: 0;
+      margin: 0 0 0px -10px;
+      font-size: 10px;
+    }
+    label {
+      display: block;
+      margin: 30px 0 0 0;
+    }
+    /*select {
+      width: 115px;
+    }*/
+    .overflow {
+      height: 350px;
+    }
+
+
+</style>	
 	<div class="container">
 		<div>
 			{{ Form::open(array('url'=>'photos', 'files'=> true)) }}
@@ -210,7 +233,7 @@
 							}
 						</script>
 					</div>
-					<div class="five columns omega row">
+					<div class="six columns omega row" style="padding:0 0 0 2px;">
 						<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
 							<!--<tr>
 								<div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
@@ -220,41 +243,60 @@
 									</p>
 								</div>
 							</tr> -->
-							 <tr>                
+							 <tr> <td>               
          						<div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
          						<div class="two columns omega">
           						   <p>{{ Form::text('photo_imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }} 
          							<br> <div class="error">{{ $errors->first('photo_imageDate') }}</div>
          							</p>       
         							</div>
+        						</td>
         						</tr>       
-							<tr>
+							<tr><td>
 								<div class="two columns alpha"><p>{{ Form::label('photo_workAuthor', 'Autor da obra:') }}</p></div>
 								<div class="two columns omega">
 									<p>
 										{{ Form::text('photo_workAuthor', Input::old('photo_workAuthor')) }} <br>
 									</p>
 								</div>
+							</td>
 							</tr>						
 
-							<tr>                
-         						<div class="two columns alpha"><p>{{ Form::label('photo_workDate', 'Data da obra:') }}</p></div>
-         						<div class="two columns omega">         						
+							<tr><td>                
+         						<div class="two columns alpha"><p>{{ Form::label('photo_workDate', 'Ano de conclusão da obra:' ) }}</p></div>
+         						<div class="four columns omega">         						
           						<p>
-          							{{ Form::text('photo_workDate','',array('id' => 'datePickerWorkDate','placeholder'=>'DD/MM/AAAA')) }} 
-         						<br>
-         						<div class="error">{{ $errors->first('photo_workDate') }}</div>
-         					</p>       
+          						<!--	{{ Form::text('photo_workDate','',array('id' => 'datePickerWorkDate','placeholder'=>'DD/MM/AAAA')) }} 
+         						<br>-->
+         						<fieldset>
+          							@include('photos.includes.dateList')          							
+         						<span>Não sabe a data precisa? 
+         							<a  onclick="date_visibility('otherDate');" >Clique aqui.</a> </span>
+         						</fieldset>	
+         						</p>   
+         						    
         					</div>
+        					<br>
+        					<div>
+        						<p>
+         							<div id="otherDate" style="display:none;">         							
+         								@include('photos.includes.dateWork')         						    
+         							</div>
+         						</p>
+        					</div>	
+        						</td>
         					</tr>
-
-							<tr>
+        					<tr><td>
+        						<label id="answer_date"></label>		
+        					</td><tr>	
+							<tr><td>
 								<div class="two columns alpha"><p>{{ Form::label('photo_description', 'Descrição:') }}</p></div>
 								<div class="two columns omega">
 									<p>
 										{{ Form::textarea('photo_description', Input::old('photo_description')) }} <br>
 									</p>
 								</div>
+							</td>
 							</tr>
 						</table>
 					</div>
@@ -347,12 +389,21 @@
 			});
 		});
 
-		//msy
+		
+		@if( Input::old('century'))				
+			var centuryInput = "{{Input::old('century')}}";
+			showPeriodCentury(centuryInput);
+			retrieveCentury(centuryInput);			
+		@endif
+		
+		@if( Input::old('decade_select'))	
+			var decadeInput = "{{Input::old('decade_select')}}";
+			retrieveDecade(decadeInput);		
+			getCenturyOfDecade(decadeInput); 	
+		@endif
+
 		$(function() {
-    	$( "#datePickerWorkDate" ).datepicker({
-      		dateFormat:'dd/mm/yy'
-    	}
-      	);
+    	
     	$( "#datePickerImageDate" ).datepicker({
       	dateFormat:'dd/mm/yy'
     	}
