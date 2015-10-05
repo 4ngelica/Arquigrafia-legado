@@ -288,7 +288,7 @@ class PhotosController extends \BaseController {
                 'title' => $input["new_album-name"],
                 'description' => "",
                 'user' => Auth::user(),
-                'cover' => null,
+                'cover' => $photo,
                 'institution' => Institution::find(Session::get('institutionId')),
               ]);
               if ( $album->isValid() ) {
@@ -639,7 +639,7 @@ class PhotosController extends \BaseController {
           'title' => $input["new_album-name"],
           'description' => "",
           'user' => Auth::user(),
-          'cover' => null,
+          'cover' => $photo,
         ]);
         if ( $album->isValid() ) {
             DB::insert('insert into album_elements (album_id, photo_id) values (?, ?)', array($album->id, $photo->id));
@@ -717,6 +717,7 @@ class PhotosController extends \BaseController {
   {
     if (Auth::check()) {
       $photo = Photo::find($id);
+      if(!$photo->authorized) return;
       $originalFileExtension = strtolower(substr(strrchr($photo->nome_arquivo, '.'), 1));
       $filename = $id . '_original.' . $originalFileExtension;
       $path = public_path().'/arquigrafia-images/'. $filename;
