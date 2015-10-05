@@ -1,5 +1,15 @@
- 
+function date_visibility(id) {
+       var e = document.getElementById(id);
+       if(e.style.display == 'block')
+          e.style.display = 'none';
+       else
+          e.style.display = 'block';
+}
 
+
+function retrieveYearDate(year){
+  $('#workDate').val(year);
+}
 
 function retrieveCentury(century){
     //alert(century);
@@ -12,6 +22,8 @@ function retrieveDecade(decade){
     $('#decade_select').val(decade);
 
 }
+
+
 
 
  $(function() {
@@ -131,6 +143,7 @@ jQuery(function($) {
 
     
     $('#century').change(function () {
+        $("#decade_select").val("");
         var century = $(this).val(), lcns = period[century] //|| []; 
         //alert(century);
         var decadeRange = decade[century]|| [];

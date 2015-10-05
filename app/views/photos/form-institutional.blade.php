@@ -566,12 +566,6 @@
 			showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));		
 		@endif
 
-		/* Methods to be called when all html document be ready */
-			//alert({{Input::get('century')}});
-		//var e = document.getElementById("ddlViewBy");
-		//var strUser = e.options[e.selectedIndex].value;	
-		//alert("opa!{{$centuryInput}}");
-		//alert("{{Input::old('century')}}");
 		@if( Input::old('century'))				
 			var centuryInput = "{{Input::old('century')}}";
 			showPeriodCentury(centuryInput);
