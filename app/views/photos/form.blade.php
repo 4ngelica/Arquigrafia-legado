@@ -148,18 +148,27 @@
 								</div>
 							</tr>
 							<tr>
+								<div class="two columns alpha"><p>Adicione a um álbum:</p></div>
+								<div class="three columns omega" style="white-space : nowrap;">
+									<p>
+										<div class="btn" onclick="newAlbumInput()" style="font-size: 11px; width: 76px; display: inline-block">NOVO ÁLBUM</div>
+										<div class="btn" onclick="selectAlbumInput()" style="font-size: 11px; width: 104px; display: inline-block">ESCOLHER ÁLBUM</div>
+									</p>
+								</div>
+							</tr>
+							<tr>
 								<?php
 									$albuns[""] = "Escolha o album";
 									foreach (Auth::user()->albums as $k => $album) {
-										$albuns[$album->id]	= $album->title;
+										if ($album->institution_id == null)
+											$albuns[$album->id]	= $album->title;
 									} 
 								?>
-								<div class="two columns alpha select-album"><p>{{ Form::label('photo_album', 'Adicionar ao álbum:') }}</p></div>
+								<div class="two columns alpha select-album" style="display: none"><p>{{ Form::label('photo_album', 'Adicionar ao álbum:') }}</p></div>
 								<div class="two columns omega">
-									<p class="select-album">
+									<p class="select-album" style="display: none;">
 										{{ Form::select('photo_album', $albuns, "") }} <br>
-									</p>
-										<div class="btn select-album" onclick="newAlbumInput()" style="font-size: 11px; width: 76px">NOVO ÁLBUM</div>	
+									</p>	
 								</div>
 							</tr>
 							<tr>
@@ -168,7 +177,6 @@
 									<p class="new-album-name" style="display: none;">
 										{{ Form::text('new_album-name', Input::old('new_album-name')) }} <br>
 									</p>
-									<div class="btn new-album-name" onclick="selectAlbumInput()" style="font-size: 11px; width: 104px; display: none">ESCOLHER ÁLBUM</div>
 								</div>
 								<td>&nbsp;</td>
 								<td>&nbsp;</td>
