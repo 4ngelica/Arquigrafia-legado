@@ -452,27 +452,6 @@ class PhotosController extends \BaseController {
         }else{
             $workAuthorInput = $photo->workAuthor;
         }
-        
-       /* if ( Session::has('centuryInput') ) {
-            $centuryInput = Session::pull('centuryInput');
-            $decadeInput = null;
-            //dd($century);
-            }else{
-              $centuryInput = null;
-            }
-        
-
-        if ( Session::has('decadeInput') ){
-            $decadeInput = Session::pull('decadeInput');  
-        }else{
-          if ($photo->workDateType == "decade") {
-              $dateYear = null;
-              $centuryInput = null;
-              $decadeInput = $photo->workdate; 
-          }else{
-              $decadeInput = null;
-          }
-        }*/
 
       $dateYear = "";
       $decadeInput = "";
@@ -483,7 +462,11 @@ class PhotosController extends \BaseController {
         $dateYear = Session::pull('workDate');
       }elseif($photo->workDateType == "year"){
         $dateYear = $photo->workdate;
+      }elseif($photo->workDateType == NULL && $photo->workdate!= "" && DateTime::createFromFormat('Y-m-d', $photo->workdate) == true){
+        $date = DateTime::createFromFormat("Y-m-d",$photo->workdate);
+        $dateYear = $date->format("Y");
       }
+
       if(Session::has('decadeInput')){ 
          $decadeInput = Session::pull('decadeInput'); 
       }elseif ($photo->workDateType == "decade"){
@@ -496,29 +479,8 @@ class PhotosController extends \BaseController {
          $centuryInput = $photo->workdate;
          //dd($centuryInput);
       }
-              
+          
 
-        /*if($photo->workDateType == "year"){
-            $dateYear = $photo->workdate;
-            $centuryInput = null;
-            $decadeInput = null;
-        }elseif ($photo->workDateType == "decade") {
-            $dateYear = null;
-            $centuryInput = null;
-            $decadeInput = $photo->workdate; 
-        }elseif ($photo->workDateType == "century") {
-            $dateYear = null;
-            $centuryInput = $photo->workdate;
-            $decadeInput = null;
-        }else{                        
-            // echo date('Y', strtotime($photo->workdate));
-            if($photo->workdate!= "" && DateTime::createFromFormat('Y-m-d', $photo->workdate) == true){
-              $date = DateTime::createFromFormat("Y-m-d",$photo->workdate);
-              $dateYear = $date->format("Y");
-            }        
-        }*/
-         
-        
         return View::make('photos.edit-institutional')
           ->with(['photo' => $photo, 'tagsArea' => $tagsArea,
           'workAuthorInput' => $workAuthorInput,
@@ -584,6 +546,7 @@ class PhotosController extends \BaseController {
           'tagsArea' => $input['tagsArea'], 
           'decadeInput'=>$decadeInput,
           'centuryInput'=>$centuryInput,
+          'workDate' => $workDate,
           'workAuthorInput'=>$input["workAuthor"] ])->withErrors($messages); 
       }else{ 
           if(!empty($input["aditionalImageComments"]) )
@@ -1149,11 +1112,15 @@ class PhotosController extends \BaseController {
       $centuryInput = "";
 
       
-      if(Session::has('workDate')){        
+      if(Session::has('workDate')){     
         $dateYear = Session::pull('workDate');
       }elseif($photo->workDateType == "year"){
         $dateYear = $photo->workdate;
+      }elseif($photo->workDateType == NULL && $photo->workdate!= "" && DateTime::createFromFormat('Y-m-d', $photo->workdate) == true){
+              $date = DateTime::createFromFormat("Y-m-d",$photo->workdate);
+              $dateYear = $date->format("Y");
       }
+
       if(Session::has('decadeInput')){ 
          $decadeInput = Session::pull('decadeInput'); 
       }elseif ($photo->workDateType == "decade"){
@@ -1166,6 +1133,8 @@ class PhotosController extends \BaseController {
          $centuryInput = $photo->workdate;
          //dd($centuryInput);
       }
+
+      
 
 			return View::make('photos.edit')
 				->with(['photo' => $photo, 'tags' => $tags,
@@ -1204,7 +1173,7 @@ class PhotosController extends \BaseController {
         'photo_imageAuthor' => 'required',
         'tags' => 'required',
         'photo_country' => 'required',
-        'photo_workDate' => 'date_format:"d/m/Y"',
+        //'photo_workDate' => 'date_format:"d/m/Y"',
         'photo_imageDate' => 'date_format:"d/m/Y"',
         'photo' => 'max:10240|mimes:jpeg,jpg,png,gif'
 
@@ -1213,11 +1182,12 @@ class PhotosController extends \BaseController {
   $validator = Validator::make($input, $rules);
 
   if ($validator->fails()) {
-      dd($input["day"]);
+      
       $messages = $validator->messages();
       return Redirect::to('/photos/' . $photo->id . '/edit')->with(['tags' => $input['tags'],
-        'decadeInput'=>$decadeInput,
-          'centuryInput'=>$centuryInput
+        'decadeInput' => $decadeInput,
+        'centuryInput' => $centuryInput,
+        'workDate' => $workDate
         ])->withErrors($messages);
 
     } else {

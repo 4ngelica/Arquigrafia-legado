@@ -256,7 +256,8 @@
 								<div class="two columns alpha"><p>{{ Form::label('photo_workAuthor', 'Autor da obra:') }}</p></div>
 								<div class="two columns omega">
 									<p>
-										{{ Form::text('photo_workAuthor', Input::old('photo_workAuthor')) }} <br>
+										{{ Form::text('photo_workAuthor', Input::old('photo_workAuthor'),array('id' => 'photo_workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:15px; width:290px; font-size:12px; border:solid 1px #ccc')) }} 
+										<br>
 									</p>
 								</div>
 							</td>
