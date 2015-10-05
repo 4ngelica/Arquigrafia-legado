@@ -343,6 +343,7 @@
 					</div>
 					<div class="twelve columns">
 						<input name="enviar" type="submit" class="btn" value="ENVIAR">
+						<div id="dialog-confirm" title=" "></div>
 					</div>
 				</div>
 			{{ Form::close() }}
@@ -367,9 +368,34 @@
 			}
 
 		$(document).ready(function() {
+
+			if({{Input::old('autoOpenModal','false')}}){ 	
+					
+			$( "#dialog-confirm" ).html("<b>Cadastro de imagem realizado com sucesso!</b> <br><br> Gostaria de utilizar os dados da imagem cadastrada para o próximo upload?");
+			 $( "#dialog-confirm" ).dialog({
+				resizable: false,
+				height:180,
+				modal: true,
+				buttons: {
+				"Sim": function() {
+					$( this ).dialog( "close" );
+					},
+					"Não": function() {
+						//$( this ).dialog( "close" );
+						window.location.replace('{{ URL::to("/") }}/photos/{{Input::old('photoId')}}');
+					}
+				}
+			}); 
+		}
+
+
 			$('#tags').textext({ plugins: 'tags' });
 
-			@if (isset($tags))
+			@if(Input::old('tags')!=null)
+				<?php $tags = explode (",", Input::old('tags')); ?>
+			@endif	
+
+			@if (isset($tags) && $tags !=null)				
 				@foreach ( $tags as $tag )
 					$('#tags').textext()[0].tags().addTags([ {{ '"' . $tag . '"' }} ]);
 				@endforeach
@@ -378,6 +404,7 @@
 			$('#add_tag').click(function(e) {
 				e.preventDefault();
 				var tag = $('#tags_input').val();
+
 				if (tag == '') return;
 				$('#tags').textext()[0].tags().addTags([ tag ]);
 				$('#tags_input').val('');
@@ -387,10 +414,13 @@
 				var key = e.which || e.keyCode;
 				if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
 					e.preventDefault();
-			});
-		});
+			}); 
 
-		
+
+
+
+
+
 		@if( Input::old('century'))				
 			var centuryInput = "{{Input::old('century')}}";
 			showPeriodCentury(centuryInput);
@@ -402,6 +432,10 @@
 			retrieveDecade(decadeInput);		
 			getCenturyOfDecade(decadeInput); 	
 		@endif
+
+		});
+
+		
 
 		$(function() {
     	

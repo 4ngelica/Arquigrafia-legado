@@ -104,10 +104,13 @@ class PhotosController extends \BaseController {
     if ( Session::has('decadeInput') )
        $decadeInput = Session::pull('decadeInput');
 
-    return View::make('/photos/form')->with(['tags'=>$tags,'pageSource'=>$pageSource, 
+    $input['autoOpenModal'] = null;   
+
+    return View::make('/photos/form')->with(['tags'=>$tags,'pageSource'=>$pageSource,       
       'user'=>Auth::user(),
       'centuryInput'=> $centuryInput,
-      'decadeInput' =>  $decadeInput
+      'decadeInput' =>  $decadeInput,
+      'autoOpenModal'=>$input['autoOpenModal']
       ]);
 
   }
@@ -798,7 +801,7 @@ class PhotosController extends \BaseController {
           $tag->save();
         }
       }
-
+      $input['autoOpenModal'] = 'true';  
       $source_page = $input["pageSource"]; //get url of the source page through form
       ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $source_page, "Upload", "user");
       ActionUser::printTags($photo->user_id, $photo->id, $tags_copy, $source_page, "user", "Inseriu");
@@ -810,8 +813,10 @@ class PhotosController extends \BaseController {
       $file->move(public_path().'/arquigrafia-images', $photo->id."_original.".strtolower($ext)); // original
 
       $photo->saveMetadata(strtolower($ext));
+      $input['photoId'] = $photo->id;
 
-      return Redirect::to("/photos/{$photo->id}");
+      //return Redirect::to("/photos/{$photo->id}");
+      return Redirect::back()->withInput($input);
 
     } else {
     $messages = $validator->messages();

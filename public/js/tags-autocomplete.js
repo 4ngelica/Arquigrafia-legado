@@ -21,6 +21,7 @@ function readURL(input) {
  */
 function showTags(tagsJson, containerText, tagInput){
 
+    
     if(tagsJson != null && tagsJson != ''){
         containerText.textext({ plugins: 'tags' });
         var array = eval(tagsJson);  // convert string to array  
@@ -32,6 +33,8 @@ function showTags(tagsJson, containerText, tagInput){
 }
 
 $(document).ready(function() {
+
+
     /*
     $('#tags_input').textext({ plugins : 'autocomplete ajax',
             ajax : {
@@ -41,6 +44,7 @@ $(document).ready(function() {
             }
         })
     ; */
+    //ok
     $('#tagsArea').textext({ plugins: 'tags' });
     $('#add_tag').click(function(e) {
         e.preventDefault();
@@ -70,9 +74,7 @@ $(document).ready(function() {
     ;*/
  
     $(function() {
-        $( "#datePickerWorkDate" ).datepicker({
-            dateFormat:'dd/mm/yy'
-        });
+        
         $( "#datePickerImageDate" ).datepicker({
             dateFormat:'dd/mm/yy'
         });
