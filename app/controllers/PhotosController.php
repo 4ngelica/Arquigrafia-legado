@@ -597,9 +597,23 @@ class PhotosController extends \BaseController {
                $photo->workAuthor = $input["workAuthor"];
           else $photo->workAuthor = null;
              
-          if ( !empty($input["workDate"]) )
+          /*if ( !empty($input["workDate"]) )
                $photo->workdate = $input["workDate"];
-          else  $photo->workdate = null;
+          else  $photo->workdate = null;*/
+
+          if(!empty($input["workDate"])){             
+             $photo->workdate = $input["workDate"];
+             $photo->workDateType = "year";
+          }elseif(!empty($input["decade_select"])){             
+            $photo->workdate = $input["decade_select"];
+            $photo->workDateType = "decade";
+          }elseif (!empty($input["century"]) && $input["century"]!="NS") { 
+            $photo->workdate = $input["century"];
+            $photo->workDateType = "century";
+          }else{ 
+            $photo->workdate = NULL;
+            $photo->workDateType = NULL;
+          }          
              
           $photo->country = $input["country"];
           if ( !empty($input["state"]) )

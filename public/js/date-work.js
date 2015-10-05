@@ -115,6 +115,38 @@ var period = {
                 '2051 a 2060','2061 a 2070','2071 a 2080','2081 a 2090','2091 a 2100'],   
     }
 
+ function getCenturyOfDecade(decade){
+    
+    decadeDigit = decade.substring(0,4);
+    century = centuryOfDecade(decadeDigit);
+    $('#century').val(century);
+    showPeriodCentury(century);
+
+ }    
+
+ function centuryOfDecade(decadeDigit){
+    var century = "";     
+    var decadeDigit = parseInt(decadeDigit);
+
+    if(1401 <= decadeDigit && decadeDigit <= 1500){
+       century = "XV";
+    }else if(1501 <= decadeDigit && decadeDigit <= 1600){
+       century = "XVI";
+        //alert("CC"+century);
+    }else if(1601 <= decadeDigit && decadeDigit <= 1700){
+       century = "XVII";
+    }else if(1701 <= decadeDigit && decadeDigit <= 1800){
+       century = "XVIII";
+    }else if(1801 <= decadeDigit && decadeDigit <= 1900){
+       century = "XIX";
+    }else if(1901 <= decadeDigit && decadeDigit <= 2000){
+       century = "XX";
+    }else if(2001 <= decadeDigit && decadeDigit <= 2100){
+       century = "XXI";
+    }
+    return century;
+ }
+
  function showPeriodCentury(century){
     var period_century = period[century];
     if(century != "NS"){
@@ -132,15 +164,6 @@ jQuery(function($) {
     var $period = $('#period_select');
     var $decade = $('#decade_select');
     var txtPeriod = '';
-
-//ssdfsdfsdf
-    /* var period_century = period[centuryInput] //|| []; 
-        alert(period_century);
-
-        if(century != "NS"){
-            $("#period_select").text("Periodo: "+period_century);
-        } */
-
     
     $('#century').change(function () {
         $("#decade_select").val("");
