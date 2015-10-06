@@ -63,11 +63,37 @@
   
 
   </style>
+  <script type="text/javascript">
+  document.onload = function() {
+			}
+  </script>
 @stop
 @section('content')
 	<script type="text/javascript">
 		$( window ).load(function() {
 			$("#preview_photo").hide();
+			if (document.getElementById("new_album-name").value != "") {
+				var select_album = document.getElementsByClassName('select-album');
+				var new_album = document.getElementsByClassName('new-album-name');
+				var i;
+				for (i = 0; i < select_album.length; i++) {
+   					select_album[i].style.display = "none";
+				}
+				for (i = 0; i < new_album.length; i++) {
+    				new_album[i].style.display = "block";
+				}
+			}
+			else if (document.getElementById("photo_album").value != "") {
+				var select_album = document.getElementsByClassName('select-album');
+				var new_album = document.getElementsByClassName('new-album-name');
+				var i;
+				for (i = 0; i < select_album.length; i++) {
+    				select_album[i].style.display = "block";
+				}
+				for (i = 0; i < new_album.length; i++) {
+    				new_album[i].style.display = "none";
+				}	
+			}
 		});
 	</script>
 	<div class="container">
