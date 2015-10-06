@@ -115,7 +115,7 @@
         <!--   FOTO   -->
         <a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photos->id."_view.jpg" }}"
           title="{{ $photos->name }}" >
-          <img class="single_view_image" style=""
+          <img <?php if (!$photos->authorized) echo "oncontextmenu='return false'"?> class="single_view_image" style=""
             src="{{ URL::to("/arquigrafia-images")."/".$photos->id."_view.jpg" }}" />
         </a>
       </div>

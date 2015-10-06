@@ -421,7 +421,8 @@
     
     @if($decadeInput != null || $decadeInput!="" ) 
         var decadeInput = "{{$decadeInput}}";
-      retrieveDecade(decadeInput);      
+      retrieveDecade(decadeInput);          
+      getCenturyOfDecade(decadeInput); 
     @endif
     
    });

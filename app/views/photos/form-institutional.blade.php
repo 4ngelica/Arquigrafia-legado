@@ -63,11 +63,37 @@
   
 
   </style>
+  <script type="text/javascript">
+  document.onload = function() {
+			}
+  </script>
 @stop
 @section('content')
 	<script type="text/javascript">
 		$( window ).load(function() {
 			$("#preview_photo").hide();
+			if (document.getElementById("new_album-name").value != "") {
+				var select_album = document.getElementsByClassName('select-album');
+				var new_album = document.getElementsByClassName('new-album-name');
+				var i;
+				for (i = 0; i < select_album.length; i++) {
+   					select_album[i].style.display = "none";
+				}
+				for (i = 0; i < new_album.length; i++) {
+    				new_album[i].style.display = "block";
+				}
+			}
+			else if (document.getElementById("photo_album").value != "") {
+				var select_album = document.getElementsByClassName('select-album');
+				var new_album = document.getElementsByClassName('new-album-name');
+				var i;
+				for (i = 0; i < select_album.length; i++) {
+    				select_album[i].style.display = "block";
+				}
+				for (i = 0; i < new_album.length; i++) {
+    				new_album[i].style.display = "none";
+				}	
+			}
 		});
 	</script>
 	<div class="container">
@@ -318,7 +344,7 @@
 						</table>
 					</div>
 					<br class="clear">
-					<div class="five columns alpha row">
+					<div class="six columns alpha row">
 						<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
 							<tr><td>
 								<div class="two columns alpha"><p>{{ Form::label('country', 'País*:') }}</p></div>
@@ -366,7 +392,42 @@
 								</div>
 								<td>
 							</tr>
-
+							<tr><td>
+								<div class="two columns alpha"><p>Adicione a um álbum:</p></div>
+								<div class="three columns omega" style="white-space : nowrap;">
+									<p>
+										<div class="btn" onclick="newAlbumInput()" style="font-size: 11px; width: 76px; display: inline-block">NOVO ÁLBUM</div>
+										<div class="btn" onclick="selectAlbumInput()" style="font-size: 11px; width: 104px; display: inline-block">ESCOLHER ÁLBUM</div>
+									</p>
+								</div>
+								</td>
+							</tr>
+							<tr><td>
+								<?php
+									$albuns[""] = "Escolha o album";
+									$institution = Institution::find(Session::get('institutionId'));
+    								$albumsInstitutional = Album::withInstitution($institution)->get();
+									foreach ($albumsInstitutional as $k => $album) {
+										$albuns[$album->id]	= $album->title;
+									} 
+								?>
+								<div class="two columns alpha select-album" style="display: none"><p>{{ Form::label('photo_album', 'Adicionar ao álbum:') }}</p></div>
+								<div class="two columns omega">
+									<p class="select-album" style="display: none;">
+										{{ Form::select('photo_album', $albuns, "") }} <br>
+									</p>	
+								</div>
+								</td>
+							</tr>
+							<tr><td>
+								<div class="two columns alpha new-album-name" style="display: none"><p>{{ Form::label('new_album-name', 'Digite o nome do novo álbum:') }}</p></div>
+								<div class="two columns omega">
+									<p class="new-album-name" style="display: none;">
+										{{ Form::text('new_album-name', Input::old('new_album-name')) }} <br>
+									</p>
+								</div>
+								</td>
+							</tr>
 							<tr><td>
 								
 									<div class="two columns alpha"><p>{{ Form::label('imageAuthor', 'Autor da imagem*:') }}</p></div>
@@ -397,34 +458,6 @@
 									</p>
 								</div>
 								</td>
-							</tr>
-							<tr><td>
-								<?php
-									$albuns[""] = "Escolha o album";
-									$institution = Institution::find(Session::get('institutionId'));
-    								$albumsInstitutional = Album::withInstitution($institution)->get();
-									foreach ($albumsInstitutional as $k => $album) {
-										$albuns[$album->id]	= $album->title;
-									} 
-								?>
-								<div class="two columns alpha select-album"><p>{{ Form::label('photo_album', 'Adicionar ao álbum:') }}</p></div>
-								<div class="two columns omega">
-									<p class="select-album">
-										{{ Form::select('photo_album', $albuns, "") }} <br>
-									</p>
-										<div class="btn select-album" onclick="newAlbumInput()" style="font-size: 11px; width: 76px">NOVO ÁLBUM</div>	
-								</div>
-								</td>
-							</tr>
-							<tr><td>
-								<div class="two columns alpha new-album-name" style="display: none"><p>{{ Form::label('new_album-name', 'Digite o nome do novo álbum:') }}</p></div>
-								<div class="two columns omega">
-									<p class="new-album-name" style="display: none;">
-										{{ Form::text('new_album-name', Input::old('new_album-name')) }} <br>
-									</p>
-									<div class="btn new-album-name" onclick="selectAlbumInput()" style="font-size: 11px; width: 104px; display: none">ESCOLHER ÁLBUM</div>
-								</div>
-							</td>
 							</tr>
 							<tr>
 								<td>&nbsp;</td>
@@ -574,7 +607,8 @@
 		
 		@if( Input::old('decade_select'))	
 			var decadeInput = "{{Input::old('decade_select')}}";
-			retrieveDecade(decadeInput);			
+			retrieveDecade(decadeInput);	
+			getCenturyOfDecade(decadeInput); 		
 		@endif
    });
 </script>
