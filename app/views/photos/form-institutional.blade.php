@@ -570,8 +570,8 @@
 	
 <script type="text/javascript">
 
-
 	$(document).ready(function() {
+
 		if({{Input::old('autoOpenModal','false')}}){ 	
 					
 			$( "#dialog-confirm" ).html("<b>Cadastro de imagem realizado com sucesso!</b> <br><br> Gostaria de utilizar os dados da imagem cadastrada para o próximo upload?");
@@ -610,6 +610,13 @@
 			retrieveDecade(decadeInput);	
 			getCenturyOfDecade(decadeInput); 		
 		@endif
+
+			@if($dates == false)				
+		 		window.onload = cleanToLoad;
+		 	@else
+		 		window.onload = resultSelectDateWork;	
+			@endif
+
    });
 </script>
 

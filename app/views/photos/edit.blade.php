@@ -53,6 +53,9 @@
       height: 350px;
     }
 
+.resultDateWork {color: #888; padding: 10px; text-align: center; margin: 0 0 20px; }
+.resultDateWork strong {font-size: 13px;  text-transform: uppercase;}
+.linkEdit {color:#888; text-decoration: underline; font-weight: bold;} /*#4AA02C*/
 
 </style>
 
@@ -204,7 +207,7 @@
               <tr> <td>       
         <div class="two columns alpha"><p>{{ Form::label('photo_description', 'Descrição:') }}</p></div>
         <div class="two columns omega">
-        <p>{{ Form::textarea('photo_description', $photo->description,['size' => '36x7']) }} <br>
+        <p>{{ Form::textarea('photo_description', $photo->description,['size' => '26x8']) }} <br>
         </p>
         </div></td>
               </tr>
@@ -270,7 +273,7 @@
                   </div>
             </td>
         </tr>
-        <tr><td><label id="answer_date"></label>    </td></tr>
+        <tr><td><label id="answer_date" class="resultDateWork"></label>    </td></tr>
         
             </table>
           </div>
@@ -367,7 +370,7 @@
       getCenturyOfDecade(decadeInput); 
     @endif
 
-    //resultSelectDateWork();
+    window.onload = resultSelectDateWork;
 
     $(function() {
     $( "#datePickerImageDate" ).datepicker({

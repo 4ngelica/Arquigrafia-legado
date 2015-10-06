@@ -311,12 +311,14 @@
         					</tr>
         					<tr><td>
         						<label id="answer_date"></label>		
-        					</td><tr>	
+        					</td>
+        					<tr>	
 							<tr><td>
 								<div class="two columns alpha"><p>{{ Form::label('photo_description', 'Descrição:') }}</p></div>
 								<div class="two columns omega">
 									<p>
-										{{ Form::textarea('photo_description', Input::old('photo_description')) }} <br>
+										{{ Form::textarea('photo_description', Input::old('photo_description'),['size' =>'36x7']) }} <br>
+										
 									</p>
 								</div>
 							</td>
@@ -453,6 +455,12 @@
 			var decadeInput = "{{Input::old('decade_select')}}";
 			retrieveDecade(decadeInput);		
 			getCenturyOfDecade(decadeInput); 	
+		@endif
+
+		@if($dates == false)		
+		 	window.onload = cleanToLoad;
+		@else
+		 	window.onload = resultSelectDateWork;	
 		@endif
 
 		});

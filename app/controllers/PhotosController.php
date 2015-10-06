@@ -91,6 +91,7 @@ class PhotosController extends \BaseController {
     $tags = null;
     $centuryInput =  null;
     $decadeInput = null;
+    $dates = false;
 
     if ( Session::has('tags') )
     {
@@ -100,9 +101,12 @@ class PhotosController extends \BaseController {
     if ( Session::has('centuryInput') ) {
        $centuryInput = Session::pull('centuryInput');
       //dd($century);
+       $dates = true;
       }
-    if ( Session::has('decadeInput') )
+    if ( Session::has('decadeInput') ){
        $decadeInput = Session::pull('decadeInput');
+       $dates = true;
+     }
 
     $input['autoOpenModal'] = null;   
 
@@ -110,7 +114,8 @@ class PhotosController extends \BaseController {
       'user'=>Auth::user(),
       'centuryInput'=> $centuryInput,
       'decadeInput' =>  $decadeInput,
-      'autoOpenModal'=>$input['autoOpenModal']
+      'autoOpenModal'=>$input['autoOpenModal'],
+      'dates' => $dates
       ]);
 
   }
@@ -136,6 +141,7 @@ class PhotosController extends \BaseController {
     $centuryInput =  null;
     $decadeInput = null;
     $workAuthorInput = null;
+    $dates = false;
 
     if ( Session::has('tagsArea') )
     {  
@@ -146,10 +152,13 @@ class PhotosController extends \BaseController {
        $workAuthorInput = Session::pull('workAuthorInput');
     if ( Session::has('centuryInput') ) {
        $centuryInput = Session::pull('centuryInput');
+       $dates = true;
       //dd($century);
       }
-    if ( Session::has('decadeInput') )
+    if ( Session::has('decadeInput') ){
        $decadeInput = Session::pull('decadeInput');
+       $dates = true;
+     }
     
     $input['autoOpenModal'] = null;  
     /* */
@@ -160,7 +169,8 @@ class PhotosController extends \BaseController {
       'pageSource'=>$pageSource, 'user'=>Auth::user(), 
       'institution' => $institution,
       'albumsInstitutional'=>$albumsInstitutional,
-      'autoOpenModal'=>$input['autoOpenModal']
+      'autoOpenModal'=>$input['autoOpenModal'],
+      'dates' => $dates
       ]);
   }
 
@@ -235,13 +245,13 @@ class PhotosController extends \BaseController {
     
 
     $validator = Validator::make($input, $rules);
-
+    
     if($validator->fails()) { 
           $messages = $validator->messages();       
           return Redirect::to('/photos/uploadInstitutional')->with(['tagsArea' => $input['tagsArea'] ,
           'workAuthorInput'=>$input["workAuthor"],
           'decadeInput'=>$input["decade_select"],
-          'centuryInput'=>$input["century"]        
+          'centuryInput'=>$input["century"]
           ])->withErrors($messages); 
     }else{       
       if(Input::hasFile('photo') and Input::file('photo')->isValid()) {
@@ -465,10 +475,10 @@ class PhotosController extends \BaseController {
         $dateYear = Session::pull('workDate');
       }elseif($photo->workDateType == "year"){
         $dateYear = $photo->workdate;
-      }elseif($photo->workDateType == NULL && $photo->workdate!= "" && DateTime::createFromFormat('Y-m-d', $photo->workdate) == true){
+      }/*elseif($photo->workDateType == NULL && $photo->workdate!= "" && DateTime::createFromFormat('Y-m-d', $photo->workdate) == true){
         $date = DateTime::createFromFormat("Y-m-d",$photo->workdate);
         $dateYear = $date->format("Y");
-      }
+      }*/
 
       if(Session::has('decadeInput')){ 
          $decadeInput = Session::pull('decadeInput'); 
@@ -1121,10 +1131,10 @@ class PhotosController extends \BaseController {
         $dateYear = Session::pull('workDate');
       }elseif($photo->workDateType == "year"){
         $dateYear = $photo->workdate;
-      }elseif($photo->workDateType == NULL && $photo->workdate!= "" && DateTime::createFromFormat('Y-m-d', $photo->workdate) == true){
+      }/*elseif($photo->workDateType == NULL && $photo->workdate!= "" && DateTime::createFromFormat('Y-m-d', $photo->workdate) == true){
               $date = DateTime::createFromFormat("Y-m-d",$photo->workdate);
               $dateYear = $date->format("Y");
-      }
+      }*/
 
       if(Session::has('decadeInput')){ 
          $decadeInput = Session::pull('decadeInput'); 
