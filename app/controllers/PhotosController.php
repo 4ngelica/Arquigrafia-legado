@@ -336,7 +336,7 @@ class PhotosController extends \BaseController {
                 'title' => $input["new_album-name"],
                 'description' => "",
                 'user' => Auth::user(),
-                'cover' => null,
+                'cover' => $photo,
                 'institution' => Institution::find(Session::get('institutionId')),
               ]);
               if ( $album->isValid() ) {
