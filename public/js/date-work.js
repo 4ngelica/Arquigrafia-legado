@@ -1,11 +1,15 @@
 function date_visibility(id) {
-       var e = document.getElementById(id);
-       if(e.style.display == 'block')
+       var e = document.getElementById(id);        
+
+       if(e.style.display == 'none'){
+          e.style.display = 'block'; //alert("aparece");
+       }else{
           e.style.display = 'none';
-       else
-          e.style.display = 'block';
+          //alert("esconde");
+        }
        $("#answer_date").text(""); 
 }
+
 
 
 function retrieveYearDate(year){
@@ -24,7 +28,7 @@ function retrieveDecade(decade){
 
 }
 
-
+//function show
 
 
  $(function() {
@@ -172,12 +176,20 @@ function close_other_date(id) {
        resultSelectDateWork();
      }
 
+function editDateWork(){
+  var idDiv = "otherDate";
+  date_visibility(idDiv);
+}
+
  function resultSelectDateWork(){
     var century = $('#century').val();
       var decade = $('#decade_select').val();
-
+      var linkEditar = "";
+      var result = "";
+      
+      
       if(century != "NS" && century != "Before"){
-        century = "Seculo: "+century;
+        century = "Século: "+century;
       }else if(century == "Before"){
         century = "Antes do século XV";
       }else{
@@ -189,13 +201,26 @@ function close_other_date(id) {
       }else if(century == "" && (decade != "")){
         decade = "Década: "+decade;
       }else{
-        decade = "";
+        decade = ""; 
       }
 
+      if(century != "" || decade !=""){
+          linkEditar = '. <a onclick="editDateWork()"; class="linkEdit">Editar</a>';
+          result = century+" "+decade+" "+linkEditar;
+      }
+      
       //alert('cent'+century+'dec'+decade);
-      $("#answer_date").text(century+" "+decade);
+    //  $("#answer_date").text(century+" "+decade+" "+linkEditar);
+      $("#answer_date").html(result);
  }    
 
+function cleanToLoad(){
+   $("#workDate").val("");
+   $("#century").val("");
+   $("#decade_select").val("");
+   $("#answer_date").text("");
+   $("#period_select").text("");
+}
 
 jQuery(function($) {
     var $period = $('#period_select');
@@ -214,6 +239,9 @@ jQuery(function($) {
         $("#decade_select").val("");
         $("#answer_date").text("");
         $("#period_select").text("");
+        //close area
+        var idDiv = "otherDate";
+       // date_visibility(idDiv);
     });
 
     $('#decade_select').change(function () {

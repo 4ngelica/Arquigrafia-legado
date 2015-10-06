@@ -193,4 +193,25 @@ class Date {
    			return implode($stringDate, ', ');
 	}
 
+	public function formatToWorkDate($date,$type){
+		
+		if($date != null && $type != null){
+			if ($type == "year"){
+				return $date;
+			}
+			if ($type == "decade"){
+				return "Décadas de ".$date;
+			}
+			if ($type == "century"){
+				return "Século ".$date;
+			}
+		}elseif($date != null && $type == null){
+			return $this->translate($date);
+		}else{
+			return null;
+		}
+		
+	}
+	
+
 }

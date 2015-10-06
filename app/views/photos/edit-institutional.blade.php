@@ -424,7 +424,7 @@
       retrieveDecade(decadeInput);          
       getCenturyOfDecade(decadeInput); 
     @endif
-    
+    window.onload = resultSelectDateWork;
    });
   </script>
 @stop
