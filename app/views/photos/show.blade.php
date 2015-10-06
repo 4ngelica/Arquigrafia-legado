@@ -106,6 +106,10 @@
             @endif
           </div>
         </div>
+
+        <div>
+            <a href="{{ URL::previous() }}" class='right'>Voltar para página anterior</a>
+        </div>
         <!--   FIM - NOME / STATUS DA FOTO   -->
 
         <!--   FOTO   -->
