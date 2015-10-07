@@ -293,7 +293,7 @@
          						<br>-->
          						<fieldset>
           							@include('photos.includes.dateList')          							
-         						<span>Não sabe a data precisa? 
+         						<span class="space_txt_element">Não sabe a data precisa? 
          							<a  onclick="date_visibility('otherDate');" >Clique aqui.</a> </span>
          						</fieldset>	
          						</p>   

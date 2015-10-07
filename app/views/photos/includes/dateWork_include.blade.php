@@ -1,7 +1,7 @@
-<div id="{{ $date_field . '_container' }}" class="six columns date_container">
-  <div class="six columns">
+<!--<div id="{{ $date_field . '_container' }}" class="six columns date_container">-->
+  <div style="margin-top: 17px">
     <p>   
-      <label>Século:</label>
+      <label>Século:&nbsp;</label>
       <select id="century" name="century" class="date" >
         <option value="NS">Escolha o Século</option>
         <option value="Before">Antes do Século XV</option>
@@ -13,13 +13,14 @@
         <option value="XX">Século XX</option>
         <option value="XXI">Século XXI</option>
       </select>
-           
-      <span id="period_select" name="period_select"></span>
+       &nbsp;&nbsp;    
+      <span class"space_txt_element" id="period_select" name="period_select"></span>
       <br>
       <br>
-      <label>Decada:</label>
+      <label>Década:</label>
       <select id="decade_select" name="decade_select" placeholder="Decada">
             <option value="">Escolha a Década</option>
+            <option value="BD">Anterior ao ano de 1401</option>
             <option value="1401 a 1410">1401 a 1410</option>
             <option value="1411 a 1420">1411 a 1420</option>
             <option value="1421 a 1430">1421 a 1430</option>
@@ -84,10 +85,10 @@
 <option value="2011 a 2020">2011 a 2020</option>
       </select>      
         <br>
-<div class="five columns">        
-<a onclick="close_other_date('otherDate');" class="btn right" >OK</a>
+<div class="separate_text">        
+<a onclick="close_other_date('otherDate');" class="btn btn_data_ok" >OK</a>
 </div>
 
     </p>
   </div>
-</div>
+<!--</div>-->

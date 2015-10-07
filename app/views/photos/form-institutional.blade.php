@@ -324,7 +324,7 @@
           							@include('photos.includes.dateList')
           							
           							<!--{{ Form::text('workDate','',array('id' => 'datePickerWorkDate','placeholder'=>'DD/MM/AAAA')) }} -->
-         						<span>Não sabe a data precisa? 
+         						<span class="space_txt_element">Não sabe a data precisa? 
          							<a  onclick="date_visibility('otherDate');" >Clique aqui.</a> </span>
          						</fieldset>	
          						<div id="otherDate" style="display:none;">         							
