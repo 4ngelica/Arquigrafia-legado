@@ -127,9 +127,15 @@
             <li>
               <a href="{{ URL::to('/albums/get/list/' . $photos->id) }}" title="Adicione aos seus álbuns" id="plus"></a>
             </li>
+            @if($photos->authorized)
             <li>
-              <a href="{{ asset('photos/download/'.$photos->id) }}" title="Faça o download" id="download" target="_blank"></a>
+                <a href="{{ asset('photos/download/'.$photos->id) }}" title="Faça o download" id="download" target="_blank"></a>
             </li>
+            @else
+            <li>
+              <a onclick="notAuthorized();return false;" href="#" title="Faça o download" id="download" target="_blank"></a>
+            </li>
+            @endif
             <li>
               <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=sb' )}}" title="Registre suas impressões sobre {{$architectureName}}" id="evaluate" ></a>
             </li>
@@ -156,6 +162,11 @@
           <li><a href="#" class="twitter addthis_button_twitter"><span class="twitter"></span></a></li>
         </ul>
       </div>
+      <script type="text/javascript">
+      function notAuthorized() {
+        alert("O Arquigrafia empreendeu esforços para entrar em contato com os autores e ou responsáveis por esta imagem. \nSe você é o autor ou responsável, por favor, entre em contato com a equipe do Arquigrafia no e-mail: arquigrafiabr@gmail.com.");
+      }
+      </script>
       <!--   FIM - BOX DE BOTOES DA IMAGEM   -->
 
       <div class="tags">
