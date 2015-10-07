@@ -369,6 +369,7 @@ class PhotosController extends \BaseController {
           $photo->saveMetadata(strtolower($ext));
           
           $input['photoId'] = $photo->id;
+          $input['dates'] = true;
           //return Redirect::to("/photos/{$photo->id}");        
           return Redirect::back()->withInput($input);
         
@@ -824,7 +825,7 @@ class PhotosController extends \BaseController {
 
       $photo->saveMetadata(strtolower($ext));
       $input['photoId'] = $photo->id;
-
+      $input['dates'] = true;
       //return Redirect::to("/photos/{$photo->id}");
       return Redirect::back()->withInput($input);
 
@@ -1220,11 +1221,7 @@ class PhotosController extends \BaseController {
       $photo->street = $input["photo_street"];
       $photo->workAuthor = $input["photo_workAuthor"];
       
-      /*if ( !empty($input["photo_workDate"])) {
-        $photo->workdate = $input["photo_workDate"];
-      }else {
-        $photo->workdate = null;
-      }*/
+      
       if(!empty($input["workDate"])){             
              $photo->workdate = $input["workDate"];
              $photo->workDateType = "year";

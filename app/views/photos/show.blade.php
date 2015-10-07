@@ -107,9 +107,6 @@
           </div>
         </div>
 
-        <div>
-            <a href="{{ URL::previous() }}" class='right'>Voltar para página anterior</a>
-        </div>
         <!--   FIM - NOME / STATUS DA FOTO   -->
 
         <!--   FOTO   -->
@@ -122,6 +119,9 @@
 
       <!--   BOX DE BOTOES DA IMAGEM   -->
       <div id="single_view_buttons_box">
+        <div>
+            <a href="{{ URL::previous() }}" class='btn left'>VOLTAR</a>
+        </div>
         @if (Auth::check())
           <ul id="single_view_image_buttons">
             <li>

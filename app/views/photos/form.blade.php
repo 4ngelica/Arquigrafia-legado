@@ -457,15 +457,18 @@
 			getCenturyOfDecade(decadeInput); 	
 		@endif
 
-		@if($dates == false)		
+		@if($dates == false)	
+			//alert("{{$dates}}");	
 		 	window.onload = cleanToLoad;
-		@else
+		@else 
+			//alert("{{$dates}}");	
 		 	window.onload = resultSelectDateWork;	
 		@endif
 
+		@if( Input::old('dates'))				
+		 	window.onload = resultSelectDateWork;
+		@endif
 		});
-
-		
 
 		$(function() {
     	

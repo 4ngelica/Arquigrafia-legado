@@ -241,7 +241,10 @@ jQuery(function($) {
         $("#period_select").text("");
         //close area
         var idDiv = "otherDate";
-       // date_visibility(idDiv);
+        var e = document.getElementById(idDiv);
+        if(e.style.display == 'block'){
+          e.style.display = 'none'; 
+       }
     });
 
     $('#decade_select').change(function () {
