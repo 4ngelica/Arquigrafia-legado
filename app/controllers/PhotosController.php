@@ -761,7 +761,7 @@ class PhotosController extends \BaseController {
           'title' => $input["new_album-name"],
           'description' => "",
           'user' => Auth::user(),
-          'cover' => null,
+          'cover' => $photo,
         ]);
         if ( $album->isValid() ) {
             DB::insert('insert into album_elements (album_id, photo_id) values (?, ?)', array($album->id, $photo->id));
