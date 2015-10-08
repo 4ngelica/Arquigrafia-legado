@@ -258,13 +258,11 @@
               </tr>
               <tr> <td>              
                 <div class="two columns alpha"><p>{{ Form::label('workDate', 'Ano de conclusão da obra:') }}</p></div>
-                 <div class="six columns omega">
-                  
+                 <div class="six columns omega">                  
                   <p>
                       @include('photos.includes.dateList')
                       <span class="space_txt_element"> Não sabe a data precisa? 
-                      <a  onclick="date_visibility('otherDate');" >Clique aqui.</a> </span>
-                      
+                      <a  onclick="date_visibility('otherDate');" >Clique aqui.</a> </span>                      
                   </p>
                   <p>
                     <div id="otherDate" style="display:none;">                      
@@ -423,8 +421,9 @@
     
     @if($decadeInput != null || $decadeInput!="" ) 
         var decadeInput = "{{$decadeInput}}";
-      retrieveDecade(decadeInput);          
-      getCenturyOfDecade(decadeInput); 
+        retrieveDecade(decadeInput);       
+        getCenturyOfDecade(decadeInput); 
+        
     @endif
     window.onload = resultSelectDateWork;
    });
