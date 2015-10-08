@@ -106,26 +106,36 @@
             @endif
           </div>
         </div>
+
         <!--   FIM - NOME / STATUS DA FOTO   -->
 
         <!--   FOTO   -->
         <a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photos->id."_view.jpg" }}"
           title="{{ $photos->name }}" >
-          <img class="single_view_image" style=""
+          <img <?php if (!$photos->authorized) echo "oncontextmenu='return false'"?> class="single_view_image" style=""
             src="{{ URL::to("/arquigrafia-images")."/".$photos->id."_view.jpg" }}" />
         </a>
       </div>
 
       <!--   BOX DE BOTOES DA IMAGEM   -->
       <div id="single_view_buttons_box">
+        <div>
+            <a href="{{ URL::previous() }}" class='btn left'>VOLTAR</a>
+        </div>
         @if (Auth::check())
           <ul id="single_view_image_buttons">
             <li>
               <a href="{{ URL::to('/albums/get/list/' . $photos->id) }}" title="Adicione aos seus álbuns" id="plus"></a>
             </li>
+            @if($photos->authorized)
             <li>
-              <a href="{{ asset('photos/download/'.$photos->id) }}" title="Faça o download" id="download" target="_blank"></a>
+                <a href="{{ asset('photos/download/'.$photos->id) }}" title="Faça o download" id="download" target="_blank"></a>
             </li>
+            @else
+            <li>
+              <a onclick="notAuthorized();return false;" href="#" title="Faça o download" id="download" target="_blank"></a>
+            </li>
+            @endif
             <li>
               <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=sb' )}}" title="Registre suas impressões sobre {{$architectureName}}" id="evaluate" ></a>
             </li>
@@ -152,6 +162,11 @@
           <li><a href="#" class="twitter addthis_button_twitter"><span class="twitter"></span></a></li>
         </ul>
       </div>
+      <script type="text/javascript">
+      function notAuthorized() {
+        alert("O Arquigrafia empreendeu esforços para entrar em contato com os autores e ou responsáveis por esta imagem. \nSe você é o autor ou responsável, por favor, entre em contato com a equipe do Arquigrafia no e-mail: arquigrafiabr@gmail.com.");
+      }
+      </script>
       <!--   FIM - BOX DE BOTOES DA IMAGEM   -->
 
       <div class="tags">
@@ -394,11 +409,12 @@
       @endif
       </div>
       <div id="workdate_container">
-      @if ( !empty($photos->workdate) )
+      @if ( !empty($photos->workdate) && $photos->getFormatWorkdateAttribute($photos->workdate,$photos->workDateType) != null )
         <h4>Data da Obra:</h4>
         <p>
           <a href="{{ URL::to("/search?q=".$photos->workdate."&t=work") }}">
-            {{ $photos->translated_work_date }}
+            <!--$photos->translated_work_date -->
+            {{ $photos->getFormatWorkdateAttribute($photos->workdate,$photos->workDateType) }}
           </a>
         </p>
       @endif

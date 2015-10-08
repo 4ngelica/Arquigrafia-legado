@@ -29,7 +29,7 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/tag-list.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/tag-autocomplete-part.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/city-autocomplete.js" charset="utf-8"></script>
-
+<script type="text/javascript" src="{{ URL::to("/") }}/js/date-work.js" charset="utf-8"></script>
 <style>
   .ui-autocomplete {
     max-height: 100px;
@@ -257,15 +257,22 @@
                 </td>
               </tr>
               <tr> <td>              
-                <div class="two columns alpha"><p>{{ Form::label('workDate', 'Data da obra:') }}</p></div>
-                 <div class="two columns omega">
-                 @if (($photo->workdate)!= null )
-                  <p>{{ Form::text('workDate',date("d/m/Y",strtotime($photo->workdate)),array('id' => 'datePickerWorkDate','placeholder'=>'dd/mm/yyyy')) }}
-                 @else
-                  <p>{{ Form::text('workDate','',array('id' => 'datePickerWorkDate','placeholder'=>'dd/mm/yyyy')) }} 
-                 @endif  
-                  <br> <div class="error">{{ $errors->first('workDate') }}</div>
-                    </p>   
+                <div class="two columns alpha"><p>{{ Form::label('workDate', 'Ano de conclusão da obra:') }}</p></div>
+                 <div class="six columns omega">
+                  
+                  <p>
+                      @include('photos.includes.dateList')
+                      <span class="space_txt_element"> Não sabe a data precisa? 
+                      <a  onclick="date_visibility('otherDate');" >Clique aqui.</a> </span>
+                      
+                  </p>
+                  <p>
+                    <div id="otherDate" style="display:none;">                      
+                         @include('photos.includes.dateWork')
+                      </div>
+                    <label id="answer_date" class="resultDateWork"></label>
+                  </p>
+                    
                 </div>
               </td>
             </tr>
@@ -397,7 +404,29 @@
   $(document).ready(function() {
     /* Methods to be called when all html document be ready */
     showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));
+
+    @if($dateYear != NULL)
+      var dateYear = "{{$dateYear}}";
+      retrieveYearDate(dateYear);
+    @endif
+
+
+    @if($centuryInput != null || $centuryInput != "" )    //  
+      var centuryInput = "{{$centuryInput}}";//"{{Input::old('century')}}"; 
+      showPeriodCentury(centuryInput);
+      retrieveCentury(centuryInput);
+      //get filter 
+      filterDecadesOfCentury(centuryInput);  
+     
+    @endif
+
     
+    @if($decadeInput != null || $decadeInput!="" ) 
+        var decadeInput = "{{$decadeInput}}";
+      retrieveDecade(decadeInput);          
+      getCenturyOfDecade(decadeInput); 
+    @endif
+    window.onload = resultSelectDateWork;
    });
   </script>
 @stop

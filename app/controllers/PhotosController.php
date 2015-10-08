@@ -89,12 +89,34 @@ class PhotosController extends \BaseController {
     $pageSource = Request::header('referer');
     if(empty($pageSource)) $pageSource = '';
     $tags = null;
+    $centuryInput =  null;
+    $decadeInput = null;
+    $dates = false;
+
     if ( Session::has('tags') )
     {
       $tags = Session::pull('tags');
       $tags = explode(',', $tags);
-    }    
-    return View::make('/photos/form')->with(['tags'=>$tags,'pageSource'=>$pageSource, 'user'=>Auth::user()]);
+    }
+    if ( Session::has('centuryInput') ) {
+       $centuryInput = Session::pull('centuryInput');
+      //dd($century);
+       $dates = true;
+      }
+    if ( Session::has('decadeInput') ){
+       $decadeInput = Session::pull('decadeInput');
+       $dates = true;
+     }
+
+    $input['autoOpenModal'] = null;   
+
+    return View::make('/photos/form')->with(['tags'=>$tags,'pageSource'=>$pageSource,       
+      'user'=>Auth::user(),
+      'centuryInput'=> $centuryInput,
+      'decadeInput' =>  $decadeInput,
+      'autoOpenModal'=>$input['autoOpenModal'],
+      'dates' => $dates
+      ]);
 
   }
 
@@ -116,7 +138,10 @@ class PhotosController extends \BaseController {
     $pageSource = Request::header('referer');
     
     $tagsArea = null;
+    $centuryInput =  null;
+    $decadeInput = null;
     $workAuthorInput = null;
+    $dates = false;
 
     if ( Session::has('tagsArea') )
     {  
@@ -124,19 +149,28 @@ class PhotosController extends \BaseController {
       $tagsArea = explode(',', $tagsArea); 
     }
     if ( Session::has('workAuthorInput') )
-    {  
-      $workAuthorInput = Session::pull('workAuthorInput');
-      
-    }
+       $workAuthorInput = Session::pull('workAuthorInput');
+    if ( Session::has('centuryInput') ) {
+       $centuryInput = Session::pull('centuryInput');
+       $dates = true;
+      //dd($century);
+      }
+    if ( Session::has('decadeInput') ){
+       $decadeInput = Session::pull('decadeInput');
+       $dates = true;
+     }
     
     $input['autoOpenModal'] = null;  
     /* */
     return View::make('/photos/form-institutional')->with(['tagsArea'=> $tagsArea,
-      'workAuthorInput' => $workAuthorInput,      
+      'workAuthorInput' => $workAuthorInput, 
+      'centuryInput'=> $centuryInput,
+      'decadeInput' =>  $decadeInput,
       'pageSource'=>$pageSource, 'user'=>Auth::user(), 
       'institution' => $institution,
       'albumsInstitutional'=>$albumsInstitutional,
-      'autoOpenModal'=>$input['autoOpenModal']
+      'autoOpenModal'=>$input['autoOpenModal'],
+      'dates' => $dates
       ]);
   }
 
@@ -179,7 +213,7 @@ class PhotosController extends \BaseController {
 
 
   public function saveFormInstitutional() {   
-    Input::flashExcept('tagsArea', 'photo','workAuthor');
+    Input::flashExcept('tagsArea', 'photo','workAuthor'); 
     $input = Input::all();
      
     if (Input::has('tagsArea')){
@@ -189,9 +223,9 @@ class PhotosController extends \BaseController {
     } 
     if (Input::has('workAuthor')){  
       $input["workAuthor"] = str_replace(array('"'), '', $input["workAuthor"]);    
-    }    
+    }  
 
-     
+    
       $rules = array(
       'support' => 'required',
       'tombo' => 'required',
@@ -206,17 +240,18 @@ class PhotosController extends \BaseController {
       'country' => 'required',
       'imageAuthor' => 'required'
       //'authorization_checkbox' => 'required'
-      //'photo_workDate' => 'date_format:"d/m/Y"',
-      //'photo_imageDate' => 'date_format:"d/m/Y"'
+      
       );
     
 
     $validator = Validator::make($input, $rules);
-
+    
     if($validator->fails()) { 
           $messages = $validator->messages();       
           return Redirect::to('/photos/uploadInstitutional')->with(['tagsArea' => $input['tagsArea'] ,
-          'workAuthorInput'=>$input["workAuthor"]        
+          'workAuthorInput'=>$input["workAuthor"],
+          'decadeInput'=>$input["decade_select"],
+          'centuryInput'=>$input["century"]
           ])->withErrors($messages); 
     }else{       
       if(Input::hasFile('photo') and Input::file('photo')->isValid()) {
@@ -239,8 +274,21 @@ class PhotosController extends \BaseController {
                $photo->description = $input["description"];
           if ( !empty($input["workAuthor"]) )
           $photo->workAuthor = $input["workAuthor"];
-          if ( !empty($input["workDate"]) )
-            $photo->workdate = $input["workDate"];
+          
+          if(!empty($input["workDate"])){             
+             $photo->workdate = $input["workDate"];
+             $photo->workDateType = "year";
+          }elseif(!empty($input["decade_select"])){             
+            $photo->workdate = $input["decade_select"];
+            $photo->workDateType = "decade";
+          }elseif (!empty($input["century"]) && $input["century"]!="NS") { 
+            $photo->workdate = $input["century"];
+            $photo->workDateType = "century";
+          }else{ 
+            $photo->workdate = NULL;
+          }
+
+
           $photo->country = $input["country"];
           if ( !empty($input["state"]) )
             $photo->state = $input["state"];
@@ -283,7 +331,21 @@ class PhotosController extends \BaseController {
               }
 
             }
-
+            if ( !empty($input["new_album-name"]) ) {
+              $album = Album::create([
+                'title' => $input["new_album-name"],
+                'description' => "",
+                'user' => Auth::user(),
+                'cover' => $photo,
+                'institution' => Institution::find(Session::get('institutionId')),
+              ]);
+              if ( $album->isValid() ) {
+                DB::insert('insert into album_elements (album_id, photo_id) values (?, ?)', array($album->id, $photo->id));
+             }
+            }
+            elseif ( !empty($input["photo_album"]) ) {
+              DB::insert('insert into album_elements (album_id, photo_id) values (?, ?)', array($input["photo_album"], $photo->id));
+            }
            //add Album
            /* if (Input::has("albums_institution")) {              
                 $album = new Album();
@@ -306,8 +368,9 @@ class PhotosController extends \BaseController {
 
           $photo->saveMetadata(strtolower($ext));
           
-          $input['photoId'] = $photo->id; //dd($input);
-          //return Redirect::to("/photos/{$photo->id}");
+          $input['photoId'] = $photo->id;
+          $input['dates'] = true;
+          //return Redirect::to("/photos/{$photo->id}");        
           return Redirect::back()->withInput($input);
         
 
@@ -403,10 +466,41 @@ class PhotosController extends \BaseController {
         }else{
             $workAuthorInput = $photo->workAuthor;
         }
-  
+
+      $dateYear = "";
+      $decadeInput = "";
+      $centuryInput = "";
+
+      
+      if(Session::has('workDate')){        
+        $dateYear = Session::pull('workDate');
+      }elseif($photo->workDateType == "year"){
+        $dateYear = $photo->workdate;
+      }/*elseif($photo->workDateType == NULL && $photo->workdate!= "" && DateTime::createFromFormat('Y-m-d', $photo->workdate) == true){
+        $date = DateTime::createFromFormat("Y-m-d",$photo->workdate);
+        $dateYear = $date->format("Y");
+      }*/
+
+      if(Session::has('decadeInput')){ 
+         $decadeInput = Session::pull('decadeInput'); 
+      }elseif ($photo->workDateType == "decade"){
+          $decadeInput = $photo->workdate;
+      }
+
+      if(Session::has('centuryInput')){
+         $centuryInput = Session::pull('centuryInput');
+      }elseif($photo->workDateType == "century") {
+         $centuryInput = $photo->workdate;
+         //dd($centuryInput);
+      }
+          
+
         return View::make('photos.edit-institutional')
           ->with(['photo' => $photo, 'tagsArea' => $tagsArea,
           'workAuthorInput' => $workAuthorInput,
+          'dateYear' => $dateYear,
+          'centuryInput'=> $centuryInput,
+          'decadeInput' =>  $decadeInput,
           'user' => $logged_user,
           'institution' => $photo->institution
           ] ); 
@@ -416,7 +510,7 @@ class PhotosController extends \BaseController {
 
   public function updateInstitutional($id){ 
       $photo = Photo::find($id); 
-      Input::flashExcept('tagsArea','photo','workAuthor'); 
+      Input::flashExcept('tagsArea','photo','workAuthor','decade_select'); 
       $input = Input::all(); 
       if(Input::has('tagsArea')){
         $input["tagsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsArea"]);              
@@ -426,8 +520,20 @@ class PhotosController extends \BaseController {
       if(Input::has('workAuthor')){ 
         $input["workAuthor"] = str_replace(array('"'), '', $input["workAuthor"]);       
       }else{
-        $input["workAuthor"] ='';
+        $input["workAuthor"] ="";
       } 
+
+      $workDate = "";
+      $decadeInput = "";
+      $centuryInput = "";
+
+      if(Input::has('workDate')){        
+        $workDate = $input["workDate"];
+      }elseif(Input::has('decade_select')){ 
+         $decadeInput = $input["decade_select"];
+      }elseif(Input::has('century')){
+         $centuryInput = $input["century"];
+      }
 
       $rules = array(
       'support' => 'required',
@@ -452,6 +558,9 @@ class PhotosController extends \BaseController {
           $messages = $validator->messages();          
           return Redirect::to('/photos/'.$photo->id.'/editInstitutional')->with([
           'tagsArea' => $input['tagsArea'], 
+          'decadeInput'=>$decadeInput,
+          'centuryInput'=>$centuryInput,
+          'workDate' => $workDate,
           'workAuthorInput'=>$input["workAuthor"] ])->withErrors($messages); 
       }else{ 
           if(!empty($input["aditionalImageComments"]) )
@@ -461,31 +570,64 @@ class PhotosController extends \BaseController {
           $photo->subject = $input["subject"];
           if ( !empty($input["hygieneDate"]) )
               $photo->hygieneDate = $this->date->formatDate($input["hygieneDate"]);
+          else $photo->hygieneDate = null;
+
           if ( !empty($input["backupDate"]) )
               $photo->backupDate = $this->date->formatDate($input["backupDate"]);
+          else   $photo->backupDate = null;
           $photo->characterization = $input["characterization"];
           $photo->cataloguingTime = date('Y-m-d H:i:s');
           $photo->UserResponsible = $input["userResponsible"];
           $photo->name = $input["photo_name"];
+
           if ( !empty($input["description"]) )
                $photo->description = $input["description"];
+          else $photo->description = null;
+
           if ( !empty($input["workAuthor"]) )
                $photo->workAuthor = $input["workAuthor"];
-          if ( !empty($input["workDate"]) )
+          else $photo->workAuthor = null;
+             
+          /*if ( !empty($input["workDate"]) )
                $photo->workdate = $input["workDate"];
+          else  $photo->workdate = null;*/
+
+          if(!empty($input["workDate"])){             
+             $photo->workdate = $input["workDate"];
+             $photo->workDateType = "year";
+          }elseif(!empty($input["decade_select"])){             
+            $photo->workdate = $input["decade_select"];
+            $photo->workDateType = "decade";
+          }elseif (!empty($input["century"]) && $input["century"]!="NS") { 
+            $photo->workdate = $input["century"];
+            $photo->workDateType = "century";
+          }else{ 
+            $photo->workdate = NULL;
+            $photo->workDateType = NULL;
+          }          
+             
           $photo->country = $input["country"];
           if ( !empty($input["state"]) )
                $photo->state = $input["state"];
+          else $photo->state = null;   
+
           if ( !empty($input["city"]) )
                $photo->city = $input["city"];
+          else $photo->city = null;   
           if ( !empty($input["street"]) )
                $photo->street = $input["street"];
+          else $photo->street = null;
+         
           if ( !empty($input["imageAuthor"]) )
                $photo->imageAuthor = $input["imageAuthor"];
+
           if ( !empty($input["imageDate"]) )
                $photo->dataCriacao = $input["imageDate"];
+          else $photo->dataCriacao = null;
+             
           if ( !empty($input["observation"]) )  
                $photo->observation = $input["observation"];
+          else $photo->observation = null;
           $photo->allowCommercialUses = $input["allowCommercialUses"];
           $photo->allowModifications = $input["allowModifications"];
 
@@ -553,7 +695,7 @@ class PhotosController extends \BaseController {
       'photo_country' => 'required',  
       'photo_authorization_checkbox' => 'required',
       'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',
-      'photo_workDate' => 'date_format:"d/m/Y"',
+      //'photo_workDate' => 'date_format:"d/m/Y"',
       'photo_imageDate' => 'date_format:"d/m/Y"'
     );
 
@@ -562,8 +704,10 @@ class PhotosController extends \BaseController {
   if ($validator->fails()) {
       $messages = $validator->messages();
       //dd($messages);
-
-    return Redirect::to('/photos/upload')->with(['tags' => $input['tags']])->withErrors($messages);
+    return Redirect::to('/photos/upload')->with(['tags' => $input['tags'],
+      'decadeInput'=>$input["decade_select"],
+      'centuryInput'=>$input["century"]        
+      ])->withErrors($messages);
     } else {
 
     if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
@@ -588,12 +732,24 @@ class PhotosController extends \BaseController {
         $photo->street = $input["photo_street"];
       if ( !empty($input["photo_workAuthor"]) )
         $photo->workAuthor = $input["photo_workAuthor"];
-      if ( !empty($input["photo_workDate"]) )
-        $photo->workdate = $input["photo_workDate"];
+      /*if ( !empty($input["photo_workDate"]) )
+        $photo->workdate = $input["photo_workDate"];*/
+       if(!empty($input["workDate"])){             
+             $photo->workdate = $input["workDate"];
+             $photo->workDateType = "year";
+       }elseif(!empty($input["decade_select"])){             
+            $photo->workdate = $input["decade_select"];
+            $photo->workDateType = "decade";
+       }elseif (!empty($input["century"]) && $input["century"]!="NS") { 
+            $photo->workdate = $input["century"];
+            $photo->workDateType = "century";
+       }else{ 
+            $photo->workdate = NULL;
+       }
+
       if ( !empty($input["photo_imageDate"]) )
       $photo->dataCriacao = $input["photo_imageDate"];
-      //$input["photo_album"]; retorna ID do album
-
+      
       $photo->nome_arquivo = $file->getClientOriginalName();
 
       $photo->user_id = Auth::user()->id;
@@ -601,7 +757,20 @@ class PhotosController extends \BaseController {
       $photo->dataUpload = date('Y-m-d H:i:s');
 
       $photo->save();
-
+      if ( !empty($input["new_album-name"]) ) {
+        $album = Album::create([
+          'title' => $input["new_album-name"],
+          'description' => "",
+          'user' => Auth::user(),
+          'cover' => $photo,
+        ]);
+        if ( $album->isValid() ) {
+            DB::insert('insert into album_elements (album_id, photo_id) values (?, ?)', array($album->id, $photo->id));
+        }
+      }
+      elseif ( !empty($input["photo_album"]) ) {
+        DB::insert('insert into album_elements (album_id, photo_id) values (?, ?)', array($input["photo_album"], $photo->id));
+      }
       $ext = $file->getClientOriginalExtension();
       $photo->nome_arquivo = $photo->id.".".$ext;
 
@@ -643,7 +812,7 @@ class PhotosController extends \BaseController {
           $tag->save();
         }
       }
-
+      $input['autoOpenModal'] = 'true';  
       $source_page = $input["pageSource"]; //get url of the source page through form
       ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $source_page, "Upload", "user");
       ActionUser::printTags($photo->user_id, $photo->id, $tags_copy, $source_page, "user", "Inseriu");
@@ -655,8 +824,10 @@ class PhotosController extends \BaseController {
       $file->move(public_path().'/arquigrafia-images', $photo->id."_original.".strtolower($ext)); // original
 
       $photo->saveMetadata(strtolower($ext));
-
-      return Redirect::to("/photos/{$photo->id}");
+      $input['photoId'] = $photo->id;
+      $input['dates'] = true;
+      //return Redirect::to("/photos/{$photo->id}");
+      return Redirect::back()->withInput($input);
 
     } else {
     $messages = $validator->messages();
@@ -951,8 +1122,42 @@ class PhotosController extends \BaseController {
 			} else {
 				$tags = $photo->tags->lists('name');
 			}
+
+      $dateYear = "";
+      $decadeInput = "";
+      $centuryInput = "";
+
+      
+      if(Session::has('workDate')){     
+        $dateYear = Session::pull('workDate');
+      }elseif($photo->workDateType == "year"){
+        $dateYear = $photo->workdate;
+      }/*elseif($photo->workDateType == NULL && $photo->workdate!= "" && DateTime::createFromFormat('Y-m-d', $photo->workdate) == true){
+              $date = DateTime::createFromFormat("Y-m-d",$photo->workdate);
+              $dateYear = $date->format("Y");
+      }*/
+
+      if(Session::has('decadeInput')){ 
+         $decadeInput = Session::pull('decadeInput'); 
+      }elseif ($photo->workDateType == "decade"){
+          $decadeInput = $photo->workdate;
+      }
+
+      if(Session::has('centuryInput')){
+         $centuryInput = Session::pull('centuryInput');
+      }elseif($photo->workDateType == "century") {
+         $centuryInput = $photo->workdate;
+         //dd($centuryInput);
+      }
+
+      
+
 			return View::make('photos.edit')
-				->with(['photo' => $photo, 'tags' => $tags] );
+				->with(['photo' => $photo, 'tags' => $tags,
+            'dateYear' => $dateYear,
+            'centuryInput'=> $centuryInput,
+            'decadeInput' =>  $decadeInput
+          ] );
 		}
 		return Redirect::action('PagesController@home');
 	}
@@ -966,13 +1171,25 @@ class PhotosController extends \BaseController {
       $input["tags"] = str_replace(array('\'', '"', '[', ']'), '', $input["tags"]);
     else
       $input["tags"] = '';
-    //2015-05-09 msy add validate for date image/work end
+    
+      $workDate = "";
+      $decadeInput = "";
+      $centuryInput = "";
+
+      if(Input::has('workDate')){        
+        $workDate = $input["workDate"];
+      }elseif(Input::has('decade_select')){ 
+         $decadeInput = $input["decade_select"];
+      }elseif(Input::has('century')){
+         $centuryInput = $input["century"];
+      }
+
     $rules = array(
         'photo_name' => 'required',
         'photo_imageAuthor' => 'required',
         'tags' => 'required',
         'photo_country' => 'required',
-        'photo_workDate' => 'date_format:"d/m/Y"',
+        //'photo_workDate' => 'date_format:"d/m/Y"',
         'photo_imageDate' => 'date_format:"d/m/Y"',
         'photo' => 'max:10240|mimes:jpeg,jpg,png,gif'
 
@@ -981,8 +1198,14 @@ class PhotosController extends \BaseController {
   $validator = Validator::make($input, $rules);
 
   if ($validator->fails()) {
+      
       $messages = $validator->messages();
-      return Redirect::to('/photos/' . $photo->id . '/edit')->with('tags', $input['tags'])->withErrors($messages);
+      return Redirect::to('/photos/' . $photo->id . '/edit')->with(['tags' => $input['tags'],
+        'decadeInput' => $decadeInput,
+        'centuryInput' => $centuryInput,
+        'workDate' => $workDate
+        ])->withErrors($messages);
+
     } else {
       if ( !empty($input["photo_aditionalImageComments"]) )
         $photo->aditionalImageComments = $input["photo_aditionalImageComments"];
@@ -998,11 +1221,20 @@ class PhotosController extends \BaseController {
       $photo->street = $input["photo_street"];
       $photo->workAuthor = $input["photo_workAuthor"];
       
-      if ( !empty($input["photo_workDate"])) {
-        $photo->workdate = $input["photo_workDate"];
-      }else {
-        $photo->workdate = null;
-      }
+      
+      if(!empty($input["workDate"])){             
+             $photo->workdate = $input["workDate"];
+             $photo->workDateType = "year";
+          }elseif(!empty($input["decade_select"])){             
+            $photo->workdate = $input["decade_select"];
+            $photo->workDateType = "decade";
+          }elseif (!empty($input["century"]) && $input["century"]!="NS") { 
+            $photo->workdate = $input["century"];
+            $photo->workDateType = "century";
+          }else{ 
+            $photo->workdate = NULL;
+            $photo->workDateType = NULL;
+          }
 
       if ( !empty($input["photo_imageDate"]) ){
         $photo->dataCriacao = $input["photo_imageDate"];

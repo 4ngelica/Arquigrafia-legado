@@ -33,7 +33,7 @@ class AlbumsController extends \BaseController {
 		} else {
 			$photos = Photo::paginateUserPhotos(Auth::user());
 		}
-		$image = Session::has('image') ? Session::get('image') : null;
+		$image = Photo::find( Input::get('photo') );
 		return View::make('albums.form')
 			->with(['photos' => $photos,
 				'url' => $url,
@@ -69,7 +69,7 @@ class AlbumsController extends \BaseController {
 	}
 
 	public function store() {
-		$photos = Input::get('photos_add');
+		$photos = (array) Input::get('photos_add');
 		$cover = Photo::find((empty($photos) ? null : array_values($photos)[0]));
 		$user = Auth::user();
 

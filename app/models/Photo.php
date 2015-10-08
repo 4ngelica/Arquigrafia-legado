@@ -380,16 +380,21 @@ class Photo extends Eloquent {
 		$this->attributes['dataCriacao'] = $this->date->formatDate($raw_date);
 	}
 
-	public function setWorkDateAttribute($raw_date) {
+	/*public function setWorkDateAttribute($raw_date) {
 		$this->attributes['workdate'] = $this->date->formatDate($raw_date);
-	}
+	}*/
 
 	public function getTranslatedDataCriacaoAttribute($raw_date) {
 		return $this->date->translate($this->attributes['dataCriacao']);
 	}
 
-	public function getTranslatedWorkdateAttribute($raw_date) {
-		return $this->date->translate($this->attributes['workdate']);
+	/*public function getTranslatedWorkdateAttribute($raw_date) {
+		return $this->date->translate($this->attributes['workdate']);		
+	}*/
+
+	public function getFormatWorkdateAttribute($dateWork,$type) {
+		//return $this->date->translate($this->attributes['workdate']);
+		return  $this->date->formatToWorkDate($dateWork,$type);
 	}
 
 	public static function import($attributes, $basepath) {
