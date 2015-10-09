@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class FillBadgesLikeTable extends Migration {
+class UpdateScoresTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,7 +12,8 @@ class FillBadgesLikeTable extends Migration {
 	 */
 	public function up()
 	{
-
+		DB::insert('insert into scores (points, user_id)' .
+			' (select 0, id from users where id not in (select user_id from scores))');
 	}
 
 	/**
