@@ -255,9 +255,10 @@
 							}
 						</script>
 					</div>
-					<div class="six columns omega row" style="padding:0 0 0 2px;">
+					<div  style="padding:0 0 0 2px; width: 535px; margin-right: 0; float: left; display: inline; margin-left: 10px; margin-bottom: 20px;">
+
 						<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
-							<!--<tr>
+							<!--<tr> class="six columns omega row"
 								<div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
 								<div class="two columns omega">
 									<p>
@@ -287,30 +288,24 @@
 
 							<tr><td>                
          						<div class="two columns alpha"><p>{{ Form::label('photo_workDate', 'Ano de conclusão da obra:' ) }}</p></div>
-         						<div class="four columns omega">         						
+         						<div class="fivemid columns omega">         						
           						<p>
-          						<!--	{{ Form::text('photo_workDate','',array('id' => 'datePickerWorkDate','placeholder'=>'DD/MM/AAAA')) }} 
-         						<br>-->
-         						<fieldset>
           							@include('photos.includes.dateList')          							
-         						<span>Não sabe a data precisa? 
-         							<a  onclick="date_visibility('otherDate');" >Clique aqui.</a> </span>
-         						</fieldset>	
-         						</p>   
-         						    
-        					</div>
-        					<br>
-        					<div>
-        						<p>
+         							<span class="space_txt_element">Não sabe a data precisa? 
+         								<a onclick="date_visibility('otherDate');" >Clique aqui.</a> 
+         							</span>         						
+         						</p>
+         						<p>
          							<div id="otherDate" style="display:none;">         							
          								@include('photos.includes.dateWork')         						    
          							</div>
-         						</p>
-        					</div>	
+         							<label id="answer_date" class="resultDateWork"></label>
+         						</p>          						    
+        						</div>        					
         						</td>
         					</tr>
         					<tr><td>
-        						<label id="answer_date"></label>		
+        								
         					</td>
         					<tr>	
 							<tr><td>

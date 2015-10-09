@@ -200,7 +200,10 @@ class Date {
 				return $date;
 			}
 			if ($type == "decade"){
-				return "Décadas de ".$date;
+				if($date =="BD")
+					return "Anterior ao ano de 1401";
+				else 
+					return "Décadas de ".$date;
 			}
 			if ($type == "century"){
 				return "Século ".$date;

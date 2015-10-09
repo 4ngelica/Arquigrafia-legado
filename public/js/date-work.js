@@ -23,7 +23,7 @@ function retrieveCentury(century){
 }
 
 function retrieveDecade(decade){
-    //alert(century);
+    
   $('#decade_select').val(decade);
 
 }
@@ -59,7 +59,7 @@ var period = {
         'XXI': ['De 2001 a 2100'],
     }
     var decade ={
-        'NS':  ['Escolha década','1401 a 1410','1411 a 1420','1421 a 1430','1431 a 1440','1441 a 1450',
+        'NS':  ['Escolha década','Anterior ao ano de 1401','1401 a 1410','1411 a 1420','1421 a 1430','1431 a 1440','1441 a 1450',
                 '1451 a 1460','1461 a 1470','1471 a 1480','1481 a 1490','1491 a 1500',
                 '1501 a 1510','1511 a 1520','1521 a 1530','1531 a 1540','1541 a 1550',
                 '1551 a 1560','1561 a 1570','1571 a 1580','1581 a 1590','1591 a 1600',
@@ -75,7 +75,7 @@ var period = {
                 //'2021 a 2030','2031 a 2040','2041 a 2050',
                 //'2051 a 2060','2061 a 2070','2071 a 2080','2081 a 2090','2091 a 2100'
                 ],    
-        'Before': ['Anterior aos anos 1401'],        
+        'Before': ['Anterior ao ano de 1401'],        
         'XV': ['Escolha década','1401 a 1410','1411 a 1420','1421 a 1430','1431 a 1440','1441 a 1450',
                 '1451 a 1460','1461 a 1470','1471 a 1480','1481 a 1490','1491 a 1500'],
         'XVI': ['Escolha década','1501 a 1510','1511 a 1520','1521 a 1530','1531 a 1540','1541 a 1550',
@@ -94,15 +94,32 @@ var period = {
                 ],   
     }
 
- function getCenturyOfDecade(decade){
+ function getCenturyOfDecade(decade,eventType){
     
-    decadeDigit = decade.substring(0,4);
-    century = centuryOfDecade(decadeDigit);
-    showPeriodCentury(century);
-    $('#century').val(century);
-    //filter decades
-    filterDecadesOfCentury(century);
-    $('#decade_select').val(decade);
+    if(decade != "BD" && decade != null){ 
+        decadeDigit = decade.substring(0,4);
+        century = centuryOfDecade(decadeDigit);
+        showPeriodCentury(century);
+        $('#century').val(century);
+       //filter decades
+        filterDecadesOfCentury(century);
+        $('#decade_select').val(decade);
+    }else if(decade == "BD"){ 
+        century = "Before";
+        showPeriodCentury(century);
+        $('#century').val(century);
+        //aqu embaix
+        filterDecadesOfCentury(century);
+        //$("#period_select").text("");//(Período:  Anterior ao ano de 1401");
+    }else{ //decade_select ==null
+      
+        $("#decade_select").val("");
+        $("#century").val(""); 
+        //$("#decade_select").val("");
+        $("#answer_date").text("");
+        $("#period_select").text("");
+    }
+    
 
  }    
 
@@ -131,8 +148,9 @@ var period = {
 
  function showPeriodCentury(century){
     var period_century = period[century];
+
     if(century != "NS"){
-            $("#period_select").text("Periodo: "+period_century);
+            $("#period_select").text("Período: "+period_century); 
         }else{
             $("#period_select").text("");
         } 
@@ -141,11 +159,11 @@ var period = {
 function filterDecadesOfCentury(century){
         var $decade = $('#decade_select');
         lcns = period[century] //|| []; 
-        //alert(century);
-        var decadeRange = decade[century]|| [];
+        
+        var decadeRange = decade[century]|| []; //alert(decadeRange);
         //alert('-lcns='+lcns+'arra'+lcns[0]+'decadR='+decadeRange);
         if(century != "NS"){
-            $("#period_select").text("Periodo: "+lcns);
+            $("#period_select").text("Período: "+lcns);
         }else{
             $("#period_select").text("");
         }       
@@ -153,11 +171,23 @@ function filterDecadesOfCentury(century){
         var i=0;
         var html = $.map(decadeRange, function(decRange){    
         i++;
-        if(i==1){
-            txtDecRange = '<option value="">' + decRange + '</option>';
-            
+
+        if(century == "NS"){
+            if(i==1){
+              txtDecRange = '<option value="">' + decRange + '</option>';            
+            }else if(i==2){
+               txtDecRange = '<option value="BD">' + decRange + '</option>';
+            }else {
+               txtDecRange = '<option value="' + decRange + '">' + decRange + '</option>';
+            }
+        }else if(century == "Before"){
+            txtDecRange = '<option value="BD">' + decRange + '</option>';
         }else{
-            txtDecRange = '<option value="' + decRange + '">' + decRange + '</option>';
+            if(i==1){
+              txtDecRange = '<option value="">' + decRange + '</option>';            
+            }else {
+              txtDecRange = '<option value="' + decRange + '">' + decRange + '</option>';
+            }
         }
         
         return txtDecRange; 
@@ -182,7 +212,7 @@ function editDateWork(){
 }
 
  function resultSelectDateWork(){
-    var century = $('#century').val();
+      var century = $('#century').val();
       var decade = $('#decade_select').val();
       var linkEditar = "";
       var result = "";
@@ -191,21 +221,23 @@ function editDateWork(){
       if(century != "NS" && century != "Before"){
         century = "Século: "+century;
       }else if(century == "Before"){
-        century = "Antes do século XV";
+        century = "Antes do século XV e Anterior ao ano de 1401";
       }else{
         century = "";
       }
 
-      if(century != "" && decade != ""){
+      if(century != "" && (decade != "" && decade != "BD")){
         decade = "e Década: "+decade;
-      }else if(century == "" && (decade != "")){
+      }else if(century == "" && (decade != "" && decade !="BD")){
         decade = "Década: "+decade;
-      }else{
+      }else if(century == "" && decade == "BD"){
+        decade = "Anterior ao ano de 1401";
+      }else {
         decade = ""; 
       }
 
       if(century != "" || decade !=""){
-          linkEditar = '. <a onclick="editDateWork()"; class="linkEdit">Editar</a>';
+          linkEditar = ' <a onclick="editDateWork()"; class="linkEdit">Editar</a>';
           result = century+" "+decade+" "+linkEditar;
       }
       
@@ -222,6 +254,14 @@ function cleanToLoad(){
    $("#period_select").text("");
 }
 
+function closeArea(){
+        var idDiv = "otherDate";
+        var e = document.getElementById(idDiv);
+        if(e.style.display == 'block'){
+          e.style.display = 'none'; 
+         } 
+}
+
 jQuery(function($) {
     var $period = $('#period_select');
     var $decade = $('#decade_select');
@@ -231,23 +271,24 @@ jQuery(function($) {
         $("#decade_select").val("");
         $("#workDate").val("");
         var century = $(this).val(); 
-        filterDecadesOfCentury(century);
+        filterDecadesOfCentury(century);        
     });
     //
     $('#workDate').change(function () {
-        $("#century").val("");
-        $("#decade_select").val("");
+        
         $("#answer_date").text("");
-        $("#period_select").text("");
-        //close area
-        var idDiv = "otherDate";
-        var e = document.getElementById(idDiv);
-        if(e.style.display == 'block'){
-          e.style.display = 'none'; 
-       }
+        $("#period_select").text("");        
+        filterDecadesOfCentury("NS");
+        $("#century").val("");
+        
+        closeArea();
+       
     });
 
-    $('#decade_select').change(function () {
+    $('#decade_select').change(function () { 
         $("#workDate").val("");
+       // $("#century").val("");
+      //  $("#period_select").text("");
+
     });
 });

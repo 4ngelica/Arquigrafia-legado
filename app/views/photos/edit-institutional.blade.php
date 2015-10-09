@@ -258,21 +258,17 @@
               </tr>
               <tr> <td>              
                 <div class="two columns alpha"><p>{{ Form::label('workDate', 'Ano de conclusão da obra:') }}</p></div>
-                 <div class="six columns omega">
-                  <!-- @if ($dateYear != NULL)
-                   <p>{{ $dateYear }}</p>
-                    -{{  Form::text('workDate',date("d/m/Y",strtotime($photo->workdate)),array('id' => 'datePickerWorkDate','placeholder'=>'dd/mm/yyyy')) }} 
-                 @else
-                  {{-Form::text('workDate','',array('id' => 'datePickerWorkDate','placeholder'=>'dd/mm/yyyy')) }}
-                 @endif  -->
+                 <div class="six columns omega">                  
                   <p>
                       @include('photos.includes.dateList')
-                      <span>Não sabe a data precisa? 
-                      <a  onclick="date_visibility('otherDate');" >Clique aqui.</a> </span>
-                      <div id="otherDate" style="display:none;">                      
+                      <span class="space_txt_element"> Não sabe a data precisa? 
+                      <a  onclick="date_visibility('otherDate');" >Clique aqui.</a> </span>                      
+                  </p>
+                  <p>
+                    <div id="otherDate" style="display:none;">                      
                          @include('photos.includes.dateWork')
                       </div>
-                    <label id="answer_date"></label>
+                    <label id="answer_date" class="resultDateWork"></label>
                   </p>
                     
                 </div>
@@ -412,17 +408,22 @@
       retrieveYearDate(dateYear);
     @endif
 
+
     @if($centuryInput != null || $centuryInput != "" )    //  
       var centuryInput = "{{$centuryInput}}";//"{{Input::old('century')}}"; 
-
       showPeriodCentury(centuryInput);
-      retrieveCentury(centuryInput);      
+      retrieveCentury(centuryInput);
+      //get filter 
+      filterDecadesOfCentury(centuryInput);  
+     
     @endif
+
     
     @if($decadeInput != null || $decadeInput!="" ) 
         var decadeInput = "{{$decadeInput}}";
-      retrieveDecade(decadeInput);          
-      getCenturyOfDecade(decadeInput); 
+        retrieveDecade(decadeInput);       
+        getCenturyOfDecade(decadeInput); 
+        
     @endif
     window.onload = resultSelectDateWork;
    });

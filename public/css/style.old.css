@@ -799,6 +799,11 @@ a.tooltip_license span
 
 #registInstAlbum { width: 320px; height: 270px; margin: 0 auto; }
 /** dateWork **/
-.resultDateWork {color: #888; padding: 10px; text-align: center; margin: 0 0 20px; }
+.resultDateWork {color: #888;  }
 .resultDateWork strong {font-size: 13px;  text-transform: uppercase;}
 .linkEdit {color:#888; text-decoration: underline; font-weight: bold;} /*#4AA02C*/
+.btn_data_ok{margin-left: 300px;}
+.separate_text{ padding-top: 25px;}
+.text_area_data{width:370px;text-align: justify; margin-top: 17px}
+.space_txt_element{margin-left: 8px;}
+.container .fivemid.columns                    { width: 374px; }

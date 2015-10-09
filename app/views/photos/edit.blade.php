@@ -53,9 +53,7 @@
       height: 350px;
     }
 
-.resultDateWork {color: #888; padding: 10px; text-align: center; margin: 0 0 20px; }
-.resultDateWork strong {font-size: 13px;  text-transform: uppercase;}
-.linkEdit {color:#888; text-decoration: underline; font-weight: bold;} /*#4AA02C*/
+
 
 </style>
 
@@ -255,25 +253,18 @@
          <p>
             <fieldset>
                    @include('photos.includes.dateList')                        
-                    <span>Não sabe a data precisa? 
+                    <span class="space_txt_element">Não sabe a data precisa? 
                       <a  onclick="date_visibility('otherDate');" >Clique aqui.</a> </span>
                     </fieldset> 
-         </p>       
+         </p> 
+         <p><div id="otherDate" style="display:none;">                      
+                        @include('photos.includes.dateWork') 
+            </div>
+            <label id="answer_date" class="resultDateWork"></label>     
+         </p>      
         </div>
         </td>
         </tr>
-        <tr><td>
-          <div>
-                    <p>
-                      <div id="otherDate" style="display:none;">                      
-                        @include('photos.includes.dateWork') 
-
-                      </div>                      
-                    </p>
-                  </div>
-            </td>
-        </tr>
-        <tr><td><label id="answer_date" class="resultDateWork"></label>    </td></tr>
         
             </table>
           </div>
@@ -361,11 +352,14 @@
     @if($centuryInput != null || $centuryInput != "" )    //  
       var centuryInput = "{{$centuryInput}}";//"{{Input::old('century')}}"; 
       showPeriodCentury(centuryInput);
-      retrieveCentury(centuryInput);      
+      retrieveCentury(centuryInput);
+      //get filter 
+      filterDecadesOfCentury(centuryInput);  
+      //alert(centuryInput);  
     @endif
     
     @if($decadeInput != null || $decadeInput!="" ) 
-        var decadeInput = "{{$decadeInput}}";
+        var decadeInput = "{{$decadeInput}}"; 
       retrieveDecade(decadeInput);          
       getCenturyOfDecade(decadeInput); 
     @endif

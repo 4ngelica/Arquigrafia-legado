@@ -315,32 +315,25 @@
 								</td>
 							</tr>-->
 														 
-        					<tr>  <td>              
+        					<tr><td>              
          						<div class="two columns alpha"><p>{{ Form::label('workDate', 'Ano de conclusão da obra:') }}</p></div>
          						<div class="six columns omega">  
           						<p>
-          						<fieldset>
-
-          							@include('photos.includes.dateList')
-          							
-          							<!--{{ Form::text('workDate','',array('id' => 'datePickerWorkDate','placeholder'=>'DD/MM/AAAA')) }} -->
-         						<span>Não sabe a data precisa? 
-         							<a  onclick="date_visibility('otherDate');" >Clique aqui.</a> </span>
-         						</fieldset>	
-         						<div id="otherDate" style="display:none;">         							
-         							@include('photos.includes.dateWork')
-         						    <!--<a onclick="close_other_date('otherDate');" class="btn right" >OK</a>-->
-         						</div>
-         						<label id="answer_date"></label>		
-         						<br>
-         						
-         					</p>      
-        					</div></td>
-        					
+          							@include('photos.includes.dateList') 
+         							<span class="space_txt_element">Não sabe a data precisa? 
+         								<a onclick="date_visibility('otherDate');" >Clique aqui.</a> 
+         							</span>
+         						</p>
+         						<p>
+         							<div id="otherDate" style="display:none;">         							
+         								@include('photos.includes.dateWork')
+         						    	<!--<a onclick="close_other_date('otherDate');" class="btn right" >OK</a>-->
+         							</div>
+         							<label id="answer_date" class="resultDateWork"></label>
+         						</p>      
+        						</div>
+        						</td>
         					</tr>
-
-							
-							
 						</table>
 					</div>
 					<br class="clear">
