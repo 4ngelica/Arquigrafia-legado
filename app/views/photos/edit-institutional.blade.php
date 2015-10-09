@@ -349,11 +349,21 @@
             </table>
           </div>  
            <div class="twelve columns omega row">
-            <h4>Licença</h4>
-            <p> 
-               Sou o autor da imagem ou possuo permissão expressa do autor para disponibilizá-la no Arquigrafia. 
+            <h4>Licença</h4></br>
+             
+               <div class="twelve columns omega row">
+            <div class="form-row">
+              <input type="radio" onclick="enableLicencenseChoice()" name="authorized" value="1" id="authorized" {{$photo->authorized == 1 ? "checked" : ""}}>
+              <label for="authorized">Sou o autor da imagem ou possuo permissão expressa do autor para disponibilizá-la no Arquigrafia</label><br class="clear">  
+            </div>
+            <div class="form-row">
+              <input type="radio" onclick="disableLicenseChoice()" name="authorized" value="0" id="authorized" {{$photo->authorized == 0 ? "checked" : ""}}>
+              <label for="authorized">Aguardando autorização do autor</label><br class="clear">
+             </div>
+          </div>
                <br>               
                <br>
+               <p>
                Escolho a licença <a href="http://creativecommons.org/licenses/?lang=pt_BR" id="creative_commons" target="_blank" style="text-decoration:underline; line-height:16px;">Creative Commons</a>, para publicar a imagem, com as seguintes permissões:
             </p>          
           </div>
@@ -361,11 +371,11 @@
             Permitir o uso comercial da imagem?
             <br>
              <div class="form-row">
-              <input type="radio" name="allowCommercialUses" value="YES" id="allowCommercialUses" {{$photo->allowCommercialUses == 'YES' ? "checked" : ""}}>
+              <input type="radio" onclick="authorization()" name="allowCommercialUses" value="YES" id="allowCommercialUses" {{$photo->allowCommercialUses == 'YES' ? "checked" : ""}}>
               <label for="allowCommercialUses">Sim</label><br class="clear">
              </div>
              <div class="form-row">
-              <input type="radio" name="allowCommercialUses" value="NO" id="allowCommercialUses" {{$photo->allowCommercialUses == 'NO' ? "checked" : ""}}>
+              <input type="radio" onclick="authorization()" name="allowCommercialUses" value="NO" id="allowCommercialUses" {{$photo->allowCommercialUses == 'NO' ? "checked" : ""}}>
               <label for="allowCommercialUses">Não</label><br class="clear">
              </div>
           </div>
@@ -373,16 +383,16 @@
             Permitir modificações em sua imagem?
             <br>
             <div class="form-row">
-              <input type="radio" name="allowModifications" value="YES" id="allowModifications" {{$photo->allowModifications == 'YES' ? "checked" : ""}}>
-              <label for="question_3-5">Sim</label><br class="clear">
+              <input type="radio" onclick="authorization()" name="allowModifications" value="YES" id="allowModifications" {{$photo->allowModifications == 'YES' ? "checked" : ""}}>
+              <label for="allowModifications">Sim</label><br class="clear">
             </div>
             <div class="form-row">
-              <input type="radio" name="allowModifications" value="YES_SA" id="allowModifications" {{$photo->allowModifications == 'YES_SA' ? "checked" : ""}}>
-              <label for="question_3-5">Sim, contanto que os outros compartilhem de forma semelhante</label><br class="clear">
+              <input type="radio" onclick="authorization()" name="allowModifications" value="YES_SA" id="allowModifications" {{$photo->allowModifications == 'YES_SA' ? "checked" : ""}}>
+              <label for="allowModifications">Sim, contanto que os outros compartilhem de forma semelhante</label><br class="clear">
              </div>
             <div class="form-row">
-              <input type="radio" name="allowModifications" value="NO" id="allowModifications" {{$photo->allowModifications == 'NO' ? "checked" : ""}}>
-              <label for="question_3-5">Não</label><br class="clear">
+              <input type="radio" onclick="authorization()" name="allowModifications" value="NO" id="allowModifications" {{$photo->allowModifications == 'NO' ? "checked" : ""}}>
+              <label for="allowModifications">Não</label><br class="clear">
             </div>
           </div>
           <div class="twelve columns">
@@ -427,5 +437,31 @@
     @endif
     window.onload = resultSelectDateWork;
    });
+  function enableLicencenseChoice() {
+    var allowModifications = document.getElementsByName('allowModifications');
+    var allowCommercialUses = document.getElementsByName('allowCommercialUses');
+    var i;
+    for (i = 0; i < allowModifications.length; i++) {
+      allowModifications[i].disabled = false;
+    }
+    for (i = 0; i < allowCommercialUses.length; i++) {
+      allowCommercialUses[i].disabled = false;
+    }
+  }
+  function disableLicenseChoice() {
+    var allowModifications = document.getElementsByName('allowModifications');
+    var allowCommercialUses = document.getElementsByName('allowCommercialUses');
+    var i;
+    allowModifications[allowModifications.length-1].checked = true;
+    allowCommercialUses[allowCommercialUses.length-1].checked = true;
+  }
+  function authorization() {
+    var authorized = document.getElementsByName('authorized');
+    var allowModifications = document.getElementsByName('allowModifications');
+    var allowCommercialUses = document.getElementsByName('allowCommercialUses');
+    if (allowModifications[allowModifications.length-1].checked == false || allowCommercialUses[allowCommercialUses.length-1].checked == false) {
+      authorized[0].checked = true;
+    }
+  }
   </script>
 @stop
