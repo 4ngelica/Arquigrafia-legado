@@ -498,15 +498,16 @@
 							
 						</table>
 					</div>
-					@if(!Session::get('institutionId'))
 					<div class="twelve columns omega row">
-						<div class="form-group">
-							*{{ Form::checkbox('authorization_checkbox', 1, true) }}
-							{{ Form::label('authorization_checkbox', '&nbsp;Sou o autor da imagem ou possuo permissão expressa do autor para disponibilizá-la no Arquigrafia')}}
-							<br><div class="error">{{ $errors->first('authorization_checkbox') }}</div>
+						<div class="form-row">
+							<input type="radio" name="authorized" value="1" id="yesauthorized" checked="checked">
+							<label for="authorized">Sou o autor da imagem ou possuo permissão expressa do autor para disponibilizá-la no Arquigrafia</label><br class="clear">	
 						</div>
+						<div class="form-row">
+							<input type="radio" name="authorized" value="0" id="noauthorized">
+							<label for="authorized">Aguardando autorização do autor</label><br class="clear">
+						 </div>
 					</div>
-					@endif
 					<div class="twelve columns omega row">
 						<label for="terms" generated="true" class="error" style="display: inline-block; "></label>	
 						Escolho a licença <a href="http://creativecommons.org/licenses/?lang=pt_BR" id="creative_commons" target="_blank" style="text-decoration:underline; line-height:16px;">Creative Commons</a>, para publicar a imagem, com as seguintes permissões:			
@@ -567,7 +568,14 @@
 
 	</div>
 
-	
+<script type="text/javascript">
+	function allowLicencenseChoice() {
+
+	}
+	function disableLicenseChoice() {
+
+	}
+</script>
 <script type="text/javascript">
 
 	$(document).ready(function() { 
