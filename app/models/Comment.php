@@ -20,7 +20,7 @@ class Comment extends Eloquent {
 	}
 
 	public function badge() {
-		return $this->belongsTo('Badge');
+		return $this->belongsTo('lib\gamification\models\Badge');
 	}
 
 	public function attachBadge($badge) {

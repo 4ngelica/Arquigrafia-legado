@@ -1,6 +1,6 @@
-<?php
+<?php namespace lib\gamification\models;
 
-class Badge extends Eloquent {
+class Badge extends \Eloquent {
 
 	protected $fillable = ['name', 'image', 'description'];
 
@@ -22,22 +22,20 @@ class Badge extends Eloquent {
 
 	public function render()
 	{
-			$image = "./img/badges/".$this->image;
-			print '<img id="badge_image" src="'.$image.'" alt="badge" />';
-			print '<h3 id="badge_name">'.$this->name.'</h3>';
-            print '<p>'.$this->description.'</p>';
-            
+		$image = "./img/badges/".$this->image;
+		print '<img id="badge_image" src="'.$image.'" alt="badge" />';
+		print '<h3 id="badge_name">'.$this->name.'</h3>';
+    print '<p>'.$this->description.'</p>';
 	}
 
-	 public function scopeWhereNotRelatedToUser($query, $id)
+	public function scopeWhereNotRelatedToUser($query, $id)
+  {
+    $query->whereNotIn('id', function ($query) use ($id)
     {
-        $query->whereNotIn('id', function ($query) use ($id)
-        {
-            $query->select('badge_id')
-                ->from('user_badges')
-                ->where('user_id', '=', $id);
-        });
-    }
+      $query->select('badge_id')->from('user_badges')
+        ->where('user_id', '=', $id);
+    });
+  }
 
     public static function checkBadgeLike($likable,$user){
     	if( is_null($likable->badge) && $likable->likes->count() == 1) {

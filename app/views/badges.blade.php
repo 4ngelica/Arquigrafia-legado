@@ -50,7 +50,7 @@ jQuery(document).ready(function()
 
     <a href="#" id="toggler1"><h2 class="badges"><img id ='arrow2' src="./img/arrow_bottom.png" alt="" > Remaining badges : </h2></a>
     <div id="toggle1" style="display:none;">
-      <?php $badges_available = Badge::WhereNotRelatedToUser($user->id)->get();?>
+      <?php $badges_available = lib\gamification\models\Badge::WhereNotRelatedToUser($user->id)->get();?>
       <?php if (!isset($badges_available)){ ?>
         <p id="no-badges">no badges available </p>
 

@@ -71,7 +71,6 @@ $(document).ready(function(){
 			$('#form_login_window').fadeIn('slow');
 		});
 
-
 	$('.leaderboard').live("click", (function (e) {
 		e.preventDefault();
 		$.ajax({
@@ -110,13 +109,6 @@ $(document).ready(function(){
 
 		return false;
 	}))	;
-
-
-               
-
-
-
-
 
 });
 

@@ -7,15 +7,18 @@ use Illuminate\Auth\Reminders\RemindableInterface;
 // begin 12/05/2015 for date msy
 use lib\date\Date;
 
+use lib\gamification\traits\UserGamificationTrait;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
 	
+	use UserGamificationTrait;
+
 	protected $fillable = ['id','name','email','password','login','verify_code'];
 
 	public function notifications()
-    {
-        return $this->hasMany('\Tricki\Notification\Models\NotificationUser');
-    }
+  {
+    return $this->hasMany('\Tricki\Notification\Models\NotificationUser');
+  }
 
 	public function photos()
 	{
@@ -48,7 +51,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	public function badges()
 	{
-		return $this->belongsToMany('Badge','user_badges');
+		return $this->belongsToMany('lib\gamification\models\Badge','user_badges');
 	}
 
 	//seguidores
@@ -148,9 +151,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	public function getPostionRank()
-{
+	{
     return ($this->newQuery()->where('nb_eval', '>=', $this->nb_eval)->count());
-}
+	}
 
 	public function getDignity($number){
 		$title="";

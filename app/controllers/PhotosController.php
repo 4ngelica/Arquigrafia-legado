@@ -1,6 +1,7 @@
 <?php
 //add
 use lib\utils\ActionUser;
+use lib\gamification\models\Badge;
 
 class PhotosController extends \BaseController {
 

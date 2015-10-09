@@ -5,7 +5,7 @@ use Facebook\FacebookRedirectLoginHelper;
 use Facebook\FacebookRequest;
 use Facebook\FacebookAuthorizationException;
 use Facebook\FacebookRequestException;
-
+use lib\gamification\models\Score;
 
 class UsersController extends \BaseController {
 
@@ -92,7 +92,7 @@ class UsersController extends \BaseController {
        $login =$input["login"];
        $verify_code = str_random(30);
       //create user with a verify code      
-      User::create([
+      $user = User::create([
       'name' => $name,
       'email' => $email,
       'password' => Hash::make($input["password"]),
@@ -100,7 +100,12 @@ class UsersController extends \BaseController {
       'verify_code' => $verify_code       
       ]);
 
-      $user = User::userInformation($login);
+      Score::create(array(
+          'points' => 0,
+          'user_id' => $user->id
+        ));
+
+      // $user = User::userInformation($login);
       $source_page = Request::header('referer');
       ActionUser::printNewAccount($user->id, $source_page, "arquigrafia", "user"); 
 
@@ -580,31 +585,5 @@ class UsersController extends \BaseController {
         ])
     );    
   }
-
-
-  function getRankEval(){
-      $users = array();
-      $u = User::orderBy('nb_eval','DESC')->get();
-      $i=0;
-      foreach ($u as $user) {
-        $users[$i] = array();
-        $users[$i]['id'] = $user->id ;
-        $users[$i]['score'] = $user->nb_eval;
-        $users[$i]['image'] = $user->photo;
-        $users[$i]['name'] = $user->name;
-        
-
-        $i=$i+1;
-        if($i==10){
-          break;
-        }
-
-      }
-   
-      return Response::json($users);
-       
-     
-    }
-
 
 }

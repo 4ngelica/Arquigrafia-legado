@@ -106,6 +106,7 @@ Route::get('/markRead/{id}', 'NotificationsController@read');
 Route::get('/readAll', 'NotificationsController@readAll');
 
 /* GAMIFICATION */
-Route::get('/photos/{id}/get/field', 'QuestionsController@getField');
-Route::post('/photos/{id}/set/field', 'QuestionsController@setField');
-Route::get("/rank/get", 'UsersController@getRankEval');
+Route::get('/photos/{id}/get/field', 'lib\gamification\controllers\QuestionsController@getField');
+Route::post('/photos/{id}/set/field', 'lib\gamification\controllers\QuestionsController@setField');
+Route::get('/rank/get', 'lib\gamification\controllers\ScoresController@getRankEval');
+Route::get('/leaderboard', 'lib\gamification\controllers\ScoresController@getLeaderboard');

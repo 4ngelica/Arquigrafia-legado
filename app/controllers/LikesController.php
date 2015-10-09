@@ -1,6 +1,7 @@
 <?php
 
 use lib\utils\ActionUser;
+use lib\gamification\models\Badge;
 
 class LikesController extends \BaseController {
 

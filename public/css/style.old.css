@@ -720,15 +720,6 @@ a.tooltip_license span
 
 #information_input .loader { display: none; margin: 0 auto; }
 
-/*leaderboard*/
-#leaderboard { width: 100%; height: 100%; position: fixed; top: 0; left: 0; display: none; z-index: 1000; }
-#leaderboard_content { width: 600px; height: 560px; background: #fff; position: fixed; top: 40%; left: 50%; margin: -240px 0 0 -340px; padding: 25px; -moz-border-radius: 2px; border-radius: 2px; display: none; z-index: 1001; } /* position: absolute; */
-#leaderboard_content a.close { float: right; text-align: center; margin-bottom: 10px; cursor: pointer; }
-.user:hover {background: #eee;}
-.user { vertical-align: top;list-style: none;    line-height: 1; font-family: Helvetica, arial, sans-serif; margin:5pt; }
-
-.leaderboard{cursor: pointer; font-size: 1.2em; color: #000;}
-
 /* badges - dar sempre preferencia a classes e não ids */
 #badges_gold, #badges_silver,#badges_bronze,
 .badges_gold, .badges_silver, .badges_bronze {border-radius:50%;width:6px;height:6px; display: inline-block; margin-top:2px;}
@@ -739,3 +730,18 @@ a.tooltip_license span
 #show_gold, #show_silver, #show_bronze,
 .show_gold, .show_silver, .show_bronze {display: block;padding: 5px;width:600px;border: 1px solid black;z-index: 200; display: none;}
 .badges-counter {display: inline-block; margin-right: 6px;}
+
+#leaderboard { font-size: 14px; }
+#leaderboard table { color: #666; border: 1px solid #d0d0d0; border-radius: 2px; }
+#leaderboard thead th { padding: 10px; color: #000; background-color: #f0f0f0; }
+#leaderboard table td { font-size: 14px; text-align: center; padding: 5px; vertical-align: middle; border-top: 1px solid #d0d0d0; }
+/*#leaderboard tr:hover { background-color: #f0f0f0; }*/
+#leaderboard table p { font-family: bold; font-size: 18px; color: #333; margin: 5px; }
+#leaderboard .user_photo_thumbnail { width: 48px; height: auto; }
+#leaderboard .name { text-align: left; }
+#leaderboard .image { text-align: right; }
+p.position { font-size: 20px; }
+#leaderboard .less-than, #leaderboard .greater-than { font-weight: bold; font-size: 14px; }
+#leaderboard .even { background-color: #f0f0f0; }
+#leaderboard a.disabled { color: #aaa; }
+#leaderboard a.disabled:hover { color: #aaa; cursor: default; text-decoration: none; }

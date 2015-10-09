@@ -313,7 +313,7 @@
         @endif
       </hgroup>
 
-      @include('gamification.photo_feedback')
+      @include('photo_feedback')
 
       <div id="description_container">
       @if ( !empty($photos->description) )
