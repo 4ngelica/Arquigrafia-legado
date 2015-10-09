@@ -306,7 +306,7 @@ class PhotosController extends \BaseController {
               $photo->aditionalImageComments = $input["aditionalImageComments"];
           $photo->allowCommercialUses = $input["allowCommercialUses"];
           $photo->allowModifications = $input["allowModifications"];
-
+          $photo->authorized = $input["authorized"];
           $photo->user_id = Auth::user()->id;
           $photo->dataUpload = date('Y-m-d H:i:s');
           $photo->institution_id = Session::get('institutionId');
