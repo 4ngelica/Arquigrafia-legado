@@ -29,34 +29,19 @@
             <tr>
               <th>Posição</th>
               <th colspan="2">Colaborador</th>
-              <th>Pontuação</th>
+              <th>
+                @if ($score_type == 'points')
+                  Pontuação
+                @elseif ($score_type == 'uploads')
+                  Uploads
+                @else
+                  Avaliações
+                @endif
+              </th>
             </tr>
           </thead>
           <tbody>
-            @foreach($users->getCollection()->sortByDesc($score_type) as $user)
-              @if ( $count % 2 == 0)
-                <tr class="even">
-              @else
-                <tr>
-              @endif
-                <td><h2>{{ $count++ }}</h2></td>
-                <td class="image">
-                  <a href="{{ URL::to('/users/' . $user->id) }}">
-                    @if ( ! empty($user->photo) )
-                      <img src="{{ asset($user->photo) }}"
-                        class="user_photo_thumbnail">
-                    @else
-                      <img src="{{ asset("img/avatar-60.png") }}"
-                        class="user_photo_thumbnail">
-                    @endif
-                  </a>
-                </td>
-                <td class="name">
-                  <p>{{ link_to('/users/' . $user->id, $user->name) }}</p>
-                </td>
-                <td><p class="score">{{ $user->$score_type }}</p></td>
-              </tr>
-            @endforeach
+            @include('leaderboard_users')
           </tbody>
         </table>
         <div class="eight columns">
@@ -79,17 +64,19 @@
               class="greater-than"> &gt; </a>
           @endif
         </div>
+        <img class="hidden loader" src="{{ asset('img/ajax-loader.gif') }}">
       </div>
     </div>
   </div>
+  <div class="message_box"></div>
   <script type="text/javascript">
     var paginator = {
       current_page: {{ $users->getCurrentPage() }},
-      max_page: {{ $users->getLastPage() }},
+      last_page: {{ $users->getLastPage() }},
       score_type: '{{ $score_type }}',
       number_items: {{ $users->count() }},
       url: '{{ URL::to('/leaderboard') }}'
     };
   </script>
-  <script type="text/javascript" src={{ asset('/js/leaderboard.js') }}></script>
+  <script type="text/javascript" src={{ asset('/js/gamification/leaderboard.js') }}></script>
 @stop

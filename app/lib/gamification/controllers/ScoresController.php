@@ -22,22 +22,24 @@ class ScoresController extends \BaseController {
 
   public function getLeaderboard() {
     $score_type = \Input::get('type', 'points');
+    if ( ! in_array($score_type, ['points', 'uploads', 'evals']) ) {
+      $score_type = 'points';
+    }
     $users = \User::with($score_type)->paginate(10);
     $count = ($users->getCurrentPage() - 1) * 10 + 1;
+    if ( \Request::ajax() ) {
+      return $this->getNextPage($score_type, $users, $count);
+    }
     return \View::make('leaderboard')
       ->with(compact('users', 'count', 'score_type', 'current_page'));
   }
 
-  public function getNextPage() {
-    $type = \Input::get('type', 'points');
-    $users = \User::with($score_type)->paginate(10);
-    $page = $scores->getCurrentPage();
-    return Response::json([
-        'score_type' => $type,
-        'users' => $users->getItems(),
-        'current_page' => $users->getCurrentPage(),
-        'last_page' => $users->getLastPage()
-      ]);
+  public function getNextPage($score_type, $users, $count) {
+    $view = \View::make('leaderboard_users')
+      ->with(compact('score_type', 'users', 'count'))
+      ->render();
+    $current_page = $users->getCurrentPage();
+    return \Response::json(compact('score_type', 'current_page', 'view'));
   }
 
 
