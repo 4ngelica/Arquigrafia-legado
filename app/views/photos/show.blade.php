@@ -410,7 +410,7 @@
       </div>
       <div id="workdate_container">
       @if ( !empty($photos->workdate) && $photos->getFormatWorkdateAttribute($photos->workdate,$photos->workDateType) != null )
-        <h4>Data da Obra:</h4>
+        <h4>Data de conclusão da obra:</h4>
         <p>
           <a href="{{ URL::to("/search?q=".$photos->workdate."&t=work") }}">
             <!--$photos->translated_work_date -->

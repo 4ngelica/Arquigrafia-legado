@@ -197,13 +197,15 @@ class Date {
 		
 		if($date != null && $type != null){
 			if ($type == "year"){
-				return $date;
+				return "Ano de ".$date;
 			}
 			if ($type == "decade"){
-				if($date =="BD")
+				if($date =="BD"){
 					return "Anterior ao ano de 1401";
-				else 
-					return "Décadas de ".$date;
+				}else{
+					$date = explode(" ", $date);
+					return "Entre ".$date[0]." e ".$date[2];
+				} 
 			}
 			if ($type == "century"){
 				return "Século ".$date;
