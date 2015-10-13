@@ -16,20 +16,45 @@
     <div class="twelve columns">
       <div id="leaderboard" class="ten columns offset-by-one">
         <h1>Quadro dos Maiores Colaboradores</h1>
-        <p>
-          Ordenar por número de {{ Form::select('score_type',
-            [ 
-              'points' => 'pontos',
-              'uploads' => 'uploads',
-              'evaluations' => 'avaliações'
-            ], $score_type) }}
-        </p>
+        <div class="two columns alpha omega">
+          <p>
+            @if ($users->getCurrentPage() <= 1)
+              <a id="less" href="#" class="disabled less-than" onclick="return false;"> &lt; </a>
+            @else
+              <a id="less"
+                href="{{ URL::to('/leaderboard?type=' . $score_type . '&page=' . ($users->getCurrentPage() - 1)) }}"
+                class="less-than"> &lt; </a>
+            @endif
+            &nbsp;
+            {{ Form::text('page', $users->getCurrentPage(),
+              array('style' => 'width: 30px;', 'class' => 'page_number')) }}
+            / {{ $users->getLastPage() }}
+            &nbsp;
+            @if ($users->getCurrentPage() >= $users->getLastPage())
+              <a id="greater" href="#" class="disabled greater-than" onclick="return false;"> &gt; </a>
+            @else
+              <a id="greater"
+                href="{{ URL::to('/leaderboard?type=' . $score_type . '&page=' . ($users->getCurrentPage() + 1)) }}"
+                class="greater-than"> &gt; </a>
+            @endif
+          </p>
+        </div>
+        <div class="eight columns omega">
+          <p class="right">
+            Ordenar por número de {{ Form::select('score_type',
+              [ 
+                'points' => 'pontos',
+                'uploads' => 'uploads',
+                'evals' => 'avaliações'
+              ], $score_type, array('class' => 'score_type')) }}
+          </p>
+        </div>
         <table class="form-table row" width="100%" cellspacing="0" cellpadding="0">
           <thead>
             <tr>
               <th>Posição</th>
               <th colspan="2">Colaborador</th>
-              <th>
+              <th class='score_type_header'>
                 @if ($score_type == 'points')
                   Pontuação
                 @elseif ($score_type == 'uploads')
@@ -44,7 +69,7 @@
             @include('leaderboard_users')
           </tbody>
         </table>
-        <div class="eight columns">
+        <div class="two columns alpha">
           @if ($users->getCurrentPage() <= 1)
             <a id="less" href="#" class="disabled less-than" onclick="return false;"> &lt; </a>
           @else
@@ -53,7 +78,8 @@
               class="less-than"> &lt; </a>
           @endif
           &nbsp;
-          {{ Form::text('page', $users->getCurrentPage(), array('style' => 'width: 30px;')) }}
+          {{ Form::text('page', $users->getCurrentPage(),
+            array('style' => 'width: 30px;', 'class' => 'page_number')) }}
           / {{ $users->getLastPage() }}
           &nbsp;
           @if ($users->getCurrentPage() >= $users->getLastPage())
