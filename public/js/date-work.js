@@ -1,13 +1,18 @@
 function date_visibility(id) {
        var e = document.getElementById(id);        
-
+       //alert($(e).attr("id"));
+       //alert("id="+id);
        if(e.style.display == 'none'){
           e.style.display = 'block'; //alert("aparece");
        }else{
           e.style.display = 'none';
           //alert("esconde");
         }
-       $("#answer_date").text(""); 
+        if(id == "otherDate")
+          $("#answer_date").text(""); 
+        else
+          $("#answer_date_image").text(""); 
+       
 }
 
 
@@ -17,15 +22,33 @@ function retrieveYearDate(year){
 }
 
 function retrieveCentury(century){
-    //alert(century);
-    $('#century').val(century);
+   // alert("N="+century);
+    //if(type=="workDate"){
+      $('#century').val(century);
+    /*}else{
+      $('#century_image').val(century);
+    } */ 
+}
 
+function retrieveCenturyImage(century){
+    // alert("I="+century);
+    $('#century_image').val(century);
 }
 
 function retrieveDecade(decade){
-    
-  $('#decade_select').val(decade);
+ //   if(type=="workDate"){
+        $('#decade_select').val(decade);
+   // }else{
+     //   $('#decade_select_image').val(decade);
+   // }          
+}
 
+function retrieveDecadeImage(decade){
+   // if(type=="workDate"){
+   //     $('#decade_select').val(decade);
+   // }else{
+        $('#decade_select_image').val(decade);
+   // }          
 }
 
 //function show
@@ -149,10 +172,28 @@ var period = {
  function showPeriodCentury(century){
     var period_century = period[century];
 
-    if(century != "NS"){
+    //if (type=="workDate"){
+        if(century != "NS"){
             $("#period_select").text("Período: "+period_century); 
         }else{
             $("#period_select").text("");
+        }
+    /*} else{
+        if(century != "NS"){
+            $("#period_select_image").text("Período: "+period_century); 
+        }else{
+            $("#period_select_image").text("");
+        }
+    }*/
+ }
+
+function showPeriodCenturyImage(century){
+    var period_century = period[century];
+
+    if(century != "NS"){
+            $("#period_select_image").text("Período: "+period_century); 
+        }else{
+            $("#period_select_image").text("");
         } 
  }
 
@@ -161,17 +202,49 @@ function filterDecadesOfCentury(century){
         lcns = period[century] //|| []; 
         
         var decadeRange = decade[century]|| []; //alert(decadeRange);
-        //alert('-lcns='+lcns+'arra'+lcns[0]+'decadR='+decadeRange);
-        if(century != "NS"){
-            $("#period_select").text("Período: "+lcns);
-        }else{
-            $("#period_select").text("");
-        }       
+        //alert('-lcns='+lcns+'arra'+lcns[0]+'decadR='+decadeRange);      
+        period_text(century,lcns,"work");
 
         var i=0;
         var html = $.map(decadeRange, function(decRange){    
         i++;
+        return option_value(decRange,i);
 
+        }).join('');
+        $decade.html(html);
+}
+
+function filterDecadesOfCenturyofImage(century){
+      var $decade = $('#decade_select_image');
+      var i=0;
+        lcns = period[century] //|| []; 
+        
+        var decadeRange = decade[century]|| []; //alert(decadeRange);
+        //alert('-lcns='+lcns+'arra'+lcns[0]+'decadR='+decadeRange);
+        period_text(century,lcns,"image");    
+        var html = $.map(decadeRange, function(decRange){    
+        i++;
+        return option_value(decRange,i);
+
+        }).join('');
+        $decade.html(html);
+}
+
+function period_text(century,period,type){
+    if(century != "NS"){
+        if(type == "work")
+            $("#period_select").text("Período: "+lcns);
+        else
+            $("#period_select_image").text("Período: "+lcns);      
+    }else{
+        if(type == "work")
+            $("#period_select").text("");
+        else  
+            $("#period_select_image").text("");
+    }  
+}
+
+function option_value(decRange,i){
         if(century == "NS"){
             if(i==1){
               txtDecRange = '<option value="">' + decRange + '</option>';            
@@ -191,10 +264,8 @@ function filterDecadesOfCentury(century){
         }
         
         return txtDecRange; 
-
-        }).join('');
-        $decade.html(html);
 }
+
 
 function close_other_date(id) {
        var e = document.getElementById(id);
@@ -202,22 +273,35 @@ function close_other_date(id) {
        if(e.style.display == 'block')
           e.style.display = 'none';
        else
-          e.style.display = 'block';      
-       resultSelectDateWork();
+          e.style.display = 'block';  
+
+       resultSelectDateWork(e);
      }
 
 function editDateWork(){
-  var idDiv = "otherDate";
+  var idDiv = "otherDate";   
   date_visibility(idDiv);
 }
 
- function resultSelectDateWork(){
-      var century = $('#century').val();
-      var decade = $('#decade_select').val();
+function editDateImage(){
+  var idDiv = "date_img_inaccurate";   
+  date_visibility(idDiv);
+}
+
+ function resultSelectDateWork(idArea){
+      var idDateArea = $(idArea).attr("id");
+      var century = "";
+      var decade = "";
       var linkEditar = "";
       var result = "";
-      
-      
+      if(idDateArea != "date_img_inaccurate"){
+          century = $('#century').val();
+          decade = $('#decade_select').val();
+      }else{
+          century = $('#century_image').val();
+          decade = $('#decade_select_image').val();
+      }  
+            
       if(century != "NS" && century != "Before"){
         century = "Século: "+century;
       }else if(century == "Before"){
@@ -236,14 +320,22 @@ function editDateWork(){
         decade = ""; 
       }
 
-      if(century != "" || decade !=""){
-          linkEditar = ' &nbsp;&nbsp;<a onclick="editDateWork()"; class="linkEdit">Editar</a>';
-          result = century+" "+decade+" "+linkEditar;
-      }
+      if(idDateArea == "date_img_inaccurate"){
+          //alert("imgh");
+          if(century != "" || decade !=""){
+              linkEditar = ' &nbsp;&nbsp;<a onclick="editDateImage()"; class="linkEdit">Editar</a>';
+              result = century+" "+decade+" "+linkEditar;
+          }            
+          $("#answer_date_image").html(result);
+      }else{ //otherDate
+          //alert("work");
+          if(century != "" || decade !=""){
+              linkEditar = ' &nbsp;&nbsp;<a onclick="editDateWork()"; class="linkEdit">Editar</a>';
+              result = century+" "+decade+" "+linkEditar;
+          }            
+          $("#answer_date").html(result);
+      }            
       
-      //alert('cent'+century+'dec'+decade);
-    //  $("#answer_date").text(century+" "+decade+" "+linkEditar);
-      $("#answer_date").html(result);
  }    
 
 function cleanToLoad(){
@@ -273,16 +365,16 @@ jQuery(function($) {
         var century = $(this).val(); 
         filterDecadesOfCentury(century);        
     });
+
+    
     //
     $('#workDate').change(function () {
         
         $("#answer_date").text("");
         $("#period_select").text("");        
-        filterDecadesOfCentury("NS");
-        $("#century").val("");
-        
-        closeArea();
-       
+        filterDecadesOfCentury("NS");       
+        $("#century").val("");  
+        closeArea();        
     });
 
     $('#decade_select').change(function () { 
@@ -290,5 +382,24 @@ jQuery(function($) {
        // $("#century").val("");
       //  $("#period_select").text("");
 
+    });
+    // Date Image
+    $('#century_image').change(function () {
+        $("#decade_select_img").val("");
+        $("#datePickerImageDate").val("");
+        var century = $(this).val();
+        filterDecadesOfCenturyofImage(century);        
+    });
+
+    $("#datePickerImageDate").change(function () {         
+        $("#answer_date_image").text("");
+        $("#period_select_image").text("");        
+        filterDecadesOfCenturyofImage("NS");       
+        $("#century_image").val("");  
+        //closeArea();        
+    });
+
+    $('#decade_select_image').change(function () { 
+        $("#datePickerImageDate").val("");
     });
 });

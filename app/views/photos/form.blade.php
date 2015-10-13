@@ -268,11 +268,20 @@
 							</tr> -->
 							 <tr> <td>               
          						<div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
-         						<div class="two columns omega">
+         						<div class="fivemidUpdateForm columns omega">
           						   <p>{{ Form::text('photo_imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }} 
-         							<br> <div class="error">{{ $errors->first('photo_imageDate') }}</div>
-         							</p>       
-        							</div>
+         							<!--<br> <div class="error">{{ $errors->first('photo_imageDate') }}</div>-->
+         								<span class="space_txt_element">Não sabe a data precisa? 
+         									<a onclick="date_visibility('date_img_inaccurate');" >Clique aqui.</a> 
+         								</span>
+         							</p>
+         							<p>
+         							<div id="date_img_inaccurate" style="display:none;">         							
+         								@include('photos.includes.dateImage')         						    
+         							</div>
+         							<label id="answer_date_image" class="resultDateWork"></label>
+         						</p>       
+        						</div>
         						</td>
         						</tr>       
 							<tr><td>
@@ -435,13 +444,26 @@
 					e.preventDefault();
 			}); 
 
+		
 
-
-
+		@if( Input::old('century_image'))		
+			var centuryInputImage = "{{Input::old('century_image')}}";
+			//alert(centuryInputImage);
+			showPeriodCenturyImage(centuryInputImage);
+			retrieveCenturyImage(centuryInputImage);			
+		@endif
+		
+		@if( Input::old('decade_select_image'))	
+			var decadeInputImage = "{{Input::old('decade_select_image')}}";
+			//retrieveDecade(decadeInputImage,"image");		
+			retrieveDecadeImage(decadeInputImage);		
+			getCenturyOfDecade(decadeInputImage); 	
+		@endif
 
 
 		@if( Input::old('century'))				
 			var centuryInput = "{{Input::old('century')}}";
+			//alert(centuryInput);
 			showPeriodCentury(centuryInput);
 			retrieveCentury(centuryInput);			
 		@endif
@@ -452,25 +474,37 @@
 			getCenturyOfDecade(decadeInput); 	
 		@endif
 
+		
+
+
 		@if($dates == false)	
 			//alert("{{$dates}}");	
+			
 		 	window.onload = cleanToLoad;
 		@else 
-			//alert("{{$dates}}");	
-		 	window.onload = resultSelectDateWork;	
+			alert("{{$dates}}");
+			@if(Input::old('century_image')!="" || Input::old('decade_select_image')!="")
+				alert("DEimag");
+				window.onload = resultSelectDateWork("date_img_inaccurate");	
+			@endif
+
+			@if(Input::old('century') || Input::old('decade_select')){
+			 	window.onload = resultSelectDateWork("otherDate");	
+			@endif	
+
 		@endif
 
-		@if( Input::old('dates'))				
+		@if(Input::old('dates'))				
 		 	window.onload = resultSelectDateWork;
 		@endif
-		});
+
+		});	
 
 		$(function() {
     	
-    	$( "#datePickerImageDate" ).datepicker({
-      	dateFormat:'dd/mm/yy'
-    	}
-      	);
+    		$( "#datePickerImageDate" ).datepicker({
+      		dateFormat:'dd/mm/yy'
+    		});
     	});
 			
 	</script>
