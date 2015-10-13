@@ -325,7 +325,7 @@
          							</span>
          						</p>
          						<p>
-         							<div id="otherDate" style="display:none;">         							
+         							<div id="otherDate" class="div_institutional" style="display:none;">         							
          								@include('photos.includes.dateWork')
          						    	<!--<a onclick="close_other_date('otherDate');" class="btn right" >OK</a>-->
          							</div>

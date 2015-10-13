@@ -3,8 +3,8 @@
     <p>   
       <label>Século:&nbsp;</label>
       <select id="century" name="century" class="date" >
-        <option value="NS">Escolha o Século</option>
-        <option value="Before">Antes do Século XV</option>
+        <option value="NS">Escolha o século</option>
+        <option value="Before">Antes do século XV</option>
         <option value="XV">Século XV</option>
         <option value="XVI">Século XVI</option>
         <option value="XVII">Século XVII</option>
@@ -13,8 +13,8 @@
         <option value="XX">Século XX</option>
         <option value="XXI">Século XXI</option>
       </select>
-       &nbsp;&nbsp;    
-      <span class"space_txt_element" id="period_select" name="period_select"></span>
+           
+      <span class="space_period" id="period_select" name="period_select"></span>
       <br>
       <br>
       <label>Década:</label>

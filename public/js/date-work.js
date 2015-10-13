@@ -237,7 +237,7 @@ function editDateWork(){
       }
 
       if(century != "" || decade !=""){
-          linkEditar = ' <a onclick="editDateWork()"; class="linkEdit">Editar</a>';
+          linkEditar = ' &nbsp;&nbsp;<a onclick="editDateWork()"; class="linkEdit">Editar</a>';
           result = century+" "+decade+" "+linkEditar;
       }
       

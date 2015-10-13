@@ -255,7 +255,7 @@
 							}
 						</script>
 					</div>
-					<div  style="padding:0 0 0 2px; width: 535px; margin-right: 0; float: left; display: inline; margin-left: 10px; margin-bottom: 20px;">
+					<div  style="padding:0 0 0 1px; width: 539px; margin-right: 0; float: left; display: inline; margin-left: 8px; margin-bottom: 20px;">
 
 						<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
 							<!--<tr> class="six columns omega row"
@@ -288,7 +288,7 @@
 
 							<tr><td>                
          						<div class="two columns alpha"><p>{{ Form::label('photo_workDate', 'Ano de conclusão da obra:' ) }}</p></div>
-         						<div class="fivemid columns omega">         						
+         						<div class="fivemidUpdateForm columns omega">         						
           						<p>
           							@include('photos.includes.dateList')          							
          							<span class="space_txt_element">Não sabe a data precisa? 

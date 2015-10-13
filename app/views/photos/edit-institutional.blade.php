@@ -265,7 +265,7 @@
                       <a  onclick="date_visibility('otherDate');" >Clique aqui.</a> </span>                      
                   </p>
                   <p>
-                    <div id="otherDate" style="display:none;">                      
+                    <div id="otherDate" class="div_institutional_edit" style="display:none;">                      
                          @include('photos.includes.dateWork')
                       </div>
                     <label id="answer_date" class="resultDateWork"></label>
