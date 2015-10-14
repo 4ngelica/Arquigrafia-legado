@@ -16,7 +16,7 @@
   <span style="font-size:10px">O Arquigrafia preza pela qualidade da informação e preferimos que o campo fique sem a data a conter informações incorretas.</span>          
   </div>  
   <!-- <div class="container">-->
-    <?php $date_field = 'dataWork' ?>
+    <?php $date_field = ''; ?>
     <!--<div class="twelve columns"> -->
    <!-- <div class="eight columns">
     <div class="six columns" style="padding: 0 0 0 -3px;">
