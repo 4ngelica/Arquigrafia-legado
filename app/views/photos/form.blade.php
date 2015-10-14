@@ -270,10 +270,10 @@
          						<div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
          						<div class="fivemidUpdateForm columns omega">
           						   <p>{{ Form::text('photo_imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }} 
-         							<!--<br> <div class="error">{{ $errors->first('photo_imageDate') }}</div>-->
          								<span class="space_txt_element">Não sabe a data precisa? 
          									<a onclick="date_visibility('date_img_inaccurate');" >Clique aqui.</a> 
          								</span>
+         							<br> <div id="error_image_date" class="error">{{ $errors->first('photo_imageDate') }}</div>	
          							</p>
          							<p>
          							<div id="date_img_inaccurate" style="display:none;">         							
@@ -443,8 +443,9 @@
 				if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
 					e.preventDefault();
 			}); 
-
-		
+		@if( Input::old('photo_imageDate'))		
+			cleanCenturyDecade();			
+		@endif 		
 
 		@if( Input::old('century_image'))		
 			var centuryInputImage = "{{Input::old('century_image')}}";
@@ -478,39 +479,16 @@
 
 
 		@if($dates == false) 
-		 	window.onload = cleanToLoad;
-		@else 
-			//alert("{{$dates}}");
-			if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
-				//alert("iamge");
-				window.onload = resultSelectDateWork("date_img_inaccurate");	
-			}
-			if("{{Input::old('century')}}" != "" || "{{Input::old('decade_select')}}" != "" ){
-				//alert("worj");
-				window.onload = resultSelectDateWork("otherDate");	
-			}
-			/*
-			@if(Input::old('century_image')!="" || Input::old('decade_select_image')!="")
-				alert("DEimag");
-				window.onload = resultSelectDateWork("date_img_inaccurate");	
-			@endif
-			
-			@if(Input::old('century') || Input::old('decade_select')){
-			 	window.onload = resultSelectDateWork("otherDate");	
-			@endif	*/
-
+		 	window.onload = cleanToLoad;		
 		@endif
 
-		/*@if(Input::old('dates'))				
-		 	window.onload = resultSelectDateWork;
-		@endif */
-
 		if("{{Input::old('dates','true')}}"){
-			if("{{Input::old('century')}}" != "" || "{{Input::old('decade_select')}}" != "" ){
-				window.onload = resultSelectDateWork("otherDate");
-			}	
+				
 			if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
 				window.onload = resultSelectDateWork("date_img_inaccurate");	
+			}
+			if("{{Input::old('century')}}" != "" || "{{Input::old('decade_select')}}" != "" ){
+				window.onload = resultSelectDateWork("otherDate");
 			}
 		}
 

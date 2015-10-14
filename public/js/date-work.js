@@ -23,24 +23,16 @@ function retrieveYearDate(year){
 
 function retrieveCentury(century){
    // alert("N="+century);
-    //if(type=="workDate"){
-      $('#century').val(century);
-    /*}else{
-      $('#century_image').val(century);
-    } */ 
+      $('#century').val(century); 
 }
 
 function retrieveCenturyImage(century){
-    // alert("I="+century);
+     //alert("I="+century);
     $('#century_image').val(century);
 }
 
 function retrieveDecade(decade){
- //   if(type=="workDate"){
         $('#decade_select').val(decade);
-   // }else{
-     //   $('#decade_select_image').val(decade);
-   // }          
 }
 
 function retrieveDecadeImage(decade){
@@ -51,24 +43,15 @@ function retrieveDecadeImage(decade){
    // }          
 }
 
-//function show
+function cleanCenturyDecadeImage(){
+        $("#answer_date_image").text("");
+        $("#period_select_image").text("");        
+        filterDecadesOfCenturyofImage("NS");       
+        $("#century_image").val(""); 
 
-
- $(function() {
-    
-    /*$( "#workDate" )
-      .selectmenu()
-      .selectmenu( "menuWidget" )
-        .addClass( "overflow" );
-     $( "#country" )
-      .selectmenu()
-      .selectmenu( "menuWidget" )
-        .addClass( "overflow" );   
-     $( "#state" )
-      .selectmenu()
-      .selectmenu( "menuWidget" )
-        .addClass( "overflow" );   */    
-  });
+        alert("clean"); 
+        //closeArea("date_img_inaccurate");  
+}
 
  
 var period = {
@@ -190,24 +173,16 @@ var period = {
  function showPeriodCentury(century){
     var period_century = period[century];
 
-    //if (type=="workDate"){
         if(century != "NS"){
             $("#period_select").text("Período: "+period_century); 
         }else{
             $("#period_select").text("");
         }
-    /*} else{
-        if(century != "NS"){
-            $("#period_select_image").text("Período: "+period_century); 
-        }else{
-            $("#period_select_image").text("");
-        }
-    }*/
  }
 
 function showPeriodCenturyImage(century){
     var period_century = period[century];
-
+   // alert(century);
     if(century != "NS"){
             $("#period_select_image").text("Período: "+period_century); 
         }else{
@@ -365,10 +340,17 @@ function cleanToLoad(){
    $("#decade_select").val("");
    $("#answer_date").text("");
    $("#period_select").text("");
+   //
+   $("#datePickerImageDate").val("");
+   $("#century_image").val("");
+   $("#decade_select_image").val("");
+   $("#answer_date_image").text("");
+   $("#period_select_image").text("");
+
 }
 
-function closeArea(){
-        var idDiv = "otherDate";
+function closeArea(idDiv){
+        //var idDiv = "otherDate";
         var e = document.getElementById(idDiv);
         if(e.style.display == 'block'){
           e.style.display = 'none'; 
@@ -396,7 +378,7 @@ jQuery(function($) {
         $("#period_select").text("");        
         filterDecadesOfCentury("NS");       
         $("#century").val("");  
-        closeArea();        
+        closeArea("otherDate");        
     });
 
     $('#decade_select').change(function () { 
@@ -409,7 +391,10 @@ jQuery(function($) {
     $('#century_image').change(function () {
         $("#decade_select_img").val("");
         $("#datePickerImageDate").val("");
-        $("#period_select_image").text(""); 
+        $("#period_select_image").text("");
+        $("#error_image_date").val(""); 
+       // $("#error_image_date").text(""); 
+        
         var century = $(this).val();
         filterDecadesOfCenturyofImage(century);        
     });
@@ -419,7 +404,7 @@ jQuery(function($) {
         $("#period_select_image").text("");        
         filterDecadesOfCenturyofImage("NS");       
         $("#century_image").val("");  
-        //closeArea();        
+        closeArea("date_img_inaccurate");        
     });
 
     $('#decade_select_image').change(function () { 

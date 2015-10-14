@@ -337,7 +337,7 @@
 						</table>
 					</div>
 					<br class="clear">
-					<div class="six columns alpha row">
+					<div class="eight columns alpha row">
 						<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
 							<tr><td>
 								<div class="two columns alpha"><p>{{ Form::label('country', 'País*:') }}</p></div>
@@ -435,11 +435,20 @@
 							</tr>
 							<tr> <td>               
          						<div class="two columns alpha"><p>{{ Form::label('imageDate', 'Data da imagem:') }}</p></div>
-         						<div class="two columns omega">
-          						   <p>{{ Form::text('imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }} 
-         							<br> <div class="error">{{ $errors->first('imageDate') }}</div>
+         						<div class="fivemidUpdateInst columns omega">
+          						   	<p>{{ Form::text('imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }} 
+         								<span class="space_txt_element">Não sabe a data precisa? 
+         									<a onclick="date_visibility('date_img_inaccurate');" >Clique aqui.</a> 
+         								</span>
+         							<br> <div id="error_image_date" class="error">{{ $errors->first('imageDate') }}</div>
+         						   	</p> 
+         						   	<p>
+         								<div id="date_img_inaccurate" style="display:none;">         							
+         									@include('photos.includes.dateImage')         						    
+         								</div>
+         								<label id="answer_date_image" class="resultDateWork"></label>
          							</p>       
-        							</div>
+        						</div>
         						</tr>   
         						</td>
 							<tr><td>
@@ -619,6 +628,10 @@
 			showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));		
 		@endif
 
+		@if( Input::old('imageDate'))	
+		//	cleanCenturyDecadeImage();			
+		@endif 	
+
 		@if( Input::old('century'))				
 			var centuryInput = "{{Input::old('century')}}";
 			showPeriodCentury(centuryInput);
@@ -631,15 +644,36 @@
 			getCenturyOfDecade(decadeInput); 		
 		@endif
 
-			@if($dates == false)				
-		 		window.onload = cleanToLoad;
-		 	@else
-		 		window.onload = resultSelectDateWork;	
-			@endif
+		@if( Input::old('century_image'))		
+			var centuryInputImage = "{{Input::old('century_image')}}";
+			//alert(centuryInputImage);
+			showPeriodCenturyImage(centuryInputImage);
+			retrieveCenturyImage(centuryInputImage);			
+		@endif
+		
+		@if( Input::old('decade_select_image'))	
+			var decadeInputImage = "{{Input::old('decade_select_image')}}";			
+			retrieveDecadeImage(decadeInputImage);		
+			getCenturyOfDecade(decadeInputImage,"imageDate"); 	
+		@endif
 
-			@if( Input::old('dates'))				
-		 		window.onload = resultSelectDateWork;
-			@endif
+		@if($dates == false) 
+		 	window.onload = cleanToLoad;
+		@endif
+
+		if("{{Input::old('dates','true')}}"){
+			if("{{Input::old('century')}}" != "" || "{{Input::old('decade_select')}}" != "" ){
+				window.onload = resultSelectDateWork("otherDate");
+			}	
+		}
+
+		if("{{Input::old('dateImage','true')}}"){	
+			if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
+				window.onload = resultSelectDateWork("date_img_inaccurate");	
+			}
+		}
+		
+
 
    });
 </script>
