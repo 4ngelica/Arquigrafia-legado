@@ -94,6 +94,7 @@ class PhotosController extends \BaseController {
     $centuryImageInput = null;
     $decadeImageInput = null;
     $dates = false;
+    $dateImage = false;
 
     if ( Session::has('tags') )
     {
@@ -113,11 +114,11 @@ class PhotosController extends \BaseController {
      if ( Session::has('centuryImageInput') ) {
        $centuryImageInput = Session::pull('centuryImageInput');
       //dd($century);
-       $dates = true;
+       $dateImage = true;
       }
     if ( Session::has('decadeImageInput') ){
        $decadeImageInput = Session::pull('decadeImageInput');
-       $dates = true;
+       $dateImage = true;
      }
 
     $input['autoOpenModal'] = null;   
@@ -129,7 +130,9 @@ class PhotosController extends \BaseController {
       'centuryImageInput'=> $centuryImageInput,
       'decadeImageInput' =>  $decadeImageInput,
       'autoOpenModal'=>$input['autoOpenModal'],
-      'dates' => $dates
+      'dates' => $dates,
+      'dateImage' => $dateImage,
+      
       ]);
 
   }
@@ -179,7 +182,7 @@ class PhotosController extends \BaseController {
 
     if ( Session::has('centuryImageInput') ) {
        $centuryImageInput = Session::pull('centuryImageInput');
-      //dd($century);
+        //echo "centuryImg";
        $dateImage = true;
       }
     if ( Session::has('decadeImageInput') ){
@@ -321,7 +324,7 @@ class PhotosController extends \BaseController {
           }
 
           if(!empty($input["imageDate"])){             
-             $photo->dataCriacao = $input["imageDate"];
+             $photo->dataCriacao = $this->date->formatDate($input["imageDate"]);
              $photo->imageDateType = "date";
           }elseif(!empty($input["decade_select_image"])){             
             $photo->dataCriacao = $input["decade_select_image"];
@@ -414,7 +417,7 @@ class PhotosController extends \BaseController {
           
           $input['photoId'] = $photo->id;
           $input['dates'] = true;
-           $input['dateImage'] = true;
+          $input['dateImage'] = true;
           //return Redirect::to("/photos/{$photo->id}");        
           return Redirect::back()->withInput($input);
         
@@ -795,7 +798,7 @@ class PhotosController extends \BaseController {
        }
 
       if(!empty($input["photo_imageDate"])){             
-             $photo->dataCriacao = $input["photo_imageDate"];
+             $photo->dataCriacao = $this->date->formatDate($input["photo_imageDate"]);
              $photo->imageDateType = "date";
        }elseif(!empty($input["decade_select_image"])){             
             $photo->dataCriacao = $input["decade_select_image"];
@@ -883,6 +886,7 @@ class PhotosController extends \BaseController {
       $photo->saveMetadata(strtolower($ext));
       $input['photoId'] = $photo->id;
       $input['dates'] = true;
+      $input['dateImage'] = true;
       //return Redirect::to("/photos/{$photo->id}");
       return Redirect::back()->withInput($input);
 

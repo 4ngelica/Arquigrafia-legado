@@ -443,9 +443,7 @@
 				if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
 					e.preventDefault();
 			}); 
-		@if( Input::old('photo_imageDate'))		
-			cleanCenturyDecade();			
-		@endif 		
+		 		
 
 		@if( Input::old('century_image'))		
 			var centuryInputImage = "{{Input::old('century_image')}}";
@@ -482,15 +480,18 @@
 		 	window.onload = cleanToLoad;		
 		@endif
 
-		if("{{Input::old('dates','true')}}"){
-				
-			if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
-				window.onload = resultSelectDateWork("date_img_inaccurate");	
-			}
+		if({{Input::old('dates','true')}}){
 			if("{{Input::old('century')}}" != "" || "{{Input::old('decade_select')}}" != "" ){
 				window.onload = resultSelectDateWork("otherDate");
 			}
 		}
+
+		if({{Input::old('dateImage','true')}}){
+			if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
+				window.onload = resultSelectDateWork("date_img_inaccurate");
+			}
+		}
+
 
 
 		});	

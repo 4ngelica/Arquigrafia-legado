@@ -49,7 +49,7 @@ function cleanCenturyDecadeImage(){
         filterDecadesOfCenturyofImage("NS");       
         $("#century_image").val(""); 
 
-        alert("clean"); 
+       // alert("clean"); 
         //closeArea("date_img_inaccurate");  
 }
 
@@ -105,7 +105,7 @@ var period = {
     if(decade != "BD" && decade != null){ 
         decadeDigit = decade.substring(0,4);
         century = centuryOfDecade(decadeDigit);
-        showPeriodCentury(century);
+        //showPeriodCentury(century);
 
         if(eventType == "workDate"){
             $('#century').val(century);       
@@ -119,7 +119,7 @@ var period = {
 
     }else if(decade == "BD"){ 
         century = "Before";
-        showPeriodCentury(century);
+        //showPeriodCentury(century);
         if(eventType == "workDate"){
             $('#century').val(century);        
             filterDecadesOfCentury(century);
@@ -127,12 +127,12 @@ var period = {
             $('#century_image').val(century);        
             filterDecadesOfCenturyofImage(century);
         }
-        //$("#period_select").text("");//(Período:  Anterior ao ano de 1401");
+        
     }else{ //decade_select ==null
         if(eventType == "workDate"){
           $("#decade_select").val("");
           $("#century").val(""); 
-          //$("#decade_select").val("");
+          
           $("#answer_date").text("");
           $("#period_select").text("");
         }else{
@@ -172,7 +172,7 @@ var period = {
 
  function showPeriodCentury(century){
     var period_century = period[century];
-
+     // alert("normal="+century);
         if(century != "NS"){
             $("#period_select").text("Período: "+period_century); 
         }else{
@@ -182,7 +182,7 @@ var period = {
 
 function showPeriodCenturyImage(century){
     var period_century = period[century];
-   // alert(century);
+   //alert("image="+century);
     if(century != "NS"){
             $("#period_select_image").text("Período: "+period_century); 
         }else{

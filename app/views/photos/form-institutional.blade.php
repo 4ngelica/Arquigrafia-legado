@@ -628,12 +628,11 @@
 			showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));		
 		@endif
 
-		@if( Input::old('imageDate'))	
-		//	cleanCenturyDecadeImage();			
-		@endif 	
+			
 
-		@if( Input::old('century'))				
+		@if( Input::old('century'))		
 			var centuryInput = "{{Input::old('century')}}";
+			//alert(centuryInput);
 			showPeriodCentury(centuryInput);
 			retrieveCentury(centuryInput);			
 		@endif
@@ -641,7 +640,7 @@
 		@if( Input::old('decade_select'))	
 			var decadeInput = "{{Input::old('decade_select')}}";
 			retrieveDecade(decadeInput);	
-			getCenturyOfDecade(decadeInput); 		
+			getCenturyOfDecade(decadeInput,"workDate"); 		
 		@endif
 
 		@if( Input::old('century_image'))		
@@ -652,7 +651,8 @@
 		@endif
 		
 		@if( Input::old('decade_select_image'))	
-			var decadeInputImage = "{{Input::old('decade_select_image')}}";			
+			var decadeInputImage = "{{Input::old('decade_select_image')}}";	
+
 			retrieveDecadeImage(decadeInputImage);		
 			getCenturyOfDecade(decadeInputImage,"imageDate"); 	
 		@endif
@@ -661,17 +661,39 @@
 		 	window.onload = cleanToLoad;
 		@endif
 
-		if("{{Input::old('dates','true')}}"){
+		if({{Input::old('dates','true')}}){
 			if("{{Input::old('century')}}" != "" || "{{Input::old('decade_select')}}" != "" ){
 				window.onload = resultSelectDateWork("otherDate");
-			}	
+			}
 		}
 
-		if("{{Input::old('dateImage','true')}}"){	
+		if({{Input::old('dateImage','true')}}){
+			if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
+				window.onload = resultSelectDateWork("date_img_inaccurate");
+			}
+		}
+
+		
+		//alert("{{Input::old('imageDate')}}");
+		/*if({{Input::old('dates','true')}}){ 
 			if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
 				window.onload = resultSelectDateWork("date_img_inaccurate");	
 			}
-		}
+
+		} 	
+
+		if("{{Input::old('imageDate')}}" == ""){ 			
+			if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
+				window.onload = resultSelectDateWork("date_img_inaccurate");	
+			}
+		} */
+
+		
+
+		//@if(Input::old('dateImage'))	
+		//	alert("?l??");
+			
+		//@endif
 		
 
 
