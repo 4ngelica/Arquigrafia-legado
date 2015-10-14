@@ -765,7 +765,7 @@ class PhotosController extends \BaseController {
 
       /*if ( !empty($input["photo_imageDate"]) )
       $photo->dataCriacao = $input["photo_imageDate"]; */
-
+      //dd($input["decade_select_image"]);
       if(!empty($input["photo_imageDate"])){             
              $photo->dataCriacao = $input["photo_imageDate"];
              $photo->imageDateType = "full";

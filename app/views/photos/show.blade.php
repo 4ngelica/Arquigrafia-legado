@@ -389,11 +389,12 @@
       @endif
       </div>
       <div id="dataCriacao_container">
-      @if ( !empty($photos->dataCriacao) )
+      @if ( !empty($photos->dataCriacao) && $photos->getFormatDataCriacaoAttribute($photos->dataCriacao,$photos->imageDateType) != null)
         <h4>Data da Imagem:</h4>
         <p>
           <a href="{{ URL::to("/search?q=".$photos->dataCriacao."&t=img") }}">
-            {{ $photos->translated_data_criacao }}
+            <!--$photos->translated_data_criacao -->
+            {{ $photos->getFormatDataCriacaoAttribute($photos->dataCriacao,$photos->imageDateType) }}
           </a>
         </p>
       @endif

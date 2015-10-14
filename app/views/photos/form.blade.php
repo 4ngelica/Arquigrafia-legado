@@ -457,7 +457,7 @@
 			var decadeInputImage = "{{Input::old('decade_select_image')}}";
 			//retrieveDecade(decadeInputImage,"image");		
 			retrieveDecadeImage(decadeInputImage);		
-			getCenturyOfDecade(decadeInputImage); 	
+			getCenturyOfDecade(decadeInputImage,"imageDate"); 	
 		@endif
 
 
@@ -471,32 +471,49 @@
 		@if( Input::old('decade_select'))	
 			var decadeInput = "{{Input::old('decade_select')}}";
 			retrieveDecade(decadeInput);		
-			getCenturyOfDecade(decadeInput); 	
+			getCenturyOfDecade(decadeInput,"workDate"); 	
 		@endif
 
 		
 
 
-		@if($dates == false)	
-			//alert("{{$dates}}");	
-			
+		@if($dates == false) 
 		 	window.onload = cleanToLoad;
 		@else 
-			alert("{{$dates}}");
+			//alert("{{$dates}}");
+			if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
+				//alert("iamge");
+				window.onload = resultSelectDateWork("date_img_inaccurate");	
+			}
+			if("{{Input::old('century')}}" != "" || "{{Input::old('decade_select')}}" != "" ){
+				//alert("worj");
+				window.onload = resultSelectDateWork("otherDate");	
+			}
+			/*
 			@if(Input::old('century_image')!="" || Input::old('decade_select_image')!="")
 				alert("DEimag");
 				window.onload = resultSelectDateWork("date_img_inaccurate");	
 			@endif
-
+			
 			@if(Input::old('century') || Input::old('decade_select')){
 			 	window.onload = resultSelectDateWork("otherDate");	
-			@endif	
+			@endif	*/
 
 		@endif
 
-		@if(Input::old('dates'))				
+		/*@if(Input::old('dates'))				
 		 	window.onload = resultSelectDateWork;
-		@endif
+		@endif */
+
+		if("{{Input::old('dates','true')}}"){
+			if("{{Input::old('century')}}" != "" || "{{Input::old('decade_select')}}" != "" ){
+				window.onload = resultSelectDateWork("otherDate");
+			}	
+			if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
+				window.onload = resultSelectDateWork("date_img_inaccurate");	
+			}
+		}
+
 
 		});	
 
