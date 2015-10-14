@@ -359,7 +359,7 @@
     @endif
     
     @if($decadeInput != null || $decadeInput!="" ) 
-        var decadeInput = "{{$decadeInput}}";
+        var decadeInput = "{{$decadeInput}}"; 
       retrieveDecade(decadeInput);          
       getCenturyOfDecade(decadeInput); 
     @endif

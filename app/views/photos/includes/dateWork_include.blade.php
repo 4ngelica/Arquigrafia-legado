@@ -2,9 +2,9 @@
   <div style="margin-top: 17px">
     <p>   
       <label>Século:&nbsp;</label>
-      <select id="century" name="century" class="date" >
-        <option value="NS">Escolha o Século</option>
-        <option value="Before">Antes do Século XV</option>
+      <select id="century{{ $date_field }}" name="century{{ $date_field }}" class="date" >
+        <option value="NS">Escolha o século</option>
+        <option value="Before">Antes do século XV</option>
         <option value="XV">Século XV</option>
         <option value="XVI">Século XVI</option>
         <option value="XVII">Século XVII</option>
@@ -13,13 +13,13 @@
         <option value="XX">Século XX</option>
         <option value="XXI">Século XXI</option>
       </select>
-       &nbsp;&nbsp;    
-      <span class"space_txt_element" id="period_select" name="period_select"></span>
+           
+      <span class="space_period" id="period_select{{ $date_field }}" name="period_select{{ $date_field }}"></span>
       <br>
       <br>
       <label>Década:</label>
-      <select id="decade_select" name="decade_select" placeholder="Decada">
-            <option value="">Escolha a Década</option>
+      <select id="decade_select{{ $date_field }}" name="decade_select{{ $date_field }}" placeholder="Decada">
+            <option value="">Escolha a década</option>
             <option value="BD">Anterior ao ano de 1401</option>
             <option value="1401 a 1410">1401 a 1410</option>
             <option value="1411 a 1420">1411 a 1420</option>
@@ -85,8 +85,12 @@
 <option value="2011 a 2020">2011 a 2020</option>
       </select>      
         <br>
-<div class="separate_text">        
+<div class="separate_text">   
+@if($date_field != "_image")     
 <a onclick="close_other_date('otherDate');" class="btn btn_data_ok" >OK</a>
+@else
+<a onclick="close_other_date('date_img_inaccurate');" class="btn btn_data_ok" >OK</a>
+@endif
 </div>
 
     </p>

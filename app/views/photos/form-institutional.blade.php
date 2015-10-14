@@ -325,7 +325,7 @@
          							</span>
          						</p>
          						<p>
-         							<div id="otherDate" style="display:none;">         							
+         							<div id="otherDate" class="div_institutional" style="display:none;">         							
          								@include('photos.includes.dateWork')
          						    	<!--<a onclick="close_other_date('otherDate');" class="btn right" >OK</a>-->
          							</div>
@@ -491,15 +491,16 @@
 							
 						</table>
 					</div>
-					@if(!Session::get('institutionId'))
 					<div class="twelve columns omega row">
-						<div class="form-group">
-							*{{ Form::checkbox('authorization_checkbox', 1, true) }}
-							{{ Form::label('authorization_checkbox', '&nbsp;Sou o autor da imagem ou possuo permissão expressa do autor para disponibilizá-la no Arquigrafia')}}
-							<br><div class="error">{{ $errors->first('authorization_checkbox') }}</div>
+						<div class="form-row">
+							<input type="radio" onclick="enableLicencenseChoice()" name="authorized" value="1" id="authorized" checked="checked">
+							<label for="authorized">Sou o autor da imagem ou possuo permissão expressa do autor para disponibilizá-la no Arquigrafia</label><br class="clear">	
 						</div>
+						<div class="form-row">
+							<input type="radio" onclick="disableLicenseChoice()" name="authorized" value="0" id="authorized">
+							<label for="authorized">Aguardando autorização do autor</label><br class="clear">
+						 </div>
 					</div>
-					@endif
 					<div class="twelve columns omega row">
 						<label for="terms" generated="true" class="error" style="display: inline-block; "></label>	
 						Escolho a licença <a href="http://creativecommons.org/licenses/?lang=pt_BR" id="creative_commons" target="_blank" style="text-decoration:underline; line-height:16px;">Creative Commons</a>, para publicar a imagem, com as seguintes permissões:			
@@ -509,11 +510,11 @@
 						Permitir o uso comercial da imagem?
 						<br>
 						 <div class="form-row">
-							<input type="radio" name="allowCommercialUses" value="YES" id="allowCommercialUses" checked="checked">
+							<input type="radio" onclick="authorization()" name="allowCommercialUses" value="YES" id="allowCommercialUses" checked="checked">
 							<label for="allowCommercialUses">Sim</label><br class="clear">
 						 </div>
 						 <div class="form-row">
-							<input type="radio" name="allowCommercialUses" value="NO" id="allowCommercialUses">
+							<input type="radio" onclick="authorization()" name="allowCommercialUses" value="NO" id="allowCommercialUses">
 							<label for="allowCommercialUses">Não</label><br class="clear">
 						 </div>
 					</div>
@@ -521,16 +522,16 @@
 						Permitir modificações em sua imagem?
 						<br>
 						<div class="form-row">
-							<input type="radio" name="allowModifications" value="YES" id="allowModifications" checked="checked">
-							<label for="question_3-5">Sim</label><br class="clear">
+							<input type="radio" onclick="authorization()" name="allowModifications" value="YES" id="allowModifications" checked="checked">
+							<label for="allowModifications">Sim</label><br class="clear">
 						</div>
 						<div class="form-row">
-							<input type="radio" name="allowModifications" value="YES_SA" id="allowModifications">
-							<label for="question_3-5">Sim, contanto que os outros compartilhem de forma semelhante</label><br class="clear">
+							<input type="radio" onclick="authorization()" name="allowModifications" value="YES_SA" id="allowModifications">
+							<label for="allowModifications">Sim, contanto que os outros compartilhem de forma semelhante</label><br class="clear">
 						</div>
 						<div class="form-row">
-							<input type="radio" name="allowModifications" value="NO" id="allowModifications">
-							<label for="question_3-5">Não</label><br class="clear">
+							<input type="radio" onclick="authorization()" name="allowModifications" value="NO" id="allowModifications">
+							<label for="allowModifications">Não</label><br class="clear">
 						</div>
 					</div>
 					<!--<div class="twelve columns omega row">
@@ -560,7 +561,34 @@
 
 	</div>
 
-	
+<script type="text/javascript">
+	function enableLicencenseChoice() {
+		var allowModifications = document.getElementsByName('allowModifications');
+		var allowCommercialUses = document.getElementsByName('allowCommercialUses');
+		var i;
+		for (i = 0; i < allowModifications.length; i++) {
+			allowModifications[i].disabled = false;
+		}
+		for (i = 0; i < allowCommercialUses.length; i++) {
+			allowCommercialUses[i].disabled = false;
+		}
+	}
+	function disableLicenseChoice() {
+		var allowModifications = document.getElementsByName('allowModifications');
+		var allowCommercialUses = document.getElementsByName('allowCommercialUses');
+		var i;
+		allowModifications[allowModifications.length-1].checked = true;
+		allowCommercialUses[allowCommercialUses.length-1].checked = true;
+	}
+	function authorization() {
+		var authorized = document.getElementsByName('authorized');
+		var allowModifications = document.getElementsByName('allowModifications');
+		var allowCommercialUses = document.getElementsByName('allowCommercialUses');
+		if (allowModifications[allowModifications.length-1].checked == false || allowCommercialUses[allowCommercialUses.length-1].checked == false) {
+			authorized[0].checked = true;
+		}
+	}
+</script>
 <script type="text/javascript">
 
 	$(document).ready(function() { 

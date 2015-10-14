@@ -376,11 +376,11 @@ class Photo extends Eloquent {
 		return $this->date->formatDatePortugues($this->attributes['dataUpload']);
 	}
 
-	public function setDataCriacaoAttribute($raw_date) {
+	/*public function setDataCriacaoAttribute($raw_date) {
 		$this->attributes['dataCriacao'] = $this->date->formatDate($raw_date);
 	}
 
-	/*public function setWorkDateAttribute($raw_date) {
+	public function setWorkDateAttribute($raw_date) {
 		$this->attributes['workdate'] = $this->date->formatDate($raw_date);
 	}*/
 
@@ -395,6 +395,11 @@ class Photo extends Eloquent {
 	public function getFormatWorkdateAttribute($dateWork,$type) {
 		//return $this->date->translate($this->attributes['workdate']);
 		return  $this->date->formatToWorkDate($dateWork,$type);
+	}
+
+	public function getFormatDataCriacaoAttribute($dataCriacao,$type) {
+		//return $this->date->translate($this->attributes['workdate']);
+		return  $this->date->formatToDataCriacao($dataCriacao,$type);
 	}
 
 	public static function import($attributes, $basepath) {

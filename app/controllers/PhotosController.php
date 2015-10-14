@@ -91,6 +91,8 @@ class PhotosController extends \BaseController {
     $tags = null;
     $centuryInput =  null;
     $decadeInput = null;
+    $centuryImageInput = null;
+    $decadeImageInput = null;
     $dates = false;
 
     if ( Session::has('tags') )
@@ -108,12 +110,24 @@ class PhotosController extends \BaseController {
        $dates = true;
      }
 
+     if ( Session::has('centuryImageInput') ) {
+       $centuryImageInput = Session::pull('centuryImageInput');
+      //dd($century);
+       $dates = true;
+      }
+    if ( Session::has('decadeImageInput') ){
+       $decadeImageInput = Session::pull('decadeImageInput');
+       $dates = true;
+     }
+
     $input['autoOpenModal'] = null;   
 
     return View::make('/photos/form')->with(['tags'=>$tags,'pageSource'=>$pageSource,       
       'user'=>Auth::user(),
       'centuryInput'=> $centuryInput,
       'decadeInput' =>  $decadeInput,
+      'centuryImageInput'=> $centuryImageInput,
+      'decadeImageInput' =>  $decadeImageInput,
       'autoOpenModal'=>$input['autoOpenModal'],
       'dates' => $dates
       ]);
@@ -306,7 +320,7 @@ class PhotosController extends \BaseController {
               $photo->aditionalImageComments = $input["aditionalImageComments"];
           $photo->allowCommercialUses = $input["allowCommercialUses"];
           $photo->allowModifications = $input["allowModifications"];
-
+          $photo->authorized = $input["authorized"];
           $photo->user_id = Auth::user()->id;
           $photo->dataUpload = date('Y-m-d H:i:s');
           $photo->institution_id = Session::get('institutionId');
@@ -364,7 +378,7 @@ class PhotosController extends \BaseController {
           $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
           $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
           $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
-          $file->move(public_path().'/arquigrafia-images', $photo->id."_original.".strtolower($ext)); // original
+          $file->move(storage_path().'/originais-images', $photo->id."_original.".strtolower($ext)); // original
 
           $photo->saveMetadata(strtolower($ext));
           
@@ -666,7 +680,7 @@ class PhotosController extends \BaseController {
               $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
               $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
               $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
-              $file->move(public_path().'/arquigrafia-images', $photo->id."_original.".strtolower($ext)); // original
+              $file->move(storage_path().'/original-images', $photo->id."_original.".strtolower($ext)); // original
               $photo->saveMetadata(strtolower($ext));
           }
          // $source_page = Request::header('referer');
@@ -706,7 +720,9 @@ class PhotosController extends \BaseController {
       //dd($messages);
     return Redirect::to('/photos/upload')->with(['tags' => $input['tags'],
       'decadeInput'=>$input["decade_select"],
-      'centuryInput'=>$input["century"]        
+      'centuryInput'=>$input["century"],
+      'decadeImageInput'=>$input["decade_select_image"],
+      'centuryImageInput'=>$input["century_image"]        
       ])->withErrors($messages);
     } else {
 
@@ -747,8 +763,21 @@ class PhotosController extends \BaseController {
             $photo->workdate = NULL;
        }
 
-      if ( !empty($input["photo_imageDate"]) )
-      $photo->dataCriacao = $input["photo_imageDate"];
+      /*if ( !empty($input["photo_imageDate"]) )
+      $photo->dataCriacao = $input["photo_imageDate"]; */
+      //dd($input["decade_select_image"]);
+      if(!empty($input["photo_imageDate"])){             
+             $photo->dataCriacao = $input["photo_imageDate"];
+             $photo->imageDateType = "full";
+       }elseif(!empty($input["decade_select_image"])){             
+            $photo->dataCriacao = $input["decade_select_image"];
+            $photo->imageDateType = "decade";
+       }elseif (!empty($input["century_image"]) && $input["century_image"]!="NS") { 
+            $photo->dataCriacao = $input["century_image"];
+            $photo->imageDateType = "century";
+       }else{ 
+            $photo->dataCriacao = NULL;
+       }      
       
       $photo->nome_arquivo = $file->getClientOriginalName();
 
@@ -821,7 +850,7 @@ class PhotosController extends \BaseController {
       $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
       $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
       $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
-      $file->move(public_path().'/arquigrafia-images', $photo->id."_original.".strtolower($ext)); // original
+      $file->move(storage_path().'/original-images', $photo->id."_original.".strtolower($ext)); // original
 
       $photo->saveMetadata(strtolower($ext));
       $input['photoId'] = $photo->id;
@@ -842,24 +871,26 @@ class PhotosController extends \BaseController {
   {
     if (Auth::check()) {
       $photo = Photo::find($id);
-      $originalFileExtension = strtolower(substr(strrchr($photo->nome_arquivo, '.'), 1));
-      $filename = $id . '_original.' . $originalFileExtension;
-      $path = public_path().'/arquigrafia-images/'. $filename;
+      if($photo->authorized) {
+        $originalFileExtension = strtolower(substr(strrchr($photo->nome_arquivo, '.'), 1));
+        $filename = $id . '_original.' . $originalFileExtension;
+        $path = storage_path().'/original-images/'. $filename;
 
-      if( File::exists($path) ) {
+        if( File::exists($path) ) {
 
-        $user_id = Auth::user()->id;
-        $pageSource = Request::header('referer');
-        ActionUser::printUploadOrDownloadLog($user_id, $id, $pageSource, "Download", "user");
+          $user_id = Auth::user()->id;
+          $pageSource = Request::header('referer');
+          ActionUser::printUploadOrDownloadLog($user_id, $id, $pageSource, "Download", "user");
 
-        header('Content-Description: File Transfer');
-        header("Content-Disposition: attachment; filename=\"". $filename ."\"");
-        header('Content-Type: application/octet-stream');
-        header("Content-Transfer-Encoding: binary");
-        header("Cache-Control: public");
-        readfile($path);
+          header('Content-Description: File Transfer');
+          header("Content-Disposition: attachment; filename=\"". $filename ."\"");
+          header('Content-Type: application/octet-stream');
+          header("Content-Transfer-Encoding: binary");
+          header("Cache-Control: public");
+          readfile($path);
 
-        exit;
+          exit;
+        }
       }
       return "Arquivo original não encontrado.";
     } else {
@@ -1322,7 +1353,7 @@ class PhotosController extends \BaseController {
         $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
         $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
         $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
-        $file->move(public_path().'/arquigrafia-images', $photo->id."_original.".strtolower($ext)); // original
+        $file->move(storage_path().'/originais-images', $photo->id."_original.".strtolower($ext)); // original
         $photo->saveMetadata(strtolower($ext));
       }
       $source_page = Request::header('referer');
