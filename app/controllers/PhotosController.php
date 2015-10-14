@@ -408,7 +408,7 @@ class PhotosController extends \BaseController {
           $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
           $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
           $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
-          $file->move(storage_path().'/originais-images', $photo->id."_original.".strtolower($ext)); // original
+          $file->move(storage_path().'/original-images', $photo->id."_original.".strtolower($ext)); // original
 
           $photo->saveMetadata(strtolower($ext));
           
@@ -1381,7 +1381,7 @@ class PhotosController extends \BaseController {
         $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
         $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
         $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
-        $file->move(storage_path().'/originais-images', $photo->id."_original.".strtolower($ext)); // original
+        $file->move(storage_path().'/original-images', $photo->id."_original.".strtolower($ext)); // original
         $photo->saveMetadata(strtolower($ext));
       }
       $source_page = Request::header('referer');
