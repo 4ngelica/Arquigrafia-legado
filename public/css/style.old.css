@@ -809,5 +809,6 @@ a.tooltip_license span
 .space_period{margin-left: 8px; width: 178px; float:right; padding-top: 3px;}
 .container .fivemid.columns{ width: 374px; }
 .container .fivemidUpdateForm.columns{ width: 377px; }
+.container .fivemidUpdateInst.columns{ width: 400px; }
 .div_institutional { width: 405px; }
 .div_institutional_edit { width: 380px; }
