@@ -91,8 +91,6 @@ class PhotosController extends \BaseController {
     $tags = null;
     $centuryInput =  null;
     $decadeInput = null;
-    $centuryImageInput = null;
-    $decadeImageInput = null;
     $dates = false;
     $dateImage = false;
 
@@ -127,8 +125,6 @@ class PhotosController extends \BaseController {
       'user'=>Auth::user(),
       'centuryInput'=> $centuryInput,
       'decadeInput' =>  $decadeInput,
-      'centuryImageInput'=> $centuryImageInput,
-      'decadeImageInput' =>  $decadeImageInput,
       'autoOpenModal'=>$input['autoOpenModal'],
       'dates' => $dates,
       'dateImage' => $dateImage,
@@ -754,9 +750,7 @@ class PhotosController extends \BaseController {
       //dd($messages);
     return Redirect::to('/photos/upload')->with(['tags' => $input['tags'],
       'decadeInput'=>$input["decade_select"],
-      'centuryInput'=>$input["century"],
-      'decadeImageInput'=>$input["decade_select_image"],
-      'centuryImageInput'=>$input["century_image"]        
+      'centuryInput'=>$input["century"]        
       ])->withErrors($messages);
     } else {
 
@@ -797,18 +791,10 @@ class PhotosController extends \BaseController {
             $photo->workdate = NULL;
        }
 
-      if(!empty($input["photo_imageDate"])){             
-             $photo->dataCriacao = $this->date->formatDate($input["photo_imageDate"]);
-             $photo->imageDateType = "date";
-       }elseif(!empty($input["decade_select_image"])){             
-            $photo->dataCriacao = $input["decade_select_image"];
-            $photo->imageDateType = "decade";
-       }elseif (!empty($input["century_image"]) && $input["century_image"]!="NS") { 
-            $photo->dataCriacao = $input["century_image"];
-            $photo->imageDateType = "century";
-       }else{ 
-            $photo->dataCriacao = NULL;
-       }      
+if(!empty($input["photo_imageDate"])){             
+	             $photo->dataCriacao = $this->date->formatDate($input["photo_imageDate"]);
+}
+
       
       $photo->nome_arquivo = $file->getClientOriginalName();
 
