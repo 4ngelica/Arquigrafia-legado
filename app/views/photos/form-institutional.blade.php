@@ -442,12 +442,6 @@
          								</span>
          							<br> <div id="error_image_date" class="error">{{ $errors->first('imageDate') }}</div>
          						   	</p> 
-         						   	<p>
-         								<div id="date_img_inaccurate" style="display:none;">         							
-         									@include('photos.includes.dateImage')         						    
-         								</div>
-         								<label id="answer_date_image" class="resultDateWork"></label>
-         							</p>       
         						</div>
         						</tr>   
         						</td>
