@@ -1,6 +1,6 @@
-  @extends('layouts.default')
+@extends('layouts.default')
 
-  @section('head')
+@section('head')
 
   <title>Arquigrafia - {{ $photos->name }}</title>
 
@@ -60,6 +60,7 @@
   <script type="text/javascript" src="{{ URL::to("/") }}/js/jquery.fancybox.pack.js"></script>
   <script type="text/javascript" src="{{ URL::to("/") }}/js/photo.js"></script>
 @stop
+
 @section('content')
 
   @if (Session::get('message'))
@@ -87,9 +88,9 @@
             <span class="right" title="{{ $commentsMessage }}">
               <i id="comments"></i><small>{{ $commentsCount }}</small>
             </span>
-            <span class="right" title="{{ $photos->likes->count() }} pessoas curtiram essa imagem">
+            <!--<span class="right" title="{{ $photos->likes->count() }} pessoas curtiram essa imagem">
               <i id="likes"></i> <small>{{ $photos->likes->count() }}</small>
-            </span>
+            </span>-->
             @if ( $owner->equal(Auth::user()) )
               <span class="right">
                 <a id="delete_button" href="{{ URL::to('/photos/' . $photos->id) }}" title="Excluir imagem"></a>
@@ -99,36 +100,47 @@
               <span class="right">
                 <small>Inserido em:</small>
                 <a class="data_upload" href="{{ URL::to("/search?q=".$photos->dataUpload."&t=up") }}">
-                  {{ Photo::formatDatePortugues($photos->dataUpload) }}
+                  {{ $photos->dataUpload }}
                 </a>
               </span>
             @endif
           </div>
         </div>
+
         <!--   FIM - NOME / STATUS DA FOTO   -->
 
         <!--   FOTO   -->
         <a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photos->id."_view.jpg" }}"
           title="{{ $photos->name }}" >
-          <img class="single_view_image" style=""
+          <img <?php if (!$photos->authorized) echo "oncontextmenu='return false'"?> class="single_view_image" style=""
             src="{{ URL::to("/arquigrafia-images")."/".$photos->id."_view.jpg" }}" />
         </a>
       </div>
 
       <!--   BOX DE BOTOES DA IMAGEM   -->
       <div id="single_view_buttons_box">
+        <div>
+            <a href="{{ URL::previous() }}" class='btn left'>VOLTAR</a>
+        </div>
         @if (Auth::check())
           <ul id="single_view_image_buttons">
             <li>
               <a href="{{ URL::to('/albums/get/list/' . $photos->id) }}" title="Adicione aos seus álbuns" id="plus"></a>
             </li>
+            @if($photos->authorized)
             <li>
-              <a href="{{ asset('photos/download/'.$photos->id) }}" title="Faça o download" id="download" target="_blank"></a>
+                <a href="{{ asset('photos/download/'.$photos->id) }}" title="Faça o download" id="download" target="_blank"></a>
             </li>
+            @else
             <li>
-              <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=sb' )}}" title="Avalie {{$architectureName}}" id="evaluate" ></a>
+              <a onclick="notAuthorized();return false;" href="#" title="Faça o download" id="download" target="_blank"></a>
+            </li>
+            @endif
+            <li>
+              <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=sb' )}}" title="Registre suas impressões sobre {{$architectureName}}" id="evaluate" ></a>
             </li>
             <!-- LIKE-->
+
             @if( ! $photos->hasUserLike(Auth::user()) )
               <li>
                 <a href="{{ URL::to('/photos/' . $photos->id . '/like' ) }}" id="like_button" title="Curtir"></a>
@@ -151,39 +163,48 @@
           <li><a href="#" class="twitter addthis_button_twitter"><span class="twitter"></span></a></li>
         </ul>
       </div>
+      <script type="text/javascript">
+      function notAuthorized() {
+        alert("O Arquigrafia empreendeu esforços para entrar em contato com os autores e ou responsáveis por esta imagem. \nSe você é o autor ou responsável, por favor, entre em contato com a equipe do Arquigrafia no e-mail: arquigrafiabr@gmail.com.");
+      }
+      </script>
       <!--   FIM - BOX DE BOTOES DA IMAGEM   -->
 
       <div class="tags">
         <h3>Tags:</h3>
         <p>
           @if (isset($tags))
-            @foreach($tags as $tag)
+            @foreach($tags as $k => $tag)
               @if ($tag->id == $tags->last()->id)
-                <a style="" href="{{ URL::to("/search?q=".$tag->name) }}">
-                  {{ $tag->name }}
-                </a>
+                <form id="{{$k}}" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" style="display: inline">
+                  <input type="hidden" name="q" value="{{$tag->name}}"/>
+                    <a style="" href="javascript: submitform({{$k}});">
+                      {{ $tag->name }}
+                    </a>
+                </form>
               @else
-                <a href="{{ URL::to("/search?q=".$tag->name) }}">
-                  {{ $tag->name }}
-                </a>,
+                <form id="{{$k}}" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" style="display: inline">
+                  <input type="hidden" name="q" value="{{$tag->name}}"/>
+                    <a href="javascript: submitform({{$k}});">
+                      {{ $tag->name }}
+                    </a>,
+                </form>
               @endif
             @endforeach
           @endif
+          <script type="text/javascript">
+            function submitform(object)
+            {
+              document.getElementById(object).submit();
+            }
+          </script>
         </p>
       </div>
 
       <!--   BOX DE COMENTARIOS   -->
       <div id="comments_block" class="eight columns row alpha omega">
         <h3>Comentários</h3>
-        @if(Auth::check()) 
-          <div class="text_comment" >
-            <small>
-              Cada usuário é responsável por seus próprios comentários.
-              O Arquigrafia não se responsabiliza pelos comentários postados,
-              mas apenas por tornar indisponível no site o conteúdo considerado
-              infringente ou danoso por determinação judicial (art.19 da Lei 12.965/14).
-            </small>
-          </div>
+        @if(Auth::check())           
           <br>
         @endif
         <?php $comments = $photos->comments; ?>
@@ -203,14 +224,22 @@
             </div>
 
             <div class="three columns row">
-              <strong><a href="#" id="name">{{ Auth::user()->name }}</a></strong><br>
-              Deixe seu comentário <br>
-              {{ $errors->first('text') }}
-              {{ Form::textarea('text', '', ['id'=>'comment_field']) }}
-              {{ Form::hidden('user', $photos->id ) }}
-              {{ Form::submit('COMENTAR', ['id'=>'comment_button','class'=>'cursor btn']) }}
+                <strong><a href="#" id="name">{{ Auth::user()->name }}</a></strong><br>
+                Deixe seu comentário <br>
+                {{ $errors->first('text') }}
+                {{ Form::textarea('text', '', ['id'=>'comment_field']) }}
+                {{ Form::hidden('user', $photos->id ) }}
+                {{ Form::submit('COMENTAR', ['id'=>'comment_button','class'=>'cursor btn']) }}
+                <br class="clear">
+                </br>
+                <p align="justify" style="font-size: 7pt; width: 558px">
+                    Cada usuário é responsável por seus próprios comentários. 
+                    O Arquigrafia não se responsabiliza pelos comentários postados, 
+                    mas apenas por tornar indisponível no site o conteúdo considerado 
+                    infringente ou danoso por determinação judicial (art.19 da Lei 12.965/14).
+                </p>
             </div>
-          {{ Form::close() }}
+            {{ Form::close() }}
           <br class="clear">
         @else
           <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e comente sobre {{ $architectureName }}</p>
@@ -220,16 +249,18 @@
           @foreach($comments as $comment)
             <div class="clearfix">
               <div class="column alpha omega row">
+                <a href={{"/users/" . $comment->user->id}}>
                 @if ($comment->user->photo != "")
                   <img class="user_thumbnail" src="{{ asset($comment->user->photo); }}" />
                 @else
                   <img class="user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" />
                 @endif
+                </a>
               </div>
               <div class="four columns omega row">
                 <small id={{"$comment->id"}}>
-                  {{ $comment->user->name }} - {{ $comment->created_at->format('d/m/Y h:m') }}
-                  <img src="{{ URL::to("/") }}/img/commentNB.png" / ><small class='likes'>{{ $comment->likes->count() }}</small>
+                  <a href={{"/users/" . $comment->user->id}}>{{ $comment->user->name }}</a> - {{ $comment->created_at->format('d/m/Y h:i') }}
+                  <!--<img src="{{ URL::to("/") }}/img/commentNB.png" / ><small class='likes'>{{ $comment->likes->count() }}</small>-->
                 </small>
                 <p>{{ $comment->text }}</p>
 
@@ -252,7 +283,7 @@
           <hgroup class="profile_block_title">
             <h3>
               <img src="{{ asset("img/evaluate.png") }}" width="16" height="16"/>
-              Imagens avaliadas com média similar
+              Imagens interpretadas com média similar
             </h3>
             <span>({{count($similarPhotos) }})
               @if(count($similarPhotos)>1)
@@ -284,20 +315,38 @@
     <div id="sidebar" class="four columns">
       <!--   USUARIO   -->
       <div id="single_user" class="clearfix row">
-        <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
-          @if ($owner->photo != "")
+        <!--<a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">-->
+          @if(!is_null($ownerInstitution))
+           <a href="{{ URL::to("/institutions/".$ownerInstitution->id) }}" id="user_name">
+              @if($ownerInstitution->photo != "")              
+                <img id="single_view_user_thumbnail" src="{{ asset($ownerInstitution->photo) }}" class="user_photo_thumbnail"/>
+              @else
+                <img id="single_view_user_thumbnail" src="{{ URL::to("/") }}/img/avatar-institution.png" class="user_photo_thumbnail"/>
+              @endif  
+          @elseif ($owner->photo != "")
+            <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
             <img id="single_view_user_thumbnail" src="{{ asset($owner->photo) }}" class="user_photo_thumbnail"/>
           @else
+            <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
             <img id="single_view_user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png"
               width="48" height="48" class="user_photo_thumbnail"/>
           @endif
         </a>
+        @if(!is_null($ownerInstitution))
+        <h1 id="single_view_owner_name"><a href="{{ URL::to("/institutions/".$ownerInstitution->id) }}" id="name">{{ $ownerInstitution->name }}</a></h1>
+        @else
         <h1 id="single_view_owner_name"><a href="{{ URL::to("/users/".$owner->id) }}" id="name">{{ $owner->name }}</a></h1>
-        @if ( $owner->equal(Auth::user()) )
+        @endif
+        
+        @if ( Auth::check() && !$owner->equal(Auth::user()) )
           @if (!empty($follow) && $follow == true )
             <a href="{{ URL::to("/friends/follow/" . $owner->id) }}" id="single_view_contact_add">Seguir</a><br />
           @else
-            <div>Seguindo</div>
+            <div id="unfollow-button">
+              <a href="{{ URL::to("/friends/unfollow/" . $owner->id) }}">
+                  <p class="label success new-label"><span>Seguindo</span></p>
+              </a>
+            </div>
           @endif
         @endif
       </div>
@@ -306,19 +355,26 @@
       <hgroup class="profile_block_title">
         <h3><i class="info"></i> Informações</h3>
           &nbsp; &nbsp;
-        @if ($owner->equal(Auth::user()))
+          @if($belongInstitution)
+          <a href= '{{"/photos/" . $photos->id . "/editInstitutional" }}' title="Editar informações da imagem">
+          <img src="{{ asset("img/edit.png") }}" width="16" height="16"/>
+          </a>
+          @endif
+          @if($owner->equal(Auth::user()) && $hasInstitution == false && !Session::get('institutionId'))
+
           <a href= '{{"/photos/" . $photos->id . "/edit" }}' title="Editar informações da imagem">
           <img src="{{ asset("img/edit.png") }}" width="16" height="16"/>
           </a>
+        
         @endif
       </hgroup>
 
-      @include('photo_feedback')
+      {{-- @include('photo_feedback') --}}
 
       <div id="description_container">
       @if ( !empty($photos->description) )
         <h4>Descrição:</h4>
-        <p>{{ $photos->description }}</p>
+        <p>{{ htmlspecialchars($photos->description, ENT_COMPAT | ENT_HTML5, 'UTF-8') }}</p>
       @endif
       </div>
       @if ( !empty($photos->collection) )
@@ -336,11 +392,12 @@
       @endif
       </div>
       <div id="dataCriacao_container">
-      @if ( !empty($photos->dataCriacao) )
+      @if ( !empty($photos->dataCriacao) && $photos->getFormatDataCriacaoAttribute($photos->dataCriacao,$photos->imageDateType) != null)
         <h4>Data da Imagem:</h4>
         <p>
           <a href="{{ URL::to("/search?q=".$photos->dataCriacao."&t=img") }}">
-            {{ Photo::translate($photos->dataCriacao) }}
+            <!--$photos->translated_data_criacao -->
+            {{ $photos->getFormatDataCriacaoAttribute($photos->dataCriacao,$photos->imageDateType) }}
           </a>
         </p>
       @endif
@@ -356,11 +413,12 @@
       @endif
       </div>
       <div id="workdate_container">
-      @if ( !empty($photos->workdate) )
-        <h4>Data da Obra:</h4>
+      @if ( !empty($photos->workdate) && $photos->getFormatWorkdateAttribute($photos->workdate,$photos->workDateType) != null )
+        <h4>Data de conclusão da obra:</h4>
         <p>
           <a href="{{ URL::to("/search?q=".$photos->workdate."&t=work") }}">
-            {{ Photo::translate($photos->workdate) }}
+            <!--$photos->translated_work_date -->
+            {{ $photos->getFormatWorkdateAttribute($photos->workdate,$photos->workDateType) }}
           </a>
         </p>
       @endif
@@ -399,10 +457,6 @@
       @endif
       </div>
       <h4>Licença:</h4>
-      <!--
-      <a href="http://creativecommons.org/licenses/{{$license[0]}}/3.0/deed.pt_BR" target="_blank"
-       title='O proprietário desta imagem "{{ucfirst($owner->name)}}" : "{{$license[1]}}"'>
-      -->
       <a class="tooltip_license"
         href="http://creativecommons.org/licenses/{{$license[0]}}/3.0/deed.pt_BR" target="_blank" >
         <img src="{{ asset('img/ccIcons/'.$license[0].'88x31.png') }}" id="ccicons"
@@ -410,11 +464,14 @@
         <span>
           @if (Auth::check())
             @if( $owner->equal(Auth::user()) )
-              <strong>O proprietário desta imagem "{{ ucfirst($owner->name) }}" </strong><br />
+              <strong>Você é proprietário(a) desta imagem</strong>
+            @else
+              <strong>O proprietário desta imagem "{{ucfirst($owner->name)}}":</strong>
             @endif
           @else
-            <strong>O proprietário desta imagem "{{ ucfirst($owner->name) }}" : </strong><br />
+            <strong>O proprietário desta imagem "{{ucfirst($owner->name)}}":</strong>
           @endif
+          <br/>
           "{{ $license[1] }}"
         </span>
       </a>
@@ -431,11 +488,11 @@
       @endif
 
       @if (empty($average))
-        <h4>Avaliação:</h4>
-        <img src="{{ URL::to('/') }}/img/GraficoFixo.png" />
+        <h4>Interpretações da arquitetura:</h4>
+        <img src="/img/GraficoFixo.png" />
       @else
         <h4>
-          <center>Média de Avaliações d{{ $architectureName }} </center>
+          <center>Média de Interpretações d{{ $architectureName }} </center>
         </h4>
         <br>
         <div id="evaluation_average"></div>
@@ -446,56 +503,55 @@
       @endif
 
       @if (Auth::check())
-        @if (isset($userEvaluations) && !$userEvaluations->isEmpty())
-          <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Avaliar" id="evaluate_button"
+        @if (isset($userEvaluations) && !$userEvaluations->isEmpty() && !Session::get('institutionId'))
+          <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
           class="btn">
-            Clique aqui para alterar sua avaliação
+            Clique aqui para alterar suas impressões
           </a> &nbsp;
         @else
-          @if (empty($average))
-            <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Avaliar" id="evaluate_button"
+          @if (empty($average) && !Session::get('institutionId'))
+            <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
             class="btn">
-              Seja o primeiro a avaliar {{$architectureName}}
+              Seja o primeiro a registrar impressões sobre {{$architectureName}}
             </a> &nbsp;
-          @else
-            <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Avaliar" id="evaluate_button"
+          @elseif(!Session::get('institutionId'))
+            <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
             class="btn">
-              Avalie você também {{$architectureName}}
+              Registre você também impressões sobre {{$architectureName}}
             </a> &nbsp;
           @endif
         @endif
       @else
-        @if (empty($average))
+        @if (empty($average) && !Session::get('institutionId'))
           <p>
             Faça o <a href="{{ URL::to('/users/login') }}">Login</a> 
-            e seja o primeiro a avaliar {{ $architectureName }}
+            e seja o primeiro a registrar impressões sobre {{ $architectureName }}
           </p>
         @else
           <p>
             Faça o <a href="{{ URL::to('/users/login') }}">Login</a>
-            e avalie você também {{ $architectureName }}
+            e registre você também impressões sobre {{ $architectureName }}
           </p>
         @endif
       @endif
     <!--   FIM - SIDEBAR   -->
     </div>
-
+  </div>
     <!--   MODAL   -->
-    <div id="mask"></div>
-    <div id="form_window" class="form window">
-      <a class="close" href="#" title="FECHAR">Fechar</a>
-      <div id="registration"></div>
-    </div>
-    <div id="confirmation_window" class="window">
-      <div id="registration_delete">
-        <p></p>
-        {{ Form::open(array('url' => '', 'method' => 'delete')) }}
-          <div id="registration_buttons">
-            <input type="submit" class="btn" value="Confirmar" />
-            <a class="btn close" href="#">Cancelar</a>
-          </div>
-        {{ Form::close() }}
-      </div>
+  <div id="mask"></div>
+  <div id="form_window" class="form window">
+    <a class="close" href="#" title="FECHAR">Fechar</a>
+    <div id="registration"></div>
+  </div>
+  <div id="confirmation_window" class="window">
+    <div id="registration_delete">
+      <p></p>
+      {{ Form::open(array('url' => '', 'method' => 'delete')) }}
+        <div id="registration_buttons">
+          <input type="submit" class="btn" value="Confirmar" />
+          <a class="btn close" href="#">Cancelar</a>
+        </div>
+      {{ Form::close() }}
     </div>
   </div>
   <script src="http://code.highcharts.com/highcharts.js"></script>
@@ -600,7 +656,7 @@
                 @endif
               ],
               yAxis: 0,
-              name: 'Sua avaliação',
+              name: 'Sua impressão',
               marker: {
                 symbol: 'circle',
                 enabled: true

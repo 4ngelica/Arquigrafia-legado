@@ -5,6 +5,7 @@
       Arquigrafia - Entrar
    </title>
    <script type="text/javascript" src="{{ URL::to('/js/stoaLogin.js') }}"></script>
+   <script type="text/javascript" src="{{ URL::to('/js/institutionLogin.js') }}"></script>
 @stop
 
 @section('content')
@@ -26,9 +27,9 @@
             
             {{ Form::open() }}
 
-               <p>Entre com seu usuário ou e-mail e em seguida digite sua senha:</p>
+               <p>Entre com seu login ou e-mail e em seguida digite sua senha:</p>
                <br>
-               <div class="two columns alpha">{{ Form::label('login', 'Usuário ou E-mail:', array('class'=>'right')) }}</div>
+               <div class="two columns alpha">{{ Form::label('login', 'Login ou E-mail:', array('class'=>'right')) }}</div>
                <div class="two columns omega">{{ Form::text('login', '', array('class'=>'right') ) }}</div>
                {{ $errors->first('login') }}
                 <p> {{ Form::hidden('firstTime', Session::get('msgRegister')) }}</p>
@@ -40,12 +41,20 @@
                @endif
 
                <br>
-               <div style="text-decoration: underline"> 
+               <div class="four columns">
+               <div style=""> 
                  <a href="{{ URL::to("/users/forget/")}}" id="single_view_contact_add">
-                     Esqueceu sua senha?
+                     Esqueceu sua senha? 
                   </a> 
+               </div>   
+               <div>&nbsp;</div>
                   
+                  <div class="link_institution">
+                     <a id="institutionLogin" href="/institutionalLogin" id="single_view_contact_add">
+                     Login institucional
+                     </a> 
                   </div>
+               </div>   
                <p>{{ Form::submit("LOGIN",array('class'=>'btn right')) }}</p>
                
             {{ Form::close() }}
@@ -96,6 +105,40 @@
                <div class="three columns">
                   <p>{{ Form::submit("LOGIN",array('class'=>'btn right')) }}</p>
                   <p class="error">Número USP e/ou senha inválidos.</p>
+               </div>
+            {{ Form::close() }}
+         </div>
+      </div>
+   </div>
+   <div id="form_login_inst_window" class="container form window">
+      <a class="close" href="#" title="FECHAR">Fechar</a>
+      <div id="registrationInstitution" class="registrationInstitution">
+         <img src="{{ asset('/img/logo.png') }}" class="row" style="width: 200px; display: block; margin-left: auto; margin-right: auto; ">
+         <br>
+         <div class="four columns">
+            {{ Form::open(array( 'url' => '/users/institutionalLogin')) }}
+
+               <div class="three columns">{{ Form::label('login', 'Login ou email:') }}</div>
+               <div class="three columns">{{ Form::text('login', '', ['class' => 'left']) }}</div>
+               {{ $errors->first('login') }}
+               
+               <div class="three columns">{{ Form::label('institution', 'Acervo:') }}</div>
+               <div class="three columns">
+               <br>
+                  @if(!is_null($institutions))
+                    {{ Form::select('institution', $institutions , Input::old('institution')) }}
+                  @else
+                      {{ Form::select('institution', [""=>"Escolha o acervo institutional"], "",array('class' => 'left')) }} 
+                  @endif
+               </div>
+               <br><br>
+               <div class="three columns">{{ Form::label('password', 'Senha:') }}</div>
+               <div class="three columns">{{ Form::password('password', ['class' => 'left']) }}</div>
+               <br>
+               <br>
+               <div class="three columns">
+                  <p>{{ Form::submit("LOGIN",array('class'=>'btn right')) }}</p>
+                  <p class="error">Usuário e/ou e-mail e/ou instituição e/ou senha inválidos.</p>
                </div>
             {{ Form::close() }}
          </div>

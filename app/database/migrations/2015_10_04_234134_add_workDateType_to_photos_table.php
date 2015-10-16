@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class MakeReadAtNullable extends Migration {
+class AddWorkDateTypeToPhotosTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,7 +12,9 @@ class MakeReadAtNullable extends Migration {
 	 */
 	public function up()
 	{
-		DB::statement('ALTER TABLE `notification_user` MODIFY `read_at` TIMESTAMP NULL DEFAULT NULL;');
+		Schema::table('photos', function ($table) {
+    		$table->string('workDateType')->nullable();
+		});
 	}
 
 	/**
@@ -22,7 +24,9 @@ class MakeReadAtNullable extends Migration {
 	 */
 	public function down()
 	{
-		DB::statement('ALTER TABLE `notification_user` MODIFY `read_at` TIMESTAMP NOT NULL DEFAULT  \'0000-00-00 00:00:00\';');
+		Schema::table('photos', function ($table) {
+    		$table->dropColumn('workDateType');
+		});
 	}
 
 }

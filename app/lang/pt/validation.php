@@ -54,8 +54,8 @@ return array(
         "array"   => "O campo :attribute deve ter no mínimo :min itens."
     ),
     "not_in"           => "O campo :attribute contém um valor inválido.",
-    "numeric"          => "O campo :attribute deverá conter um valor numérico.",
-    "regex"            => "O formato do valor para o campo :attribute é inválido.",
+    "numeric"          => "O campo :attribute deverá conter um valor numérico.",    
+    "regex"            => "O campo :attribute só pode conter números, traços, underscore e letras minúsculas sem acentos, com no mínimo 3 e no máximo 20 caracteres.",
     "required"         => "É obrigatória a indicação de um valor para o campo :attribute.",
     "required_if"      => "É obrigatória a indicação de um valor para o campo :attribute quando o valor do campo :other é igual a :value.",
     "required_with"    => "É obrigatória a indicação de um valor para o campo :attribute quando :values está presente.",
@@ -90,6 +90,7 @@ return array(
         ),
     ), */
     'custom' => array(
+
         //To photo
         'photo_name' => array(
             'required' => 'É obrigatório inserir um valor para o título da imagem.',
@@ -155,6 +156,32 @@ return array(
         'password' => array(
             'confirmed' => 'A confirmação para o campo senha não coincide.',
         ),
+         'tagsArea' => array(
+            'required' => 'É obrigatório inserir um valor para tags.',
+        ),
+        'tagsTypologyArea' => array(
+            'required' => 'É obrigatório inserir um valor para tags de tipologia.',
+        ),        
+        'tagsElementsArea' => array(
+            'required' => 'É obrigatório inserir um valor para tags de elementos.',
+        ),
+        'tagsMaterialArea' => array(
+            'required' => 'É obrigatório inserir um valor para tags de materiais.',
+        ),
+        'support' => array(
+            'required' => 'É obrigatório inserir um valor para o campo suporte.',
+        ),
+        'tombo' => array(
+            'required' => 'É obrigatório inserir um valor para o campo tombo.',
+        ),
+        'subject' => array(
+            'required' => 'É obrigatório inserir um valor para o campo assunto.',
+        ),
+        
+        'characterization' => array(
+            'required' => 'É obrigatório inserir um valor para o campo de caracterização.',
+        ),
+        
 
         
     ), 

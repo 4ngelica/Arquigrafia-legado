@@ -8,17 +8,15 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
 use Illuminate\Filesystem\Filesystem;
 
-class ActionUser{
-
-    public static function convertArrayObjectToString($array,$atribute){
-
+class ActionUser {
+    public static function convertArrayObjectToString($array, $atribute) {
         $string = "";
         $numElement = count($array);
         $i = 1;
         $separator = ', ';
         if(!empty($array)) {             
             foreach ($array as $value) {
-                if($numElement == $i){
+                if($numElement == $i) {
                     $separator = '';
                 }
                 $string = $string.''.$value->$atribute.$separator;
@@ -91,7 +89,7 @@ class ActionUser{
     //Photos Controller
     public static function printUploadOrDownloadLog($user_id, $photo_id, $source_page, $up_or_down, $user_or_visitor) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $date_only = date('Y-m-d');
+        list($date_only) = explode(" ", $date_and_time);
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
         $info = sprintf('[%s] ' . $up_or_down . ' da foto de ID nº: %d, pela página %s', $date_and_time, $photo_id, $source_page);
@@ -102,7 +100,7 @@ class ActionUser{
     //Users Controller
     public static function printFollowOrUnfollowLog($user_id, $target_user_id, $source_page, $follow_or_unfollow, $user_or_visitor) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $date_only = date('Y-m-d');
+        list($date_only) = explode(" ", $date_and_time);
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
         $info = sprintf('[%s] Usuário de ID nº: %d ' . $follow_or_unfollow . ' o usuário de ID nº: %d, pela página %s', $date_and_time, $user_id, $target_user_id, $source_page);
@@ -113,7 +111,7 @@ class ActionUser{
     //Photos Controller
     public static function printSelectPhoto($user_id, $photo_id, $source_page, $user_or_visitor) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $date_only = date('Y-m-d');
+        list($date_only) = explode(" ", $date_and_time);
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
         $info = sprintf('[%s] Selecionou a foto de ID nº: %d, pela página %s', $date_and_time, $photo_id, $source_page);
@@ -124,7 +122,7 @@ class ActionUser{
     //Users Controller
     public static function printLoginOrLogout($user_id, $source_page, $login_or_logout, $arquigrafia_facebook_stoa, $user_or_visitor) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $date_only = date('Y-m-d');
+        list($date_only) = explode(" ", $date_and_time);
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
         $info = sprintf('[%s] ' . $login_or_logout .' através do ' . $arquigrafia_facebook_stoa . ', pela página %s', $date_and_time, $source_page);
@@ -135,7 +133,7 @@ class ActionUser{
     //Users Controller
     public static function printSelectUser($user_id, $target_user_id, $source_page, $user_or_visitor) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $date_only = date('Y-m-d');
+        list($date_only) = explode(" ", $date_and_time);
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
         $info = sprintf('[%s] Selecionou o usuário de ID nº: %d, pela página %s', $date_and_time, $target_user_id, $source_page);
@@ -146,7 +144,7 @@ class ActionUser{
     //Photos Controller
     public static function printComment($user_id, $source_page, $inserted_edited_deleted, $comment_id, $photo_id, $user_or_visitor) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $date_only = date('Y-m-d');
+        list($date_only) = explode(" ", $date_and_time);
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
         $info = sprintf('[%s] '. $inserted_edited_deleted . ' o comentário de ID nº: %d, na foto de ID nº: %d, pela página %s', $date_and_time, $comment_id, $photo_id, $source_page);
@@ -157,7 +155,7 @@ class ActionUser{
     //Pages Controller
     public static function printSearch($user_id, $source_page, $key_words, $user_or_visitor) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $date_only = date('Y-m-d');
+        list($date_only) = explode(" ", $date_and_time);
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
         $size = str_word_count($key_words);
@@ -169,7 +167,7 @@ class ActionUser{
 
     public static function printHomePage($user_id, $source_page, $user_or_visitor) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $date_only = date('Y-m-d');
+        list($date_only) = explode(" ", $date_and_time);
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
         $info = sprintf('[%s] Acessou a home page, pela página %s', $date_and_time, $source_page);
@@ -180,7 +178,7 @@ class ActionUser{
 
     public static function printNewAccount($user_id, $source_page, $arquigrafia_or_facebook, $user_or_visitor) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $date_only = date('Y-m-d');
+        list($date_only) = explode(" ", $date_and_time);
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
         $info = sprintf('[%s] Nova conta criada pelo ' . $arquigrafia_or_facebook . ', ID nº: %d', $date_and_time, $user_id);
@@ -191,7 +189,7 @@ class ActionUser{
 
     public static function printLikeDislike($user_id, $photo_or_comment_id, $source_page, $photo_or_comment, $like_or_dislike, $user_or_visitor) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $date_only = date('Y-m-d');
+        list($date_only) = explode(" ", $date_and_time);
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
         $info = sprintf('[%s] ' . $like_or_dislike . " " . $photo_or_comment . ', ID nº: %d', $date_and_time, $photo_or_comment_id);
@@ -202,7 +200,7 @@ class ActionUser{
 
     public static function printTags($user_id, $photo_id, $tags, $source_page, $user_or_visitor, $inserted_edited) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $date_only = date('Y-m-d');
+        list($date_only) = explode(" ", $date_and_time);
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
         $info = sprintf('[%s] ' . $inserted_edited . ' as tags: ' . $tags . '. Pertencentes a foto de ID nº: %d', $date_and_time, $photo_id);
@@ -213,7 +211,7 @@ class ActionUser{
 
     public static function printEvaluation($user_id, $photo_id, $source_page, $user_or_visitor, $inserted_edited, $evaluation) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $date_only = date('Y-m-d');
+        list($date_only) = explode(" ", $date_and_time);
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
         $info = sprintf('[%s] ' . $inserted_edited . ' avaliação na foto de ID nº: %d, com os seguintes valores %spela página: %s', $date_and_time, $photo_id, $evaluation, $source_page);
@@ -224,7 +222,7 @@ class ActionUser{
 
     public static function printEvaluationAccess($user_id, $photo_id, $source_page, $user_or_visitor, $local) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $date_only = date('Y-m-d');
+        list($date_only) = explode(" ", $date_and_time);
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
         $info = sprintf('[%s] Acessou a página de avaliação %s da página %s', $date_and_time, $local, $source_page);
@@ -235,7 +233,7 @@ class ActionUser{
 
     public static function printNotification($user_id, $source_page, $user_or_visitor) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $date_only = date('Y-m-d');
+        list($date_only) = explode(" ", $date_and_time);
         $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
         ActionUser::verifyTimeout($file_path, $user_id, $source_page);
         $info = sprintf('[%s] Acessou a página de notificações pela página %s', $date_and_time, $source_page);

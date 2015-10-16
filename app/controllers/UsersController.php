@@ -1,11 +1,11 @@
 <?php
 use lib\utils\ActionUser;
+use Carbon\Carbon; 
 use Facebook\FacebookSession;
 use Facebook\FacebookRedirectLoginHelper;
 use Facebook\FacebookRequest;
 use Facebook\FacebookAuthorizationException;
 use Facebook\FacebookRequestException;
-use lib\gamification\models\Score;
 
 class UsersController extends \BaseController {
 
@@ -13,10 +13,6 @@ class UsersController extends \BaseController {
   {
     $this->beforeFilter('auth',
       array('only' => ['follow', 'unfollow']));
-    $this->beforeFilter('ajax',
-      array( 'only' => array(
-        'getScores'
-      )));
   }
   
   public function index()
@@ -48,13 +44,16 @@ class UsersController extends \BaseController {
         session_start();
         $user_id = session_id();
     }
+    //
+    $albums = $user->userAlbums; 
     $source_page = Request::header('referer');
     ActionUser::printSelectUser($user_id, $id, $source_page, $user_or_visitor);
 
     return View::make('/users/show',['user' => $user, 'photos' => $photos, 'follow' => $follow,
       'evaluatedPhotos' => Photo::getEvaluatedPhotosByUser($user),
       'lastDateUpdatePhoto' => Photo::getLastUpdatePhotoByUser($id),
-      'lastDateUploadPhoto' => Photo::getLastUploadPhotoByUser($id)
+      'lastDateUploadPhoto' => Photo::getLastUploadPhotoByUser($id),
+      'albums' => $albums,
       ]);
   }
   
@@ -76,7 +75,7 @@ class UsersController extends \BaseController {
     // validate data
     $rules = array(
         'name' => 'required',
-        'login' => 'required|unique:users',
+        'login' => 'required|regex:/^[a-z0-9-_]{3,20}$/|unique:users',
         'password' => 'required|min:6|confirmed',
         'email' => 'required|email|unique:users',
         'terms' => 'required'
@@ -170,13 +169,13 @@ class UsersController extends \BaseController {
     }else{
 
       $user = User::userInformationObtain($email);
-
+      
       if(!empty($user)){
         $randomPassword = strtolower(Str::quickRandom(8)); 
         $user->password = Hash::make($randomPassword);
-        
-        $user->touch();
-        $user->save();
+        $user->oldAccount = 0; // usuário já tem senha nova
+        $user->touch(); // touch já salva
+        // $user->save();
         Mail::send('emails.users.reset-password', array('user' => $user,'email' => $email,'randomPassword' => $randomPassword),
          function($message) use($email) {  
                $message->to($email)
@@ -210,70 +209,83 @@ class UsersController extends \BaseController {
     $fburl = $helper->getLoginUrl(array(
         'scope' => 'email',
     ));
+      
+    $institutions = Institution::institutionsList();
 
     if (!Session::has('filter.login') && !Session::has('login.message')) //nao foi acionado pelo filtro, retornar para pagina anterior
       Session::put('url.previous', URL::previous());
     
-    return View::make('/modal/login')->with(['fburl' => $fburl]);
+    return View::make('/modal/login')->with(['fburl' => $fburl,'institutions' => $institutions]);
   }
   
-
    // validacao do login
   public function login()
   { 
-     $input = Input::all();   
-     $user = User::userInformation($input["login"]);    
-    
+    $input = Input::all();   
+    $user = User::userInformation($input["login"]);
+    if (isset($user)) {
+      $integration_message = $this->integrateAccounts($user->email);
+    }
     if ($user != null && $user->oldAccount == 1) 
     {
       if ( User::checkOldAccount($user, $input["password"]) )
       {
-        $user->oldAccount = 0;
-        $user->password = Hash::make($input["password"]);
-        $user->save();
+        $user->updateAccount($input['password']);
       } else {
         Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
         return Redirect::to('/users/login')->withInput();
       }
     }
-
-    if (Auth::attempt(array('login' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true || Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true  )
-        { 
-      if ( Session::has('filter.login') ) //acionado pelo login
-      {  
-        Session::forget('filter.login');
-        $source_page = Request::header('referer');
-        ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
-        return Redirect::intended('/');
-      }
-        
-      if ( Session::has('url.previous') )
-      {
-        $url = Session::pull('url.previous'); 
-        
-        if (!empty($url)) {
+    if (isset($user)) {
+      if ( Auth::attempt(array('login' => $user->login, 'password' => $input["password"],'active' => 'yes')) == true || 
+          Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true  ) { 
+        if ( Session::has('filter.login') ) //acionado pelo login
+        {  
+          Session::forget('filter.login');
           $source_page = Request::header('referer');
           ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
-          //Redirect when user forget password
-          if($url == URL::to('users/forget')){ 
-            return Redirect::to('/');
-          }elseif(!empty($input["firstTime"])){ 
-              return Redirect::to('/')->with('msgWelcome', "Bem-vind@ ".ucfirst($user->name).".");
+          if (isset($integration_message)) {
+            return Redirect::to('/')->with('msgWelcome', $integration_message);  
+          }
+          return Redirect::intended('/');
+        }
+        if ( Session::has('url.previous') )
+        {
+          $url = Session::pull('url.previous'); 
           
-          }else{
-            return Redirect::to($url);
+          if (!empty($url)) {
+            $source_page = Request::header('referer');
+            ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+            //Redirect when user forget password
+            if($url == URL::to('users/forget')){ 
+              return Redirect::to('/');
+            }elseif(!empty($input["firstTime"])){ 
+                return Redirect::to('/')->with('msgWelcome', "Bem-vind@ ".ucfirst($user->name).".");
+            
+            }else{
+              return Redirect::to($url);
+            }
+
           }
 
+          
+          $source_page = Request::header('referer');
+          ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+          if (isset($integration_message)) {
+            return Redirect::to('/')->with('msgWelcome', $integration_message);  
+          }
+          return Redirect::to('/');
         }
-
-        
         $source_page = Request::header('referer');
         ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+        if (isset($integration_message)) {
+          return Redirect::to('/')->with('msgWelcome', $integration_message);  
+        }
         return Redirect::to('/');
+      } else {
+  			Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
+        return Redirect::to('/users/login')->withInput();
       }
-      $source_page = Request::header('referer');
-      ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
-      return Redirect::to('/');
     } else {
       Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
       return Redirect::to('/users/login')->withInput();
@@ -283,11 +295,15 @@ class UsersController extends \BaseController {
   // formulário de login
   public function logout()
   {
-    $user_id = Auth::user()->id;
-    $source_page = Request::header('referer');
-    ActionUser::printLoginOrLogout($user_id, $source_page, "Logout", "arquigrafia", "user");
+    if (Auth::check()) {
+      $user_id = Auth::user()->id;
+      $source_page = Request::header('referer');
+      ActionUser::printLoginOrLogout($user_id, $source_page, "Logout", "arquigrafia", "user");
 
-    Auth::logout();
+      Auth::logout();
+      Session::flush();
+      return Redirect::to('/');
+    }
     return Redirect::to('/');
   }
   
@@ -330,14 +346,19 @@ class UsersController extends \BaseController {
       $response = $request->execute();
       $fbuser = $response->getGraphObject();
       $fbid = $fbuser->getProperty('id');
+      $fbmail = $fbuser->getProperty('email');
       
+      $integration_message = $this->integrateAccounts($fbmail);
       //usuarios antigos tem campo id_facebook null, mas existe login = $fbid;
       $user = User::where('id_facebook', '=', $fbid)->orWhere('login', '=', $fbid)->first();
       
       if (!is_null($user)) {
         // loga usuário existente
         Auth::loginUsingId($user->id);
-        
+        if(is_null($user->id_facebook)) {
+          $user->id_facebook = $fbid;
+          $user->save();
+        }
         // pega avatar
         $request = new FacebookRequest(
           $session,
@@ -353,18 +374,32 @@ class UsersController extends \BaseController {
         $response = $request->execute();
         $pic = $response->getGraphObject();
         $image = Image::make($pic->getProperty('url'))->save(public_path().'/arquigrafia-avatars/'.$user->id.'.jpg');
-        if ($user->photo == "") {
+        if ($user->photo != '/arquigrafia-avatars/'.$user->id.'.jpg') {
           $user->photo = '/arquigrafia-avatars/'.$user->id.'.jpg';
           $user->save();
         }
 
         $source_page = Request::header('referer');
         ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "facebook", "user");
-        
-        return Redirect::to('/')->with('message', "Bem-vindo {$user->name}!");
+        if (isset($integration_message)) {
+          return Redirect::to('/')->with('msgWelcome', $integration_message);  
+        }
+        return Redirect::to('/')->with('msgWelcome', "Bem-vindo {$user->name}!");
         
       } else {
-        // cria um novo usuário
+        $query = User::where('email', '=', $fbmail)->first();
+        if (!is_null($query)) {
+          $query->id_facebook = $fbid;
+          $query->save();
+          Auth::loginUsingId($query->id);
+          $source_page = Request::header('referer');
+          ActionUser::printLoginOrLogout($query->id, $source_page, "Login", "facebook", "user");
+          if (isset($integration_message)) {
+            return Redirect::to('/')->with('msgWelcome', $integration_message);  
+          }
+          return Redirect::to('/')->with('msgWelcome', "Bem-vindo {$query->name}!");
+        }
+        else {
         $user = new User;
         $user->name = $fbuser->getProperty('name');
         $user->login = $fbuser->getProperty('id');
@@ -393,15 +428,31 @@ class UsersController extends \BaseController {
         $user->save();
         
         $source_page = Request::header('referer');
-        ActionUser::printLoginOrLogout($user->id, $source_page, "login", "arquigrafia", "user");
+        ActionUser::printNewAccount($user->id, $source_page, "facebook", "user");
 
-        // return $user;
         return Redirect::to('/')->with('message', 'Sua conta foi criada com sucesso!');
+      }
       }
             
     }
     
     
+  }
+
+  public function getFacebookPicture() {
+    if (Auth::check()) {
+      $user = Auth::user();
+      if ($user->id_facebook != null) {
+        $image = file_get_contents('https://graph.facebook.com/'.$user->id_facebook.'/picture?type=large');
+        $file_name = public_path().'/arquigrafia-avatars/'.$user->id.'.jpg';
+        $file = fopen($file_name, 'w+');
+        fputs($file, $image);
+        fclose($file);
+        $user->photo = '/arquigrafia-avatars/'.$user->id.'.jpg';
+        $user->save();
+      }
+    }
+    return $user->photo;
   }
 
   public function follow($user_id)
@@ -417,8 +468,31 @@ class UsersController extends \BaseController {
     if ($user_id != $logged_user->id && !$following->contains($user_id)) {
       $logged_user->following()->attach($user_id);
 
+      /*Envio de notificação*/
+      if ($user_id != $logged_user->id) {
+      $user_note = User::find($user_id);
+      foreach ($user_note->notifications as $notification) {
+        $info = $notification->render();
+        if ($info[0] == "follow" && $notification->read_at == null) {
+          $note_id = $notification->notification_id;
+          $note_user_id = $notification->id;
+          $note = $notification;
+        }
+      }
+      if (isset($note_id)) {
+        $note_from_table = DB::table("notifications")->where("id","=", $note_id)->get();
+        if (NotificationsController::isNotificationByUser($logged_user->id, $note_from_table[0]->sender_id, $note_from_table[0]->data) == false) {
+          $new_data = $note_from_table[0]->data . ":" . $logged_user->id;
+          DB::table("notifications")->where("id", "=", $note_id)->update(array("data" => $new_data, "created_at" => Carbon::now('America/Sao_Paulo')));
+          $note->created_at = Carbon::now('America/Sao_Paulo');
+          $note->save();  
+        }
+      }
+      else Notification::create('follow', $logged_user, $user_note, [$user_note], null);
+    }
+
       $logged_user_id = Auth::user()->id;
-      $pageSource = Request::header('referer'); //get url of the source page
+      $pageSource = Request::header('referer');
       ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "passou a seguir", "user");
     }
 
@@ -467,10 +541,15 @@ class UsersController extends \BaseController {
  * @return Response
  */
   public function edit($id) {     
-    $user = User::find($id);   
-    return View::make('users.edit')
-      ->with(
-        ['user' => $user] );
+    $user = User::find($id);
+    $logged_user = Auth::User();
+    if ($logged_user == null) {
+      return Redirect::action('PagesController@home');  
+    } 
+    elseif ($logged_user->id == $user->id) { 
+      return View::make('users.edit')->with( ['user' => $user] );
+    }
+    return Redirect::action('PagesController@home');
   }
 
   public function update($id) {              
@@ -504,11 +583,8 @@ class UsersController extends \BaseController {
       $user->scholarity = $input['scholarity'];
       $user->lastName = $input['lastName'];
       $user->site = $input['site'];
-      //begin 12/05/2015 msy
       if ( !empty($input["birthday"]) )
-      $user->birthday = User::formatDate($input["birthday"]);      
-      //$user->birthday = $input['birthday'];
-      //end
+        $user->birthday = $input["birthday"];      
       $user->country = $input['country'];
       $user->state = $input['state'];
       $user->city = $input['city'];  
@@ -543,6 +619,7 @@ class UsersController extends \BaseController {
   }
 
   public function stoaLogin() {
+
     $account = Input::get('stoa_account');
     $password = Input::get('password');
     $stoa_user = $this->getStoaAccount($account, $password, 'login');
@@ -554,10 +631,32 @@ class UsersController extends \BaseController {
     }
     $user = User::stoa($stoa_user);
     Auth::loginUsingId($user->id);
-    //$user_id = Auth::user()->id;
+    
     $source_page = Request::header('referer');
     ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "stoa", "user");
     return Response::json(true);
+  }
+
+  public function institutionalLogin() { 
+    $login = Input::get('login');    
+    $institution = Input::get('institution');
+    $password = Input::get('password');
+    Log::info("Retrieved params login=".$login.", institution=".$institution);
+    $booleanExist = User::userBelongInstitution($login,$institution); 
+    Log::info("Result belong institution -> booleanExist=".$booleanExist);
+
+    if ((Auth::attempt(array('login' => $login, 'password' => $password)) == true || 
+      Auth::attempt(array('email' => $login, 'password' => $password,'active' => 'yes')) == true) &&
+      $booleanExist == true){
+
+      Log::info("Valid access, redirect");
+      Session::put('institutionId', $institution);
+      //loga usuario da institution
+      return Redirect::to('/');
+    } else {
+      Log::info("Invalid access, return message");
+      return Response::json(false);
+    }
   }
 
   private function getStoaAccount($account, $password, $account_type) {
@@ -581,4 +680,133 @@ class UsersController extends \BaseController {
     );    
   }
 
+  private function integrateAccounts($email) {
+    /* Verifica quantas contas com o mesmo e-mail existem */
+    $all_acc = User::where('email','=',$email)->get();
+    /* Se existir somente uma, não há o que integrar */
+    if (count($all_acc) <= 1) { 
+      return;
+    }
+    /* Pega cada conta separadamente */
+    $arq_acc =  User::whereRaw('(email = ?) and (id_stoa is NULL or id_stoa != login) and (id_facebook is NULL or id_facebook != login)', array($email))->first();
+    $fb_acc = User::whereRaw('(email = ?) and (id_facebook = login)', array($email))->first();
+    $stoa_acc = User::whereRaw('(email = ?) and (id_stoa = login)', array($email))->first();
+    /* Existe uma conta Arquigrafia? */
+    if (!is_null($arq_acc)) {
+      /* Essa conta já tem uma foto? */
+      if ($arq_acc->photo == "/arquigrafia-avatars/" . $arq_acc->id . ".jpg") {
+        $has_photo = true;
+      }
+      /* Existe uma conta Facebook? */
+      if (!is_null($fb_acc)) {
+        $fb_boolean = true;
+        /* Associa as contas */
+        DB::table('users')->where('id', '=', $arq_acc->id)->update(array('id_facebook' => $fb_acc->id));
+        /* Se a conta Arquigrafia não possuir foto e a conta Facebook possuir foto, pega essa foto */
+        if (!isset($has_photo)) {
+          if ($fb_acc->photo == "/arquigrafia-avatars/" . $fb_acc->id . ".jpg") {
+            $old_filename = public_path() . $fb_acc->photo;
+            $new_filename = public_path() . "/arquigrafia-avatars/" . $arq_acc->id . ".jpg";
+            if (File::exists($old_filename) && File::move($old_filename, $new_filename)) {
+              $arq_acc->photo = "/arquigrafia-avatars/" . $arq_acc->id . ".jpg";
+              $has_photo = true;
+            }
+          }
+        }
+        /* Importa Photos, Comments, Evaluations, follows e followers, se existirem */
+        $this->getAttributesFromTo($fb_acc, $arq_acc);
+      }
+      /* Existe uma conta Stoa? */
+      /*if (!is_null($stoa_acc)) {
+        $stoa_boolean = true;
+        // Associa as contas 
+        DB::table('users')->where('id', '=', $arq_acc->id)->update(array('id_stoa' => $stoa_acc->id));
+        // Se uma foto já não foi importada, verifica se a conta Stoa tem uma foto e pega ela 
+        if (!isset($has_photo)) {
+          if ($stoa_acc->photo == "/arquigrafia-avatars/" . $stoa_acc->id . ".jpg") {
+            if (rename("/arquigrafia-avatars/" . $stoa_acc->id . ".jpg", "/arquigrafia-avatars/" . $arq_acc->id . ".jpg")) {
+            $arq_acc->photo = "/arquigrafia-avatars/" . $arq_acc->id . ".jpg";
+            $has_photo = true;
+            }
+          }
+        }
+        // Importa Photos, Comments, Evaluations, follows e followers, se existirem 
+        UsersController::getAttributesFromTo($stoa_acc, $arq_acc);
+      }*/
+      /* Retorna uma mensagem dizendo quais contas foram integradas */
+      $result = "Sua(s) conta(s): ";
+      if (isset($fb_boolean)) {
+        $result = $result . "Facebook";
+      }
+      if (isset($fb_boolean) && isset($stoa_boolean)) {
+        $result = $result . " e ";
+      }
+      if (isset($stoa_boolean)) {
+        $result = $result . "Stoa";
+      }
+      $result = $result . " foi(ram) integrada(s) à sua conta Arquigrafia";
+      /* Exclui as contas paralelas do banco */
+      if (isset($fb_boolean)) {
+        DB::table('users')->where('id', '=', $fb_acc->id)->delete();
+      }
+      if (isset($stoa_boolean)) {
+        DB::table('users')->where('id', '=', $stoa_acc->id)->delete();
+      }
+      return $result;
+    }
+    /* Existe uma conta Facebook mas não uma Arquigrafia? */
+    /*if (!is_null($fb_acc) && is_null($arq_acc)) {
+      // A conta Facebook tem foto?
+      if ($fb_acc->photo == "/arquigrafia-avatars/" . $fb_acc->id . ".jpg") {
+        $has_photo = true;
+      }
+      // Existe uma conta Stoa? 
+      if (!is_null($stoa_acc)) {
+        $stoa_boolean = true;
+        // Associa as contas 
+        DB::table('users')->where('id', '=', $fb_acc->id)->update(array('id_stoa' => $stoa_acc->id));
+        // Se a conta Facebook não possuir foto e a conta Stoa possuir foto, pega essa foto
+        if (!isset($has_photo)) {
+          if ($stoa_acc->photo == "/arquigrafia-avatars/" . $stoa_acc->id . ".jpg") {
+            if (rename("/arquigrafia-avatars/" . $stoa_acc->id . ".jpg", "/arquigrafia-avatars/" . $fb_acc->id . ".jpg")) {
+            $fb_acc->photo = "/arquigrafia-avatars/" . $fb_acc->id . ".jpg";
+            $has_photo = true;
+            }
+          }
+        }
+        // Importa Photos, Comments, Evaluations, follows e followers, se existirem 
+        UsersController::getAttributesFromTo($stoa_acc, $fb_acc);
+      }
+      // Retorna uma mensagem dizendo quais contas foram integradas 
+      $result = "Sua conta: ";
+      if ($stoa_boolean) {
+        $result = $result . "Stoa";
+      }
+      $result = $result . " foi integrada à sua conta Facebook";
+      // Exclui a conta paralela do banco 
+      if (isset($stoa_boolean)) {
+        DB::table('users')->where('id', '=', $stoa_acc->id)->delete();
+      }
+      return $result;
+    }*/
+  }
+
+  private function getAttributesFromTo($accountFrom, $accountTo) {
+    DB::table('friendship')->where('following_id', '=', $accountFrom->id)->update(array('following_id' => $accountTo->id));
+    DB::table('friendship')->where('followed_id', '=', $accountFrom->id)->update(array('followed_id' => $accountTo->id));  
+    DB::table('photos')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
+    DB::table('binomial_evaluation')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
+    DB::table('comments')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
+    DB::table('albums')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
+    DB::table('notifications')->where('sender_id', '=', $accountFrom->id)->update(array('sender_id' => $accountTo->id));
+    DB::table('notification_user')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
+    DB::table('likes')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
+    DB::table('occupations')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
+    DB::table('scores')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
+    DB::table('users_roles')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
+    DB::table('user_badges')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
+    DB::table('employees')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
+    DB::table('friendship_institution')->where('following_user_id', '=', $accountFrom->id)
+      ->update(array('following_user_id' => $accountTo->id));
+  }
 }

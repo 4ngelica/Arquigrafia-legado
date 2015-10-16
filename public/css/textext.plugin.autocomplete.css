@@ -30,6 +30,11 @@
   text-decoration: underline;
 }
 .text-core .text-wrap .text-dropdown .text-list .text-suggestion.text-selected {
-  color: #fff;
-  background: #6d84b4;
+  /*color: #fff;
+  background: #6d84b4;*/
+  color: #000;
+  font-weight: bold;
+  font-style: italic;
+  background: #fff;
+  border: 1px solid #ccc;
 }

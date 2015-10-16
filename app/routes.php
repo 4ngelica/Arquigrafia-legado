@@ -12,8 +12,11 @@
 */
 
 Route::get('/test', function () { 
-	//testes
+  //testes
 });
+
+/* IMPORTS */
+Route::get('/photos/import', 'ImportsController@import');
 
 /* phpinfo() */
 Route::get('/info/', function(){ return View::make('i'); });
@@ -42,10 +45,12 @@ Route::get('users/login/fb', 'UsersController@facebook');
 Route::get('users/login/fb/callback', 'UsersController@callback');
 Route::get('/users/forget', 'UsersController@forgetForm');
 Route::post('/users/forget', 'UsersController@forget');
+Route::get('/getPicture', 'UsersController@getFacebookPicture');
 
 Route::resource('/users','UsersController');
 Route::resource('/users/stoaLogin','UsersController@stoaLogin');
 
+Route::resource('/users/institutionalLogin','UsersController@institutionalLogin');
 
 
 /* FOLLOW */
@@ -54,8 +59,6 @@ Route::get('/friends/unfollow/{user_id}', 'UsersController@unfollow');
 
 // AVATAR 
 Route::get('/profile/10/showphotoprofile/{profile_id}', 'UsersController@profile');
-
-Route::resource('/profile','ProfileController'); // lixo ?
 
 /* ALBUMS */
 Route::resource('/albums','AlbumsController');
@@ -94,19 +97,27 @@ Route::get('/photos/{id}/dislike', 'lib\gamification\controllers\LikesController
 Route::resource('/groups','GroupsController');
 Route::get('/photos/batch','PhotosController@batch');
 Route::get('/photos/upload','PhotosController@form');
+Route::get('/photos/uploadInstitutional','PhotosController@formInstitutional');
+Route::get('/photos/{photo_id}/editInstitutional','PhotosController@editFormInstitutional');
+Route::put('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');
+//Route::get('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');
+
 Route::get('/photos/download/{photo_id}','PhotosController@download');
+Route::get('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');
+Route::post('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');
 Route::resource('/photos','PhotosController');
 
 /* TAGS */
 Route::get('/tags/json', 'TagsController@index');
+Route::get('/tags/refreshCount', 'TagsController@refreshCount');
 
 /* NOTIFICATIONS */
 Route::get('/notifications', 'NotificationsController@show');
 Route::get('/markRead/{id}', 'NotificationsController@read');
 Route::get('/readAll', 'NotificationsController@readAll');
 
-/* GAMIFICATION */
-Route::get('/photos/{id}/get/field', 'lib\gamification\controllers\QuestionsController@getField');
-Route::post('/photos/{id}/set/field', 'lib\gamification\controllers\QuestionsController@setField');
-Route::get('/rank/get', 'lib\gamification\controllers\ScoresController@getRankEval');
-Route::get('/leaderboard', 'lib\gamification\controllers\ScoresController@getLeaderboard');
+Route::get('/refreshBubble', 'NotificationsController@howManyUnread');
+
+/* INSTITUTIONS */
+Route::get('/institutions/{id}', 'InstitutionsController@show');
+Route::resource('/institutions','InstitutionsController');

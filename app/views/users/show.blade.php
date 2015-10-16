@@ -80,18 +80,24 @@
         <p>{{ $user->city }}</p>
         @endif
 
-        @if (Auth::check() && $user->id != Auth::user()->id)
-          @if (!empty($follow) && $follow == true )
-            <a href="{{ URL::to("/friends/follow/" . $user->id) }}" id="single_view_contact_add">Seguir</a><br />
-           @else
-                <div>Seguindo</div>
-         @endif
-       @endif  
-        
-          </div>
-          <div class="count">Imagens compartilhadas ({{ count($photos) }})</div>
-        </div>
-      </div>
+			@if (Auth::check() && $user->id != Auth::user()->id && !Session::has('institutionId'))
+    			@if (!empty($follow) && $follow == true )
+	    			<a href="{{ URL::to("/friends/follow/" . $user->id) }}" id="single_view_contact_add">Seguir</a><br />
+ 				@else
+            		<div id="unfollow-button">
+					    <a href="{{ URL::to("/friends/unfollow/" . $user->id) }}">
+         					<p class="label success new-label"><span>Seguindo</span></p>
+    					</a>
+					</div>
+ 				@endif
+ 			@elseif (Auth::check() && $user->id == Auth::user()->id && !Session::has('institutionId'))
+ 				<a href="{{ URL::to("/users/" . $user->id . "/edit") }}" id="single_view_contact_add" title="Edite o seu perfil">Editar perfil</a><br />
+			@endif	
+			  
+	        </div>
+	      	<div class="count">Imagens compartilhadas ({{ count($photos) }})</div>
+	      </div>
+	    </div>
     
     <!-- GALERIA DO USUÁRIO -->
     <div id="user_gallery">
@@ -101,18 +107,18 @@
             @include('includes.panel-stripe')
         </div>
       @else
-        <div class="container row">
-          <div class="six columns">
-            <p>
-              @if (Auth::check() && $user->id == Auth::user()->id)
-                Você ainda não possui imagens no seu perfil. Faça o upload de uma imagem 
-                <a href="{{ URL::to('/photos/upload') }}">aqui</a>
-              @else
-                Não possui imagens.
-              @endif
-            </p>
-          </div>
-        </div>
+      	<div class="container row">
+      		<div class="six columns">
+	      		<p>
+	      			@if (Auth::check() && $user->id == Auth::user()->id && !Session::has('institutionId'))
+	      				Você ainda não possui imagens no seu perfil. Faça o upload de uma imagem 
+	      				<a href="{{ URL::to('/photos/upload') }}">aqui</a>
+	      			@else
+	      				Não possui imagens.
+	      			@endif
+	      		</p>
+      		</div>
+      	</div>
       @endif
     
     </div>
@@ -122,14 +128,14 @@
     
     <!-- USUÁRIO -->
     <div class="container row">
-      <div class="four columns">
-        <hgroup class="profile_block_title">
-          <h3><i class="profile"></i>Perfil</h3> &nbsp; &nbsp;
-          <?php if (Auth::check() && Auth::user()->id == $user->id) { ?>
-          <a href= '{{ URL::to("/") . "/users/" . $user->id . "/edit" }}' title="Editar perfil" >
-            <img src="{{ asset("img/edit.png") }}" width="16" height="16" />
-          </a>
-          <?php } ?>
+    	<div class="four columns">
+      	<hgroup class="profile_block_title">
+        	<h3><i class="profile"></i>Perfil</h3> &nbsp; &nbsp;
+        	<?php if (Auth::check() && Auth::user()->id == $user->id && !Session::has('institutionId')) { ?>
+               	<a href= '{{"/users/" . $user->id . "/edit" }}' title="Editar perfil" >
+        		<img src="{{ asset("img/edit.png") }}" width="16" height="16" />
+        	</a>
+        	<?php } ?>
         </hgroup>
         <ul>
       @if ( !empty($user->name) )
@@ -141,40 +147,40 @@
         </ul>
         <br>
         <ul>
-          @if ( !empty($user->lastName) )
-        <li><strong>Apelido: </strong>{{ $user->lastName }}</li>
-      @endif
-      @if ( !empty($user->birthday) && $user->visibleBirthday == 'yes')
-        <li><strong>Data de nascimento: </strong>{{ date("d/m/Y",strtotime($user->birthday)) }}</li>
-      @endif
-      @if ( !empty($user->gender) )
-        <li><strong>Sexo: </strong>{{ $user->gender == 'female' ? 'Feminino' : 'Masculino' }}</li>
-      @endif
-      @if ( !empty($user->email) && $user->visibleEmail == 'yes')
-        <li><strong>E-mail: </strong>{{ $user->email }}</li>
-      @endif
-      @if ( !empty($user->country) )
-        <li><strong>País: </strong>{{ $user->country }}</li>
-      @endif
-      @if ( !empty($user->state) )
-        <li><strong>Estado: </strong>{{ $user->state }}</li>
-      @endif
-      @if ( !empty($user->city) )
-        <li><strong>Cidade: </strong>{{ $user->city }}</li>
-      @endif
-      @if ( !empty($user->scholarity) )
-        <li><strong>Escolaridade: </strong> {{ $user->scholarity }}</li>
-      @endif
-      @if ( $user->occupation != null && $user->occupation->institution != null )
-        <li><strong>Instituição: </strong>{{ $user->occupation->institution}}</li>
-      @endif
-      @if ( $user->occupation != null && $user->occupation->occupation != null )
-        <li><strong>Ocupação: </strong>{{ $user->occupation->occupation}}</li>
-      @endif
-      @if ( !empty($user->site) )
-        <li><strong>Site pessoal: </strong> <a href="{{ $user->site }}">{{ $user->site }}</a></li>
-      @endif  
-      </br>
+        	@if ( !empty($user->lastName) )
+				<li><strong>Apelido: </strong>{{ $user->lastName }}</li>
+			@endif
+			@if ( !empty($user->birthday) && $user->visibleBirthday == 'yes')
+				<li><strong>Data de nascimento: </strong>{{ date("d/m/Y",strtotime($user->birthday)) }}</li>
+			@endif
+			@if ( !empty($user->gender) )
+				<li><strong>Sexo: </strong>{{ $user->gender == 'female' ? 'Feminino' : 'Masculino' }}</li>
+			@endif
+			@if ( !empty($user->email) && $user->visibleEmail == 'yes')
+				<li><strong>E-mail: </strong>{{ $user->email }}</li>
+			@endif
+			@if ( !empty($user->country) )
+				<li><strong>País: </strong>{{ $user->country }}</li>
+			@endif
+			@if ( !empty($user->state) )
+				<li><strong>Estado: </strong>{{ $user->state }}</li>
+			@endif
+			@if ( !empty($user->city) )
+				<li><strong>Cidade: </strong>{{ $user->city }}</li>
+			@endif
+			@if ( !empty($user->scholarity) )
+				<li><strong>Escolaridade: </strong> {{ $user->scholarity }}</li>
+			@endif
+			@if ( $user->occupation != null && $user->occupation->institution != null )
+				<li><strong>Instituição: </strong>{{ $user->occupation->institution}}</li>
+			@endif
+			@if ( $user->occupation != null && $user->occupation->occupation != null )
+				<li><strong>Ocupação: </strong>{{ $user->occupation->occupation}}</li>
+			@endif
+			@if ( !empty($user->site) )
+				<li><strong>Site pessoal: </strong> <a href="{{ $user->site }}" target="_blank">{{ $user->site }}</a></li>
+			@endif	
+			</br>
 
       
 
@@ -227,152 +233,134 @@
         
       </div>
       
-    </div>  
-    
-          <!-- MEUS ALBUNS -->
-  <div class="container">
-        
-      <div class="twelve columns albums">
-        <hgroup class="profile_block_title">
-          <h3><i class="photos"></i>
-            @if (Auth::check() && $user->id == Auth::user()->id)
-              Meus álbuns
-            @else
-              Álbuns
-            @endif
-          </h3>
-        </hgroup>
-        <?php $albums = $user->albums; ?>
-        
-        <div class="profile_box">
-          @if ($albums->count() > 0)
-            @foreach($albums as $album)
-              <div class="gallery_box">
-                <a href="{{ URL::to("/albums/" . $album->id) }}" class="gallery_photo" title="{{ $album->title }}">
-                  @if (isset($album->cover_id))
-                    <img src="{{ URL::to("/arquigrafia-images/" . $album->cover_id . "_home.jpg") }}" class="gallery_photo" />
-                  @else
-                    <div class="gallery_photo">
-                      <div class="no_cover">
-                        <p> Álbum sem capa </p>
-                      </div>
-                    </div>
-                  @endif
-                </a>
-                <a href="{{ URL::to("/albums/" . $album->id) }}" class="name">
-                  {{ $album->title . ' ' . '(' . $album->photos->count() . ')' }}
-                </a>
-                <br />
-              </div>
-            @endforeach
-          @else
-            <p>
-            @if (Auth::check() && $user->id == Auth::user()->id)
-              Você ainda não tem nenhum álbum. Crie um <a href="{{ URL::to('/albums/create') }}">aqui</a>
-            @else
-              Não possui álbuns.
-            @endif
-            </p>
-          @endif
-        </div>
-      
-      </div>
-  
-  </div>
-
-  <br>
-  <br>
-  <!-- MINHAS AVALIAÇÕES -->
-  <div class="container">
-        
-      <div class="twelve columns albums">
-        <hgroup class="profile_block_title">
-          <h3><img src="{{ asset("img/evaluate.png") }}" width="16" height="16"/>
-            @if (Auth::check() && $user->id == Auth::user()->id)
-              Minhas imagens avaliadas
-            @else
-              Imagens avaliadas
-            @endif
-          </h3>
-        </hgroup>      
-        
-        <div class="profile_box">
-          @if ($evaluatedPhotos->count() > 0)
-            @foreach($evaluatedPhotos as $evaluatedPhoto)
-              @if (Auth::check() && $user->id == Auth::user()->id)
-                <div class="gallery_box">
-                  <a href='{{"/photos/" . $evaluatedPhoto->id . "/evaluate/" }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">                  
-                    <img src="{{ URL::to("/arquigrafia-images/" . $evaluatedPhoto->id . "_home.jpg") }}" class="gallery_photo" />                  
-                  </a>
-                  <a href='{{"/photos/" . $evaluatedPhoto->id . "/evaluate/" }}' class="name">
-                    {{ $evaluatedPhoto->name  }}
-                  </a>
-                  <br />
-                </div>
-              @else
-                <div class="gallery_box">
-                  <a href='{{"/photos/" . $evaluatedPhoto->id . "/viewEvaluation/" . $user->id }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">                  
-                    <img src="{{ URL::to("/arquigrafia-images/" . $evaluatedPhoto->id . "_home.jpg") }}" class="gallery_photo" />                  
-                  </a>
-                  <a href='{{"/photos/" . $evaluatedPhoto->id . "/viewEvaluation/" . $user->id }}' class="name">
-                    {{ $evaluatedPhoto->name  }}
-                  </a>
-                  <br />
-                </div>
-              @endif
-            @endforeach
-          @else
-            <p>
-            @if (Auth::check() && $user->id == Auth::user()->id)
-              Você ainda não realizou nenhuma avaliação. <a href="{{ URL::to('/') }}">Selecione</a> uma imagem e avalie a arquitetura apresentada nela.
-            @else
-              Não possui avaliações.
-            @endif
-            </p>
-          @endif
-   
-
-        </div>
-      
-      </div>
-
-    <div id="fb-root"></div>
-
-  </div>
-
-  <br>
-  <br>
-
-  <div class="container">
-    <div class="twelve columns albums">
-        <hgroup class="profile_block_title">
-          <h3><img src="{{ asset("img/badge.png") }}" width="16" height="16"/>
-            Badges ({{$user->badges->count()}})</h3>
-        </hgroup>
-        <div class="profile_box">
-  </div>
-
-</div>
-  </div>
-
-    <!--   MODAL   -->
-  <div id="mask"></div>
-  <div id="form_window" class="form window">
-    <a class="close" href="#" title="FECHAR">Fechar</a>
-    <div id="registration"></div>
-  </div>
-  <div id="confirmation_window" class="window">
-    <div id="registration_delete">
-      <p></p>
-      {{ Form::open(array('url' => '', 'method' => 'delete')) }}
-        <div id="registration_buttons">
-              <input type="submit" class="btn" value="Confirmar" />
-          <a class="btn close" href="#" >Cancelar</a>
-        </div>
-      {{ Form::close() }}
     </div>
-  </div>
-</div>
 
+    	    <!-- MEUS ALBUNS -->
+	<div class="container">
+				
+			<div class="twelve columns albums">
+				<hgroup class="profile_block_title">
+					<h3><i class="photos"></i>
+						@if (Auth::check() && $user->id == Auth::user()->id && !Session::has('institutionId'))
+							Meus álbuns
+						@else
+							Álbuns
+						@endif
+					</h3>
+				</hgroup>
+				<?php //$albums = $user->albums; ?>
+				
+				<div class="profile_box">
+					@if ($albums->count() > 0)
+						@foreach($albums as $album)
+							<div class="gallery_box">
+								<a href="{{ URL::to("/albums/" . $album->id) }}" class="gallery_photo" title="{{ $album->title }}">
+									@if (isset($album->cover_id))
+										<img src="{{ URL::to("/arquigrafia-images/" . $album->cover_id . "_home.jpg") }}" class="gallery_photo" />
+									@else
+										<div class="gallery_photo">
+											<div class="no_cover">
+												<p> Álbum sem capa </p>
+											</div>
+										</div>
+									@endif
+								</a>
+								<a href="{{ URL::to("/albums/" . $album->id) }}" class="name">
+									{{ $album->title . ' ' . '(' . $album->photos->count() . ')' }}
+								</a>
+								<br />
+							</div>
+						@endforeach
+					@else
+						<p>
+						@if (Auth::check() && $user->id == Auth::user()->id)
+							Você ainda não tem nenhum álbum. Crie um <a href="{{ URL::to('/albums/create') }}">aqui</a>
+						@else
+							Não possui álbuns.
+						@endif
+						</p>
+					@endif
+				</div>
+			
+			</div>
+	
+	</div>
+
+	<br>
+	<br>
+	@if(!Session::has('institutionId'))
+	<!-- MINHAS AVALIAÇÕES -->
+	<div class="container">
+		<div class="twelve columns albums">
+			<hgroup class="profile_block_title">
+				<h3><img src="{{ asset("img/evaluate.png") }}" width="16" height="16"/>
+					@if (Auth::check() && $user->id == Auth::user()->id &&!Session::has('institutionId'))
+						<!--Minhas imagens avaliadas-->
+						Minhas imagens interpretadas
+					@else
+						<!--Imagens avaliadas-->
+						Imagens interpretadas
+					@endif
+				</h3>
+			</hgroup>			
+			
+			<div class="profile_box">
+				@if ($evaluatedPhotos->count() > 0)
+					@foreach($evaluatedPhotos as $evaluatedPhoto)
+						@if (Auth::check() && $user->id == Auth::user()->id)
+							<div class="gallery_box">
+								<a href='{{"/photos/" . $evaluatedPhoto->id . "/evaluate/" }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">									
+									<img src="{{ URL::to("/arquigrafia-images/" . $evaluatedPhoto->id . "_home.jpg") }}" class="gallery_photo" />
+								</a>
+								<a href='{{"/photos/" . $evaluatedPhoto->id . "/evaluate/" }}' class="name">
+									{{ $evaluatedPhoto->name }}
+								</a>
+								<br />
+							</div>
+						@else
+							<div class="gallery_box">
+								<a href='{{"/photos/" . $evaluatedPhoto->id . "/viewEvaluation/" . $user->id }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">									
+									<img src="{{ URL::to("/arquigrafia-images/" . $evaluatedPhoto->id . "_home.jpg") }}" class="gallery_photo" />
+								</a>
+								<a href='{{"/photos/" . $evaluatedPhoto->id . "/viewEvaluation/" . $user->id }}' class="name">
+									{{ $evaluatedPhoto->name }}
+								</a>
+								<br />
+							</div>
+						@endif
+					@endforeach
+				@else
+					<p>
+						@if (Auth::check() && $user->id == Auth::user()->id)
+							Você ainda não realizou nenhuma avaliação.
+              <a href="{{ URL::to('/') }}">Selecione</a> uma imagem e avalie a arquitetura apresentada nela.
+						@else
+							Não possui avaliações.
+						@endif
+					</p>
+				@endif
+			</div>
+		</div>
+	</div>
+	@endif
+    
+		<!--   MODAL   -->
+	<div id="mask"></div>
+	<div id="form_window" class="form window">
+		<a class="close" href="#" title="FECHAR">Fechar</a>
+		<div id="registration"></div>
+	</div>
+	<div id="confirmation_window" class="window">
+		<div id="registration_delete">
+			<p></p>
+			{{ Form::open(array('url' => '', 'method' => 'delete')) }}
+				<div id="registration_buttons">
+	            <input type="submit" class="btn" value="Confirmar" />
+					<a class="btn close" href="#" >Cancelar</a>
+				</div>
+			{{ Form::close() }}
+		</div>
+	</div>
+{{-- >>>>>>> 6fbf3b1deebee8ae0b7bc744766dffb1a39b961b --}}
 
 @stop

@@ -34,7 +34,7 @@ class CreateNotificationsTables extends Migration {
 			$table->increments('id');
 			$table->integer('notification_id');
 			$table->integer('user_id');
-			$table->timestamp('read_at');
+			$table->timestamp('read_at')->nullable()->default(null);
 			$table->timestamps();
 			$table->softDeletes();
 		});
@@ -47,8 +47,16 @@ class CreateNotificationsTables extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('notifications');
-		Schema::drop('notification_user');
+		Schema::table('notifications', function(Blueprint $table)
+		{
+			Schema::drop('notifications');
+		});
+
+		Schema::table('notification_user', function(Blueprint $table)
+		{
+			Schema::drop('notification_user');
+		});		
+			
 	}
 
 }

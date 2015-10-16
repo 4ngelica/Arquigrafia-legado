@@ -14,3 +14,5 @@ app/config/facebook.php
 public/arquigrafia-images/*
 public/arquigrafia-avatars/*
 public/packages/darsain/*
+public/arquigrafia-imports/*
+app/storage/original-images/*

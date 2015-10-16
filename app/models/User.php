@@ -4,16 +4,24 @@ use Illuminate\Auth\UserTrait;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
-// begin 12/05/2015 for date msy
 use lib\date\Date;
 
 use lib\gamification\traits\UserGamificationTrait;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
+
+	use UserTrait, RemindableTrait;
 	
 	use UserGamificationTrait;
 
 	protected $fillable = ['id','name','email','password','login','verify_code'];
+
+	protected $date;
+
+	public function __construct($attributes = array(), Date $date = null) {
+		parent::__construct($attributes);
+		$this->date = $date ?: new Date;
+	}
 
 	public function notifications()
   {
@@ -24,7 +32,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	{
 		return $this->hasMany('Photo');
 	}
-
+	public function userPhotos($user_id){
+		return $this->hasMany('Photo')->where('user_id', $user_id)->whereNull('institution_id');
+	}
 	public function comments()
 	{
 		return $this->hasMany('Comment');
@@ -43,7 +53,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	{
 		return $this->hasMany('Album');
 	}
-
+	public function userAlbums()
+	{
+		return $this->hasMany('Album')->whereNull('institution_id');
+	}
 	public function occupation()
 	{
 		return $this->hasOne('Occupation');
@@ -60,13 +73,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	{
 		return $this->belongsToMany('User', 'friendship', 'following_id', 'followed_id');
 	}
-	//begin 12/05/2015 format date msy
-	public static function formatDate($date)
-	{
-		return Date::formatDate($date);
-	}
-	//end
-	use UserTrait, RemindableTrait;
 
 	protected $hidden = array('password', 'remember_token');
 
@@ -118,7 +124,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	public function equal($user) {
 		try {
-			return ($this->id == $user->id);
+			return $user instanceof User &&
+				$this->id == $user->id;
 		} catch (Exception $e) {
 			return false;
 		}
@@ -126,22 +133,51 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	public static function userInformation($login){
 		
-		$user = User::where('login','=',$login)
-          ->orWhere('email','=',$login)
-          ->first();
-
+		$user = User::whereRaw('((login = ?) or (email = ?)) and (id_stoa is NULL or id_stoa != login) and (id_facebook is NULL or id_facebook != login)', array($login, $login))->first();
           return $user;
 	}
 	
 
 	public static function userInformationObtain($email){
-		$user = User::where('email','=',$email)->first();
+		$user = User::where('email','=',$email)->whereRaw('(id_stoa is NULL or id_stoa != login) and (id_facebook is NULL or id_facebook != login)')->first();
           return $user;
 	}
 
 	public static function userVerifyCode($verify_code){
 		$newUser = User::where('verify_code','=',$verify_code)->first();			
         return $newUser;
+	}
+
+	public static function userBelongInstitution($login,$institution){
+
+		Log::info("Begining userBelongInstitution with input params login=".$login.", institution=".$institution);
+
+		$employees = DB::table('employees')
+    			->join('users','employees.user_id','=','users.id')
+    			->join('institutions','employees.institution_id','=','institutions.id')
+    			->select('institutions.id')
+     			->where('employees.institution_id', $institution)
+     			->where('users.login',$login)
+     			->orWhere('users.email',$login)
+     			->get();
+     			
+     			if (!empty($employees)){
+     				return true;
+     			}else{
+     				return false;
+     			}
+     			
+
+	}
+
+	public function setBirthdayAttribute($birthday) {
+		$this->attributes['birthday'] = $this->date->formatDate($birthday);
+	}
+
+	public function updateAccount($password) {
+		$this->oldAccount = 0;
+		$this->password = Hash::make($password);
+		$this->save();
 	}
 
 }

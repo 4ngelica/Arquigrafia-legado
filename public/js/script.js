@@ -71,5 +71,17 @@ $(document).ready(function(){
 			$('#form_login_window').fadeIn('slow');
 		});
 
-});
+		$('#institutionLogin').live('click', function (e) {
+			e.preventDefault();
+			$('#mask').fadeIn('fast');
+			$('#form_login_inst_window').fadeIn('slow');
+		});
 
+		$('.tabs .tab-links a').live('click', function(e) {
+      e.preventDefault();
+      var currentAttrValue = $(this).attr('href');
+      $('.tabs ' + currentAttrValue).fadeIn('slow').siblings().hide();
+      $(this).parent('li').addClass('active').siblings().removeClass('active');
+    });
+
+});

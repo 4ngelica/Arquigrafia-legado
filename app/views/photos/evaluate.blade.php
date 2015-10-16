@@ -127,7 +127,7 @@
                 marginRight: 80,          
             },
             title: {
-                text: '<b> Média de Avaliações d{{$architectureName}} </b>'
+                text: '<b> Média de interpretações d{{$architectureName}} </b>'
             },
             tooltip: {
               formatter: function() {
@@ -214,9 +214,9 @@
                 color: '#000000',
                 name: 
                 @if (Auth::check() && $owner->id == Auth::user()->id)
-                  'Sua avaliação' 
+                  'Suas impressões' 
                 @else
-                  'Avaliação de {{$owner->name}}'
+                  'Impressões de {{$owner->name}}'
                 @endif
             }
             @endif
@@ -234,7 +234,7 @@
      
     <hgroup class="profile_block_title">    
       <h3><img src="{{ asset("img/evaluate.png") }}" width="16" height="16"/>
-        Imagens avaliadas com média similar</h3>
+        Imagens interpretadas com média similar</h3>
         <span>({{count($similarPhotos) }})
             @if(count($similarPhotos)>1) 
                Imagens 
@@ -296,77 +296,110 @@
         @endif
 				<!--   FIM - USUARIO   -->				
         
-        <!-- AVALIAÇÃO -->
-               
-        <h3>Avaliação d{{$architectureName}}</h3> 
+        <!-- AVALIAÇÃO -->              
         
-			 
-        <p>Avalie a arquitetura apresentada nesta imagem de acordo com seus aspectos, compare também sua avaliação com as dos outros usuários.</p>
+        <h3>Suas impressões d{{$architectureName}}</h3> 
+	       <br>
+         {{ Form::open(array('url' => "photos/{$photos->id}/saveEvaluation")) }}
+         
+         
+         {{ Form::checkbox('knownArchitecture', 'yes', $checkedKnowArchitecture) }}
+         
+
+         Eu conheço pessoalmente esta arquitetura.
+
+	       <br><br>
+         {{ Form::checkbox('areArchitecture', 'yes', $checkedAreArchitecture) }}
+         
+
+         Estou no local.
+
+         <br><br>
+
+        <p>Para cada um dos pares abaixo, quais são as qualidades predominantes na arquitetura que são visíveis nesta imagem?</p>
                
         <!-- FORMULÁRIO DE AVALIAÇÃO -->
         <div id="evaluation_box">         
         
           <?php if (Auth::check()) { ?>
-              
-            {{ Form::open(array('url' => "photos/{$photos->id}/saveEvaluation")) }}
-
             <script>
+              var baseURL = '{{ URL::to('/search') }}';
               function outputUpdate(binomio, val) {                        
-                document.querySelector('#leftBinomialValue'+binomio).value = 100 - val;
-                document.querySelector('#rightBinomialValue'+binomio).value = val;                                         
+                var left, right;
+                left = document.querySelector('#leftBinomialValue'+binomio);
+                right = document.querySelector('#rightBinomialValue'+binomio);
+                left.value = 100 - val;
+                right.value = val;
+                makeSearchURL(binomio, val);
               }
-            </script> 
-            
-              <?php 
-                $count = $binomials->count() - 1;
-                // fazer um loop para cada e salvar como uma avaliação
-                foreach ($binomials->reverse() as $binomial) { ?>
-
-                  
-                  
-                  <p>
-                    <table border = 0 width= 230>
-                      <tr>
-                        <td width=110>{{ Form::label('value-'.$binomial->id, $binomial->firstOption) }} 
-                    @if (isset($userEvaluations) && !$userEvaluations->isEmpty())
-                            <?php $userEvaluation = $userEvaluations->get($count) ?>
-                            (<output for=fader{{$binomial->id}} id=leftBinomialValue{{$binomial->id}}>{{100 - $userEvaluation->evaluationPosition}}</output>%)</td>
-                            <td align="right"> {{ Form::label('value-'.$binomial->id, $binomial->secondOption) }} 
-                            (<output for=fader{{$binomial->id}} id=rightBinomialValue{{$binomial->id}}>{{$userEvaluation->evaluationPosition}}</output>%)</td>
-                      </tr>
-                    </table> 
-                            {{ Form::input('range', 'value-'.$binomial->id, $userEvaluation->evaluationPosition, ['min'=>'0','max'=>'100', 
-                      'oninput'=>'outputUpdate(' . $binomial->id . ', value)']) }} 
-
-                    @else
-                            (<output for=fader{{$binomial->id}} id=leftBinomialValue{{$binomial->id}}>{{100 - $binomial->defaultValue}}</output>%)</td>
-                            <td align="right"> {{ Form::label('value-'.$binomial->id, $binomial->secondOption) }} 
-                            (<output for=fader{{$binomial->id}} id=rightBinomialValue{{$binomial->id}}>{{$binomial->defaultValue}}</output>%)</td>
-                            </tr>
-                    </table> 
-                             {{ Form::input('range', 'value-'.$binomial->id, $binomial->defaultValue, ['min'=>'0','max'=>'100',
-                      'oninput'=>'outputUpdate(' . $binomial->id . ', value)']) }} 
-
-                    @endif 
-
-                    <?php $count-- ?>  
-                  </p>
-                  
-              <?php } ?>
+              function makeSearchURL(binomio, val) {
+                var left = document.querySelector('.output#first_' + binomio);
+                var right = document.querySelector('.output#second_' + binomio);
+                left.href = baseURL + '/?bin=' + binomio + '&opt=1&val=' + val;
+                right.href = baseURL + '/?bin=' + binomio + '&opt=2&val=' + val;
+              }
+            </script>
+            <?php $count = $binomials->count() - 1; ?>
+            @foreach($binomials->reverse() as $binomial)
+              <?php
+                if ( isset($userEvaluations) && ! $userEvaluations->isEmpty() ) {
+                  $userEvaluation = $userEvaluations->get($count);
+                  $diff = $userEvaluation->evaluationPosition;
+                } else {
+                  $diff = $binomial->defaultValue;
+                }
+              ?>
+              <p>
+                <table border="0" width="230">
+                  <tr>
+                    <td width="110">
+                      <a href="{{ URL::to('/search?bin=' . $binomial->id . '&opt=1') }}">
+                        {{ $binomial->firstOption }}
+                      </a>
+                      <a class="output" id="first_{{ $binomial->id }}"
+                        href="{{ URL::to('/search?bin=' . $binomial->id . '&opt=1&val=' . $diff) }}">
+                        (<output for="fader{{ $binomial->id }}"
+                          id="leftBinomialValue{{ $binomial->id }}">
+                          {{100 - $diff }}
+                        </output>%)
+                      </a>
+                    </td>
+                    <td align="right">
+                      <a href="{{ URL::to('/search?bin=' . $binomial->id . '&opt=2') }}">
+                        {{ $binomial->secondOption }}
+                      </a>
+                      <a class="output" id="second_{{ $binomial->id }}"
+                        href="{{ URL::to('/search?bin=' . $binomial->id . '&opt=2&val=' . $diff) }}">
+                        (<output for="fader{{ $binomial->id }}"
+                          id="rightBinomialValue{{ $binomial->id }}">
+                          {{ $diff }}
+                        </output>%)
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+                {{ Form::input('range', 'value-'.$binomial->id, $diff,
+                  [ 'min' => '0',
+                    'max' => '100',
+                    'oninput' => 'outputUpdate(' . $binomial->id . ', value)' ])
+                }}
+              </p>
+              <?php $count-- ?>
+            @endforeach
               
-               <a href="{{ URL::previous() }}" class='btn right'>VOLTAR</a>
+               <a href="{{ URL::to('/photos/' . $photos->id) }}" class='btn right'>VOLTAR</a>
                @if (Auth::check() && $owner != null && $owner->id == Auth::user()->id)
-                {{ Form::submit('AVALIAR', ['id'=>'evaluation_button','class'=>'btn right']) }} 
+                {{ Form::submit('ENVIAR', ['id'=>'evaluation_button','class'=>'btn right']) }} 
                @endif
                 
             {{ Form::close() }}
             
             
           <?php } else { ?>
-            @if (empty($average)) 
-              <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e seja o primeiro a avaliar {{$architectureName}}</p>
-            @else
-              <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e avalie você também {{$architectureName}}</p>
+            @if (empty($average))               
+              <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e seja o primeiro a registrar impressões sobre {{$architectureName}}</p>
+            @else              
+              <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e registre você também impressões sobre {{$architectureName}}</p>
             @endif            
           <?php } ?>
         
@@ -377,17 +410,9 @@
 
       <!--   BOX DE COMENTARIOS   -->
         <div id="comments_block" class="eight columns row alpha omega">
-          <h3>Comentários</h3>
-          <div class="text_comment width_comment" >
-            <small>
-            Cada usuário é responsável por seus próprios comentários. 
-            O Arquigrafia não se responsabiliza pelos comentários postados,
-             mas apenas por tornar indisponível no site o conteúdo considerado
-              infringente ou danoso por determinação judicial (art.19 da Lei 12.965/14).
-            </small>
-            </div>
+          <h3>Comentários</h3>          
           <p></p>
-          <?php $comments = $photos->comments; ?>
+          <?php $comments = $photos->comments; ?>         
           
           @if (!isset($comments))          
          
@@ -413,10 +438,15 @@
                 {{ Form::textarea('text', '', ['id'=>'comment_field']) }}
                 {{ Form::hidden('user', $photos->id ) }}
                 {{ Form::submit('COMENTAR', ['id'=>'comment_button','class'=>'cursor btn']) }}
+                </br>   
+                </br>             
+                <p align="justify" style="font-size: 7pt">
+                  Cada usuário é responsável por seus próprios comentários. O Arquigrafia não se responsabiliza pelos comentários postados, mas apenas por tornar indisponível no site o conteúdo considerado infringente ou danoso por determinação judicial (art.19 da Lei 12.965/14).
+                </p>
               </div>
             {{ Form::close() }}
             
-            <br class="clear">
+            <br class="clear">           
             
           <?php } else { ?>            
             <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e comente sobre {{$architectureName}}</p>
@@ -437,7 +467,7 @@
 
               </div>
               <div class="four columns omega row">
-                <small>{{$comment->user->name}} - {{$comment->created_at->format('d/m/Y h:m') }}</small>
+                <small>{{$comment->user->name}} - {{$comment->created_at->format('d/m/Y h:i') }}</small>
                 <p>{{ $comment->text }}</p>
               </div>        
             </div>       

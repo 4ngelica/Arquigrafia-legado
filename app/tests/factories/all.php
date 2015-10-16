@@ -14,6 +14,7 @@ FactoryMuffin::define('Photo', [
 	'imageAuthor' => 'firstName',
 	'nome_arquivo' => 'word',
 	'user_id' => 'factory|User',
+	'tombo' => 'word',
 ]);
 
 FactoryMuffin::define('Album', [
@@ -21,4 +22,9 @@ FactoryMuffin::define('Album', [
 	'description' => 'sentence|5',
 	'user_id' => 'factory|User',
 	'cover_id' => 'factory|Photo'
+]);
+
+FactoryMuffin::define('Tag', [
+	'name' => 'word',
+	'count' => 'randomNumber'
 ]);

@@ -1,5 +1,5 @@
 <?php
 
-  return array(
-      'pretend' => true,
-    );
+return array(
+		'pretend' => true,
+	);

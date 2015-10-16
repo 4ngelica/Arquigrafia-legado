@@ -7,10 +7,10 @@ class AlbumsController extends \BaseController {
 			array( 'except' => 'show' ));
 		$this->beforeFilter('ajax',
 			array( 'only' => array(
-				'paginateAlbumPhotos',
 				'updateInfo',
 				'detachPhotos',
 				'attachPhotos',
+				'paginateAlbumPhotos',
 				'paginatePhotosNotInAlbum',
 				'paginateCoverPhotos',
 				'getList'
@@ -18,32 +18,47 @@ class AlbumsController extends \BaseController {
 	}
 
 	public function index() {
-		$albums = Auth::user()->albums;
+		if(Session::has('institutionId')) {
+			$albums = Album::withInstitution(Session::get('institutionId'))->get();
+		} else {
+			$albums = Album::withUser(Auth::user())->withoutInstitutions()->get();
+		}
 		return View::make('albums.index')->with('albums', $albums);
 	}
 
 	public function create() {
 		$url = URL::to('/albums/photos/add');
-		$photos = Photo::paginateUserPhotos(Auth::user());
-		$image = Session::has('image') ? Session::get('image') : null;
+		if ( Session::has('institutionId') ) {
+			$photos = Photo::paginateInstitutionPhotos(Session::get('institutionId'));
+		} else {
+			$photos = Photo::paginateUserPhotos(Auth::user());
+		}
+		$image = Photo::find( Input::get('photo') );
 		return View::make('albums.form')
 			->with(['photos' => $photos,
 				'url' => $url,
 				'maxPage' => $photos->getLastPage(),
 				'page' => 1,
 				'type' => 'add',
-				'image' => $image
+				'image' => $image,
 			]);
 	}
 
 	public function show($id) {
 		$album = Album::find($id);
+		
+		
 		if (is_null($album)) {
 			return Redirect::to('/');
 		}
 		$photos = $album->photos;
-		$user = $album->user;
-		$other_albums = Album::withUser($user)->except($album)->get();
+		if (!is_null($album->institution)){			
+			$user = $album->institution;
+			$other_albums = Album::withInstitution($user)->except($album)->get();
+		} else {
+			$user = $album->user;				
+			$other_albums = Album::withUser($user)->whereNull('institution_id')->except($album)->get();
+		}
 		return View::make('albums.show')
 			->with([
 				'photos' => $photos,
@@ -54,14 +69,21 @@ class AlbumsController extends \BaseController {
 	}
 
 	public function store() {
-		$photos = Input::get('photos_add');
+		$photos = (array) Input::get('photos_add');
 		$cover = Photo::find((empty($photos) ? null : array_values($photos)[0]));
 		$user = Auth::user();
+
+		if( Session::has('institutionId') ) {
+			$institution = Institution::find(Session::get('institutionId'));
+		} else {
+			$institution = NULL;
+		}
 		$album = Album::create([
 			'title' => Input::get('title'),
 			'description' => Input::get('description'),
 			'user' => $user,
-			'cover' => $cover
+			'cover' => $cover,
+			'institution' => $institution
 		]);
 		if ( $album->isValid() ) {
 			if ( !empty($photos) ) {
@@ -75,7 +97,10 @@ class AlbumsController extends \BaseController {
 	public function delete($id) {
 		$album = Album::find($id);
 		$user = Auth::user();
-		if ( isset($album) && $user->equal($album->user) ) {
+		$institution = Institution::find( Session::get('institutionId') );
+		if ( isset($album) && ( $user->equal($album->user) || 
+			(isset($institution) && $institution->equal($album->institution) ) ) )
+		{
 			$album->delete();
 			Session::put('album.delete', 'Álbum ' . $album->title . ' deletado com sucesso.');
 		}
@@ -85,13 +110,18 @@ class AlbumsController extends \BaseController {
 	public function edit($id) {
 		$user = Auth::user();
 		$album = Album::find($id);
-		if (is_null($album) || !$user->equal($album->user)) {
+		$institution = Institution::find( Session::get('institutionId') );
+		if ( is_null($album) || ! ( $user->equal($album->user) ||
+			(isset($institution) && $institution->equal($album->institution) ) ) ) {
 			return Redirect::to('/');
 		}
 		$album_photos = Photo::paginateAlbumPhotos($album);
-		$other_photos_pagination = Photo::paginateUserPhotosNotInAlbum($user, $album);
-		$other_photos = $other_photos_pagination['photos'];
-		$other_photos_count = $other_photos_pagination['photos_count'];
+		if ( isset($institution) ) {
+			$other_photos = Photo::paginateInstitutionPhotosNotInAlbum($institution, $album);
+		} else {
+			$other_photos = Photo::paginateUserPhotosNotInAlbum($user, $album);
+		}
+		$other_photos_count = $other_photos->getTotal();
 		$maxPage = $other_photos->getLastPage();
 		$rmMaxPage = $album_photos->getLastPage();
 		$url = URL::to('/albums/' . $album->id . '/paginate/other/photos/');
@@ -139,7 +169,11 @@ class AlbumsController extends \BaseController {
 	}
 
 	public function paginateByUser() {
-		$photos = Photo::paginateUserPhotos(Auth::user());
+		if ( Session::has('institutionId') ) {
+			$photos = Photo::paginateInstitutionPhotos(Session::get('institutionId'));
+		} else {
+			$photos = Photo::paginateUserPhotos(Auth::user());
+		}
 		$page = $photos->getCurrentPage();
 		return Response::json(View::make('albums.includes.album-photos')
 			->with(['photos' => $photos, 'page' => $page, 'type' => 'add'])
@@ -169,14 +203,22 @@ class AlbumsController extends \BaseController {
 		$photos = Photo::paginateAlbumPhotos($album, 48);
 		$photos_ids = [];
 		foreach ($photos as $photo) {
-			array_push($photos_ids, $photo->id);
+			$photos_ids[] = $photo->id;
 		}
 		return $photos_ids;
+		// return $photos->getCollection()->lists('id');
 	}
 
 	public function getList($id) {
+		//
 		$albums_with_photo = Photo::find($id)->albums; // albums que já têm essa foto
-		$albums = Album::withUser( Auth::user() )->except($albums_with_photo)->get();
+		
+		if(Session::has('institutionId')) { //dd($albums_with_photo);
+			$albums = Album::withInstitution(Session::get('institutionId'))->except($albums_with_photo)->get();
+		}else{
+			$albums = Album::withUser( Auth::user() )->whereNull('institution_id')->except($albums_with_photo)->get();
+		}
+		
 		return Response::json(View::make('albums.get-albums')
 			->with(['albums' => $albums, 'photo_id' => $id])
 			->render());
@@ -205,7 +247,7 @@ class AlbumsController extends \BaseController {
 			}
 		}
 		if ($albums->isEmpty()) {
-			return Redirect::to('/photos/' . $photo);
+			return Redirect::to('/photos/' . $photo->id);
 		} else {
 			return Redirect::to('/albums')->with('message', '<strong>Imagem adicionada com sucesso ao(s) seu(s) álbum(ns)</strong>');
 		}
@@ -219,7 +261,7 @@ class AlbumsController extends \BaseController {
 
 	public function removePhotoFromAlbum($album_id, $photo_id) {
 		$album = Album::find($album_id);
-		$album->detachPhotos();
+		$album->detachPhotos($photo_id);
 		return Redirect::to('/albums/' . $album->id);
 	}
 
@@ -255,23 +297,28 @@ class AlbumsController extends \BaseController {
 	public function paginatePhotosNotInAlbum($id) {
 		$album = Album::find($id);
 		$user = Auth::user();
-		if ( is_null($album) || !$user->equal($album->user) ) {
+		$inst = Institution::find(Session::get('institutionId'));
+		if ( is_null($album) || ! ( $user->equal($album->user) ||
+			(isset($institution) && $institution->equal($album->institution) ) ) ) {
 			return Response::json('failed');
 		}
 		$query = Input::has('q') ? Input::get('q') : '';
 		$which_photos = Input::get('wp');
 		$pagination = null;
-		if (strcmp($which_photos, 'user') == 0) {
-			$pagination = Photo::paginateUserPhotosNotInAlbum($user, $album, $query);
+		if ( $which_photos == 'user' ) {
+			if ( isset($inst) ) {
+				$pagination = Photo::paginateInstitutionPhotosNotInAlbum($inst, $album, $query);
+			} else {
+				$pagination = Photo::paginateUserPhotosNotInAlbum($user, $album, $query);
+			}
 		} else {
 			$pagination = Photo::paginateAllPhotosNotInAlbum($album, $query);
 		}
 		return $this->paginationResponse($pagination, 'add');
 	}
 
-	private function paginationResponse($pagination, $type) {
-		$photos = $pagination['photos'];
-		$count = $pagination['photos_count'];
+	private function paginationResponse($photos, $type) {
+		$count = $photos->getTotal();
 		$page = $photos->getCurrentPage();
 		$response = [];
 		$response['content'] = View::make('albums.includes.album-photos-edit')

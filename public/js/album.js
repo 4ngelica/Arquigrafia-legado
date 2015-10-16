@@ -280,7 +280,11 @@ function requestPage(page, type, URL, callback, paginator, runInBackground) {
 	.done(function(data) {
 		$("." + type + " .loader").hide();
 		data = parseData(data);
-		callback(type, data, paginator, page);
+		if (data == false) {
+			failedRequest(type, 'Aconteceu um erro! Tente novamente mais tarde.');	
+		} else {
+			callback(type, data, paginator, page);
+		}
 	}).fail(function() {
 		$("." + type + " .loader").hide();
 		failedRequest(type, 'Aconteceu um erro! Tente novamente mais tarde.');
@@ -424,7 +428,7 @@ function detachOrAttachPhotos(photos, callback, type, action) {
 	photos['wp'] = $('input[name=which_photos]:checked').val();
 	$.post('/albums/' + album + '/' + action + '/photos?page=1', photos).done(function(response) { //volta tudo para a página 1
 		$('.'+ type + ' .loader').hide();
-		if (response == 'failed') {
+		if (response == 'failed' || parseData(response) == false) {
 			failedRequest(type, 'Não foi possível atualizar seu álbum! Tente novamente mais tarde.');
 		} else {
 			response = parseData(response);
@@ -455,5 +459,10 @@ function updatePages(type) {
 }
 
 function parseData(data) {
-	return (typeof data == 'string') ? $.parseJSON(data) : data;
+	try {
+		return (typeof data == 'string') ? $.parseJSON(data) : data;
+	} catch (err) {
+		console.error(err.message);
+	}
+	return false;
 }

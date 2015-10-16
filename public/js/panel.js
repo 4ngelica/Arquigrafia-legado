@@ -4,12 +4,16 @@ $(document).ready(function(e) {
 	// mansonry
 	panel = $('#panel').isotope({
     itemSelector : '.item',
-    layoutMode: 'masonryHorizontal'
+    layoutMode: 'masonryHorizontal',
+    masonryHorizontal: {
+      rowHeight: 114
+    }
 	});
 });
 
 $(window).load(function(e) {
 	// resize by height
+	/*
 	$("#panel .item").each(function(i){
 		var objh = $(this).height();
 		var img = $(this).find("img");
@@ -18,6 +22,17 @@ $(window).load(function(e) {
 			img.css({"width":"auto", "height": objh+20});
 		}
 	});
+	*/
+	
+	// teste de carregamento
+  imgcounter = 0;
+  function changeImage() {
+    var $item = $("#panel .item").eq(imgcounter);
+	$item.find("img").attr("src", $item.find("img").data("src") );
+	$item.find("img").bind("load", function(){$item.addClass('sharpen');});
+    imgcounter++;
+  }
+  setInterval(changeImage, 10);
 	
 	// pan by depth
 	/* $("body").mousemove(function(e) {

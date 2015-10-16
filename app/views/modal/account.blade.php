@@ -8,8 +8,7 @@
     
       <div class="twelve columns">
         <h1>Cadastro</h1>
-        <p>Faça seu cadastro para poder compartilhar imagens no Arquigrafia.<br>
-        <small>* Todos os campos a seguir são obrigatórios.</small>
+        <p>Faça seu cadastro para poder compartilhar imagens no Arquigrafia.
         </p>
       </div>
       
@@ -24,7 +23,7 @@
           </div>
           
           
-          <div class="two columns alpha"><p>{{ Form::label('login', 'Usuário*:') }}</p></div>
+          <div class="two columns alpha"><p>{{ Form::label('login', 'Login*:') }}</p></div>
           <div class="two columns omega">
             <p>{{ Form::text('login') }} <br>
             <div class="error">{{ $errors->first('login') }}</div>
@@ -47,6 +46,8 @@
           
           <div class="two columns row alpha"><p>{{ Form::label('password_confirmation', 'Repita a senha*:') }}</p></div>
           <div class="two columns row omega"><p>{{ Form::password('password_confirmation') }}</p></div>
+
+          <small>* Campos obrigatórios.</small>
           
           <div class="four columns alpha omega">
           
