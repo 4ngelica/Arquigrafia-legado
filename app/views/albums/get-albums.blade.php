@@ -121,9 +121,9 @@
       {{ '#album_' . $album->id . ' + label' }}
       {
         @if ($album->cover_id != null)
-          background: url('{{"/arquigrafia-images/" . $album->cover_id . "_home.jpg" }}');
+          background: url('{{ URL::to("/") . "/arquigrafia-images/" . $album->cover_id . "_home.jpg" }}');
         @else
-          background: url('{{"/img/registration_no_cover.png" }}');
+          background: url('{{ URL::to("/") . "/img/registration_no_cover.png" }}');
         @endif
       }
     @endforeach
