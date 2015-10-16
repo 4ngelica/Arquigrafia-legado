@@ -54,7 +54,7 @@ class Badge extends \Eloquent {
           'element_id' => $photo->id,
           'element_type' => get_class($photo),
         ));
-      return true;
+      return $destaque_badge;
     }
   }
 

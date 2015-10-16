@@ -4,6 +4,10 @@ use lib\gamification\models\Score;
 
 trait UserGamificationTrait {
 
+  public function score() {
+    return $this->hasOne('lib\gamification\models\Score');
+  }
+
   public function scopeWithPoints($query, $columns, $following) {
     return $query->select(\DB::raw('users.' . $columns . ', scores.points'))
     ->leftJoin('scores', 'users.id', '=', 'scores.user_id')

@@ -60,8 +60,12 @@
               $counts["Bronze"] = 0;
             }
           ?>
+          <p>
+            <a href="{{ URL::to('/leaderboard') }}">
+              Ver Quadro de Colaboradores
+            </a>
+          </p>
           <div>
-            {{-- <span class="leaderboard" id"ranking"><strong>1</strong></span> --}}
             <span class="badges-counter" title ="{{$counts['Gold']}} gold badges">
               <span  class="badges_gold"></span>
               <span class="number_badge">{{$counts["Gold"]}}</span>
