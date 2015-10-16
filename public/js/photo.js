@@ -64,7 +64,7 @@ $(document).ready(function() {
       like_button.attr('href', data.url);
       like_button.attr('title', like_button.hasClass('dislike') ? 'Descurtir' : 'Curtir' );
       $("#likes + small").text(data.likes_count);
-      $('#likes').closest('spam').attr('title', data.likes_count + " pessoas curtiram essa imagem");
+      $('#likes').closest('span').attr('title', data.likes_count + " pessoas curtiram essa imagem");
     });
     
   });
