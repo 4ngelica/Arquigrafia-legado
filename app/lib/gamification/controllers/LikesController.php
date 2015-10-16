@@ -19,7 +19,9 @@ class LikesController extends \BaseController {
       \Notification::create('photo_liked', $user, $photo, [$user_note], null);
     }
     $like = Like::getFirstOrCreate($photo, $user);
-    $gotBadge = Badge::getDestaqueDaSemana($photo);
+    if ( ($badge = Badge::getDestaqueDaSemana($photo)) ) {
+      \Notification::create('badge_earned', $user, $badge, [$photo->user], null);
+    }
     return \Response::json([ 
       'url' => \URL::to('/photos/' . $photo->id . '/' . 'dislike'),
       'likes_count' => $photo->likes->count()
