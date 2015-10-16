@@ -223,7 +223,7 @@ input.search_bar_button { background: url(../img/sprite.png) -330px 0; height: 2
 .wrap .item:hover .item-title { display: block; }
 .wrap .item .item-title p { margin: 0; padding: 0; color: #ddd; display: inline-block; }
 /* lightbox - criar uma conta */
-#form_window { width: 600px; height: 470px; background: #fff; position: fixed; top: 40%; left: 50%; margin: -240px 0 0 -340px; padding: 25px; -moz-border-radius: 2px; border-radius: 2px; display: none; z-index: 1001; } /* position: absolute; */
+#form_window { width: 600px; min-height: 470px; background: #fff; position: fixed; top: 40%; left: 50%; margin: -240px 0 0 -340px; padding: 25px; -moz-border-radius: 2px; border-radius: 2px; display: none; z-index: 1001; } /* position: absolute; */
 /*#form_window label { width: 100px; display: inline-block; color: #777; text-align: left; vertical-align: top; line-height: 27px; }*/
 #form_window textarea { border: solid 1px #EEEEEE; padding: 3px; margin: 2px 0 2px 5px; font-size: 11px; }
 #form_window input { border: solid 1px #eee; padding: 3px; margin: 2px 0 2px 5px; }
