@@ -171,9 +171,9 @@
 				@foreach($user->following as $following)
 					<a href= {{ '/users/' .  $following->id }} >
 					<?php if ($following->photo != "") { ?>					
-						<img width="40" height="40" class="avatar" src="{{ asset($following->photo) }}" class="user_photo_thumbnail"/>
+						<img width="40" height="40" class="avatar" src="{{ asset($following->photo) }}" class="user_photo_thumbnail" title="{{$following->name}}"/>
 					<?php } else { ?>
-						<img width="40" height="40" class="avatar" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
+						<img width="40" height="40" class="avatar" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail" title="{{$following->name}}"/>
 					<?php } ?>
 					</a>
 					
@@ -195,9 +195,9 @@
           @foreach($user->followers as $follower)
 					<a href= {{ '/users/' .  $follower->id }} >
 					<?php if ($follower->photo != "") { ?>					
-						<img width="40" height="40" class="avatar" src="{{ asset($follower->photo) }}" class="user_photo_thumbnail"/>
+						<img width="40" height="40" class="avatar" src="{{ asset($follower->photo) }}" class="user_photo_thumbnail" title="{{$follower->name}}"/>
 					<?php } else { ?>
-						<img width="40" height="40" class="avatar" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
+						<img width="40" height="40" class="avatar" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail" title="{{$follower->name}}"/>
 					<?php } ?>
 					</a>
 		@endforeach   
