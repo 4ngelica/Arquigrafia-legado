@@ -4,10 +4,12 @@ use lib\date\Date;
 use lib\metadata\Exiv2;
 use lib\license\CreativeCommons_3_0;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use lib\gamification\traits\LikableGamificationTrait;
 
 class Photo extends Eloquent {
 
 	use SoftDeletingTrait;
+	use LikableGamificationTrait;
 
 	protected $softDelete = true;
 
@@ -53,11 +55,6 @@ class Photo extends Eloquent {
 		return $this->belongsTo('User');
 	}
 
-	public function badge()
-	{
-		return $this->belongsTo('lib\gamification\models\Badge');
-	}
-
 	public function tags()
 	{
 		return $this->belongsToMany('Tag', 'tag_assignments');
@@ -66,11 +63,6 @@ class Photo extends Eloquent {
 	public function comments()
 	{
 		return $this->hasMany('Comment');
-	}
-
-	public function likes()
-	{
-		return $this->morphMany('Like', 'likable');
 	}
 
 	public function albums()
@@ -281,11 +273,6 @@ class Photo extends Eloquent {
 
 		
     	return $arrayPhotosDB;
-	}
-
-	public function attachBadge($badge) {
-		$this->badge_id = $badge->id;
-		$this->save();
 	}
 
 	public static function licensePhoto($photo){

@@ -36,7 +36,6 @@ class PhotosController extends \BaseController {
     $question = $photos->getFieldQuestion($field);
     $follow = true;
     if (Auth::check()) {
-      $photoliked = Like::fromUser($user)->withLikable($photos)->first();
       $evaluations =  Evaluation::where("user_id", $user->id)->where("photo_id", $id)->orderBy("binomial_id", "asc")->get();
       if ($user->following->contains($photo_owner->id)) {
         $follow = false;
@@ -60,7 +59,6 @@ class PhotosController extends \BaseController {
       'average' => $average, 'userEvaluations' => $evaluations, 'binomials' => $binomials,
       'architectureName' => Photo::composeArchitectureName($photos->name),
       'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photos->id),
-      'photoliked' => $photoliked,
       'license' => $license,
       'getFieldURL' => URL::to('/photos/' . $photos->id . '/get/field'),
       'setFieldURL' => URL::to('/photos/' . $photos->id . '/set/field'),

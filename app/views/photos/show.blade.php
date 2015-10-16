@@ -129,7 +129,7 @@
               <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=sb' )}}" title="Avalie {{$architectureName}}" id="evaluate" ></a>
             </li>
             <!-- LIKE-->
-            @if(is_null($photoliked))
+            @if( ! $photos->hasUserLike(Auth::user()) )
               <li>
                 <a href="{{ URL::to('/photos/' . $photos->id . '/like' ) }}" id="like_button" title="Curtir"></a>
               </li>
@@ -234,7 +234,7 @@
                 <p>{{ $comment->text }}</p>
 
                 @if (Auth::check())
-                  @if(!$comment->isLiked())
+                  @if( ! $comment->hasUserLike(Auth::user()) )
                     <p> <a href="{{ URL::to('/comments/' . $comment->id . '/like' ) }}" class='like_comment' >Curtir</a></p>
                   @else
                     <p> <a href="{{ URL::to('/comments/' . $comment->id . '/dislike' ) }}" class='like_comment' class='dislike'>Descurtir</a></p>
@@ -432,7 +432,7 @@
 
       @if (empty($average))
         <h4>Avaliação:</h4>
-        <img src="/img/GraficoFixo.png" />
+        <img src="{{ URL::to('/') }}/img/GraficoFixo.png" />
       @else
         <h4>
           <center>Média de Avaliações d{{ $architectureName }} </center>
