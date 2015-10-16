@@ -4,6 +4,7 @@
 
 <title>Arquigrafia - Seu universo de imagens de arquitetura</title>
 
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <!-- ISOTOPE -->
 <script src="{{ URL::to("/") }}/js/jquery.isotope.min.js"></script>
 
@@ -15,43 +16,69 @@
 
 @section('content')
 
-	@if (Session::get('message'))
-      	<div class="container">
-        	<div class="twelve columns">
-          		<div class="message">{{ Session::get('message') }}</div>
-        	</div>
+  @if (Session::get('message'))
+        <div class="container">
+          <div class="twelve columns">
+              <div class="message">{{ Session::get('message') }}</div>
+          </div>
         </div>
     @endif
 
-		<?php //include "includes/header.php"; ?>
+    <!--   HEADER DO USUÁRIO   -->
+    <div class="container">
+      <div id="user_header" class="twelve columns">
+        <!-- Avatar with edit profile -->
+        @if (Auth::check() && Auth::user()->id == $user->id)
+          <a href= '{{ url("users/" . $user->id . "/edit") }}' title="Editar perfil" >
+          @if ($user->photo != "")
+            <img class="avatar" src="{{ asset($user->photo) }}" class="user_photo_thumbnail"/>          
+          @else
+            <img class="avatar" src="{{ asset("img/avatar-perfil.png") }}"
+              width="60" height="60" class="user_photo_thumbnail"/>
+          @endif
+          </a>
+        @else
+          @if ($user->photo != "")
+            <img class="avatar" src="{{ asset($user->photo) }}" class="user_photo_thumbnail"/>          
+          @else
+            <img class="avatar" src="{{ asset("img/avatar-60.png") }}"
+              width="60" height="60" class="user_photo_thumbnail"/>
+          @endif
+        @endif
 
-		<!--   HEADER DO USUÁRIO   -->
-		<div class="container">
-	      <div id="user_header" class="twelve columns">
-          
-             <!-- Avatar with edit profile -->
-			<?php if (Auth::check() && Auth::user()->id == $user->id) { ?>
-			  <a href= '{{"/users/" . $user->id . "/edit" }}' title="Editar perfil" >
-				<?php if ($user->photo != "") { ?>
-            	 <img class="avatar" src="{{ asset($user->photo) }}" class="user_photo_thumbnail"/>          
-          		<?php } else { ?>
-            	<img class="avatar" src="{{ asset("img/avatar-perfil.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
-          		<?php } ?>
-          	  </a>
-            <?php }else{ ?>
-            		<?php if ($user->photo != "") { ?>
-            	 		<img class="avatar" src="{{ asset($user->photo) }}" class="user_photo_thumbnail"/>          
-          			<?php } else { ?>
-            			<img class="avatar" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
-          			<?php } ?>
-            <?php } ?>
-	        <div class="info">
-
-	          <h1>{{ $user->name}} {{ $user->secondName}}</h1>	          
-
-			 @if ( !empty($user->city) )
-				<p>{{ $user->city }}</p>
-			  @endif
+        <div class="info">
+          <h1>{{ $user->name}} {{ $user->secondName}}</h1>
+          <?php
+            $counts = array_count_values($user->badges->lists("class"));
+            if ( ! array_key_exists("Gold", $counts) ) {
+              $counts["Gold"] = 0;
+            }
+            if ( ! array_key_exists("Silver", $counts) ) {
+              $counts["Silver"] = 0;
+            }
+            if ( ! array_key_exists("Bronze", $counts) ) {
+              $counts["Bronze"] = 0;
+            }
+          ?>
+          <div>
+            {{-- <span class="leaderboard" id"ranking"><strong>1</strong></span> --}}
+            <span class="badges-counter" title ="{{$counts['Gold']}} gold badges">
+              <span  class="badges_gold"></span>
+              <span class="number_badge">{{$counts["Gold"]}}</span>
+            </span>
+            <span class="badges-counter" title ="{{$counts['Silver']}} silver badges">
+              <span  class="badges_silver"></span>
+              <span class="number_badge">{{$counts["Silver"]}}</span>
+            </span>
+            <span class="badges-counter" title ="{{$counts['Bronze']}} bronze badges">
+              <span  class="badges_bronze"></span>
+              <span class="number_badge">{{$counts["Bronze"]}}</span>
+            </span>
+          </div>
+           
+       @if ( !empty($user->city) )
+        <p>{{ $user->city }}</p>
+        @endif
 
 			@if (Auth::check() && $user->id != Auth::user()->id && !Session::has('institutionId'))
     			@if (!empty($follow) && $follow == true )
@@ -75,10 +102,10 @@
     <!-- GALERIA DO USUÁRIO -->
     <div id="user_gallery">
       
-    	@if($photos->count() > 0)
-	      <div class="wrap">
-   	   		@include('includes.panel-stripe')
-      	</div>
+      @if($photos->count() > 0)
+        <div class="wrap">
+            @include('includes.panel-stripe')
+        </div>
       @else
       	<div class="container row">
       		<div class="six columns">
@@ -110,13 +137,13 @@
         	</a>
         	<?php } ?>
         </hgroup>
-      	<ul>
-			@if ( !empty($user->name) )
-				<li><strong>Nome completo: </strong> {{ $user->name}}</li>
-			@endif
-			<!--@if ( !empty($user->secondName) )
-				<li><strong>Sobrenome:</strong>{{ $user->secondName }}</li>
-			@endif-->
+        <ul>
+      @if ( !empty($user->name) )
+        <li><strong>Nome completo: </strong> {{ $user->name}}</li>
+      @endif
+      <!--@if ( !empty($user->secondName) )
+        <li><strong>Sobrenome:</strong>{{ $user->secondName }}</li>
+      @endif-->
         </ul>
         <br>
         <ul>
@@ -155,18 +182,19 @@
 			@endif	
 			</br>
 
-			
+      
 
-			
+      
         </ul>
       </div>
       
       <div class="four columns">
-      	<hgroup class="profile_block_title">
-        	<h3><i class="follow"></i>Seguindo ({{$user->following->count()}})</h3>
-    			<!--<a href="#" id="small" class="profile_block_link">Ver todos</a>-->
-   	 		</hgroup>
+        <hgroup class="profile_block_title">
+          <h3><i class="follow"></i>Seguindo ({{$user->following->count()}})</h3>
+          <!--<a href="#" id="small" class="profile_block_link">Ver todos</a>-->
+          </hgroup>
         <!--   BOX - AMIGOS   -->
+
     		<div class="profile_box">			
 				@foreach($user->following as $following)
 					<a href= {{ '/users/' .  $following->id }} >
@@ -183,16 +211,28 @@
       </div>
       
       <div class="four columns">
-      	<hgroup class="profile_block_title">
+        <hgroup class="profile_block_title">
           <h3><i class="follow"></i>Seguidores ({{$user->followers->count()}})</h3>
           <!--<a href="#" id="small" class="profile_block_link">Ver todos</a>-->
         </hgroup>
-    		<!--   BOX - AMIGOS   -->
-		<div class="profile_box">
+        <!--   BOX - AMIGOS   -->
+    <div class="profile_box">
           <!--   LINHA - FOTOS - AMIGOS   -->
           <!--   FOTO - AMIGO   -->
           
           @foreach($user->followers as $follower)
+<<<<<<< HEAD
+          <a href="{{ URL::to('/') . '/users/' .  $follower->id }}" >
+          <?php if ($follower->photo != "") { ?>          
+            <img width="40" height="40" class="avatar" src="{{ asset($follower->photo) }}" class="user_photo_thumbnail"/>
+          <?php } else { ?>
+            <img width="40" height="40" class="avatar" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
+          <?php } ?>
+          </a>
+    @endforeach   
+    
+    </div>
+=======
 					<a href= {{ '/users/' .  $follower->id }} >
 					<?php if ($follower->photo != "") { ?>					
 						<img width="40" height="40" class="avatar" src="{{ asset($follower->photo) }}" class="user_photo_thumbnail" title="{{$follower->name}}"/>
@@ -203,11 +243,12 @@
 		@endforeach   
 		
 		</div>
+>>>>>>> 215cb8584f366b4253388feb347848862ee79d84
         
       </div>
       
-    </div>  
-    
+    </div>
+
     	    <!-- MEUS ALBUNS -->
 	<div class="container">
 				
@@ -334,5 +375,6 @@
 			{{ Form::close() }}
 		</div>
 	</div>
+{{-- >>>>>>> 6fbf3b1deebee8ae0b7bc744766dffb1a39b961b --}}
 
 @stop

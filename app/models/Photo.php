@@ -2,11 +2,13 @@
 
 use lib\date\Date;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use lib\gamification\traits\LikableGamificationTrait;
 use Illuminate\Database\Eloquent\Collection as Collection;
 
 class Photo extends Eloquent {
 
 	use SoftDeletingTrait;
+	use LikableGamificationTrait;
 
 	protected $softDelete = true;
 
@@ -47,6 +49,20 @@ class Photo extends Eloquent {
 		'NO' => ['Não', '-nc']
 	];
 
+	private static	$information_questions = [
+		'city' => 'Deseja adicionar a cidade da obra?',
+		'country' => 'Deseja adicionar o país da obra?',
+		'dataCriacao' => 'Qual é a data desta imagem?',
+		'description' => 'Deseja adicionar uma descrição para a imagem?',
+		'district' => 'Qual é o bairro da obra?',
+		'imageAuthor' => 'Quem é o autor desta imagem?',
+		'name' => 'Qual é o nome desta obra?',
+		'state' => 'Qual é o Estado desta arquitetura?',
+		'street' => 'Qual é a rua desta obra?',
+		'workAuthor' => 'Quem é o autor da obra?',
+		'workdate' => 'Quando foi construída a obra?'
+	];
+
 	protected $date;
 
 	public function __construct($attributes = array(), Date $date = null) {
@@ -77,11 +93,6 @@ class Photo extends Eloquent {
 	public function comments()
 	{
 		return $this->hasMany('Comment');
-	}
-
-	public function likes()
-	{
-		return $this->morphMany('Like', 'likable');
 	}
 
 	public function albums()
@@ -250,11 +261,6 @@ class Photo extends Eloquent {
 
 
 			return $arrayPhotosDB;
-	}
-
-	public function attachBadge($badge) {
-		$this->badge_id = $badge->id;
-		$this->save();
 	}
 
 	public static function licensePhoto($photo){

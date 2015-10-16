@@ -88,9 +88,9 @@
             <span class="right" title="{{ $commentsMessage }}">
               <i id="comments"></i><small>{{ $commentsCount }}</small>
             </span>
-            <!--<span class="right" title="{{ $photos->likes->count() }} pessoas curtiram essa imagem">
+            <span class="right" title="{{ $photos->likes->count() }} pessoas curtiram essa imagem">
               <i id="likes"></i> <small>{{ $photos->likes->count() }}</small>
-            </span>-->
+            </span>
             @if ( $owner->equal(Auth::user()) )
               <span class="right">
                 <a id="delete_button" href="{{ URL::to('/photos/' . $photos->id) }}" title="Excluir imagem"></a>
@@ -140,7 +140,8 @@
               <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=sb' )}}" title="Registre suas impressões sobre {{$architectureName}}" id="evaluate" ></a>
             </li>
             <!-- LIKE-->
-            <!--@if(is_null($photoliked))
+
+            @if( ! $photos->hasUserLike(Auth::user()) )
               <li>
                 <a href="{{ URL::to('/photos/' . $photos->id . '/like' ) }}" id="like_button" title="Curtir"></a>
               </li>
@@ -148,7 +149,7 @@
               <li>
                 <a href="{{ URL::to('/photos/' . $photos->id . '/dislike' ) }}" id="like_button" class="dislike" title="Descurtir"></a>
               </li>
-            @endif -->
+            @endif
           </ul>
         @else
           <div class="six columns alpha">
@@ -263,13 +264,13 @@
                 </small>
                 <p>{{ $comment->text }}</p>
 
-                <!--@if (Auth::check())
-                  @if(!$comment->isLiked())
+                @if (Auth::check())
+                  @if( ! $comment->hasUserLike(Auth::user()) )
                     <p> <a href="{{ URL::to('/comments/' . $comment->id . '/like' ) }}" class='like_comment' >Curtir</a></p>
                   @else
                     <p> <a href="{{ URL::to('/comments/' . $comment->id . '/dislike' ) }}" class='like_comment' class='dislike'>Descurtir</a></p>
                   @endif
-                @endif-->
+                @endif
               </div>
             </div>
           @endforeach
@@ -368,6 +369,8 @@
         @endif
       </hgroup>
 
+      {{-- @include('photo_feedback') --}}
+
       <div id="description_container">
       @if ( !empty($photos->description) )
         <h4>Descrição:</h4>
@@ -420,6 +423,7 @@
         </p>
       @endif
       </div>
+      <div id="address_container">
       @if ( !empty($photos->street) || !empty($photos->city) ||
         !empty($photos->state) || !empty($photos->country) )
         <h4>Endereço:</h4>
@@ -451,7 +455,7 @@
           @endif
         </p>
       @endif
-
+      </div>
       <h4>Licença:</h4>
       <a class="tooltip_license"
         href="http://creativecommons.org/licenses/{{$license[0]}}/3.0/deed.pt_BR" target="_blank" >
@@ -662,5 +666,4 @@
       });
     });
   </script>
-  
 @stop

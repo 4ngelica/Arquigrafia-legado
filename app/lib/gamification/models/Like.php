@@ -1,6 +1,6 @@
-<?php
+<?php namespace lib\gamification\models;
 
-class Like extends Eloquent {
+class Like extends \Eloquent {
 
 	protected $table = "likes";
 	protected $fillable = [ 'user_id', 'likable_id', 'likable_type' ];
@@ -15,7 +15,7 @@ class Like extends Eloquent {
 		return $this->morphTo();
 	}
 	
-	public static function getLike($likable, $user) {
+	public static function getFirstOrCreate($likable, $user) {
 		return self::firstOrCreate([
 				'user_id' => $user->id,
 				'likable_id' => $likable->id,

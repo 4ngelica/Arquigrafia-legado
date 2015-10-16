@@ -15,20 +15,17 @@ class UsersController extends \BaseController {
       array('only' => ['follow', 'unfollow']));
   }
   
-	public function index()
-	{
-		$users = User::all();
+  public function index()
+  {
+    $users = User::all();
 
-		return View::make('/users/index',['users' => $users]);
-	}
+    return View::make('/users/index',['users' => $users]);
+  }
 
-	public function show($id)
-	{ 
-		$user = User::whereid($id)->first();
-   //$photos = $user->photos()->get()->reverse();    
-    $photos = $user->userPhotos($id)->get()->reverse();
-    //dd($photos);
-
+  public function show($id)
+  {
+    $user = User::whereid($id)->first();
+    $photos = $user->photos()->get()->reverse();
     if (Auth::check()) {      
       if (Auth::user()->following->contains($user->id))
         $follow = false;
@@ -58,7 +55,7 @@ class UsersController extends \BaseController {
       'lastDateUploadPhoto' => Photo::getLastUploadPhotoByUser($id),
       'albums' => $albums,
       ]);
-	}
+  }
   
   // show create account form
   public function account()
@@ -94,7 +91,7 @@ class UsersController extends \BaseController {
        $login =$input["login"];
        $verify_code = str_random(30);
       //create user with a verify code      
-      User::create([
+      $user = User::create([
       'name' => $name,
       'email' => $email,
       'password' => Hash::make($input["password"]),
@@ -102,7 +99,7 @@ class UsersController extends \BaseController {
       'verify_code' => $verify_code       
       ]);
 
-      $user = User::userInformation($login);
+      // $user = User::userInformation($login);
       $source_page = Request::header('referer');
       ActionUser::printNewAccount($user->id, $source_page, "arquigrafia", "user"); 
 
@@ -205,7 +202,7 @@ class UsersController extends \BaseController {
     if (Auth::check())
       return Redirect::to('/');
 
-		session_start();
+    session_start();
     $fb_config = Config::get('facebook');
     FacebookSession::setDefaultApplication($fb_config["id"], $fb_config["secret"]);
     $helper = new FacebookRedirectLoginHelper(url('/users/login/fb/callback'));
@@ -322,10 +319,10 @@ class UsersController extends \BaseController {
     );
     return Redirect::to($facebook->getLoginUrl($params));
   }
-	
-	// facebook login callback
-	public function callback() 
-	{
+    
+    // facebook login callback
+    public function callback() 
+   {
     session_start();
     
     $fb_config = Config::get('facebook');
@@ -440,7 +437,7 @@ class UsersController extends \BaseController {
     }
     
     
-	}
+  }
 
   public function getFacebookPicture() {
     if (Auth::check()) {

@@ -6,10 +6,14 @@ use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use lib\date\Date;
 
+use lib\gamification\traits\UserGamificationTrait;
+
 class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	use UserTrait, RemindableTrait;
 	
+	use UserGamificationTrait;
+
 	protected $fillable = ['id','name','email','password','login','verify_code'];
 
 	protected $date;
@@ -56,11 +60,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	public function occupation()
 	{
 		return $this->hasOne('Occupation');
-	}
-
-	public function badges()
-	{
-		return $this->belongsToMany('Badge','user_badges');
 	}
 
 	//seguidores
@@ -147,7 +146,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	public static function userVerifyCode($verify_code){
 		$newUser = User::where('verify_code','=',$verify_code)->first();			
         return $newUser;
-
 	}
 
 	public static function userBelongInstitution($login,$institution){

@@ -62,7 +62,7 @@ $(document).ready(function() {
       like_button.attr('href', data.url);
       like_button.attr('title', like_button.hasClass('dislike') ? 'Descurtir' : 'Curtir' );
       $("#likes + small").text(data.likes_count);
-      $('#likes').closest('spam').attr('title', data.likes_count + " pessoas curtiram essa imagem");
+      $('#likes').closest('span').attr('title', data.likes_count + " pessoas curtiram essa imagem");
     });
     
   });
@@ -115,8 +115,10 @@ $(document).ready(function() {
     var parent_container = $('#information_input');
     var loader = parent_container.children('.loader');
     var container = parent_container.children().children('div');
+    var url = getFieldURL + '?fp=' + currentField;
+    currentField++;
     showLoader(loader);
-    $.get(getFieldURL + '?fp=' + currentField++).done(function (data) {
+    $.get(url).done(function (data) {
       data = parseData(data);
       container.empty();
       hideLoader(loader);
@@ -191,6 +193,7 @@ $(document).ready(function() {
     $.post(setFieldURL, data).done(function(data) {
       data = parseData(data);
       updateFieldContainer(data);
+      currentField--;
       loadQuestion();
       progressbar.levelUp(data['information_completion']);
     }).fail(function(data){
@@ -199,13 +202,14 @@ $(document).ready(function() {
   });
 
   function updateFieldContainer(data) {
-    var field_translation = data['field_translation'];
-    var value = data['value'];
-    var container = $('#' + data['field'] + '_container');
-    container.hide();
-    container.append('<h4>' + field_translation + ':</h4>', '<p>' + value + '</p>');
-    container.css({ 'background-color' : '#ffff99' }).fadeIn(1500, function () {
-      container.css({ 'background-color': '#fff' });
+    var p;
+    var container = $('#' + ( data['is_address'] ? 'address' : data['field'] ) + '_container' );
+    container.empty().hide();
+    container.append(data['html']);
+    p = container.children('p');
+    p.css({ 'background-color' : '#ffff99' });
+    container.fadeIn(1500, function () {
+      p.css({ 'background-color': '#fff' });
     });
   }
 
