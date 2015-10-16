@@ -1,13 +1,16 @@
 <?php namespace lib\gamification\models;
 
+use Carbon\Carbon;
+
 class Badge extends \Eloquent {
 
 	protected $fillable = ['name', 'image', 'description'];
 
-
 	public function users()
 	{
-		return $this->belongsToMany('User','user_badges');
+		return $this->belongsToMany('User','user_badges')
+      ->withTimestamps()
+      ->withPivot('element_type', 'element_id');
 	}
 
 	public function comments()
@@ -37,11 +40,28 @@ class Badge extends \Eloquent {
     });
   }
 
-    public static function checkBadgeLike($likable,$user){
-    	if( is_null($likable->badge) && $likable->likes->count() == 1) {
-    		$badge = Badge::where('name', 'TestLike_' . get_class($likable))->first();
-      		$likable->user->badges()->attach($badge->id);
-      		$likable->attachBadge($badge);
-    	}
+  public static function getDestaqueDaSemana($photo) {
+    $last_week = Carbon::today()->subWeek();
+    if ( $photo->countLikesAfterDate($last_week) != 5 ) {
+      return false;
+    } 
+    $destaque_badge = static::whereName('Destaque da Semana')->first();
+    $has_badge = $destaque_badge->withElement($photo)->count();
+    if ( $has_badge ) {
+      return false;
+    } else {
+      $destaque_badge->users()->attach($photo->user, array(
+          'element_id' => $photo->id,
+          'element_type' => get_class($photo),
+        ));
+      return true;
     }
+  }
+
+  public function withElement($el) {
+    return $this->users()
+      ->wherePivot('element_type', get_class($el))
+      ->wherePivot('element_id', $el->id);
+  }
+
 }

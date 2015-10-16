@@ -1,12 +1,12 @@
 
   @foreach($users->getCollection()->sortByDesc($score_type) as $user)
     @if ( $count % 2 == 0)
-      <tr class="even">
+      <tr class="even {{ $user->equal(Auth::user()) ? 'selected' : '' }}">
     @else
-      <tr>
+      <tr class="{{ $user->equal(Auth::user()) ? 'selected' : '' }}">
     @endif
       <td><h2>{{ $count++ }}</h2></td>
-      <td class="image">
+      <td class="avatar">
         <a href="{{ URL::to('/users/' . $user->id) }}">
           @if ( ! empty($user->photo) )
             <img src="{{ asset($user->photo) }}"
@@ -20,6 +20,6 @@
       <td class="name">
         <p>{{ link_to('/users/' . $user->id, $user->name) }}</p>
       </td>
-      <td><p class="score">{{ $user->$score_type }}</p></td>
+      <td><p class="score">{{ intval($user->$score_type) }}</p></td>
     </tr>
   @endforeach

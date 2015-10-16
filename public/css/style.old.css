@@ -555,7 +555,7 @@ input#login_white_button:hover { background-position: -160px -258px; }
 #confirmation_window { background: #fff; position: fixed; width: 300px; height: 80px;  top: 30%; left: 50%; margin: -40px 0 0 -150px; padding: 20px; -moz-border-radius: 5px; border-radius: 5px; display: none; z-index: 1001; font-size: 14px;}
 #confirmation_window p { color: black;}
 #confirmation_window #registration_buttons { position: absolute; right: 20px; bottom: 20px; }
-.no_cover { width: 100%; height: 100%; background-color: #aaa; min-height: 200px; }
+.no_cover { width: 100%; height: 100%; background-color: #aaa; }
 .no_cover p { width: 100%; text-align: center; font-size: 14px; margin: 0; position: absolute; left: 0; top: 40%; color: #eee;}
 .wrap .no_cover p { font-size: 18px; top: 50%; }
 
@@ -738,8 +738,6 @@ a.tooltip_license span
 /*#leaderboard tr:hover { background-color: #f0f0f0; }*/
 #leaderboard table p { font-family: bold; font-size: 18px; color: #333; margin: 5px; }
 #leaderboard .user_photo_thumbnail { width: 48px; height: auto; }
-#leaderboard .name { text-align: left; }
-#leaderboard .image { text-align: right; }
 p.position { font-size: 20px; }
 #leaderboard .less-than, #leaderboard .greater-than { font-weight: bold; font-size: 14px; }
 #leaderboard .even { background-color: #f0f0f0; }
@@ -747,3 +745,12 @@ p.position { font-size: 20px; }
 #leaderboard a.disabled:hover { color: #aaa; cursor: default; text-decoration: none; }
 #leaderboard .loader { position: absolute; top: 50%; left: 50%; }
 .opaque { opacity: 0.7; filter: alpha(opacity=70); }
+#leaderboard .edge { width: 139px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+#leaderboard .middle { width: 500px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+#leaderboard td.name { text-align: left; width: 300px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+#leaderboard td.avatar { text-align: right; width: 200px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+#leaderboard tr.selected { background-color: #FFFF66; }
+#leaderboard tr.selected a { color: #333; }
+tr.gold { border-color: #EFD807; }
+tr.silver { border-color: #CECECE }
+tr.bronze { border-color: #B36700 }

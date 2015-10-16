@@ -1,6 +1,11 @@
 $(document).ready(function() {
   var lb = $('#leaderboard');
 
+  $('#find_me').click(function(e) {
+    e.preventDefault();
+    getPage(paginator.user_page);
+  });
+
   $('.greater-than').click(function(e) {
     e.preventDefault();
     getPage(paginator.current_page + 1);
@@ -33,6 +38,7 @@ $(document).ready(function() {
     var type_text;
     paginator.current_page = data['current_page'];
     paginator.score_type = data['score_type'];
+    paginator.user_page = data['user_page'];
     if (paginator.current_page == 1) {
       btn_prev.addClass('disabled');
     } else {

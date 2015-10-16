@@ -61,7 +61,7 @@
             }
           ?>
           <div>
-            <span class="leaderboard" id"ranking"><strong>1</strong></span>
+            {{-- <span class="leaderboard" id"ranking"><strong>1</strong></span> --}}
             <span class="badges-counter" title ="{{$counts['Gold']}} gold badges">
               <span  class="badges_gold"></span>
               <span class="number_badge">{{$counts["Gold"]}}</span>
@@ -126,7 +126,7 @@
         <hgroup class="profile_block_title">
           <h3><i class="profile"></i>Perfil</h3> &nbsp; &nbsp;
           <?php if (Auth::check() && Auth::user()->id == $user->id) { ?>
-          <a href= '{{"/users/" . $user->id . "/edit" }}' title="Editar perfil" >
+          <a href= '{{ URL::to("/") . "/users/" . $user->id . "/edit" }}' title="Editar perfil" >
             <img src="{{ asset("img/edit.png") }}" width="16" height="16" />
           </a>
           <?php } ?>
@@ -190,7 +190,7 @@
         <!--   BOX - AMIGOS   -->
         <div class="profile_box">      
         @foreach($user->following as $following)
-          <a href= {{ '/users/' .  $following->id }} >
+          <a href="{{ URL::to('/') . '/users/' .  $following->id }}" >
           <?php if ($following->photo != "") { ?>          
             <img width="40" height="40" class="avatar" src="{{ asset($following->photo) }}" class="user_photo_thumbnail"/>
           <?php } else { ?>
@@ -214,7 +214,7 @@
           <!--   FOTO - AMIGO   -->
           
           @foreach($user->followers as $follower)
-          <a href= {{ '/users/' .  $follower->id }} >
+          <a href="{{ URL::to('/') . '/users/' .  $follower->id }}" >
           <?php if ($follower->photo != "") { ?>          
             <img width="40" height="40" class="avatar" src="{{ asset($follower->photo) }}" class="user_photo_thumbnail"/>
           <?php } else { ?>
