@@ -194,18 +194,19 @@
           <!--<a href="#" id="small" class="profile_block_link">Ver todos</a>-->
           </hgroup>
         <!--   BOX - AMIGOS   -->
-        <div class="profile_box">      
-        @foreach($user->following as $following)
-          <a href="{{ URL::to('/') . '/users/' .  $following->id }}" >
-          <?php if ($following->photo != "") { ?>          
-            <img width="40" height="40" class="avatar" src="{{ asset($following->photo) }}" class="user_photo_thumbnail"/>
-          <?php } else { ?>
-            <img width="40" height="40" class="avatar" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
-          <?php } ?>
-          </a>
-          
-        @endforeach           
-      </div>
+
+    		<div class="profile_box">			
+				@foreach($user->following as $following)
+					<a href= {{ '/users/' .  $following->id }} >
+					<?php if ($following->photo != "") { ?>					
+						<img width="40" height="40" class="avatar" src="{{ asset($following->photo) }}" class="user_photo_thumbnail" title="{{$following->name}}"/>
+					<?php } else { ?>
+						<img width="40" height="40" class="avatar" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail" title="{{$following->name}}"/>
+					<?php } ?>
+					</a>
+					
+				@endforeach           
+			</div>
         
       </div>
       
@@ -220,6 +221,7 @@
           <!--   FOTO - AMIGO   -->
           
           @foreach($user->followers as $follower)
+<<<<<<< HEAD
           <a href="{{ URL::to('/') . '/users/' .  $follower->id }}" >
           <?php if ($follower->photo != "") { ?>          
             <img width="40" height="40" class="avatar" src="{{ asset($follower->photo) }}" class="user_photo_thumbnail"/>
@@ -230,6 +232,18 @@
     @endforeach   
     
     </div>
+=======
+					<a href= {{ '/users/' .  $follower->id }} >
+					<?php if ($follower->photo != "") { ?>					
+						<img width="40" height="40" class="avatar" src="{{ asset($follower->photo) }}" class="user_photo_thumbnail" title="{{$follower->name}}"/>
+					<?php } else { ?>
+						<img width="40" height="40" class="avatar" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail" title="{{$follower->name}}"/>
+					<?php } ?>
+					</a>
+		@endforeach   
+		
+		</div>
+>>>>>>> 215cb8584f366b4253388feb347848862ee79d84
         
       </div>
       

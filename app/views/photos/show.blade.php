@@ -88,9 +88,9 @@
             <span class="right" title="{{ $commentsMessage }}">
               <i id="comments"></i><small>{{ $commentsCount }}</small>
             </span>
-            <!--<span class="right" title="{{ $photos->likes->count() }} pessoas curtiram essa imagem">
+            <span class="right" title="{{ $photos->likes->count() }} pessoas curtiram essa imagem">
               <i id="likes"></i> <small>{{ $photos->likes->count() }}</small>
-            </span>-->
+            </span>
             @if ( $owner->equal(Auth::user()) )
               <span class="right">
                 <a id="delete_button" href="{{ URL::to('/photos/' . $photos->id) }}" title="Excluir imagem"></a>
