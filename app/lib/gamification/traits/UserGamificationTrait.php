@@ -16,7 +16,7 @@ trait UserGamificationTrait {
   }
 
   public function scopeWithUploads($query, $columns, $following) {
-    $p = \DB::raw('(select * from photos where deleted_at is null) as p');
+    $p = \DB::raw('(select * from photos where deleted_at is null and institution_id is null) as p');
     return $query->select(\DB::raw('users.' . $columns . ', count(user_id) as uploads'))
     ->leftJoin($p, 'users.id', '=', 'p.user_id')
     ->groupBy('users.id')
