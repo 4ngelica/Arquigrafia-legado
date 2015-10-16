@@ -75,13 +75,20 @@
 			if (document.getElementById("new_album-name").value != "") {
 				var select_album = document.getElementsByClassName('select-album');
 				var new_album = document.getElementsByClassName('new-album-name');
+				var selector = document.getElementById('photo_album');
 				var i;
 				for (i = 0; i < select_album.length; i++) {
-   					select_album[i].style.display = "none";
+   					select_album[i].style.display = "block";
 				}
 				for (i = 0; i < new_album.length; i++) {
-    				new_album[i].style.display = "block";
+    				new_album[i].style.display = "none";
 				}
+				for (i = 0; i < selector.options.length; i++) {
+					if (selector.options[i].text == document.getElementById("new_album-name").value) {
+						selector.selectedIndex = i;
+					}
+				}
+				document.getElementById("new_album-name").value = "";
 			}
 			else if (document.getElementById("photo_album").value != "") {
 				var select_album = document.getElementsByClassName('select-album');
