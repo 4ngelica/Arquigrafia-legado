@@ -49,11 +49,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $this->hasOne('Occupation');
 	}
 
-	public function badges()
-	{
-		return $this->belongsToMany('lib\gamification\models\Badge','user_badges');
-	}
-
 	//seguidores
 	public function followers()
 	{
@@ -147,38 +142,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	public static function userVerifyCode($verify_code){
 		$newUser = User::where('verify_code','=',$verify_code)->first();			
         return $newUser;
-
 	}
-
-	public function getPostionRank()
-	{
-    return ($this->newQuery()->where('nb_eval', '>=', $this->nb_eval)->count());
-	}
-
-	public function getDignity($number){
-		$title="";
-		if(2<=$number && $number<5){
-	    	 $title='Iniciante';
-	     }
-	    if(5<=$number && $number<10){
-	         $title='Veterano';
-	    }
-	    if(10<=$number && $number<20){
-	        $title='Arquiteto';
-	    }
-	    if(20<=$number && $number<50){
-	        $title='Especialista';
-	    }
-	    if(50<=$number && $number<100){
-	        $title='Professor';
-	    }
-	    if($number==100){
-	        $title='Master';
-	    }
-	    if($number>=100){
-	        $title='Rei';
-	    }
-	    return $title;
-}
 
 }

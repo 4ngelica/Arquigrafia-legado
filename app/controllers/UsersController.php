@@ -100,11 +100,6 @@ class UsersController extends \BaseController {
       'verify_code' => $verify_code       
       ]);
 
-      Score::create(array(
-          'points' => 0,
-          'user_id' => $user->id
-        ));
-
       // $user = User::userInformation($login);
       $source_page = Request::header('referer');
       ActionUser::printNewAccount($user->id, $source_page, "arquigrafia", "user"); 
