@@ -8,7 +8,7 @@
       <td><h2>{{ $count++ }}</h2></td>
       <td class="avatar">
         <a href="{{ URL::to('/users/' . $user->id) }}">
-          @if ( ! empty($user->photo) )
+          @if ( ! empty($user->photo) && File::exists(public_path() . $user->photo) )
             <img src="{{ asset($user->photo) }}"
               class="user_photo_thumbnail">
           @else

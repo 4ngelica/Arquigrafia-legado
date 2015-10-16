@@ -56,7 +56,7 @@
             <p class="right">
               Ordenar por número de {{ Form::select('score_type',
                 [ 
-                  'points' => 'pontos',
+                  /*'points' => 'pontos',*/
                   'uploads' => 'uploads',
                   'evals' => 'avaliações'
                 ], $score_type, array('class' => 'score_type')) }}

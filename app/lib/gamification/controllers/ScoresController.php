@@ -5,16 +5,16 @@ use lib\gamification\models\Score;
 class ScoresController extends \BaseController {
 
   public function getLeaderboard() {
-    $score_type = \Input::get('type', 'points');
+    $score_type = \Input::get('type', 'uploads');
     if ( ! in_array($score_type, ['points', 'uploads', 'evals']) ) {
-      $score_type = 'points';
+      $score_type = 'uploads';
     }
     $user_page = 0;
     $following = 0;
     $isFollowing = \Input::has('following');
     if ( \Auth::check() ) {
       $following = $isFollowing ? \Auth::id() : 0;
-      $u = \User::sortBy($score_type, 'id', $following)->get();
+      $u = \User::sortBy($score_type, '*', $following)->get();
       $location = array_search(\Auth::id(), $u->lists('id'));
       $user_page = $location === false ? 0 : intval($location / 10) + 1;
     }
