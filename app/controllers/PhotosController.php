@@ -1,6 +1,7 @@
 <?php
 //add
 use lib\utils\ActionUser;
+use lib\gamification\models\Badge;
 use Carbon\Carbon;
 use lib\date\Date;
 
@@ -48,8 +49,6 @@ class PhotosController extends \BaseController {
       } else{
         $hasInstitution = Institution::belongSomeInstitution($photos->id);
       }
-      
-      $photoliked = Like::fromUser($user)->withLikable($photos)->first();
       $evaluations =  Evaluation::where("user_id", $user->id)->where("photo_id", $id)->orderBy("binomial_id", "asc")->get();
       if ($user->following->contains($photo_owner->id)) {
         $follow = false;
@@ -73,7 +72,6 @@ class PhotosController extends \BaseController {
       'average' => $average, 'userEvaluations' => $evaluations, 'binomials' => $binomials,
       'architectureName' => Photo::composeArchitectureName($photos->name),
       'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photos->id),
-      'photoliked' => $photoliked,
       'license' => $license,
       'belongInstitution' => $belongInstitution,
       'hasInstitution' => $hasInstitution,
@@ -321,14 +319,8 @@ class PhotosController extends \BaseController {
 
           if(!empty($input["imageDate"])){             
              $photo->dataCriacao = $this->date->formatDate($input["imageDate"]);
-             $photo->imageDateType = "date";
-          }elseif(!empty($input["decade_select_image"])){             
-            $photo->dataCriacao = $input["decade_select_image"];
-            $photo->imageDateType = "decade";
-          }elseif (!empty($input["century_image"]) && $input["century_image"]!="NS") { 
-            $photo->dataCriacao = $input["century_image"];
-            $photo->imageDateType = "century";
-          }else{ 
+          }
+          else{ 
             $photo->dataCriacao = NULL;
           }  
 
@@ -867,6 +859,7 @@ if(!empty($input["photo_imageDate"])){
       $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
       $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
       $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
+      $image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
       $file->move(storage_path().'/original-images', $photo->id."_original.".strtolower($ext)); // original
 
       $photo->saveMetadata(strtolower($ext));
@@ -1073,7 +1066,6 @@ if(!empty($input["photo_imageDate"])){
   }
 
   public function evaluate($photoId ) { 
-    $this->checkEvalCount(5, 'test');
     if(isset($_SERVER['QUERY_STRING'])) parse_str($_SERVER['QUERY_STRING']);
     $user_id = Auth::user()->id;
     $source_page = Request::header('referer');
@@ -1086,17 +1078,7 @@ if(!empty($input["photo_imageDate"])){
     return static::getEvaluation($photoId, Auth::user()->id, true);
   }
 
-  private function checkEvalCount($number_assessment, $badge_name){
-    $user = Auth::user();
-    if(($user->badges()->where('name', $badge_name)->first()) != null){
-        return;
-      }
-    if (($user->evaluations->groupBy('photo_id')->count()) == $number_assessment){
-        $badge=Badge::where('name', $badge_name)->first();
-        $user->badges()->attach($badge);
-      }
-    }
-
+// need to be modified
     private function checkCommentCount($number_comment, $badge_name){
       $user = Auth::user();
       if(($user->badges()->where('name', $badge_name)->first()) != null){
