@@ -259,7 +259,7 @@ class PhotosController extends \BaseController {
       $rules = array(
       'support' => 'required',
       'tombo' => 'required',
-      'subject' => 'required', 
+      //'subject' => 'required', 
       'hygieneDate' => 'date_format:"d/m/Y"|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
       'backupDate' => 'date_format:"d/m/Y"|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
       'characterization' => 'required',
@@ -622,7 +622,7 @@ class PhotosController extends \BaseController {
       $rules = array(
       'support' => 'required',
       'tombo' => 'required',
-      'subject' => 'required',      
+      //'subject' => 'required',      
       'hygieneDate' => 'date_format:"d/m/Y"',
       'backupDate' => 'date_format:"d/m/Y"',
       'characterization' => 'required',

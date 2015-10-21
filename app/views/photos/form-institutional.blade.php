@@ -155,7 +155,7 @@
 							<tr>
 								<td>
 									<div class="two columns alpha">
-										<p>{{ Form::label('subjectTxt', 'Assunto*:') }}</p>
+										<p>{{ Form::label('subjectTxt', 'Assunto:') }}</p>
 									</div>
 									<div class="three columns omega">
 										<p>{{ Form::text('subject', Input::old('subject')) }} <br>
