@@ -269,15 +269,24 @@
     </p>
     </div>
     </tr> -->
-    <tr> <td>
-    <div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
-    <div class="two columns omega">
-    <p>{{ Form::text('photo_imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }}
-    <br> <div class="error">{{ $errors->first('photo_imageDate') }}</div>
-    </p>
-    </div>
-    </td>
-    </tr>
+     <tr> <td>               
+            <div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
+            <div class="fivemidUpdateForm columns omega">
+                <p>{{ Form::text('photo_imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }} 
+                    <span class="space_txt_element">Não sabe a data precisa? 
+                                            <a onclick="date_visibility('date_img_inaccurate');" >Clique aqui.</a> 
+                    </span>
+                    <br> <div id="error_image_date" class="error">{{ $errors->first('photo_imageDate') }}</div> 
+                </p>
+                <p>
+                    <div id="date_img_inaccurate" style="display:none;">                                    
+                        @include('photos.includes.dateImage')                                   
+                    </div>
+                    <label id="answer_date_image" class="resultDateWork"></label>
+                </p>       
+            </div>
+         </td>
+        </tr> 
     <tr><td>
     <div class="two columns alpha"><p>{{ Form::label('photo_workAuthor', 'Autor da obra:') }}</p></div>
     <div class="two columns omega">
@@ -409,12 +418,13 @@
         }
         $('#tags').textext({ plugins: 'tags' });
         @if(Input::old('tags')!=null)
-        <?php $tags = explode (",", Input::old('tags')); ?>
+            <?php $tags = explode (",", Input::old('tags')); ?>
         @endif
+        
         @if (isset($tags) && $tags !=null)
             @foreach ( $tags as $tag )
-        $('#tags').textext()[0].tags().addTags([ {{ '"' . $tag . '"' }} ]);
-        @endforeach
+                $('#tags').textext()[0].tags().addTags([ {{ '"' . $tag . '"' }} ]);
+            @endforeach
         @endif
         $('#add_tag').click(function(e) {
             e.preventDefault();
@@ -428,27 +438,50 @@
             if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
                 e.preventDefault();
         });
-        @if( Input::old('century'))
-        var centuryInput = "{{Input::old('century')}}";
-        showPeriodCentury(centuryInput);
-        retrieveCentury(centuryInput);
+        @if( Input::old('century_image'))       
+            var centuryInputImage = "{{Input::old('century_image')}}";
+            //alert(centuryInputImage);
+            showPeriodCenturyImage(centuryInputImage);
+            retrieveCenturyImage(centuryInputImage);            
         @endif
         
-        @if( Input::old('decade_select'))
-        var decadeInput = "{{Input::old('decade_select')}}";
-        retrieveDecade(decadeInput);
-        getCenturyOfDecade(decadeInput);
+        @if( Input::old('decade_select_image')) 
+            var decadeInputImage = "{{Input::old('decade_select_image')}}";
+            //retrieveDecade(decadeInputImage,"image");     
+            retrieveDecadeImage(decadeInputImage);      
+            getCenturyOfDecade(decadeInputImage,"imageDate");   
         @endif
-        @if($dates == false)
-        //alert("{{$dates}}");
-        window.onload = cleanToLoad;
-        @else
-            //alert("{{$dates}}");
-        window.onload = resultSelectDateWork;
+
+        @if( Input::old('century'))             
+            var centuryInput = "{{Input::old('century')}}";
+            //alert(centuryInput);
+            showPeriodCentury(centuryInput);
+            retrieveCentury(centuryInput);          
         @endif
-        @if( Input::old('dates'))
-        window.onload = resultSelectDateWork;
+        
+        @if( Input::old('decade_select'))   
+            var decadeInput = "{{Input::old('decade_select')}}";
+            retrieveDecade(decadeInput);        
+            getCenturyOfDecade(decadeInput,"workDate");     
         @endif
+
+        @if($dates == false) 
+            window.onload = cleanToLoad;        
+        @endif
+
+        if({{Input::old('dates','true')}}){
+            if("{{Input::old('century')}}" != "" || "{{Input::old('decade_select')}}" != "" ){
+                window.onload = resultSelectDateWork("otherDate");
+            }
+        }
+
+        if({{Input::old('dateImage','true')}}){
+            if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
+                window.onload = resultSelectDateWork("date_img_inaccurate");
+            }
+        }
+    
+
     });
     $(function() {
         
