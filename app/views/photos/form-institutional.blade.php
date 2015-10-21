@@ -443,9 +443,18 @@
 							<tr> <td>               
          						<div class="two columns alpha"><p>{{ Form::label('imageDate', 'Data da imagem:') }}</p></div>
          						<div class="fivemidUpdateInst columns omega">
-          						   	<p>{{ Form::text('imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }} 
-         							<br> <div id="error_image_date" class="error">{{ $errors->first('imageDate') }}</div>
+          						   	<p>{{ Form::text('image_date','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }} 
+         								<span class="space_txt_element">Não sabe a data precisa? 
+         									<a onclick="date_visibility('date_img_inaccurate');" >Clique aqui.</a> 
+         								</span>
+         							<br> <div id="error_image_date" class="error">{{ $errors->first('image_date') }}</div>
          						   	</p> 
+         						   	<p>
+         								<div id="date_img_inaccurate" style="display:none;">         							
+         									@include('photos.includes.dateImage')         						    
+         								</div>
+         								<label id="answer_date_image" class="resultDateWork"></label>
+         							</p>       
         						</div>
         						</tr>   
         						</td>
@@ -641,6 +650,19 @@
 			getCenturyOfDecade(decadeInput,"workDate"); 		
 		@endif
 
+		@if( Input::old('century_image'))		
+			var centuryInputImage = "{{Input::old('century_image')}}";
+			//alert(centuryInputImage);
+			showPeriodCenturyImage(centuryInputImage);
+			retrieveCenturyImage(centuryInputImage);			
+		@endif
+		
+		@if( Input::old('decade_select_image'))	
+			var decadeInputImage = "{{Input::old('decade_select_image')}}";	
+
+			retrieveDecadeImage(decadeInputImage);		
+			getCenturyOfDecade(decadeInputImage,"imageDate"); 	
+		@endif
 
 		@if($dates == false) 
 		 	window.onload = cleanToLoad;
@@ -651,6 +673,36 @@
 				window.onload = resultSelectDateWork("otherDate");
 			}
 		}
+
+		if({{Input::old('dateImage','true')}}){
+			if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
+				window.onload = resultSelectDateWork("date_img_inaccurate");
+			}
+		}
+
+		
+		//alert("{{Input::old('imageDate')}}");
+		/*if({{Input::old('dates','true')}}){ 
+			if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
+				window.onload = resultSelectDateWork("date_img_inaccurate");	
+			}
+
+		} 	
+
+		if("{{Input::old('imageDate')}}" == ""){ 			
+			if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
+				window.onload = resultSelectDateWork("date_img_inaccurate");	
+			}
+		} */
+
+		
+
+		//@if(Input::old('dateImage'))	
+		//	alert("?l??");
+			
+		//@endif
+		
+
 
    });
 </script>

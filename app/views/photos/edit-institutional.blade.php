@@ -277,41 +277,43 @@
             </table>
           </div>
           <br class="clear">
-          <div class="five columns alpha row">
+          <div class="eight columns alpha row">
             <table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
-              <tr>
+              <tr><td>
                 <div class="two columns alpha"><p>{{ Form::label('country', 'País*:') }}</p></div>
                 <div class="two columns omega">
                     <p>{{ Form::select('country', [ "Afeganistão"=>"Afeganistão", "África do Sul"=>"África do Sul", "Albânia"=>"Albânia", "Alemanha"=>"Alemanha", "América Samoa"=>"América Samoa", "Andorra"=>"Andorra", "Angola"=>"Angola", "Anguilla"=>"Anguilla", "Antartida"=>"Antartida", "Antigua"=>"Antigua", "Antigua e Barbuda"=>"Antigua e Barbuda", "Arábia Saudita"=>"Arábia Saudita", "Argentina"=>"Argentina", "Aruba"=>"Aruba", "Australia"=>"Australia", "Austria"=>"Austria", "Bahamas"=>"Bahamas", "Bahrain"=>"Bahrain", "Barbados"=>"Barbados", "Bélgica"=>"Bélgica", "Belize"=>"Belize", "Bermuda"=>"Bermuda", "Bhutan"=>"Bhutan", "Bolívia"=>"Bolívia", "Botswana"=>"Botswana", "Brasil"=>"Brasil", "Brunei"=>"Brunei", "Bulgária"=>"Bulgária", "Burundi"=>"Burundi", "Cabo Verde"=>"Cabo Verde", "Camboja"=>"Camboja", "Canadá"=>"Canadá", "Chade"=>"Chade", "Chile"=>"Chile", "China"=>"China", "Cingapura"=>"Cingapura", "Colômbia"=>"Colômbia", "Djibouti"=>"Djibouti", "Dominicana"=>"Dominicana", "Emirados Árabes"=>"Emirados Árabes", "Equador"=>"Equador", "Espanha"=>"Espanha", "Estados Unidos"=>"Estados Unidos", "Fiji"=>"Fiji", "Filipinas"=>"Filipinas", "Finlândia"=>"Finlândia", "França"=>"França", "Gabão"=>"Gabão", "Gaza Strip"=>"Gaza Strip", "Ghana"=>"Ghana", "Gibraltar"=>"Gibraltar", "Granada"=>"Granada", "Grécia"=>"Grécia", "Guadalupe"=>"Guadalupe", "Guam"=>"Guam", "Guatemala"=>"Guatemala", "Guernsey"=>"Guernsey", "Guiana"=>"Guiana", "Guiana Francesa"=>"Guiana Francesa", "Haiti"=>"Haiti", "Holanda"=>"Holanda", "Honduras"=>"Honduras", "Hong Kong"=>"Hong Kong", "Hungria"=>"Hungria", "Ilha Cocos (Keeling)"=>"Ilha Cocos (Keeling)", "Ilha Cook"=>"Ilha Cook", "Ilha Marshall"=>"Ilha Marshall", "Ilha Norfolk"=>"Ilha Norfolk", "Ilhas Turcas e Caicos"=>"Ilhas Turcas e Caicos", "Ilhas Virgens"=>"Ilhas Virgens", "Índia"=>"Índia", "Indonésia"=>"Indonésia", "Inglaterra"=>"Inglaterra", "Irã"=>"Irã", "Iraque"=>"Iraque", "Irlanda"=>"Irlanda", "Irlanda do Norte"=>"Irlanda do Norte", "Islândia"=>"Islândia", "Israel"=>"Israel", "Itália"=>"Itália", "Iugoslávia"=>"Iugoslávia", "Jamaica"=>"Jamaica", "Japão"=>"Japão", "Jersey"=>"Jersey", "Kirgizstão"=>"Kirgizstão", "Kiribati"=>"Kiribati", "Kittsnev"=>"Kittsnev", "Kuwait"=>"Kuwait", "Laos"=>"Laos", "Lesotho"=>"Lesotho", "Líbano"=>"Líbano", "Líbia"=>"Líbia", "Liechtenstein"=>"Liechtenstein", "Luxemburgo"=>"Luxemburgo", "Maldivas"=>"Maldivas", "Malta"=>"Malta", "Marrocos"=>"Marrocos", "Mauritânia"=>"Mauritânia", "Mauritius"=>"Mauritius", "México"=>"México", "Moçambique"=>"Moçambique", "Mônaco"=>"Mônaco", "Mongólia"=>"Mongólia", "Namíbia"=>"Namíbia", "Nepal"=>"Nepal", "Netherlands Antilles"=>"Netherlands Antilles", "Nicarágua"=>"Nicarágua", "Nigéria"=>"Nigéria", "Noruega"=>"Noruega", "Nova Zelândia"=>"Nova Zelândia", "Omã"=>"Omã", "Panamá"=>"Panamá", "Paquistão"=>"Paquistão", "Paraguai"=>"Paraguai", "Peru"=>"Peru", "Polinésia Francesa"=>"Polinésia Francesa", "Polônia"=>"Polônia", "Portugal"=>"Portugal", "Qatar"=>"Qatar", "Quênia"=>"Quênia", "República Dominicana"=>"República Dominicana", "Romênia"=>"Romênia", "Rússia"=>"Rússia", "Santa Helena"=>"Santa Helena", "Santa Kitts e Nevis"=>"Santa Kitts e Nevis", "Santa Lúcia"=>"Santa Lúcia", "São Vicente"=>"São Vicente", "Singapura"=>"Singapura", "Síria"=>"Síria", "Spiemich"=>"Spiemich", "Sudão"=>"Sudão", "Suécia"=>"Suécia", "Suiça"=>"Suiça", "Suriname"=>"Suriname", "Swaziland"=>"Swaziland", "Tailândia"=>"Tailândia", "Taiwan"=>"Taiwan", "Tchecoslováquia"=>"Tchecoslováquia", "Tonga"=>"Tonga", "Trinidad e Tobago"=>"Trinidad e Tobago", "Turksccai"=>"Turksccai", "Turquia"=>"Turquia", "Tuvalu"=>"Tuvalu", "Uruguai"=>"Uruguai", "Vanuatu"=>"Vanuatu", "Wallis e Fortuna"=>"Wallis e Fortuna", "West Bank"=>"West Bank", "Yémen"=>"Yémen", "Zaire"=>"Zaire", "Zimbabwe"=>"Zimbabwe"], $photo->country != null ? $photo->country : "Brasil") }}<br>
                         <div class="error">{{ $errors->first('country') }} </div>
                     </p>
                 </div>
+                </td>
               </tr>
-              <tr>
+              <tr><td>
                 <div class="two columns alpha"><p>{{ Form::label('state', 'Estado:') }}</p></div>
                 <div class="two columns omega">
                 <p>{{ Form::select('state', [""=>"Escolha o Estado", "AC"=>"Acre", "AL"=>"Alagoas", "AM"=>"Amazonas", "AP"=>"Amapá", "BA"=>"Bahia", "CE"=>"Ceará", "DF"=>"Distrito Federal", "ES"=>"Espirito Santo", "GO"=>"Goiás", "MA"=>"Maranhão", "MG"=>"Minas Gerais", "MS"=>"Mato Grosso do Sul", "MT"=>"Mato Grosso", "PA"=>"Pará", "PB"=>"Paraíba", "PE"=>"Pernambuco", "PI"=>"Piauí", "PR"=>"Paraná", "RJ"=>"Rio de Janeiro", "RN"=>"Rio Grande do Norte", "RO"=>"Rondônia", "RR"=>"Roraima", "RS"=>"Rio Grande do Sul", "SC"=>"Santa Catarina", "SE"=>"Sergipe", "SP"=>"São Paulo", "TO"=>"Tocantins"], $photo->state) }} <br>
                   <div class="error">{{ $errors->first('state') }}</div>
                 </p>
+                </td>
               </tr>
-              <tr>
+              <tr><td>
                 <div class="two columns alpha"><p>{{ Form::label('city', 'Cidade:') }}</p></div>
                 <div class="two columns omega">
                   <p>{{ Form::text('city', $photo->city) }}<br>                    
                   </p>
-                </div>
+                </div></td>
               </tr>
               
-              <tr>
+              <tr><td>
                 <div class="two columns alpha"><p>{{ Form::label('street', 'Endereço:') }}</p></div>
                 <div class="two columns omega">
                   <p>{{ Form::text('street', $photo->street) }} <br>
                   </p>
                 </div>
+                </td>
               </tr>
 
-              <tr>
-                
+              <tr><td>                
                   <div class="two columns alpha"><p>{{ Form::label('imageAuthor', 'Autor da imagem*:') }}</p></div>
                   <div class="two columns omega">
                     <p>
@@ -319,27 +321,38 @@
                        <br>
                       <div class="error">{{ $errors->first('imageAuthor') }}</div>
                     </p>
-                  </div>
+                  </div></td>
               </tr>
-              <tr>                
-                    <div class="two columns alpha"><p>{{ Form::label('imageDate', 'Data da imagem:') }}</p></div>
-                    <div class="two columns omega">
-                      @if (($photo->dataCriacao)!= null )
-                         <p>{{ Form::text('imageDate',date("d/m/Y",strtotime($photo->dataCriacao)),array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }} 
-                      @else
-                         <p>{{ Form::text('imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }} 
-                      @endif    
-                      <br> <div class="error">{{ $errors->first('imageDate') }}</div>
+               
+             <tr><td>                
+                <div class="two columns alpha"><p>{{ Form::label('imageDate', 'Data da imagem:') }}</p></div>
+                <div class="five columns omega">
+                    @if (($photo->dataCriacao)!= null && $photo->imageDateType == "date")
+                      <p>{{ Form::text('image_date',date("d/m/Y",strtotime($photo->dataCriacao)),array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }} 
+                    @else
+                      <p>{{ Form::text('image_date','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }} 
+                    @endif  
+                          <span class="space_txt_element">Não sabe a data precisa? 
+                            <a onclick="date_visibility('date_img_inaccurate');" >Clique aqui.</a> 
+                          </span>
+                          <br> <div id="error_image_date" class="error">{{ $errors->first('image_date') }}</div> 
+                      </p>
+                      <p>
+                          <div id="date_img_inaccurate" style="display:none;">                                    
+                            @include('photos.includes.dateImage')                                   
+                          </div>
+                          <label id="answer_date_image" class="resultDateWork"></label>
                       </p>       
-                      </div>
-             </tr>
-              <tr>
+                </div></td>
+            </tr>
+              <tr><td>
                 <div class="two columns alpha"><p>{{ Form::label('observation', 'Observações:') }}</p></div>
                 <div class="two columns omega">
                   <p>
                     {{ Form::textarea('observation',$photo->observation) }} <br>
                   </p>
                 </div>
+              </td>
               </tr>
 
               <tr>
@@ -424,18 +437,53 @@
       showPeriodCentury(centuryInput);
       retrieveCentury(centuryInput);
       //get filter 
-      filterDecadesOfCentury(centuryInput);  
-     
+      //filterDecadesOfCentury(centuryInput);  
+      //alert(centuryInput);  
     @endif
-
     
     @if($decadeInput != null || $decadeInput!="" ) 
-        var decadeInput = "{{$decadeInput}}";
-        retrieveDecade(decadeInput);       
-        getCenturyOfDecade(decadeInput); 
-        
+        var decadeInput = "{{$decadeInput}}"; 
+      retrieveDecade(decadeInput);          
+      getCenturyOfDecade(decadeInput,"workDate"); 
     @endif
-    window.onload = resultSelectDateWork;
+
+     @if($centuryImageInput != null || $centuryImageInput != "" )    //  
+      var centuryImageInput = "{{$centuryImageInput}}";//"{{Input::old('century')}}"; 
+      showPeriodCenturyImage(centuryImageInput);
+      retrieveCenturyImage(centuryImageInput);
+      //get filter 
+      //filterDecadesOfCentury(centuryInput);  
+      //alert(centuryImageInput);  
+    @endif
+
+    @if($decadeImageInput != null || $decadeImageInput!="" ) 
+        var decadeImageInput = "{{$decadeImageInput}}"; 
+        retrieveDecadeImage(decadeImageInput);      
+        getCenturyOfDecade(decadeImageInput,"imageDate");   
+        //alert("fueraForm"+decadeImageInput);  
+    @endif 
+    //window.onload = resultSelectDateWork;
+
+     if("{{ $centuryInput }}" != "" || "{{ $decadeInput}} " != "" ){                
+                window.onload = resultSelectDateWork("otherDate");
+               // alert("other Decade-load");
+        }
+
+     if("{{Input::old('century')}}" != "" || "{{Input::old('decade_select')}}" != "" ){                
+                window.onload = resultSelectDateWork("otherDate");
+               // alert("other Decade-old");
+        }
+
+     if("{{ $centuryImageInput }}" != "" || "{{ $decadeImageInput }}" != "" ){
+                window.onload = resultSelectDateWork("date_img_inaccurate"); 
+               // alert("iamge carga");
+      }
+     
+     if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
+                window.onload = resultSelectDateWork("date_img_inaccurate"); 
+              //  alert("image por error o recuperac");
+      }   
+
    });
   function enableLicencenseChoice() {
     var allowModifications = document.getElementsByName('allowModifications');
