@@ -23,10 +23,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		$this->date = $date ?: new Date;
 	}
 
+	public function news()
+    {
+        return $this->hasMany('News');
+    }
+
 	public function notifications()
-  {
-    return $this->hasMany('\Tricki\Notification\Models\NotificationUser');
-  }
+ 	{
+    	return $this->hasMany('\Tricki\Notification\Models\NotificationUser');
+  	}
 
 	public function photos()
 	{
