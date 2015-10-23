@@ -5,9 +5,11 @@
                 if($counter >= $max) break;
                 else $counter++;
                 $info_array = $notification->render(); 
+                if ( ! is_null($notification->deleted_at) ) {
+                    continue;
+                }
             ?>
             @if($info_array[0] == "photo_liked")
-                @if($notification->deleted_at != null) <?php continue; ?> @endif
                 <div id={{$notification->id}} class="notes {{$notification->id}}<?php if($notification->read_at == null) echo ' not-read'?>" >
                     <li>
                         <div class="read-button" title="Marcar como lida" onclick="markRead(this);"></div>
@@ -46,7 +48,6 @@
                     </li>
                 </div>
             @elseif($info_array[0] == "comment_liked")
-                @if($notification->deleted_at != null) <?php continue; ?> @endif
                 <div id={{$notification->id}} class="notes {{$notification->id}}<?php if($notification->read_at == null) echo ' not-read'?>">
                     <li>
                         <div class="read-button" title="Marcar como lida" onclick="markRead(this);"></div>
@@ -82,7 +83,6 @@
                     </li>
                 </div>
             @elseif($info_array[0] == "comment_posted")
-                @if($notification->deleted_at != null) <?php continue; ?> @endif
                 <div id={{$notification->id}} class="notes {{$notification->id}}<?php if($notification->read_at == null) echo ' not-read'?>">
                     <li>
                         <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
@@ -118,7 +118,6 @@
                     </li>
                 </div>
             @elseif($info_array[0] == "follow")
-                @if($notification->deleted_at != null) <?php continue; ?> @endif
                 <div id={{$notification->id}} class="notes {{$notification->id}}<?php if($notification->read_at == null) echo ' not-read'?>">
                     <li>
                         <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
@@ -160,20 +159,18 @@
                     </li>
                 </div>
             @elseif($info_array[0] == "badge_earned")
-                @if($notification->deleted_at != null) <?php continue; ?> @endif
                 <div id={{$notification->id}} class="notes {{$notification->id}}<?php if($notification->read_at == null) echo ' not-read'?>">
                     <li>
                         <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
                         <div onclick="markRead(this);">
-                            <a href={{URL::to("badges/" . $info_array[4])}}>
+                            <a href={{URL::to("badges/" . $info_array[3])}}>
                                 <img class="mini" 
-                                src="{{ asset('img/' . $info_array[3] . '-badge.png') }}" >
+                                src="{{ asset('img/badges/' . $info_array[4]) }}" >
                             </a>
                             Você ganhou o troféu
-                            <a href={{URL::to("badges/" . $info_array[4])}}>"{{ $info_array[2]}}"</a>
+                            <a href={{URL::to("badges/" . $info_array[3])}}>"{{ $info_array[2]}}"</a>
                             </br>
-                            <p class="date">{{"$info_array[2], às $info_array[3]."}}</p>
-                            <a class="link-block" href={{URL::to("badges/" . $info_array[4])}}></a>
+                            <a class="link-block" href={{URL::to("badges/" . $info_array[3])}}></a>
                         </div>
                     </li>
                 </div>
