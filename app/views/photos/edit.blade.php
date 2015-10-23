@@ -224,13 +224,22 @@
          
         <tr><td>                
          <div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
-         <div class="two columns omega">
-         @if (($photo->dataCriacao)!= null )
-          <p>{{ Form::text('photo_imageDate',date("d/m/Y",strtotime($photo->dataCriacao)),array('id' => 'datePickerImageDate','placeholder'=>'dd/mm/yyyy')) }} 
+         <div class="fivemidUpdateForm columns omega">
+         @if (($photo->dataCriacao)!= null && $photo->imageDateType == "date")
+          <p>{{ Form::text('photo_imageDate',date("d/m/Y",strtotime($photo->dataCriacao)),array('id' => 'datePickerImageDate','placeholder'=>'dd/mm/yyyy')) }}      
          @else
-          <p>{{ Form::text('photo_imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'dd/mm/yyyy')) }} 
+          <p>{{ Form::text('photo_imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'dd/mm/yyyy')) }}
          @endif  
-         <br> <div class="error">{{ $errors->first('photo_imageDate') }}</div>
+          <span class="space_txt_element">Não sabe a data precisa? 
+                  <a onclick="date_visibility('date_img_inaccurate');" >Clique aqui.</a> 
+          </span>
+          <br> <div id="error_image_date" class="error">{{ $errors->first('photo_imageDate') }}</div> 
+         </p>
+         <p>
+             <div id="date_img_inaccurate" style="display:none;">                                    
+                        @include('photos.includes.dateImage')                                   
+             </div>
+             <label id="answer_date_image" class="resultDateWork"></label>
          </p>       
         </div></td>
         </tr>
@@ -327,9 +336,11 @@
   <script type="text/javascript">
     $(document).ready(function() {
      $('#tags').textext({ plugins: 'tags' });
+      
       @foreach($tags as $tag)
         $('#tags').textext()[0].tags().addTags([ {{ '"' . $tag . '"' }} ]);
       @endforeach
+
       $('#add_tag').click(function(e) {
         e.preventDefault();
         var tag = $('#tags_input').val();
@@ -344,6 +355,24 @@
       });
     })
     
+    @if($centuryImageInput != null || $centuryImageInput != "" )    //  
+      var centuryImageInput = "{{$centuryImageInput}}";//"{{Input::old('century')}}"; 
+      showPeriodCenturyImage(centuryImageInput);
+      retrieveCenturyImage(centuryImageInput);
+      //get filter 
+      //filterDecadesOfCentury(centuryInput);  
+      //alert(centuryImageInput);  
+    @endif
+
+    @if($decadeImageInput != null || $decadeImageInput!="" ) 
+        var decadeImageInput = "{{$decadeImageInput}}"; 
+        retrieveDecadeImage(decadeImageInput);      
+        getCenturyOfDecade(decadeImageInput,"imageDate");   
+       // alert("fueraForm"+decadeImageInput);  
+    @endif
+
+
+
     @if($dateYear != NULL)
       var dateYear = "{{$dateYear}}";
       retrieveYearDate(dateYear);
@@ -354,17 +383,38 @@
       showPeriodCentury(centuryInput);
       retrieveCentury(centuryInput);
       //get filter 
-      filterDecadesOfCentury(centuryInput);  
+      //filterDecadesOfCentury(centuryInput);  
       //alert(centuryInput);  
     @endif
     
     @if($decadeInput != null || $decadeInput!="" ) 
         var decadeInput = "{{$decadeInput}}"; 
       retrieveDecade(decadeInput);          
-      getCenturyOfDecade(decadeInput); 
+      getCenturyOfDecade(decadeInput,"workDate"); 
     @endif
 
-    window.onload = resultSelectDateWork;
+    //window.onload = resultSelectDateWork;
+     
+     if("{{ $centuryImageInput }}" != "" || "{{ $decadeImageInput }}" != "" ){
+                window.onload = resultSelectDateWork("date_img_inaccurate"); 
+               // alert("iamge carga");
+      }
+     
+     if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
+                window.onload = resultSelectDateWork("date_img_inaccurate"); 
+                //alert("image por error o recuperac");
+      }
+
+     
+     if("{{ $centuryInput }}" != "" || "{{ $decadeInput}} " != "" ){                
+                window.onload = resultSelectDateWork("otherDate");
+              //  alert("other Decade-load");
+        }
+
+     if("{{Input::old('century')}}" != "" || "{{Input::old('decade_select')}}" != "" ){                
+                window.onload = resultSelectDateWork("otherDate");
+              //  alert("other Decade-old");
+        }
 
     $(function() {
     $( "#datePickerImageDate" ).datepicker({

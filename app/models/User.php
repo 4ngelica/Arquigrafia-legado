@@ -35,7 +35,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	public function photos()
 	{
-		return $this->hasMany('Photo');
+		return $this->hasMany('Photo')->whereNull('institution_id');
 	}
 	public function userPhotos($user_id){
 		return $this->hasMany('Photo')->where('user_id', $user_id)->whereNull('institution_id');

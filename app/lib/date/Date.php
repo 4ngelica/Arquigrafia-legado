@@ -221,7 +221,7 @@ class Date {
 	public function formatToDataCriacao($date,$type){
 		
 		if($date != null && $type != null){
-			if ($type == "full"){
+			if ($type == "date"){
 				return $this->translateDate($date);				
 			}
 			if ($type == "decade"){
