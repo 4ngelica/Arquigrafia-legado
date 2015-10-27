@@ -26,8 +26,16 @@
   
     <!--   PAINEL DE IMAGENS - GALERIA - CARROSSEL   -->  
     <div class="wrap">
-      <div id="panel"> 
+      <div id="panel">
+      <!--@if(Auth::check())
+        @if(!Auth::user()->news->isEmpty())
+          @include('includes.news')
+        @else
+          @include('includes.panel')
+        @endif
+      @else -->
         @include('includes.panel')
+      <!--@endif-->
       </div>
       <div class="panel-back"></div>
       <div class="panel-next"></div>
