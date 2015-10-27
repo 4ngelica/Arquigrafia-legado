@@ -1026,9 +1026,6 @@ class PhotosController extends \BaseController {
       }
       else Notification::create('comment_posted', $user, $comment, [$user_note], null);
       }
-
-      $this->checkCommentCount(5,'test');
-
       return Redirect::to("/photos/{$id}");
     }
 
