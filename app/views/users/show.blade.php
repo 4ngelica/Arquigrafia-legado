@@ -48,37 +48,11 @@
 
         <div class="info">
           <h1>{{ $user->name}} {{ $user->secondName}}</h1>
-          <?php
-            $counts = array_count_values($user->badges->lists("class"));
-            if ( ! array_key_exists("Gold", $counts) ) {
-              $counts["Gold"] = 0;
-            }
-            if ( ! array_key_exists("Silver", $counts) ) {
-              $counts["Silver"] = 0;
-            }
-            if ( ! array_key_exists("Bronze", $counts) ) {
-              $counts["Bronze"] = 0;
-            }
-          ?>
           <p>
             <a href="{{ URL::to('/leaderboard') }}">
               Ver Quadro de Colaboradores
             </a>
           </p>
-          <div>
-            <span class="badges-counter" title ="{{$counts['Gold']}} gold badges">
-              <span  class="badges_gold"></span>
-              <span class="number_badge">{{$counts["Gold"]}}</span>
-            </span>
-            <span class="badges-counter" title ="{{$counts['Silver']}} silver badges">
-              <span  class="badges_silver"></span>
-              <span class="number_badge">{{$counts["Silver"]}}</span>
-            </span>
-            <span class="badges-counter" title ="{{$counts['Bronze']}} bronze badges">
-              <span  class="badges_bronze"></span>
-              <span class="number_badge">{{$counts["Bronze"]}}</span>
-            </span>
-          </div>
            
        @if ( !empty($user->city) )
         <p>{{ $user->city }}</p>

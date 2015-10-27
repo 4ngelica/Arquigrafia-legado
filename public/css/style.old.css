@@ -783,7 +783,7 @@ a.tooltip_license span
 #leaderboard table { color: #666; border: 1px solid; border-radius: 2px; }
 #leaderboard thead th { padding: 10px; color: #000; }
 #leaderboard table td { font-size: 14px; text-align: center; padding: 5px; vertical-align: middle; border-top: 1px solid /*#d0d0d0*/; }
-#leaderboard tr:hover { background-color: #d0d0d0 }
+#leaderboard tr:hover, #leaderboard tr.selected:hover { background-color: #d0d0d0 }
 #leaderboard tr.selected { background-color: #e0e0e0; }
 #leaderboard table p { font-family: bold; font-size: 18px; color: #333; margin: 5px; }
 #leaderboard .user_photo_thumbnail { width: 48px; height: auto; }
