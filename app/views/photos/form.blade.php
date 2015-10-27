@@ -7,6 +7,7 @@
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.plugin.tags.css" />
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/styletags.css" />
 
+<script type="text/javascript" src="{{ URL::to("/") }}/js/rotate.js"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.core.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.tags.js" charset="utf-8"></script>
@@ -95,8 +96,15 @@
     {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
     <div class="error">{{ $errors->first('photo') }}</div>
     </p>
-    <br>
+    <br/>
+    <h4>Edição da Imagem</h4>
+    <h5 align="center" >Rotação</h5>
+    <div>
+    <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), Math.PI/2);">Horária</a>
+    <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), -Math.PI/2);">Anti-Horária</a>
     </div>
+    </div>
+    <br>
     </div>
     <div id="registration" class="twelve columns row step-2">
     <h1><span class="step-text">Dados da imagem</span></h1>
