@@ -399,13 +399,16 @@ class PhotosController extends \BaseController {
             }*/
            
           $input['autoOpenModal'] = 'true';  
-
           $sourcePage = $input["pageSource"]; //get url of the source page through form
           //ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "UploadInstitutional", "user");
           //ActionUser::printTags($photo->user_id, $photo->id, $tagsCopy, $sourcePage, "user", "Inseriu");
-          
-          $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
 
+
+          if(array_key_exists('rotate', $input))
+              $angle = (float)$input['rotate'];
+          else
+              $angle = 0;
+          $image = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80); // todas começam com jpg quality 80
           $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
           $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
           $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');

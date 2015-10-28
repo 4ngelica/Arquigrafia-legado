@@ -94,15 +94,11 @@
     <p>
     {{ Form::label('photo','Imagem:') }}
     {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
+    <br></br>
+    <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), Math.PI/2);">Girar 90° para direita</a>
+    <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), -Math.PI/2);">Girar 90° para esquerda</a>
     <div class="error">{{ $errors->first('photo') }}</div>
     </p>
-    <br/>
-    <h4>Edição da Imagem</h4>
-    <h5 align="center" >Rotação</h5>
-    <div>
-    <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), Math.PI/2);">Horária</a>
-    <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), -Math.PI/2);">Anti-Horária</a>
-    </div>
     </div>
     <br>
     </div>
