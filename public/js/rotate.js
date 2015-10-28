@@ -29,8 +29,6 @@ var Rotate = (function(){
                 var fullWidth = Math.abs(sin) * imgHeight +  Math.abs(cos) * imgWidth;
                 var fullHeight = Math.abs(cos) * imgHeight +  Math.abs(sin) * imgWidth;
 
-                console.log(fullWidth);
-                console.log(fullHeight);
                 canvas.setAttribute('width',fullWidth);
                 canvas.setAttribute('height',fullHeight);
 

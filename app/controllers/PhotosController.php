@@ -930,7 +930,10 @@ class PhotosController extends \BaseController {
       ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $source_page, "Upload", "user");
       ActionUser::printTags($photo->user_id, $photo->id, $tags_copy, $source_page, "user", "Inseriu");
 
-      $angle = (float)$input['rotate'];
+      if(array_key_exists('rotate', $input))
+          $angle = (float)$input['rotate'];
+      else
+          $angle = 0;
       $image = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80); // todas começam com jpg quality 80
       $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
       $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
