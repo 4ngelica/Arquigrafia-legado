@@ -223,7 +223,7 @@
           	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
          
         <tr><td>                
-         <div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
+         <div class="oneUpload columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
          <div class="fivemidUpdateForm columns omega">
          @if (($photo->dataCriacao)!= null && $photo->imageDateType == "date")
           <p>{{ Form::text('photo_imageDate',date("d/m/Y",strtotime($photo->dataCriacao)),array('id' => 'datePickerImageDate','placeholder'=>'dd/mm/yyyy')) }}      
@@ -245,26 +245,17 @@
         </tr>
 
 
-              <tr><td>
-                
-				<div class="two columns alpha"><p>{{ Form::label('photo_workAuthor', 'Autor da obra:') }}</p></div>
-				<div class="two columns omega">
-				<p>
-            {{ Form::text('photo_workAuthor', $photo->workAuthor ,array('id' => 'photo_workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:15px; width:290px; font-size:12px; border:solid 1px #ccc')) }} 
-          <br>
-				</p>
-			  </div></td>
-        </tr>	
+
+        <tr><td> @include('photos.includes.workAuthor') </td></tr>
 
         <tr><td>                
-         <div class="two columns alpha"><p>{{ Form::label('photo_workDate', 'Ano de conclusão da obra:') }}</p></div>
-         <div class="five columns omega">
+         <div class="oneUpload columns alpha"><p>{{ Form::label('photo_workDate', 'Ano de conclusão da obra:') }}</p></div>
+         <div class="fivemidUpdateForm columns omega">
          <p>
-            <fieldset>
                    @include('photos.includes.dateList')                        
                     <span class="space_txt_element">Não sabe a data precisa? 
                       <a  onclick="date_visibility('otherDate');" >Clique aqui.</a> </span>
-                    </fieldset> 
+                    
          </p> 
          <p><div id="otherDate" style="display:none;">                      
                         @include('photos.includes.dateWork') 
@@ -353,6 +344,39 @@
         if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
           e.preventDefault();
       });
+
+        $('#work_authors').textext({ plugins: 'tags' });
+
+        @if(Input::old('work_authors')!= null)
+
+            <?php //print_r(Input::old('work_authors'));
+            $work_authors = explode (";", Input::old('work_authors')); ?>
+        @endif
+        
+        @if (isset($work_authors) && $work_authors != null)
+                              // console.log("AC = "+ auth);
+            @foreach ( $work_authors as $work_author )
+                $('#work_authors').textext()[0].tags().addTags([ {{ '"' . $work_author . '"' }} ]);
+            @endforeach
+        @endif
+      
+
+        $('#add_work_authors').click(function(e) {
+            e.preventDefault();
+            var authors = $('#photo_workAuthor').val();
+            
+            if (authors == '') return;
+            $('#work_authors').textext()[0].tags().addTags([ authors ]);
+            $('#photo_workAuthor').val('');
+        });
+        $('#photo_workAuthor').keypress(function(e) {
+            var key = e.which || e.keyCode;
+            //alert("A" + key);
+            if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
+                e.preventDefault();
+        });
+
+
     })
     
     @if($centuryImageInput != null || $centuryImageInput != "" )    //  
