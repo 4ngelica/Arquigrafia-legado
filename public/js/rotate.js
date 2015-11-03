@@ -29,8 +29,6 @@ var Rotate = (function(){
                 var fullWidth = Math.abs(sin) * imgHeight +  Math.abs(cos) * imgWidth;
                 var fullHeight = Math.abs(cos) * imgHeight +  Math.abs(sin) * imgWidth;
 
-                console.log(fullWidth);
-                console.log(fullHeight);
                 canvas.setAttribute('width',fullWidth);
                 canvas.setAttribute('height',fullHeight);
 
@@ -52,11 +50,11 @@ var Rotate = (function(){
                 input.name = "rotate";
                 input.id   = "rotate";
                 if(input_rotate == null) {
-                    input.value = 90;
+                    input.value = angle * 180/Math.PI;
                     input_file.parentNode.appendChild(input);
                 }
                 else {
-                    input.value = (angle * 180/Math.PI) +  parseInt(input_rotate.value);
+                    input.value = ((angle * 180/Math.PI) +  parseInt(input_rotate.value)) % 360;
                     input_file.parentNode.replaceChild(input, input_rotate);
                 }
             };

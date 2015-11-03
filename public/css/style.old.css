@@ -833,3 +833,11 @@ p.position { font-size: 20px; }
 .container .fivemidUpdateInst.columns{ width: 400px; }
 .div_institutional { width: 405px; }
 .div_institutional_edit { width: 380px; }
+.container .oneUpload.columns { width: 117px; }
+.container .fourUpload.columns { width: 380px; }
+.container .fourUploadInst.columns { width: 380px; }
+
+.container .sevenUpload.columns  { width: 258px; padding-left: 137px }
+.container .sevenUploadInst.columns  { width: 460px; }
+.author_area_size_int { width: 460px; }
+.author_area_size { width: 380px; }

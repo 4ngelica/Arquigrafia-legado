@@ -8,6 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.plugin.tags.css" />
 	<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/styletags.css" />
 
+    <script type="text/javascript" src="{{ URL::to("/") }}/js/rotate.js"></script>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.core.js" charset="utf-8"></script>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.tags.js" charset="utf-8"></script>
@@ -115,6 +116,11 @@
 							{{ Form::label('photo','Imagem:') }}
 							{{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
 							<div class="error">{{ $errors->first('photo') }}</div>
+                            <br></br>
+                            <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), 
+                                -Math.PI/2);">Girar 90° para esquerda</a>
+                            <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), 
+                                Math.PI/2);">Girar 90° para direita</a>
 						</p>
 						<br>
 					</div>
@@ -275,52 +281,30 @@
 										<button class="btn" id="add_tag" style="font-size: 11px;">ADICIONAR TAG</button>
 									</div>
 									<div class="five columns alpha">
-
 										<textarea name="tagsArea" id="tagsArea" cols="60" rows="1" style="display: none;">
 										</textarea>
 									</div>									
 								</td>
 							</tr>
 
-							<tr>
+							<!--<tr>
 								<td>
 									<br/>
-									<div class="two columns alpha"><p>{{ Form::label('workAuthor', 'Autor da obra:') }}</p></div>
+									<div class="two columns alpha"><p>Form::label('workAuthor', 'Autor da obra:') }}</p></div>
 									<div class="two columns">
 										<p><div style="max-width:150px;">
-
-											{{ Form::text('workAuthor', $workAuthorInput, array('id' => 'workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:15px; width:290px; font-size:12px; border:solid 1px #ccc')) }}
-										   	
-										   </div>
-											
+											 Form::text('workAuthor', $workAuthorInput, array('id' => 'workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:15px; width:290px; font-size:12px; border:solid 1px #ccc')) }}										   	
+										   </div>											
 											<br>
-											<div class="error">{{ $errors->first('workAuthor') }}</div>
+											<div class="error"> errors->first('workAuthor') }}</div>
 										</p>
-									</div>
-									<!--<div>
-										<button class="btn" id="addWorkAuthor" style="font-size: 11px;">ADICIONAR att</button>
-									</div>
-									<div class="five columns alpha">
-										<textarea name="workAuthorArea" id="workAuthorArea" cols="60" rows="1" style="display: none;"></textarea>
-									</div>-->									
-								</td>
-							</tr>
-
-							<!--<tr>
-								<td>
-									<br/>
-								<div class="two columns alpha"><p>{{ Form::label('workAuthor', 'Autor da obra:') }}</p></div>
-								<div class="two columns omega">
-									<p>
-										{{ Form::text('workAuthor', Input::old('workAuthor')) }} <br>
-									</p>
-								</div>
-								</td>
-							</tr> -->
-							<!--<tr>
-								<td>@include('photos.includes.datepicker')
+									</div>									
 								</td>
 							</tr>-->
+
+							<tr><td></td></tr>
+    						<tr><td> @include('photos.includes.workAuthorInst') </td></tr>
+    						<tr><td></td></tr>						
 														 
         					<tr><td>              
          						<div class="two columns alpha"><p>{{ Form::label('workDate', 'Ano de conclusão da obra:') }}</p></div>
@@ -456,8 +440,8 @@
          								<label id="answer_date_image" class="resultDateWork"></label>
          							</p>       
         						</div>
-        						</tr>   
         						</td>
+        					</tr>           						
 							<tr><td>
 								<div class="two columns alpha"><p>{{ Form::label('observation', 'Observações:') }}</p></div>
 								<div class="two columns omega">
@@ -627,6 +611,8 @@
 			}); 
 		}
 
+
+
 		/* //if({{Input::old('autoOpenModal','false')}}){ */
 		@if(Input::old('tagsArea')!= null)				
 			var tagsArea = {{"'".Input::old('tagsArea') ."'"}}.split(',');
@@ -635,7 +621,36 @@
 			showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));		
 		@endif
 
-			
+		//authors
+		$('#work_authors').textext({ plugins: 'tags' });
+
+        @if(Input::old('work_authors')!= null)
+            <?php //print_r(Input::old('work_authors'));
+            $work_authors = explode (";", Input::old('work_authors')); ?>
+        @endif
+        
+        @if (isset($work_authors) && $work_authors != null)
+                              // console.log("AC = "+ auth);
+            @foreach ( $work_authors as $work_author )
+                $('#work_authors').textext()[0].tags().addTags([ {{ '"' . $work_author . '"' }} ]);
+            @endforeach
+        @endif
+      
+
+        $('#add_work_authors').click(function(e) {
+            e.preventDefault();
+            var authors = $('#photo_workAuthor').val();
+            
+            if (authors == '') return;
+            $('#work_authors').textext()[0].tags().addTags([ authors ]);
+            $('#photo_workAuthor').val('');
+        });
+        $('#photo_workAuthor').keypress(function(e) {
+            var key = e.which || e.keyCode;
+            //alert("A" + key);
+            if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
+                e.preventDefault();
+        });	
 
 		@if( Input::old('century'))		
 			var centuryInput = "{{Input::old('century')}}";
