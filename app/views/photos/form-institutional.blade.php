@@ -8,7 +8,6 @@
 	<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.plugin.tags.css" />
 	<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/styletags.css" />
 
-    <script type="text/javascript" src="{{ URL::to("/") }}/js/rotate.js"></script>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.core.js" charset="utf-8"></script>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.tags.js" charset="utf-8"></script>
@@ -30,6 +29,7 @@
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-autocomplete-part.js" charset="utf-8"></script>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/city-autocomplete.js" charset="utf-8"></script>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/date-work.js" charset="utf-8"></script>
+    <script type="text/javascript" src="{{ URL::to("/") }}/js/rotate.js" charset="utf-8"></script>
 <style>
   .ui-autocomplete {
     max-height: 100px;
@@ -117,11 +117,13 @@
 							{{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
 							<div class="error">{{ $errors->first('photo') }}</div>
                             <br></br>
-                            <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), 
-                                -Math.PI/2);">Girar 90° para esquerda</a>
-                            <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), 
-                                Math.PI/2);">Girar 90° para direita</a>
 						</p>
+                        <div id="image_rotate" style="display:none;">
+                        <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), 
+                            Math.PI/2);">Girar 90° para direita</a>
+                        <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), 
+                            -Math.PI/2);">Girar 90° para esquerda</a>
+                        </div>
 						<br>
 					</div>
 				</div>
