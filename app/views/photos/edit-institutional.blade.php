@@ -426,19 +426,23 @@
         @endif       
 
         $('#add_work_authors').click(function(e) {
-            e.preventDefault(); alert("btn");
-            var authors = $('#photo_workAuthor').val();
-            
-            if (authors == '') return;
-            $('#work_authors').textext()[0].tags().addTags([ authors ]);
-            $('#photo_workAuthor').val('');
+            e.preventDefault();
+            authorsList();
         });
         $('#photo_workAuthor').keypress(function(e) {
             var key = e.which || e.keyCode;
-            //alert("A" + key);
+            if(key ==13)
+               authorsList();            
             if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
                 e.preventDefault();
-        }); 
+        });
+
+        function authorsList(){
+            var authors = $('#photo_workAuthor').val();            
+            if (authors == '') return;
+            $('#work_authors').textext()[0].tags().addTags([ authors ]);
+            $('#photo_workAuthor').val('');
+        } 
 
 
 

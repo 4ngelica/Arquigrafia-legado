@@ -59,7 +59,6 @@ class Author extends Eloquent {
   }
 
   public function deleteAuthorPhoto($photo){
-
       $allAuthors = $this->getAuthorPhoto($photo->id); 
       if(!empty($allAuthors)){
           foreach ($allAuthors as $allAuthor) {            
@@ -69,7 +68,7 @@ class Author extends Eloquent {
       
   }
   public function updateAuthors($authors_list,$photo)
-  {   
+  {   //dd($authors_list);
       $this->deleteAuthorPhoto($photo);
       //dd($authors_list);
       //die();

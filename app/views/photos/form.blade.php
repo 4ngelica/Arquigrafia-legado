@@ -478,18 +478,24 @@
 
         $('#add_work_authors').click(function(e) {
             e.preventDefault();
-            var authors = $('#photo_workAuthor').val();
-            
-            if (authors == '') return;
-            $('#work_authors').textext()[0].tags().addTags([ authors ]);
-            $('#photo_workAuthor').val('');
+            authorsList();
         });
         $('#photo_workAuthor').keypress(function(e) {
             var key = e.which || e.keyCode;
-            //alert("A" + key);
+            //alert("A" +key)
+            if(key ==13)
+               authorsList();
+            
             if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
                 e.preventDefault();
         });
+
+        function authorsList(){
+            var authors = $('#photo_workAuthor').val();            
+            if (authors == '') return;
+            $('#work_authors').textext()[0].tags().addTags([ authors ]);
+            $('#photo_workAuthor').val('');
+        }
 
         @if( Input::old('century_image'))       
             var centuryInputImage = "{{Input::old('century_image')}}";

@@ -22,7 +22,6 @@ function readURL(input) {
  */
 function showTags(tagsJson, containerText, tagInput){
 
-    
     if(tagsJson != null && tagsJson != ''){
         containerText.textext({ plugins: 'tags' });
         var array = eval(tagsJson);  // convert string to array  
@@ -63,7 +62,11 @@ $(document).ready(function() {
             $('#tags_input').val('');
         }
     });
-
+    $('#tags_input').keypress(function(e) {
+            var key = e.which || e.keyCode; //alert("B"+key);
+            if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
+                e.preventDefault();
+        });
 
     /*$('#workAuthor').textext({ plugins : 'autocomplete ajax',
             ajax : {
