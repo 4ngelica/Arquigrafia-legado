@@ -639,18 +639,22 @@
 
         $('#add_work_authors').click(function(e) {
             e.preventDefault();
-            var authors = $('#photo_workAuthor').val();
-            
-            if (authors == '') return;
-            $('#work_authors').textext()[0].tags().addTags([ authors ]);
-            $('#photo_workAuthor').val('');
+            authorsList();
         });
         $('#photo_workAuthor').keypress(function(e) {
             var key = e.which || e.keyCode;
-            //alert("A" + key);
+            if(key ==13)
+               authorsList();            
             if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
                 e.preventDefault();
-        });	
+        });
+
+        function authorsList(){
+            var authors = $('#photo_workAuthor').val();            
+            if (authors == '') return;
+            $('#work_authors').textext()[0].tags().addTags([ authors ]);
+            $('#photo_workAuthor').val('');
+        }	
 
 		@if( Input::old('century'))		
 			var centuryInput = "{{Input::old('century')}}";
@@ -695,27 +699,6 @@
 			}
 		}
 
-		
-		//alert("{{Input::old('imageDate')}}");
-		/*if({{Input::old('dates','true')}}){ 
-			if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
-				window.onload = resultSelectDateWork("date_img_inaccurate");	
-			}
-
-		} 	
-
-		if("{{Input::old('imageDate')}}" == ""){ 			
-			if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
-				window.onload = resultSelectDateWork("date_img_inaccurate");	
-			}
-		} */
-
-		
-
-		//@if(Input::old('dateImage'))	
-		//	alert("?l??");
-			
-		//@endif
 		
 
 

@@ -489,17 +489,33 @@ class Photo extends Eloquent {
 	}
 
 	public function authorTextFormat($authorName){
-		$arrayAuthor = explode(',', $authorName);
-		$first = true;
-		$authorString = ""; 
-		foreach ($arrayAuthor as $t ) {
-			if($first == true){
-				$authorString.= strtoupper($t).", ";				
-			}else{
-				$authorString.= ucfirst($t)." ";
+		
+		if(strpos($authorName, ",")){
+			$arrayAuthor = explode(',', $authorName);
+			$first = true;
+			$authorString = ""; 
+			foreach ($arrayAuthor as $t ) {
+				if($first == true){
+					$authorString.= strtoupper($t).", ";				
+				}else{
+					$arrayText = explode(' ', $t);
+					foreach ($arrayText as $a ) {
+						if(strlen($a) > 3){
+							$authorString.= ucwords($a)." ";
+						}else{
+							$authorString.= $a." ";
+						}
+							
+					}	
+					//if(strlen($t) > 3)
+					//	$authorString.= ucwords($t)." ";
+				}
+				$first = false;	
 			}
-			$first = false;	
+			
+		}else{
+			$authorString = ucwords($authorName);
 		}
-		return $authorString;
+		return $authorString;		
 	}
 }

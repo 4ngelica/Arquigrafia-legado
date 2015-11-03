@@ -402,16 +402,6 @@
         </p>
       @endif
       </div>
-      <!--<div id="workAuthor_container">
-      @if ( !empty($photos->workAuthor) )
-        <h4>Autor da Obra:</h4>
-        <p>
-          <a href="{{ URL::to("/search?q=".$photos->workAuthor) }}">
-            {{ $photos->workAuthor }}
-          </a>
-        </p>
-      @endif
-      </div>-->
       
       <div id="workAuthor_container">
       @if (!empty($authorsList) )
@@ -422,12 +412,20 @@
           <a href="{{ URL::to("/search?q=".$authors) }}">            
             {{ $photos->authorTextFormat($authors); }}
           </a>  
-            @if($i!=count($authorsList))
-            ;
+            @if($i!=count($authorsList));
             @endif
             <?php $i++; ?>
           @endforeach
         </p>
+      @else
+        @if ( !empty($photos->workAuthor) )
+        <h4>Autor da Obra:</h4>
+        <p>
+          <a href="{{ URL::to("/search?q=".$photos->workAuthor) }}">
+            {{ $photos->workAuthor }}
+          </a>
+        </p>
+        @endif
       @endif
       </div>
       <div id="workdate_container">

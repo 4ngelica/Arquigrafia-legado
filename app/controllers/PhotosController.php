@@ -64,8 +64,6 @@ class PhotosController extends \BaseController {
     ActionUser::printSelectPhoto($user_id, $id, $source_page, $user_or_visitor);
 
     $license = Photo::licensePhoto($photos);
-    //$author = new Author();
-    //$authorsPhoto = $author->filterAuthorByPhoto($photo);
     $authorsList = $photos->authors->lists('name');
     
     return View::make('/photos/show',
@@ -633,7 +631,7 @@ class PhotosController extends \BaseController {
 
   public function updateInstitutional($id){ 
       $photo = Photo::find($id); 
-      Input::flashExcept('tagsArea','photo','workAuthor','decade_select'); 
+      Input::flashExcept('tagsArea','photo','decade_select'); 
       $input = Input::all(); 
       if(Input::has('tagsArea')){
         $input["tagsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsArea"]);              
@@ -703,7 +701,6 @@ class PhotosController extends \BaseController {
           'decadeImageInput' => $decadeImageInput,
           'centuryImageInput' => $centuryImageInput,          
           'imageDateCreated' => $imageDateCreated,
-          //'workAuthorInput'=> $input["workAuthor"],
           'work_authors'=> $input["work_authors"] 
           ])->withErrors($messages); 
       }else{ 
@@ -728,13 +725,10 @@ class PhotosController extends \BaseController {
                $photo->description = $input["description"];
           else $photo->description = null;
 
-          if ( !empty($input["workAuthor"]) )
+          /*if ( !empty($input["workAuthor"]) )
                $photo->workAuthor = $input["workAuthor"];
-          else $photo->workAuthor = null;
-             
-          /*if ( !empty($input["workDate"]) )
-               $photo->workdate = $input["workDate"];
-          else  $photo->workdate = null;*/
+          else $photo->workAuthor = null; */
+          
 
           if(!empty($input["workDate"])){             
              $photo->workdate = $input["workDate"];
@@ -779,9 +773,7 @@ class PhotosController extends \BaseController {
           if ( !empty($input["imageAuthor"]) )
                $photo->imageAuthor = $input["imageAuthor"];
 
-         /* if ( !empty($input["imageDate"]) )
-               $photo->dataCriacao = $input["imageDate"];
-          else $photo->dataCriacao = null; */
+         
              
           if ( !empty($input["observation"]) )  
                $photo->observation = $input["observation"];
@@ -796,12 +788,13 @@ class PhotosController extends \BaseController {
           //dd(Input::file('photo')->isValid());
           if(Input::hasFile('photo') and Input::file('photo')->isValid()) {
               $file = Input::file('photo');
-            //  dd($file);
+              //dd($file);
               $ext = $file->getClientOriginalExtension();
               $photo->nome_arquivo = $photo->id.".".$ext;
           }
+
           $photo->touch();
-          $photo->save();
+          $photo->save(); 
           //tags
           $tagsCopy = $input['tagsArea'];
           $tags = explode(',', $input['tagsArea']);
@@ -819,8 +812,8 @@ class PhotosController extends \BaseController {
               }
           }
 
-           $author = new Author();
-            if (!empty($input["work_authors"])) {
+            $author = new Author();
+            if (!empty($input["work_authors"])) {                 
                 $author->updateAuthors($input["work_authors"],$photo);
             }else{
                 $author->deleteAuthorPhoto($photo);
