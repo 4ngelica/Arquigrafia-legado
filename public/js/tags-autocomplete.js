@@ -10,6 +10,7 @@ function readURL(input) {
         };
         reader.readAsDataURL(input.files[0]);
     }
+    document.getElementById("image_rotate").style.display = 'block';
 }
 
 
