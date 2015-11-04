@@ -49,12 +49,14 @@ var Rotate = (function(){
                 input.type = "hidden";
                 input.name = "rotate";
                 input.id   = "rotate";
+                // Popula o value com -angle pois o package intervention
+                // interpreta a rotacao de modo contrario ao context 2d.
                 if(input_rotate == null) {
-                    input.value = angle * 180/Math.PI;
+                    input.value = -angle * 180/Math.PI;
                     input_file.parentNode.appendChild(input);
                 }
                 else {
-                    input.value = ((angle * 180/Math.PI) +  parseInt(input_rotate.value)) % 360;
+                    input.value = ((-angle * 180/Math.PI) +  parseInt(input_rotate.value)) % 360;
                     input_file.parentNode.replaceChild(input, input_rotate);
                 }
             };
