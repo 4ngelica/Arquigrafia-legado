@@ -450,6 +450,13 @@ class UsersController extends \BaseController {
         fclose($file);
         $user->photo = '/arquigrafia-avatars/'.$user->id.'.jpg';
         $user->save();
+        foreach ($user->followers as $users) {
+          News::create(array('object_type' => 'User', 
+                             'object_id' => $user->id, 
+                             'user_id' => $users->id, 
+                             'sender_id' => $user->id, 
+                             'news_type' => 'new_profile_picture'));
+        }
       }
     }
     return $user->photo;
@@ -610,9 +617,24 @@ class UsersController extends \BaseController {
         $user->save();
         $image = Image::make(Input::file('photo'))->encode('jpg', 80);         
         $image->save(public_path().'/arquigrafia-avatars/'.$user->id.'.jpg');
-        $file->move(public_path().'/arquigrafia-avatars', $user->id."_original.".strtolower($ext));         
+        $file->move(public_path().'/arquigrafia-avatars', $user->id."_original.".strtolower($ext)); 
+        foreach ($user->followers as $users) {
+          News::create(array('object_type' => 'User', 
+                             'object_id' => $user->id, 
+                             'user_id' => $users->id, 
+                             'sender_id' => $user->id, 
+                             'news_type' => 'new_profile_picture'));
+        }        
       } 
-      
+      else {
+        foreach ($user->followers as $users) {
+          News::create(array('object_type' => 'User', 
+                             'object_id' => $user->id, 
+                             'user_id' => $users->id, 
+                             'sender_id' => $user->id, 
+                             'news_type' => 'edited_profile'));
+        }
+      }
       return Redirect::to("/users/{$user->id}")->with('message', '<strong>Edição de perfil do usuário</strong><br>Dados alterados com sucesso'); 
       
     }    

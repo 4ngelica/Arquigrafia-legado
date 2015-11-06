@@ -942,6 +942,14 @@ class PhotosController extends \BaseController {
       $input['dates'] = true;
       $input['dateImage'] = true;
       //return Redirect::to("/photos/{$photo->id}");
+      foreach(Auth::user()->followers as $users) {
+        News::create(array('object_type' => 'Photo', 
+                           'object_id' => $photo->id, 
+                           'user_id' => $users->id, 
+                           'sender_id' => Auth::user()->id, 
+                           'news_type' => 'new_photo'));
+      }
+
       return Redirect::back()->withInput($input);
 
     } else {
@@ -1026,6 +1034,41 @@ class PhotosController extends \BaseController {
       else Notification::create('comment_posted', $user, $comment, [$user_note], null);
       }
 
+      /*News feed*/
+      foreach ($user->followers as $users) {
+        foreach ($users->news as $news) {
+          if ($news->news_type == 'commented_photo' && Comment::find($news->object_id)->photo_id == $id) {
+            $last_update = $news->updated_at;
+            if($last_update->diffInDays(Carbon::now('America/Sao_Paulo')) < 7) {
+              if ($news->data != null) {
+                $data = explode(":", $news->data);
+                for($i = 1; $i < count($data); $i++) {
+                  if($data[$i] == $users->id) {
+                    $already_sent = true;
+                  }
+                }
+              }
+              if(!isset($already_sent)) {
+                $news_id = $news->id;
+              }
+            }
+          }
+        }
+        if(isset($news_id)) {
+          $existing_news = News::find($news_id);
+          $data = $existing_news->data . ":" . $user->id;
+          $existing_news->data = $data;
+          $existing_news->save();
+        }
+        else {
+          News::create(array('object_type' => 'Comment', 
+                             'object_id' => $comment->id, 
+                             'user_id' => $users->id, 
+                             'sender_id' => $user->id, 
+                             'news_type' => 'commented_photo'));
+        }
+      }
+
       $this->checkCommentCount(5,'test');
 
       return Redirect::to("/photos/{$id}");
@@ -1085,6 +1128,39 @@ class PhotosController extends \BaseController {
 
 				  $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
 			  }
+        foreach (Auth::user()->followers as $users) {
+          foreach ($users->news as $news) {
+            if ($news->news_type == 'evaluated_photo' && Photo::find($news->object_id)->photo_id == $id) {
+              $last_update = $news->updated_at;
+              if($last_update->diffInDays(Carbon::now('America/Sao_Paulo')) < 7) {
+                if ($news->data != null) {
+                  $data = explode(":", $news->data);
+                  for($i = 1; $i < count($data); $i++) {
+                    if($data[$i] == $users->id) {
+                      $already_sent = true;
+                    }
+                  }
+                }
+                if(!isset($already_sent)) {
+                  $news_id = $news->id;
+                }
+              }
+            }
+          }
+          if(isset($news_id)) {
+            $existing_news = News::find($news_id);
+            $data = $existing_news->data . ":" . $user->id;
+            $existing_news->data = $data;
+            $existing_news->save();
+          }
+          else {
+            News::create(array('object_type' => 'Photo', 
+                               'object_id' => $id, 
+                               'user_id' => $users->id, 
+                               'sender_id' => $user_id, 
+                               'news_type' => 'evaluated_photo'));
+          }
+        }
 		  } else { 
 			  $insertion_edition = "Editou";
 			  foreach ($evaluations as $evaluation) {
@@ -1470,6 +1546,26 @@ class PhotosController extends \BaseController {
       }
       $source_page = Request::header('referer');
       ActionUser::printTags($photo->user_id, $id, $tags_copy, $source_page, "user", "Editou");
+
+      /*News feed*/
+      $user = User::find($photo->user_id);
+      foreach ($user->followers as $users) {
+        foreach ($users->news as $news) {
+          if ($news->news_type == 'edited_photo' && $news->object_id == $photo->id) {
+            $last_update = $news->updated_at;
+            if($last_update->diffInDays(Carbon::now('America/Sao_Paulo')) < 7) {
+              $already_sent = true;
+            }
+          }
+        }
+        if(!isset($already_sent)) {
+          News::create(array('object_type' => 'Photo', 
+                             'object_id' => $photo->id, 
+                             'user_id' => $users->id, 
+                             'sender_id' => $user->id, 
+                             'news_type' => 'edited_photo'));
+        }
+      }
       return Redirect::to("/photos/{$photo->id}")->with('message', '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso');
 
   }
