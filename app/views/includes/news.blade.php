@@ -27,10 +27,10 @@
 @elseif($info->news_type == 'commented_photo')<!--Alguém que você segue comentou uma foto-->
 <div class="item h<?php echo $size; ?>">
   <div class="layer" data-depth="0.2">
-    <a href='{{ URL::to("/photos") . "/" . Comment::find($this->object_id)->photo_id . "#" . $info->object_id}}'>
+    <a href='{{ URL::to("/photos") . "/" . Comment::find($info->object_id)->photo_id . "#" . $info->object_id}}'>
     <?php 
     ?>
-    <img data-src={{"/arquigrafia-images/" . Comment::find($this->object_id)->photo_id . "_home.jpg"}} title="{{ Photo::find(Comment::find($this->object_id)->photo_id)->name }}">
+    <img data-src={{"/arquigrafia-images/" . Comment::find($info->object_id)->photo_id . "_home.jpg"}} title="{{ Photo::find(Comment::find($info->object_id)->photo_id)->name }}">
     </a>
     <div class="item-title">
       @if($info->data == null)
@@ -38,7 +38,7 @@
       @else
       <?php 
         $users = explode(":", $info->data);
-        $users_size = count($users) - 1;
+        $users_size = count($users);
       ?>
         <p>{{$users_size}} usuários comentaram em uma foto</p>
       @endif
@@ -59,7 +59,7 @@
       @else
       <?php 
         $users = explode(":", $info->data);
-        $users_size = count($users) - 1;
+        $users_size = count($users);
       ?>
         <p>{{$users_size}} usuários avaliaram uma foto</p>
       @endif
@@ -129,7 +129,7 @@
       @else
       <?php 
         $users = explode(":", $info->data);
-        $users_size = count($users) - 1;
+        $users_size = count($users);
       ?>
         <p>{{$users_size}} usuários gostaram de uma foto</p>
       @endif
