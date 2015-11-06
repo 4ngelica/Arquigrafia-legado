@@ -15,12 +15,8 @@ class BadgeEarnedNotification extends \Tricki\Notification\Models\Notification
         return array($this->getTypes(),
                      $this->getSender(),
                      $this->getBadgeName(),
-                     $this->getBadgeClass(),
                      $this->getBadgeID(),
-                     $this->getDate(),
-                     $this->getTime(),
-                     $this->getSenderID(),
-                     $this->getData()
+                     $this->getImage()
                      );
     }
 
@@ -50,8 +46,8 @@ class BadgeEarnedNotification extends \Tricki\Notification\Models\Notification
         return $this->getBadge()->name;
     }
 
-    public function getBadgeClass() {
-        return $this->getBadge()->class;
+    public function getImage() {
+        return $this->getBadge()->image;
     }
 
     public function getObjectType() {
@@ -76,6 +72,8 @@ class BadgeEarnedNotification extends \Tricki\Notification\Models\Notification
         }
         return $this->badge;
     }
+
+
 
 }
 

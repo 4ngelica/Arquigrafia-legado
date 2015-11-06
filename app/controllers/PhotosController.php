@@ -64,7 +64,8 @@ class PhotosController extends \BaseController {
     ActionUser::printSelectPhoto($user_id, $id, $source_page, $user_or_visitor);
 
     $license = Photo::licensePhoto($photos);
-
+    $authorsList = $photos->authors->lists('name');
+    
     return View::make('/photos/show',
       ['photos' => $photos, 'owner' => $photo_owner, 'follow' => $follow, 'tags' => $tags,
       'commentsCount' => $photos->comments->count(),
@@ -76,17 +77,21 @@ class PhotosController extends \BaseController {
       'belongInstitution' => $belongInstitution,
       'hasInstitution' => $hasInstitution,
       'ownerInstitution' => $photo_institution,
-      'institution' => $institution
+      'institution' => $institution,
+      'authorsList' => $authorsList
     ]);
   }
 
   // upload form
   public function form()
   {
-
+    if (Session::has('institutionId') ) {
+      return Redirect::to('/');
+    }
     $pageSource = Request::header('referer');
     if(empty($pageSource)) $pageSource = '';
     $tags = null;
+    $work_authors = null;
     $centuryInput =  null;
     $decadeInput = null;
     $centuryImageInput = null;
@@ -99,6 +104,13 @@ class PhotosController extends \BaseController {
       $tags = Session::pull('tags');
       $tags = explode(',', $tags);
     }
+
+    if ( Session::has('work_authors') )
+    {
+      $work_authors = Session::pull('work_authors');
+      $work_authors = explode(';', $work_authors);
+    }
+
     if ( Session::has('centuryInput') ) {
        $centuryInput = Session::pull('centuryInput');
       //dd($century);
@@ -129,7 +141,8 @@ class PhotosController extends \BaseController {
       'decadeImageInput' =>  $decadeImageInput,
       'autoOpenModal'=>$input['autoOpenModal'],
       'dates' => $dates,
-      'dateImage' => $dateImage      
+      'dateImage' => $dateImage,
+      'work_authors'=>$work_authors   
       ]);
 
   }
@@ -152,6 +165,7 @@ class PhotosController extends \BaseController {
     $pageSource = Request::header('referer');
     
     $tagsArea = null;
+    $work_authors = null;
     $centuryInput =  null;
     $decadeInput = null;
     $centuryImageInput = null;
@@ -165,8 +179,16 @@ class PhotosController extends \BaseController {
       $tagsArea = Session::pull('tagsArea');
       $tagsArea = explode(',', $tagsArea); 
     }
-    if ( Session::has('workAuthorInput') )
-       $workAuthorInput = Session::pull('workAuthorInput');
+
+    if ( Session::has('work_authors') )
+    {
+      $work_authors = Session::pull('work_authors');
+      $work_authors = explode(';', $work_authors);
+    }
+
+   // if ( Session::has('workAuthorInput') )
+     //  $workAuthorInput = Session::pull('workAuthorInput');
+
     if ( Session::has('centuryInput') ) {
        $centuryInput = Session::pull('centuryInput');
        $dates = true;
@@ -190,7 +212,7 @@ class PhotosController extends \BaseController {
     $input['autoOpenModal'] = null;  
     /* */
     return View::make('/photos/form-institutional')->with(['tagsArea'=> $tagsArea,
-      'workAuthorInput' => $workAuthorInput, 
+      //'workAuthorInput' => $workAuthorInput, 
       'centuryInput'=> $centuryInput,
       'decadeInput' =>  $decadeInput,
       'centuryImageInput'=> $centuryImageInput,
@@ -200,7 +222,8 @@ class PhotosController extends \BaseController {
       'albumsInstitutional'=>$albumsInstitutional,
       'autoOpenModal'=>$input['autoOpenModal'],
       'dates' => $dates,
-      'dateImage' => $dateImage
+      'dateImage' => $dateImage,
+      'work_authors'=>$work_authors
       ]);
   }
 
@@ -243,7 +266,7 @@ class PhotosController extends \BaseController {
 
 
   public function saveFormInstitutional() {   
-    Input::flashExcept('tagsArea', 'photo','workAuthor'); 
+    Input::flashExcept('tagsArea', 'photo','work_authors'); 
     $input = Input::all();
      
     if (Input::has('tagsArea')){
@@ -251,9 +274,17 @@ class PhotosController extends \BaseController {
     }else{
       $input["tagsArea"] = '';
     } 
-    if (Input::has('workAuthor')){  
-      $input["workAuthor"] = str_replace(array('"'), '', $input["workAuthor"]);    
-    }  
+
+    if (Input::has('work_authors')){
+        $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
+        $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
+    }else
+        $input["work_authors"] = '';
+
+
+   // if (Input::has('workAuthor')){  
+   //    $input["workAuthor"] = str_replace(array('"'), '', $input["workAuthor"]);    
+   // }  
 
     
       $rules = array(
@@ -280,11 +311,12 @@ class PhotosController extends \BaseController {
     if($validator->fails()) { 
           $messages = $validator->messages();       
           return Redirect::to('/photos/uploadInstitutional')->with(['tagsArea' => $input['tagsArea'] ,
-          'workAuthorInput'=>$input["workAuthor"],
+         // 'workAuthorInput'=>$input["workAuthor"],
           'decadeInput'=>$input["decade_select"],
           'centuryInput'=>$input["century"],
           'decadeImageInput'=>$input["decade_select_image"],
-          'centuryImageInput'=>$input["century_image"]  
+          'centuryImageInput'=>$input["century_image"],
+          'work_authors'=>$input["work_authors"]   
           ])->withErrors($messages); 
     }else{       
       if(Input::hasFile('photo') and Input::file('photo')->isValid()) {
@@ -305,8 +337,8 @@ class PhotosController extends \BaseController {
           $photo->name = $input["photo_name"];
           if ( !empty($input["description"]) )
                $photo->description = $input["description"];
-          if ( !empty($input["workAuthor"]) )
-          $photo->workAuthor = $input["workAuthor"];
+          //if ( !empty($input["workAuthor"]) )
+          //$photo->workAuthor = $input["workAuthor"];
           
           if(!empty($input["workDate"])){             
              $photo->workdate = $input["workDate"];
@@ -397,15 +429,22 @@ class PhotosController extends \BaseController {
                 $album->id = $input["albums_institution"];
                 $album->attachPhotos($photo->id);               
             }*/
+          $author = new Author();
+          if (!empty($input["work_authors"])) {
+              $author->saveAuthors($input["work_authors"],$photo);
+          }
            
           $input['autoOpenModal'] = 'true';  
-
           $sourcePage = $input["pageSource"]; //get url of the source page through form
           //ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "UploadInstitutional", "user");
           //ActionUser::printTags($photo->user_id, $photo->id, $tagsCopy, $sourcePage, "user", "Inseriu");
-          
-          $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
 
+
+          if(array_key_exists('rotate', $input))
+              $angle = (float)$input['rotate'];
+          else
+              $angle = 0;
+          $image = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80); // todas começam com jpg quality 80
           $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
           $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
           $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
@@ -506,11 +545,19 @@ class PhotosController extends \BaseController {
             $tagsArea = $photo->tags->lists('name');
             //$tagsArea = static::filterTagByType($photo,"Acervo");      
         }
-        if (Session::has('workAuthorInput')  )
+        /*if (Session::has('workAuthorInput')  )
         {  
             $workAuthorInput = Session::pull('workAuthorInput');      
         }else{
             $workAuthorInput = $photo->workAuthor;
+        } */
+
+        if ( Session::has('work_authors') )
+        {
+            $work_authors = Session::pull('work_authors');
+            $work_authors = explode(';', $work_authors);
+        }else{
+            $work_authors = $photo->authors->lists('name');
         }
 
       $dateYear = "";
@@ -567,7 +614,7 @@ class PhotosController extends \BaseController {
 
         return View::make('photos.edit-institutional')
           ->with(['photo' => $photo, 'tagsArea' => $tagsArea,
-          'workAuthorInput' => $workAuthorInput,
+          //'workAuthorInput' => $workAuthorInput,
           'dateYear' => $dateYear,
           'centuryInput'=> $centuryInput,
           'decadeInput' =>  $decadeInput,
@@ -575,7 +622,8 @@ class PhotosController extends \BaseController {
           'decadeImageInput' =>  $decadeImageInput,
           'imageDateCreated' => $imageDateCreated,
           'user' => $logged_user,
-          'institution' => $photo->institution
+          'institution' => $photo->institution,
+          'work_authors' => $work_authors
           ] ); 
     }    
     return Redirect::to('/');
@@ -583,18 +631,23 @@ class PhotosController extends \BaseController {
 
   public function updateInstitutional($id){ 
       $photo = Photo::find($id); 
-      Input::flashExcept('tagsArea','photo','workAuthor','decade_select'); 
+      Input::flashExcept('tagsArea','photo','decade_select'); 
       $input = Input::all(); 
       if(Input::has('tagsArea')){
         $input["tagsArea"] = str_replace(array('\'', '"', '[', ']'), '', $input["tagsArea"]);              
       }else{
         $input["tagsArea"] = '';      
       } 
-      if(Input::has('workAuthor')){ 
+      /*if(Input::has('workAuthor')){ 
         $input["workAuthor"] = str_replace(array('"'), '', $input["workAuthor"]);       
       }else{
         $input["workAuthor"] ="";
-      } 
+      } */
+      if (Input::has('work_authors')){
+          $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
+          $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
+      }else
+          $input["work_authors"] = '';
 
       $workDate = "";
       $decadeInput = "";
@@ -648,7 +701,8 @@ class PhotosController extends \BaseController {
           'decadeImageInput' => $decadeImageInput,
           'centuryImageInput' => $centuryImageInput,          
           'imageDateCreated' => $imageDateCreated,
-          'workAuthorInput'=>$input["workAuthor"] ])->withErrors($messages); 
+          'work_authors'=> $input["work_authors"] 
+          ])->withErrors($messages); 
       }else{ 
           if(!empty($input["aditionalImageComments"]) )
               $photo->aditionalImageComments = $input["aditionalImageComments"];
@@ -671,13 +725,10 @@ class PhotosController extends \BaseController {
                $photo->description = $input["description"];
           else $photo->description = null;
 
-          if ( !empty($input["workAuthor"]) )
+          /*if ( !empty($input["workAuthor"]) )
                $photo->workAuthor = $input["workAuthor"];
-          else $photo->workAuthor = null;
-             
-          /*if ( !empty($input["workDate"]) )
-               $photo->workdate = $input["workDate"];
-          else  $photo->workdate = null;*/
+          else $photo->workAuthor = null; */
+          
 
           if(!empty($input["workDate"])){             
              $photo->workdate = $input["workDate"];
@@ -722,9 +773,7 @@ class PhotosController extends \BaseController {
           if ( !empty($input["imageAuthor"]) )
                $photo->imageAuthor = $input["imageAuthor"];
 
-         /* if ( !empty($input["imageDate"]) )
-               $photo->dataCriacao = $input["imageDate"];
-          else $photo->dataCriacao = null; */
+         
              
           if ( !empty($input["observation"]) )  
                $photo->observation = $input["observation"];
@@ -739,12 +788,13 @@ class PhotosController extends \BaseController {
           //dd(Input::file('photo')->isValid());
           if(Input::hasFile('photo') and Input::file('photo')->isValid()) {
               $file = Input::file('photo');
-            //  dd($file);
+              //dd($file);
               $ext = $file->getClientOriginalExtension();
               $photo->nome_arquivo = $photo->id.".".$ext;
           }
+
           $photo->touch();
-          $photo->save();
+          $photo->save(); 
           //tags
           $tagsCopy = $input['tagsArea'];
           $tags = explode(',', $input['tagsArea']);
@@ -761,9 +811,20 @@ class PhotosController extends \BaseController {
                   'tagsArea' => $input['tagsArea'] ])->withErrors($messages);
               }
           }
+
+            $author = new Author();
+            if (!empty($input["work_authors"])) {                 
+                $author->updateAuthors($input["work_authors"],$photo);
+            }else{
+                $author->deleteAuthorPhoto($photo);
+            }
                     
           if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
-              $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
+              if(array_key_exists('rotate', $input))
+                  $angle = (float)$input['rotate'];
+              else
+                  $angle = 0;
+              $image = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80); // todas começam com jpg quality 80
               $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
               $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
               $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
@@ -779,7 +840,7 @@ class PhotosController extends \BaseController {
   public function store() {
 
 
-  Input::flashExcept('tags', 'photo');
+  Input::flashExcept('tags', 'photo','work_authors');
 
   $input = Input::all();
 
@@ -788,7 +849,13 @@ class PhotosController extends \BaseController {
   else
     $input["tags"] = '';
 
-  //validate for tamnho maximo e tipo de extensao
+  if (Input::has('work_authors')){
+    $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
+    $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
+  }else
+    $input["work_authors"] = '';
+ 
+  
     $rules = array(
       'photo_name' => 'required',
       'photo_imageAuthor' => 'required',
@@ -809,7 +876,8 @@ class PhotosController extends \BaseController {
       'decadeInput'=>$input["decade_select"],
       'centuryInput'=>$input["century"],
       'decadeImageInput'=>$input["decade_select_image"],
-      'centuryImageInput'=>$input["century_image"]        
+      'centuryImageInput'=>$input["century_image"] ,
+      'work_authors'=>$input["work_authors"]     
       ])->withErrors($messages);
     } else {
 
@@ -833,10 +901,9 @@ class PhotosController extends \BaseController {
       $photo->state = $input["photo_state"];
       if ( !empty($input["photo_street"]) )
         $photo->street = $input["photo_street"];
-      if ( !empty($input["photo_workAuthor"]) )
-        $photo->workAuthor = $input["photo_workAuthor"];
-      /*if ( !empty($input["photo_workDate"]) )
-        $photo->workdate = $input["photo_workDate"];*/
+      //if ( !empty($input["photo_workAuthor"]) )
+      //  $photo->workAuthor = $input["photo_workAuthor"];
+      
        if(!empty($input["workDate"])){             
              $photo->workdate = $input["workDate"];
              $photo->workDateType = "year";
@@ -866,10 +933,10 @@ class PhotosController extends \BaseController {
       $photo->nome_arquivo = $file->getClientOriginalName();
 
       $photo->user_id = Auth::user()->id;
-
       $photo->dataUpload = date('Y-m-d H:i:s');
-
       $photo->save();
+      
+
       if ( !empty($input["new_album-name"]) ) {
         $album = Album::create([
           'title' => $input["new_album-name"],
@@ -889,12 +956,12 @@ class PhotosController extends \BaseController {
 
       $photo->save();
 
+      
+
       $tags_copy = $input['tags'];
       $tags = explode(',', $input['tags']);
 
       if (!empty($tags)) {
-
-
         $tags = array_map('trim', $tags);
         //$tags = array_map('strtolower', $tags);
 
@@ -925,12 +992,23 @@ class PhotosController extends \BaseController {
           $tag->save();
         }
       }
+
+      $author = new Author();
+      if (!empty($input["work_authors"])) {
+          $author->saveAuthors($input["work_authors"],$photo);
+      }
+            
       $input['autoOpenModal'] = 'true';  
       $source_page = $input["pageSource"]; //get url of the source page through form
       ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $source_page, "Upload", "user");
       ActionUser::printTags($photo->user_id, $photo->id, $tags_copy, $source_page, "user", "Inseriu");
 
-      $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
+
+      if(array_key_exists('rotate', $input))
+          $angle = (float)$input['rotate'];
+      else
+          $angle = 0;
+      $image = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80); // todas começam com jpg quality 80
       $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
       $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
       $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
@@ -1070,7 +1148,6 @@ class PhotosController extends \BaseController {
       }
 
       $this->checkCommentCount(5,'test');
-
       return Redirect::to("/photos/{$id}");
     }
 
@@ -1291,6 +1368,9 @@ class PhotosController extends \BaseController {
 
 
 	public function edit($id) {
+    if (Session::has('institutionId') ) {
+      return Redirect::to('/');
+    }
 		$photo = Photo::find($id);
 		$logged_user = Auth::User();
 		if ($logged_user == null) {
@@ -1305,12 +1385,20 @@ class PhotosController extends \BaseController {
 				$tags = $photo->tags->lists('name');
 			}
 
+      if( Session::has('work_authors'))
+      {
+        $work_authors = Session::pull('work_authors');
+        $work_authors = explode(';', $work_authors);
+      } else{
+        $work_authors = $photo->authors->lists('name');
+      }
+
       $dateYear = "";
       $decadeInput = "";
       $centuryInput = "";
       $decadeImageInput = "";
       $centuryImageInput = "";
-      
+            
       if(Session::has('workDate')){     
         $dateYear = Session::pull('workDate');
       }elseif($photo->workDateType == "year"){
@@ -1354,6 +1442,7 @@ class PhotosController extends \BaseController {
             'decadeInput' =>  $decadeInput,
             'centuryImageInput'=> $centuryImageInput,
             'decadeImageInput' =>  $decadeImageInput,
+            'work_authors' => $work_authors
           ] );
 		}
 		return Redirect::action('PagesController@home');
@@ -1368,6 +1457,12 @@ class PhotosController extends \BaseController {
       $input["tags"] = str_replace(array('\'', '"', '[', ']'), '', $input["tags"]);
     else
       $input["tags"] = '';
+
+    if (Input::has('work_authors')){
+      $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
+      $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
+    }else
+      $input["work_authors"] = '';
     
       $workDate = "";
       $decadeInput = "";
@@ -1414,7 +1509,8 @@ class PhotosController extends \BaseController {
         'workDate' => $workDate,
         'decadeImageInput'=>$decadeImageInput,
         'centuryImageInput'=>$centuryImageInput,  
-        'imageDateCreated' => $imageDateCreated
+        'imageDateCreated' => $imageDateCreated,
+        'work_authors'=>$input["work_authors"] 
         ])->withErrors($messages);
 
     } else {
@@ -1430,7 +1526,7 @@ class PhotosController extends \BaseController {
       $photo->name = $input["photo_name"];
       $photo->state = $input["photo_state"];
       $photo->street = $input["photo_street"];
-      $photo->workAuthor = $input["photo_workAuthor"];
+      //$photo->workAuthor = $input["photo_workAuthor"];
       
       
       if(!empty($input["workDate"])){             
@@ -1536,8 +1632,20 @@ class PhotosController extends \BaseController {
 
       }
 
+      $author = new Author();
+      if (!empty($input["work_authors"])) {
+          $author->updateAuthors($input["work_authors"],$photo);
+      }else{
+
+          $author->deleteAuthorPhoto($photo);
+      }
+
       if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
-        $image = Image::make(Input::file('photo'))->encode('jpg', 80); // todas começam com jpg quality 80
+        if(array_key_exists('rotate', $input))
+            $angle = (float)$input['rotate'];
+        else
+            $angle = 0;
+        $image = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80); // todas começam com jpg quality 80
         $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
         $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
         $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');

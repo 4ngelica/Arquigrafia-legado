@@ -23,6 +23,7 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/tag-autocomplete-part.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/city-autocomplete.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/date-work.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/rotate.js" charset="utf-8"></script>
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 {{-- <script src="//code.jquery.com/jquery-1.10.2.js"></script> --}}
@@ -66,21 +67,23 @@
       	<h1><span class="step-text">Edição de informações da imagem {{$photo->name}}</span></h1>
         
         <div class="four columns alpha">
-          
-
-          <p><a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" >
+          <p>
+            <a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" >
             <img class="single_view_image" style="" src="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" />
             </a>
           </p>
-          <br>
-
-           <p>{{ Form::label('photo','Alterar imagem:') }} 
-          {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
-              <div class="error">{{ $errors->first('photo') }}</div>
+          <br></br>
+          <img src="" id="preview_photo">
+          <p>
+            {{ Form::label('photo','Alterar imagem:') }} 
+            {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
+            <br></br>
+            <div class="error">{{ $errors->first('photo') }}</div>
           </p>
-           <br>
-           <img src="" id="preview_photo">
-           <br>
+          <div id="image_rotate" style="display:none;">
+            <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), -Math.PI/2);">Girar 90° para esquerda</a>
+            <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), Math.PI/2);">Girar 90° para direita</a>
+          </div>
         </div>  
 
         <script type="text/javascript">
@@ -96,6 +99,7 @@
               };
               reader.readAsDataURL(input.files[0]);
             }
+            document.getElementById("image_rotate").style.display = 'block';
           }
        </script>      
            
@@ -223,7 +227,7 @@
           	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
          
         <tr><td>                
-         <div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
+         <div class="oneUpload columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
          <div class="fivemidUpdateForm columns omega">
          @if (($photo->dataCriacao)!= null && $photo->imageDateType == "date")
           <p>{{ Form::text('photo_imageDate',date("d/m/Y",strtotime($photo->dataCriacao)),array('id' => 'datePickerImageDate','placeholder'=>'dd/mm/yyyy')) }}      
@@ -245,26 +249,17 @@
         </tr>
 
 
-              <tr><td>
-                
-				<div class="two columns alpha"><p>{{ Form::label('photo_workAuthor', 'Autor da obra:') }}</p></div>
-				<div class="two columns omega">
-				<p>
-            {{ Form::text('photo_workAuthor', $photo->workAuthor ,array('id' => 'photo_workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:15px; width:290px; font-size:12px; border:solid 1px #ccc')) }} 
-          <br>
-				</p>
-			  </div></td>
-        </tr>	
+
+        <tr><td> @include('photos.includes.workAuthor') </td></tr>
 
         <tr><td>                
-         <div class="two columns alpha"><p>{{ Form::label('photo_workDate', 'Ano de conclusão da obra:') }}</p></div>
-         <div class="five columns omega">
+         <div class="oneUpload columns alpha"><p>{{ Form::label('photo_workDate', 'Ano de conclusão da obra:') }}</p></div>
+         <div class="fivemidUpdateForm columns omega">
          <p>
-            <fieldset>
                    @include('photos.includes.dateList')                        
                     <span class="space_txt_element">Não sabe a data precisa? 
                       <a  onclick="date_visibility('otherDate');" >Clique aqui.</a> </span>
-                    </fieldset> 
+                    
          </p> 
          <p><div id="otherDate" style="display:none;">                      
                         @include('photos.includes.dateWork') 
@@ -353,6 +348,42 @@
         if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
           e.preventDefault();
       });
+
+        $('#work_authors').textext({ plugins: 'tags' });
+
+        @if(Input::old('work_authors')!= null)
+
+            <?php //print_r(Input::old('work_authors'));
+            $work_authors = explode (";", Input::old('work_authors')); ?>
+        @endif
+        
+        @if (isset($work_authors) && $work_authors != null)
+                              // console.log("AC = "+ auth);
+            @foreach ( $work_authors as $work_author )
+                $('#work_authors').textext()[0].tags().addTags([ {{ '"' . $work_author . '"' }} ]);
+            @endforeach
+        @endif
+      
+        $('#add_work_authors').click(function(e) {
+            e.preventDefault();
+            authorsList();
+        });
+        $('#photo_workAuthor').keypress(function(e) {
+            var key = e.which || e.keyCode;
+            //alert("A" +key)
+            if(key ==13)
+               authorsList();
+            
+            if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
+                e.preventDefault();
+        });
+        function authorsList(){
+            var authors = $('#photo_workAuthor').val();            
+            if (authors == '') return;
+            $('#work_authors').textext()[0].tags().addTags([ authors ]);
+            $('#photo_workAuthor').val('');
+        }
+
     })
     
     @if($centuryImageInput != null || $centuryImageInput != "" )    //  
