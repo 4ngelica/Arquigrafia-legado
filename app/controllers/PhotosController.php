@@ -638,11 +638,7 @@ class PhotosController extends \BaseController {
       }else{
         $input["tagsArea"] = '';      
       } 
-      /*if(Input::has('workAuthor')){ 
-        $input["workAuthor"] = str_replace(array('"'), '', $input["workAuthor"]);       
-      }else{
-        $input["workAuthor"] ="";
-      } */
+     
       if (Input::has('work_authors')){
           $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
           $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
@@ -674,8 +670,7 @@ class PhotosController extends \BaseController {
 
       $rules = array(
       'support' => 'required',
-      'tombo' => 'required',
-      //'subject' => 'required',      
+      'tombo' => 'required',      
       'hygieneDate' => 'date_format:"d/m/Y"',
       'backupDate' => 'date_format:"d/m/Y"',
       'characterization' => 'required',
@@ -723,12 +718,7 @@ class PhotosController extends \BaseController {
 
           if ( !empty($input["description"]) )
                $photo->description = $input["description"];
-          else $photo->description = null;
-
-          /*if ( !empty($input["workAuthor"]) )
-               $photo->workAuthor = $input["workAuthor"];
-          else $photo->workAuthor = null; */
-          
+          else $photo->description = null;         
 
           if(!empty($input["workDate"])){             
              $photo->workdate = $input["workDate"];
@@ -756,7 +746,6 @@ class PhotosController extends \BaseController {
           }else{ 
               $photo->dataCriacao = NULL;
           }
-
              
           $photo->country = $input["country"];
           if ( !empty($input["state"]) )
@@ -772,9 +761,7 @@ class PhotosController extends \BaseController {
          
           if ( !empty($input["imageAuthor"]) )
                $photo->imageAuthor = $input["imageAuthor"];
-
-         
-             
+                     
           if ( !empty($input["observation"]) )  
                $photo->observation = $input["observation"];
           else $photo->observation = null;
@@ -955,42 +942,20 @@ class PhotosController extends \BaseController {
       $photo->nome_arquivo = $photo->id.".".$ext;
 
       $photo->save();
-
-      
+     
 
       $tags_copy = $input['tags'];
       $tags = explode(',', $input['tags']);
-
-      if (!empty($tags)) {
-        $tags = array_map('trim', $tags);
-        //$tags = array_map('strtolower', $tags);
-
-        $tags = array_map('mb_strtolower', $tags); // com suporte para cadeias multibytes
-        // tudo em minusculas, para remover redundancias, como Casa/casa/CASA
-        $tags = array_unique($tags); //retira tags repetidas, se houver.
-        foreach ($tags as $t) {
-          $tag = Tag::where('name', $t)->first();
-
-          if (is_null($tag)) {
-            $tag = new Tag();
-            $tag->name = $t;
-            
-            try {
-              $tag->save();
-            } catch (PDOException $e) {
-                Log::error("Logging exception, error to register tags");
-                $photo->forceDelete();
-                //$messages = array('tags'=>array('invalido'));
-                return Redirect::to('/photos/upload')->with(['tags' => $input['tags']]); //->withErrors($messages)
+          
+      if (!empty($tags)) {           
+              $tags = static::formatTags($tags);              
+              $tagsSaved = static::saveTags($tags,$photo);
+              
+            if(!$tagsSaved){ 
+                  $photo->forceDelete();
+                  $messages = array('tags'=>array('Inserir pelo menos uma tag'));                  
+                  return Redirect::to('/photos/upload')->with(['tags' => $input['tags']])->withErrors($messages);                  
             }
-            
-          }
-          $photo->tags()->attach($tag->id);
-          if ($tag->count == null)
-            $tag->count = 0;
-          $tag->count++;
-          $tag->save();
-        }
       }
 
       $author = new Author();
@@ -1491,74 +1456,23 @@ class PhotosController extends \BaseController {
       $tags_copy = $input['tags'];
       $tags = explode(',', $input['tags']);
 
-      if (!empty($tags)) {
-        $tags = array_map('trim', $tags);
-        $tags = array_map('mb_strtolower', $tags);
+      if(!empty($tags)) { 
+            $tags = static::formatTags($tags);              
+            $tagsSaved = static::updateTags($tags,$photo);
 
-        $tags_id = [];
-        $photo_tags = $photo->tags;
-        // tudo em minusculas, para remover redundancias, como Casa/casa/CASA
-        $tags = array_unique($tags); //retira tags repetidas, se houver.
-
-        foreach ($tags as $t) {
-
-          $tag = Tag::where('name', $t)->first();
-
-          if (is_null($tag)) {
-            $tag = new Tag();
-            $tag->name = $t;
-
-            try{
-              $tag->save();
-            }catch(PDOException $e) {
-              Log::error("Logging exception, error to edit tags 1");
-
-              $messages = array('tags'=>array('Erro nos tags'));
-              return Redirect::to("/photos/{$photo->id}/edit")->with(['tags' => $input['tags']])->withErrors($messages);
-
+            if(!$tagsSaved){
+                $photo->forceDelete();
+                $messages = array('tags'=>array('Erro nos tags'));
+                return Redirect::to("/photos/{$photo->id}/edit")->with([
+                    'tags' => $input['tags']])->withErrors($messages);
             }
-          }
-          if ( !$photo_tags->contains($tag) )
-          {
-            if ($tag->count == null) $tag->count = 0;
-            $tag->count++;
-            $photo->tags()->attach($tag->id);
-            try{
-              $tag->save();
-            }catch(PDOException $e) {
-              Log::error("Logging exception, error to edit tags 2");
-              $messages = array('tags'=>array('Erro nos tags'));
-              return Redirect::to("/photos/{$photo->id}/edit")->with(['tags' => $input['tags']])->withErrors($messages);
-            }
-
-          }
-          array_push($tags_id, $tag->id);
-        }
-
-
-        foreach($photo_tags as $tag)
-        {
-          if (!in_array($tag->id, $tags_id))
-          {
-            $tag->count--;
-            $photo->tags()->detach($tag->id);
-            try{
-              $tag->save();
-            }catch(PDOException $e) {
-              Log::error("Logging exception, error to edit tags 3");
-              $messages = array('tags'=>array('Erro nos tags'));
-              return Redirect::to("/photos/{$photo->id}/edit")->with(['tags' => $input['tags']])->withErrors($messages);
-            }
-          }
-        }
-
       }
 
+      
       $author = new Author();
       if (!empty($input["work_authors"])) {
           $author->updateAuthors($input["work_authors"],$photo);
       }else{
-
           $author->deleteAuthorPhoto($photo);
       }
 
@@ -1610,5 +1524,6 @@ class PhotosController extends \BaseController {
       $commentsMessage = 'Existem '. $commentsCount . ' comentários sobre esta imagem';
     return $commentsMessage;
   }
+  
 
 }
