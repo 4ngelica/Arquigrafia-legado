@@ -48,7 +48,7 @@
 @elseif($info->news_type == 'evaluated_photo')<!--Alguém que você segue avaliou uma foto-->
 <div class="item h<?php echo $size; ?>">
   <div class="layer" data-depth="0.2">
-    <a href='{{ URL::to("/photos") . "/" . $info->object_id }}'>
+    <a href='{{ URL::to("/photos") . "/" . $info->object_id . "/viewEvaluation/" . $info->sender_id}}'>
     <?php 
     ?>
     <img data-src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}">
