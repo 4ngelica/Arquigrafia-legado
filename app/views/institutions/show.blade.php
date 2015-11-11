@@ -80,7 +80,7 @@
   <br>
   <!-- USUÁRIO -->
   <div class="container row">
-    <div class="four columns">
+    <div class="six columns">
       <hgroup class="profile_block_title">
         <h3><i class="profile"></i>Informações</h3>
       </hgroup>
@@ -108,29 +108,38 @@
         @endif
       </ul>
     </div>
-  {{--
-    <div class="four columns">
+  
+    <div class="six columns">
       <hgroup class="profile_block_title">
         <h3><i class="follow"></i>
-          Seguidores ({{$institution->followers->count()}})
+          Seguidores ({{$institution->followersInstitutions->count()}})
         </h3>
         <!--<a href="#" id="small" class="profile_block_link">Ver todos</a>-->
       </hgroup>
       <!--   BOX - AMIGOS   -->
       <div class="profile_box">
-        @foreach($institution->followers as $follower)
-          <a href= {{ '/users/' .  $follower->id }} >
+        @foreach($institution->followersInstitutions as $follower)
+        <div class="gallery_box_inst">
+          <a href= "{{ URL::to("/users/". $follower->id) }}" 
+            class="gallery_box_inst" title="{{$follower->name}}" >
             @if ($follower->photo != "")
-              <img width="40" height="40" class="avatar" src="{{ asset($follower->photo) }}" class="user_photo_thumbnail"/>
+              <img width="40" height="40" class="avatar" 
+              src="{{ asset($follower->photo) }}" class="user_photo_thumbnail" 
+              class="gallery_box_inst" />
             @else
               <img width="40" height="40" class="avatar"
-              src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
+              src="{{ asset("img/avatar-60.png") }}" class="user_photo_thumbnail"
+              class="gallery_box_inst"/>
             @endif
           </a>
+          <a href="{{ URL::to("/users/". $follower->id) }}" class="name_text_follow">
+               {{ Str::limit($follower->name, 5) }}
+          </a>
+        </div>  
         @endforeach
       </div>
     </div>
-  --}}
+  
   </div>
 
 <!-- MEUS ALBUNS -->

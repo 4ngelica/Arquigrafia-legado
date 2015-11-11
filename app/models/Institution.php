@@ -61,4 +61,11 @@ class Institution extends Eloquent {
 			return false;
 		}
 	}
+
+	//followers to institutions
+	public function followersInstitutions()
+	{
+		return $this->belongsToMany('User', 'friendship_institution', 'institution_id','following_user_id');		
+	}
+ 
 }
