@@ -20,15 +20,15 @@ class LikesController extends \BaseController {
       $user = \Auth::user();
       foreach ($user->followers as $users) {
         foreach ($users->news as $news) {
-          if ($news->news_type == 'liked_photo' && Photo::find($news->object_id)->photo_id == $id) {
+          if ($news->news_type == 'liked_photo' && \Photo::find($news->object_id)->photo_id == $id) {
             $last_update = $news->updated_at;
-            if($last_update->diffInDays(Carbon::now('America/Sao_Paulo')) < 7) {
+            if($last_update->diffInDays(\Carbon::now('America/Sao_Paulo')) < 7) {
               $already_sent = true;
             }
           }
         }
         if(!isset($already_sent)) {
-          News::create(array('object_type' => 'Photo', 
+          \News::create(array('object_type' => 'Photo', 
                              'object_id' => $photo->id, 
                              'user_id' => $users->id, 
                              'sender_id' => $user->id, 
