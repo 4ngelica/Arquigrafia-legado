@@ -17,7 +17,7 @@ class LikesController extends \BaseController {
     if ($user->id != $photo->user_id) {
       $user_note = \User::find($photo->user_id);
       /*News feed*/
-      $user = Auth::user();
+      $user = \Auth::user();
       foreach ($user->followers as $users) {
         foreach ($users->news as $news) {
           if ($news->news_type == 'liked_photo' && Photo::find($news->object_id)->photo_id == $id) {
