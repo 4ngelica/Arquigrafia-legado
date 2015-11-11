@@ -1170,6 +1170,7 @@ class PhotosController extends \BaseController {
 
 				  $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
 			  }
+        lib\gamification\models\Leaderboard::increaseUserScore($user_id, 'evaluations');
         foreach (Auth::user()->followers as $users) {
           foreach ($users->news as $news) {
             if ($news->news_type == 'evaluated_photo' && Photo::find($news->object_id)->photo_id == $id) {

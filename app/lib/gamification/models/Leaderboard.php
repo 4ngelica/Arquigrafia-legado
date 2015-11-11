@@ -15,12 +15,41 @@ class Leaderboard extends \Eloquent {
     return $query->where('user_id', $id);
   }
 
-  public function increaseScore() {
+  public function increaseScore($save = true) {
     $this->count += 1;
+    if ($save) {
+      $this->save();
+    }
   }
 
-  public function decreaseScore() {
+  public function decreaseScore($save = true) {
     $this->count -= 1;
+    if ($save) {
+      $this->save();
+    }
+  }
+
+  public static function createFromUser($user) {
+    static::create([
+        'type' => 'uploads',
+        'count' => 0,
+        'user_id' => $user->id
+      ]);
+    static::create([
+        'type' => 'evaluations',
+        'count' => 0,
+        'user_id' => $user->id
+      ]);
+  }
+
+  public static function increaseUserScore($user, $type) {
+    $user_uploads = static::fromUser($user)->whereType($type)->first();
+    $user_uploads->increaseScore();
+  }
+
+  public static function decreaseUserScore($user, $type) {
+    $user_uploads = static::fromUser($user)->whereType($type)->first();
+    $user_uploads->decreaseScore();
   }
 
 }
