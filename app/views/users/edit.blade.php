@@ -187,26 +187,40 @@
             </p>
           </div>          
 
-          <div class="two columns alpha"><p>{{ Form::label('site', 'Site pessoal:') }}</p></div>
-          <div class="two columns omega">
+          <div class="two columns row alpha"><p>{{ Form::label('site', 'Site pessoal:') }}</p></div>
+          <div class="two columns row omega">
             <p>{{ Form::text('site', $user->site) }}<br>
               <div class="error">{{ $errors->first('site') }} </div>
             </p>
           </div>
-          
-          <div class="two columns alpha"><p>{{ Form::label('password', 'Nova Senha:') }}</p></div>
-          <div class="two columns omega">
-            <p>{{ Form::password('password') }}<br>
-            <div class="error">{{ $errors->first('password') }} </div>
-            </p>
+          <!-- 
+          <div class="five columns alpha">
+              <br>
+              <span class="txt_stl_pass" style = "" >Mudar senha?
+                  <a onclick="password_change('passChange');" >Clique aqui.</a>
+              </span>
           </div>
+         <div id="passChange" style="display:none;"> 
+              <br>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>-->
+              <div class="two columns alpha"><p>{{ Form::label('old_password', 'Antiga senha :') }}</p></div>
+              <div class="two columns omega">
+                <p>{{ Form::password('old_password') }}
+                  <div class="error">{{ $errors->first('old_password') }}</div>
+                </p>
+              </div>
+              <div class="two columns alpha"><p>{{ Form::label('user_password', 'Nova Senha:') }}</p></div>
+              <div class="two columns omega">
+                <p>{{ Form::password('user_password') }}<br>
+                <div class="error">{{ $errors->first('user_password') }} </div>
+                </p>
+              </div>          
+              <div class="two columns alpha"><p>{{ Form::label('password_confirmation', 'Repita a senha:') }}</p></div>
+              <div class="two columns omega"><p>{{ Form::password('user_password_confirmation') }}</p></div>
+         <!--  </div> -->
           
-          <div class="two columns row alpha"><p>{{ Form::label('password_confirmation', 'Repita a senha:') }}</p></div>
-          <div class="two columns row omega"><p>{{ Form::password('password_confirmation') }}</p></div>
-
-          
-          <div class="four columns alpha omega">  
-          
+          <div class="four columns alpha omega">            
             <br>            
             <a href="{{ URL::to('/users/' . $user->id) }}" class='btn right'>VOLTAR</a>
             {{ Form::submit("EDITAR", array('class'=>'btn right')) }}
@@ -232,5 +246,16 @@
     }
       );
     });
+
+    function password_change(id) {
+       var e = document.getElementById(id); 
+       if(e.style.display == 'none'){
+          e.style.display = 'block'; 
+       }else{
+          e.style.display = 'none';
+        }
+       
+       
+}
 </script>    
 @stop

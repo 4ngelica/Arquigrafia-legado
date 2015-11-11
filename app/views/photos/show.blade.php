@@ -416,16 +416,7 @@
             @endif
             <?php $i++; ?>
           @endforeach
-        </p>
-      @else
-        @if ( !empty($photos->workAuthor) )
-        <h4>Autor da Obra:</h4>
-        <p>
-          <a href="{{ URL::to("/search?q=".$photos->workAuthor) }}">
-            {{ $photos->workAuthor }}
-          </a>
-        </p>
-        @endif
+        </p>     
       @endif
       </div>
       <div id="workdate_container">
