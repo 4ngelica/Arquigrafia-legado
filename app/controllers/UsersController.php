@@ -23,7 +23,7 @@ class UsersController extends \BaseController {
   }
 
   public function show($id)
-  {
+  { 
     $user = User::whereid($id)->first();
     $photos = $user->photos()->get()->reverse();
     if (Auth::check()) {      
