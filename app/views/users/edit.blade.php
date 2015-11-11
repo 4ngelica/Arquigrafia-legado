@@ -210,7 +210,7 @@
                   <div class="error">{{ $errors->first('old_password') }}</div>
                 </p>
               </div>
-              <div class="two columns alpha"><p>{{ Form::label('user_password', 'Nova Senha:') }}</p></div>
+              <div class="two columns alpha"><p>{{ Form::label('user_password', 'Nova senha:') }}</p></div>
               <div class="two columns omega">
                 <p>{{ Form::password('user_password') }}<br>
                 <div class="error">{{ $errors->first('user_password') }} </div>
