@@ -518,4 +518,8 @@ class Photo extends Eloquent {
 		}
 		return $authorString;		
 	}
+
+	public function hasInstitution() {
+		return ! is_null ($this->institution_id);
+	}
 }
