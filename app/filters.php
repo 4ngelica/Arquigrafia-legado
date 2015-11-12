@@ -14,20 +14,28 @@
 App::before(function($request)
 {
 	// BEFORE
-  
-  // VIEW COMPOSERS
-  View::composer('includes.footer', function($view) {
-    $count = Photo::count();
-    $view->with('count', $count);
-  });
-  
+
+	// VIEW COMPOSERS
+	View::composer('includes.footer', function($view) {
+		$count = Photo::count();
+		$view->with('count', $count);
+	});
+
+	View::composer('includes.header', function($view) {
+		$institution = null;
+		if ( Session::has('institutionId') ) {
+			$institution = Institution::find( Session::get('institutionId') );
+		}
+		$view->with('institution', $institution);
+	});
+
 });
 
 
 App::after(function($request, $response)
 {
 	// AFTER
-  
+
 });
 
 /*

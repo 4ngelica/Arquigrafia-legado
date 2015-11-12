@@ -21,7 +21,11 @@
           @if ($city != "") 
               Resultados encontrados para: "{{ ucwords($query) }}" da cidade de "{{ucwords($city)}}"
           @elseif ( isset($binomial_option) )
-            Resultados encontrados para arquiteturas com característica: {{ $binomial_option }}
+            Resultados encontrados para arquiteturas com característica: 
+            @if ( isset($value) )
+              {{ $value }}%
+            @endif
+            {{ $binomial_option }}
           @else
             Resultados encontrados para: {{ $query }}
           @endif
@@ -41,16 +45,28 @@
         @endif
        <!-- -->
         @if( count($tags) != 0 )            
-          <p>
+          <p style="display: inline">
             Tags contendo o termo: 
             @foreach($tags as $k => $tag)
               @if ($k != count($tags)-1 )
-                <a href="?q={{ $tag->name }}">{{ $tag->name }}</a>, 
+                <form id="{{$k}}" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" style="display: inline">
+                  <input type="hidden" name="q" value="{{$tag->name}}"/>
+                  <a href="javascript: submitform({{$k}});">{{ $tag->name }}</a>, 
+                </form>  
               @else
-                <a href="?q={{ $tag->name }}">{{ $tag->name }}</a>
+                <form id="{{$k}}" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" style="display: inline">
+                <input type="hidden" name="q" value="{{$tag->name}}"/>
+                  <a href="javascript: submitform({{$k}});">{{ $tag->name }}</a>
+                </form>
               @endif
             @endforeach
           </p>
+          <script type="text/javascript">
+            function submitform(object)
+            {
+              document.getElementById(object).submit();
+            }
+          </script>
         @endif
         @if ( count($photos) < 1 && !isset($binomial_option) )
           <p>Não encontramos nenhuma imagem com o termo {{ $query }}.</p>
@@ -60,7 +76,8 @@
         @else
           <p>Foram encontradas {{ count($photos) }} imagens.</p>
         @endif
-        <p>Faça uma <a href="{{ URL::to('/search/more') }}">busca avançada</a>.</p>
+        <p>Faça uma <a href="{{ URL::to('/search/more') }}">busca avançada aqui</a>.</p>
+        <p><a href="{{ URL::previous() }}">Voltar para página anterior</a></p>
       </div>
     </div>
 

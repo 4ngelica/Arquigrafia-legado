@@ -6,6 +6,9 @@
    </title>
    <script type="text/javascript" src="{{ URL::to('/js/stoaLogin.js') }}"></script>
    <script type="text/javascript" src="{{ URL::to('/js/institutionLogin.js') }}"></script>
+   <script type="text/javascript">
+      var baseUrl = '{{ URL::to("/") }}';
+   </script>
 @stop
 
 @section('content')

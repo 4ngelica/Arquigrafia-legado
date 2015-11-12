@@ -55,7 +55,11 @@
 				@endif
 			</hgroup>
 			<ul>
-				<li><strong>Autor: </strong> <a href="{{ URL::to('/users/' . $user->id) }}">{{ $user->name }}</a></li>			
+				@if ( Session::has('institutionId') )
+					<li><strong>Autor: </strong> <a href="{{ URL::to('/institutions/' . $user->id) }}">{{ $user->name }}</a></li>
+				@else
+					<li><strong>Autor: </strong> <a href="{{ URL::to('/users/' . $user->id) }}">{{ $user->name }}</a></li>
+				@endif
 				<li><strong>Título: </strong> {{ $album->title }} </li>
 				<br>
 				@if ( !empty($album->description) )
@@ -71,8 +75,10 @@
 		<div class="twelve columns albums">
 			<hgroup class="profile_block_title">
 				<h3><i class="photos"></i> Outros álbuns
-					@if($album->user_id != Auth::id())
+					@if(Session::get('institutionId')!= $album->institution_id)
 						de {{ $user->name }}
+					@elseif(($album->user_id != Auth::id()))
+						de {{ $user->name }}			
 					@endif
 				</h3>
 			</hgroup>

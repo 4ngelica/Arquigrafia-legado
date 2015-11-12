@@ -4,12 +4,16 @@ $(document).ready(function(e) {
 	// mansonry
 	panel = $('#panel').isotope({
     itemSelector : '.item',
-    layoutMode: 'masonryHorizontal'
+    layoutMode: 'masonryHorizontal',
+    masonryHorizontal: {
+      rowHeight: 114
+    }
 	});
 });
 
 $(window).load(function(e) {
 	// resize by height
+	/*
 	$("#panel .item").each(function(i){
 		var objh = $(this).height();
 		var img = $(this).find("img");
@@ -18,6 +22,7 @@ $(window).load(function(e) {
 			img.css({"width":"auto", "height": objh+20});
 		}
 	});
+	*/
 	
 	// teste de carregamento
   imgcounter = 0;

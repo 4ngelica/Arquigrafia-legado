@@ -4,10 +4,10 @@ $(document).ready(function() {
 	 	e.preventDefault();
 		var form = $(this);
 		var data = form.serializeArray();
-		$.post('/users/institutionalLogin', data)
+		$.post(baseUrl + '/users/institutionalLogin', data)
 		.done(function(success) {
 			if (success) {
-				window.location.replace('/');
+				window.location.replace(baseUrl);
 			} else {
 				form.find('p.error').show();
 			}

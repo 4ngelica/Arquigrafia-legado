@@ -122,7 +122,21 @@ return array(
             'date_format' => 'O valor inserido não é válido.',
         ),
         'photo_imageDate' => array(
-            'date_format' => 'O valor inserido não é válido.',
+            'date_format' => 'O valor inserido não  respeita o formato dd/mm/yyyy.',
+        ), 
+        'photo_image_date' => array(
+            'date_format' => 'O valor inserido não  respeita o formato dd/mm/yyyy.',
+        ), 
+        'photo_imageDate' => array(
+            'regex' => 'O valor inserido não  respeita o formato dd/mm/yyyy.',
+        ),
+        
+       
+        'image_date' => array(
+            'date_format' => 'O valor inserido não  respeita o formato dd/mm/yyyy.',
+        ),
+        'image_date' => array(
+            'regex' => 'O valor inserido não respeita o formato dd/mm/yyyy.',
         ),
         'title' => array(
             'required' => 'É obrigatório inserir um valor para o título do album.',
@@ -156,6 +170,17 @@ return array(
         'password' => array(
             'confirmed' => 'A confirmação para o campo senha não coincide.',
         ),
+        'password' => array(
+            'alpha_num' => 'O campo deverá conter apenas letras e números.',
+        ),
+        
+        'user_password' => array(
+            'confirmed' => 'A confirmação para o campo nova senha não coincide.',
+        ),
+        'user_password' => array(
+            'alpha_num' => 'A senha deverá conter apenas letras e números.',
+        ),        
+
          'tagsArea' => array(
             'required' => 'É obrigatório inserir um valor para tags.',
         ),
