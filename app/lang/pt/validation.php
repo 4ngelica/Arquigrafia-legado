@@ -170,6 +170,17 @@ return array(
         'password' => array(
             'confirmed' => 'A confirmação para o campo senha não coincide.',
         ),
+        'password' => array(
+            'alpha_num' => 'O campo deverá conter apenas letras e números.',
+        ),
+        
+        'user_password' => array(
+            'confirmed' => 'A confirmação para o campo nova senha não coincide.',
+        ),
+        'user_password' => array(
+            'alpha_num' => 'A senha deverá conter apenas letras e números.',
+        ),        
+
          'tagsArea' => array(
             'required' => 'É obrigatório inserir um valor para tags.',
         ),

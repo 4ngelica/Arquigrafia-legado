@@ -90,6 +90,11 @@ class Photo extends Eloquent {
 		return $this->belongsToMany('Tag', 'tag_assignments');
 	}
 
+	public function authors()
+	{
+		return $this->belongsToMany('Author', 'photo_author');
+	}
+
 	public function comments()
 	{
 		return $this->hasMany('Comment');
@@ -481,5 +486,36 @@ class Photo extends Eloquent {
 		$query->withTags($tags);
 		$query->withBinomials($binomials);
     return $query->get();
+	}
+
+	public function authorTextFormat($authorName){
+		
+		if(strpos($authorName, ",")){
+			$arrayAuthor = explode(',', $authorName);
+			$first = true;
+			$authorString = ""; 
+			foreach ($arrayAuthor as $t ) {
+				if($first == true){
+					$authorString.= strtoupper($t).", ";				
+				}else{
+					$arrayText = explode(' ', $t);
+					foreach ($arrayText as $a ) {
+						if(strlen($a) > 3){
+							$authorString.= ucwords($a)." ";
+						}else{
+							$authorString.= $a." ";
+						}
+							
+					}	
+					//if(strlen($t) > 3)
+					//	$authorString.= ucwords($t)." ";
+				}
+				$first = false;	
+			}
+			
+		}else{
+			$authorString = ucwords($authorName);
+		}
+		return $authorString;		
 	}
 }

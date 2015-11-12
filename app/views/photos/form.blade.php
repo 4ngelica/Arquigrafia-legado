@@ -13,13 +13,14 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.autocomplete.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.suggestions.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.filter.js" charset="utf-8"></script>
-<script type="text/javascript" src="{{ URL::to("/") }}/js/tags-autocomplete.js" charset="utf-8"></script>
+<!--<script type="text/javascript" src="{{ URL::to("/") }}/js/tags-autocomplete.js" charset="utf-8"></script>-->
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.ajax.js" charset="utf-8"></script>
-<script type="text/javascript" src="{{ URL::to("/") }}/js/tags-autocomplete.js" charset="utf-8"></script>
+<!--<script type="text/javascript" src="{{ URL::to("/") }}/js/tags-autocomplete.js" charset="utf-8"></script>-->
 <script type="text/javascript" src="{{ URL::to("/") }}/js/tag-list.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/tag-autocomplete-part.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/city-autocomplete.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/date-work.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/rotate.js" charset="utf-8"></script>
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 {{-- <script src="//code.jquery.com/jquery-1.10.2.js"></script> --}}
@@ -93,10 +94,15 @@
     <p>
     {{ Form::label('photo','Imagem:') }}
     {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
+    <br></br>
     <div class="error">{{ $errors->first('photo') }}</div>
     </p>
-    <br>
+    <div id="image_rotate" style="display:none;">
+    <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), -Math.PI/2);">Girar 90° para esquerda</a>
+    <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), Math.PI/2);">Girar 90° para direita</a>
     </div>
+    </div>
+    <br>
     </div>
     <div id="registration" class="twelve columns row step-2">
     <h1><span class="step-text">Dados da imagem</span></h1>
@@ -270,7 +276,7 @@
     </div>
     </tr> -->
      <tr> <td>               
-            <div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
+            <div class="oneUpload columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
             <div class="fivemidUpdateForm columns omega">
                 <p>{{ Form::text('photo_imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }} 
                     <span class="space_txt_element">Não sabe a data precisa? 
@@ -286,20 +292,33 @@
                 </p>       
             </div>
          </td>
-        </tr> 
+        </tr>
+
+   <!--
+    <tr>
+        <td>
+            <div class="oneUpload columns alpha"><p>{{ Form::label('photo_workAuthor', 'Autor da obra:') }}</p></div>
+            <div class="fourUpload columns">
+             <p>
+                
+                -- Form::text('photo_workAuthor', '',array('id' => 'photo_workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:15px; width:280px; font-size:12px; border:solid 1px #ccc')) }}
+                <button class="btn" id="add_work_authors" style="font-size: 11px;">ADICIONAR</button>
+                <br>
+                <div class="error"> $errors->first('work_authors') }}</div>
+             </p>
+            </div>
+            <div class="sevenUpload columns alpha">
+              <textarea name="work_authors" id="work_authors" cols="60" rows="1" style="display: none;width: 380px;"></textarea>
+            </div>
+            </br>
+            </br>
+        </td>
+    </tr> -->
+    <tr><td></td></tr>
+    <tr><td> @include('photos.includes.workAuthor') </td></tr>
+    <tr><td></td></tr>
     <tr><td>
-    <div class="two columns alpha"><p>{{ Form::label('photo_workAuthor', 'Autor da obra:') }}</p></div>
-    <div class="two columns omega">
-    <p>
-    {{ Form::text('photo_workAuthor', Input::old('photo_workAuthor'),array('id' => 'photo_workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:15px; width:290px; font-size:12px; border:solid 1px #ccc')) }}
-    <br>
-    </p>
-    </div>
-    </td>
-    </tr>
-    
-    <tr><td>
-    <div class="two columns alpha"><p>{{ Form::label('photo_workDate', 'Ano de conclusão da obra:' ) }}</p></div>
+    <div class="oneUpload columns alpha"><p>{{ Form::label('photo_workDate', 'Ano de conclusão da obra:' ) }}</p></div>
     <div class="fivemidUpdateForm columns omega">
     <p>
     @include('photos.includes.dateList')
@@ -319,9 +338,9 @@
     <tr><td>
     
     </td>
-    <tr>
+    </tr>
     <tr><td>
-    <div class="two columns alpha"><p>{{ Form::label('photo_description', 'Descrição:') }}</p></div>
+    <div class="oneUpload columns alpha"><p>{{ Form::label('photo_description', 'Descrição:') }}</p></div>
     <div class="two columns omega">
     <p>
     {{ Form::textarea('photo_description', Input::old('photo_description'),['size' =>'36x7']) }} <br>
@@ -396,6 +415,7 @@
             };
             reader.readAsDataURL(input.files[0]);
         }
+        document.getElementById("image_rotate").style.display = 'block';
     }
     $(document).ready(function() {
         if({{Input::old('autoOpenModal','false')}}){
@@ -434,10 +454,49 @@
             $('#tags_input').val('');
         });
         $('#tags_input').keypress(function(e) {
-            var key = e.which || e.keyCode;
+            var key = e.which || e.keyCode; //alert("B"+key);
             if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
                 e.preventDefault();
         });
+
+          // authors
+        $('#work_authors').textext({ plugins: 'tags' });
+
+        @if(Input::old('work_authors')!= null)
+
+            <?php //print_r(Input::old('work_authors'));
+            $work_authors = explode (";", Input::old('work_authors')); ?>
+        @endif
+        
+        @if (isset($work_authors) && $work_authors != null)
+                              // console.log("AC = "+ auth);
+            @foreach ( $work_authors as $work_author )
+                $('#work_authors').textext()[0].tags().addTags([ {{ '"' . $work_author . '"' }} ]);
+            @endforeach
+        @endif
+      
+
+        $('#add_work_authors').click(function(e) {
+            e.preventDefault();
+            authorsList();
+        });
+        $('#photo_workAuthor').keypress(function(e) {
+            var key = e.which || e.keyCode;
+            //alert("A" +key)
+            if(key ==13)
+               authorsList();
+            
+            if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
+                e.preventDefault();
+        });
+
+        function authorsList(){
+            var authors = $('#photo_workAuthor').val();            
+            if (authors == '') return;
+            $('#work_authors').textext()[0].tags().addTags([ authors ]);
+            $('#photo_workAuthor').val('');
+        }
+
         @if( Input::old('century_image'))       
             var centuryInputImage = "{{Input::old('century_image')}}";
             //alert(centuryInputImage);
@@ -480,7 +539,6 @@
                 window.onload = resultSelectDateWork("date_img_inaccurate");
             }
         }
-    
 
     });
     $(function() {

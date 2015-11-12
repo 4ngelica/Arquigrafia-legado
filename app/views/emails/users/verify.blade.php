@@ -9,7 +9,7 @@
         <div>
              
             Para finalizar o seu cadastro no Arquigrafia, por favor, acesse o link abaixo para confirmar o seu endereço de e-mail.<br/>  
-            {{ URL::to('users/verify/' . $verifyCode) }}.<br>
+            {{ URL::to('users/verify/' . $verifyCode) }}<br>
 
             Atenciosamente,
             Equipe do Arquigrafia.  

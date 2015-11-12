@@ -23,7 +23,7 @@ class UsersController extends \BaseController {
   }
 
   public function show($id)
-  {
+  { 
     $user = User::whereid($id)->first();
     $photos = $user->photos()->get()->reverse();
     if (Auth::check()) {      
@@ -450,6 +450,13 @@ class UsersController extends \BaseController {
         fclose($file);
         $user->photo = '/arquigrafia-avatars/'.$user->id.'.jpg';
         $user->save();
+        foreach ($user->followers as $users) {
+          News::create(array('object_type' => 'User', 
+                             'object_id' => $user->id, 
+                             'user_id' => $users->id, 
+                             'sender_id' => $user->id, 
+                             'news_type' => 'new_profile_picture'));
+        }
       }
     }
     return $user->photo;
@@ -557,13 +564,14 @@ class UsersController extends \BaseController {
     
     Input::flash();    
     $input = Input::only('name', 'login', 'email', 'scholarity', 'lastName', 'site', 'birthday', 'country', 'state', 'city', 
-      'photo', 'gender', 'institution', 'occupation', 'visibleBirthday', 'visibleEmail','password','password_confirmation');    
+      'photo', 'gender', 'institution', 'occupation', 'visibleBirthday', 'visibleEmail','old_password','user_password','user_password_confirmation');    
     
     $rules = array(
         'name' => 'required',
         'login' => 'required',
         'email' => 'required|email',
-        'password' => 'min:6|confirmed',
+        'user_password' => 'min:6|alphaNum|confirmed',
+        'old_password' => 'min:6',
         'birthday' => 'date_format:"d/m/Y"'                  
     );     
     if ($input['email'] !== $user->email)        
@@ -590,8 +598,22 @@ class UsersController extends \BaseController {
       $user->city = $input['city'];  
       $user->gender = $input['gender'];  
       $user->visibleBirthday = $input['visibleBirthday'];  
-      $user->visibleEmail = $input['visibleEmail'];   
-      $user->password = Hash::make($input["password"]);
+      $user->visibleEmail = $input['visibleEmail'];  
+
+      if ( ( Auth::attempt(array('password' => $input["old_password"])) == true )  ) { //(!empty($input['old_password']) || trim($input['old_password'])!="") &&
+            if(!empty($input['user_password']) || trim($input['user_password']) != ""){
+                $user->password = Hash::make($input["user_password"]);  
+            }else{
+                  $messages = array('user_password'=>array('Inserir uma senha válida com mínimo 6 caracteres')); 
+                  return Redirect::to('/users/' . $id . '/edit')->withErrors($messages);
+            }                        
+       } else if(!empty($input['old_password']) || trim($input['old_password']) != ""){
+            $messages = array('old_password'=>array('Antiga senha incorreta')); 
+            return Redirect::to('/users/' . $id . '/edit')->withErrors($messages);
+       } else if(!empty($input['user_password']) || trim($input['user_password']) != "" ){
+            $messages = array('old_password'=>array('Precisa inserir a senha antiga')); 
+            return Redirect::to('/users/' . $id . '/edit')->withErrors($messages);
+       }      
 
       $user->touch();
       $user->save();   
@@ -610,9 +632,24 @@ class UsersController extends \BaseController {
         $user->save();
         $image = Image::make(Input::file('photo'))->encode('jpg', 80);         
         $image->save(public_path().'/arquigrafia-avatars/'.$user->id.'.jpg');
-        $file->move(public_path().'/arquigrafia-avatars', $user->id."_original.".strtolower($ext));         
+        $file->move(public_path().'/arquigrafia-avatars', $user->id."_original.".strtolower($ext)); 
+        foreach ($user->followers as $users) {
+          News::create(array('object_type' => 'User', 
+                             'object_id' => $user->id, 
+                             'user_id' => $users->id, 
+                             'sender_id' => $user->id, 
+                             'news_type' => 'new_profile_picture'));
+        }        
       } 
-      
+      else {
+        foreach ($user->followers as $users) {
+          News::create(array('object_type' => 'User', 
+                             'object_id' => $user->id, 
+                             'user_id' => $users->id, 
+                             'sender_id' => $user->id, 
+                             'news_type' => 'edited_profile'));
+        }
+      }
       return Redirect::to("/users/{$user->id}")->with('message', '<strong>Edição de perfil do usuário</strong><br>Dados alterados com sucesso'); 
       
     }    

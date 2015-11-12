@@ -30,6 +30,7 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/tag-autocomplete-part.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/city-autocomplete.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/date-work.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/rotate.js" charset="utf-8"></script>
 <style>
   .ui-autocomplete {
     max-height: 100px;
@@ -59,21 +60,23 @@
       	<h1><span class="step-text">Edição de informações da imagem {{$photo->name}}</span></h1>
         
         <div class="four columns alpha">
-          
-
-          <p><a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" >
+          <p>
+            <a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" >
             <img class="single_view_image" style="" src="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" />
             </a>
           </p>
-          <br>
-
-           <p>{{ Form::label('photo','Alterar imagem:') }} 
-          {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
-              <div class="error">{{ $errors->first('photo') }}</div>
+          <br></br>
+          <img src="" id="preview_photo">
+          <p>
+            {{ Form::label('photo','Alterar imagem:') }} 
+            {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
+            <br></br>
+            <div class="error">{{ $errors->first('photo') }}</div>
           </p>
-           <br>
-           <img src="" id="preview_photo">
-           <br>
+          <div id="image_rotate" style="display:none;">
+            <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), -Math.PI/2);">Girar 90° para esquerda</a>
+            <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), Math.PI/2);">Girar 90° para direita</a>
+          </div>
         </div>   
 
       </div> 
@@ -85,8 +88,6 @@
           <h4>Campos obrigatórios (*)</h4>
           <br class="clear">
          <!-- <h4>Campos complementares</h4>-->
-          
- 
           
           <div class="eight columns alpha row">
           	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -222,7 +223,6 @@
                     <p><div style="max-width:180px;">
                       {{ Form::text('tags_input',null,array('id' => 'tags_input','style'=>'width: 200px; height:15px; border:solid 1px #ccc')) }}
                        </div>
-                      
                       <br>
                       <div class="error">{{ $errors->first('tagsArea') }}</div>
                     </p>
@@ -231,31 +231,18 @@
                     <button class="btn" id="add_tag" style="font-size: 11px;">ADICIONAR TAG</button>
                   </div>
                   <div class="five columns alpha">
-
                     <textarea name="tagsArea" id="tagsArea" cols="79" rows="2" style="display: none;">
                     </textarea>
                   </div>                  
                 </td>
               </tr>
 
-                
-              
-              <tr>
-                <td>
-                  <br/><br/>
-                  <div class="two columns alpha"><p>{{ Form::label('workAuthor', 'Autor da obra:') }}</p></div>
-                  <div class="ui-widget two columns">
-                    <p>
-
-                      {{ Form::text('workAuthor', $workAuthorInput, array('id' => 'workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:15px; width:290px; font-size:11px; border:solid 1px #ccc')) }}
-                        
-                                             
-                      <br>
-                      <div class="error">{{ $errors->first('workAuthor') }}</div>
-                    </p>
-                  </div>               
-                </td>
-              </tr>
+              <tr><td><br class="clear"></td></tr>
+              <tr><td> 
+                @include('photos.includes.workAuthorInst')                
+              </td>
+            </tr>
+              <tr><td></td></tr>    
               <tr> <td>              
                 <div class="two columns alpha"><p>{{ Form::label('workDate', 'Ano de conclusão da obra:') }}</p></div>
                  <div class="six columns omega">                  
@@ -425,6 +412,42 @@
   $(document).ready(function() {
     /* Methods to be called when all html document be ready */
     showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));
+
+    //authors
+    $('#work_authors').textext({ plugins: 'tags' });
+
+        @if(Input::old('work_authors')!= null)
+            <?php //print_r(Input::old('work_authors'));
+            $work_authors = explode (";", Input::old('work_authors')); ?>
+        @endif
+        
+        @if (isset($work_authors) && $work_authors != null)
+                              // console.log("AC = "+ auth);
+            @foreach ( $work_authors as $work_author )
+                $('#work_authors').textext()[0].tags().addTags([ {{ '"' . $work_author . '"' }} ]);
+            @endforeach
+        @endif       
+
+        $('#add_work_authors').click(function(e) {
+            e.preventDefault();
+            authorsList();
+        });
+        $('#photo_workAuthor').keypress(function(e) {
+            var key = e.which || e.keyCode;
+            if(key ==13)
+               authorsList();            
+            if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
+                e.preventDefault();
+        });
+
+        function authorsList(){
+            var authors = $('#photo_workAuthor').val();            
+            if (authors == '') return;
+            $('#work_authors').textext()[0].tags().addTags([ authors ]);
+            $('#photo_workAuthor').val('');
+        } 
+
+
 
     @if($dateYear != NULL)
       var dateYear = "{{$dateYear}}";
