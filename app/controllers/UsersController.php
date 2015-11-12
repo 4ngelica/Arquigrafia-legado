@@ -598,9 +598,10 @@ class UsersController extends \BaseController {
       $user->city = $input['city'];  
       $user->gender = $input['gender'];  
       $user->visibleBirthday = $input['visibleBirthday'];  
-      $user->visibleEmail = $input['visibleEmail'];  
-
-      if ( ( Auth::attempt(array('password' => $input["old_password"])) == true )  ) { //(!empty($input['old_password']) || trim($input['old_password'])!="") &&
+      $user->visibleEmail = $input['visibleEmail']; 
+      Log::info("authenticate =".Auth::attempt(array('password' => $input["old_password"]))); 
+      
+      if (Auth::attempt(array('password' => $input["old_password"])) == true ) { 
             if(!empty($input['user_password']) || trim($input['user_password']) != ""){
                 $user->password = Hash::make($input["user_password"]);  
             }else{
