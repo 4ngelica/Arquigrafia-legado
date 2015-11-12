@@ -4,14 +4,59 @@
 
 <title>Arquigrafia - Fotos - Update</title>
 
+<!-- AUTOCOMPLETE -->
+<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
+<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.core.css" />
+<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.plugin.autocomplete.css" />
+<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.plugin.tags.css" />
+<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/styletags.css" />
+
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.core.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.tags.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.autocomplete.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.suggestions.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.filter.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/tags-autocomplete.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.ajax.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-list.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-autocomplete-part.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/city-autocomplete.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/date-work.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/rotate.js" charset="utf-8"></script>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+{{-- <script src="//code.jquery.com/jquery-1.10.2.js"></script> --}}
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
 
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 @stop
 
 @section('content')
+<style>
+  /* Style select*/
+
+    fieldset {
+      border: 0;
+      margin: 0 0 0px -10px;
+      font-size: 10px;
+    }
+    label {
+      display: block;
+      margin: 30px 0 0 0;
+    }
+    /*select {
+      width: 150px;
+    }*/
+    .overflow {
+      height: 350px;
+    }
+
+
+
+</style>
 
   <div class="container">
   
@@ -22,21 +67,23 @@
       	<h1><span class="step-text">Edição de informações da imagem {{$photo->name}}</span></h1>
         
         <div class="four columns alpha">
-          
-
-          <p><a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" >
+          <p>
+            <a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" >
             <img class="single_view_image" style="" src="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" />
             </a>
           </p>
-          <br>
-
-           <p>{{ Form::label('photo','Alterar imagem:') }} 
-          {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
-              <div class="error">{{ $errors->first('photo') }}</div>
+          <br></br>
+          <img src="" id="preview_photo">
+          <p>
+            {{ Form::label('photo','Alterar imagem:') }} 
+            {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
+            <br></br>
+            <div class="error">{{ $errors->first('photo') }}</div>
           </p>
-           <br>
-           <img src="" id="preview_photo">
-           <br>
+          <div id="image_rotate" style="display:none;">
+            <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), -Math.PI/2);">Girar 90° para esquerda</a>
+            <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), Math.PI/2);">Girar 90° para direita</a>
+          </div>
         </div>  
 
         <script type="text/javascript">
@@ -52,6 +99,7 @@
               };
               reader.readAsDataURL(input.files[0]);
             }
+            document.getElementById("image_rotate").style.display = 'block';
           }
        </script>      
            
@@ -124,15 +172,15 @@
           <div class="five columns alpha row">
           	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
               
-              <tr>
+              <tr><td>
 
 				<div class="two columns alpha"><p>{{ Form::label('photo_state', 'Estado:') }}</p></div>
 				<div class="two columns omega">
 				<p>{{ Form::select('photo_state', [""=>"Escolha o Estado", "AC"=>"Acre", "AL"=>"Alagoas", "AM"=>"Amazonas", "AP"=>"Amapá", "BA"=>"Bahia", "CE"=>"Ceará", "DF"=>"Distrito Federal", "ES"=>"Espirito Santo", "GO"=>"Goiás", "MA"=>"Maranhão", "MG"=>"Minas Gerais", "MS"=>"Mato Grosso do Sul", "MT"=>"Mato Grosso", "PA"=>"Pará", "PB"=>"Paraíba", "PE"=>"Pernambuco", "PI"=>"Piauí", "PR"=>"Paraná", "RJ"=>"Rio de Janeiro", "RN"=>"Rio Grande do Norte", "RO"=>"Rondônia", "RR"=>"Roraima", "RS"=>"Rio Grande do Sul", "SC"=>"Santa Catarina", "SE"=>"Sergipe", "SP"=>"São Paulo", "TO"=>"Tocantins"], $photo->state) }} <br>
 				  <div class="error">{{ $errors->first('photo_state') }}</div>
-        </p>
+        </p></td>
               </tr>
-              <tr>
+              <tr><td>
                 
 				<div class="two columns alpha"><p>{{ Form::label('photo_city', 'Cidade:') }}</p></div>
 				<div class="two columns omega">				
@@ -140,26 +188,32 @@
 				  <div class="error">{{ $errors->first('photo_city') }}</div>
         </p>
 			  </div>
-				
+				</td>
               </tr>
-              <tr>
+              <tr><td>
                
 				<div class="two columns alpha"><p>{{ Form::label('photo_district', 'Bairro:') }}</p></div>
 				<div class="two columns omega">
 				<p>{{ Form::text('photo_district', $photo->district) }} <br>
 				</p>
 			  </div>
-				
-				
+				</td>				
               </tr>
-              <tr>
-                
+              <tr><td>                
 				<div class="two columns alpha"><p>{{ Form::label('photo_street', 'Endereço:') }}</p></div>
 				<div class="two columns omega">
 				<p>{{ Form::text('photo_street', $photo->street) }} <br>
 				</p>
-			  </div>
+			  </div></td>
               </tr>
+              <tr> <td>       
+        <div class="two columns alpha"><p>{{ Form::label('photo_description', 'Descrição:') }}</p></div>
+        <div class="two columns omega">
+        <p>{{ Form::textarea('photo_description', $photo->description,['size' => '26x8']) }} <br>
+        </p>
+        </div></td>
+              </tr>
+        
               <tr>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
@@ -169,52 +223,53 @@
           	
           </div>
           
-          <div class="five columns omega row">
+          <div class="seven columns omega row">
           	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
          
-        <tr>                
-         <div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
-         <div class="two columns omega">
-         @if (($photo->dataCriacao)!= null )
-          <p>{{ Form::text('photo_imageDate',date("d/m/Y",strtotime($photo->dataCriacao)),array('id' => 'datePickerImageDate','placeholder'=>'dd/mm/yyyy')) }} 
+        <tr><td>                
+         <div class="oneUpload columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
+         <div class="fivemidUpdateForm columns omega">
+         @if (($photo->dataCriacao)!= null && $photo->imageDateType == "date")
+          <p>{{ Form::text('photo_imageDate',date("d/m/Y",strtotime($photo->dataCriacao)),array('id' => 'datePickerImageDate','placeholder'=>'dd/mm/yyyy')) }}      
          @else
-          <p>{{ Form::text('photo_imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'dd/mm/yyyy')) }} 
+          <p>{{ Form::text('photo_imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'dd/mm/yyyy')) }}
          @endif  
-         <br> <div class="error">{{ $errors->first('photo_imageDate') }}</div>
+          <span class="space_txt_element">Não sabe a data precisa? 
+                  <a onclick="date_visibility('date_img_inaccurate');" >Clique aqui.</a> 
+          </span>
+          <br> <div id="error_image_date" class="error">{{ $errors->first('photo_imageDate') }}</div> 
+         </p>
+         <p>
+             <div id="date_img_inaccurate" style="display:none;">                                    
+                        @include('photos.includes.dateImage')                                   
+             </div>
+             <label id="answer_date_image" class="resultDateWork"></label>
          </p>       
-        </div>
+        </div></td>
         </tr>
 
 
-              <tr>
-                
-				<div class="two columns alpha"><p>{{ Form::label('photo_workAuthor', 'Autor da obra:') }}</p></div>
-				<div class="two columns omega">
-				<p>{{ Form::text('photo_workAuthor', $photo->workAuthor) }} <br>
-				</p>
-			  </div>
-        </tr>	
 
-        <tr>                
-         <div class="two columns alpha"><p>{{ Form::label('photo_workDate', 'Data da obra:') }}</p></div>
-         <div class="two columns omega">
-         @if (($photo->workdate)!= null )
-          <p>{{ Form::text('photo_workDate',date("d/m/Y",strtotime($photo->workdate)),array('id' => 'datePickerWorkDate','placeholder'=>'dd/mm/yyyy')) }} 
-         @else
-          <p>{{ Form::text('photo_workDate','',array('id' => 'datePickerWorkDate','placeholder'=>'dd/mm/yyyy')) }} 
-         @endif  
-         <br> <div class="error">{{ $errors->first('photo_workDate') }}</div>
-         </p>       
+        <tr><td> @include('photos.includes.workAuthor') </td></tr>
+
+        <tr><td>                
+         <div class="oneUpload columns alpha"><p>{{ Form::label('photo_workDate', 'Ano de conclusão da obra:') }}</p></div>
+         <div class="fivemidUpdateForm columns omega">
+         <p>
+                   @include('photos.includes.dateList')                        
+                    <span class="space_txt_element">Não sabe a data precisa? 
+                      <a  onclick="date_visibility('otherDate');" >Clique aqui.</a> </span>
+                    
+         </p> 
+         <p><div id="otherDate" style="display:none;">                      
+                        @include('photos.includes.dateWork') 
+            </div>
+            <label id="answer_date" class="resultDateWork"></label>     
+         </p>      
         </div>
+        </td>
         </tr>
         
-        <tr>        
-				<div class="two columns alpha"><p>{{ Form::label('photo_description', 'Descrição:') }}</p></div>
-				<div class="two columns omega">
-				<p>{{ Form::textarea('photo_description', $photo->description) }} <br>
-				</p>
-			  </div>
-              </tr>
             </table>
           </div>
         	
@@ -276,9 +331,11 @@
   <script type="text/javascript">
     $(document).ready(function() {
      $('#tags').textext({ plugins: 'tags' });
+      
       @foreach($tags as $tag)
         $('#tags').textext()[0].tags().addTags([ {{ '"' . $tag . '"' }} ]);
       @endforeach
+
       $('#add_tag').click(function(e) {
         e.preventDefault();
         var tag = $('#tags_input').val();
@@ -291,14 +348,106 @@
         if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
           e.preventDefault();
       });
+
+        $('#work_authors').textext({ plugins: 'tags' });
+
+        @if(Input::old('work_authors')!= null)
+
+            <?php //print_r(Input::old('work_authors'));
+            $work_authors = explode (";", Input::old('work_authors')); ?>
+        @endif
+        
+        @if (isset($work_authors) && $work_authors != null)
+                              // console.log("AC = "+ auth);
+            @foreach ( $work_authors as $work_author )
+                $('#work_authors').textext()[0].tags().addTags([ {{ '"' . $work_author . '"' }} ]);
+            @endforeach
+        @endif
+      
+        $('#add_work_authors').click(function(e) {
+            e.preventDefault();
+            authorsList();
+        });
+        $('#photo_workAuthor').keypress(function(e) {
+            var key = e.which || e.keyCode;
+            //alert("A" +key)
+            if(key ==13)
+               authorsList();
+            
+            if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
+                e.preventDefault();
+        });
+        function authorsList(){
+            var authors = $('#photo_workAuthor').val();            
+            if (authors == '') return;
+            $('#work_authors').textext()[0].tags().addTags([ authors ]);
+            $('#photo_workAuthor').val('');
+        }
+
     })
     
-//msy
+    @if($centuryImageInput != null || $centuryImageInput != "" )    //  
+      var centuryImageInput = "{{$centuryImageInput}}";//"{{Input::old('century')}}"; 
+      showPeriodCenturyImage(centuryImageInput);
+      retrieveCenturyImage(centuryImageInput);
+      //get filter 
+      //filterDecadesOfCentury(centuryInput);  
+      //alert(centuryImageInput);  
+    @endif
+
+    @if($decadeImageInput != null || $decadeImageInput!="" ) 
+        var decadeImageInput = "{{$decadeImageInput}}"; 
+        retrieveDecadeImage(decadeImageInput);      
+        getCenturyOfDecade(decadeImageInput,"imageDate");   
+       // alert("fueraForm"+decadeImageInput);  
+    @endif
+
+
+
+    @if($dateYear != NULL)
+      var dateYear = "{{$dateYear}}";
+      retrieveYearDate(dateYear);
+    @endif
+
+    @if($centuryInput != null || $centuryInput != "" )    //  
+      var centuryInput = "{{$centuryInput}}";//"{{Input::old('century')}}"; 
+      showPeriodCentury(centuryInput);
+      retrieveCentury(centuryInput);
+      //get filter 
+      //filterDecadesOfCentury(centuryInput);  
+      //alert(centuryInput);  
+    @endif
+    
+    @if($decadeInput != null || $decadeInput!="" ) 
+        var decadeInput = "{{$decadeInput}}"; 
+      retrieveDecade(decadeInput);          
+      getCenturyOfDecade(decadeInput,"workDate"); 
+    @endif
+
+    //window.onload = resultSelectDateWork;
+     
+     if("{{ $centuryImageInput }}" != "" || "{{ $decadeImageInput }}" != "" ){
+                window.onload = resultSelectDateWork("date_img_inaccurate"); 
+               // alert("iamge carga");
+      }
+     
+     if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
+                window.onload = resultSelectDateWork("date_img_inaccurate"); 
+                //alert("image por error o recuperac");
+      }
+
+     
+     if("{{ $centuryInput }}" != "" || "{{ $decadeInput}} " != "" ){                
+                window.onload = resultSelectDateWork("otherDate");
+              //  alert("other Decade-load");
+        }
+
+     if("{{Input::old('century')}}" != "" || "{{Input::old('decade_select')}}" != "" ){                
+                window.onload = resultSelectDateWork("otherDate");
+              //  alert("other Decade-old");
+        }
+
     $(function() {
-    $( "#datePickerWorkDate" ).datepicker({
-      dateFormat:'dd/mm/yy'
-    }
-      );
     $( "#datePickerImageDate" ).datepicker({
       dateFormat:'dd/mm/yy'
     }

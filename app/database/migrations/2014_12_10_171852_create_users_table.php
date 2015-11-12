@@ -41,6 +41,7 @@ class CreateUsersTable extends Migration {
 			$table->string('id_foursquare')->nullable();
 			$table->string('id_instagram')->nullable();
 			$table->string('id_twitter')->nullable();
+			$table->string('id_stoa')->nullable();
 			$table->rememberToken();
 			$table->timestamps();
 			$table->enum('visibleBirthday',['yes','no'])->default('no')->nullable();

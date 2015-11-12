@@ -6,16 +6,16 @@ class Employee extends Eloquent {
 
 	protected $table = 'employees';
 
-	public $timestamps = false;
+	//public $timestamps = false;
 
 	public function user()
 	{
-			return $this->belongsTo('User');
+		return $this->belongsTo('User');
 	}
 
 	public function institution()
 	{
-		return $this->hasOne('Institution');
+		return $this->belongsTo('Institution');
 	}
 
 
