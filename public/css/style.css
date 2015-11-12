@@ -313,6 +313,8 @@ a.footer_image { display: block; margin: 4px; float: left; border: none; width: 
 #sidebar h4 { margin: 10px 0 0; font-size: 13px; font-weight: bold; color: #222; line-height: 1em; }
 #sidebar #single_user { margin: 0 0 20px; }
 #edit_photo { text-align: right; color: #7B7D7F; font-size: 12px; width: 300px; line-height: 19px; border-bottom: solid 1px #7B7D7F; }
+#progressbar {border: 1px solid #ddd;}
+.photo-edit-button {float: right;}
 
 /* SINGLE VIEW */
 #single_view_block { margin-bottom: 5px; }
