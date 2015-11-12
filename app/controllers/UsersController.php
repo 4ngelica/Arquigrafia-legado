@@ -549,6 +549,7 @@ class UsersController extends \BaseController {
  */
   public function edit($id) {     
     $user = User::find($id);
+    
     $logged_user = Auth::User();
     if ($logged_user == null) {
       return Redirect::action('PagesController@home');  
@@ -561,7 +562,7 @@ class UsersController extends \BaseController {
 
   public function update($id) {              
     $user = User::find($id);
-    
+   
     Input::flash();    
     $input = Input::only('name', 'login', 'email', 'scholarity', 'lastName', 'site', 'birthday', 'country', 'state', 'city', 
       'photo', 'gender', 'institution', 'occupation', 'visibleBirthday', 'visibleEmail','old_password','user_password','user_password_confirmation');    
@@ -570,8 +571,7 @@ class UsersController extends \BaseController {
         'name' => 'required',
         'login' => 'required',
         'email' => 'required|email',
-        'user_password' => 'min:6|alphaNum|confirmed',
-        'old_password' => 'min:6',
+        'user_password' => 'min:6|regex:/^[a-z0-9-@_]{6,10}$/|confirmed',        
         'birthday' => 'date_format:"d/m/Y"'                  
     );     
     if ($input['email'] !== $user->email)        
@@ -599,9 +599,11 @@ class UsersController extends \BaseController {
       $user->gender = $input['gender'];  
       $user->visibleBirthday = $input['visibleBirthday'];  
       $user->visibleEmail = $input['visibleEmail']; 
-      Log::info("authenticate =".Auth::attempt(array('password' => $input["old_password"]))); 
+
+      Log::info("check=".Hash::check($input["old_password"], $user->password)."autenticar =".Auth::attempt(array('login' => $user->login,'password' => $input["old_password"]))); 
       
-      if (Auth::attempt(array('password' => $input["old_password"])) == true ) { 
+      if(Hash::check($input["old_password"], $user->password)){
+      //if ( Auth::attempt(array('login' => $user->login, 'password' => $input["old_password"])) == true) { 
             if(!empty($input['user_password']) || trim($input['user_password']) != ""){
                 $user->password = Hash::make($input["user_password"]);  
             }else{
