@@ -19,7 +19,7 @@ class FillLeaderboardsTable extends Migration {
 
 		$q  = "insert into leaderboards (type, user_id, count, created_at, updated_at) ";
 		$q .= "(select 'evaluations', u.id, count(b.user_id) / 6, now(), now() from users u left join binomial_evaluation b on ";
-		$q .= "u.id = b.user_id and b.photo_id in (select id from photos where deleted_at is null and institution_id is null) group by u.id)";
+		$q .= "u.id = b.user_id and b.photo_id in (select id from photos where deleted_at is null) group by u.id)";
 		DB::insert(DB::raw($q));			
 	}
 
@@ -30,7 +30,7 @@ class FillLeaderboardsTable extends Migration {
 	 */
 	public function down()
 	{
-		//
+		DB::delete(DB::raw('delete from leaderboards'));
 	}
 
 }

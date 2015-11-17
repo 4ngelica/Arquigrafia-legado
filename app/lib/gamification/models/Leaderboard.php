@@ -1,6 +1,7 @@
 <?php namespace lib\gamification\models;
 
 use User;
+use Illuminate\Support\Collection as Collection;
 
 class Leaderboard extends \Eloquent {
 
@@ -13,6 +14,14 @@ class Leaderboard extends \Eloquent {
   public function scopeFromUser($query, $user) {
     $id = $user instanceof User ? $user->id : $user;
     return $query->where('user_id', $id);
+  }
+
+  public function scopeFromUsers($query, $users) {
+    $ids = $users;    
+    if ($users instanceof Collection) {
+      $ids = array_unique($users->lists('id'));
+    }
+    return $query->whereIn('user_id', $ids);
   }
 
   public function increaseScore($save = true) {
@@ -43,13 +52,20 @@ class Leaderboard extends \Eloquent {
   }
 
   public static function increaseUserScore($user, $type) {
-    $user_uploads = static::fromUser($user)->whereType($type)->first();
-    $user_uploads->increaseScore();
+    $user_leaderboard = static::fromUser($user)->whereType($type)->first();
+    $user_leaderboard->increaseScore();
   }
 
   public static function decreaseUserScore($user, $type) {
-    $user_uploads = static::fromUser($user)->whereType($type)->first();
-    $user_uploads->decreaseScore();
+    $user_leaderboard = static::fromUser($user)->whereType($type)->first();
+    $user_leaderboard->decreaseScore();
+  }
+
+  public static function decreaseUsersScores($users, $type) {
+    $leaderboards = static::fromUsers($users)->whereType($type)->get();
+    foreach ($leaderboards as $l) {
+      $l->decreaseScore();
+    }
   }
 
 }

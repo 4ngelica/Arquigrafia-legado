@@ -80,11 +80,6 @@ class Photo extends Eloquent {
 		return $this->belongsTo('Institution');
 	}
 
-	public function badge()
-	{
-		return $this->belongsTo('Badge');
-	}
-
 	public function tags()
 	{
 		return $this->belongsToMany('Tag', 'tag_assignments');
@@ -108,6 +103,11 @@ class Photo extends Eloquent {
 	public function evaluations()
 	{
 		return $this->hasMany('Evaluation');
+	}
+
+	public function evaluators()
+	{
+		return $this->belongsToMany('User', 'binomial_evaluation');
 	}
 
 	public function saveMetadata($originalFileExtension)
