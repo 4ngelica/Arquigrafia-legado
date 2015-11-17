@@ -13,9 +13,9 @@ class InstitutionsController extends \BaseController {
     if ( is_null($institution) ) {
       return Redirect::to('/');
     }
-    $photos = $institution->photos()->get()->reverse();
-
-    /*
+    $photos = $institution->photos()->get()->reverse(); 
+     
+  /* 
     if(Session::has('institutionId')){
         if(Session::get('institutionId') == $id)
           $follow = false;
@@ -24,7 +24,7 @@ class InstitutionsController extends \BaseController {
       }else{
         $follow = true;
       } 
-
+ 
        if(Session::has('institutionId')){
             $institution_id = Session::get('institutionId');
             $institution_or_visitor = "institution";
@@ -33,8 +33,7 @@ class InstitutionsController extends \BaseController {
             session_start();
             $user_id = session_id();
         }
-      
-    
+          
     //$source_page = Request::header('referer');
     //ActionUser::printSelectUser($institution_id, $id, $source_page, $institution_or_visitor);
 

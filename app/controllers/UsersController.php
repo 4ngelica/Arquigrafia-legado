@@ -23,7 +23,7 @@ class UsersController extends \BaseController {
   }
 
   public function show($id)
-  {
+  { 
     $user = User::whereid($id)->first();
     $photos = $user->photos()->get()->reverse();
     if (Auth::check()) {      
@@ -549,6 +549,7 @@ class UsersController extends \BaseController {
  */
   public function edit($id) {     
     $user = User::find($id);
+    
     $logged_user = Auth::User();
     if ($logged_user == null) {
       return Redirect::action('PagesController@home');  
@@ -561,16 +562,16 @@ class UsersController extends \BaseController {
 
   public function update($id) {              
     $user = User::find($id);
-    
+   
     Input::flash();    
     $input = Input::only('name', 'login', 'email', 'scholarity', 'lastName', 'site', 'birthday', 'country', 'state', 'city', 
-      'photo', 'gender', 'institution', 'occupation', 'visibleBirthday', 'visibleEmail','password','password_confirmation');    
+      'photo', 'gender', 'institution', 'occupation', 'visibleBirthday', 'visibleEmail','old_password','user_password','user_password_confirmation');    
     
     $rules = array(
         'name' => 'required',
         'login' => 'required',
         'email' => 'required|email',
-        'password' => 'min:6|confirmed',
+        'user_password' => 'min:6|regex:/^[a-z0-9-@_]{6,10}$/|confirmed',        
         'birthday' => 'date_format:"d/m/Y"'                  
     );     
     if ($input['email'] !== $user->email)        
@@ -597,8 +598,25 @@ class UsersController extends \BaseController {
       $user->city = $input['city'];  
       $user->gender = $input['gender'];  
       $user->visibleBirthday = $input['visibleBirthday'];  
-      $user->visibleEmail = $input['visibleEmail'];   
-      $user->password = Hash::make($input["password"]);
+      $user->visibleEmail = $input['visibleEmail']; 
+
+      Log::info("check=".Hash::check($input["old_password"], $user->password)."autenticar =".Auth::attempt(array('login' => $user->login,'password' => $input["old_password"]))); 
+      
+      if(Hash::check($input["old_password"], $user->password)){
+      //if ( Auth::attempt(array('login' => $user->login, 'password' => $input["old_password"])) == true) { 
+            if(!empty($input['user_password']) || trim($input['user_password']) != ""){
+                $user->password = Hash::make($input["user_password"]);  
+            }else{
+                  $messages = array('user_password'=>array('Inserir uma senha válida com mínimo 6 caracteres')); 
+                  return Redirect::to('/users/' . $id . '/edit')->withErrors($messages);
+            }                        
+       } else if(!empty($input['old_password']) || trim($input['old_password']) != ""){
+            $messages = array('old_password'=>array('Antiga senha incorreta')); 
+            return Redirect::to('/users/' . $id . '/edit')->withErrors($messages);
+       } else if(!empty($input['user_password']) || trim($input['user_password']) != "" ){
+            $messages = array('old_password'=>array('Precisa inserir a senha antiga')); 
+            return Redirect::to('/users/' . $id . '/edit')->withErrors($messages);
+       }      
 
       $user->touch();
       $user->save();   
