@@ -31,6 +31,8 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/city-autocomplete.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/date-work.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/rotate.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/readURL.js" charset="utf-8"></script>
+
 <style>
   .ui-autocomplete {
     max-height: 100px;
@@ -58,25 +60,28 @@
   
       <div class="twelve columns row step-1">
       	<h1><span class="step-text">Edição de informações da imagem {{$photo->name}}</span></h1>
-        
-        <div class="four columns alpha">
-          <p>
+          <div class="four columns alpha">
             <a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" >
-            <img class="single_view_image" style="" src="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" />
+            <img id="old_image" class="single_view_image" style="" src="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" />
             </a>
-          </p>
+          <div id="old_image_rotate">
+            <br></br>
+            <a class="btn left" onclick="Rotate(document.getElementById('old_image'), -Math.PI/2);">Girar 90° para esquerda</a>
+            <a class="btn right" onclick="Rotate(document.getElementById('old_image'), Math.PI/2);">Girar 90° para direita</a>
+          </div>
           <br></br>
           <img src="" id="preview_photo">
+          <div id="image_rotate" style="display:none;">
+            <br></br>
+            <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), -Math.PI/2);">Girar 90° para esquerda</a>
+            <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), Math.PI/2);">Girar 90° para direita</a>
+          </div>
           <p>
             {{ Form::label('photo','Alterar imagem:') }} 
             {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
             <br></br>
             <div class="error">{{ $errors->first('photo') }}</div>
           </p>
-          <div id="image_rotate" style="display:none;">
-            <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), -Math.PI/2);">Girar 90° para esquerda</a>
-            <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), Math.PI/2);">Girar 90° para direita</a>
-          </div>
         </div>   
 
       </div> 
