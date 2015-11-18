@@ -43,7 +43,7 @@
         @endif
       <div class="info">
         <h1>{{ $institution->name}}</h1>         
-        @if ( !empty($institution->city) ) 
+        @if ( !empty($institution->city) && Session::has('institutionId')) 
           <p  >{{ $institution->city }}</p>
         @endif
         
