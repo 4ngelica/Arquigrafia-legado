@@ -25,22 +25,26 @@
         @if (Auth::check() && Session::get('institutionId') == $institution->id)
         <!-- <a href= '{{"/institutions/" . $institution->id . "/edit" }}' title="Editar perfil" >-->
               @if ($institution->photo != "")
-               <img class="avatar" src="{{ asset($institution->photo) }}" class="user_photo_thumbnail"/>          
+              <div class="div_avatar_size_inst" >
+               <img class ="class_img_avatar"  class="avatar" src="{{ asset($institution->photo) }}" class="user_photo_thumbnail"/>   
+              </div>        
               @else
-               <img class="avatar" src="{{ asset("img/avatar-institution.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
+               <img class="avatar" src="{{ asset("img/avatar-institution.png") }}" width="68" height="68" class="user_photo_thumbnail"/>
               @endif
            <!--   </a>-->
         @else                
                 @if($institution->photo != "")
-                  <img class="avatar" src="{{ asset($institution->photo) }}" class="user_photo_thumbnail"/>          
+                <div class="div_avatar_size_inst" >
+                  <img class ="class_img_avatar" class="avatar" src="{{ asset($institution->photo) }}" class="user_photo_thumbnail"/>   
+                </div>         
                 @else 
-                  <img class="avatar" src="{{ asset("img/avatar-institution.png") }}" width="60" height="60" class="user_photo_thumbnail"/>
+                  <img class="avatar" src="{{ asset("img/avatar-institution.png") }}" width="68" height="68" class="user_photo_thumbnail"/>
                 @endif 
         @endif
       <div class="info">
         <h1>{{ $institution->name}}</h1>         
         @if ( !empty($institution->city) ) 
-          <p style="padding:1px 3px 2px 74px;" >{{ $institution->city }}</p>
+          <p  >{{ $institution->city }}</p>
         @endif
         
         @if (Auth::check() && !is_null($follow)) 
@@ -131,11 +135,11 @@
               <img width="40" height="40" class="avatar"
               src="{{ asset("img/avatar-60.png") }}" class="user_photo_thumbnail"
               class="gallery_box_inst"/>
-              </a>
-              <a href="{{ URL::to("/users/". $follower->id) }}" class="name_text_follow">
+              </a>              
+            @endif   
+            <a href="{{ URL::to("/users/". $follower->id) }}" class="name_text_follow">
                {{ Str::limit(ucfirst($follower->name), 5) }}
-              </a>
-            @endif           
+              </a>        
         </div>  
         @endforeach
       </div>
