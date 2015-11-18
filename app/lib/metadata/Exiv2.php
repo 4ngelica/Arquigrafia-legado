@@ -6,17 +6,13 @@ use lib\license\CreativeCommons_3_0;
 
 class Exiv2 {
 
-	private $originalFileExtension;
-	private $imageId;
-	private $imagesPath;
 	private $log;
 	private $photo;
+	private $file_path;
 
-	public function __construct($originalFileExtension, $photo, $imagesPath) {
-		$this->originalFileExtension = $originalFileExtension;
+	public function __construct($file_path, $photo) {
 		$this->photo = $photo;
-		$this->imageId = $photo->id;
-		$this->imagesPath = $imagesPath;
+		$this->file_path = $file_path;
 	}
 
 	public function saveMetadata() {
@@ -67,15 +63,8 @@ class Exiv2 {
 		return $result;
 	}
 
-	private function runExif2($command) {		
-		$this->runExif2_internal('_original', $this->originalFileExtension, $command);
-		$this->runExif2_internal('_200h', 'jpg', $command);
-		$this->runExif2_internal('_view', 'jpg', $command);
-	}
-
-	private function runExif2_internal($sufix, $extension, $command) {
-		$fileName = sprintf("%s%s%s.%s", $this->imagesPath, $this->imageId, $sufix, $extension);
-		$cmd = 'exiv2 -M "set ' . $command . '" ' . $fileName;
+	private function runExif2($command) {
+		$cmd = 'exiv2 -M "set ' . $command . '" ' . $this->file_path;
 		system($cmd, $retval);
 		if ($retval != 0) {
 			$this->log_error($cmd, $retval);
