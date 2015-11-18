@@ -13,7 +13,6 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.autocomplete.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.suggestions.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.filter.js" charset="utf-8"></script>
-<!--<script type="text/javascript" src="{{ URL::to("/") }}/js/tags-autocomplete.js" charset="utf-8"></script>-->
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.ajax.js" charset="utf-8"></script>
 <!--<script type="text/javascript" src="{{ URL::to("/") }}/js/tags-autocomplete.js" charset="utf-8"></script>-->
 <script type="text/javascript" src="{{ URL::to("/") }}/js/tag-list.js" charset="utf-8"></script>
@@ -21,6 +20,7 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/city-autocomplete.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/date-work.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/rotate.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/readURL.js" charset="utf-8"></script>
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 {{-- <script src="//code.jquery.com/jquery-1.10.2.js"></script> --}}
@@ -91,16 +91,17 @@
     <h1><span class="step-text">Upload</span></h1>
     <div class="four columns alpha">
     <img src="" id="preview_photo">
+    <div id="image_rotate" style="display:none;">
+    <br></br>
+    <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), -Math.PI/2);">Girar 90° para esquerda</a>
+    <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), Math.PI/2);">Girar 90° para direita</a>
+    </div>
     <p>
     {{ Form::label('photo','Imagem:') }}
     {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
     <br></br>
     <div class="error">{{ $errors->first('photo') }}</div>
     </p>
-    <div id="image_rotate" style="display:none;">
-    <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), -Math.PI/2);">Girar 90° para esquerda</a>
-    <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), Math.PI/2);">Girar 90° para direita</a>
-    </div>
     </div>
     <br>
     </div>
@@ -306,7 +307,7 @@
                 <br>
                 <div class="error"> $errors->first('work_authors') }}</div>
              </p>
-            </div>
+            e/div>
             <div class="sevenUpload columns alpha">
               <textarea name="work_authors" id="work_authors" cols="60" rows="1" style="display: none;width: 380px;"></textarea>
             </div>
@@ -403,20 +404,6 @@
     </div>
     
     <script type="text/javascript">
-    function readURL(input) {
-        $("#preview_photo").hide();
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $('#preview_photo')
-                .attr('src', e.target.result)
-                .width(600);
-                $("#preview_photo").show();
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-        document.getElementById("image_rotate").style.display = 'block';
-    }
     $(document).ready(function() {
         if({{Input::old('autoOpenModal','false')}}){
             
