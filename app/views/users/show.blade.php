@@ -39,7 +39,7 @@
           </a>
         @else
           @if ($user->photo != "")
-            <img class="avatar" src="{{ asset($user->photo) }}" class="user_photo_thumbnail"/>          
+            <img class="avatar" src="{{ asset($user->photo) }}"  class="user_photo_thumbnail"/>          
           @else
             <img class="avatar" src="{{ asset("img/avatar-60.png") }}"
               width="60" height="60" class="user_photo_thumbnail"/>
@@ -48,19 +48,21 @@
 
         <div class="info">
           <h1>{{ $user->name}} {{ $user->secondName}}</h1>
+
+         @if ( !empty($user->city) )
+          <p>{{ $user->city }}</p>
+         @endif 
           <p>
             <a href="{{ URL::to('/leaderboard') }}">
               Ver Quadro de Colaboradores
             </a>
           </p>
-           
-       @if ( !empty($user->city) )
-        <p>{{ $user->city }}</p>
-        @endif
+         
 
 			@if (Auth::check() && $user->id != Auth::user()->id && !Session::has('institutionId'))
     			@if (!empty($follow) && $follow == true )
-	    			<a href="{{ URL::to("/friends/follow/" . $user->id) }}" id="single_view_contact_add">Seguir</a><br />
+	    			<a href="{{ URL::to("/friends/follow/" . $user->id) }}" 	    				
+	    				id="single_view_contact_add">Seguir</a><br />
  				@else
             		<div id="unfollow-button">
 					    <a href="{{ URL::to("/friends/unfollow/" . $user->id) }}">
@@ -168,24 +170,53 @@
       
       <div class="four columns">
         <hgroup class="profile_block_title">
-          <h3><i class="follow"></i>Seguindo ({{$user->following->count()}})</h3>
+          <h3><i class="follow"></i>Seguindo ({{$user->following->count() + $institutionFollowed->count()}})</h3>
           <!--<a href="#" id="small" class="profile_block_link">Ver todos</a>-->
           </hgroup>
         <!--   BOX - AMIGOS   -->
-
     		<div class="profile_box">			
 				@foreach($user->following as $following)
-					<a href= {{ '/users/' .  $following->id }} >
-					<?php if ($following->photo != "") { ?>					
-						<img width="40" height="40" class="avatar" src="{{ asset($following->photo) }}" class="user_photo_thumbnail" title="{{$following->name}}"/>
-					<?php } else { ?>
-						<img width="40" height="40" class="avatar" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail" title="{{$following->name}}"/>
-					<?php } ?>
+				<!--<div class="gallery_box_inst">-->
+					<a href= "{{ URL::to('/users/' .  $following->id) }}" 
+					   class="gallery_box_inst" title="{{$following->name}}"	>
+					@if ($following->photo != "")					
+						<img width="40" height="40" class="avatar" 
+						src="{{ asset($following->photo) }}" class="user_photo_thumbnail"
+						class="gallery_box_inst"  />
+					</a>	
+					@else
+						<img width="40" height="40" class="avatar" 
+						src="{{ asset("img/avatar-60.png") }}" class="user_photo_thumbnail" 
+						class="gallery_box_inst"  />
 					</a>
+					<a href="{{ URL::to("/users/". $following->id) }}" class="name_text_follow">
+               			{{ Str::limit(ucfirst($following->name), 5) }}
+          			</a>	
+					@endif
 					
-				@endforeach           
-			</div>
-        
+				<!--</div> -->
+				@endforeach  
+				@foreach($institutionFollowed as $followingInstitution) 
+				   <div class="gallery_box_inst">
+						<a href= "{{ '/institutions/' .  $followingInstitution->id }}"
+						   class="gallery_box_inst" title="{{$followingInstitution->name}}"   >
+						@if ($followingInstitution->photo != "")					
+							<img width="40" height="40" class="avatar" 
+							src="{{ asset($followingInstitution->photo) }}" class="user_photo_thumbnail" 
+							class="gallery_box_inst" />
+						</a>	
+						@else
+							<img width="40" height="40" class="avatar" 
+							src="{{ asset("img/avatar-60.png") }}"  class="user_photo_thumbnail" 
+							class="gallery_box_inst" />
+						</a>
+						<a href="{{ URL::to('/institutions/'. $followingInstitution->id) }}" class="name_text_follow">
+               			{{ Str::limit($followingInstitution->name, 5) }}
+               			</a>	
+						@endif 
+				   </div>	
+				@endforeach        
+			</div>        
       </div>
       
       <div class="four columns">
@@ -340,6 +371,5 @@
 			{{ Form::close() }}
 		</div>
 	</div>
-{{-- >>>>>>> 6fbf3b1deebee8ae0b7bc744766dffb1a39b961b --}}
 
 @stop

@@ -29,15 +29,17 @@ class PhotosController extends \BaseController {
       return Redirect::to('/');
     }
     $user = Auth::user();
-    $photo_owner = $photos->user;
-
-    $photo_institution = $photos->institution;
+    $photo_owner = $photos->user; 
+    
+    $photo_institution = $photos->institution;     
+    
     $tags = $photos->tags;
     $binomials = Binomial::all()->keyBy('id');
     $average = Evaluation::average($photos->id);
     $evaluations = null;
     $photoliked = null;
     $follow = true;
+    $followInstitution = true;
     $belongInstitution = false;
     $hasInstitution = false; 
     $institution = null;
@@ -45,11 +47,17 @@ class PhotosController extends \BaseController {
       if(Session::has('institutionId')){
         $belongInstitution = Institution::belongInstitution($photos->id,Session::get('institutionId'));
         $hasInstitution = Institution::belongSomeInstitution($photos->id);
-        $institution = Institution::find(Session::get('institutionId')); 
+        $institution = Institution::find(Session::get('institutionId'));         
       } else{
         $hasInstitution = Institution::belongSomeInstitution($photos->id);
+        
+        if(!is_null($photo_institution) && $user->followingInstitution->contains($photo_institution->id)){ 
+         
+           $followInstitution = false;
+        }        
       }
       $evaluations =  Evaluation::where("user_id", $user->id)->where("photo_id", $id)->orderBy("binomial_id", "asc")->get();
+      
       if ($user->following->contains($photo_owner->id)) {
         $follow = false;
       }
@@ -78,7 +86,8 @@ class PhotosController extends \BaseController {
       'hasInstitution' => $hasInstitution,
       'ownerInstitution' => $photo_institution,
       'institution' => $institution,
-      'authorsList' => $authorsList
+      'authorsList' => $authorsList,
+      'followInstitution' => $followInstitution
     ]);
   }
 
