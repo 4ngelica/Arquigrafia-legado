@@ -186,7 +186,7 @@ class PagesController extends BaseController {
                     $query->where('name', 'LIKE', '%'. $needle .'%');  
                     $query->orWhere('description', 'LIKE', '%'. $needle .'%');  
                     $query->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%');
-                    $query->orWhere('workAuthor', 'LIKE', '%'. $needle .'%');
+                   // $query->orWhere('workAuthor', 'LIKE', '%'. $needle .'%');
                     $query->orWhere('country', 'LIKE', '%'. $needle .'%');  
                     $query->orWhere('state', 'LIKE', '%'. $needle .'%'); 
                     $query->orWhere('city', 'LIKE', '%'. $needle .'%'); 
@@ -242,7 +242,7 @@ class PagesController extends BaseController {
     public function advancedSearch()
     {
         $fields = Input::only( array(
-            'name', 'description', 'city', 'state', 'country', 'workAuthor',
+            'name', 'description', 'city', 'state', 'country', 
             'imageAuthor', 'dataCriacao', 'dataUpload', 'workdate', 'district',
             'street', 'tags', 'allowCommercialUses', 'allowModifications'
         ));
