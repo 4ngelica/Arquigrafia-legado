@@ -28,43 +28,45 @@
     <div class="container">
       <div id="user_header" class="twelve columns">
         <!-- Avatar with edit profile -->
-        @if (Auth::check() && Auth::user()->id == $user->id)
-          <a href= '{{ url("users/" . $user->id . "/edit") }}' title="Editar perfil" >
-          @if ($user->photo != "")
-            <img class="avatar" src="{{ asset($user->photo) }}" class="user_photo_thumbnail"/>          
-          @else
-            <img class="avatar" src="{{ asset("img/avatar-perfil.png") }}"
-              width="60" height="60" class="user_photo_thumbnail"/>
-          @endif
+        @if (Auth::check() && Auth::user()->id == $user->id)  
+         <div class="div_avatar_size" >      
+           <a href= '{{ url("users/" . $user->id . "/edit") }}' title="Editar perfil" >
+           @if ($user->photo != "")
+             <img class ="class_img_avatar" class="avatar" src="{{ asset($user->photo) }}" class="user_photo_thumbnail"/>          
+           @else
+             <img class="avatar" src="{{ asset("img/avatar-perfil.png") }}"
+               width="62" height="62" class="user_photo_thumbnail"/>
+           @endif
           </a>
+         </div> 
         @else
           @if ($user->photo != "")
-            <img class="avatar" src="{{ asset($user->photo) }}" class="user_photo_thumbnail"/>          
+          	<div class="div_avatar_size" >
+            	<img class ="class_img_avatar" class="avatar" src="{{ asset($user->photo) }}"  class="user_photo_thumbnail"/>          
+            </div>
           @else
             <img class="avatar" src="{{ asset("img/avatar-60.png") }}"
-              width="60" height="60" class="user_photo_thumbnail"/>
+              width="62" height="62" class="user_photo_thumbnail"/>
           @endif
         @endif
 
-        <div class="info">
-          <h1>{{ $user->name}} {{ $user->secondName}}</h1>
+        <div class="info" class="position_info">
+          <h1>{{ $user->name}} {{ $user->secondName}}</h1>         
           <p>
             <a href="{{ URL::to('/leaderboard') }}">
               Ver Quadro de Colaboradores
             </a>
           </p>
-           
-       @if ( !empty($user->city) )
-        <p>{{ $user->city }}</p>
-        @endif
+         
 
 			@if (Auth::check() && $user->id != Auth::user()->id && !Session::has('institutionId'))
     			@if (!empty($follow) && $follow == true )
-	    			<a href="{{ URL::to("/friends/follow/" . $user->id) }}" id="single_view_contact_add">Seguir</a><br />
+	    			<a href="{{ URL::to("/friends/follow/" . $user->id) }}" 	    				
+	    				id="single_view_contact_add">Seguir</a><br />
  				@else
-            		<div id="unfollow-button">
+            		<div id="unfollow-button" class="label_following">
 					    <a href="{{ URL::to("/friends/unfollow/" . $user->id) }}">
-         					<p class="label success new-label"><span>Seguindo</span></p>
+         					<p  class="label success new-label"><span>Seguindo</span></p>
     					</a>
 					</div>
  				@endif
@@ -168,24 +170,53 @@
       
       <div class="four columns">
         <hgroup class="profile_block_title">
-          <h3><i class="follow"></i>Seguindo ({{$user->following->count()}})</h3>
+          <h3><i class="follow"></i>Seguindo ({{$user->following->count() + $institutionFollowed->count()}})</h3>
           <!--<a href="#" id="small" class="profile_block_link">Ver todos</a>-->
           </hgroup>
         <!--   BOX - AMIGOS   -->
-
     		<div class="profile_box">			
 				@foreach($user->following as $following)
-					<a href= {{ '/users/' .  $following->id }} >
-					<?php if ($following->photo != "") { ?>					
-						<img width="40" height="40" class="avatar" src="{{ asset($following->photo) }}" class="user_photo_thumbnail" title="{{$following->name}}"/>
-					<?php } else { ?>
-						<img width="40" height="40" class="avatar" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail" title="{{$following->name}}"/>
-					<?php } ?>
-					</a>
-					
-				@endforeach           
-			</div>
-        
+				<div class="gallery_box_inst">
+					<a href= "{{ URL::to('/users/' .  $following->id) }}" 
+					   class="gallery_box_inst" title="{{$following->name}}"	>
+					@if ($following->photo != "")					
+						<img width="40" height="40" class="avatar" 
+						src="{{ asset($following->photo) }}" class="user_photo_thumbnail"
+						class="gallery_box_inst"  />
+					</a>	
+					@else
+						<img width="40" height="40" class="avatar" 
+						src="{{ asset("img/avatar-60.png") }}" class="user_photo_thumbnail" 
+						class="gallery_box_inst"  />
+					</a>						
+					@endif
+					<a href="{{ URL::to("/users/". $following->id) }}" class="name_text_follow">
+               			{{ Str::limit(ucfirst($following->name), 5) }}
+          			</a>					
+				</div> 
+				@endforeach  
+				@foreach($institutionFollowed as $followingInstitution) 
+				   <div class="gallery_box_inst">
+						<a href= "{{ '/institutions/' .  $followingInstitution->id }}"
+						   class="gallery_box_inst" title="{{$followingInstitution->name}}"   >
+						@if ($followingInstitution->photo != "")					
+							<img width="40" height="40" class="avatar" 
+							src="{{ asset($followingInstitution->photo) }}" class="user_photo_thumbnail" 
+							class="gallery_box_inst" />
+						</a>	
+						@else
+							<img width="40" height="40" class="avatar" 
+							src="{{ asset("img/avatar-60.png") }}"  class="user_photo_thumbnail" 
+							class="gallery_box_inst" />
+						</a>
+						<a href="{{ URL::to('/institutions/'. $followingInstitution->id) }}" class="name_text_follow">
+               			{{ Str::limit($followingInstitution->name, 5) }}
+               			</a>							
+						@endif 
+
+				   </div>	
+				@endforeach        
+			</div>        
       </div>
       
       <div class="four columns">
@@ -199,13 +230,18 @@
           <!--   FOTO - AMIGO   -->
           
           @foreach($user->followers as $follower)
-					<a href= {{ '/users/' .  $follower->id }} >
-					<?php if ($follower->photo != "") { ?>					
-						<img width="40" height="40" class="avatar" src="{{ asset($follower->photo) }}" class="user_photo_thumbnail" title="{{$follower->name}}"/>
-					<?php } else { ?>
-						<img width="40" height="40" class="avatar" src="{{ asset("img/avatar-60.png") }}" width="60" height="60" class="user_photo_thumbnail" title="{{$follower->name}}"/>
-					<?php } ?>
+           <div class="gallery_box_inst">
+					<a href= "{{ '/users/' .  $follower->id }}" class="gallery_box_inst" title="{{$follower->name}}">
+					 @if ($follower->photo != "") 				
+						<img width="40" height="40" class="avatar" src="{{ asset($follower->photo) }}" class="user_photo_thumbnail" class="gallery_box_inst"/>
+					 @else
+						<img width="40" height="40" class="avatar" src="{{ asset("img/avatar-60.png") }}" class="user_photo_thumbnail" class="gallery_box_inst"/>
+					 @endif
 					</a>
+					<a href="{{ URL::to("/users/". $follower->id) }}" class="name_text_follow">
+               			{{ Str::limit(ucfirst($follower->name), 5) }}
+              		</a>
+		   </div>
 		@endforeach   
 		
 		</div>
@@ -340,6 +376,5 @@
 			{{ Form::close() }}
 		</div>
 	</div>
-{{-- >>>>>>> 6fbf3b1deebee8ae0b7bc744766dffb1a39b961b --}}
 
 @stop
