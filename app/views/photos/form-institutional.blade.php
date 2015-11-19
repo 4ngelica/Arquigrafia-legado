@@ -30,6 +30,8 @@
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/city-autocomplete.js" charset="utf-8"></script>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/date-work.js" charset="utf-8"></script>
     <script type="text/javascript" src="{{ URL::to("/") }}/js/rotate.js" charset="utf-8"></script>
+    <script type="text/javascript" src="{{ URL::to("/") }}/js/readURL.js" charset="utf-8"></script>
+
 <style>
   .ui-autocomplete {
     max-height: 100px;
@@ -112,18 +114,19 @@
 					<h1><span class="step-text">Upload</span></h1>
 					<div class="four columns alpha">
 						<img src="" id="preview_photo">
+                        <div id="image_rotate" style="display:none;">
+                        <br></br>
+                        <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), 
+                            Math.PI/2);">Girar 90° para direita</a>
+                        <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), 
+                            -Math.PI/2);">Girar 90° para esquerda</a>
+                        </div>
 						<p>
 							{{ Form::label('photo','Imagem:') }}
 							{{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
 							<div class="error">{{ $errors->first('photo') }}</div>
                             <br></br>
 						</p>
-                        <div id="image_rotate" style="display:none;">
-                        <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), 
-                            Math.PI/2);">Girar 90° para direita</a>
-                        <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), 
-                            -Math.PI/2);">Girar 90° para esquerda</a>
-                        </div>
 						<br>
 					</div>
 				</div>
