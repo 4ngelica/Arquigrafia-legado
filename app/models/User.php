@@ -83,6 +83,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $this->belongsToMany('Institution', 'friendship_institution','institution_id', 'following_user_id');
 	}
 
+	public function followingInstitution(){
+		return $this->belongsToMany('Institution', 'friendship_institution','following_user_id', 'institution_id');
+	}
+
 	protected $hidden = array('password', 'remember_token');
 
 	public static function checkOldAccount( $user, $password)

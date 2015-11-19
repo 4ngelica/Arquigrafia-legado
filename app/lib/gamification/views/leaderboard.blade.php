@@ -55,8 +55,7 @@
           <div class="four columns omega">
             <p class="right">
               Ordenar por número de {{ Form::select('score_type',
-                [ 
-                  /*'points' => 'pontos',*/
+                [
                   'uploads' => 'uploads',
                   'evals' => 'avaliações'
                 ], $score_type, array('class' => 'score_type')) }}
@@ -69,9 +68,7 @@
               <th class="edge">Posição</th>
               <th colspan="2" class="middle">Colaborador</th>
               <th class='score_type_header edge'>
-                @if ($score_type == 'points')
-                  Pontuação
-                @elseif ($score_type == 'uploads')
+                @if ($score_type == 'uploads')
                   Uploads
                 @else
                   Avaliações
@@ -117,8 +114,6 @@
       number_items: {{ $users->count() }},
       url: '{{ URL::to('/leaderboard') }}',
       user_page: {{ $user_page }},
-      following: {{ $following }},
-      isFollowing: {{ $isFollowing ? 'true' : 'false' }}
     };
   </script>
   <script type="text/javascript" src={{ asset('/js/gamification/leaderboard.js') }}></script>

@@ -338,7 +338,17 @@
         <h1 id="single_view_owner_name"><a href="{{ URL::to("/users/".$owner->id) }}" id="name">{{ $owner->name }}</a></h1>
         @endif
         
-        @if ( Auth::check() && !$owner->equal(Auth::user()) )
+        @if(!is_null($ownerInstitution) && Auth::check() && !$ownerInstitution->equal(Auth::user()) && !Session::has('institutionId'))
+            @if (!empty($followInstitution) && $followInstitution == true )
+              <a href="{{ URL::to("/friends/followInstitution/" . $ownerInstitution->id) }}" id="single_view_contact_add">Seguir</a><br />
+            @else
+              <div id="unfollow-button">
+                  <a href="{{ URL::to("/friends/unfollowInstitution/" . $ownerInstitution->id) }}">
+                    <p class="label success new-label"><span>Seguindo</span></p>
+                  </a>
+              </div>
+            @endif
+        @elseif ( Auth::check() && !$owner->equal(Auth::user()) && !Session::has('institutionId'))        
           @if (!empty($follow) && $follow == true )
             <a href="{{ URL::to("/friends/follow/" . $owner->id) }}" id="single_view_contact_add">Seguir</a><br />
           @else

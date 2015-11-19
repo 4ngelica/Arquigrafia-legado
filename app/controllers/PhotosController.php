@@ -29,15 +29,17 @@ class PhotosController extends \BaseController {
       return Redirect::to('/');
     }
     $user = Auth::user();
-    $photo_owner = $photos->user;
-
-    $photo_institution = $photos->institution;
+    $photo_owner = $photos->user; 
+    
+    $photo_institution = $photos->institution;     
+    
     $tags = $photos->tags;
     $binomials = Binomial::all()->keyBy('id');
     $average = Evaluation::average($photos->id);
     $evaluations = null;
     $photoliked = null;
     $follow = true;
+    $followInstitution = true;
     $belongInstitution = false;
     $hasInstitution = false; 
     $institution = null;
@@ -45,11 +47,17 @@ class PhotosController extends \BaseController {
       if(Session::has('institutionId')){
         $belongInstitution = Institution::belongInstitution($photos->id,Session::get('institutionId'));
         $hasInstitution = Institution::belongSomeInstitution($photos->id);
-        $institution = Institution::find(Session::get('institutionId')); 
+        $institution = Institution::find(Session::get('institutionId'));         
       } else{
         $hasInstitution = Institution::belongSomeInstitution($photos->id);
+        
+        if(!is_null($photo_institution) && $user->followingInstitution->contains($photo_institution->id)){ 
+         
+           $followInstitution = false;
+        }        
       }
       $evaluations =  Evaluation::where("user_id", $user->id)->where("photo_id", $id)->orderBy("binomial_id", "asc")->get();
+      
       if ($user->following->contains($photo_owner->id)) {
         $follow = false;
       }
@@ -78,7 +86,8 @@ class PhotosController extends \BaseController {
       'hasInstitution' => $hasInstitution,
       'ownerInstitution' => $photo_institution,
       'institution' => $institution,
-      'authorsList' => $authorsList
+      'authorsList' => $authorsList,
+      'followInstitution' => $followInstitution
     ]);
   }
 
@@ -444,14 +453,15 @@ class PhotosController extends \BaseController {
               $angle = (float)$input['rotate'];
           else
               $angle = 0;
-          $image = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80); // todas começam com jpg quality 80
-          $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
-          $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
-          $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
-          $file->move(storage_path().'/original-images', $photo->id."_original.".strtolower($ext)); // original
+          $public_image   = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80);
+          $original_image = Image::make(Input::file('photo'))->rotate($angle);
+
+          $public_image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
+          $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); 
+          $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
+          $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
 
           $photo->saveMetadata(strtolower($ext));
-          
           $input['photoId'] = $photo->id;
           $input['dates'] = true;
           $input['dateImage'] = true;
@@ -806,27 +816,42 @@ class PhotosController extends \BaseController {
                 $author->deleteAuthorPhoto($photo);
             }
                     
-          if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
-              if(array_key_exists('rotate', $input))
-                  $angle = (float)$input['rotate'];
-              else
-                  $angle = 0;
-              $image = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80); // todas começam com jpg quality 80
-              $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
-              $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
-              $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
-              $file->move(storage_path().'/original-images', $photo->id."_original.".strtolower($ext)); // original
-              $photo->saveMetadata(strtolower($ext));
-          }
-         // $source_page = Request::header('referer');
-         // ActionUser::printTags($photo->user_id, $id, $tags_copy, $source_page, "user", "Editou");
-          return Redirect::to("/photos/".$photo->id)->with('message', '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso');
+      if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
+        if(array_key_exists('rotate', $input))
+            $angle = (float)$input['rotate'];
+        else
+            $angle = 0;
+        $public_image   = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80);
+        $original_image = Image::make(Input::file('photo'))->rotate($angle);
+        $create = true;
+      }
+      elseif (array_key_exists('rotate', $input) and ($input['rotate'] != 0)) {
+        list($photo_id, $ext) = explode(".", $photo->nome_arquivo);
+        $path = storage_path().'/original-images/'.$photo->id.'_original.'.$ext;
+        $angle = (float)$input['rotate'];
+        $public_image   = Image::make($path)->rotate($angle)->encode('jpg', 80);
+        $original_image = Image::make($path)->rotate($angle);
+        $create = true;
+      }
+      else
+        $create = false;
+
+      if ($create) {
+        $public_image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
+        $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); 
+        $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
+        $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
+        $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
+        $photo->saveMetadata(strtolower($ext));
+      }
+      // $source_page = Request::header('referer');
+      // ActionUser::printTags($photo->user_id, $id, $tags_copy, $source_page, "user", "Editou");
+      return Redirect::to("/photos/".$photo->id)->with('message', 
+          '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso');
     }
   }  
 
   public function store() {
-
-
   Input::flashExcept('tags', 'photo','work_authors');
 
   $input = Input::all();
@@ -968,17 +993,18 @@ class PhotosController extends \BaseController {
       ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $source_page, "Upload", "user");
       ActionUser::printTags($photo->user_id, $photo->id, $tags_copy, $source_page, "user", "Inseriu");
 
-
       if(array_key_exists('rotate', $input))
           $angle = (float)$input['rotate'];
       else
           $angle = 0;
-      $image = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80); // todas começam com jpg quality 80
-      $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
-      $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
-      $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
-      $image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
-      $file->move(storage_path().'/original-images', $photo->id."_original.".strtolower($ext)); // original
+      $public_image   = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80);
+      $original_image = Image::make(Input::file('photo'))->rotate($angle);
+
+      $public_image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
+      $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg');
+      $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
+      $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
+      $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
 
       $photo->saveMetadata(strtolower($ext));
       $input['photoId'] = $photo->id;
@@ -1545,8 +1571,7 @@ class PhotosController extends \BaseController {
                     'tags' => $input['tags']])->withErrors($messages);
             }
       }
-
-      
+ 
       $author = new Author();
       if (!empty($input["work_authors"])) {
           $author->updateAuthors($input["work_authors"],$photo);
@@ -1559,13 +1584,30 @@ class PhotosController extends \BaseController {
             $angle = (float)$input['rotate'];
         else
             $angle = 0;
-        $image = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80); // todas começam com jpg quality 80
-        $image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
-        $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); // deveria ser 220h, mantem por já haver alguns arquivos assim.
-        $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
-        $file->move(storage_path().'/original-images', $photo->id."_original.".strtolower($ext)); // original
+        $public_image   = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80);
+        $original_image = Image::make(Input::file('photo'))->rotate($angle);
+        $create = true;
+      }
+      elseif (array_key_exists('rotate', $input) and ($input['rotate'] != 0)) {
+        list($photo_id, $ext) = explode(".", $photo->nome_arquivo);
+        $path = storage_path().'/original-images/'.$photo->id.'_original.'.$ext;
+        $angle = (float)$input['rotate'];
+        $public_image   = Image::make($path)->rotate($angle)->encode('jpg', 80);
+        $original_image = Image::make($path)->rotate($angle);
+        $create = true;
+      }
+      else
+        $create = false;
+
+      if ($create) {
+        $public_image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
+        $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); 
+        $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
+        $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
+        $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
         $photo->saveMetadata(strtolower($ext));
       }
+
       $source_page = Request::header('referer');
       ActionUser::printTags($photo->user_id, $id, $tags_copy, $source_page, "user", "Editou");
 

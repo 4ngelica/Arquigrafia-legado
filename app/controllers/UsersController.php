@@ -25,14 +25,16 @@ class UsersController extends \BaseController {
   public function show($id)
   { 
     $user = User::whereid($id)->first();
+    $institutionFollowed = $user->followingInstitution;
     $photos = $user->photos()->get()->reverse();
-    if (Auth::check()) {      
+    if (Auth::check()) {   
       if (Auth::user()->following->contains($user->id))
         $follow = false;
       else 
-        $follow = true;
+        $follow = true; 
     } else{ 
       $follow = true;
+      $followInstitution = true;
     }
     
     if (Auth::check()) {
@@ -54,6 +56,7 @@ class UsersController extends \BaseController {
       'lastDateUpdatePhoto' => Photo::getLastUpdatePhotoByUser($id),
       'lastDateUploadPhoto' => Photo::getLastUploadPhotoByUser($id),
       'albums' => $albums,
+      'institutionFollowed' => $institutionFollowed
       ]);
   }
   
@@ -467,7 +470,7 @@ class UsersController extends \BaseController {
     $logged_user = Auth::user();
     
     if ($logged_user == null) //futuramente, adicionar filtro de login
-      return Redirect::to('/');
+       return Redirect::to('/');
 
     $following = $logged_user->following;
 
@@ -525,7 +528,7 @@ class UsersController extends \BaseController {
     }
 
     return Redirect::to(URL::previous()); // redirecionar para friends
-  }
+  } 
   
   // AVATAR
   public function profile($id)
