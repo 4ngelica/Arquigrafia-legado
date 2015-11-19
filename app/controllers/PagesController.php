@@ -54,16 +54,15 @@ class PagesController extends BaseController {
         return View::make('api.panel', ['photos' => $photos]);
     }
 
-
-  private static function userPhotosSearch($needle) {
-    $query = User::where('id', '>', 0);
-    $query->where('name', 'LIKE', '%'. $needle .'%');
-    $userList = $query->get();    
-    return $userList->lists('id');
-  }
-   //2015-05-09 msy end
-  private static function streetAndCitySearch(&$needle,&$txtcity) {
-
+    private static function userPhotosSearch($needle) {
+        $query = User::where('id', '>', 0);
+        $query->where('name', 'LIKE', '%'. $needle .'%');
+        $userList = $query->get();    
+        return $userList->lists('id');
+    }
+    
+	//2015-05-09 msy end
+    private static function streetAndCitySearch(&$needle,&$txtcity) {
         Log::info("Logging info txtcity <".$txtcity.">");       
 
         $allowed = "/[^a-z\\.\/\sçáéíóúãàõ]/i";

@@ -187,6 +187,28 @@ input.search_bar_button { background: url(../img/sprite.png) -330px 0; height: 2
 #user_gallery .panel-back, #user_gallery .panel-next {height: 220px;}
 .wrap .item { position: relative; }
 .wrap .item a { display: block; position: relative; width: 100%; height: 100%; }
+.wrap .item img {
+  -webkit-transition: all 0.4s linear;
+  -moz-transition: all 0.4s linear;
+  -moz-transition: all 0.4s linear;
+  -ms-transition: all 0.4s linear;
+  -o-transition: all 0.4s linear;
+  transition: all 0.4s linear;
+  
+  -webkit-filter: blur(10px);
+  -moz-filter: blur(10px);
+  -o-filter: blur(10px);
+  -ms-filter: blur(10px);
+  filter: blur(10px);
+  overflow: hidden;
+}
+.wrap .item.sharpen img {
+  -webkit-filter: blur(0px);
+  -moz-filter: blur(0px);
+  -o-filter: blur(0px);
+  -ms-filter: blur(0px);
+  filter: blur(0px);
+}
 .wrap .layer { position: absolute; top: 0; left: 0; overflow: hidden; }
 .wrap .h1, .wrap .h2, .wrap .h3, .wrap .v1 { float: left; margin: 5px; }
 #panel .h1, #panel .h1 .layer { width: 156px; height: 104px; }
