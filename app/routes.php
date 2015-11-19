@@ -56,11 +56,11 @@ Route::resource('/users/institutionalLogin','UsersController@institutionalLogin'
 /* FOLLOW */
 Route::get('/friends/follow/{user_id}', 'UsersController@follow');
 Route::get('/friends/unfollow/{user_id}', 'UsersController@unfollow');
+Route::get('/friends/followInstitution/{institution_id}', 'InstitutionsController@followInstitution');
+Route::get('/friends/unfollowInstitution/{institution_id}', 'InstitutionsController@unfollowInstitution');
 
 // AVATAR 
 Route::get('/profile/10/showphotoprofile/{profile_id}', 'UsersController@profile');
-
-Route::resource('/profile','ProfileController'); // lixo ?
 
 /* ALBUMS */
 Route::resource('/albums','AlbumsController');
@@ -82,8 +82,8 @@ Route::get('/albums/{id}/paginate/other/photos', 'AlbumsController@paginatePhoto
 
 /* COMMENTS */
 Route::post('/photos/{photo_id}/comment','PhotosController@comment');
-Route::get('/comments/{comment_id}/like','LikesController@commentlike');
-Route::get('/comments/{comment_id}/dislike','LikesController@commentdislike');
+Route::get('/comments/{comment_id}/like','lib\gamification\controllers\LikesController@commentlike');
+Route::get('/comments/{comment_id}/dislike','lib\gamification\controllers\LikesController@commentdislike');
 
 /* EVALUATIONS */
 Route::get('/photos/{photo_id}/saveEvaluation','PhotosController@saveEvaluation');
@@ -94,26 +94,34 @@ Route::get('/photos/{photo_id}/viewEvaluation/{user_id}','PhotosController@viewE
 Route::get('/photos/{photo_id}/showSimilarAverage/', 'PhotosController@showSimilarAverage');
 
 /* PHOTOS */
-Route::get('/photos/{id}/like', 'LikesController@photolike');
-Route::get('/photos/{id}/dislike', 'LikesController@photodislike');
+Route::get('/photos/{id}/like', 'lib\gamification\controllers\LikesController@photolike');
+Route::get('/photos/{id}/dislike', 'lib\gamification\controllers\LikesController@photodislike');
 Route::resource('/groups','GroupsController');
 Route::get('/photos/batch','PhotosController@batch');
 Route::get('/photos/upload','PhotosController@form');
-Route::get('/photos/newUpload','PhotosController@newForm');
+Route::get('/photos/uploadInstitutional','PhotosController@formInstitutional');
 Route::get('/photos/{photo_id}/editInstitutional','PhotosController@editFormInstitutional');
 Route::put('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');
+Route::get('/photos/migrar','PhotosController@migrar');
+Route::get('/photos/rollmigrar','PhotosController@rollmigrar');
 //Route::get('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');
 
 Route::get('/photos/download/{photo_id}','PhotosController@download');
 Route::get('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');
 Route::post('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');
 Route::resource('/photos','PhotosController');
+
 /* TAGS */
 Route::get('/tags/json', 'TagsController@index');
+Route::get('/tags/refreshCount', 'TagsController@refreshCount');
 
 /* NOTIFICATIONS */
 Route::get('/notifications', 'NotificationsController@show');
 Route::get('/markRead/{id}', 'NotificationsController@read');
 Route::get('/readAll', 'NotificationsController@readAll');
+
 Route::get('/refreshBubble', 'NotificationsController@howManyUnread');
 
+/* INSTITUTIONS */
+Route::get('/institutions/{id}', 'InstitutionsController@show');
+Route::resource('/institutions','InstitutionsController');

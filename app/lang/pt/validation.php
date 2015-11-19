@@ -55,7 +55,7 @@ return array(
     ),
     "not_in"           => "O campo :attribute contém um valor inválido.",
     "numeric"          => "O campo :attribute deverá conter um valor numérico.",    
-    "regex"            => "O campo :attribute só pode conter números, traços, underscore e letras minúsculas sem acentos, com no mínimo 3 e no máximo 20 caracteres.",
+    "regex"            => "O campo :attribute só pode conter números, traços, underscore e letras minúsculas sem acentos, com no mínimo 6 e no máximo 10 caracteres.",
     "required"         => "É obrigatória a indicação de um valor para o campo :attribute.",
     "required_if"      => "É obrigatória a indicação de um valor para o campo :attribute quando o valor do campo :other é igual a :value.",
     "required_with"    => "É obrigatória a indicação de um valor para o campo :attribute quando :values está presente.",
@@ -122,7 +122,21 @@ return array(
             'date_format' => 'O valor inserido não é válido.',
         ),
         'photo_imageDate' => array(
-            'date_format' => 'O valor inserido não é válido.',
+            'date_format' => 'O valor inserido não  respeita o formato dd/mm/yyyy.',
+        ), 
+        'photo_image_date' => array(
+            'date_format' => 'O valor inserido não  respeita o formato dd/mm/yyyy.',
+        ), 
+        'photo_imageDate' => array(
+            'regex' => 'O valor inserido não  respeita o formato dd/mm/yyyy.',
+        ),
+        
+       
+        'image_date' => array(
+            'date_format' => 'O valor inserido não  respeita o formato dd/mm/yyyy.',
+        ),
+        'image_date' => array(
+            'regex' => 'O valor inserido não respeita o formato dd/mm/yyyy.',
         ),
         'title' => array(
             'required' => 'É obrigatório inserir um valor para o título do album.',
@@ -156,6 +170,17 @@ return array(
         'password' => array(
             'confirmed' => 'A confirmação para o campo senha não coincide.',
         ),
+               
+        'user_password' => array(
+            'confirmed' => 'A confirmação para o campo nova senha não coincide.',
+        ),
+        'user_password' => array(
+            'regex' => 'A senha deve conter números, traços, underscore e letras minúsculas sem acentos, com no mínimo 6 e no máximo 10 caracteres',
+        ),
+        'user_password' => array(
+            'alpha_num' => 'A senha deverá conter apenas letras e números.',
+        ),        
+
          'tagsArea' => array(
             'required' => 'É obrigatório inserir um valor para tags.',
         ),

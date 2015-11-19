@@ -4,7 +4,10 @@ $(document).ready(function(e) {
 	// mansonry
 	panel = $('#panel').isotope({
     itemSelector : '.item',
-    layoutMode: 'masonryHorizontal'
+    layoutMode: 'masonryHorizontal',
+    masonryHorizontal: {
+      rowHeight: 114
+    }
 	});
 });
 

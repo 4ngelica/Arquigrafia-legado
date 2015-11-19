@@ -152,7 +152,7 @@
             </div>
           </div>
           <div id="add_images" class="tab add">
-          <div class="eleven columns select_options add">
+            <div class="eleven columns select_options add">
               {{ Form::open(array('url' => '', 'method' => '',
                 'class' => 'eleven columns alpha omega album_form')) }}
                 <div class="seven columns alpha omega">
@@ -212,17 +212,4 @@
     <div id="covers_registration"></div>
   </div>
   <div class="message_box"></div>
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $('.tabs .tab-links a').on('click', function(e) {
-        var currentAttrValue = $(this).attr('href');
-        $('.tabs ' + currentAttrValue).fadeIn('slow').siblings().hide();
-        $(this).parent('li').addClass('active').siblings().removeClass('active');
-        e.preventDefault();
-        if (update && $('.tabs ' + currentAttrValue).hasClass(update)) {
-          updatePages(update);
-        }
-      });
-    });
-  </script>    
 @stop

@@ -2,8 +2,9 @@
 
 class Exiv2Manager {
 
-  public function getInstance($originalFileExtension, $photo, $imagesPath) {
-    return new Exiv2($originalFileExtension, $photo, $imagesPath);
+  public function saveMetadata($filename, $photo) {
+    $e = new Exiv2($filename, $photo);
+    $e->saveMetadata();
   }
 
 }

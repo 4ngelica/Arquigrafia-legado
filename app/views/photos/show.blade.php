@@ -88,9 +88,9 @@
             <span class="right" title="{{ $commentsMessage }}">
               <i id="comments"></i><small>{{ $commentsCount }}</small>
             </span>
-            <!--<span class="right" title="{{ $photos->likes->count() }} pessoas curtiram essa imagem">
+            <span class="right" title="{{ $photos->likes->count() }} pessoas curtiram essa imagem">
               <i id="likes"></i> <small>{{ $photos->likes->count() }}</small>
-            </span>-->
+            </span>
             @if ( $owner->equal(Auth::user()) )
               <span class="right">
                 <a id="delete_button" href="{{ URL::to('/photos/' . $photos->id) }}" title="Excluir imagem"></a>
@@ -106,31 +106,42 @@
             @endif
           </div>
         </div>
+
         <!--   FIM - NOME / STATUS DA FOTO   -->
 
         <!--   FOTO   -->
         <a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photos->id."_view.jpg" }}"
           title="{{ $photos->name }}" >
-          <img class="single_view_image" style=""
+          <img <?php if (!$photos->authorized) echo "oncontextmenu='return false'"?> class="single_view_image" style=""
             src="{{ URL::to("/arquigrafia-images")."/".$photos->id."_view.jpg" }}" />
         </a>
       </div>
 
       <!--   BOX DE BOTOES DA IMAGEM   -->
       <div id="single_view_buttons_box">
+        <div>
+            <a href="{{ URL::previous() }}" class='btn left'>VOLTAR</a>
+        </div>
         @if (Auth::check())
           <ul id="single_view_image_buttons">
             <li>
               <a href="{{ URL::to('/albums/get/list/' . $photos->id) }}" title="Adicione aos seus álbuns" id="plus"></a>
             </li>
+            @if($photos->authorized)
             <li>
-              <a href="{{ asset('photos/download/'.$photos->id) }}" title="Faça o download" id="download" target="_blank"></a>
+                <a href="{{ asset('photos/download/'.$photos->id) }}" title="Faça o download" id="download" target="_blank"></a>
             </li>
+            @else
             <li>
-              <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=sb' )}}" title="Interprete {{$architectureName}}" id="evaluate" ></a>
+              <a onclick="notAuthorized();return false;" href="#" title="Faça o download" id="download" target="_blank"></a>
+            </li>
+            @endif
+            <li>
+              <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=sb' )}}" title="Registre suas impressões sobre {{$architectureName}}" id="evaluate" ></a>
             </li>
             <!-- LIKE-->
-            <!--@if(is_null($photoliked))
+
+            @if( ! $photos->hasUserLike(Auth::user()) )
               <li>
                 <a href="{{ URL::to('/photos/' . $photos->id . '/like' ) }}" id="like_button" title="Curtir"></a>
               </li>
@@ -138,7 +149,7 @@
               <li>
                 <a href="{{ URL::to('/photos/' . $photos->id . '/dislike' ) }}" id="like_button" class="dislike" title="Descurtir"></a>
               </li>
-            @endif -->
+            @endif
           </ul>
         @else
           <div class="six columns alpha">
@@ -152,24 +163,41 @@
           <li><a href="#" class="twitter addthis_button_twitter"><span class="twitter"></span></a></li>
         </ul>
       </div>
+      <script type="text/javascript">
+      function notAuthorized() {
+        alert("O Arquigrafia empreendeu esforços para entrar em contato com os autores e ou responsáveis por esta imagem. \nSe você é o autor ou responsável, por favor, entre em contato com a equipe do Arquigrafia no e-mail: arquigrafiabr@gmail.com.");
+      }
+      </script>
       <!--   FIM - BOX DE BOTOES DA IMAGEM   -->
 
       <div class="tags">
         <h3>Tags:</h3>
         <p>
           @if (isset($tags))
-            @foreach($tags as $tag)
+            @foreach($tags as $k => $tag)
               @if ($tag->id == $tags->last()->id)
-                <a style="" href="{{ URL::to("/search?q=".$tag->name) }}">
-                  {{ $tag->name }}
-                </a>
+                <form id="{{$k}}" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" style="display: inline">
+                  <input type="hidden" name="q" value="{{$tag->name}}"/>
+                    <a style="" href="javascript: submitform({{$k}});">
+                      {{ $tag->name }}
+                    </a>
+                </form>
               @else
-                <a href="{{ URL::to("/search?q=".$tag->name) }}">
-                  {{ $tag->name }}
-                </a>,
+                <form id="{{$k}}" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" style="display: inline">
+                  <input type="hidden" name="q" value="{{$tag->name}}"/>
+                    <a href="javascript: submitform({{$k}});">
+                      {{ $tag->name }}
+                    </a>,
+                </form>
               @endif
             @endforeach
           @endif
+          <script type="text/javascript">
+            function submitform(object)
+            {
+              document.getElementById(object).submit();
+            }
+          </script>
         </p>
       </div>
 
@@ -196,19 +224,22 @@
             </div>
 
             <div class="three columns row">
-              <strong><a href="#" id="name">{{ Auth::user()->name }}</a></strong><br>
-              Deixe seu comentário <br>
-              {{ $errors->first('text') }}
-              {{ Form::textarea('text', '', ['id'=>'comment_field']) }}
-              {{ Form::hidden('user', $photos->id ) }}
-              {{ Form::submit('COMENTAR', ['id'=>'comment_button','class'=>'cursor btn']) }}
-              <br class="clear">
-              </br>
-              <p align="justify" style="font-size: 7pt">
-                  Cada usuário é responsável por seus próprios comentários. O Arquigrafia não se responsabiliza pelos comentários postados, mas apenas por tornar indisponível no site o conteúdo considerado infringente ou danoso por determinação judicial (art.19 da Lei 12.965/14).
-              </p>
+                <strong><a href="#" id="name">{{ Auth::user()->name }}</a></strong><br>
+                Deixe seu comentário <br>
+                {{ $errors->first('text') }}
+                {{ Form::textarea('text', '', ['id'=>'comment_field']) }}
+                {{ Form::hidden('user', $photos->id ) }}
+                {{ Form::submit('COMENTAR', ['id'=>'comment_button','class'=>'cursor btn']) }}
+                <br class="clear">
+                </br>
+                <p align="justify" style="font-size: 7pt; width: 558px">
+                    Cada usuário é responsável por seus próprios comentários. 
+                    O Arquigrafia não se responsabiliza pelos comentários postados, 
+                    mas apenas por tornar indisponível no site o conteúdo considerado 
+                    infringente ou danoso por determinação judicial (art.19 da Lei 12.965/14).
+                </p>
             </div>
-          {{ Form::close() }}
+            {{ Form::close() }}
           <br class="clear">
         @else
           <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e comente sobre {{ $architectureName }}</p>
@@ -233,13 +264,13 @@
                 </small>
                 <p>{{ $comment->text }}</p>
 
-                <!--@if (Auth::check())
-                  @if(!$comment->isLiked())
+                @if (Auth::check())
+                  @if( ! $comment->hasUserLike(Auth::user()) )
                     <p> <a href="{{ URL::to('/comments/' . $comment->id . '/like' ) }}" class='like_comment' >Curtir</a></p>
                   @else
                     <p> <a href="{{ URL::to('/comments/' . $comment->id . '/dislike' ) }}" class='like_comment' class='dislike'>Descurtir</a></p>
                   @endif
-                @endif-->
+                @endif
               </div>
             </div>
           @endforeach
@@ -284,27 +315,40 @@
     <div id="sidebar" class="four columns">
       <!--   USUARIO   -->
       <div id="single_user" class="clearfix row">
-        <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
+        <!--<a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">-->
           @if(!is_null($ownerInstitution))
+           <a href="{{ URL::to("/institutions/".$ownerInstitution->id) }}" id="user_name">
               @if($ownerInstitution->photo != "")              
                 <img id="single_view_user_thumbnail" src="{{ asset($ownerInstitution->photo) }}" class="user_photo_thumbnail"/>
               @else
                 <img id="single_view_user_thumbnail" src="{{ URL::to("/") }}/img/avatar-institution.png" class="user_photo_thumbnail"/>
               @endif  
           @elseif ($owner->photo != "")
+            <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
             <img id="single_view_user_thumbnail" src="{{ asset($owner->photo) }}" class="user_photo_thumbnail"/>
           @else
+            <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
             <img id="single_view_user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png"
               width="48" height="48" class="user_photo_thumbnail"/>
           @endif
         </a>
         @if(!is_null($ownerInstitution))
-        <h1 id="single_view_owner_name"><a href="#" id="name">{{ $ownerInstitution->name }}</a></h1>
+        <h1 id="single_view_owner_name"><a href="{{ URL::to("/institutions/".$ownerInstitution->id) }}" id="name">{{ $ownerInstitution->name }}</a></h1>
         @else
         <h1 id="single_view_owner_name"><a href="{{ URL::to("/users/".$owner->id) }}" id="name">{{ $owner->name }}</a></h1>
         @endif
         
-        @if ( Auth::check() && !$owner->equal(Auth::user()) )
+        @if(!is_null($ownerInstitution) && Auth::check() && !$ownerInstitution->equal(Auth::user()) && !Session::has('institutionId'))
+            @if (!empty($followInstitution) && $followInstitution == true )
+              <a href="{{ URL::to("/friends/followInstitution/" . $ownerInstitution->id) }}" id="single_view_contact_add">Seguir</a><br />
+            @else
+              <div id="unfollow-button">
+                  <a href="{{ URL::to("/friends/unfollowInstitution/" . $ownerInstitution->id) }}">
+                    <p class="label success new-label"><span>Seguindo</span></p>
+                  </a>
+              </div>
+            @endif
+        @elseif ( Auth::check() && !$owner->equal(Auth::user()) && !Session::has('institutionId'))        
           @if (!empty($follow) && $follow == true )
             <a href="{{ URL::to("/friends/follow/" . $owner->id) }}" id="single_view_contact_add">Seguir</a><br />
           @else
@@ -335,10 +379,12 @@
         @endif
       </hgroup>
 
+      {{-- @include('photo_feedback') --}}
+
       <div id="description_container">
       @if ( !empty($photos->description) )
         <h4>Descrição:</h4>
-        <p>{{ $photos->description }}</p>
+        <p>{{ htmlspecialchars($photos->description, ENT_COMPAT | ENT_HTML5, 'UTF-8') }}</p>
       @endif
       </div>
       @if ( !empty($photos->collection) )
@@ -356,35 +402,45 @@
       @endif
       </div>
       <div id="dataCriacao_container">
-      @if ( !empty($photos->dataCriacao) )
+      @if ( !empty($photos->dataCriacao) && $photos->getFormatDataCriacaoAttribute($photos->dataCriacao,$photos->imageDateType) != null)
         <h4>Data da Imagem:</h4>
         <p>
           <a href="{{ URL::to("/search?q=".$photos->dataCriacao."&t=img") }}">
-            {{ $photos->translated_data_criacao }}
+            <!--$photos->translated_data_criacao -->
+            {{ $photos->getFormatDataCriacaoAttribute($photos->dataCriacao,$photos->imageDateType) }}
           </a>
         </p>
       @endif
       </div>
+      
       <div id="workAuthor_container">
-      @if ( !empty($photos->workAuthor) )
+      @if (!empty($authorsList) )
         <h4>Autor da Obra:</h4>
-        <p>
-          <a href="{{ URL::to("/search?q=".$photos->workAuthor) }}">
-            {{ $photos->workAuthor }}
-          </a>
-        </p>
+        <p><?php $i=1; ?>
+          @foreach ($authorsList as $authors)
+
+          <a href="{{ URL::to("/search?q=".$authors) }}">            
+            {{ $photos->authorTextFormat($authors); }}
+          </a>  
+            @if($i!=count($authorsList));
+            @endif
+            <?php $i++; ?>
+          @endforeach
+        </p>     
       @endif
       </div>
       <div id="workdate_container">
-      @if ( !empty($photos->workdate) )
-        <h4>Data da Obra:</h4>
+      @if ( !empty($photos->workdate) && $photos->getFormatWorkdateAttribute($photos->workdate,$photos->workDateType) != null )
+        <h4>Data de conclusão da obra:</h4>
         <p>
           <a href="{{ URL::to("/search?q=".$photos->workdate."&t=work") }}">
-            {{ $photos->translated_work_date }}
+            <!--$photos->translated_work_date -->
+            {{ $photos->getFormatWorkdateAttribute($photos->workdate,$photos->workDateType) }}
           </a>
         </p>
       @endif
       </div>
+      <div id="address_container">
       @if ( !empty($photos->street) || !empty($photos->city) ||
         !empty($photos->state) || !empty($photos->country) )
         <h4>Endereço:</h4>
@@ -416,7 +472,7 @@
           @endif
         </p>
       @endif
-
+      </div>
       <h4>Licença:</h4>
       <a class="tooltip_license"
         href="http://creativecommons.org/licenses/{{$license[0]}}/3.0/deed.pt_BR" target="_blank" >
@@ -449,7 +505,7 @@
       @endif
 
       @if (empty($average))
-        <h4>Interpretação da arquitetura:</h4>
+        <h4>Interpretações da arquitetura:</h4>
         <img src="/img/GraficoFixo.png" />
       @else
         <h4>
@@ -467,8 +523,7 @@
         @if (isset($userEvaluations) && !$userEvaluations->isEmpty() && !Session::get('institutionId'))
           <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
           class="btn">
-            <!--Clique aqui para alterar sua avaliação-->
-            Clique aqui para alterar sua impressão
+            Clique aqui para alterar suas impressões
           </a> &nbsp;
         @else
           @if (empty($average) && !Session::get('institutionId'))

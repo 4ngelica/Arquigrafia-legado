@@ -18,7 +18,7 @@
     </a>
     <div class="item-title">
       <p>{{ $photo->name }}</p>
-      @if (Auth::check() && !Session::get('institutionId'))        
+      @if (Auth::check())        
         <a id="title_plus_button" class="title_plus" href="{{ URL::to('/albums/get/list/' . $photo->id)}}" title="Adicionar aos meus álbuns"></a>        
       @endif
       @if (Auth::check() && $photo->institution_id !="" && Session::get('institutionId') == $photo->institution_id)

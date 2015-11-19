@@ -6,10 +6,14 @@ use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use lib\date\Date;
 
+use lib\gamification\traits\UserGamificationTrait;
+
 class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	use UserTrait, RemindableTrait;
 	
+	use UserGamificationTrait;
+
 	protected $fillable = ['id','name','email','password','login','verify_code'];
 
 	protected $date;
@@ -19,16 +23,23 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		$this->date = $date ?: new Date;
 	}
 
+	public function news()
+    {
+        return $this->hasMany('News');
+    }
+
 	public function notifications()
-  {
-    return $this->hasMany('\Tricki\Notification\Models\NotificationUser');
-  }
+ 	{
+    	return $this->hasMany('\Tricki\Notification\Models\NotificationUser');
+  	}
 
 	public function photos()
 	{
-		return $this->hasMany('Photo');
+		return $this->hasMany('Photo')->whereNull('institution_id');
 	}
-
+	public function userPhotos($user_id){
+		return $this->hasMany('Photo')->where('user_id', $user_id)->whereNull('institution_id');
+	}
 	public function comments()
 	{
 		return $this->hasMany('Comment');
@@ -47,15 +58,13 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	{
 		return $this->hasMany('Album');
 	}
-
+	public function userAlbums()
+	{
+		return $this->hasMany('Album')->whereNull('institution_id');
+	}
 	public function occupation()
 	{
 		return $this->hasOne('Occupation');
-	}
-
-	public function badges()
-	{
-		return $this->belongsToMany('Badge','user_badges');
 	}
 
 	//seguidores
@@ -68,6 +77,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	public function following()
 	{
 		return $this->belongsToMany('User', 'friendship', 'following_id', 'followed_id');
+	}
+
+	public function institutions(){
+		return $this->belongsToMany('Institution', 'friendship_institution','institution_id', 'following_user_id');
+	}
+
+	public function followingInstitution(){
+		return $this->belongsToMany('Institution', 'friendship_institution','following_user_id', 'institution_id');
 	}
 
 	protected $hidden = array('password', 'remember_token');
@@ -120,7 +137,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	public function equal($user) {
 		try {
-			return ($this->id == $user->id);
+			return $user instanceof User &&
+				$this->id == $user->id;
 		} catch (Exception $e) {
 			return false;
 		}
@@ -141,7 +159,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	public static function userVerifyCode($verify_code){
 		$newUser = User::where('verify_code','=',$verify_code)->first();			
         return $newUser;
-
 	}
 
 	public static function userBelongInstitution($login,$institution){
@@ -168,6 +185,12 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	public function setBirthdayAttribute($birthday) {
 		$this->attributes['birthday'] = $this->date->formatDate($birthday);
+	}
+
+	public function updateAccount($password) {
+		$this->oldAccount = 0;
+		$this->password = Hash::make($password);
+		$this->save();
 	}
 
 }

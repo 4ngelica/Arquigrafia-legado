@@ -193,4 +193,55 @@ class Date {
    			return implode($stringDate, ', ');
 	}
 
+	public function formatToWorkDate($date,$type){
+		
+		if($date != null && $type != null){
+			if ($type == "year"){
+				return "Ano de ".$date;
+			}
+			if ($type == "decade"){
+				if($date =="BD"){
+					return "Anterior ao ano de 1401";
+				}else{
+					$date = explode(" ", $date);
+					return "Entre ".$date[0]." e ".$date[2];
+				} 
+			}
+			if ($type == "century"){
+				return "Século ".$date;
+			}
+		}elseif($date != null && $type == null){
+			return $this->translate($date);
+		}else{
+			return null;
+		}
+		
+	}
+
+	public function formatToDataCriacao($date,$type){
+		
+		if($date != null && $type != null){
+			if ($type == "date"){
+				return $this->translateDate($date);				
+			}
+			if ($type == "decade"){
+				if($date =="BD"){
+					return "Anterior ao ano de 1401";
+				}else{
+					$date = explode(" ", $date);
+					return "Entre ".$date[0]." e ".$date[2];
+				} 
+			}
+			if ($type == "century"){
+				return "Século ".$date;
+			}
+		}elseif($date != null && $type == null){
+			return $this->translate($date);
+		}else{
+			return null;
+		}
+		
+	}
+	
+
 }

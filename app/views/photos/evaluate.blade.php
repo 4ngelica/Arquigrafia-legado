@@ -306,7 +306,13 @@
          {{ Form::checkbox('knownArchitecture', 'yes', $checkedKnowArchitecture) }}
          
 
-         Você conhece pessoalmente esta arquitetura?
+         Eu conheço pessoalmente esta arquitetura.
+
+	       <br><br>
+         {{ Form::checkbox('areArchitecture', 'yes', $checkedAreArchitecture) }}
+         
+
+         Estou no local.
 
          <br><br>
 
@@ -354,9 +360,8 @@
                         href="{{ URL::to('/search?bin=' . $binomial->id . '&opt=1&val=' . $diff) }}">
                         (<output for="fader{{ $binomial->id }}"
                           id="leftBinomialValue{{ $binomial->id }}">
-                          {{100 - $diff }}%
-                        </output>
-                        )
+                          {{100 - $diff }}
+                        </output>%)
                       </a>
                     </td>
                     <td align="right">
@@ -367,9 +372,8 @@
                         href="{{ URL::to('/search?bin=' . $binomial->id . '&opt=2&val=' . $diff) }}">
                         (<output for="fader{{ $binomial->id }}"
                           id="rightBinomialValue{{ $binomial->id }}">
-                          {{ $diff }}%
-                        </output>
-                        )
+                          {{ $diff }}
+                        </output>%)
                       </a>
                     </td>
                   </tr>
@@ -383,7 +387,7 @@
               <?php $count-- ?>
             @endforeach
               
-               <a href="{{ URL::previous() }}" class='btn right'>VOLTAR</a>
+               <a href="{{ URL::to('/photos/' . $photos->id) }}" class='btn right'>VOLTAR</a>
                @if (Auth::check() && $owner != null && $owner->id == Auth::user()->id)
                 {{ Form::submit('ENVIAR', ['id'=>'evaluation_button','class'=>'btn right']) }} 
                @endif
