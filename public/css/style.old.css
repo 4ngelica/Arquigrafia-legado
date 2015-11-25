@@ -91,13 +91,15 @@ input[type=text].error { border-color: #C52D30; }
 .row, .clearfix {zoom: 1; }
 
 /* icons */
-i {padding: 4px 25px 0 0; background-image: url(../img/sprite.png);}
+i {padding: 5px 24px 0 0; background-image: url(../img/sprite.png);}
 i.profile {background-position: -160px 0; padding-right: 22px; }
 i.follow {background-position: -262px 0; }
 i.photos {background-position: -233px 0;}
 i.stack {padding: 4px 22px 0 0; background: url(../img/i-album.png) no-repeat;}
 i.group {background-position: -121px 0;}
 i.info {background-position: -121px 0;}
+i.notification {background-position: -202px 0px; }
+i.upload {background-position: -402px 0px; }
 
 /* forms */
 form p {margin: 3px 0;}
@@ -117,7 +119,7 @@ input:-moz-placeholder { color:#bbb; }
 /* --- HEADER --- */
 .header { height: auto; margin: 25px auto 35px; }
 .header #logo { float: left; display: block; width: 250px; height: 50px; margin: 7px 1px 0 0px; background: url(../img/logo.png) no-repeat; }
-.header p#beta { float: left; margin: 21px 80px 0 0; color: #222; font-size: 12px; }
+.header p#beta { float: left; margin: 21px 0 0 0; color: #222; font-size: 12px; }
 /* itens do menu */
 ul#top_menu_items { margin: 8px 0 -3px -2px; color: #7B7D7F; font-size: 11px; float: left; clear: right; width: 400px; }
 ul#top_menu_items li { display: inline; margin-right: 10px; }
@@ -127,7 +129,7 @@ ul#top_menu_items li #help { background: url(../img/sprite.png) no-repeat -780px
 ul#top_menu_items li #contact { background: url(../img/sprite.png) no-repeat -780px -93px; }
 /* registro e login - OFF */
 .registration input[type=text], .registration input[type=password] {width: 130px;}
-#loggin_area { position: relative; float: right; width: 217px; height: 53px; }
+#loggin_area { position: relative; height: 53px; }
 #loggin_area #login_button { float: right; margin: 30px 0 0 5px; }
 #loggin_area #registration_button { float: right; margin: 30px 5px 0; }
 #login_registration_bar { float: right; margin: 30px 25px 0 0; }
@@ -136,24 +138,24 @@ ul#top_menu_items li #contact { background: url(../img/sprite.png) no-repeat -78
 #loggin_area_institutional { position: relative; float: right; width: 277px; height: 53px; }
 
 /* registro e login - ON */
-ul#logged_menu { height: 25px; float: left; margin: 7px 0 2px 0; }
-ul#logged_menu li { display: inline-block; margin-left: 5px; width: 22px; height: 22px; zoom: 1; }
-ul#logged_menu li #messages, ul#logged_menu li #users, ul#logged_menu li #comunities, ul#logged_menu li #upload, ul#logged_menu li #notification, ul#logged_menu li #badge{ display: block; width: 22px; height: 22px; text-decoration: none;}
+ul#logged_menu { float: left; margin: 17px -10px 2px 0; font-size: 10px; }
+ul#logged_menu li { display: inline-block; margin-left: 2px; height: 22px; zoom: 1; }
+ul#logged_menu li i {padding: 8px 19px 0 0;}
+ul#logged_menu li #messages, ul#logged_menu li #users, ul#logged_menu li #comunities, ul#logged_menu li #notification, ul#logged_menu li #badge{ text-decoration: none;}
 ul#logged_menu li #messages { background: url(../img/sprite.png) -203px 0px; margin-top: -4px; }
 ul#logged_menu li #users { background: url(../img/sprite.png) -233px 0px; margin-top: -4px; }
 ul#logged_menu li #comunities { background: url(../img/sprite.png) -262px -2px; }
 ul#logged_menu li #comunities:hover { background-position: -262px -34px; }
-ul#logged_menu li #upload { background: url(../img/sprite.png) -402px 0px; }
-ul#logged_menu li #notification { background: url(../img/sprite.png) -202px 0px; }
+/*ul#logged_menu li #upload { background: url(../img/sprite.png) -402px 0px; }*/
+/*ul#logged_menu li #notification { background: url(../img/sprite.png) -202px 0px; }*/
 ul#logged_menu li #badge { background: url(../img/sprite.png)  -181px 0px;}
 #user_name { margin-left: 8px; font-size: 12px; line-height: 24px; margin-right: -100px; }
-.header #user_photo {display: block; width: 48px; height: 48px; overflow: hidden; margin: 4px 12px 0 5px; float: left; }
-#logout { position: absolute; bottom: 0; right: -18px; }
+.header #user_photo {display: block; width: 48px; height: 48px; overflow: hidden; margin: 4px 12px 0 0; float: left; }
+#logout { position: absolute; top: 4px; right: 0; }
 .user_photo_thumbnail { width: 48px; height: auto; }
 /* busca */
-div#first_menu { width: 300px; float: left; }
 #search_buttons_area { float: left; height: 22px; width: 280px; margin-top: 32px/*5px*/;  }
-input.search_bar { height: 13px; width: 211px; padding: 3px 5px; float: left; border: solid 1px #ddd; border-right: none; -webkit-border-top-left-radius: 5px; -webkit-border-bottom-left-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-bottomleft: 5px; border-top-left-radius: 5px; border-bottom-left-radius: 5px; }
+input.search_bar { height: 13px; width: 210px; padding: 3px 5px; float: left; border: solid 1px #ddd; border-right: none; -webkit-border-top-left-radius: 5px; -webkit-border-bottom-left-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-bottomleft: 5px; border-top-left-radius: 5px; border-bottom-left-radius: 5px; }
 input.search_bar_button { background: url(../img/sprite.png) -330px 0; height: 21px; width: 28px; border: solid 1px #ddd; /*border-left: none;*/ -webkit-border-top-right-radius: 5px; -webkit-border-bottom-right-radius: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; }
 #complete_search { float: right; margin-top: -3px; height: 24px; width: 24px; background: url(../img/sprite.png) -367px 0; }
 #complete_search:hover { background-position: -367px -32px; }
