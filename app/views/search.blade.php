@@ -68,6 +68,37 @@
             }
           </script>
         @endif
+
+
+        @if( count($authors) != 0 )            
+          <p style="display: inline">
+            Autores contendo o termo: 
+            @foreach($authors as $v => $author)
+            
+              @if ($v != count($authors)-1 )
+                <form id="a{{$v}}" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" style="display: inline">
+                  <input type="hidden" name="q" value="{{$author->name}}"/>
+                  <input type="hidden" name="type" value="a"/>
+                  <a href="javascript: submitformS('a{{$v}}');">{{ $author->name }}</a>; 
+                </form>  
+              @else
+                <form id="a{{$v}}" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" style="display: inline">
+                <input type="hidden" name="q" value="{{$author->name}}"/>
+                <input type="hidden" name="type" value="a"/>
+                  <a href="javascript: submitformS('a{{$v}}');">{{ $author->name }}</a>
+                </form>
+              @endif
+            @endforeach
+          </p>
+          <script type="text/javascript">
+            function submitformS(objectAuthor)
+            { 
+              document.getElementById(objectAuthor).submit();
+            }
+          </script>
+        @endif
+
+
         @if ( count($photos) < 1 && !isset($binomial_option) )
           <p>Não encontramos nenhuma imagem com o termo {{ $query }}.</p>
         @elseif (count($photos) < 1)

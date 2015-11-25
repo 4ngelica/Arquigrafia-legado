@@ -361,7 +361,7 @@ class Photo extends Eloquent {
 		return $query->where('name', 'LIKE', '%'. $needle .'%')
 			->orWhere('description', 'LIKE', '%'. $needle .'%')
 			->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%')
-			->orWhere('workAuthor', 'LIKE', '%'. $needle .'%')
+			//->orWhere('workAuthor', 'LIKE', '%'. $needle .'%')
 			->orWhere('country', 'LIKE', '%'. $needle .'%')
 			->orWhere('state', 'LIKE', '%'. $needle .'%')
 			->orWhere('city', 'LIKE', '%'. $needle .'%');
@@ -369,7 +369,7 @@ class Photo extends Eloquent {
 
 	public function scopeWithBinomials($query, $binomials) {
 		foreach($binomials as $binomial => $avg) {
-			$query->whereIn('id', function ($sub_query) use ($binomial, $avg) {
+			$query->whereIn('photos.id', function ($sub_query) use ($binomial, $avg) { //id //photos.id 
 				$sub_query->select('photo_id')->from('binomial_evaluation')
 					->whereRaw('binomial_id = ' . $binomial)
 					->groupBy('photo_id')
@@ -381,11 +381,52 @@ class Photo extends Eloquent {
 	}
 
 	public function scopeWithTags($query, $tags) {
-		if ( ! empty($tags) ) {
+		if ( ! empty($tags) ) { 
 			$query->whereHas('tags', function($sub_query) use ($tags) {
 				$sub_query->whereIn('name', $tags);
 			});
 		}
+		return $query;
+	}
+
+	public function scopeWithTagsVarious($query, $tags) {
+		if(!empty($tags)) { 
+				
+				$query->join('tag_assignments','tag_assignments.photo_id','=','photos.id');
+				$query->join('tags','tags.id','=','tag_assignments.tag_id');
+				$query->where(function($sub_query) use ($tags) {
+					foreach ($tags as $tag) {
+						$sub_query->orWhere('tags.name', '=', $tag);
+						//$sub_query->orWhere('tags.name', 'LIKE', '%' .  $tag. '%');
+					}
+				});	
+		}
+		return $query;
+	}
+
+	public function scopeWithAuthors($query, $authors) {
+		if ( ! empty($authors) ) {
+			$query->whereHas('authors', function($sub_query) use ($authors) {
+				$sub_query->whereIn('name', $authors);
+				
+				
+			});
+		}
+		return $query;
+	}
+	public function scopeWithAuthorsVarious($query, $authors) {
+
+			if(!empty($authors)) { 
+				
+				$query->join('photo_author','photo_author.photo_id','=','photos.id');
+				$query->join('authors','authors.id','=','photo_author.author_id');
+				$query->where(function($sub_query) use ($authors) {
+					foreach ($authors as $author) {
+						$sub_query->orWhere('authors.name', 'LIKE', '%' .  $author. '%');
+					}
+				});	
+			}
+			
 		return $query;
 	}
 
@@ -473,25 +514,36 @@ class Photo extends Eloquent {
 		$this->tags()->sync($tags);
 	}
 
-	public static function search($input, $tags, $binomials) {
+	public static function search($input, $tags, $binomials, $authorsArea) {
+
 		foreach (['workdate', 'dataCriacao', 'dataUpload'] as $date) {
 			if ( isset($input[$date])
-					&& DateTime::createFromFormat('Y', $input[$date]) == FALSE ) {
-				$input[$date] = $this->date->formatDate($input[$date]);
+					&& DateTime::createFromFormat('Y', $input[$date]) == FALSE ) { 				
+					$input[$date] = Date::formatedDate($input[$date]);
 			}
 		}
 		$query = static::query();
+		$query->select(DB::raw('photos.*'));
 		foreach (['allowCommercialUses', 'allowModifications'] as $license) {
 			if ( isset($input[$license]) ) {
 				$query->where($license, array_pull($input, $license) );
 			}
 		}
-		foreach ( $input as $column => $value) {
+		if(Input::has('workAuthor_area')){  						
+			$input = array_except($input, 'workAuthor_area'); 
+		}
+		foreach ( $input as $column => $value) { 			
 			$query->where($column, 'LIKE', '%' . $value . '%');
 		}
-		$query->withTags($tags);
-		$query->withBinomials($binomials);
-    return $query->get();
+
+		$query->withTagsVarious($tags);
+		$query->withBinomials($binomials);			
+		$query->withAuthorsVarious($authorsArea);
+
+		$query->groupBy('photos.id');
+		$resultSet = $query->get();
+		//dd(DB::getQueryLog());
+    	return $resultSet;
 	}
 
 	public function authorTextFormat($authorName){
