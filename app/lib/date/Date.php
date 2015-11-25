@@ -45,7 +45,13 @@ class Date {
 		'XXIII'
 	];
 
-	public function formatDate($date) {
+	public static function formatedDate($date){
+
+		$dateFunction = new Date(); 
+		$d = $dateFunction->formatDate($date);
+		return $d;
+	}
+	public function formatDate($date) { 
 		if ( $this->isFormatted($date) ) {
 			return $date;
 		}

@@ -68,12 +68,17 @@ class Author extends Eloquent {
       
   }
   public function updateAuthors($authors_list,$photo)
-  {   //dd($authors_list);
+  {   
       $this->deleteAuthorPhoto($photo);
-      //dd($authors_list);
-      //die();
       $this->saveAuthors($authors_list,$photo);      
   }
 
+  public static function transform($raw_authors) {
+    $authors = explode(';', $raw_authors);
+    $authors = array_map('trim', $authors);
+   // $authors = array_map('mb_strtolower', $authors);
+    $authors = array_filter($authors);
+    return array_unique($authors);
+  }
   
 }

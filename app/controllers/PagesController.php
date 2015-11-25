@@ -19,7 +19,7 @@ class PagesController extends BaseController {
     }
 
     public function home()
-    {
+    { 
         if(Session::has('last_search'))
             Session::forget('last_search');
 
@@ -148,27 +148,44 @@ class PagesController extends BaseController {
             ]);
     }
 
+    
+
     public function search()
-    {
+    {   
         if ( Input::has('bin') ) {
             return $this->searchBinomial(
                 Input::get('bin'), Input::get('opt'), Input::get('val')
             );
         }
-        //2015-05-06 msy begin, add param city
+        
+        
         $needle = Input::get("q");
         $txtcity = Input::get("city"); 
         $type = Input::get("t"); 
         $dateFilter = null;
         $date = Input::get("d"); 
+        $authorFilter = null;
+
+        if ( Input::has('type') ) {
+                $authorFilter= Input::get('type');
+        }
 
         if ($needle != "") {
-
+            $tags = null;
+            $allAuthors =  null;
             $query = Tag::where('name', 'LIKE', '%' . $needle . '%')->where('count', '>', 0);  
             $tags = $query->get();
 
-            if ($txtcity != "") {  
-                //2015-05-09 msy end
+            
+                $allAuthors = DB::table('authors')
+             ->join('photo_author', function($join) use ($needle)
+                {   $join->on('authors.id', '=', 'photo_author.author_id')
+                         ->where('name', 'LIKE', '%' . $needle . '%');
+                })->groupBy('authors.id')->get();
+            
+            
+                                     
+            if ($txtcity != "") {                  
                 $photos = static::streetAndCitySearch($needle,$txtcity);        
 
             }elseif ((DateTime::createFromFormat('Y-m-d', $needle) !== FALSE || DateTime::createFromFormat('Y-m-d H:i:s', $needle) !== FALSE )&& !empty($type)) {
@@ -178,34 +195,50 @@ class PagesController extends BaseController {
 
                 $photos = static::yearSearch($needle,$dateFilter,$date);      
 
-            } else {         
-
+            } else {                  
                 $idUserList = static::userPhotosSearch($needle);
-
+                
                 $query = Photo::where(function($query) use($needle, $idUserList) {
                     $query->where('name', 'LIKE', '%'. $needle .'%');  
                     $query->orWhere('description', 'LIKE', '%'. $needle .'%');  
-                    $query->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%');
-                   // $query->orWhere('workAuthor', 'LIKE', '%'. $needle .'%');
+                    $query->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%');                    
                     $query->orWhere('country', 'LIKE', '%'. $needle .'%');  
                     $query->orWhere('state', 'LIKE', '%'. $needle .'%'); 
                     $query->orWhere('city', 'LIKE', '%'. $needle .'%'); 
                     if ($idUserList != null && !empty($idUserList)) {
                         $query->orWhereIn('user_id', $idUserList);}
                 })->orderBy('created_at', 'desc');
+                
                 $photos = $query->get();
-            } 
-            //2015-05-06 msy end
+            }             
 
             // se houver uma tag exatamente como a busca, pegar todas as fotos dessa tag e juntar no painel
             //$tag = Tag::where('name', '=', $needle)->get();
+
             $query = Tag::where('name', '=', $needle);  
             $tag = $query->get();
-
+            
             if ($tag->first()) {
-                $byTag = $tag->first()->photos;
+                $byTag = $tag->first()->photos;                
                 $photos = $photos->merge($byTag);
             }
+
+            if($authorFilter != null){             
+                $query = Author::where('name', '=', $needle);
+                $author = $query->get();
+                if ($author->first()) { 
+                    $byAuthor = $author->first()->photos;                
+                    $photos = $photos->merge($byAuthor);                
+                }     
+            }else{
+                $queryAuthor = Author::where('name', 'LIKE', '%' . $needle . '%'); 
+                $authors = $queryAuthor->get();
+                foreach ($authors as $author) { 
+                    $byAuthor = $author->photos;                
+                    $photos = $photos->merge($byAuthor);                
+                }    
+            }   
+           
 
             if (Auth::check()) {
                 $user_id = Auth::user()->id;
@@ -220,15 +253,15 @@ class PagesController extends BaseController {
             ActionUser::printSearch($user_id, $source_page, $needle, $user_or_visitor);
 
             Session::put('last_search',
-                ['tags' => $tags, 'photos' => $photos, 'query'=>$needle, 'city'=>$txtcity,'dateFilter'=>$dateFilter]);
+                ['tags' => $tags, 'photos' => $photos, 'query'=>$needle, 'city'=>$txtcity,'dateFilter'=>$dateFilter, 'authors' => $allAuthors ]);
 
             // retorna resultado da busca
-            return View::make('/search',['tags' => $tags, 'photos' => $photos, 'query'=>$needle, 'city'=>$txtcity,'dateFilter'=>$dateFilter]);
+            return View::make('/search',['tags' => $tags, 'photos' => $photos, 'query'=>$needle, 'city'=>$txtcity,'dateFilter'=>$dateFilter,'authors' => $allAuthors ,'needle' => $needle]);
         }else {
             if(Session::has('last_search'))	
                 return View::make('/search', Session::get('last_search'));
             else{// busca vazia
-                return View::make('/search',['tags' => [], 'photos' => [], 'query' => "", 'city'=>"",'dateFilter'=>[]]);
+                return View::make('/search',['tags' => [], 'photos' => [], 'query' => "", 'city'=>"",'dateFilter'=>[], 'authors' =>[]]);
             }
         }
     }  
@@ -240,19 +273,20 @@ class PagesController extends BaseController {
     }
 
     public function advancedSearch()
-    {
+    { 
         $fields = Input::only( array(
             'name', 'description', 'city', 'state', 'country', 
             'imageAuthor', 'dataCriacao', 'dataUpload', 'workdate', 'district',
-            'street', 'tags', 'allowCommercialUses', 'allowModifications'
+            'street', 'tags', 'allowCommercialUses', 'allowModifications','workAuthor_area'
         ));
         $fields = array_filter(array_map('trim', $fields));
+
         if( count($fields) == 0 ) { // busca vazia
             if(Session::has('last_advanced_search'))
                 return View::make('/advanced-search', Session::get('last_advanced_search'));
             else { // busca vazia
                 return View::make('/advanced-search',
-                    ['tags' => [], 'photos' => [], 'query' => "", 'binomials' => Binomial::all() ]);
+                    ['tags' => [], 'photos' => [], 'query' => "", 'binomials' => Binomial::all(),'authorsArea' => [] ]);
             }
         }
         $binomials = array();
@@ -263,10 +297,18 @@ class PagesController extends BaseController {
                 }
             }
         }
+        
         //Adding search by tags
         $tags = str_replace(array('\'', '"', '[', ']'), '', $fields['tags']);
         $tags = Tag::transform($tags);
-        $photos = Photo::search(array_except($fields, 'tags'), $tags, $binomials);
+
+        $authorsArea = str_replace(array('","'), '";"', $fields['workAuthor_area']);    
+        $authorsArea = str_replace(array('\'', '"', '[', ']'), '', $authorsArea);
+        $authorsArea = Author::transform($authorsArea);
+
+        $photos = Photo::search(array_except($fields, 'tags'), $tags, $binomials,$authorsArea);
+        //dd($fields); 
+
         if( ($count_photos = $photos->count()) == 0 ) {
             $message = 'A busca não retornou resultados.';
         } elseif ( $count_photos == 1 ) {
@@ -278,10 +320,10 @@ class PagesController extends BaseController {
         $photos = $photos->count() == 0 ? [] : $photos;
 
         Session::put('last_advanced_search', ['tags' => $tags, 'photos' => $photos,
-            'binomials' => Binomial::all(), 'message' => $message]);
+            'binomials' => Binomial::all(), 'authorsArea' => $authorsArea, 'message' => $message]);
 
         return View::make('/advanced-search',
             ['tags' => $tags, 'photos' => $photos,
-            'binomials' => Binomial::all(), 'message' => $message]); //tagsResult
+            'binomials' => Binomial::all(), 'authorsArea' => $authorsArea, 'message' => $message]); //tagsResult
     }
 }
