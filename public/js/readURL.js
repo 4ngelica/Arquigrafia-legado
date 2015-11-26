@@ -11,9 +11,15 @@ function readURL(input) {
         reader.readAsDataURL(input.files[0]);
     }
     document.getElementById("image_rotate").style.display = 'block';
-    old_image = document.getElementById("old_image_rotate");
-    if ( old_image != null)
+
+    old_image  = document.getElementById("old_image_rotate");
+    new_rotate = document.getElementById("rotate");
+
+    if(old_image != null)
         old_image.style.display = 'none';
+    if(new_rotate != null)
+        new_rotate.value = 0;
+
 }
 
 
