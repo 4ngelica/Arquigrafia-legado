@@ -19,15 +19,7 @@ function showTags(tagsJson, containerText, tagInput){
 $(document).ready(function() {
 
 
-    /*
-    $('#tags_input').textext({ plugins : 'autocomplete ajax',
-            ajax : {
-                url : '/js/tagList.json',
-                dataType : 'json',
-                cacheResults : true
-            }
-        })
-    ; */
+    
     //ok
     $('#tagsArea').textext({ plugins: 'tags' });
     $('#add_tag').click(function(e) {
@@ -36,7 +28,7 @@ $(document).ready(function() {
         if (tag == '') return;
         if ($('#tagsArea').textext()[0] == null) {
             var sizeTags = $('#tags').textext()[0].tags()._formData.length;
-            if (sizeTags < 5) {
+            if (sizeTags < 5) { 
                 $('#tags').textext()[0].tags().addTags([ tag ]);
                 $('#tags_input').val('');
             }
@@ -52,14 +44,37 @@ $(document).ready(function() {
                 e.preventDefault();
         });
 
-    /*$('#workAuthor').textext({ plugins : 'autocomplete ajax',
-            ajax : {
-                url : '/js/autor.json',
-                dataType : 'json',
-                cacheResults : true
+    //author
+     $('#workAuthor_area').textext({ plugins: 'tags' });
+
+    $('#add_author').click(function(e) {
+        e.preventDefault();
+        authorsList();
+    });
+
+        $('#workAuthor').keypress(function(e) {
+            var key = e.which || e.keyCode; 
+            if(key ==13)
+               authorsList();
+            if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
+                e.preventDefault();
+        });
+
+
+      function authorsList(){
+           var author = $('#workAuthor').val();
+           if (author == '') return;
+        
+            var sizeTags = $('#workAuthor_area').textext()[0].tags()._formData.length;
+            if (sizeTags < 3) { 
+                $('#workAuthor_area').textext()[0].tags().addTags([ author ]);
+                $('#workAuthor').val('');
+            }     
+            else {
+                $('#workAuthor').val('');
             }
-        })
-    ;*/
+      }
+
  
     $(function() {
         

@@ -110,26 +110,11 @@
                   </tr>
                 </table>
               </div>
-              <!-- 2015-05-06 msy begin, workAuthor -->
+              
               <div class="four columns" style="margin-left: 15px; margin-right: 15px;">
                 <h3>Arquitetura</h3>
                 <table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td>
-                      {{ Form::label('workAuthor', 'Autor da obra:') }}
-                    </td>
-                    <td>
-                      {{ Form::text('workAuthor', Input::get("workAuthor") ) }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      {{ Form::label('imageAuthor', 'Autor da imagem:') }}
-                    </td>
-                    <td>
-                      {{ Form::text('imageAuthor', Input::get("imageAuthor") ) }}
-                    </td>
-                  </tr>
+                  
                   <tr>
                     <td>
                       {{ Form::label('workdate', 'Data da obra:') }}
@@ -157,6 +142,36 @@
                         array('id' => 'datePickerdataUpload')) }}
                     </td>
                   </tr>
+                  <tr>
+                    <td>
+                      {{ Form::label('imageAuthor', 'Autor da imagem:') }}
+                    </td>
+                    <td>
+                      {{ Form::text('imageAuthor', Input::get("imageAuthor") ) }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{ Form::label('workAuthor', 'Autor da obra:') }}
+                      <p style="font-size: 7pt">Máximo 3 Autores</p>
+                    </td>
+                    <td>
+                      
+
+                        <div class="two columns alpha" style="width: 88% !important;">
+                        {{ Form::text('workAuthor', null , array('style' => "width: 88%")) }} <br>
+                          <p>
+                            <button class="btn right" id="add_author">ADICIONAR AUTOR</button>
+                          </p>
+                        </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <textarea name="workAuthor_area" id="workAuthor_area" cols="41" rows="1" style="display: none;"></textarea>
+                    </td>
+                  </tr>
+                  
                 </table>
               </div>
               <!-- 2015-05-06 msy end -->
@@ -313,6 +328,13 @@
             $('#binomial_container').addClass('hidden');
           }
         });
+        
+        @if ( isset($authorsArea) )
+          @foreach ( $authorsArea as $author )
+            $('#workAuthor_area').textext()[0].tags().addTags([ {{ '"' . $author . '"' }} ]);
+          @endforeach
+        @endif 
+
 
         $('#tags').textext({ plugins: 'tags' });
         @if ( isset($tags) )
@@ -320,20 +342,12 @@
             $('#tags').textext()[0].tags().addTags([ {{ '"' . $tag . '"' }} ]);
           @endforeach
         @endif
-        //var h = document.getElementsById('text-label').value;
-        //h.value = 100;
-        //alert(h);
-        //var clicks = 0;
+        
 
-        $('#tags_input').keypress(function(e) {
-          var key = e.which || e.keyCode;
-          if (key == 44 || key == 46 || key == 59){ // key = , ou Key = . ou key = ;
-            e.preventDefault();
-            // clicks += 1;
-            // alert(clicks);
-          }
-        });
+        
       });
+
+
       $(function() {
         $( "#datePickerWorkDate" ).datepicker({
           dateFormat:'dd/mm/yy',

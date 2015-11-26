@@ -2,10 +2,13 @@
 	<div class="header container">
     <div class="twelve columns">
 	  	<!--   LOGO   -->
-      <a href="{{ URL::to("/") }}" id="logo"></a>
-      <p id="beta">beta</p>
+      <div class="four columns alpha">
+        <a href="{{ URL::to("/") }}" id="logo"></a>
+        <p id="beta">beta</p>
+      </div>
+      
       <!--   MENU SUPERIOR   -->
-      <div id="first_menu">
+      <div id="first_menu" class="four columns">
           <!--   MENU INSTITUCIONAL   -->
           <!--
           <ul id="top_menu_items">
@@ -32,7 +35,7 @@
 
       <!--   ÁREA DO USUARIO   -->
       {{-- <div id="loggin_area_institutional"> --}}
-      <div id="loggin_area">
+      <div id="loggin_area" class="four columns omega">
 
       @if (Auth::check())
         @if ( Session::has('institutionId') )
@@ -45,7 +48,7 @@
             @endif
           </a>
         @else
-          <a id="user_name" href="{{ URL::to('/users/' . Auth::id()) }}">{{ Auth::user()->name; }}</a>
+          <a id="user_name" href="{{ URL::to('/users/' . Auth::id()) }}">{{ str_limit( Auth::user()->name, $limit = 23, $end = '...') }}</a>
           <a id="user_photo" href="{{ URL::to('/users/' . Auth::id()) }}">
             @if ( ! empty(Auth::user()->photo) )
               <img  src="{{ asset(Auth::user()->photo) }}"
@@ -61,16 +64,16 @@
         <ul id="logged_menu">
           @if (Auth::user()->photos->count() > 0 )
             @if(Auth::user()->albums->count() > 0)
-              <li><a href="{{ URL::to('/albums') }}" id="users" title="Meus álbuns">&nbsp;</a></li>
+              <li><a href="{{ URL::to('/albums') }}" title="Meus álbuns"><i class="photos">&nbsp;</i> ALBUNS</a></li>
             @else
-              <li><a href="{{ URL::to('/albums/create') }}" id="users" title="Crie seu álbum personalizado">&nbsp;</a></li>
+              <li><a href="{{ URL::to('/albums/create') }}" title="Crie seu álbum personalizado"><i class="photos">&nbsp;</i> ALBUNS</a></li>
             @endif
           @endif
           <!-- <li><a href="#" id="comunities" title="Comunidades">&nbsp;</a></li> -->
           @if(Session::has('institutionId'))
-            <li><a href="{{ URL::to("/photos/uploadInstitutional") }}" name="modal" id="upload" title="Enviar uma imagem">&nbsp;</a></li>
+            <li><a href="{{ URL::to("/photos/uploadInstitutional") }}" name="modal" title="Enviar uma imagem"><i class="upload">&nbsp;</i> UPLOAD</a></li>
           @else
-            <li><a href="{{ URL::to("/photos/upload") }}" name="modal" id="upload" title="Enviar uma imagem">&nbsp;</a></li>
+            <li><a href="{{ URL::to("/photos/upload") }}" name="modal" title="Enviar uma imagem"><i class="upload">&nbsp;</i> UPLOAD</a></li>
           @endif
           <!-- <li><a href="#" id="messages" title="Você tem 19 mensagens">&nbsp;</a></li> -->
 
@@ -81,7 +84,7 @@
                 if ($notesCounter != 1) $title = "Você tem " . $notesCounter . " notificações não lidas";
                 else $title = "Você tem " . $notesCounter . " notificação não lida";
               ?>
-              <a onclick="toggleNotes()" id="notification" title="{{$title}}">&nbsp;</a>
+              <a onclick="toggleNotes()" id="notification" title="{{$title}}"><i class="notification">&nbsp;</i> ATUALIZAÇÕES</a>
               @if ($notesCounter > 0) <div id="bubble"> {{$notesCounter}} </div>  @endif
             </div>
           </li>

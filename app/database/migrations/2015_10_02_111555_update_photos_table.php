@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdatePhotosTable extends Migration {
+class IncludeAuthorizedPhotosTable extends Migration {
 
 	/**
 	 * Run the migrations.
