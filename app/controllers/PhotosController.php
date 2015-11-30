@@ -447,7 +447,14 @@ class PhotosController extends \BaseController {
           $sourcePage = $input["pageSource"]; //get url of the source page through form
           //ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "UploadInstitutional", "user");
           //ActionUser::printTags($photo->user_id, $photo->id, $tagsCopy, $sourcePage, "user", "Inseriu");
-
+          /* Feed de notícias para todos os usuários */
+          foreach(User::all() as $users) {
+          News::create(array('object_type' => 'Photo', 
+                             'object_id' => $photo->id, 
+                             'user_id' => $users->id, 
+                             'sender_id' => $photo->institution_id, 
+                             'news_type' => 'new_institutional_photo'));
+          }
 
           if(array_key_exists('rotate', $input))
               $angle = (float)$input['rotate'];

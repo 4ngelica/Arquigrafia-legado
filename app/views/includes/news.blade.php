@@ -24,6 +24,19 @@
     </div>
 	</div>
 </div>
+@elseif($info->news_type == 'new_institutional_photo')<!--Uma instituição inseriu uma foto-->
+<div class="item h<?php echo $size; ?>">
+  <div class="layer" data-depth="0.2">
+    <a href='{{ URL::to("/photos") . "/" . $info->object_id }}'>
+    <?php 
+    ?>
+    <img data-src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}">
+    </a>
+    <div class="item-title">
+      <p>A instituição {{Institution::find($info->sender_id)->name}} postou uma nova foto</p>
+    </div>
+  </div>
+</div>
 @elseif($info->news_type == 'commented_photo')<!--Alguém que você segue comentou uma foto-->
 <div class="item h<?php echo $size; ?>">
   <div class="layer" data-depth="0.2">
