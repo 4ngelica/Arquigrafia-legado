@@ -121,20 +121,23 @@
          <div class="four columns">
             {{ Form::open(array( 'url' => '/users/institutionalLogin')) }}
 
-               <div class="three columns">{{ Form::label('login', 'Login ou email:') }}</div>
-               <div class="three columns">{{ Form::text('login', '', ['class' => 'left']) }}</div>
-               {{ $errors->first('login') }}
                
                <div class="three columns">{{ Form::label('institution', 'Acervo:') }}</div>
                <div class="three columns">
-               <br>
+               
                   @if(!is_null($institutions))
                     {{ Form::select('institution', $institutions , Input::old('institution')) }}
                   @else
                       {{ Form::select('institution', [""=>"Escolha o acervo institutional"], "",array('class' => 'left')) }} 
                   @endif
                </div>
-               <br><br>
+		<br>
+               		
+		 <div class="three columns">{{ Form::label('login', 'Login ou E-mail:') }}</div>
+               <div class="three columns">{{ Form::text('login', '', ['class' => 'left']) }}</div>
+               {{ $errors->first('login') }}
+
+
                <div class="three columns">{{ Form::label('password', 'Senha:') }}</div>
                <div class="three columns">{{ Form::password('password', ['class' => 'left']) }}</div>
                <br>
