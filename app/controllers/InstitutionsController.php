@@ -17,6 +17,7 @@ class InstitutionsController extends \BaseController {
     $photos = $institution->photos()->get()->reverse(); 
      //echo "ss=".!Session::has('institutionId');
     $follow = null;
+    $responsible = false;
     if(!Session::has('institutionId') && Auth::check()){
         $userId = Auth::user()->id; 
         $user = User::whereid($userId)->first(); 
@@ -26,28 +27,19 @@ class InstitutionsController extends \BaseController {
         else
             $follow = true;        
     }
-        
-   /*
+    if(Session::has('institutionId') && Auth::check() && $institution->id == Session::get('institutionId')){
        
- 
-       if(Session::has('institutionId')){
-            $institution_id = Session::get('institutionId');
-            $institution_or_visitor = "institution";
-        }else{
-            $institution_or_visitor = "visitor";
-            session_start();
-            $user_id = session_id();
-        }
-          
-    //$source_page = Request::header('referer');
-    //ActionUser::printSelectUser($institution_id, $id, $source_page, $institution_or_visitor);
-
-      */
+       $userId = Auth::user()->id; 
+       $responsibleEmployee = institution::RoleOfInstitutionalUser($userId);   
+       if(!empty($responsibleEmployee)) 
+          $responsible = true;  
+    }
 
     return View::make('institutions.show', [
       'institution' => $institution,
       'photos' => $photos,
-      'follow' => $follow
+      'follow' => $follow,
+      'responsible' => $responsible 
     ]);
   }
 
@@ -104,5 +96,87 @@ class InstitutionsController extends \BaseController {
     }
     return Redirect::to(URL::previous()); 
   } 
+
+  public function edit($id) {     
+    if (!Session::has('institutionId') ) {
+      return Redirect::to('/');
+    }
+
+    $institution = Institution::find($id); 
+    if ( is_null($institution) )   return Redirect::to('/');
+     
+    return View::make('institutions.edit', [
+      'institution' => $institution      
+    ]);
+  }
+
+   public function update($id) {              
+    $institution = Institution::find($id);
+   //dd($institution);
+    Input::flash();    
+    $input = Input::only('name_institution', 'email', 'site', 'country', 'state', 'city', 
+      'photo', 'address', 'phone');    
+    
+    $rules = array( 'name_institution' => 'required',
+            "site" => "url",
+            "phone" => "regex:/^[0-9-()]{8,21}$/"   );  
+
+    if ($input['email'] !== $institution->email)        
+      $rules['email'] = 'required|email|unique:institutions';
+
+    $validator = Validator::make($input, $rules);   
+    if ($validator->fails()) {
+      $messages = $validator->messages();      
+      return Redirect::to('/institutions/' . $id . '/edit')->withErrors($messages);
+    } else {  
+      //dd($input);
+      $institution->name = $input['name_institution'];      
+      $institution->email = $input['email'];     
+         
+      $institution->country = $input['country'];
+      
+      if(!empty($input['site']))
+         $institution->site = $input['site'];   
+      else
+         $institution->site = null; 
+       
+      if(!empty($input['state']))
+         $institution->state = $input['state'];   
+      else
+         $institution->state = null; 
+
+      if(!empty($input['city']))
+         $institution->city = $input['city'];   
+      else
+         $institution->city = null;
+
+      if(!empty($input['address']))
+         $institution->address = $input['address'];   
+      else
+         $institution->address = null;
+
+      if(!empty($input['phone']))
+         $institution->phone = $input['phone'];   
+      else
+         $institution->phone = null;
+
+      $institution->touch();
+      $institution->save();   
+
+     
+
+      if (Input::hasFile('photo') and Input::file('photo')->isValid())  {    
+        $file = Input::file('photo');
+        $ext = $file->getClientOriginalExtension();
+        $institution->photo = "/arquigrafia-avatars-inst/".$institution->id.".jpg";
+        $institution->save();
+        $image = Image::make(Input::file('photo'))->encode('jpg', 80);         
+        $image->save(public_path().'/arquigrafia-avatars-inst/'.$institution->id.'.jpg');
+        $file->move(public_path().'/arquigrafia-avatars-inst', $institution->id."_original.".strtolower($ext));                
+      } 
+      return Redirect::to("/institutions/{$institution->id}")->with('message', '<strong>Edição de perfil da instituição</strong><br>Dados alterados com sucesso'); 
+      
+    }    
+  }
 
 }

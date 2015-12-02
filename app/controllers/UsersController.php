@@ -551,6 +551,10 @@ class UsersController extends \BaseController {
  * @return Response
  */
   public function edit($id) {     
+    if (Session::has('institutionId') ) {
+      return Redirect::to('/');
+    }
+
     $user = User::find($id);
     
     $logged_user = Auth::User();

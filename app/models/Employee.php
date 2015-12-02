@@ -18,5 +18,10 @@ class Employee extends Eloquent {
 		return $this->belongsTo('Institution');
 	}
 
+	public function role()
+	{
+		return $this->belongsTo('Role');
+	}
+
 
 }

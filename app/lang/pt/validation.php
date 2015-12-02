@@ -206,8 +206,15 @@ return array(
         'characterization' => array(
             'required' => 'É obrigatório inserir um valor para o campo de caracterização.',
         ),
-        
-
+        'name_institution' => array(
+            'required' => 'É obrigatório inserir o nome da instituição.',
+        ),
+        'phone' => array(
+            'regex' => 'O telefone deve conter números, traços ou parênteses, com mínimo 8 dígitos.',
+        ),
+        'site' => array(
+            'url' => 'O site deve ter o formato do URL.',
+        ),
         
     ), 
 
