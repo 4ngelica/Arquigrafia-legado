@@ -119,7 +119,7 @@ class InstitutionsController extends \BaseController {
     
     $rules = array( 'name_institution' => 'required',
             "site" => "url",
-            "phone" => "regex:/^[0-9-()]{8,21}$/"   );  
+            "phone" => "regex:/^[0-9-() ]{8,25}$/"   );  
 
     if ($input['email'] !== $institution->email)        
       $rules['email'] = 'required|email|unique:institutions';
@@ -130,13 +130,13 @@ class InstitutionsController extends \BaseController {
       return Redirect::to('/institutions/' . $id . '/edit')->withErrors($messages);
     } else {  
       //dd($input);
-      $institution->name = $input['name_institution'];      
+      $institution->name = trim($input['name_institution']);      
       $institution->email = $input['email'];     
          
       $institution->country = $input['country'];
       
       if(!empty($input['site']))
-         $institution->site = $input['site'];   
+         $institution->site = trim($input['site']);   
       else
          $institution->site = null; 
        
@@ -146,17 +146,17 @@ class InstitutionsController extends \BaseController {
          $institution->state = null; 
 
       if(!empty($input['city']))
-         $institution->city = $input['city'];   
+         $institution->city = trim($input['city']);   
       else
          $institution->city = null;
 
       if(!empty($input['address']))
-         $institution->address = $input['address'];   
+         $institution->address = trim($input['address']);   
       else
          $institution->address = null;
 
       if(!empty($input['phone']))
-         $institution->phone = $input['phone'];   
+         $institution->phone = trim($input['phone']);   
       else
          $institution->phone = null;
 
