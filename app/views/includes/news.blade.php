@@ -1,18 +1,16 @@
 <?php 
-  $i = rand(0,10);
   $news = Auth::user()->news; 
 ?>
 
 @foreach($news as $info)
 
 <?php 
-  $i++;
-  $size = 1; 
-  if ($i%7 == 6) $size = 2;
-  if ($i%21 == 6) $size = 3;  
+  $size = 1;   
 ?>
-@if($info->news_type == 'new_photo')<!--Alguém que você segue inseriu uma foto-->
-<div class="item h<?php echo $size; ?>">
+
+@if($info->news_type == 'new_photo')
+<!--Alguém que você segue inseriu uma foto-->
+<div class="news item h<?php echo $size; ?>">
 	<div class="layer" data-depth="0.2">
     <a href='{{ URL::to("/photos") . "/" . $info->object_id }}'>
 		<?php 
@@ -25,7 +23,7 @@
 	</div>
 </div>
 @elseif($info->news_type == 'new_institutional_photo')<!--Uma instituição inseriu uma foto-->
-<div class="item h<?php echo $size; ?>">
+<div class="news item h<?php echo $size; ?>">
   <div class="layer" data-depth="0.2">
     <a href='{{ URL::to("/photos") . "/" . $info->object_id }}'>
     <?php 
@@ -38,7 +36,7 @@
   </div>
 </div>
 @elseif($info->news_type == 'commented_photo')<!--Alguém que você segue comentou uma foto-->
-<div class="item h<?php echo $size; ?>">
+<div class="news item h<?php echo $size; ?>">
   <div class="layer" data-depth="0.2">
     <a href='{{ URL::to("/photos") . "/" . Comment::find($info->object_id)->photo_id . "#" . $info->object_id}}'>
     <?php 
@@ -59,7 +57,7 @@
   </div>
 </div>
 @elseif($info->news_type == 'evaluated_photo')<!--Alguém que você segue avaliou uma foto-->
-<div class="item h<?php echo $size; ?>">
+<div class="news item h<?php echo $size; ?>">
   <div class="layer" data-depth="0.2">
     <a href='{{ URL::to("/photos") . "/" . $info->object_id . "/viewEvaluation/" . $info->sender_id}}'>
     <?php 
@@ -80,7 +78,7 @@
   </div>
 </div>
 @elseif($info->news_type == 'new_profile_picture')<!--Alguém que você segue trocou a foto de perfil-->
-<div class="item h<?php echo $size; ?>">
+<div class="news item h<?php echo $size; ?>">
   <div class="layer" data-depth="0.2">
     <a href='{{ URL::to("/users") . "/" . $info->object_id }}'>
     <?php 
@@ -97,7 +95,7 @@
   </div>
 </div>
 @elseif($info->news_type == 'edited_photo')<!--Alguém que você segue editou uma foto-->
-<div class="item h<?php echo $size; ?>">
+<div class="news item h<?php echo $size; ?>">
   <div class="layer" data-depth="0.2">
     <a href='{{ URL::to("/photos") . "/" . $info->object_id }}'>
     <?php 
@@ -110,7 +108,7 @@
   </div>
 </div>
 @elseif($info->news_type == 'edited_profile')<!--Alguém que você segue editou o perfil-->
-<div class="item h<?php echo $size; ?>">
+<div class="news item h<?php echo $size; ?>">
   <div class="layer" data-depth="0.2">
     <a href='{{ URL::to("/users") . "/" . $info->object_id }}'>
     <?php 
@@ -129,7 +127,7 @@
 @elseif($info->news_type == 'highlight_of_the_week')<!--Destaque da semana-->
 
 @elseif($info->news_type == 'liked_photo')<!--Alguém que você segue gostou de uma foto-->
-<div class="item h<?php echo $size; ?>">
+<div class="news item h<?php echo $size; ?>">
   <div class="layer" data-depth="0.2">
     <a href='{{ URL::to("/photos") . "/" . $info->object_id }}'>
     <?php 
@@ -150,6 +148,5 @@
   </div>
 </div>
 @endif
-
 
 @endforeach

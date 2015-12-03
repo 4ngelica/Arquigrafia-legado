@@ -10,7 +10,6 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/panel.js"></script>
 
 <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/checkbox.css" />
-
 @stop
 
 @section('content')
@@ -27,11 +26,10 @@
     <!--   PAINEL DE IMAGENS - GALERIA - CARROSSEL   -->  
     <div class="wrap">
       <div id="panel">
-      @if(Auth::user())
-        @include('includes.news')
-      @else
+        @if(Auth::user())
+          @include('includes.news')
+        @endif
         @include('includes.panel')
-      @endif
       </div>
       <div class="panel-back"></div>
       <div class="panel-next"></div>
