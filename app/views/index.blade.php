@@ -22,13 +22,21 @@
   @endif
   <!--   MEIO DO SITE - ÁREA DE NAVEGAÇÃO   -->
   <div id="content">
-  
+  @if(Auth::user())
+    @if(Auth::user()->news->count() > 0)
+      <div class="albums" style="margin-bottom: 40px; margin-left: auto; margin-right: auto; display: table; width: 900px;">
+        <hgroup class="profile_block_title">
+          <h3><img src="{{ asset("img/logo-mini.png") }}" width="16" height="16"/>
+            Atualizações:
+          </h3>
+        </hgroup>
+        @include('includes.news')
+      </div>
+    @endif
+  @endif
     <!--   PAINEL DE IMAGENS - GALERIA - CARROSSEL   -->  
     <div class="wrap">
       <div id="panel">
-        @if(Auth::user())
-          @include('includes.news')
-        @endif
         @include('includes.panel')
       </div>
       <div class="panel-back"></div>
