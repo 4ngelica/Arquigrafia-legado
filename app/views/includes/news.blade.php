@@ -1,5 +1,5 @@
 <?php 
-  $news = Auth::user()->news; 
+  $news = Auth::user()->news->reverse(); 
 ?>
 
 @foreach($news as $info)
@@ -131,6 +131,9 @@
   </a>
   <br />
 </div>
+@elseif($info->news_type == '')
+@elseif($info->news_type == '')
+@elseif($info->news_type == '')
 @endif
 
 @endforeach
