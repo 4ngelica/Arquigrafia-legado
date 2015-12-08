@@ -264,6 +264,7 @@
 			</div>
 	
 	</div>
+    @include('user_badges')
 
 	<br>
 	<br>
