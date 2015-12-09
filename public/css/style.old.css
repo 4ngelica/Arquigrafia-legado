@@ -98,6 +98,7 @@ i.photos {background-position: -233px 0;}
 i.stack {padding: 4px 22px 0 0; background: url(../img/i-album.png) no-repeat;}
 i.group {background-position: -121px 0;}
 i.info {background-position: -121px 0;}
+i.badges { padding: 4px 22px 0 0; background: url(../img/i-badge.png) no-repeat; }
 
 /* forms */
 form p {margin: 3px 0;}
