@@ -134,7 +134,7 @@
 @elseif($info->news_type == 'check_institution')
 <div class="gallery_box">
   <a href='{{ URL::to("/institutions") . "/" . $info->object_id }}'>                 
-    <img src={{"/arquigrafia-avatars-inst/" . $info->object_id . ".jpg"}} title="{{ Institution::find($info->object_id)->name }}" class="gallery_photo" />
+    <img src={{"/arquigrafia-avatars-inst/" . $info->object_id . ".jpg"}} title="{{ Institution::find($info->object_id)->name }}"  />
   </a>
   <a href='{{ URL::to("/institutions") . "/" . $info->object_id }}' class="name">
     Novas imagens adquiridas pelo {{Institution::find($info->object_id)->name}}
@@ -144,7 +144,8 @@
 @elseif($info->news_type == 'check_evaluation')
 <div class="gallery_box">
   <a href='{{ URL::to("/photos") . "/" . $info->object_id . "/evaluate" }}'>                 
-    <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
+   <!-- <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" /> -->
+   <img src="/img/GraficoFixo.png" class="gallery_photo"/>
   </a>
   <a href='{{ URL::to("/photos") . "/" . $info->object_id . "/evaluate" }}' class="name">
    Confira as últimas impressões sobre a imagem {{Photo::find($info->object_id)->name}} 
