@@ -109,7 +109,7 @@
     <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
   </a>
   <a href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
-    Confira o destaque dessa semana!
+    Confira o destaque desta semana!
   </a>
   <br />
 </div>
@@ -137,7 +137,7 @@
     <img src={{"/arquigrafia-avatars-inst/" . $info->object_id . ".jpg"}} title="{{ Institution::find($info->object_id)->name }}" class="gallery_photo" />
   </a>
   <a href='{{ URL::to("/institutions") . "/" . $info->object_id }}' class="name">
-    Confira as imagens do {{Institution::find($info->object_id)->name}}
+    Novas imagens adquiridas pelo {{Institution::find($info->object_id)->name}}
   </a>
   <br />
 </div>
@@ -147,7 +147,7 @@
     <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
   </a>
   <a href='{{ URL::to("/photos") . "/" . $info->object_id . "/evaluate" }}' class="name">
-    Avalie a imagem {{Photo::find($info->object_id)->name}}
+   Confira as últimas impressões sobre a imagem {{Photo::find($info->object_id)->name}} 
   </a>
   <br />
 </div>
@@ -157,7 +157,7 @@
     <img src={{"/img/leaderboard.jpg"}} title="Learderboard arquigrafia" class="gallery_photo" />
   </a>
   <a href='{{ URL::to("/leaderboard") }}' class="name">
-    Confira o quadro de colaboradores do Arquigrafia
+    Conheça o quadro de colaboradores do Arquigrafia
   </a>
   <br />
 </div>
