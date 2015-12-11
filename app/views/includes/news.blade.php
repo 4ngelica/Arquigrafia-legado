@@ -1,5 +1,5 @@
 <?php 
-  $news = Auth::user()->news->reverse()->take(14); 
+  $news = Auth::user()->news->reverse()->take(14);
 ?>
 
 @foreach($news as $info)
