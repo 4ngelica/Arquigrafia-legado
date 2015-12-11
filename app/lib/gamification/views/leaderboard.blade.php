@@ -15,6 +15,9 @@
   <div class="container">
     <div class="twelve columns">
       <div id="leaderboard" class="ten columns offset-by-one">
+        <a href="{{ URL::previous() }}">Voltar para a página anterior</a>
+        <br>
+        <br>
         <h1>Quadro dos Maiores Colaboradores</h1>
         <div class="paginator">
           <div class="three columns alpha omega">
