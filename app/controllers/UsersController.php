@@ -454,11 +454,30 @@ class UsersController extends \BaseController {
         $user->photo = '/arquigrafia-avatars/'.$user->id.'.jpg';
         $user->save();
         foreach ($user->followers as $users) {
-          News::create(array('object_type' => 'User', 
-                             'object_id' => $user->id, 
-                             'user_id' => $users->id, 
-                             'sender_id' => $user->id, 
-                             'news_type' => 'new_profile_picture'));
+          foreach ($users->news as $note) {
+            if($note->news_type == 'new_profile_picture') {
+              $curr_note = $note;
+            }
+          }
+          if(isset($curr_note)) {
+            if($note->sender_id == $user->id) {
+              $date = $note->created_at;
+              if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
+                News::create(array('object_type' => 'User', 
+                                   'object_id' => $user->id, 
+                                   'user_id' => $users->id, 
+                                   'sender_id' => $user->id, 
+                                   'news_type' => 'new_profile_picture'));
+              }
+            }
+          }
+          else {
+              News::create(array('object_type' => 'User', 
+                                 'object_id' => $user->id, 
+                                 'user_id' => $users->id, 
+                                 'sender_id' => $user->id, 
+                                 'news_type' => 'new_profile_picture'));
+            }
         }
       }
     }
@@ -644,20 +663,58 @@ class UsersController extends \BaseController {
         $image->save(public_path().'/arquigrafia-avatars/'.$user->id.'.jpg');
         $file->move(public_path().'/arquigrafia-avatars', $user->id."_original.".strtolower($ext)); 
         foreach ($user->followers as $users) {
-          News::create(array('object_type' => 'User', 
-                             'object_id' => $user->id, 
-                             'user_id' => $users->id, 
-                             'sender_id' => $user->id, 
-                             'news_type' => 'new_profile_picture'));
+          foreach ($users->news as $note) {
+            if($note->news_type == 'new_profile_picture') {
+              $curr_note = $note;
+            }
+          }
+          if(isset($curr_note)) {
+            if($note->sender_id == $user->id) {
+              $date = $note->created_at;
+              if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
+                News::create(array('object_type' => 'User', 
+                                   'object_id' => $user->id, 
+                                   'user_id' => $users->id, 
+                                   'sender_id' => $user->id, 
+                                   'news_type' => 'new_profile_picture'));
+              }
+            }
+          }
+          else {
+              News::create(array('object_type' => 'User', 
+                                 'object_id' => $user->id, 
+                                 'user_id' => $users->id, 
+                                 'sender_id' => $user->id, 
+                                 'news_type' => 'new_profile_picture'));
+            }
         }        
       } 
       else {
         foreach ($user->followers as $users) {
-          News::create(array('object_type' => 'User', 
-                             'object_id' => $user->id, 
-                             'user_id' => $users->id, 
-                             'sender_id' => $user->id, 
-                             'news_type' => 'edited_profile'));
+          foreach ($users->news as $note) {
+            if($note->news_type == 'edited_profile') {
+              $curr_note = $note;
+            }
+          }
+          if(isset($curr_note)) {
+            if($note->sender_id == $user->id) {
+              $date = $note->created_at;
+              if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
+                News::create(array('object_type' => 'User', 
+                                   'object_id' => $user->id, 
+                                   'user_id' => $users->id, 
+                                   'sender_id' => $user->id, 
+                                   'news_type' => 'edited_profile'));
+              }
+            }
+          }
+          else {
+              News::create(array('object_type' => 'User', 
+                                 'object_id' => $user->id, 
+                                 'user_id' => $users->id, 
+                                 'sender_id' => $user->id, 
+                                 'news_type' => 'edited_profile'));
+            }
         }
       }
       return Redirect::to("/users/{$user->id}")->with('message', '<strong>Edição de perfil do usuário</strong><br>Dados alterados com sucesso'); 
