@@ -472,6 +472,12 @@ ul#avaliation_list li span.right { text-align: left; padding-left: 10px; }
 .albums .gallery_box {float:left; position: relative; width: 143px; height: 104px; margin: 2px; }
 .albums .name {position: absolute; bottom: 8px; left: 8px; z-index: 9; font-size: 10px; color: #fff; }
 
+/* NEWS - home */
+.news {margin: 0 auto 10px;}
+.news .profile_block_title {margin: 0 5px 5px;}
+.news .gallery_box {float:left; position: relative; width: 148px; height: 104px; margin: 5px; overflow: hidden; }
+.news .gallery_photo {width: 100%; height: auto;}
+
 /* GROUP */
 #group_content {margin-top: 20px;}
 #group_photos .gallery_box {float: left; margin: 0 1px 1px 0; padding: 0; width: 99px;}
