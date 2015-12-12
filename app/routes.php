@@ -124,4 +124,5 @@ Route::get('/refreshBubble', 'NotificationsController@howManyUnread');
 
 /* INSTITUTIONS */
 Route::get('/institutions/{id}', 'InstitutionsController@show');
+Route::get('/institutions/{id}/edit', 'InstitutionsController@edit');
 Route::resource('/institutions','InstitutionsController');

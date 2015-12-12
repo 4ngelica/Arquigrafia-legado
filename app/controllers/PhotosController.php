@@ -447,7 +447,14 @@ class PhotosController extends \BaseController {
           $sourcePage = $input["pageSource"]; //get url of the source page through form
           //ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "UploadInstitutional", "user");
           //ActionUser::printTags($photo->user_id, $photo->id, $tagsCopy, $sourcePage, "user", "Inseriu");
-
+          /* Feed de notícias para todos os usuários */
+          foreach(User::all() as $users) {
+          News::create(array('object_type' => 'Photo', 
+                             'object_id' => $photo->id, 
+                             'user_id' => $users->id, 
+                             'sender_id' => $photo->institution_id, 
+                             'news_type' => 'new_institutional_photo'));
+          }
 
           if(array_key_exists('rotate', $input))
               $angle = (float)$input['rotate'];
@@ -1614,22 +1621,31 @@ class PhotosController extends \BaseController {
       /*News feed*/
       $user = User::find($photo->user_id);
       foreach ($user->followers as $users) {
-        foreach ($users->news as $news) {
-          if ($news->news_type == 'edited_photo' && $news->object_id == $photo->id) {
-            $last_update = $news->updated_at;
-            if($last_update->diffInDays(Carbon::now('America/Sao_Paulo')) < 7) {
-              $already_sent = true;
+          foreach ($users->news as $note) {
+            if($note->news_type == 'edited_photo') {
+              $curr_note = $note;
             }
           }
+          if(isset($curr_note)) {
+            if($note->sender_id == $user->id) {
+              $date = $note->created_at;
+              if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
+                News::create(array('object_type' => 'User', 
+                                   'object_id' => $user->id, 
+                                   'user_id' => $users->id, 
+                                   'sender_id' => $user->id, 
+                                   'news_type' => 'edited_photo'));
+              }
+            }
+          }
+          else {
+              News::create(array('object_type' => 'User', 
+                                 'object_id' => $user->id, 
+                                 'user_id' => $users->id, 
+                                 'sender_id' => $user->id, 
+                                 'news_type' => 'edited_photo'));
+            }
         }
-        if(!isset($already_sent)) {
-          News::create(array('object_type' => 'Photo', 
-                             'object_id' => $photo->id, 
-                             'user_id' => $users->id, 
-                             'sender_id' => $user->id, 
-                             'news_type' => 'edited_photo'));
-        }
-      }
       return Redirect::to("/photos/{$photo->id}")->with('message', '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso');
 
   }

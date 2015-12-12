@@ -214,15 +214,19 @@ class PagesController extends BaseController {
             }             
 
             // se houver uma tag exatamente como a busca, pegar todas as fotos dessa tag e juntar no painel
-            //$tag = Tag::where('name', '=', $needle)->get();
-
-            $query = Tag::where('name', '=', $needle);  
-            $tag = $query->get();
+            $query = Tag::where('name', '=', $needle); 
+            //$tag = $query->get();
             
-            if ($tag->first()) {
+           /* if ($tag->first()) {
                 $byTag = $tag->first()->photos;                
                 $photos = $photos->merge($byTag);
-            }
+            } */
+
+             $tags = $query->get();
+             foreach ($tags as $tag) { 
+                $byTag = $tag->photos;                
+                $photos = $photos->merge($byTag);
+             }   
 
             if($authorFilter != null){             
                 $query = Author::where('name', '=', $needle);

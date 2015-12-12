@@ -251,7 +251,7 @@
     </div>
 
     	    <!-- MEUS ALBUNS -->
-	<div class="container">
+	<div class="container row">
 				
 			<div class="twelve columns albums">
 				<hgroup class="profile_block_title">
@@ -300,6 +300,7 @@
 			</div>
 	
 	</div>
+    @include('user_badges')
 
 	<br>
 	<br>

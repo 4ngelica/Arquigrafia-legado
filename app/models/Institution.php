@@ -68,4 +68,13 @@ class Institution extends Eloquent {
 		return $this->belongsToMany('User', 'friendship_institution', 'institution_id','following_user_id');		
 	}
  
+ 	public static function RoleOfInstitutionalUser($userId)
+	{
+		$roles = Role::where('name', 'LIKE', '%Respon%')->first();  
+        $query = Employee::where('user_id', '=', $userId)
+                            ->where('institution_id', '=', Session::get('institutionId'))
+                            ->where('role_id', '=',$roles->id)
+                            ->first();
+        return $query;
+	}	
 }
