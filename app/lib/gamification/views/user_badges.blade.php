@@ -11,7 +11,7 @@
     </hgroup>
     <div class="profile_box">
       @if ( !$user->badges->count() )
-        <p>Não há nenhuma troféu ainda.</p>
+        <p>Ainda não possui troféus.</p>
       @else
         @foreach($user->badges as $b)
           <div class="one column">
