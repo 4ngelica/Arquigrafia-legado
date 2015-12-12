@@ -44,7 +44,7 @@
       <div class="info">
         <h1>{{ $institution->name}}</h1>         
         @if ( !empty($institution->city) && Session::has('institutionId')) 
-          <p  >{{ $institution->city }}</p>
+          <p >{{ ucfirst($institution->city) }}</p>
         @endif
         
         @if (Auth::check() && !is_null($follow)) 
@@ -58,6 +58,9 @@
                 </a>
               </div>
             @endif
+        @endif
+        @if ($responsible == true)
+        <a href="{{ URL::to("/institutions/" . $institution->id . "/edit") }}" id="single_view_contact_add" title="Edite o seu perfil">Editar perfil</a><br />
         @endif
       
       </div>
@@ -108,6 +111,18 @@
           <li>
             <strong>Site pessoal: </strong>
             <a href="{{ $institution->site }}" target="_blank">{{ $institution->site }}</a>
+          </li>
+        @endif
+        @if ( !empty($institution->address) )
+          <li>
+            <strong>Endereço: </strong>
+            {{ $institution->address }}
+          </li>
+        @endif
+        @if ( !empty($institution->phone) )
+          <li>
+            <strong>Telefone: </strong>
+            {{ $institution->phone }}
           </li>
         @endif
       </ul>
