@@ -121,6 +121,7 @@
                         <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), 
                             -Math.PI/2);">Girar 90° para esquerda</a>
                         </div>
+                        <br></br>
 						<p>
 							{{ Form::label('photo','Imagem:') }}
 							{{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
@@ -515,11 +516,11 @@
 						Permitir o uso comercial da imagem?
 						<br>
 						 <div class="form-row">
-							<input type="radio" onclick="authorization()" name="allowCommercialUses" value="YES" id="allowCommercialUses" checked="checked">
+							<input type="radio" onclick="authorization()" name="allowCommercialUses" value="YES" id="allowCommercialUsesYES" checked="checked">
 							<label for="allowCommercialUses">Sim</label><br class="clear">
 						 </div>
 						 <div class="form-row">
-							<input type="radio" onclick="authorization()" name="allowCommercialUses" value="NO" id="allowCommercialUses">
+							<input type="radio" onclick="authorization()" name="allowCommercialUses" value="NO" id="allowCommercialUsesNO">
 							<label for="allowCommercialUses">Não</label><br class="clear">
 						 </div>
 					</div>
@@ -527,15 +528,15 @@
 						Permitir modificações em sua imagem?
 						<br>
 						<div class="form-row">
-							<input type="radio" onclick="authorization()" name="allowModifications" value="YES" id="allowModifications" checked="checked">
+							<input type="radio" onclick="authorization()" name="allowModifications" value="YES" id="allowModificationsYES" checked="checked">
 							<label for="allowModifications">Sim</label><br class="clear">
 						</div>
 						<div class="form-row">
-							<input type="radio" onclick="authorization()" name="allowModifications" value="YES_SA" id="allowModifications">
+							<input type="radio" onclick="authorization()" name="allowModifications" value="YES_SA" id="allowModificationsYES_SA">
 							<label for="allowModifications">Sim, contanto que os outros compartilhem de forma semelhante</label><br class="clear">
 						</div>
 						<div class="form-row">
-							<input type="radio" onclick="authorization()" name="allowModifications" value="NO" id="allowModifications">
+							<input type="radio" onclick="authorization()" name="allowModifications" value="NO" id="allowModificationsNO">
 							<label for="allowModifications">Não</label><br class="clear">
 						</div>
 					</div>
@@ -615,8 +616,20 @@
 				}
 			}); 
 		}
+        
+        var radio_checked_commercial    = "{{"allowCommercialUses".(Input::old('allowCommercialUses'))}}";
+        var radio_checked_modifications = "{{"allowModifications".(Input::old('allowModifications'))}}";
 
-
+        if((radio_checked_commercial != "allowCommercialUses") && (radio_checked_modifications != "allowModifications")) {
+            if(radio_checked_commercial != "allowCommercialUsesYES") {
+                document.getElementById("allowCommercialUsesYES").checked = false;
+                document.getElementById(radio_checked_commercial).checked = true;
+            }
+            if(radio_checked_modifications != "allowModificationsYES") {
+                document.getElementById("allowModificationsYES").checked     = false;
+                document.getElementById(radio_checked_modifications).checked = true;
+            }
+        }
 
 		/* //if({{Input::old('autoOpenModal','false')}}){ */
 		@if(Input::old('tagsArea')!= null)				
