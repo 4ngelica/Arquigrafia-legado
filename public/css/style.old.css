@@ -502,7 +502,7 @@ ul#avaliation_list li span.right { text-align: left; padding-left: 10px; }
 .news {margin: 0 -5px 10px;}
 .news .profile_block_title {margin: 0 5px 5px;}
 .news .gallery_box {float:left; position: relative; width: 148px; height: 104px; margin: 5px; overflow: hidden; }
-.news .gallery_box .name {position: absolute; bottom: 10px; left: 8px; color: #fff;}
+.news .gallery_box .name {position: absolute; bottom: 9px; left: 8px; color: #fff; font-size: 10px;}
 .news .gallery_photo {width: 100%; height: auto;}
 
 /* GROUP */
