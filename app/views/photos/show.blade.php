@@ -480,13 +480,13 @@
           alt="Creative Commons License" />
         <span>
           @if (Auth::check())
-            @if( $owner->equal(Auth::user()) )
+            @if( trim($photos->imageAuthor) == trim($user->name) ) )
               <strong>Você é proprietário(a) desta imagem</strong>
             @else
-              <strong>O proprietário desta imagem "{{ucfirst($owner->name)}}":</strong>
+              <strong>O proprietário desta imagem "{{ucfirst($photos->imageAuthor)}}":</strong>
             @endif
           @else
-            <strong>O proprietário desta imagem "{{ucfirst($owner->name)}}":</strong>
+            <strong>O proprietário desta imagem "{{ucfirst($photos->imageAuthor)}}":</strong>
           @endif
           <br/>
           "{{ $license[1] }}"

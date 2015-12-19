@@ -247,7 +247,14 @@ class PagesController extends BaseController {
                     $byAuthor = $author->photos;                
                     $photos = $photos->merge($byAuthor);                
                 }    
-            }   
+            }  
+
+            $query = Institution::where('name', '=', $needle); 
+            $institution = $query->get();
+            if ($institution->first()) {
+                $byInstitution = $institution->first()->photos;                
+                $photos = $photos->merge($byInstitution);
+            }
           
             $photosAll = $photos->count();
 
