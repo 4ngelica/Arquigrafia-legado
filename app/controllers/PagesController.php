@@ -15,8 +15,10 @@ class PagesController extends BaseController {
 
     public function __construct(Date $date = null)
     {
-        $this->date = $date ?: new Date; 
+        $this->date = $date ?: new Date;
+        
     }
+
 
     public function home()
     { 
@@ -60,7 +62,7 @@ class PagesController extends BaseController {
         $userList = $query->get();    
         return $userList->lists('id');
     }
-    //2015-05-09 msy end
+    
     private static function streetAndCitySearch(&$needle,&$txtcity) {
         Log::info("Logging info txtcity <".$txtcity.">");       
 
@@ -76,7 +78,7 @@ class PagesController extends BaseController {
         $photos = $query->get(); 
         return $photos;  
     }
-    //msy
+    
     private static function dateSearch(&$needle,&$type){
 
         if($type=='work'){
@@ -100,10 +102,10 @@ class PagesController extends BaseController {
         $photos = $query->get(); 
         return $photos;   
     }
-    //msy
+    
     public static function yearSearch(&$needle,&$dateFilter,&$date){
 
-        //  $dateFilter = array('dataCriacao','dataUpload','workdate');
+        
 
         $dateFilter = [
             'di'=>'Data da Imagem',
@@ -152,6 +154,7 @@ class PagesController extends BaseController {
 
     public function search()
     {   
+
         if ( Input::has('bin') ) {
             return $this->searchBinomial(
                 Input::get('bin'), Input::get('opt'), Input::get('val')
@@ -166,11 +169,21 @@ class PagesController extends BaseController {
         $date = Input::get("d"); 
         $authorFilter = null;
 
+        $url= null;
+        $maxPage = 0;
+        $photosTotal = 0;        
+        $photosPages = null;
+        $photosAll = 0;
+        
+        if($needle == ""){
+            Session::forget('last_search');
+        } 
+       
         if ( Input::has('type') ) {
                 $authorFilter= Input::get('type');
         }
 
-        if ($needle != "") {
+        if ($needle != "") { 
             $tags = null;
             $allAuthors =  null;
             $query = Tag::where('name', 'LIKE', '%' . $needle . '%')->where('count', '>', 0);  
@@ -178,7 +191,7 @@ class PagesController extends BaseController {
 
             
                 $allAuthors = DB::table('authors')
-             ->join('photo_author', function($join) use ($needle)
+                ->join('photo_author', function($join) use ($needle)
                 {   $join->on('authors.id', '=', 'photo_author.author_id')
                          ->where('name', 'LIKE', '%' . $needle . '%');
                 })->groupBy('authors.id')->get();
@@ -197,7 +210,7 @@ class PagesController extends BaseController {
 
             } else {                  
                 $idUserList = static::userPhotosSearch($needle);
-                
+
                 $query = Photo::where(function($query) use($needle, $idUserList) {
                     $query->where('name', 'LIKE', '%'. $needle .'%');  
                     $query->orWhere('description', 'LIKE', '%'. $needle .'%');  
@@ -208,20 +221,13 @@ class PagesController extends BaseController {
                     if ($idUserList != null && !empty($idUserList)) {
                         $query->orWhereIn('user_id', $idUserList);}
                 })->orderBy('created_at', 'desc');
+                $photos =  $query->get(); 
                 
-                $photos = $query->get();
-            }             
-
+            }       
+           
             // se houver uma tag exatamente como a busca, pegar todas as fotos dessa tag e juntar no painel
             $query = Tag::where('name', '=', $needle); 
-            //$tag = $query->get();
-            
-           /* if ($tag->first()) {
-                $byTag = $tag->first()->photos;                
-                $photos = $photos->merge($byTag);
-            } */
-
-             $tags = $query->get();
+            $tags = $query->get();
              foreach ($tags as $tag) { 
                 $byTag = $tag->photos;                
                 $photos = $photos->merge($byTag);
@@ -242,13 +248,13 @@ class PagesController extends BaseController {
                     $photos = $photos->merge($byAuthor);                
                 }    
             }   
-           
+          
+            $photosAll = $photos->count();
 
             if (Auth::check()) {
                 $user_id = Auth::user()->id;
                 $user_or_visitor = "user";
-            }
-            else { 
+            }else { 
                 $user_or_visitor = "visitor";
                 session_start();
                 $user_id = session_id();
@@ -257,15 +263,36 @@ class PagesController extends BaseController {
             ActionUser::printSearch($user_id, $source_page, $needle, $user_or_visitor);
 
             Session::put('last_search',
-                ['tags' => $tags, 'photos' => $photos, 'query'=>$needle, 'city'=>$txtcity,'dateFilter'=>$dateFilter, 'authors' => $allAuthors ]);
+                ['tags' => $tags, 'photos' => $photos, 'query'=>$needle, 'city'=>$txtcity,
+                'dateFilter'=>$dateFilter, 'authors' => $allAuthors,
+                'url' => $url,'photosTotal' => $photosTotal , 'maxPage' => $maxPage, 'page' => 1,
+                'photosAll' => $photosAll ]);
+            
+            
+            if($photos->count() != 0){           
+                $photosPages = Photo::paginatePhotosSearch($photos); 
+                $photosTotal = $photosPages->getTotal();
+                $maxPage = $photosPages->getLastPage();
+                Log::info('simpleSearch');
+                $url = URL::to('/search'. '/paginate/other/photos/');
+            }else{                
+                Session::forget('last_search');
+            }
+            
 
-            // retorna resultado da busca
-            return View::make('/search',['tags' => $tags, 'photos' => $photos, 'query'=>$needle, 'city'=>$txtcity,'dateFilter'=>$dateFilter,'authors' => $allAuthors ,'needle' => $needle]);
+            return View::make('/search',['tags' => $tags, 'photos' => $photosPages, 
+                'query'=>$needle, 'city'=>$txtcity,'dateFilter'=>$dateFilter,
+                'authors' => $allAuthors ,'needle' => $needle,'url' => $url,
+                'photosTotal' => $photosTotal , 'maxPage' => $maxPage, 'page' => 1,
+                'photosAll' => $photosAll ]);
         }else {
             if(Session::has('last_search'))	
                 return View::make('/search', Session::get('last_search'));
             else{// busca vazia
-                return View::make('/search',['tags' => [], 'photos' => [], 'query' => "", 'city'=>"",'dateFilter'=>[], 'authors' =>[]]);
+
+                return View::make('/search',['tags' => [], 'photos' => [], 'query' => "", 'city'=>"",
+                    'dateFilter'=>[], 'authors' =>[], 
+                    'url'=>null,'photosTotal'=> 1,'maxPage' => 1, 'page' => 1, 'photosAll' => 0 ]);
             }
         }
     }  
@@ -285,12 +312,19 @@ class PagesController extends BaseController {
         ));
         $fields = array_filter(array_map('trim', $fields));
 
-        if( count($fields) == 0 ) { // busca vazia
+        $url= null;
+        $maxPage = 0;
+        $photosTotal = 0;        
+        $photosPages = null;
+
+        if( count($fields) == 0 ) { // busca vazia 
+        
             if(Session::has('last_advanced_search'))
                 return View::make('/advanced-search', Session::get('last_advanced_search'));
-            else { // busca vazia
+            else {  // busca vazia
                 return View::make('/advanced-search',
-                    ['tags' => [], 'photos' => [], 'query' => "", 'binomials' => Binomial::all(),'authorsArea' => [] ]);
+                    ['tags' => [], 'photos' => [], 'query' => "", 'binomials' => Binomial::all(),'authorsArea' => [],
+                    'url'=> null,'photosTotal'=> 1,'maxPage' => 1, 'page' => 1 ]);
             }
         }
         $binomials = array();
@@ -324,10 +358,66 @@ class PagesController extends BaseController {
         $photos = $photos->count() == 0 ? [] : $photos;
 
         Session::put('last_advanced_search', ['tags' => $tags, 'photos' => $photos,
-            'binomials' => Binomial::all(), 'authorsArea' => $authorsArea, 'message' => $message]);
+            'binomials' => Binomial::all(), 'authorsArea' => $authorsArea, 'message' => $message,
+            'url' => $url,'photosTotal' => $photosTotal , 'maxPage' => $maxPage, 'page' => 1
+            ]);
+
+        $photosPages = Photo::paginatePhotosSearchAdvance($photos); 
+        if($photosPages != null){
+            $photosTotal = $photosPages->getTotal();
+            $maxPage = $photosPages->getLastPage();
+        } else {
+            $photosTotal = 0;
+            $maxPage = 0;
+        }
+        
+
+        $url = URL::to('/search/more'. '/paginate/other/photos/');
 
         return View::make('/advanced-search',
-            ['tags' => $tags, 'photos' => $photos,
-            'binomials' => Binomial::all(), 'authorsArea' => $authorsArea, 'message' => $message]); //tagsResult
+            ['tags' => $tags, 'photos' => $photosPages, //'photos' => $photos,
+            'binomials' => Binomial::all(), 'authorsArea' => $authorsArea, 'message' => $message,
+            'url' => $url,'photosTotal' => $photosTotal , 'maxPage' => $maxPage, 'page' => 1 ]); 
     }
+
+    public function paginatePhotosResult() {
+       if(Session::has('last_search')){
+            $lastSearch = Session::get('last_search');
+            $photos = $lastSearch['photos'];
+        }
+            
+        $query = Input::has('q') ? Input::get('q') : ''; 
+        
+        $pagination = Photo::paginateAllPhotosSearch($photos,$query);
+        return $this->paginationResponseSearch($pagination, 'add');
+    }
+
+    public function paginatePhotosResultAdvance() {
+       if(Session::has('last_advanced_search')){
+            $lastSearchAdvance = Session::get('last_advanced_search');
+            $photos = $lastSearchAdvance['photos'];
+        }
+            
+        $query = Input::has('q') ? Input::get('q') : ''; 
+        
+        $pagination = Photo::paginateAllPhotosSearchAdvance($photos,$query);
+        return $this->paginationResponseSearch($pagination, 'add');
+    }
+
+    private function paginationResponseSearch($photos, $type) {
+        $count = $photos->getTotal();
+        $page = $photos->getCurrentPage();
+        $response = [];
+        $response['content'] = View::make('photos.includes.searchResult_include')
+            ->with(['photos' => $photos, 'page' => $page, 'type' => $type])
+            ->render();
+        $response['maxPage'] = $photos->getLastPage();
+        $response['empty'] = ($photos->count() == 0);
+        $response['count'] = $count;
+        return Response::json($response);
+    }
+
+    
+
+    
 }

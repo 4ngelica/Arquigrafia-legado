@@ -96,6 +96,7 @@
     <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), -Math.PI/2);">Girar 90° para esquerda</a>
     <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), Math.PI/2);">Girar 90° para direita</a>
     </div>
+    <br></br>
     <p>
     {{ Form::label('photo','Imagem:') }}
     {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
@@ -368,11 +369,11 @@
     Permitir o uso comercial da imagem?
     <br>
     <div class="form-row">
-    <input type="radio" name="photo_allowCommercialUses" value="YES" id="photo_allowCommercialUses" checked="checked">
+    <input type="radio" name="photo_allowCommercialUses" value="YES" id="photo_allowCommercialUsesYES" checked="checked">
     <label for="photo_allowCommercialUses">Sim</label><br class="clear">
     </div>
     <div class="form-row">
-    <input type="radio" name="photo_allowCommercialUses" value="NO" id="photo_allowCommercialUses">
+    <input type="radio" name="photo_allowCommercialUses" value="NO" id="photo_allowCommercialUsesNO">
     <label for="photo_allowCommercialUses">Não</label><br class="clear">
     </div>
     </div>
@@ -380,15 +381,15 @@
     Permitir modificações em sua imagem?
     <br>
     <div class="form-row">
-    <input type="radio" name="photo_allowModifications" value="YES" id="photo_allowModifications" checked="checked">
+    <input type="radio" name="photo_allowModifications" value="YES" id="photo_allowModificationsYES" checked="checked">
     <label for="question_3-5">Sim</label><br class="clear">
     </div>
     <div class="form-row">
-    <input type="radio" name="photo_allowModifications" value="YES_SA" id="photo_allowModifications">
+    <input type="radio" name="photo_allowModifications" value="YES_SA" id="photo_allowModificationsYES_SA">
     <label for="question_3-5">Sim, contanto que os outros compartilhem de forma semelhante</label><br class="clear">
     </div>
     <div class="form-row">
-    <input type="radio" name="photo_allowModifications" value="NO" id="photo_allowModifications">
+    <input type="radio" name="photo_allowModifications" value="NO" id="photo_allowModificationsNO">
     <label for="question_3-5">Não</label><br class="clear">
     </div>
     </div>
@@ -405,8 +406,7 @@
     
     <script type="text/javascript">
     $(document).ready(function() {
-        if({{Input::old('autoOpenModal','false')}}){
-            
+        if({{Input::old('autoOpenModal','false')}}){    
             $( "#dialog-confirm" ).html("<b>Cadastro de imagem realizado com sucesso!</b> <br><br> Gostaria de utilizar os dados da imagem cadastrada para o próximo upload?");
             $( "#dialog-confirm" ).dialog({
                 resizable: false,
@@ -423,6 +423,21 @@
                 }
             });
         }
+
+        var radio_checked_commercial    = "{{"photo_allowCommercialUses".(Input::old('photo_allowCommercialUses'))}}";
+        var radio_checked_modifications = "{{"photo_allowModifications".(Input::old('photo_allowModifications'))}}";
+
+        if((radio_checked_commercial != "photo_allowCommercialUses") && (radio_checked_modifications != "photo_allowModifications")) {
+            if(radio_checked_commercial != "photo_allowCommercialUsesYES") {
+                document.getElementById("photo_allowCommercialUsesYES").checked = false;
+                document.getElementById(radio_checked_commercial).checked       = true;
+            }
+            if(radio_checked_modifications != "photo_allowModificationsYES") {
+                document.getElementById("photo_allowModificationsYES").checked = false;
+                document.getElementById(radio_checked_modifications).checked   = true;
+            }
+        }
+
         $('#tags').textext({ plugins: 'tags' });
         @if(Input::old('tags')!=null)
             <?php $tags = explode (",", Input::old('tags')); ?>

@@ -126,3 +126,7 @@ Route::get('/refreshBubble', 'NotificationsController@howManyUnread');
 Route::get('/institutions/{id}', 'InstitutionsController@show');
 Route::get('/institutions/{id}/edit', 'InstitutionsController@edit');
 Route::resource('/institutions','InstitutionsController');
+
+/* SEARCH PAGE */
+Route::get('/search/paginate/other/photos', 'PagesController@paginatePhotosResult');
+Route::get('/search/more/paginate/other/photos', 'PagesController@paginatePhotosResultAdvance');
