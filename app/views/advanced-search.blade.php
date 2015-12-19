@@ -36,7 +36,29 @@
 
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
-
+<!-- pages -->
+<script src="{{ URL::to('/js/searchPagination.js') }}"></script> 
+<script src="{{ URL::to('/js/albums-covers.js') }}"></script> 
+<link rel="stylesheet" type="text/css" href="{{ URL::to('/css/tabs.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/album.css" />
+<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/checkbox-edition.css" />
+<script>
+    var paginators = {
+      add: {
+        currentPage: 1,
+        maxPage: {{ $maxPage }},
+        url: '{{ $url }}',
+        loadedPages: [1],
+        selectedItems: 0,
+        searchQuery: '',
+        selected_photos: 0,
+      }
+    };
+    var coverPage = 1;    
+    var covers_counter = 0;    
+    var update = null;
+   
+  </script>
 @stop
 
 @section('content')
@@ -306,14 +328,15 @@
       </div>
       @if (count($photos))
         <!--   PAINEL DE IMAGENS - GALERIA - CARROSSEL   -->
-        <div class="wrap">
+        <!--<div class="wrap">
           <div id="panel">
-            @include('includes.panel')
+            include('includes.panel')
           </div>
   		    <div class="panel-back"></div>
-          <div class="panel-next"></div>
-        </div>
+          <div class="panel-next"></div>          
+        </div> -->        
       <!--   FIM - PAINEL DE IMAGENS  -->
+      @include('includes.result-search')
     @endif
     </div>
     <!--   FIM - MEIO DO SITE   -->

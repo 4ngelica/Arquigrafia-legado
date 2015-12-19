@@ -39,7 +39,11 @@
 
       @if (Auth::check())
         @if ( Session::has('institutionId') )
-          <a id="user_name" href="{{ URL::to('/institutions/' . $institution->id) }}">{{ $institution->name; }}</a>
+            @if($institution->id == 3)
+            <a id="user_name" href="{{ URL::to('/institutions/' . $institution->id) }}">MRCI</a>
+            @else 
+            <a id="user_name" href="{{ URL::to('/institutions/' . $institution->id) }}">{{ $institution->name; }}</a>
+            @endif
           <a id="user_photo" href="{{ URL::to('/institutions/' . $institution->id) }}">
             @if( ! empty($institution->photo) )
               <img src="{{ asset($institution->photo) }}" width="48" height="48" class="user_photo_thumbnail"/>
