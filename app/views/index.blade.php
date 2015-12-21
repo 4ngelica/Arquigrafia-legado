@@ -22,22 +22,6 @@
   @endif
   <!--   MEIO DO SITE - ÁREA DE NAVEGAÇÃO   -->
   <div id="content">
-  @if(Auth::user())
-    @if(Auth::user()->news->count() > 0)
-      <div class="container">
-        <div class="twelve columns">
-          <div class="news clearfix">
-            <hgroup class="profile_block_title">
-              <h3><img src="{{ asset("img/logo-mini.png") }}" width="16" height="16"/>
-                Atualizações:
-              </h3>
-            </hgroup>
-            @include('includes.news')
-          </div>
-        </div>
-      </div>
-    @endif
-  @endif
     <!--   PAINEL DE IMAGENS - GALERIA - CARROSSEL   -->  
     <div class="wrap">
       <div id="panel">

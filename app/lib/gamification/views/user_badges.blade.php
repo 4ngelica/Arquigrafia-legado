@@ -3,15 +3,15 @@
     <hgroup class="profile_block_title">
       <h3><i class="badges"></i>
         @if( $user->equal(Auth::user()) )
-          Meus troféus
+          Minhas conquistas
         @else
-          Troféus
+          Conquistas
         @endif
       </h3>
     </hgroup>
     <div class="profile_box">
       @if ( !$user->badges->count() )
-        <p>Ainda não possui troféus.</p>
+        <p>Ainda não há nenhuma conquista.</p>
       @else
         @foreach($user->badges as $b)
           <div class="one column">
