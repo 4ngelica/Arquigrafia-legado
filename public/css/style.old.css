@@ -641,18 +641,20 @@ input#login_white_button:hover { background-position: -160px -258px; }
 
 a.hovertext {
     position: relative;
-    width: 104px;
+    width: 103px;
     text-decoration: none !important;
-    text-align: center;
+    text-align: left;
+    font-size: 11px;
+
   }
   a.hovertext:after {
     content: attr(title);
     position: absolute;
     left: 0;
     bottom: 0;
-    padding: 0.5em 20px;
-    width: 104px;
-    background: rgba(0,0,0,0.8);
+    padding: 0.5em 5px;
+    width: 134px;
+    background: rgba(0,0,0,0.7);
     text-decoration: none !important;
     color: #fff;
     opacity: 0;
@@ -862,3 +864,7 @@ p.position { font-size: 20px; }
 .label_following { margin: -7px 0px 0px -2px; }
 .position_info {position: relative;}
 .div_avatar_size_inst { height:75px; max-width:120px; display:block; float: left;}
+/** search page **/
+.cls_image_search { height: 83px; width: 124px; padding: 0px; margin: 2px; cursor: pointer; border: 1px solid #fff; position: absolute; z-index: 2; }
+.gallery_photo2 { width: 144px; height: 104px; }
+.container.twelveMid.columns { width: 960px; }

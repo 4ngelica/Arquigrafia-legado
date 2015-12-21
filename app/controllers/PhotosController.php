@@ -28,9 +28,10 @@ class PhotosController extends \BaseController {
     if ( !isset($photos) ) {
       return Redirect::to('/');
     }
+    $user = null;
     $user = Auth::user();
     $photo_owner = $photos->user; 
-    
+    //dd($user);
     $photo_institution = $photos->institution;     
     
     $tags = $photos->tags;
@@ -87,7 +88,8 @@ class PhotosController extends \BaseController {
       'ownerInstitution' => $photo_institution,
       'institution' => $institution,
       'authorsList' => $authorsList,
-      'followInstitution' => $followInstitution
+      'followInstitution' => $followInstitution,
+      'user' => $user
     ]);
   }
 

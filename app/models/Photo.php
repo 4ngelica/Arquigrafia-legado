@@ -149,8 +149,12 @@ class Photo extends Eloquent {
 
 		return static::notInAlbum($album, $q)->withUser($user)
 			->withoutInstitutions()->paginate($perPage);
+
 		
 	}
+
+	
+
 
 	public static function paginateInstitutionPhotosNotInAlbum($inst, $album, $q = null, $perPage = 24) {
 		return static::notInAlbum($album, $q)
@@ -533,7 +537,7 @@ class Photo extends Eloquent {
 			$input = array_except($input, 'workAuthor_area'); 
 		}
 		foreach ( $input as $column => $value) { 			
-			$query->where($column, 'LIKE', '%' . $value . '%');
+			$query->where('photos.'.$column, 'LIKE', '%' . $value . '%');
 		}
 
 		$query->withTagsVarious($tags);
@@ -541,10 +545,12 @@ class Photo extends Eloquent {
 		$query->withAuthorsVarious($authorsArea);
 
 		$query->groupBy('photos.id');
-		$resultSet = $query->get();
-		//dd(DB::getQueryLog());
+		$resultSet = $query->get();		
     	return $resultSet;
 	}
+
+
+
 
 	public function authorTextFormat($authorName){
 		
@@ -580,4 +586,141 @@ class Photo extends Eloquent {
 	public function hasInstitution() {
 		return ! is_null ($this->institution_id);
 	}
+
+
+	/////asaassa
+
+	public function scopeWithTagsName($query, $tag) {
+		if(!empty($tag)) { 				
+				$query->join('tag_assignments','tag_assignments.photo_id','=','photos.id');
+				$query->join('tags','tags.id','=','tag_assignments.tag_id');
+				$query->where(function($sub_query) use ($tag) {					
+						$sub_query->where('tags.name', '=', $tag); 
+				});	
+		}
+		return $query;
+	}
+
+	public function scopeWithAuthorName($query, $author) {
+		if(!empty($author)) { 				
+				$query->join('photo_author','photo_author.photo_id','=','photos.id');
+				$query->join('authors','authors.id','=','photo_author.author_id');
+				$query->where(function($sub_query) use ($author) {					
+						$sub_query->where('authors.name', '=', $author); 
+				});	
+		}
+		return $query;
+	}
+
+
+	//busc Simples
+	public function scopeWithAttributesBuilder($query, $needle) {
+		$qq = $query->orWhere('photos.name', 'LIKE', '%'. $needle .'%')
+			->orWhere('photos.description', 'LIKE', '%'. $needle .'%')
+			->orWhere('photos.imageAuthor', 'LIKE', '%' . $needle . '%')			
+			->orWhere('photos.country', 'LIKE', '%'. $needle .'%')
+			->orWhere('photos.state', 'LIKE', '%'. $needle .'%')
+			->orWhere('photos.city', 'LIKE', '%'. $needle .'%');			
+		return $qq;	
+	}
+
+	public function scopeWithBinomialsxxx($query, $binomials) {
+		foreach($binomials as $binomial => $avg) {
+			$query->whereIn('photos.id', function ($sub_query) use ($binomial, $avg) { //id //photos.id 
+				$sub_query->select('photo_id')->from('binomial_evaluation')
+					->whereRaw('binomial_id = ' . $binomial)
+					->groupBy('photo_id')
+					->havingRaw('avg(evaluationPosition) >= ' . ($avg - 5))
+					->havingRaw('avg(evaluationPosition) <= ' . ($avg + 5));
+			});
+		}
+		return $query;
+	}
+
+	public static function search2($needle,$perPage = 24 ) { 
+
+		$query = static::query()->select(DB::raw('photos.*'))
+		->withAttributesBuilder($needle)->withTagsName($needle)
+		->withAuthorName($needle)
+		->groupBy('photos.id')->paginate($perPage); 		
+    	
+    	return $query;
+	}
+
+	public static function searchPhotosField($needle,$perPage = 24 ) { 
+		$query = static::query()->select(DB::raw('photos.*'))
+		->withAttributesBuilder($needle)
+		->orderBy('photos.id')
+		->groupBy('photos.id')
+		->paginate($perPage); 
+		//$resultSet = $query->get(); 	
+    	//return $resultSet;
+    	return $query;
+	}
+
+	public static function searchPhotosWithTags($needle,$perPage = 24 ) { 
+		$query = static::query()->select(DB::raw('photos.*'))
+		->withTagsName($needle)
+		->orderBy('photos.id')
+		->groupBy('photos.id')
+		->paginate($perPage); 
+		//$resultSet = $query->get();    	
+    	//return $resultSet;
+    	return $query;
+	}
+
+	public static function searchPhotosWithAuthor($needle,$perPage = 24 ) { 
+		$query = static::query()->select(DB::raw('photos.*'))
+		->withAuthorName($needle)
+		->orderBy('photos.id')
+		->groupBy('photos.id')
+		->paginate($perPage); 
+		//$resultSet = $query->get();		
+    	
+    	return $query;
+	}
+
+
+
+
+	public function scopePhotosVarious($query, $photos, $q = null) { 
+		if(!empty($photos)) { 				
+				$query->where(function($sub_query) use ($photos) {
+					foreach ($photos as $photo) {
+						//echo $photo->id." ";
+						$sub_query->orwhere('photos.id', '=', $photo->id);						
+					} })->whereMatches($q);	
+		}
+		return $query;
+	}
+
+
+	public static function paginatePhotosSearch($photos, $perPage = 36,$q = null) { 		
+		if($photos!= null){
+			$qq = static::PhotosVarious($photos, $q)->paginate($perPage);			
+			return $qq;
+		}else{
+			return null;
+		}			
+	}
+
+	
+	public static function paginateAllPhotosSearch($photos, $q = null, $perPage = 36) { 		
+		return static::PhotosVarious($photos,$q)->paginate($perPage);	
+	}
+
+	public static function paginateAllPhotosSearchAdvance($photos, $q = null, $perPage = 36) { 		
+		return static::PhotosVarious($photos,$q)->paginate($perPage);	
+	}
+
+	public static function paginatePhotosSearchAdvance($photos, $perPage = 36,$q = null) {		
+		if($photos!= null)
+			return static::PhotosVarious($photos, $q)->paginate($perPage);	
+		else 
+			return null;
+					
+	}
+
+
+
 }
