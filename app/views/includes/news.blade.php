@@ -131,16 +131,6 @@
   </a>
   <br />
 </div>
-@elseif($info->news_type == 'check_institution')
-<div class="gallery_box">
-  <a href='{{ URL::to("/institutions") . "/" . $info->object_id }}'>                 
-    <img src={{"/arquigrafia-avatars-inst/" . $info->object_id . ".jpg"}} title="{{ Institution::find($info->object_id)->name }}"  />
-  </a>
-  <a href='{{ URL::to("/institutions") . "/" . $info->object_id }}' class="name">
-    Novas imagens adquiridas pelo {{Institution::find($info->object_id)->name}}
-  </a>
-  <br />
-</div>
 @elseif($info->news_type == 'check_evaluation')
 <div class="gallery_box">
   <a href='{{ URL::to("/photos") . "/" . $info->object_id . "/evaluate" }}'>                 
