@@ -1,5 +1,6 @@
 <?php
 
+use lib\draft\DraftingTrait;
 use lib\date\Date;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use lib\gamification\traits\LikableGamificationTrait;
@@ -7,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection as Collection;
 
 class Photo extends Eloquent {
 
+	use DraftingTrait;
 	use SoftDeletingTrait;
 	use LikableGamificationTrait;
 
