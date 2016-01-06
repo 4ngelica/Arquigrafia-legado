@@ -84,7 +84,7 @@
                 if ($notesCounter != 1) $title = "Você tem " . $notesCounter . " notificações não lidas";
                 else $title = "Você tem " . $notesCounter . " notificação não lida";
               ?>
-              <a onclick="toggleNotes()" id="notification" title="{{$title}}"><i class="notification">&nbsp;</i> ATUALIZAÇÕES</a>
+              <a onclick="toggleNotes()" id="notification" title="{{$title}}"><i class="notification">&nbsp;</i> NOTIFICAÇÕES</a>
               @if ($notesCounter > 0) <div id="bubble"> {{$notesCounter}} </div>  @endif
             </div>
           </li>
