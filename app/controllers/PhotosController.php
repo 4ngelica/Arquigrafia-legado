@@ -1634,6 +1634,43 @@ class PhotosController extends \BaseController {
       $tag->save();
     }
     DB::table('tag_assignments')->where('photo_id', '=', $photo->id)->delete();
+    $all_users = User::all();
+    foreach ($all_users as $users) {
+      foreach ($users->news as $news) {
+        if ($news->news_type == 'liked_photo' || $news->news_type == 'highlight_of_the_week' || $news->news_type == 'edited_photo' || $news->news_type == 'evaluated_photo' || $news->news_type == 'new_institutional_photo' || $news->news_type == 'new_photo') {
+          if ($news->object_id == $photo->id) {
+            $news->delete();
+          }
+        }
+        if ($news->news_type == 'commented_photo') {
+          $object_comment = Comment::find($news->object_id);
+          $object_photo = Photo::find($object_comment->photo_id);
+          if ($photo->id == $object_photo->id) {
+            $news->delete();
+          }
+        }
+      }
+      foreach ($users->notifications as $notes) {
+        $curr_note = DB::table('notifications')->where('id', $notes->notification_id)->get();
+        if (!is_null($curr_note)) {
+          if ($curr_note->type = 'photo_liked') {
+            if ($curr_note->object_id = $photo->id) {
+              $curr_note->delete();
+              $notes->delete();
+            }
+          }
+          if ($curr_note->type = 'comment_liked' || $curr_note->type = 'comment_posted') {
+            $note_comment = Comment::find($curr_note->object_id);
+            $note_photo = Photo::find($note_comment->photo_id);
+            if ($photo->id == $note_photo->id) {
+              $curr_note->delete();
+              $notes->delete();
+            }
+          }
+        }
+      }
+    }
+
     $photo->delete();
     return Redirect::to('/users/' . $photo->user_id);
   }
