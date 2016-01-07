@@ -16,7 +16,15 @@ trait DraftingTrait {
   }
 
   public function getQualifiedDraftColumn() {
-    return 'photos.draft';
+    return $this->getTable() . '.draft';
+  }
+
+  public function draft() {
+    $this->draft = $this->freshTimestampString();
+  }
+
+  public function removeDraft() {
+    $this->draft = null;
   }
 
 }

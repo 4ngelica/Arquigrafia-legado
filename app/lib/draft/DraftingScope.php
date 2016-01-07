@@ -31,7 +31,7 @@ class DraftingScope implements \Illuminate\Database\Eloquent\ScopeInterface {
     {
       $this->remove($builder);
       
-      $builder->getQuery()->whereNotNull($builder->getModel()->getQualifiedDeletedAtColumn());
+      $builder->getQuery()->whereNotNull($builder->getModel()->getQualifiedDraftColumn());
 
       return $builder;
     });

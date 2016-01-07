@@ -868,3 +868,4 @@ p.position { font-size: 20px; }
 .cls_image_search { height: 83px; width: 124px; padding: 0px; margin: 2px; cursor: pointer; border: 1px solid #fff; position: absolute; z-index: 2; }
 .gallery_photo2 { width: 144px; height: 104px; }
 .container.twelveMid.columns { width: 960px; }
+div.draft { font-size: 14px !important; }

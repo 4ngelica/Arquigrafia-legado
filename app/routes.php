@@ -15,6 +15,9 @@ Route::get('/test', function () {
   //testes
 });
 
+/* DRAFTS */
+Route::get('/drafts/{id}', 'PhotosController@getDraft');
+Route::get('/drafts', 'PhotosController@listDrafts');
 /* IMPORTS */
 Route::get('/photos/import', 'ImportsController@import');
 
