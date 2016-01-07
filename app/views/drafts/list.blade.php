@@ -8,7 +8,7 @@
   <div class="container">
     <a href="{{ URL::previous() }}" class="row">Voltar para a página anterior</a>
     <br>
-    <h1 class="row">Informações prontas para upload ({{ $drafts->count() }})</h1>
+    <h1 class="row">Uploads incompletos ({{ $drafts->count() }})</h1>
     @foreach($drafts as $draft)
       <a href="{{ URL::to('/drafts/' . $draft->id) }}">
         <div class="three columns draft row">

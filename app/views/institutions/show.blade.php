@@ -93,10 +93,10 @@
     <div class="container row">
       <div class="twelve columns">
         <hgroup class="profile_block_title">
-          <h3><i class="upload"></i>Informações prontas para upload</h3>
+          <h3><i class="upload"></i>Uploads incompletos</h3>
           @if ($drafts->count())
             <div class="two columns">
-              <a href="{{ URL::to('/drafts') }}">Ver tudo</a>
+              <a href="{{ URL::to('/drafts') }}">Visualizar todos</a>
             </div>
           @endif
         </hgroup>
