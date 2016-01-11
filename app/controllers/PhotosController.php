@@ -989,17 +989,38 @@ class PhotosController extends \BaseController {
       $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
       $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
 
-      $photo->saveMetadata(strtolower($ext));
+      //$photo->saveMetadata(strtolower($ext));
       $input['photoId'] = $photo->id;
       $input['dates'] = true;
       $input['dateImage'] = true;
       //return Redirect::to("/photos/{$photo->id}");
       foreach(Auth::user()->followers as $users) {
-        News::create(array('object_type' => 'Photo', 
+        foreach ($users->news as $note) {
+          if($note->news_type == 'new_photo' && $note->sender_id == Auth::user()->id) {
+              $curr_note = $note;
+            }
+        }
+        if(isset($curr_note)) {
+          $date = $curr_note->created_at;
+          if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
+            News::create(array('object_type' => 'Photo', 
                            'object_id' => $photo->id, 
                            'user_id' => $users->id, 
                            'sender_id' => Auth::user()->id, 
                            'news_type' => 'new_photo'));
+          }
+          else {
+            $curr_note->object_id = $photo->id;
+            $curr_note->save();
+          }
+        }
+        else {
+          News::create(array('object_type' => 'Photo', 
+                             'object_id' => $photo->id, 
+                             'user_id' => $users->id, 
+                             'sender_id' => Auth::user()->id, 
+                             'news_type' => 'new_photo'));
+        }
       }
 
       return Redirect::back()->withInput($input);
@@ -1653,18 +1674,20 @@ class PhotosController extends \BaseController {
       foreach ($users->notifications as $notes) {
         $curr_note = DB::table('notifications')->where('id', $notes->notification_id)->get();
         if (!is_null($curr_note)) {
-          if ($curr_note->type = 'photo_liked') {
-            if ($curr_note->object_id = $photo->id) {
-              $curr_note->delete();
+          if ($curr_note[0]->type == 'photo_liked') {
+            if ($curr_note[0]->object_id == $photo->id) {
+              $curr_note[0]->delete();
               $notes->delete();
             }
           }
-          if ($curr_note->type = 'comment_liked' || $curr_note->type = 'comment_posted') {
-            $note_comment = Comment::find($curr_note->object_id);
+          if ($curr_note[0]->type = 'comment_liked' || $curr_note[0]->type = 'comment_posted') {
+            $note_comment = Comment::find($curr_note[0]->object_id);
             $note_photo = Photo::find($note_comment->photo_id);
-            if ($photo->id == $note_photo->id) {
-              $curr_note->delete();
-              $notes->delete();
+            if(!is_null($note_photo)) {
+              if ($photo->id == $note_photo->id) {
+                $curr_note[0]->delete();
+                $notes->delete();
+              }
             }
           }
         }
