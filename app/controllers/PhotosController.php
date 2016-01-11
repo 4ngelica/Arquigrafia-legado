@@ -1598,13 +1598,13 @@ class PhotosController extends \BaseController {
       $user = User::find($photo->user_id);
       foreach ($user->followers as $users) {
           foreach ($users->news as $note) {
-            if($note->news_type == 'edited_photo') {
+            if($note->news_type == 'edited_photo' && $note->sender_id == $user->id) {
               $curr_note = $note;
             }
           }
           if(isset($curr_note)) {
             if($note->sender_id == $user->id) {
-              $date = $note->created_at;
+              $date = $curr_note->created_at;
               if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
                 News::create(array('object_type' => 'User', 
                                    'object_id' => $user->id, 

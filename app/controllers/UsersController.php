@@ -664,13 +664,13 @@ class UsersController extends \BaseController {
         $file->move(public_path().'/arquigrafia-avatars', $user->id."_original.".strtolower($ext)); 
         foreach ($user->followers as $users) {
           foreach ($users->news as $note) {
-            if($note->news_type == 'new_profile_picture') {
+            if($note->news_type == 'new_profile_picture' && $note->sender_id == $user->id) {
               $curr_note = $note;
             }
           }
           if(isset($curr_note)) {
             if($note->sender_id == $user->id) {
-              $date = $note->created_at;
+              $date = $curr_note->created_at;
               if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
                 News::create(array('object_type' => 'User', 
                                    'object_id' => $user->id, 
@@ -692,13 +692,13 @@ class UsersController extends \BaseController {
       else {
         foreach ($user->followers as $users) {
           foreach ($users->news as $note) {
-            if($note->news_type == 'edited_profile') {
+            if($note->news_type == 'edited_profile' && $note->sender_id == $user->id) {
               $curr_note = $note;
             }
           }
           if(isset($curr_note)) {
             if($note->sender_id == $user->id) {
-              $date = $note->created_at;
+              $date = $curr_note->created_at;
               if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
                 News::create(array('object_type' => 'User', 
                                    'object_id' => $user->id, 
