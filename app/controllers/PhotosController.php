@@ -385,7 +385,7 @@ class PhotosController extends \BaseController {
       $photo->user_id = Auth::id();
       $photo->dataUpload = date('Y-m-d H:i:s');
       $photo->institution_id = Session::get('institutionId');
-
+      
       if (Input::has('draft')) {
         $photo->nome_arquivo = 'draft';
         $photo->draft();
@@ -403,18 +403,39 @@ class PhotosController extends \BaseController {
         $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); 
         $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
         $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
-        $photo->saveMetadata(strtolower($ext));
+        //$photo->saveMetadata(strtolower($ext));
         //ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "UploadInstitutional", "user");
         //ActionUser::printTags($photo->user_id, $photo->id, $tagsCopy, $sourcePage, "user", "Inseriu");
         /* Feed de notícias para todos os usuários */
         foreach (User::all() as $users) {
-          News::create(array(
-            'object_type' => 'Photo',
-            'object_id' => $photo->id,
-            'user_id' => $users->id,
-            'sender_id' => $photo->institution_id,
-            'news_type' => 'new_institutional_photo'
-          ));
+          foreach ($users->news as $note) {
+          if($note->news_type == 'new_institutional_photo' && $note->sender_id == Session::get('institutionId')) {
+              $curr_note = $note;
+            }
+          }
+          if(isset($curr_note)) {
+            $date = $curr_note->created_at;
+            if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
+              News::create(array('object_type' => 'Photo',
+                                 'object_id' => $photo->id,
+                                 'user_id' => $users->id,
+                                 'sender_id' => $photo->institution_id,
+                                 'news_type' => 'new_institutional_photo'
+              ));
+            }
+            else {
+              $curr_note->object_id = $photo->id;
+              $curr_note->save();
+            }
+          }
+          else {
+            News::create(array('object_type' => 'Photo',
+                               'object_id' => $photo->id,
+                               'user_id' => $users->id,
+                               'sender_id' => $photo->institution_id,
+                               'news_type' => 'new_institutional_photo'
+            ));
+          }
         }
       } else {
         $messages = $validator->messages();
@@ -989,7 +1010,7 @@ class PhotosController extends \BaseController {
       $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
       $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
 
-      //$photo->saveMetadata(strtolower($ext));
+      $photo->saveMetadata(strtolower($ext));
       $input['photoId'] = $photo->id;
       $input['dates'] = true;
       $input['dateImage'] = true;
