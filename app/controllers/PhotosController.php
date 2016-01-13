@@ -1697,7 +1697,7 @@ class PhotosController extends \BaseController {
         if (!is_null($curr_note)) {
           if ($curr_note[0]->type == 'photo_liked') {
             if ($curr_note[0]->object_id == $photo->id) {
-              $curr_note[0]->delete();
+              DB::table('notifications')->where('id', $notes->notification_id)->delete();
               $notes->delete();
             }
           }
@@ -1706,7 +1706,7 @@ class PhotosController extends \BaseController {
             $note_photo = Photo::find($note_comment->photo_id);
             if(!is_null($note_photo)) {
               if ($photo->id == $note_photo->id) {
-                $curr_note[0]->delete();
+                DB::table('notifications')->where('id', $notes->notification_id)->delete();
                 $notes->delete();
               }
             }
