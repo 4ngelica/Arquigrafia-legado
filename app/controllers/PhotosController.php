@@ -1693,17 +1693,17 @@ class PhotosController extends \BaseController {
         }
       }
       foreach ($users->notifications as $notes) {
-        $curr_note = DB::table('notifications')->where('id', $notes->notification_id)->get();
+        $curr_note = DB::table('notifications')->where('id', $notes->notification_id)->first();
         if (!is_null($curr_note)) {
-          if ($curr_note[0]->type == 'photo_liked') {
-            if ($curr_note[0]->object_id == $photo->id) {
+          if ($curr_note->type == 'photo_liked') {
+            if ($curr_note->object_id == $photo->id) {
               DB::table('notifications')->where('id', $notes->notification_id)->delete();
               $notes->delete();
             }
           }
-          if ($curr_note[0]->type = 'comment_liked' || $curr_note[0]->type = 'comment_posted') {
-            $note_comment = Comment::find($curr_note[0]->object_id);
-            $note_photo = Photo::find($note_comment->photo_id);
+          if ($curr_note->type = 'comment_liked' || $curr_note->type = 'comment_posted') {
+            $note_comment = Comment::find($curr_note->object_id);
+            if (!is_null($note_comment)) $note_photo = Photo::find($note_comment->photo_id);
             if(!is_null($note_photo)) {
               if ($photo->id == $note_photo->id) {
                 DB::table('notifications')->where('id', $notes->notification_id)->delete();
