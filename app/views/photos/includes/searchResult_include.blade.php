@@ -1,9 +1,9 @@
 <?php $count = 0; 
 	  $type = 'add';
 ?>
+
 <table id="{{ $type . '_page' . $page }}" class="page form-table" width="100%" border="0"
-	cellspacing="0" cellpadding="0">
-	
+	cellspacing="0" cellpadding="0">	
 	@foreach($photos as $photo)
 		@if ($count % 6 == 0)
 		<tr>
@@ -17,7 +17,8 @@
 			@else
 				<?php $position = 'left'; ?>
 			@endif
-			
+			<!-- <p>{{-- $page --}}</p> -->
+			<input type="hidden" id="pageCur" value="{{$page}}">
 			<a class="hovertext" href='{{ URL::to("/photos/{$photo->id}") }}' class="gallery_photo2" title="{{ $photo->name }}">
 			<img 
 			class="gallery_photo2" class="cls_image_search"  src="{{ URL::to('/arquigrafia-images/' . $photo->id . '_home.jpg') }}"
