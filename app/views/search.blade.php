@@ -15,7 +15,7 @@
 
     var paginators = {
       add: {
-        currentPage: 1,
+        currentPage: {{ $page}},//1,
         maxPage: {{ $maxPage }},
         url: '{{ $url }}',
         loadedPages: [1],
@@ -23,11 +23,15 @@
         searchQuery: '',
         selected_photos: 0,
       }
+
     };
+    console.log({{$page}});
     var coverPage = 1;    
     var covers_counter = 0;    
     var update = null;
-   
+    
+    
+    
   </script>
 @stop
 
@@ -131,7 +135,10 @@
         <p><a href="{{ URL::previous() }}">Voltar para página anterior</a></p>
       </div>
     </div>
-
+    <input type="hidden" id="pgVisited" value="{{$pageVisited}}">
+    <input type="hidden" id="pageCurrent1" value="{{$page}}">
+    <input type="hidden" id="urlType" value="simple">
+    
     <!--   PAINEL DE IMAGENS - GALERIA - CARROSSEL   -->  
      <!--  <div class="wrap">
          <div id="panel">
@@ -149,5 +156,5 @@
     <!-- FIM FOTOS PAGINADAS -->
   </div>
   <!--   FIM - MEIO DO SITE   -->
-    
+  
 @stop
