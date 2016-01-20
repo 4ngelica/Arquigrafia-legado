@@ -101,20 +101,7 @@
           @endif
         </hgroup>
         <div class="profile_box">
-          @foreach ($drafts->take(4) as $draft)
-            <a href="{{ URL::to('/drafts/' . $draft->id) }}">
-              <div class="three columns omega">
-                <ul>
-                  <li><strong>Título:</strong> {{ $draft->name }}</li>
-                  <li><strong>Suporte:</strong> {{ $draft->support }}</li>
-                  <li><strong>Tombo:</strong> {{ $draft->tombo }}</li>
-                  <li><strong>Suporte:</strong> {{ $draft->support }}</li>
-                  <li><strong>Caracterização:</strong> {{ $draft->characterization }}</li>
-                  <li><strong>...</strong></li>
-                </ul>
-              </div>
-            </a>
-          @endforeach
+          @include('drafts.list')
         </div>
       </div>
     </div>
@@ -253,11 +240,20 @@
       <p></p>
       {{ Form::open(array('url' => '', 'method' => 'delete')) }}
         <div id="registration_buttons">
-              <input type="submit" class="btn" value="Confirmar" />
+          <input type="submit" class="btn" value="Confirmar" />
           <a class="btn close" href="#" >Cancelar</a>
         </div>
       {{ Form::close() }}
     </div>
   </div>
-
+  <div id="draft_window" class="window">
+    <div id="registration_delete">
+      <p>Tem certeza que deseja excluir estes dados?</p>
+      <div id="registration_buttons">
+        <a href="#" class="delete_draft_confirm btn">Confirmar</a>
+        <a class="btn close" href="#" >Cancelar</a>
+      </div>
+    </div>
+  </div>
+  <div class="message_box"></div>
 @stop

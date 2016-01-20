@@ -210,7 +210,21 @@ class PhotosController extends \BaseController {
       Log::error("Logging exception, error to register tags");           
       $saved = false;
     }
-    return $saved;  
+    return $saved;
+  }
+
+  public function paginateDrafts() {
+    $institution = Session::get('institutionId');
+    $perPage = Input::get('perPage') ?: 50;
+    $drafts = Photo::withInstitution($institution)->onlyDrafts()->paginate($perPage);
+    $view = View::make('drafts.draft_list')
+      ->with([ 'drafts' => $drafts ])->render();
+    return Response::json([
+        'view' => $view,
+        'current_page' => $drafts->getCurrentPage(),
+        'last_page' => $drafts->getLastPage(),
+        'total_items' => $drafts->getTotal()
+    ]);
   }
 
   public function listDrafts() {
@@ -219,8 +233,8 @@ class PhotosController extends \BaseController {
       return Redirect::to('/');
     }
     $drafts = Photo::with('tags')->withInstitution($institution)
-      ->onlyDrafts()->get();
-    return View::make('drafts.list')->with([
+      ->onlyDrafts()->paginate(100);
+    return View::make('drafts.show')->with([
       'drafts' => $drafts
     ]);
   }
@@ -275,6 +289,34 @@ class PhotosController extends \BaseController {
     }
     return Redirect::to('/photos/uploadInstitutional')
       ->withInput($input);
+  }
+
+  public function deleteDraft() {
+    $id = Input::get('draft');
+    $last_page = Input::get('last_page');
+    $perPage = Input::get('per_page');
+    $institution = Session::get('institutionId');
+    $draft = Photo::withInstitution($institution)->onlyDrafts()->find($id);
+    if ( !is_null($draft) ) {
+      $draft->deleted_at = $draft->freshTimestampString();
+      $draft->save();
+      $drafts = Photo::withInstitution($institution)->onlyDrafts()->paginate($perPage);
+      if ( $last_page > $drafts->getLastPage()) {
+        return Response::json([
+          'refresh' => true,
+          'view' => View::make('drafts.draft_list')->with(compact('drafts'))->render(),
+          'current_page' => $drafts->getCurrentPage(),
+          'last_page' => $drafts->getLastPage(),
+          'total_items' => $drafts->getTotal()
+        ]);
+      } else {
+        return Response::json([
+            'refresh' => false,
+            'total_items' => $drafts->getTotal()
+          ]);
+      }
+    }
+    return Response::json(false);
   }
 
   public function saveFormInstitutional() {
@@ -1702,6 +1744,7 @@ class PhotosController extends \BaseController {
             }
           }
           if ($curr_note->type = 'comment_liked' || $curr_note->type = 'comment_posted') {
+            $note_photo = null;
             $note_comment = Comment::find($curr_note->object_id);
             if (!is_null($note_comment)) $note_photo = Photo::find($note_comment->photo_id);
             if(!is_null($note_photo)) {
