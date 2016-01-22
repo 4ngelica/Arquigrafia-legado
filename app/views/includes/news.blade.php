@@ -30,12 +30,13 @@
   <br />
 </div>
 @elseif($info->news_type == 'commented_photo')<!--Alguém que você segue comentou uma foto-->
-<div class="gallery_box">
-  <a href='{{ URL::to("/photos") . "/" . Comment::find($info->object_id)->photo_id . "#" . $info->object_id}}'>                 
-    <img src={{"/arquigrafia-images/" . Comment::find($info->object_id)->photo_id . "_home.jpg"}} title="{{ Photo::find(Comment::find($info->object_id)->photo_id)->name }}" class="gallery_photo" />
-  </a>
-  <a href='{{ URL::to("/photos") . "/" . Comment::find($info->object_id)->photo_id . "#" . $info->object_id}}' class="name">
-    @if($info->data == null)
+  @if($info->secondary_type == NULL && $info->tertiary_type == NULL)
+  <div class="gallery_box">
+    <a href='{{ URL::to("/photos") . "/" . Comment::find($info->object_id)->photo_id . "#" . $info->object_id}}'>                 
+      <img src={{"/arquigrafia-images/" . Comment::find($info->object_id)->photo_id . "_home.jpg"}} title="{{ Photo::find(Comment::find($info->object_id)->photo_id)->name }}" class="gallery_photo" />
+    </a>
+    <a href='{{ URL::to("/photos") . "/" . Comment::find($info->object_id)->photo_id . "#" . $info->object_id}}' class="name">
+      @if($info->data == null)
         {{User::find($info->sender_id)->name}} comentou em uma foto
       @else
         <?php 
@@ -44,10 +45,22 @@
         ?>
         {{$users_size}} usuários comentaram em uma foto
       @endif
-  </a>
-  <br />
-</div>
+    </a>
+    <br />
+  </div>
+  @else
+  <div class="gallery_box">
+    <a href='{{ URL::to("/photos") . "/" . Comment::find($info->object_id)->photo_id }}'>                 
+      <img src={{"/arquigrafia-images/" . Comment::find($info->object_id)->photo_id . "_home.jpg"}} title="{{ Photo::find(Comment::find($info->object_id)->photo_id)->name }}" class="gallery_photo" />
+    </a>
+    <a href='{{ URL::to("/photos") . "/" . Comment::find($info->object_id)->photo_id }}' class="name">
+      Usuários realizaram diversas atividades nesta foto. Confira!
+    </a>
+    <br />
+  </div>
+  @endif
 @elseif($info->news_type == 'evaluated_photo')<!--Alguém que você segue avaliou uma foto-->
+@if($info->secondary_type == NULL && $info->tertiary_type == NULL)
 <div class="gallery_box">
   <a href='{{ URL::to("/photos") . "/" . $info->object_id . "/viewEvaluation/" . $info->sender_id}}'>                 
     <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
@@ -65,6 +78,17 @@
   </a>
   <br />
 </div>
+@else
+<div class="gallery_box">
+  <a href='{{ URL::to("/photos") . "/" . $info->object_id }}'>                 
+    <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
+  </a>
+  <a  href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
+    Usuários realizaram diversas atividades nesta foto. Confira!
+  </a>
+  <br />
+</div>
+@endif
 @elseif($info->news_type == 'new_profile_picture')<!--Alguém que você segue trocou a foto de perfil-->
 <div class="gallery_box">
   <a href='{{ URL::to("/users") . "/" . $info->object_id }}'>                 
@@ -114,6 +138,7 @@
   <br />
 </div>
 @elseif($info->news_type == 'liked_photo')<!--Alguém que você segue gostou de uma foto-->
+@if($info->secondary_type == NULL && $info->tertiary_type == NULL)
 <div class="gallery_box">
   <a href='{{ URL::to("/photos") . "/" . $info->object_id }}'>                 
     <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
@@ -131,6 +156,17 @@
   </a>
   <br />
 </div>
+@else
+<div class="gallery_box">
+  <a href='{{ URL::to("/photos") . "/" . $info->object_id }}'>                 
+    <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
+  </a>
+  <a  href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
+    Usuários realizaram diversas atividades nesta foto. Confira!
+  </a>
+  <br />
+</div>
+@endif
 @elseif($info->news_type == 'check_evaluation')
 <div class="gallery_box">
   <a href='{{ URL::to("/photos") . "/" . $info->object_id . "/evaluate" }}'>                 
