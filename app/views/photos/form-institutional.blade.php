@@ -111,6 +111,7 @@
 			<!--{{ Form::open(array('url'=>'photos', 'files'=> true)) }} -->
 			{{ Form::open(array('url' => "photos/savePhotoInstitutional", 'files'=> true , 'id'=>"formInstitutional")) }}
 				<div class="twelve columns row step-1">
+					<a href="{{ URL::to('/drafts') }}" class="right">Uploads incompletos</a>
 					<h1><span class="step-text">Upload</span></h1>
 					<div class="four columns alpha">
 						<img src="" id="preview_photo">
@@ -478,11 +479,13 @@
 					</div>
 					<div class="twelve columns omega row">
 						<div class="form-row">
-							<input type="radio" onclick="enableLicencenseChoice()" name="authorized" value="1" id="authorized" checked="checked">
+							{{ Form::radio('authorized', '1', true,
+								['id' => 'authorized', 'onclick' => 'enableLicencenseChoice()']) }}
 							<label for="authorized">Sou o autor da imagem ou possuo permissão expressa do autor para disponibilizá-la no Arquigrafia</label><br class="clear">
 						</div>
 						<div class="form-row">
-							<input type="radio" onclick="disableLicenseChoice()" name="authorized" value="0" id="authorized">
+							{{ Form::radio('authorized', '0', false,
+								['id' => 'authorized', 'onclick' => 'disableLicencenseChoice()']) }}
 							<label for="authorized">Aguardando autorização do autor</label><br class="clear">
 						 </div>
 					</div>
@@ -582,7 +585,7 @@
 			var text;
 			var url;
 			if ('{{ Input::old("draft", null) }}'.length) {
-				text = "<b>Informações sem imagem salvas com sucesso!</b><br><br>Gostaria de utilizar os dados anteriores novamente?";
+				text = "<b>Informações sem a imagem salvas com sucesso! Para completar os dados acesse a área de perfil do acervo ou o link 'Uploads incompletos' nesta página</b><br><br>Gostaria de utilizar os dados anteriores novamente?";
 				url = "{{ URL::to('/institutions/' . $institution->id) }}";
 			} else {
 				text = "<b>Cadastro de imagem realizado com sucesso!</b><br><br>Gostaria de utilizar os dados da imagem cadastrada para o próximo upload?";

@@ -30,7 +30,7 @@ class InstitutionsController extends \BaseController {
         $responsible = true;  
       }
     }
-    $drafts = Photo::withInstitution($institution)->onlyDrafts()->get();
+    $drafts = Photo::withInstitution($institution)->onlyDrafts()->paginate(50);
     return View::make('institutions.show', [
       'institution' => $institution,
       'photos' => $photos,

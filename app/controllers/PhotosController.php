@@ -44,6 +44,9 @@ class PhotosController extends \BaseController {
     $belongInstitution = false;
     $hasInstitution = false; 
     $institution = null;
+    $currentPage = null;
+    $urlBack = URL::previous();
+
     if (Auth::check()) {
       if(Session::has('institutionId')){
         $belongInstitution = Institution::belongInstitution($photos->id,Session::get('institutionId'));
@@ -74,7 +77,35 @@ class PhotosController extends \BaseController {
 
     $license = Photo::licensePhoto($photos);
     $authorsList = $photos->authors->lists('name');
-    
+    //
+    //echo URL::previous();
+
+   // echo strpos(, 'more');
+     $querySearch = "";
+    //echo !strpos(URL::previous(),'more');
+    if (strpos(URL::previous(),'more') !== false) {
+        if(Session::has('last_advanced_search')){
+       //echo "more";
+       $lastSearch = Session::get('last_advanced_search');
+       
+       $typeSearch = $lastSearch['typeSearch']; 
+       $currentPage = $lastSearch['page']; 
+       }
+    } else {
+       if(Session::has('last_search')){
+        //echo "searc";
+        $lastSearch = Session::get('last_search');
+        $querySearch = $lastSearch['query'];
+        $typeSearch = $lastSearch['typeSearch']; 
+        $currentPage = $lastSearch['page']; 
+        $urlBack = "search/";              
+      }
+    }
+    /*if(Session::has('CurrPage')){
+      $currentPage = Session::get('CurrPage'); 
+    }*/
+
+
     return View::make('/photos/show',
       ['photos' => $photos, 'owner' => $photo_owner, 'follow' => $follow, 'tags' => $tags,
       'commentsCount' => $photos->comments->count(),
@@ -89,7 +120,11 @@ class PhotosController extends \BaseController {
       'institution' => $institution,
       'authorsList' => $authorsList,
       'followInstitution' => $followInstitution,
-      'user' => $user
+      'user' => $user,
+      'querySearch' => $querySearch,
+      'currentPage' => $currentPage,
+      'typeSearch' => $typeSearch,
+      'urlBack' => $urlBack 
     ]);
   }
 
@@ -210,7 +245,21 @@ class PhotosController extends \BaseController {
       Log::error("Logging exception, error to register tags");           
       $saved = false;
     }
-    return $saved;  
+    return $saved;
+  }
+
+  public function paginateDrafts() {
+    $institution = Session::get('institutionId');
+    $perPage = Input::get('perPage') ?: 50;
+    $drafts = Photo::withInstitution($institution)->onlyDrafts()->paginate($perPage);
+    $view = View::make('drafts.draft_list')
+      ->with([ 'drafts' => $drafts ])->render();
+    return Response::json([
+        'view' => $view,
+        'current_page' => $drafts->getCurrentPage(),
+        'last_page' => $drafts->getLastPage(),
+        'total_items' => $drafts->getTotal()
+    ]);
   }
 
   public function listDrafts() {
@@ -219,8 +268,8 @@ class PhotosController extends \BaseController {
       return Redirect::to('/');
     }
     $drafts = Photo::with('tags')->withInstitution($institution)
-      ->onlyDrafts()->get();
-    return View::make('drafts.list')->with([
+      ->onlyDrafts()->paginate(100);
+    return View::make('drafts.show')->with([
       'drafts' => $drafts
     ]);
   }
@@ -275,6 +324,34 @@ class PhotosController extends \BaseController {
     }
     return Redirect::to('/photos/uploadInstitutional')
       ->withInput($input);
+  }
+
+  public function deleteDraft() {
+    $id = Input::get('draft');
+    $last_page = Input::get('last_page');
+    $perPage = Input::get('per_page');
+    $institution = Session::get('institutionId');
+    $draft = Photo::withInstitution($institution)->onlyDrafts()->find($id);
+    if ( !is_null($draft) ) {
+      $draft->deleted_at = $draft->freshTimestampString();
+      $draft->save();
+      $drafts = Photo::withInstitution($institution)->onlyDrafts()->paginate($perPage);
+      if ( $last_page > $drafts->getLastPage()) {
+        return Response::json([
+          'refresh' => true,
+          'view' => View::make('drafts.draft_list')->with(compact('drafts'))->render(),
+          'current_page' => $drafts->getCurrentPage(),
+          'last_page' => $drafts->getLastPage(),
+          'total_items' => $drafts->getTotal()
+        ]);
+      } else {
+        return Response::json([
+            'refresh' => false,
+            'total_items' => $drafts->getTotal()
+          ]);
+      }
+    }
+    return Response::json(false);
   }
 
   public function saveFormInstitutional() {
@@ -1197,78 +1274,74 @@ class PhotosController extends \BaseController {
   // EVALUATE
   public function saveEvaluation($id)
   {
-	  if (Auth::check()) {
-		  $evaluations =  Evaluation::where("user_id", Auth::id())->where("photo_id", $id)->get();
-		  $input = Input::all();
-
-		  if(Input::get('knownArchitecture') == true)
-		  {
-			  $knownArchitecture = Input::get('knownArchitecture');
-		  }else{
-			  $knownArchitecture = 'no';
-		  }
-
-		  if(Input::get('areArchitecture') == true)
-		  {
-			  $areArchitecture = Input::get('areArchitecture');
-		  }else{
-			  $areArchitecture = 'no';
-		  }
-
-		  $i = 0;
-		  $user_id = Auth::user()->id;
-		  $evaluation_string = "";
-		  $evaluation_names = array(
-			  "Vertical-Horizontal", 
-			  "Opaca-Translúcida", 
-			  "Assimétrica-Simétrica", 
-			  "Simples-Complexa", 
-			  "Externa-Interna", 
-			  "Fechada-Aberta"
-		  );
-
-		  // Pegar do banco as possives métricas
-		  $binomials = Binomial::all();
-
-		  // Fazer um loop por cada e salvar como uma avaliação
-		  if ($evaluations->isEmpty()) {
-			  $insertion_edition = "Inseriu";
-			  foreach ($binomials as $binomial) {
-				  $bid = $binomial->id;
-				  $newEvaluation = Evaluation::create([
-					  'photo_id'=> $id,
-					  'evaluationPosition'=> $input['value-'.$bid],
-					  'binomial_id'=> $bid,
-					  'user_id'=> $user_id,
-					  'knownArchitecture'=>$knownArchitecture,
-					  'areArchitecture'=>$areArchitecture
-				  ]);
-
-				  $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
-			  }
+    if (Auth::check()) {
+      $evaluations =  Evaluation::where("user_id", Auth::id())->where("photo_id", $id)->get();
+      $input = Input::all();
+      if(Input::get('knownArchitecture') == true)
+      {
+        $knownArchitecture = Input::get('knownArchitecture');
+      }else{
+        $knownArchitecture = 'no';
+      }
+      if(Input::get('areArchitecture') == true)
+      {
+        $areArchitecture = Input::get('areArchitecture');
+      }else{
+        $areArchitecture = 'no';
+      }
+      $i = 0;
+      $user_id = Auth::user()->id;
+      $evaluation_string = "";
+      $evaluation_names = array(
+        "Vertical-Horizontal", 
+        "Opaca-Translúcida", 
+        "Assimétrica-Simétrica", 
+        "Simples-Complexa", 
+        "Externa-Interna", 
+        "Fechada-Aberta"
+      );
+      // Pegar do banco as possives métricas
+      $binomials = Binomial::all();
+      // Fazer um loop por cada e salvar como uma avaliação
+      if ($evaluations->isEmpty()) {
+        $insertion_edition = "Inseriu";
+        foreach ($binomials as $binomial) {
+          $bid = $binomial->id;
+          $newEvaluation = Evaluation::create([
+            'photo_id'=> $id,
+            'evaluationPosition'=> $input['value-'.$bid],
+            'binomial_id'=> $bid,
+            'user_id'=> $user_id,
+            'knownArchitecture'=>$knownArchitecture,
+            'areArchitecture'=>$areArchitecture
+          ]);
+          $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
+        }
+        /* News feed */
+        $user = Auth::user();
         foreach ($user->followers as $users) {
-        foreach ($users->news as $news) {
-          if ($news->news_type == 'evaluated_photo' && $news->object_id == $id) {
+          foreach ($users->news as $news) {
+            if ($news->news_type == 'evaluated_photo' && $news->object_id == $id) {
               $last_news = $news;
               $primary = 'evaluated_photo';
+            }
+            else if ($news->news_type == 'liked_photo' || $news->news_type == 'commenteded_photo') {
+              if ($news->object_id == $id) {
+                $last_news = $news;
+                $primary = 'other';
+              }
+              else if (\Comment::find($news->object_id)->photo_id == $id) {
+                $last_news = $news;
+                $primary = 'other';
+              }
+            }
           }
-          else if ($news->news_type == 'liked_photo' || $news->news_type == 'commenteded_photo') {
-            if ($news->object_id == $id) {
-              $last_news = $news;
-              $primary = 'other';
-            }
-            else if (Comment::find($news->object_id)->photo_id == $id) {
-              $last_news = $news;
-              $primary = 'other';
-            }
-          }
-        }
-        if (isset($last_news)) {
-          $last_update = $last_news->updated_at;
-          if($last_update->diffInDays(Carbon::now('America/Sao_Paulo')) < 7) {
-            if ($news->sender_id == $user->id) {
-              $already_sent = true;
-            }
+          if (isset($last_news)) {
+            $last_update = $last_news->updated_at;
+            if($last_update->diffInDays(\Carbon::now('America/Sao_Paulo')) < 7) {
+              if ($news->sender_id == $user->id) {
+                $already_sent = true;
+              }
             else if ($news->data != null) {
               $data = explode(":", $news->data);
               for($i = 1; $i < count($data); $i++) {
@@ -1308,27 +1381,28 @@ class PhotosController extends \BaseController {
                               'news_type' => 'evaluated_photo'));
         }
       }
-		  } else { 
-			  $insertion_edition = "Editou";
-			  foreach ($evaluations as $evaluation) {
-				  $bid = $evaluation->binomial_id;
-				  $evaluation->evaluationPosition = $input['value-'.$bid];
-				  $evaluation->knownArchitecture = $knownArchitecture;
-				  $evaluation->areArchitecture = $areArchitecture;
-				  $evaluation->save();
-				  $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
-			  }
-		  }
-		  $user_id = Auth::user()->id;
-		  $source_page = Request::header('referer');
-		  ActionUser::printEvaluation($user_id, $id, $source_page, "user", $insertion_edition, $evaluation_string);
-		  return Redirect::to("/photos/{$id}/evaluate")->with('message', 
-			  '<strong>Avaliação salva com sucesso</strong><br>Abaixo você pode visualizar a média atual de avaliações');
-	  } else {
-		  // avaliação sem login
-		  return Redirect::to("/photos/{$id}")->with('message', 
-			  '<strong>Erro na avaliação</strong><br>Faça login para poder avaliar');
-	  }
+
+      } else { 
+        $insertion_edition = "Editou";
+        foreach ($evaluations as $evaluation) {
+          $bid = $evaluation->binomial_id;
+          $evaluation->evaluationPosition = $input['value-'.$bid];
+          $evaluation->knownArchitecture = $knownArchitecture;
+          $evaluation->areArchitecture = $areArchitecture;
+          $evaluation->save();
+          $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
+        }
+      }
+      $user_id = Auth::user()->id;
+      $source_page = Request::header('referer');
+      ActionUser::printEvaluation($user_id, $id, $source_page, "user", $insertion_edition, $evaluation_string);
+      return Redirect::to("/photos/{$id}/evaluate")->with('message', 
+        '<strong>Avaliação salva com sucesso</strong><br>Abaixo você pode visualizar a média atual de avaliações');
+    } else {
+      // avaliação sem login
+      return Redirect::to("/photos/{$id}")->with('message', 
+        '<strong>Erro na avaliação</strong><br>Faça login para poder avaliar');
+    }
   }
 
   // BATCH RESIZE
@@ -1338,13 +1412,13 @@ class PhotosController extends \BaseController {
     foreach ($photos as $photo) {
       $path = public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg';
       // novo tamanho para home, o micro, para pré carregamento.
-	  $new = public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg';
+    $new = public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg';
       if (is_file($path) && !is_file($new)) $image = Image::make($path)->fit(32,20)->save($new);
-	  /*
-	  $image = Image::make($path)->save(public_path().'/arquigrafia-images/'.$newid.'_view.jpg');
-	  $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$newid.'_200h.jpg');
-	  $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$newid.'_home.jpg');
-	  */
+    /*
+    $image = Image::make($path)->save(public_path().'/arquigrafia-images/'.$newid.'_view.jpg');
+    $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$newid.'_200h.jpg');
+    $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$newid.'_home.jpg');
+    */
     }
     return "OK.";
   }
@@ -1355,10 +1429,10 @@ class PhotosController extends \BaseController {
     $photos = Photo::all();
     foreach ($photos as $photo) {
       $path = public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg';
-	  $image = Image::make($path);
-	  $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg');
-	  $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
-	  $image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
+    $image = Image::make($path);
+    $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg');
+    $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
+    $image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
     }
     return "OK.";
   }
@@ -1388,72 +1462,72 @@ class PhotosController extends \BaseController {
       }
     }
 
-	private function getEvaluation($photoId, $userId, $isOwner) {
-		$photo = Photo::find($photoId);
-		$binomials = Binomial::all()->keyBy('id');
-		$average = Evaluation::average($photo->id);
-		$evaluations = null;
-		$averageAndEvaluations = null;
-		$checkedKnowArchitecture = false;
-		$checkedAreArchitecture = false;
-		$user = null;
-		$follow = true;
+  private function getEvaluation($photoId, $userId, $isOwner) {
+    $photo = Photo::find($photoId);
+    $binomials = Binomial::all()->keyBy('id');
+    $average = Evaluation::average($photo->id);
+    $evaluations = null;
+    $averageAndEvaluations = null;
+    $checkedKnowArchitecture = false;
+    $checkedAreArchitecture = false;
+    $user = null;
+    $follow = true;
 
-		if ($userId != null) {
-			$user = User::find($userId);
-			if (Auth::check()) {
-				if (Auth::user()->following->contains($user->id))
-					$follow = false;
-				else
-					$follow = true;
-			}
+    if ($userId != null) {
+      $user = User::find($userId);
+      if (Auth::check()) {
+        if (Auth::user()->following->contains($user->id))
+          $follow = false;
+        else
+          $follow = true;
+      }
 
-			$averageAndEvaluations= Evaluation::averageAndUserEvaluation($photo->id,$userId);
-			$evaluations =  Evaluation::where("user_id",
-				$user->id)->where("photo_id", $photo->id)->orderBy("binomial_id", "asc")->get();
-			$checkedKnowArchitecture= Evaluation::userKnowsArchitecture($photoId,$userId);
-			$checkedAreArchitecture= Evaluation::userAreArchitecture($photoId,$userId);
+      $averageAndEvaluations= Evaluation::averageAndUserEvaluation($photo->id,$userId);
+      $evaluations =  Evaluation::where("user_id",
+        $user->id)->where("photo_id", $photo->id)->orderBy("binomial_id", "asc")->get();
+      $checkedKnowArchitecture= Evaluation::userKnowsArchitecture($photoId,$userId);
+      $checkedAreArchitecture= Evaluation::userAreArchitecture($photoId,$userId);
 
-		}
+    }
 
-		return View::make('/photos/evaluate',
-			[
-				'photos' => $photo, 
-				'owner' => $user, 
-				'follow' => $follow, 
-				'tags' => $photo->tags, 
-				'commentsCount' => $photo->comments->count(), 
-				'commentsMessage' => static::createCommentsMessage($photo->comments->count()),
-				'average' => $average, 
-				'userEvaluations' => $evaluations,
-				'userEvaluationsChart' => $averageAndEvaluations, 
-				'binomials' => $binomials,
-				'architectureName' => Photo::composeArchitectureName($photo->name),
-				'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photo->id),
-				'isOwner' => $isOwner,
-				'checkedKnowArchitecture' => $checkedKnowArchitecture,
-				'checkedAreArchitecture' => $checkedAreArchitecture
-			]);
-	}
+    return View::make('/photos/evaluate',
+      [
+        'photos' => $photo, 
+        'owner' => $user, 
+        'follow' => $follow, 
+        'tags' => $photo->tags, 
+        'commentsCount' => $photo->comments->count(), 
+        'commentsMessage' => static::createCommentsMessage($photo->comments->count()),
+        'average' => $average, 
+        'userEvaluations' => $evaluations,
+        'userEvaluationsChart' => $averageAndEvaluations, 
+        'binomials' => $binomials,
+        'architectureName' => Photo::composeArchitectureName($photo->name),
+        'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photo->id),
+        'isOwner' => $isOwner,
+        'checkedKnowArchitecture' => $checkedKnowArchitecture,
+        'checkedAreArchitecture' => $checkedAreArchitecture
+      ]);
+  }
 
 
-	public function edit($id) {
+  public function edit($id) {
     if (Session::has('institutionId') ) {
       return Redirect::to('/');
     }
-		$photo = Photo::find($id);
-		$logged_user = Auth::User();
-		if ($logged_user == null) {
-			return Redirect::action('PagesController@home');
-		}
-		elseif ($logged_user->id == $photo->user_id) {
-			if (Session::has('tags'))
-			{
-				$tags = Session::pull('tags');
-				$tags = explode(',', $tags);
-			} else {
-				$tags = $photo->tags->lists('name');
-			}
+    $photo = Photo::find($id);
+    $logged_user = Auth::User();
+    if ($logged_user == null) {
+      return Redirect::action('PagesController@home');
+    }
+    elseif ($logged_user->id == $photo->user_id) {
+      if (Session::has('tags'))
+      {
+        $tags = Session::pull('tags');
+        $tags = explode(',', $tags);
+      } else {
+        $tags = $photo->tags->lists('name');
+      }
 
       if( Session::has('work_authors'))
       {
@@ -1505,8 +1579,8 @@ class PhotosController extends \BaseController {
       }
       
 
-			return View::make('photos.edit')
-				->with(['photo' => $photo, 'tags' => $tags,
+      return View::make('photos.edit')
+        ->with(['photo' => $photo, 'tags' => $tags,
             'dateYear' => $dateYear,
             'centuryInput'=> $centuryInput,
             'decadeInput' =>  $decadeInput,
@@ -1514,9 +1588,9 @@ class PhotosController extends \BaseController {
             'decadeImageInput' =>  $decadeImageInput,
             'work_authors' => $work_authors
           ] );
-		}
-		return Redirect::action('PagesController@home');
-	}
+    }
+    return Redirect::action('PagesController@home');
+  }
 
   public function update($id) {
     $photo = Photo::find($id);
@@ -1756,6 +1830,7 @@ class PhotosController extends \BaseController {
             }
           }
           if ($curr_note->type = 'comment_liked' || $curr_note->type = 'comment_posted') {
+            $note_photo = null;
             $note_comment = Comment::find($curr_note->object_id);
             if (!is_null($note_comment)) $note_photo = Photo::find($note_comment->photo_id);
             if(!is_null($note_photo)) {

@@ -1,33 +1,104 @@
 var pageRequestRunning = false;
-$(document).ready(function() {
 
-$(".greater-than").click(function(e) {
+//alert(window.location.href);
+
+$(window).load(function() {
+	//atribuir pagina
+	var b = document.querySelector("#pageCur"); 
+	
+	//b.setAttribute("disabled", "disabled");
+});
+
+$(document).ready(function() { 
+if($('#pgVisited').val() != 0){ 
+	//if($('#typeSearch').val() == 'advance'){ 
+		var type = "add";
+		var pageCurrentAdv = $('#pageCurrent1').val();
+		var p = getPaginator(type); 
+		var pageInitial = document.getElementById("add_page"+pageCurrentAdv);
+		pageInitial.id = "add_page1";
+		document.getElementById("add_page1").setAttribute("style","display: none;");
+		clearContent(type);
+		fixPageContainerHeight(type);
+		changePage(p, pageCurrentAdv, type);
+		
+}
+
+
+    	
+$(".greater-than").click(function(e) { 
+		//adition
+		var currentPg = $('#pageCurrent1').val(); 	
+		//alert(currentPg);
+		if(currentPg != 1){ //currentPg != null || 
+			deletedTable(currentPg);
+		}	
 		var type = $(this).getType();
 		var p = getPaginator(type); 
-		console.log(p);
+		
 		e.preventDefault();
 		if (p.currentPage < p.maxPage) {
-			var newPage = ( $(this).hasClass('greater') ? p.maxPage : p.currentPage + 1 );
+			var newPage = ( $(this).hasClass('greater') ? p.maxPage : parseInt(p.currentPage) + 1 );
+			
+			$('#pageLinked').val(newPage);
 			changePage(p, newPage, type);
+
 		}
 	});
 
-function getPaginator(type) {
+ function deletedTable(currentPage){  				
+	//document.getElementById(pageDelete).remove();		
+	//document.getElementById("add_page"+currentPg).remove();	
+ 	$('#add_page'+currentPage).remove();
+ }
+
+function getPaginator(type) { 	
 	return paginators[type];
 }
 
 function changePage(paginator, page, type) {
-	if (paginator.loadedPages.indexOf(page) >= 0) {
+	//* */
+	var currentPg = $('#pageCurrent1').val(); 
+	if($("#" + currentPg).length == 0 && page == currentPg) {
+		if(paginator.loadedPages.indexOf(currentPg) >= 0){
+		//alert("current"+currentPg);
+		var callback = function(type, data, paginator, currentPg) {			    
+			$("#" + type).append(data['content']);
+			//console.log(data['content']);
+			paginator.loadedPages.push(currentPg);
+			showPage(currentPg, type);
+		};
+		requestPage(currentPg, type, paginator.url, callback, paginator);
+	  }
+	}	
+	
+	//* */
+
+	$('#pageLinked').val(page); 
+	//alert(paginator.loadedPages.indexOf(page));
+	if (paginator.loadedPages.indexOf(page) >= 0) { 
 		fixPageContainerHeight(type);
 		clearContent(type);
 		showPage(page, type);
-	} else {
-		var callback = function(type, data, paginator, page) {
+		if(page == 1){
+			deletedTable(1);
+			var callback = function(type, data, paginator, page) {			    
 			$("#" + type).append(data['content']);
+				console.log(data['content']);
+				paginator.loadedPages.push(page);
+				showPage(page, type);
+			};
+			requestPage(page, type, paginator.url, callback, paginator); 
+		}
+	} else { //alert("callback"+page+"tp="+type);
+		var callback = function(type, data, paginator, page) {			    
+			$("#" + type).append(data['content']);
+			console.log(data['content']);
 			paginator.loadedPages.push(page);
 			showPage(page, type);
 		};
 		requestPage(page, type, paginator.url, callback, paginator);
+
 	}
 }
 
@@ -49,9 +120,12 @@ function clearContent(type) {
 }
 
 function showPage(page, type) {
+	//addition
+	document.getElementById("add").style.height = "685px";
+
 	var paginator = getPaginator(type);
 	$('#' + type + '_page' + page).fadeIn();
-	paginator.currentPage = page;
+	paginator.currentPage = page;	
 	updatePaginationButtons(type);
 	updateSelectAllCheckbox(type, paginator);
 }
@@ -68,8 +142,9 @@ function requestPage(page, type, URL, callback, paginator, runInBackground) {
 		fixPageContainerHeight(type);
 		showAndFixElementSpacing(type, $('.' + type + ' .loader'), true);
 	}
-	console.log(URL);
-	console.log(data);
+	//console.log(URL);
+	//console.log(data);
+	//console.log(page);
 	$.get(URL, data)
 	.done(function(data) {
 		$("." + type + " .loader").hide();
@@ -168,17 +243,17 @@ function parseData(data) {
 	return false;
 }
 
-function photosFromCurrentPage(type) {
+function photosFromCurrentPage(type) { 	
 	var paginator = getPaginator(type);
 	return '#' + type + '_page' + paginator.currentPage + ' .ch_photo';
 }
 
-$(".less-than").click(function(e) {
+$(".less-than").click(function(e) { 
 		var type = $(this).getType();
 		var p = getPaginator(type);
 		e.preventDefault();
 		if (p.currentPage > 1) {
-			var newPage = ( $(this).hasClass('less') ? 1 : p.currentPage - 1 );
+			var newPage = ( $(this).hasClass('less') ? 1 : parseInt(p.currentPage) - 1 );
 			changePage(p, newPage, type);
 		}
 	});
