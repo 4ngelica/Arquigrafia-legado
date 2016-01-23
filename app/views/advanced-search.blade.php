@@ -268,6 +268,20 @@
                         Input::get("allowModifications") ) }}
                     </td>
                   </tr>
+
+                  <tr>
+                    <td>
+                      {{ Form::label('institution', 'Acervo:') }}
+                    </td>
+                    <td>
+                      @if(!is_null($institutions))
+                        {{ Form::select('institution', array(""=>"Escolha") + $institutions , Input::old('institution')) }}
+                      @else
+                        {{ Form::select('institution', [""=>"Escolha o acervo institutional"], "",array('class' => 'left')) }} 
+                      @endif
+                    </td>
+                  </tr>
+
                 </table>
               </div>
             </div>

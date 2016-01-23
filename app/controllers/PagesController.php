@@ -337,13 +337,14 @@ class PagesController extends BaseController {
         $haveSession = 0;
         $pageLinked = 0;
 
-
         if(Session::has('CurrPage') && Session::get('CurrPage')!= 1){ 
              $pageRetrieved = Session::get('CurrPage');  
             $haveSession = 1;   
         }else{
             Session::put('CurrPage',1);
         }
+
+        $institutions = Institution::institutionsList();
 
         if( count($fields) == 0 ) { // busca vazia                    
             if(Session::has('last_advanced_search')){ 
@@ -354,7 +355,7 @@ class PagesController extends BaseController {
                 return View::make('/advanced-search',
                     ['tags' => [], 'photos' => [], 'query' => "", 'binomials' => Binomial::all(),'authorsArea' => [],
                     'url'=> null,'photosTotal'=> 1,'maxPage' => 1, 'page' => $pageRetrieved,
-                    'photosAll' => 0 , 'pageVisited'=> $pageVisited,'typeSearch'=> 'advance'  ]);
+                    'photosAll' => 0 , 'pageVisited'=> $pageVisited,'typeSearch'=> 'advance', 'institutions' => $institutions  ]);
             }
         }
         $binomials = array();
@@ -412,7 +413,7 @@ class PagesController extends BaseController {
         Session::put('last_advanced_search', ['tags' => $tags, 'photos' => $photos,
             'binomials' => Binomial::all(), 'authorsArea' => $authorsArea, 'message' => $message,
             'url' => $url,'photosTotal' => $photosTotal , 'maxPage' => $maxPage, 'page' => $pageRetrieved,
-            'pageVisited'=> $pageVisited, 'typeSearch'=> 'advance'
+            'pageVisited'=> $pageVisited, 'typeSearch'=> 'advance', 'institutions' => $institutions
             ]);
        
         if(Session::has('last_advanced_search')){ 
@@ -426,7 +427,7 @@ class PagesController extends BaseController {
             ['tags' => $tags, 'photos' => $photosPages, //'photos' => $photos,
             'binomials' => Binomial::all(), 'authorsArea' => $authorsArea, 'message' => $message,
             'url' => $url,'photosTotal' => $photosTotal , 'maxPage' => $maxPage, 'page' => $pageRetrieved,
-            'pageVisited'=> $pageVisited,'typeSearch'=> 'advance'  ]); 
+            'pageVisited'=> $pageVisited,'typeSearch'=> 'advance', 'institutions' => $institutions ]); 
     }
 
     public function paginatePhotosResult() {
