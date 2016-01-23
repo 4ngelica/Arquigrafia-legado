@@ -81,19 +81,17 @@ class PhotosController extends \BaseController {
     //echo URL::previous();
 
    // echo strpos(, 'more');
-     $querySearch = "";
+    $querySearch = "";
+    $typeSearch = "";
     //echo !strpos(URL::previous(),'more');
     if (strpos(URL::previous(),'more') !== false) {
         if(Session::has('last_advanced_search')){
-       //echo "more";
-       $lastSearch = Session::get('last_advanced_search');
-       
-       $typeSearch = $lastSearch['typeSearch']; 
-       $currentPage = $lastSearch['page']; 
-       }
+          $lastSearch = Session::get('last_advanced_search');
+          $typeSearch = $lastSearch['typeSearch']; 
+          $currentPage = $lastSearch['page']; 
+        }
     } else {
-       if(Session::has('last_search')){
-        //echo "searc";
+      if(Session::has('last_search')){
         $lastSearch = Session::get('last_search');
         $querySearch = $lastSearch['query'];
         $typeSearch = $lastSearch['typeSearch']; 

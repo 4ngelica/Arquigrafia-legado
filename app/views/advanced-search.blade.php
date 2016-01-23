@@ -275,9 +275,9 @@
                     </td>
                     <td>
                       @if(!is_null($institutions))
-                        {{ Form::select('institution', array(""=>"Escolha") + $institutions , Input::old('institution')) }}
+                        {{ Form::select('institution_id', array(""=>"Escolha") + $institutions , Input::get('institution_id')) }}
                       @else
-                        {{ Form::select('institution', [""=>"Escolha o acervo institutional"], "",array('class' => 'left')) }} 
+                        {{ Form::select('institution_id', [""=>"Escolha o acervo institutional"], "",array('class' => 'left')) }} 
                       @endif
                     </td>
                   </tr>

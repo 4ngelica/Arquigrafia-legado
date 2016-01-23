@@ -325,7 +325,7 @@ class PagesController extends BaseController {
         $fields = Input::only( array(
             'name', 'description', 'city', 'state', 'country', 
             'imageAuthor', 'dataCriacao', 'dataUpload', 'workdate', 'district',
-            'street', 'allowCommercialUses', 'allowModifications'//,'workAuthor_area', $tags
+            'street', 'allowCommercialUses', 'allowModifications', 'institution_id'//,'workAuthor_area', $tags
         ));
         $fields = array_filter(array_map('trim', $fields));
 
