@@ -268,10 +268,13 @@
                         Input::get("allowModifications") ) }}
                     </td>
                   </tr>
+                </table>
 
+                <h3>Acervos</h3>
+                <table class="form-table" width="80%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
                     <td>
-                      {{ Form::label('institution', 'Acervo:') }}
+                      {{ Form::label('institution', 'Instituições:') }}&nbsp;
                     </td>
                     <td>
                       @if(!is_null($institutions))
@@ -281,8 +284,8 @@
                       @endif
                     </td>
                   </tr>
+                </table>  
 
-                </table>
               </div>
             </div>
             <div class="six columns alpha row">

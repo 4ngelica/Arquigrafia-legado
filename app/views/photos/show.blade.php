@@ -120,12 +120,16 @@
 
       <!--   BOX DE BOTOES DA IMAGEM   -->
       <div id="single_view_buttons_box">
-        @if($typeSearch == 'advance')
+        @if ($typeSearch == '')          
+          <div class="first columns"> 
+            <a href="{{ URL::previous()}}" class='btn left'>VOLTAR</a>
+          </div>
+        @elseif($typeSearch == 'advance')
           
            <div class="first columns"> 
             <a href="{{ URL::previous()}}&pg=1" class='btn left'>VOLTAR</a>
             </div>
-        @else 
+        @elseif($typeSearch == 'simples')
         <div class="first columns">       
         {{ Form::open(array('url' => $urlBack ,'id'=> 'frmDetailPhoto' ,'method' => 'post')) }}
         
