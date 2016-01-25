@@ -269,6 +269,23 @@
                     </td>
                   </tr>
                 </table>
+
+                <h3>Acervos</h3>
+                <table class="form-table" width="80%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td>
+                      {{ Form::label('institution', 'Instituições:') }}&nbsp;
+                    </td>
+                    <td>
+                      @if(!is_null($institutions))
+                        {{ Form::select('institution_id', array(""=>"Escolha") + $institutions , Input::get('institution_id')) }}
+                      @else
+                        {{ Form::select('institution_id', [""=>"Escolha o acervo institutional"], "",array('class' => 'left')) }} 
+                      @endif
+                    </td>
+                  </tr>
+                </table>  
+
               </div>
             </div>
             <div class="six columns alpha row">

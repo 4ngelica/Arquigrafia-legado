@@ -80,16 +80,18 @@ function changePage(paginator, page, type) {
 		fixPageContainerHeight(type);
 		clearContent(type);
 		showPage(page, type);
-		if(page == 1){
-			deletedTable(1);
+
+		if(page == 1 || page == paginator.maxPage){
+			deletedTable(page);
 			var callback = function(type, data, paginator, page) {			    
 			$("#" + type).append(data['content']);
 				console.log(data['content']);
 				paginator.loadedPages.push(page);
 				showPage(page, type);
 			};
-			requestPage(page, type, paginator.url, callback, paginator); 
+			requestPage(page, type, paginator.url, callback, paginator);
 		}
+
 	} else { //alert("callback"+page+"tp="+type);
 		var callback = function(type, data, paginator, page) {			    
 			$("#" + type).append(data['content']);
