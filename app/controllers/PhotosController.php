@@ -1246,7 +1246,7 @@ class PhotosController extends \BaseController {
                 $last_news->secondary_type = 'commented_photo';
               }
               else if ($last_news->tertiary_type == null) {
-                $last_news->secondary_type = 'commented_photo';
+                $last_news->tertiary_type = 'commented_photo';
               }
               $last_news->save();
             }
@@ -1333,9 +1333,14 @@ class PhotosController extends \BaseController {
                 $last_news = $news;
                 $primary = 'other';
               }
-              else if (Comment::find($news->object_id)->photo_id == $id) {
-                $last_news = $news;
-                $primary = 'other';
+              else {
+                $comment = Comment::find($news->object_id);
+                if(!is_null($comment)) {
+                  if ($comment->photo_id == $id) {
+                    $last_news = $news;
+                    $primary = 'other';
+                  }
+                }
               }
             }
           }
@@ -1363,7 +1368,7 @@ class PhotosController extends \BaseController {
                   $last_news->secondary_type = 'evaluated_photo';
                 }
                 else if ($last_news->tertiary_type == null) {
-                  $last_news->secondary_type = 'evaluated_photo';
+                  $last_news->tertiary_type = 'evaluated_photo';
                 }
                 $last_news->save();
               }

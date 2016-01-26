@@ -4,6 +4,7 @@ use lib\utils\ActionUser;
 use lib\gamification\models\Badge;
 use lib\gamification\models\Like;
 use Notification;
+use Carbon\Carbon;
 
 class LikesController extends \BaseController {
 
@@ -17,27 +18,33 @@ class LikesController extends \BaseController {
     if ($user->id != $photo->user_id) {
       $user_note = \User::find($photo->user_id);
       /*News feed*/
-      $user = \Auth::user();
       foreach ($user->followers as $users) {
         foreach ($users->news as $news) {
-          if ($news->news_type == 'liked_photo' && $news->object_id == $id) {
+          if ($news->news_type == 'liked_photo') {
+            if ($news->object_id == $id) {
               $last_news = $news;
               $primary = 'liked_photo';
+            }
           }
-          else if ($news->news_type == 'evaluated_photo' || $news->news_type == 'commenteded_photo') {
+          else if ($news->news_type == 'evaluated_photo') {
             if ($news->object_id == $id) {
               $last_news = $news;
               $primary = 'other';
             }
-            else if (\Comment::find($news->object_id)->photo_id == $id) {
-              $last_news = $news;
-              $primary = 'other';
+          }
+          else if ($news->news_type == 'commented_photo') {
+            $comment = \Comment::find($news->object_id);
+            if(!is_null($comment)) {
+              if ($comment->photo_id == $id) {
+                $last_news = $news;
+                $primary = 'other';
+              }
             }
           }
         }
         if (isset($last_news)) {
           $last_update = $last_news->updated_at;
-          if($last_update->diffInDays(\Carbon::now('America/Sao_Paulo')) < 7) {
+          if($last_update->diffInDays(Carbon::now('America/Sao_Paulo')) < 7) {
             if ($news->sender_id == $user->id) {
               $already_sent = true;
             }
@@ -59,7 +66,7 @@ class LikesController extends \BaseController {
                 $last_news->secondary_type = 'liked_photo';
               }
               else if ($last_news->tertiary_type == null) {
-                $last_news->secondary_type = 'liked_photo';
+                $last_news->tertiary_type = 'liked_photo';
               }
               $last_news->save();
             }
