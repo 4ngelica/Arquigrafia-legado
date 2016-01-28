@@ -54,7 +54,11 @@
       <img src={{"/arquigrafia-images/" . Comment::find($info->object_id)->photo_id . "_home.jpg"}} title="{{ Photo::find(Comment::find($info->object_id)->photo_id)->name }}" class="gallery_photo" />
     </a>
     <a href='{{ URL::to("/photos") . "/" . Comment::find($info->object_id)->photo_id }}' class="name">
-      Usuários realizaram diversas ações nesta foto. Confira!
+      @if($info->data == null)
+        Usuário {{User::find($info->sender_id)->name}} realizou diversas ações nesta foto. Confira!
+      @else
+        Usuários realizaram diversas ações nesta foto. Confira!
+      @endif
     </a>
     <br />
   </div>
@@ -84,7 +88,11 @@
     <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
   </a>
   <a  href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
-    Usuários realizaram diversas ações nesta foto. Confira!
+    @if($info->data == null)
+      Usuário {{User::find($info->sender_id)->name}} realizou diversas ações nesta foto. Confira!
+    @else
+      Usuários realizaram diversas ações nesta foto. Confira!
+    @endif
   </a>
   <br />
 </div>
@@ -162,7 +170,11 @@
     <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
   </a>
   <a  href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
-    Usuários realizaram diversas ações nesta foto. Confira!
+    @if($info->data == null)
+      Usuário {{User::find($info->sender_id)->name}} realizou diversas ações nesta foto. Confira!
+    @else
+      Usuários realizaram diversas ações nesta foto. Confira!
+    @endif  
   </a>
   <br />
 </div>
