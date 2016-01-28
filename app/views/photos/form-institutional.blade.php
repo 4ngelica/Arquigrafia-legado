@@ -1,7 +1,7 @@
 @extends('layouts.default')
 @section('head')
 	<title>Arquigrafia - Fotos - Upload</title>
-	
+
 	<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
 	<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.core.css" />
 	<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.plugin.autocomplete.css" />
@@ -29,47 +29,47 @@
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-autocomplete-part.js" charset="utf-8"></script>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/city-autocomplete.js" charset="utf-8"></script>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/date-work.js" charset="utf-8"></script>
-    <script type="text/javascript" src="{{ URL::to("/") }}/js/rotate.js" charset="utf-8"></script>
-    <script type="text/javascript" src="{{ URL::to("/") }}/js/readURL.js" charset="utf-8"></script>
+		<script type="text/javascript" src="{{ URL::to("/") }}/js/rotate.js" charset="utf-8"></script>
+		<script type="text/javascript" src="{{ URL::to("/") }}/js/readURL.js" charset="utf-8"></script>
 
 <style>
-  .ui-autocomplete {
-    max-height: 100px;
-    font-size: 12px;
-    overflow-y: auto;
-    /* prevent horizontal scrollbar */
-    overflow-x: hidden;
-  }
-  /* IE 6 doesn't support max-height
-   * we use height instead, but this forces the menu to always be this tall
-   */
-  * html .ui-autocomplete {
-    height: 100px;
-  }
-  /* Style select*/
+	.ui-autocomplete {
+		max-height: 100px;
+		font-size: 12px;
+		overflow-y: auto;
+		/* prevent horizontal scrollbar */
+		overflow-x: hidden;
+	}
+	/* IE 6 doesn't support max-height
+	 * we use height instead, but this forces the menu to always be this tall
+	 */
+	* html .ui-autocomplete {
+		height: 100px;
+	}
+	/* Style select*/
 
-    fieldset {
-      border: 0;
-      margin: 0 0 0px -10px;
-      font-size: 10px;
-    }
-    label {
-      display: block;
-      margin: 30px 0 0 0;
-    }
-    select {
-      width: 160px;
-    }
-    .overflow {
-      height: 350px;
-    }
-  
+		fieldset {
+			border: 0;
+			margin: 0 0 0px -10px;
+			font-size: 10px;
+		}
+		label {
+			display: block;
+			margin: 30px 0 0 0;
+		}
+		select {
+			width: 160px;
+		}
+		.overflow {
+			height: 350px;
+		}
 
-  </style>
-  <script type="text/javascript">
-  document.onload = function() {
+
+	</style>
+	<script type="text/javascript">
+	document.onload = function() {
 			}
-  </script>
+	</script>
 @stop
 @section('content')
 	<script type="text/javascript">
@@ -81,10 +81,10 @@
 				var selector = document.getElementById('photo_album');
 				var i;
 				for (i = 0; i < select_album.length; i++) {
-   					select_album[i].style.display = "block";
+	 					select_album[i].style.display = "block";
 				}
 				for (i = 0; i < new_album.length; i++) {
-    				new_album[i].style.display = "none";
+						new_album[i].style.display = "none";
 				}
 				for (i = 0; i < selector.options.length; i++) {
 					if (selector.options[i].text == document.getElementById("new_album-name").value) {
@@ -98,11 +98,11 @@
 				var new_album = document.getElementsByClassName('new-album-name');
 				var i;
 				for (i = 0; i < select_album.length; i++) {
-    				select_album[i].style.display = "block";
+						select_album[i].style.display = "block";
 				}
 				for (i = 0; i < new_album.length; i++) {
-    				new_album[i].style.display = "none";
-				}	
+						new_album[i].style.display = "none";
+				}
 			}
 		});
 	</script>
@@ -111,22 +111,23 @@
 			<!--{{ Form::open(array('url'=>'photos', 'files'=> true)) }} -->
 			{{ Form::open(array('url' => "photos/savePhotoInstitutional", 'files'=> true , 'id'=>"formInstitutional")) }}
 				<div class="twelve columns row step-1">
+					<a href="{{ URL::to('/drafts') }}" class="right">Uploads incompletos</a>
 					<h1><span class="step-text">Upload</span></h1>
 					<div class="four columns alpha">
 						<img src="" id="preview_photo">
-                        <div id="image_rotate" style="display:none;">
-                        <br></br>
-                        <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), 
-                            Math.PI/2);">Girar 90° para direita</a>
-                        <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), 
-                            -Math.PI/2);">Girar 90° para esquerda</a>
-                        </div>
-                        <br></br>
+												<div id="image_rotate" style="display:none;">
+												<br></br>
+												<a class="btn right" onclick="Rotate(document.getElementById('preview_photo'),
+														Math.PI/2);">Girar 90° para direita</a>
+												<a class="btn left" onclick="Rotate(document.getElementById('preview_photo'),
+														-Math.PI/2);">Girar 90° para esquerda</a>
+												</div>
+												<br></br>
 						<p>
 							{{ Form::label('photo','Imagem:') }}
 							{{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
 							<div class="error">{{ $errors->first('photo') }}</div>
-                            <br></br>
+														<br></br>
 						</p>
 						<br>
 					</div>
@@ -135,7 +136,9 @@
 					<h1><span class="step-text">Dados da imagem</span></h1>
 					<p>(*) Campos obrigatórios.</p>
 					<p>{{ Form::hidden('pageSource', $pageSource) }} </p>
-
+					@if ( Input::old('draft_id', false) )
+						{{ Form::hidden('draft_id', Input::old('draft_id')) }}
+					@endif
 					<br>
 					<div class="eight columns alpha row">
 						<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -146,7 +149,7 @@
 										<p>{{ Form::label('support', 'Suporte*:') }}</p>
 									</div>
 									<div class="three columns omega">
-										<p>{{ Form::text('support', Input::old('support')) }} <br>
+										<p>{{ Form::text('support') }} <br>
 											<div class="error">{{ $errors->first('support') }}</div>
 										</p>
 									</div>
@@ -158,7 +161,7 @@
 										<p>{{ Form::label('tomboTxt', 'Tombo*:') }}</p>
 									</div>
 									<div class="three columns omega">
-										<p>{{ Form::text('tombo', Input::old('tombo')) }} <br>
+										<p>{{ Form::text('tombo') }} <br>
 											<div class="error">{{ $errors->first('tombo') }}</div>
 										</p>
 									</div>
@@ -170,7 +173,7 @@
 										<p>{{ Form::label('subjectTxt', 'Assunto:') }}</p>
 									</div>
 									<div class="three columns omega">
-										<p>{{ Form::text('subject', Input::old('subject')) }} <br>
+										<p>{{ Form::text('subject') }} <br>
 											<div class="error">{{ $errors->first('subject') }}</div>
 										</p>
 									</div>
@@ -183,16 +186,15 @@
 									</div>
 									<div class="three columns omega">
 										<p>
-											{{ Form::text('hygieneDate','',array('id' => 'datePickerHygieneDate','placeholder'=>'DD/MM/AAAA')) }} 
-											
+											{{ Form::text('hygieneDate','',array('id' => 'datePickerHygieneDate','placeholder'=>'DD/MM/AAAA')) }}
+
 											<br>
 											<div class="error">{{ $errors->first('hygieneDate') }}</div>
-										</p> 
+										</p>
 
 									</div>
 								</td>
 							</tr>
-														
 							<tr>
 								<td>
 									<div class="two columns alpha">
@@ -200,21 +202,20 @@
 									</div>
 									<div class="three columns omega">
 										<p>
-											{{ Form::text('backupDate','',array('id' => 'datePickerBackupDate','placeholder'=>'DD/MM/AAAA')) }}	
+											{{ Form::text('backupDate','',array('id' => 'datePickerBackupDate','placeholder'=>'DD/MM/AAAA')) }}
 											<br>
 											<div class="error">{{ $errors->first('backupDate') }}</div>
 										</p>
 									</div>
 								</td>
 							</tr>
-
 							<tr>
 								<td>
 									<div class="two columns alpha">
 										<p>{{ Form::label('characterizationTxt', 'Caracterização*:') }}</p>
 									</div>
 									<div class="three columns omega">
-										<p>{{ Form::text('characterization', Input::old('characterization')) }} <br>
+										<p>{{ Form::text('characterization') }} <br>
 											<div class="error">{{ $errors->first('characterization') }}</div>
 										</p>
 									</div>
@@ -253,7 +254,7 @@
 										<p>{{ Form::label('name', 'Título*:') }}</p>
 									</div>
 									<div class="three columns omega">
-										<p>{{ Form::text('photo_name', Input::old('photo_name')) }} <br>
+										<p>{{ Form::text('photo_name') }} <br>
 											<div class="error">{{ $errors->first('photo_name') }}</div>
 										</p>
 									</div>
@@ -266,7 +267,7 @@
 									</div>
 									<div class="three columns omega">
 										<p>
-											{{ Form::textarea('description', Input::old('description')) }}<br>
+											{{ Form::textarea('description') }}<br>
 										</p>
 									</div>
 								</td>
@@ -277,8 +278,8 @@
 									<div class="three columns">
 										<p><div style="max-width:150px;">
 											{{ Form::text('tags_input',null,array('id' => 'tags_input','style'=>'width: 200px; height:15px; border:solid 1px #ccc')) }}
-										   </div>
-											
+											 </div>
+
 											<br>
 											<div class="error">{{ $errors->first('tagsArea') }}</div>
 										</p>
@@ -289,48 +290,33 @@
 									<div class="five columns alpha">
 										<textarea name="tagsArea" id="tagsArea" cols="60" rows="1" style="display: none;">
 										</textarea>
-									</div>									
+									</div>
 								</td>
 							</tr>
-
-							<!--<tr>
-								<td>
-									<br/>
-									<div class="two columns alpha"><p>Form::label('workAuthor', 'Autor da obra:') }}</p></div>
-									<div class="two columns">
-										<p><div style="max-width:150px;">
-											 Form::text('workAuthor', $workAuthorInput, array('id' => 'workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:15px; width:290px; font-size:12px; border:solid 1px #ccc')) }}										   	
-										   </div>											
-											<br>
-											<div class="error"> errors->first('workAuthor') }}</div>
-										</p>
-									</div>									
-								</td>
-							</tr>-->
-
 							<tr><td></td></tr>
-    						<tr><td> @include('photos.includes.workAuthorInst') </td></tr>
-    						<tr><td></td></tr>						
-														 
-        					<tr><td>              
-         						<div class="two columns alpha"><p>{{ Form::label('workDate', 'Ano de conclusão da obra:') }}</p></div>
-         						<div class="six columns omega">  
-          						<p>
-          							@include('photos.includes.dateList') 
-         							<span class="space_txt_element">Não sabe a data precisa? 
-         								<a onclick="date_visibility('otherDate');" >Clique aqui.</a> 
-         							</span>
-         						</p>
-         						<p>
-         							<div id="otherDate" class="div_institutional" style="display:none;">         							
-         								@include('photos.includes.dateWork')
-         						    	<!--<a onclick="close_other_date('otherDate');" class="btn right" >OK</a>-->
-         							</div>
-         							<label id="answer_date" class="resultDateWork"></label>
-         						</p>      
-        						</div>
-        						</td>
-        					</tr>
+							<tr><td> @include('photos.includes.workAuthorInst') </td></tr>
+							<tr><td></td></tr>
+							<tr><td>
+		 						<div class="two columns alpha">
+		 							<p>{{ Form::label('workDate', 'Ano de conclusão da obra:') }}</p>
+		 						</div>
+		 						<div class="six columns omega">
+											<p>
+												@include('photos.includes.dateList')
+				 								<span class="space_txt_element">Não sabe a data precisa?
+				 									<a onclick="date_visibility('otherDate');" >Clique aqui.</a>
+				 								</span>
+				 							</p>
+				 							<p>
+				 								<div id="otherDate" class="div_institutional" style="display:none;">
+				 									@include('photos.includes.dateWork')
+				 									<!--<a onclick="close_other_date('otherDate');" class="btn right" >OK</a>-->
+					 							</div>
+					 							<label id="answer_date" class="resultDateWork"></label>
+					 						</p>
+								</div>
+								</td>
+							</tr>
 						</table>
 					</div>
 					<br class="clear">
@@ -340,9 +326,9 @@
 								<div class="two columns alpha"><p>{{ Form::label('country', 'País*:') }}</p></div>
 								<div class="two columns omega">
 									<p>
-										
+
 										{{ Form::select('country', [ "Afeganistão"=>"Afeganistão", "África do Sul"=>"África do Sul", "Albânia"=>"Albânia", "Alemanha"=>"Alemanha", "América Samoa"=>"América Samoa", "Andorra"=>"Andorra", "Angola"=>"Angola", "Anguilla"=>"Anguilla", "Antartida"=>"Antartida", "Antigua"=>"Antigua", "Antigua e Barbuda"=>"Antigua e Barbuda", "Arábia Saudita"=>"Arábia Saudita", "Argentina"=>"Argentina", "Aruba"=>"Aruba", "Australia"=>"Australia", "Austria"=>"Austria", "Bahamas"=>"Bahamas", "Bahrain"=>"Bahrain", "Barbados"=>"Barbados", "Bélgica"=>"Bélgica", "Belize"=>"Belize", "Bermuda"=>"Bermuda", "Bhutan"=>"Bhutan", "Bolívia"=>"Bolívia", "Botswana"=>"Botswana", "Brasil"=>"Brasil", "Brunei"=>"Brunei", "Bulgária"=>"Bulgária", "Burundi"=>"Burundi", "Cabo Verde"=>"Cabo Verde", "Camboja"=>"Camboja", "Canadá"=>"Canadá", "Chade"=>"Chade", "Chile"=>"Chile", "China"=>"China", "Cingapura"=>"Cingapura", "Colômbia"=>"Colômbia", "Djibouti"=>"Djibouti", "Dominicana"=>"Dominicana", "Emirados Árabes"=>"Emirados Árabes", "Equador"=>"Equador", "Espanha"=>"Espanha", "Estados Unidos"=>"Estados Unidos", "Fiji"=>"Fiji", "Filipinas"=>"Filipinas", "Finlândia"=>"Finlândia", "França"=>"França", "Gabão"=>"Gabão", "Gaza Strip"=>"Gaza Strip", "Ghana"=>"Ghana", "Gibraltar"=>"Gibraltar", "Granada"=>"Granada", "Grécia"=>"Grécia", "Guadalupe"=>"Guadalupe", "Guam"=>"Guam", "Guatemala"=>"Guatemala", "Guernsey"=>"Guernsey", "Guiana"=>"Guiana", "Guiana Francesa"=>"Guiana Francesa", "Haiti"=>"Haiti", "Holanda"=>"Holanda", "Honduras"=>"Honduras", "Hong Kong"=>"Hong Kong", "Hungria"=>"Hungria", "Ilha Cocos (Keeling)"=>"Ilha Cocos (Keeling)", "Ilha Cook"=>"Ilha Cook", "Ilha Marshall"=>"Ilha Marshall", "Ilha Norfolk"=>"Ilha Norfolk", "Ilhas Turcas e Caicos"=>"Ilhas Turcas e Caicos", "Ilhas Virgens"=>"Ilhas Virgens", "Índia"=>"Índia", "Indonésia"=>"Indonésia", "Inglaterra"=>"Inglaterra", "Irã"=>"Irã", "Iraque"=>"Iraque", "Irlanda"=>"Irlanda", "Irlanda do Norte"=>"Irlanda do Norte", "Islândia"=>"Islândia", "Israel"=>"Israel", "Itália"=>"Itália", "Iugoslávia"=>"Iugoslávia", "Jamaica"=>"Jamaica", "Japão"=>"Japão", "Jersey"=>"Jersey", "Kirgizstão"=>"Kirgizstão", "Kiribati"=>"Kiribati", "Kittsnev"=>"Kittsnev", "Kuwait"=>"Kuwait", "Laos"=>"Laos", "Lesotho"=>"Lesotho", "Líbano"=>"Líbano", "Líbia"=>"Líbia", "Liechtenstein"=>"Liechtenstein", "Luxemburgo"=>"Luxemburgo", "Maldivas"=>"Maldivas", "Malta"=>"Malta", "Marrocos"=>"Marrocos", "Mauritânia"=>"Mauritânia", "Mauritius"=>"Mauritius", "México"=>"México", "Moçambique"=>"Moçambique", "Mônaco"=>"Mônaco", "Mongólia"=>"Mongólia", "Namíbia"=>"Namíbia", "Nepal"=>"Nepal", "Netherlands Antilles"=>"Netherlands Antilles", "Nicarágua"=>"Nicarágua", "Nigéria"=>"Nigéria", "Noruega"=>"Noruega", "Nova Zelândia"=>"Nova Zelândia", "Omã"=>"Omã", "Panamá"=>"Panamá", "Paquistão"=>"Paquistão", "Paraguai"=>"Paraguai", "Peru"=>"Peru", "Polinésia Francesa"=>"Polinésia Francesa", "Polônia"=>"Polônia", "Portugal"=>"Portugal", "Qatar"=>"Qatar", "Quênia"=>"Quênia", "República Dominicana"=>"República Dominicana", "Romênia"=>"Romênia", "Rússia"=>"Rússia", "Santa Helena"=>"Santa Helena", "Santa Kitts e Nevis"=>"Santa Kitts e Nevis", "Santa Lúcia"=>"Santa Lúcia", "São Vicente"=>"São Vicente", "Singapura"=>"Singapura", "Síria"=>"Síria", "Spiemich"=>"Spiemich", "Sudão"=>"Sudão", "Suécia"=>"Suécia", "Suiça"=>"Suiça", "Suriname"=>"Suriname", "Swaziland"=>"Swaziland", "Tailândia"=>"Tailândia", "Taiwan"=>"Taiwan", "Tchecoslováquia"=>"Tchecoslováquia", "Tonga"=>"Tonga", "Trinidad e Tobago"=>"Trinidad e Tobago", "Turksccai"=>"Turksccai", "Turquia"=>"Turquia", "Tuvalu"=>"Tuvalu", "Uruguai"=>"Uruguai", "Vanuatu"=>"Vanuatu", "Wallis e Fortuna"=>"Wallis e Fortuna", "West Bank"=>"West Bank", "Yémen"=>"Yémen", "Zaire"=>"Zaire", "Zimbabwe"=>"Zimbabwe"], "Brasil") }}<br>
-										
+
 
 										<div class="error">{{ $errors->first('country') }}</div>
 									</p>
@@ -358,7 +344,7 @@
 								<div class="two columns alpha"><p>{{ Form::label('state', 'Estado:') }}</p></div>
 								<div class="two columns omega">
 									{{ Form::select('state', [""=>"Escolha o Estado", "AC"=>"Acre", "AL"=>"Alagoas", "AM"=>"Amazonas", "AP"=>"Amapá", "BA"=>"Bahia", "CE"=>"Ceará", "DF"=>"Distrito Federal", "ES"=>"Espirito Santo", "GO"=>"Goiás", "MA"=>"Maranhão", "MG"=>"Minas Gerais", "MS"=>"Mato Grosso do Sul", "MT"=>"Mato Grosso", "PA"=>"Pará", "PB"=>"Paraíba", "PE"=>"Pernambuco", "PI"=>"Piauí", "PR"=>"Paraná", "RJ"=>"Rio de Janeiro", "RN"=>"Rio Grande do Norte", "RO"=>"Rondônia", "RR"=>"Roraima", "RS"=>"Rio Grande do Sul", "SC"=>"Santa Catarina", "SE"=>"Sergipe", "SP"=>"São Paulo", "TO"=>"Tocantins"], "") }} <br>
-									
+
 									<div class="error">{{ $errors->first('state') }}</div>
 								</td>
 							</tr>
@@ -366,18 +352,18 @@
 								<div class="two columns alpha"><p>{{ Form::label('city', 'Cidade:') }}</p></div>
 								<div class="two columns omega">
 									<p>
-										{{ Form::text('city', Input::old('city')) }} <br>
+										{{ Form::text('city') }} <br>
 										<div class="error">{{ $errors->first('city') }}</div>
 									</p>
 								</div>
 								</td>
 							</tr>
-							
+
 							<tr><td>
 								<div class="two columns alpha"><p>{{ Form::label('street', 'Endereço:') }}</p></div>
 								<div class="two columns omega">
 									<p>
-										{{ Form::text('street', Input::old('street')) }} <br>
+										{{ Form::text('street') }} <br>
 									</p>
 								</div>
 								<td>
@@ -393,19 +379,13 @@
 								</td>
 							</tr>
 							<tr><td>
-								<?php
-									$albuns[""] = "Escolha o album";
-									$institution = Institution::find(Session::get('institutionId'));
-    								$albumsInstitutional = Album::withInstitution($institution)->get();
-									foreach ($albumsInstitutional as $k => $album) {
-										$albuns[$album->id]	= $album->title;
-									} 
-								?>
-								<div class="two columns alpha select-album" style="display: none"><p>{{ Form::label('photo_album', 'Adicionar ao álbum:') }}</p></div>
+								<div class="two columns alpha select-album" style="display: none">
+									<p>{{ Form::label('photo_album', 'Adicionar ao álbum:') }}</p>
+								</div>
 								<div class="two columns omega">
 									<p class="select-album" style="display: none;">
-										{{ Form::select('photo_album', $albuns, "") }} <br>
-									</p>	
+										{{ Form::select('photo_album', $albums, "") }} <br>
+									</p>
 								</div>
 								</td>
 							</tr>
@@ -413,46 +393,46 @@
 								<div class="two columns alpha new-album-name" style="display: none"><p>{{ Form::label('new_album-name', 'Digite o nome do novo álbum:') }}</p></div>
 								<div class="two columns omega">
 									<p class="new-album-name" style="display: none;">
-										{{ Form::text('new_album-name', Input::old('new_album-name')) }} <br>
+										{{ Form::text('new_album-name') }} <br>
 									</p>
 								</div>
 								</td>
 							</tr>
 							<tr><td>
-								
+
 									<div class="two columns alpha"><p>{{ Form::label('imageAuthor', 'Autor da imagem*:') }}</p></div>
 									<div class="two columns omega">
 										<p>
-											{{ Form::text('imageAuthor', $institution->name) }} 
+											{{ Form::text('imageAuthor', $institution->name) }}
 											 <br>
 											<div class="error">{{ $errors->first('imageAuthor') }}</div>
 										</p>
 									</div>
 								</td>
 							</tr>
-							<tr> <td>               
-         						<div class="two columns alpha"><p>{{ Form::label('imageDate', 'Data da imagem:') }}</p></div>
-         						<div class="fivemidUpdateInst columns omega">
-          						   	<p>{{ Form::text('image_date','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }} 
-         								<span class="space_txt_element">Não sabe a data precisa? 
-         									<a onclick="date_visibility('date_img_inaccurate');" >Clique aqui.</a> 
-         								</span>
-         							<br> <div id="error_image_date" class="error">{{ $errors->first('image_date') }}</div>
-         						   	</p> 
-         						   	<p>
-         								<div id="date_img_inaccurate" style="display:none;">         							
-         									@include('photos.includes.dateImage')         						    
-         								</div>
-         								<label id="answer_date_image" class="resultDateWork"></label>
-         							</p>       
-        						</div>
-        						</td>
-        					</tr>           						
+							<tr> <td>
+				 						<div class="two columns alpha"><p>{{ Form::label('imageDate', 'Data da imagem:') }}</p></div>
+				 						<div class="fivemidUpdateInst columns omega">
+												 	<p>{{ Form::text('image_date','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }}
+				 								<span class="space_txt_element">Não sabe a data precisa?
+				 									<a onclick="date_visibility('date_img_inaccurate');" >Clique aqui.</a>
+				 								</span>
+				 							<br> <div id="error_image_date" class="error">{{ $errors->first('image_date') }}</div>
+				 							 	</p>
+				 							 	<p>
+				 								<div id="date_img_inaccurate" style="display:none;">
+				 									@include('photos.includes.dateImage')
+				 								</div>
+				 								<label id="answer_date_image" class="resultDateWork"></label>
+				 							</p>
+										</div>
+										</td>
+									</tr>
 							<tr><td>
 								<div class="two columns alpha"><p>{{ Form::label('observation', 'Observações:') }}</p></div>
 								<div class="two columns omega">
 									<p>
-										{{ Form::textarea('observation', Input::old('observation')) }} <br>
+										{{ Form::textarea('observation') }} <br>
 
 									</p>
 								</div>
@@ -469,10 +449,10 @@
 								var new_album = document.getElementsByClassName('new-album-name');
 								var i;
 								for (i = 0; i < select_album.length; i++) {
-    								select_album[i].style.display = "none";
+										select_album[i].style.display = "none";
 								}
 								for (i = 0; i < new_album.length; i++) {
-    								new_album[i].style.display = "block";
+										new_album[i].style.display = "block";
 								}
 								document.getElementById("photo_album").value = "";
 							}
@@ -482,10 +462,10 @@
 								var new_album = document.getElementsByClassName('new-album-name');
 								var i;
 								for (i = 0; i < select_album.length; i++) {
-    								select_album[i].style.display = "block";
+										select_album[i].style.display = "block";
 								}
 								for (i = 0; i < new_album.length; i++) {
-    								new_album[i].style.display = "none";
+										new_album[i].style.display = "none";
 								}
 								document.getElementById("new_album-name").value = "";
 							}
@@ -493,23 +473,25 @@
 					</div>
 					<div class="five columns omega row">
 						<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
-							
-							
+
+
 						</table>
 					</div>
 					<div class="twelve columns omega row">
 						<div class="form-row">
-							<input type="radio" onclick="enableLicencenseChoice()" name="authorized" value="1" id="authorized" checked="checked">
-							<label for="authorized">Sou o autor da imagem ou possuo permissão expressa do autor para disponibilizá-la no Arquigrafia</label><br class="clear">	
+							{{ Form::radio('authorized', '1', true,
+								['id' => 'authorized', 'onclick' => 'enableLicencenseChoice()']) }}
+							<label for="authorized">Sou o autor da imagem ou possuo permissão expressa do autor para disponibilizá-la no Arquigrafia</label><br class="clear">
 						</div>
 						<div class="form-row">
-							<input type="radio" onclick="disableLicenseChoice()" name="authorized" value="0" id="authorized">
+							{{ Form::radio('authorized', '0', false,
+								['id' => 'authorized', 'onclick' => 'disableLicencenseChoice()']) }}
 							<label for="authorized">Aguardando autorização do autor</label><br class="clear">
 						 </div>
 					</div>
 					<div class="twelve columns omega row">
-						<label for="terms" generated="true" class="error" style="display: inline-block; "></label>	
-						Escolho a licença <a href="http://creativecommons.org/licenses/?lang=pt_BR" id="creative_commons" target="_blank" style="text-decoration:underline; line-height:16px;">Creative Commons</a>, para publicar a imagem, com as seguintes permissões:			
+						<label for="terms" generated="true" class="error" style="display: inline-block; "></label>
+						Escolho a licença <a href="http://creativecommons.org/licenses/?lang=pt_BR" id="creative_commons" target="_blank" style="text-decoration:underline; line-height:16px;">Creative Commons</a>, para publicar a imagem, com as seguintes permissões:
 					</div>
 
 					<div class="four columns" id="creative_commons_left_form">
@@ -541,22 +523,24 @@
 						</div>
 					</div>
 					<!--<div class="twelve columns omega row">
-						<h4>Álbuns do  </h4>
+						<h4>Álbuns do	</h4>
 						<div>
 							include('photos.includes.institutional_albums')
-							
+
 						</div>
 					</div>-->
-					
-					<!--<div class="twelve columns omega row">						
+
+					<!--<div class="twelve columns omega row">
 						<div>
 							include('photos.includes.repopulate_photos');
-							
+
 						</div>
 					</div>-->
-					
+
 					<div class="twelve columns">
 						<input name="enviar" type="submit" class="btn" value="ENVIAR">
+						<input name="draft" type="submit" class="btn"
+							value="SALVAR INFORMAÇÕES SEM A IMAGEM">
 						<!--<input type="button" id="btnOpenDialogRepopulate" value="ENVIAR" class="btn">-->
 						<div id="dialog-confirm" title=" "></div>
 					</div>
@@ -596,132 +580,119 @@
 	}
 </script>
 <script type="text/javascript">
-
-	$(document).ready(function() { 
-		if({{Input::old('autoOpenModal','false')}}){ 	
-					
-			$( "#dialog-confirm" ).html("<b>Cadastro de imagem realizado com sucesso!</b> <br><br> Gostaria de utilizar os dados da imagem cadastrada para o próximo upload?");
-			 $( "#dialog-confirm" ).dialog({
+	$(document).ready(function() {
+		if ({{ Input::old('autoOpenModal','false') }}) {
+			var text;
+			var url;
+			if ('{{ Input::old("draft", null) }}'.length) {
+				text = "<b>Informações sem a imagem salvas com sucesso! Para completar os dados acesse a área de perfil do acervo ou o link 'Uploads incompletos' nesta página</b><br><br>Gostaria de utilizar os dados anteriores novamente?";
+				url = "{{ URL::to('/institutions/' . $institution->id) }}";
+			} else {
+				text = "<b>Cadastro de imagem realizado com sucesso!</b><br><br>Gostaria de utilizar os dados da imagem cadastrada para o próximo upload?";
+				url = "{{ URL::to('/photos/' . Input::old('photoId')) }}"
+			}
+			$( "#dialog-confirm" ).html(text);
+			$( "#dialog-confirm" ).dialog({
 				resizable: false,
 				height:180,
 				modal: true,
 				buttons: {
-				"Sim": function() {
-					$( this ).dialog( "close" );
+					"Sim": function() {
+						$( this ).dialog( "close" );
 					},
 					"Não": function() {
-						//$( this ).dialog( "close" );
-						window.location.replace('{{ URL::to("/") }}/photos/{{Input::old('photoId')}}');
+						window.location.replace(url);
 					}
 				}
-			}); 
+			});
 		}
-        
-        var radio_checked_commercial    = "{{"allowCommercialUses".(Input::old('allowCommercialUses'))}}";
-        var radio_checked_modifications = "{{"allowModifications".(Input::old('allowModifications'))}}";
+		var radio_checked_commercial = "{{ 'allowCommercialUses'. Input::old('allowCommercialUses') }}";
+		var radio_checked_modifications = "{{ 'allowModifications' . Input::old('allowModifications') }}";
+		if ((radio_checked_commercial != "allowCommercialUses") && (radio_checked_modifications != "allowModifications")) {
+			if (radio_checked_commercial != "allowCommercialUsesYES") {
+				document.getElementById("allowCommercialUsesYES").checked = false;
+				document.getElementById(radio_checked_commercial).checked = true;
+			}
+			if (radio_checked_modifications != "allowModificationsYES") {
+				document.getElementById("allowModificationsYES").checked = false;
+				document.getElementById(radio_checked_modifications).checked = true;
+			}
+		}
 
-        if((radio_checked_commercial != "allowCommercialUses") && (radio_checked_modifications != "allowModifications")) {
-            if(radio_checked_commercial != "allowCommercialUsesYES") {
-                document.getElementById("allowCommercialUsesYES").checked = false;
-                document.getElementById(radio_checked_commercial).checked = true;
-            }
-            if(radio_checked_modifications != "allowModificationsYES") {
-                document.getElementById("allowModificationsYES").checked     = false;
-                document.getElementById(radio_checked_modifications).checked = true;
-            }
-        }
-
-		/* //if({{Input::old('autoOpenModal','false')}}){ */
-		@if(Input::old('tagsArea')!= null)				
-			var tagsArea = {{"'".Input::old('tagsArea') ."'"}}.split(',');
-			showTags(tagsArea,$('#tagsArea'),$('#tags_input'));			
-		@else
-			showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));		
+		@if (Input::old('tagsArea') != null)
+			var tagsArea = "{{ Input::old('tagsArea') }}".split(',');
+			showTags(tagsArea, $('#tagsArea'), $('#tags_input'));
 		@endif
 
 		//authors
 		$('#work_authors').textext({ plugins: 'tags' });
+		@if(Input::old('work_authors')!= null)
+			<?php $work_authors = explode (";", Input::old('work_authors')); ?>
+		@endif
 
-        @if(Input::old('work_authors')!= null)
-            <?php //print_r(Input::old('work_authors'));
-            $work_authors = explode (";", Input::old('work_authors')); ?>
-        @endif
-        
-        @if (isset($work_authors) && $work_authors != null)
-                              // console.log("AC = "+ auth);
-            @foreach ( $work_authors as $work_author )
-                $('#work_authors').textext()[0].tags().addTags([ {{ '"' . $work_author . '"' }} ]);
-            @endforeach
-        @endif
-      
+		@if (isset($work_authors) && $work_authors != null)
+			@foreach ( $work_authors as $work_author )
+				$('#work_authors').textext()[0].tags().addTags([ {{ '"' . $work_author . '"' }} ]);
+			@endforeach
+		@endif
 
-        $('#add_work_authors').click(function(e) {
-            e.preventDefault();
-            authorsList();
-        });
-        $('#photo_workAuthor').keypress(function(e) {
-            var key = e.which || e.keyCode;
-            if(key ==13)
-               authorsList();            
-            if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
-                e.preventDefault();
-        });
+		$('#add_work_authors').click(function(e) {
+			e.preventDefault();
+			authorsList();
+		});
 
-        function authorsList(){
-            var authors = $('#photo_workAuthor').val();            
-            if (authors == '') return;
-            $('#work_authors').textext()[0].tags().addTags([ authors ]);
-            $('#photo_workAuthor').val('');
-        }	
+		$('#photo_workAuthor').keypress(function(e) {
+			var key = e.which || e.keyCode;
+			if(key ==13) authorsList();
+			if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
+				e.preventDefault();
+		});
 
-		@if( Input::old('century'))		
+		function authorsList(){
+			var authors = $('#photo_workAuthor').val();
+			if (authors == '') return;
+			$('#work_authors').textext()[0].tags().addTags([ authors ]);
+			$('#photo_workAuthor').val('');
+		}
+
+		@if( Input::old('century'))
 			var centuryInput = "{{Input::old('century')}}";
-			//alert(centuryInput);
 			showPeriodCentury(centuryInput);
-			retrieveCentury(centuryInput);			
+			retrieveCentury(centuryInput);
 		@endif
-		
-		@if( Input::old('decade_select'))	
+
+		@if( Input::old('decade_select'))
 			var decadeInput = "{{Input::old('decade_select')}}";
-			retrieveDecade(decadeInput);	
-			getCenturyOfDecade(decadeInput,"workDate"); 		
+			retrieveDecade(decadeInput);
+			getCenturyOfDecade(decadeInput,"workDate");
 		@endif
 
-		@if( Input::old('century_image'))		
+		@if( Input::old('century_image'))
 			var centuryInputImage = "{{Input::old('century_image')}}";
-			//alert(centuryInputImage);
 			showPeriodCenturyImage(centuryInputImage);
-			retrieveCenturyImage(centuryInputImage);			
-		@endif
-		
-		@if( Input::old('decade_select_image'))	
-			var decadeInputImage = "{{Input::old('decade_select_image')}}";	
-
-			retrieveDecadeImage(decadeInputImage);		
-			getCenturyOfDecade(decadeInputImage,"imageDate"); 	
+			retrieveCenturyImage(centuryInputImage);
 		@endif
 
-		@if($dates == false) 
+		@if( Input::old('decade_select_image'))
+			var decadeInputImage = "{{ Input::old('decade_select_image') }}";
+			retrieveDecadeImage(decadeInputImage);
+			getCenturyOfDecade(decadeInputImage, "imageDate");
+		@endif
+		@if ($dates == false)
 		 	window.onload = cleanToLoad;
 		@endif
 
-		if({{Input::old('dates','true')}}){
-			if("{{Input::old('century')}}" != "" || "{{Input::old('decade_select')}}" != "" ){
+		if ({{ Input::old('dates','true') }}) {
+			if ("{{ Input::old('century') }}" != "" || "{{ Input::old('decade_select') }}" != "") {
 				window.onload = resultSelectDateWork("otherDate");
 			}
 		}
 
-		if({{Input::old('dateImage','true')}}){
-			if("{{Input::old('century_image')}}" != "" || "{{Input::old('decade_select_image')}}" != "" ){
+		if ({{ Input::old('dateImage','true') }}) {
+			if ("{{ Input::old('century_image') }}" != "" || "{{ Input::old('decade_select_image') }}" != "") {
 				window.onload = resultSelectDateWork("date_img_inaccurate");
 			}
 		}
-
-		
-
-
-   });
+	});
 </script>
-
-
 @stop

@@ -32,27 +32,21 @@ class Author extends Eloquent {
   }
 
   public function saveAuthors($authors_list,$photo)
-  {     
-        $arrayAuthors = $this->formatAuthors($authors_list);
-        //dd($arrayAuthors);
-        
-        foreach ($arrayAuthors as $name_author) {
-            $author = $this->getOrCreate($name_author);
-            //echo $author->id;
-            //echo "<br>";
-            //echo $author->name;
-            $photo->authors()->attach($author->id);          
-            $author->save();
-        } 
-        
-  } 
+  {
+    $arrayAuthors = $this->formatAuthors($authors_list);
+    $authors = [];
+    foreach ($arrayAuthors as $name_author) {
+      $author = $this->getOrCreate($name_author);
+      $authors[] = $author->id;
+    }
+    $photo->authors()->sync($authors, false);
+  }
 
   public function getAuthorPhoto($photo_id){     
     $allAuthors = DB::table('photo_author')
       ->select('author_id')
       ->where('photo_id',$photo_id)
       ->lists('author_id');
-       //dd($allAuthors);
      $authorsList = Author::wherein('id',$allAuthors)->get(); 
      
      return $authorsList;

@@ -1,5 +1,6 @@
 <?php
 
+use lib\draft\DraftingTrait;
 use lib\date\Date;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use lib\gamification\traits\LikableGamificationTrait;
@@ -7,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection as Collection;
 
 class Photo extends Eloquent {
 
+	use DraftingTrait;
 	use SoftDeletingTrait;
 	use LikableGamificationTrait;
 
@@ -520,6 +522,11 @@ class Photo extends Eloquent {
 
 	public static function search($input, $tags, $binomials, $authorsArea) {
 
+		if(Session::has('CurrPage') && Session::get('CurrPage')!= 1){ 			
+		   Session::forget('CurrPage');
+		}else{
+		   Session::put('CurrPage',1);
+		}
 		foreach (['workdate', 'dataCriacao', 'dataUpload'] as $date) {
 			if ( isset($input[$date])
 					&& DateTime::createFromFormat('Y', $input[$date]) == FALSE ) { 				
@@ -697,7 +704,7 @@ class Photo extends Eloquent {
 
 	public static function paginatePhotosSearch($photos, $perPage = 36,$q = null) { 		
 		if($photos!= null){
-			$qq = static::PhotosVarious($photos, $q)->paginate($perPage);			
+			$qq = static::PhotosVarious($photos, $q)->orderBy('photos.created_at', 'DESC')->paginate($perPage);			
 			return $qq;
 		}else{
 			return null;
@@ -706,21 +713,22 @@ class Photo extends Eloquent {
 
 	
 	public static function paginateAllPhotosSearch($photos, $q = null, $perPage = 36) { 		
-		return static::PhotosVarious($photos,$q)->paginate($perPage);	
+		return static::PhotosVarious($photos,$q)->orderBy('photos.created_at', 'DESC')->paginate($perPage);	
 	}
 
 	public static function paginateAllPhotosSearchAdvance($photos, $q = null, $perPage = 36) { 		
-		return static::PhotosVarious($photos,$q)->paginate($perPage);	
+		return static::PhotosVarious($photos,$q)->orderBy('photos.created_at', 'DESC')->paginate($perPage);	
+		
 	}
 
 	public static function paginatePhotosSearchAdvance($photos, $perPage = 36,$q = null) {		
 		if($photos!= null)
-			return static::PhotosVarious($photos, $q)->paginate($perPage);	
+			return static::PhotosVarious($photos, $q)->orderBy('photos.created_at', 'DESC')->paginate($perPage);	
 		else 
 			return null;
 					
 	}
 
-
+	
 
 }

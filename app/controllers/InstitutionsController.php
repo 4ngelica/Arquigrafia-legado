@@ -9,37 +9,34 @@ class InstitutionsController extends \BaseController {
   } 
 
   public function show($id) {
-
     $institution = Institution::find($id);
     if ( is_null($institution) ) {
       return Redirect::to('/');
     }
     $photos = $institution->photos()->get()->reverse(); 
-     //echo "ss=".!Session::has('institutionId');
     $follow = null;
     $responsible = false;
-    if(!Session::has('institutionId') && Auth::check()){
-        $userId = Auth::user()->id; 
-        $user = User::whereid($userId)->first(); 
-        
-        if($user->followingInstitution->contains($institution->id))
-            $follow = false;
-        else
-            $follow = true;        
+    if ( !Session::has('institutionId') && Auth::check() ) {
+      $user = Auth::user();
+      $follow = true;
+      if ($user->followingInstitution->contains($institution->id)) {
+        $follow = false;
+      }
     }
-    if(Session::has('institutionId') && Auth::check() && $institution->id == Session::get('institutionId')){
-       
-       $userId = Auth::user()->id; 
-       $responsibleEmployee = institution::RoleOfInstitutionalUser($userId);   
-       if(!empty($responsibleEmployee)) 
-          $responsible = true;  
+    if (Auth::check() && $institution->id == Session::get('institutionId')) {
+      $userId = Auth::id();
+      $responsibleEmployee = Institution::RoleOfInstitutionalUser($userId);   
+      if (!empty($responsibleEmployee)) {
+        $responsible = true;  
+      }
     }
-
+    $drafts = Photo::withInstitution($institution)->onlyDrafts()->paginate(50);
     return View::make('institutions.show', [
       'institution' => $institution,
       'photos' => $photos,
       'follow' => $follow,
-      'responsible' => $responsible 
+      'responsible' => $responsible,
+      'drafts' => $drafts
     ]);
   }
 

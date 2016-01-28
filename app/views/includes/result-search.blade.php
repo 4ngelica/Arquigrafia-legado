@@ -2,7 +2,7 @@
       <div class="twelveMid columns">    
        <div id="add_images" class="" style="display: block;"> 
         <div id="add" class="twelveMid columns add" >
-          <!--<img class="loader" src="{{ URL::to('/img/ajax-loader.gif') }}" />-->
+          <!--<img class="loader" src="{{ URL::to('/img/ajax-loader.gif') }}" /> style="height: 1500px;"-->
           @if ( $photos!= null)
               @if ($photos->count() > 0)
                 
@@ -21,7 +21,7 @@
             <div class="eight columns alpha buttons">
               <input type="button" class="btn less less-than" value="&lt;&lt;">
               <input type="button" class="btn less-than" value="&lt;">
-              <p>1 / {{$maxPage}}</p>
+              <p>{{$page}} / {{$maxPage}}</p>
               <input type="button" class="btn greater-than" value="&gt;">
               <input type="button" class="btn greater greater-than" value="&gt;&gt;">
             </div>          
