@@ -6,6 +6,7 @@
 
   <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/checkbox.css" />
   <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4fdf62121c50304d"></script>
+  
   <!-- Google Maps API -->
   <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>
   <script type="text/javascript">
@@ -119,9 +120,33 @@
 
       <!--   BOX DE BOTOES DA IMAGEM   -->
       <div id="single_view_buttons_box">
-        <div>
-            <a href="{{ URL::previous() }}" class='btn left'>VOLTAR</a>
+        @if ($typeSearch == '')          
+          <div class="first columns"> 
+            <a href="{{ URL::previous()}}" class='btn left'>VOLTAR</a>
+          </div>
+        @elseif($typeSearch == 'advance')
+          
+           <div class="first columns"> 
+            <a href="{{ URL::previous()}}&pg=1" class='btn left'>VOLTAR</a>
+            </div>
+        @elseif($typeSearch == 'simples')
+        <div class="first columns">       
+        {{ Form::open(array('url' => $urlBack ,'id'=> 'frmDetailPhoto' ,'method' => 'post')) }}
+        
+          {{ Form::hidden('q', $querySearch) }} 
+          {{ Form::hidden('pg', "1") }} 
+          {{ Form::hidden('typeSearch', $typeSearch) }} 
+          {{ Form::hidden('visitedPage', "$currentPage") }}   
+          {{ Form::hidden('urlPrev', $urlBack, array('id'  => 'urlPrev') ) }}   
+           
+          {{Form::submit('VOLTAR', ['class' => 'btn return-show', 'id' =>'btnBack', 'onclick' => 'return updateForm();' ])}}
+          
+            
+        
+        {{ Form::close() }}
         </div>
+        @endif
+
         @if (Auth::check())
           <ul id="single_view_image_buttons">
             <li>
@@ -682,6 +707,30 @@
           }]
       });
     });
+
+  /*$("#btnBack").click(function(){
+    alert("ok");
+    if(urlType == "advance"){
+        alert("adv");
+        $( "#advanceSearch" ).submit();
+  }
+});*/
+
+  //function updateForm(){    
+ 
+
+  // var urlPrev = $('#urlPrev').val();
+   //var substring = "more";
+
+   // if(urlPrev.indexOf(substring) > -1){     
+      //$('#frmDetailPhoto').attr('method','GET');
+     // $('#frmDetailPhoto').attr('method','POST');
+      //window.location.replace("/search/more/");
+  ///  }else{
+    //  $('#frmDetailPhoto').attr('method','POST');
+   // }
+   //location.reload();
+
   </script>
   
 @stop

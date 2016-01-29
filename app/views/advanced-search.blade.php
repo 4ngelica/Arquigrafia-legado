@@ -45,7 +45,7 @@
 <script>
     var paginators = {
       add: {
-        currentPage: 1,
+        currentPage: {{ $page}},//1,
         maxPage: {{ $maxPage }},
         url: '{{ $url }}',
         loadedPages: [1],
@@ -81,7 +81,7 @@
             </p>
           </div>
         </div>
-        {{ Form::open(array('url' => 'search/more', 'method' => 'get')) }}
+        {{ Form::open(array('url' => 'search/more', 'id'=>'advanceSearch' ,'method' => 'get')) }}
           <div class="eight columns omega row">
             <div class="nine columns alpha row">
               <div class="four columns alpha" style="margin-right: 15px;">
@@ -236,6 +236,7 @@
                   </tr>
                   <tr>
                     <td>
+                      {{ Form::hidden('typeSearch', $typeSearch, array('id'  => 'typeSearch') ) }}
                       {{ Form::label('street', 'Endereço:') }}
                     </td>
                     <td>
@@ -268,6 +269,23 @@
                     </td>
                   </tr>
                 </table>
+
+                <h3>Acervos</h3>
+                <table class="form-table" width="80%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td>
+                      {{ Form::label('institution', 'Instituições:') }}&nbsp;
+                    </td>
+                    <td>
+                      @if(!is_null($institutions))
+                        {{ Form::select('institution_id', array(""=>"Escolha") + $institutions , Input::get('institution_id')) }}
+                      @else
+                        {{ Form::select('institution_id', [""=>"Escolha o acervo institutional"], "",array('class' => 'left')) }} 
+                      @endif
+                    </td>
+                  </tr>
+                </table>  
+
               </div>
             </div>
             <div class="six columns alpha row">
@@ -326,6 +344,10 @@
         {{ Form::close() }}
 
       </div>
+      {{ Form::hidden('pgVisited', $pageVisited, array('id'  => 'pgVisited') ) }} 
+      {{ Form::hidden('pageCurrent1', $page, array('id'  => 'pageCurrent1') ) }} 
+      {{ Form::hidden('urlType', "advance", array('id'  => 'urlType') ) }} 
+
       @if (count($photos))
         <!--   PAINEL DE IMAGENS - GALERIA - CARROSSEL   -->
         <!--<div class="wrap">
@@ -336,6 +358,7 @@
           <div class="panel-next"></div>          
         </div> -->        
       <!--   FIM - PAINEL DE IMAGENS  -->
+      
       @include('includes.result-search')
     @endif
     </div>
