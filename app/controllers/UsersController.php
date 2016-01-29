@@ -1,5 +1,6 @@
 <?php
 use lib\utils\ActionUser;
+use lib\utils\HelpTool;
 use Carbon\Carbon; 
 use Facebook\FacebookSession;
 use Facebook\FacebookRedirectLoginHelper;
@@ -743,19 +744,22 @@ class UsersController extends \BaseController {
 
   public function institutionalLogin() { 
     $login = Input::get('login');    
-    $institution = Input::get('institution');
+    $institutionId = Input::get('institution');
     $password = Input::get('password');
-    Log::info("Retrieved params login=".$login.", institution=".$institution);
-    $booleanExist = User::userBelongInstitution($login,$institution); 
+    Log::info("Retrieved params login=".$login.", institution=".$institutionId);
+    $booleanExist = User::userBelongInstitution($login,$institutionId); 
     Log::info("Result belong institution -> booleanExist=".$booleanExist);
 
     if ((Auth::attempt(array('login' => $login, 'password' => $password)) == true || 
       Auth::attempt(array('email' => $login, 'password' => $password,'active' => 'yes')) == true) &&
       $booleanExist == true){
-
+      $displayedInstitutionName = null;
+      $institution = Institution::find($institutionId);      
+      $displayedInstitutionName = HelpTool::formattingLongText($institution->name, $institution->acronym, 25);
       Log::info("Valid access, redirect");
-      Session::put('institutionId', $institution);
-      //loga usuario da institution
+      Session::put('institutionId', $institutionId);
+      Session::put('displayInstitution', $displayedInstitutionName);
+            
       return Redirect::to('/');
     } else {
       Log::info("Invalid access, return message");

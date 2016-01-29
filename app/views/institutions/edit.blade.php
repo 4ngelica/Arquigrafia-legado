@@ -87,6 +87,12 @@
             <div class="error">{{ $errors->first('name_institution') }} </div>
             </p>
           </div>
+          <div class="two columns alpha"><p>{{ Form::label('acrônimo', 'Acrônimo:') }}</p></div>
+          <div class="two columns omega">            
+            <p>{{Form::text('acronym_institution', $institution->acronym)}} <br>
+            <div class="error">{{ $errors->first('acronym_institution') }} </div>
+            </p>
+          </div>
 
           <div class="two columns alpha"><p>{{ Form::label('email', 'E-mail*:') }}</p></div>
           <div class="two columns omega">
