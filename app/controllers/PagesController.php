@@ -248,8 +248,12 @@ class PagesController extends BaseController {
                 }    
             }  
 
-            $query = Institution::where('name', 'LIKE', '%' . $needle . '%'); 
-            $institutions = $query->get();
+            $query = Institution::where(function($query) use($needle) {
+                    $query->where('name', 'LIKE', '%'. $needle .'%');  
+                 //   $query->orWhere('acronym', 'LIKE', '%'. $needle .'%'); 
+                });
+            $institutions =  $query->get(); 
+            
             foreach ($institutions as $institution) { 
                 $byInstitution = $institution->photos;
                 $photos = $photos->merge($byInstitution);
