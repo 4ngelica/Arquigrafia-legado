@@ -160,7 +160,7 @@ class PagesController extends BaseController {
             );
         }
         $pageVisited = 0;    //null; 
-        $needle = Input::get("q");
+        $needle = trim(Input::get("q"));
         $txtcity = Input::get("city"); 
         $type = Input::get("t"); 
         $dateFilter = null;
@@ -248,12 +248,12 @@ class PagesController extends BaseController {
                 }    
             }  
 
-            $query = Institution::where('name', '=', $needle); 
-            $institution = $query->get();
-            if ($institution->first()) {
-                $byInstitution = $institution->first()->photos;                
+            $query = Institution::where('name', 'LIKE', '%' . $needle . '%'); 
+            $institutions = $query->get();
+            foreach ($institutions as $institution) { 
+                $byInstitution = $institution->photos;
                 $photos = $photos->merge($byInstitution);
-            }
+            }  
            
             $photosAll = $photos->count();
 
