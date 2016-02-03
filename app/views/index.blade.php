@@ -23,7 +23,8 @@
   <!--   MEIO DO SITE - ÁREA DE NAVEGAÇÃO   -->
   <div id="content">
   @if(Auth::user())
-    @if(Auth::user()->news->count() > 0)
+    <?php $news = DB::table('news')->where('user_id', '=', Auth::user()->id)->orWhere('user_id', '=', 0)->orderBy('updated_at', 'desc')->take(6)->get(); ?>
+    @if(!is_null($news))
       <div class="container">
         <div class="twelve columns">
           <div class="news clearfix">
