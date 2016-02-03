@@ -525,13 +525,15 @@
       </br>
 
       <!-- AVALIAÇÃO -->
-      @if (Auth::check())
+      @if (Auth::check() )
         <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=g' ) }}">
       @endif
-
+      
       @if (empty($average))
+        @if(!Session::has('institutionId'))
         <h4>Interpretações da arquitetura:</h4>
         <img src="/img/GraficoFixo.png" />
+        @endif
       @else
         <h4>
           <center>Média de Interpretações d{{ $architectureName }} </center>
@@ -540,7 +542,7 @@
         <div id="evaluation_average"></div>
       @endif
       
-      @if (Auth::check())
+      @if (Auth::check() )
         </a>
       @endif
 
@@ -687,8 +689,9 @@
                 enabled: true
               },
               color: '#999999',
-          }, {
-              <?php $count = 0; ?>
+          },
+          @if (!Session::has('institutionId'))            
+          { <?php $count = 0; ?>
               data: [
                 @if(isset($userEvaluations) && !$userEvaluations->isEmpty())
                   @foreach($userEvaluations as $userEvaluation)
@@ -697,14 +700,16 @@
                   @endforeach
                 @endif
               ],
-              yAxis: 0,
+              yAxis: 0,              
               name: 'Sua impressão',
               marker: {
                 symbol: 'circle',
                 enabled: true
-              },
+              },              
               color: '#000000',
-          }]
+          }
+          @endif 
+          ]
       });
     });
 
@@ -732,4 +737,5 @@
    //location.reload();
 
   </script>
+  
 @stop
