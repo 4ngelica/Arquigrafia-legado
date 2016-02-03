@@ -487,8 +487,8 @@ class PhotosController extends \BaseController {
         //ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "UploadInstitutional", "user");
         //ActionUser::printTags($photo->user_id, $photo->id, $tagsCopy, $sourcePage, "user", "Inseriu");
         /* Feed de notícias para todos os usuários */
-        foreach (User::all() as $users) {
-          foreach ($users->news as $note) {
+          $institutional_news = DB::table('news')->where('user_id', '=', 0)->get();
+          foreach ($institutional_news as $note) {
           if($note->news_type == 'new_institutional_photo' && $note->sender_id == Session::get('institutionId')) {
               $curr_note = $note;
             }
@@ -498,7 +498,7 @@ class PhotosController extends \BaseController {
             if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
               News::create(array('object_type' => 'Photo',
                                  'object_id' => $photo->id,
-                                 'user_id' => $users->id,
+                                 'user_id' => 0,
                                  'sender_id' => $photo->institution_id,
                                  'news_type' => 'new_institutional_photo'
               ));
@@ -511,12 +511,11 @@ class PhotosController extends \BaseController {
           else {
             News::create(array('object_type' => 'Photo',
                                'object_id' => $photo->id,
-                               'user_id' => $users->id,
+                               'user_id' => 0,
                                'sender_id' => $photo->institution_id,
                                'news_type' => 'new_institutional_photo'
             ));
           }
-        }
       } else {
         $messages = $validator->messages();
         return Redirect::to('/photos/uploadInstitutional')

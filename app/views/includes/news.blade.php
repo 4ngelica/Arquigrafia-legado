@@ -1,5 +1,5 @@
 <?php 
-  $news = Auth::user()->news->reverse()->take(6); 
+  $news = DB::table('news')->where('user_id', '=', Auth::user()->id)->orWhere('user_id', '=', 0)->orderBy('updated_at', 'desc')->take(6)->get(); 
 ?>
 
 @foreach($news as $info)
