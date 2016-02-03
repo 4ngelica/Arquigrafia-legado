@@ -249,8 +249,8 @@ class PagesController extends BaseController {
             }  
 
             $query = Institution::where(function($query) use($needle) {
-                    $query->where('name', 'LIKE', '%'. $needle .'%');  
-                 //   $query->orWhere('acronym', 'LIKE', '%'. $needle .'%'); 
+                    $query->where('name', 'LIKE', '%'. $needle .'%');                      
+                    $query->orWhere('acronym', '=',  $needle);
                 });
             $institutions =  $query->get(); 
             
