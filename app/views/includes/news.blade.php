@@ -68,6 +68,7 @@
 <div class="gallery_box">
   <a href='{{ URL::to("/photos") . "/" . $info->object_id . "/viewEvaluation/" . $info->sender_id}}'>                 
     <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
+    <img src="/img/mask-avaliacao.png" class="evaluated-mask">
   </a>
   <a  href='{{ URL::to("/photos") . "/" . $info->object_id . "/viewEvaluation/" . $info->sender_id}}' class="name">
     @if($info->data == null)
