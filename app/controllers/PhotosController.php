@@ -1497,7 +1497,7 @@ class PhotosController extends \BaseController {
       $checkedAreArchitecture= Evaluation::userAreArchitecture($photoId,$userId);
 
     }
-
+    
     return View::make('/photos/evaluate',
       [
         'photos' => $photo, 
