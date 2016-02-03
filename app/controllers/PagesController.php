@@ -3,6 +3,7 @@
 use lib\utils\ActionUser;
 use lib\date\Date;
 
+
 class PagesController extends BaseController {
 
 /*
@@ -40,14 +41,14 @@ class PagesController extends BaseController {
             $user_id = session_id();
         }
         if(Session::has('institutionId')){
-            $institution = Institution::find(Session::get('institutionId')); 
+            $institution = Institution::find(Session::get('institutionId'));             
         }else{ 
-            $institution = null;
+            $institution = null;            
         }
         $source_page = Request::header('referer');
         ActionUser::printHomePage($user_id, $source_page, $user_or_visitor);
 
-        return View::make('index', ['photos' => $photos, 'institution' => $institution]);
+        return View::make('index', ['photos' => $photos, 'institution' => $institution ]);
     }
 
     public function panel()
@@ -175,7 +176,6 @@ class PagesController extends BaseController {
         $pageRetrieved = 1;
         $haveSession = 0;
         $pageLinked = 0;
-        
         
       
         if ( Input::has('type') ) {
