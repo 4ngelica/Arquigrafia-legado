@@ -483,18 +483,18 @@ class PhotosController extends \BaseController {
         $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); 
         $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
         $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
-        $photo->saveMetadata(strtolower($ext));
+        //$photo->saveMetadata(strtolower($ext));
         //ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "UploadInstitutional", "user");
         //ActionUser::printTags($photo->user_id, $photo->id, $tagsCopy, $sourcePage, "user", "Inseriu");
         /* Feed de notícias para todos os usuários */
-          $institutional_news = DB::table('news')->where('user_id', '=', 0)->get();
+          $institutional_news = DB::table('news')->where('user_id', '=', 0)->where('news_type', '=', 'new_institutional_photo')->get();
           foreach ($institutional_news as $note) {
           if($note->news_type == 'new_institutional_photo' && $note->sender_id == Session::get('institutionId')) {
               $curr_note = $note;
             }
           }
           if(isset($curr_note)) {
-            $date = $curr_note->created_at;
+            $date = Carbon::createFromFormat('Y-m-d H:i:s', $curr_note->updated_at);
             if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
               News::create(array('object_type' => 'Photo',
                                  'object_id' => $photo->id,
@@ -504,8 +504,7 @@ class PhotosController extends \BaseController {
               ));
             }
             else {
-              $curr_note->object_id = $photo->id;
-              $curr_note->save();
+              DB::table('news')->where('id', $curr_note->id)->update(array('object_id' => $photo->id));
             }
           }
           else {
