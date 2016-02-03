@@ -192,8 +192,16 @@
 </div>
 @elseif($info->news_type == 'check_leaderboard')
 <div class="gallery_box">
-  <a href='{{ URL::to("/leaderboard") }}'>                 
-    <img src={{"/img/leaderboard.jpg"}} title="Learderboard arquigrafia" class="gallery_photo" />
+  <a href='{{ URL::to("/leaderboard") }}'>
+    <?php 
+      $top_user = DB::table('leaderboards')->where('type', '=', 'uploads')->orderBy('count', 'desc')->first();
+      $uploader = User::find($top_user->user_id);
+    ?>
+    @if($uploader->photo != null)                 
+      <img src={{"/arquigrafia-avatars/" . $uploader->id . ".jpg"}} title="Learderboard arquigrafia" class="gallery_photo" />
+    @else
+      <img src="{{ URL::to("/") }}/img/avatar-48.png" title="Learderboard arquigrafia" class="gallery_photo" />
+    @endif
   </a>
   <a href='{{ URL::to("/leaderboard") }}' class="name">
     Conheça o quadro de colaboradores do Arquigrafia
