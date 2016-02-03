@@ -199,7 +199,7 @@
       $uploader = User::find($top_user->user_id);
     ?>
     @if($uploader->photo != null)                 
-      <img src={{$uploader->photo}} title="Learderboard arquigrafia" class="gallery_photo" />
+      <img src={{$uploader->photo}} title="Learderboard arquigrafia" class="gallery_photo" style= "width: 100%; height: 100%;"/>
     @else
       <img src="{{ URL::to("/") }}/img/avatar-48.png" title="Learderboard arquigrafia" class="gallery_photo" />
     @endif
