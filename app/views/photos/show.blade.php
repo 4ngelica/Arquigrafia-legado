@@ -525,13 +525,15 @@
       </br>
 
       <!-- AVALIAÇÃO -->
-      @if (Auth::check())
+      @if (Auth::check() && !Session::has('institutionId'))
         <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=g' ) }}">
       @endif
 
       @if (empty($average))
+        @if(!Session::has('institutionId'))
         <h4>Interpretações da arquitetura:</h4>
         <img src="/img/GraficoFixo.png" />
+        @endif
       @else
         <h4>
           <center>Média de Interpretações d{{ $architectureName }} </center>
@@ -540,7 +542,7 @@
         <div id="evaluation_average"></div>
       @endif
       
-      @if (Auth::check())
+      @if (Auth::check() && !Session::has('institutionId'))
         </a>
       @endif
 
@@ -687,7 +689,9 @@
                 enabled: true
               },
               color: '#999999',
-          }, {
+          },
+          @if(!Session::has('institutionId'))
+           {
               <?php $count = 0; ?>
               data: [
                 @if(isset($userEvaluations) && !$userEvaluations->isEmpty())
@@ -704,7 +708,9 @@
                 enabled: true
               },
               color: '#000000',
-          }]
+          }
+          @endif
+          ]
       });
     });
 

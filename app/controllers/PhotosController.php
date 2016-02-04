@@ -1435,6 +1435,9 @@ class PhotosController extends \BaseController {
   }
 
   public function evaluate($photoId ) { 
+    if (Session::has('institutionId') ) {
+      return Redirect::to('/');
+    }
     if(isset($_SERVER['QUERY_STRING'])) parse_str($_SERVER['QUERY_STRING']);
     $user_id = Auth::user()->id;
     $source_page = Request::header('referer');
@@ -1846,6 +1849,7 @@ class PhotosController extends \BaseController {
   }
 
   public function viewEvaluation($photoId, $userId ) {
+    
     return static::getEvaluation($photoId, $userId, false);
   }
 

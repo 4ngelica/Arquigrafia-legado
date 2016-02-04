@@ -213,7 +213,7 @@
                 },
                 color: '#000000',
                 name: 
-                @if (Auth::check() && $owner->id == Auth::user()->id)
+                @if (Auth::check() && $owner->id == Auth::user()->id && !Session::has('institutionId'))
                   'Suas impressões' 
                 @else
                   'Impressões de {{$owner->name}}'
@@ -270,35 +270,16 @@
 
 			<div id="sidebar" class="four columns">
 				<!--   USUARIO   -->
-				@if ($owner != null)
-          <div id="single_user" class="clearfix row">
-  				  
-            
-            <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
-              <?php if ($owner->photo != "") { ?>
-                <img id="single_view_user_thumbnail" src="<?php echo asset($owner->photo); ?>" class="user_photo_thumbnail"/>
-              <?php } else { ?>
-                <img id="single_view_user_thumbnail" src="{{ URL::to("/") }}/img/avatar-48.png" width="48" height="48" class="user_photo_thumbnail"/>
-              <?php } ?>
-            </a>  
-            
-            
-            
-  					<h1 id="single_view_owner_name"><a href="{{ URL::to("/users/".$owner->id) }}" id="name">{{ $owner->name }}</a></h1>
-      		@if (Auth::check() && $owner->id != Auth::user()->id)
-      			@if (!empty($follow) && $follow == true)
-  	    			<a href="{{ URL::to("/friends/follow/" . $owner->id) }}" id="single_view_contact_add">Seguir</a><br />
-   				  @else
-              <div>Seguindo</div>
-   				  @endif
-  			  @endif	
-  				</div>
-        @endif
+				
 				<!--   FIM - USUARIO   -->				
         
-        <!-- AVALIAÇÃO -->              
+        <!-- AVALIAÇÃO  Suas impressões-->              
+        @if($owner->equal(Auth::user()) &&  !Session::has('institutionId'))
+        <h3>Suas impressões d{{$architectureName}}</h3>
+        @else
+        <h3>Interpretação d{{$architectureName}} realizada por <a href="{{ URL::to("/users/".$owner->id) }}" id="name">{{$owner->name}}</a></h3> 
+        @endif
         
-        <h3>Suas impressões d{{$architectureName}}</h3> 
 	       <br>
          {{ Form::open(array('url' => "photos/{$photos->id}/saveEvaluation")) }}
          
@@ -388,7 +369,7 @@
             @endforeach
               
                <a href="{{ URL::to('/photos/' . $photos->id) }}" class='btn right'>VOLTAR</a>
-               @if (Auth::check() && $owner != null && $owner->id == Auth::user()->id)
+               @if (Auth::check() && $owner != null && $owner->id == Auth::user()->id && !Session::has('institutionId'))
                 {{ Form::submit('ENVIAR', ['id'=>'evaluation_button','class'=>'btn right']) }} 
                @endif
                 
