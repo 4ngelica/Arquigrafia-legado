@@ -1,5 +1,5 @@
 <?php 
-  $news = Auth::user()->news->reverse()->take(6); 
+  $news = DB::table('news')->where('user_id', '=', Auth::user()->id)->orWhere('user_id', '=', 0)->orderBy('updated_at', 'desc')->take(6)->get(); 
 ?>
 
 @foreach($news as $info)
@@ -68,6 +68,7 @@
 <div class="gallery_box">
   <a href='{{ URL::to("/photos") . "/" . $info->object_id . "/viewEvaluation/" . $info->sender_id}}'>                 
     <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
+    <img src="/img/mask-avaliacao.png" class="evaluated-mask">
   </a>
   <a  href='{{ URL::to("/photos") . "/" . $info->object_id . "/viewEvaluation/" . $info->sender_id}}' class="name">
     @if($info->data == null)
@@ -192,8 +193,16 @@
 </div>
 @elseif($info->news_type == 'check_leaderboard')
 <div class="gallery_box">
-  <a href='{{ URL::to("/leaderboard") }}'>                 
-    <img src={{"/img/leaderboard.jpg"}} title="Learderboard arquigrafia" class="gallery_photo" />
+  <a href='{{ URL::to("/leaderboard") }}'>
+    <?php 
+      $top_user = DB::table('leaderboards')->where('type', '=', 'uploads')->orderBy('count', 'desc')->first();
+      $uploader = User::find($top_user->user_id);
+    ?>
+    @if($uploader->photo != null)
+      <img src={{$uploader->photo}} title="Learderboard arquigrafia" class="gallery_photo" />
+    @else
+      <img src="{{ URL::to("/") }}/img/avatar-48.png" title="Learderboard arquigrafia" class="gallery_photo" />
+    @endif
   </a>
   <a href='{{ URL::to("/leaderboard") }}' class="name">
     Conheça o quadro de colaboradores do Arquigrafia

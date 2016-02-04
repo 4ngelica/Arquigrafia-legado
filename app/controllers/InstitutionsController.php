@@ -1,5 +1,5 @@
 <?php
-
+use lib\utils\HelpTool;
 class InstitutionsController extends \BaseController {
 
   public function index()
@@ -30,7 +30,8 @@ class InstitutionsController extends \BaseController {
         $responsible = true;  
       }
     }
-    $drafts = Photo::withInstitution($institution)->onlyDrafts()->paginate(50);
+     $drafts = Photo::withInstitution($institution)->onlyDrafts()->paginate(50);  
+    
     return View::make('institutions.show', [
       'institution' => $institution,
       'photos' => $photos,
@@ -46,9 +47,9 @@ class InstitutionsController extends \BaseController {
     if ($logged_user == null)  return Redirect::to('/');
 
     $following = $logged_user->followingInstitution;   
-    if (!$following->contains($institution_id)) { //$institution_id != $logged_user->id 
+    if (!$following->contains($institution_id)) { 
       $logged_user->followingInstitution()->attach($institution_id);
-     // dd($logged_user); die();      
+         
     }      
     return Redirect::to(URL::previous()); 
   }
@@ -112,7 +113,7 @@ class InstitutionsController extends \BaseController {
    //dd($institution);
     Input::flash();    
     $input = Input::only('name_institution', 'email', 'site', 'country', 'state', 'city', 
-      'photo', 'address', 'phone');    
+      'photo', 'address', 'phone','acronym_institution');  
     
     $rules = array( 'name_institution' => 'required',
             "site" => "url",
@@ -126,12 +127,16 @@ class InstitutionsController extends \BaseController {
       $messages = $validator->messages();      
       return Redirect::to('/institutions/' . $id . '/edit')->withErrors($messages);
     } else {  
-      //dd($input);
-      $institution->name = trim($input['name_institution']);      
-      $institution->email = $input['email'];     
-         
-      $institution->country = $input['country'];
       
+      $institution->name = trim($input['name_institution']);      
+      $institution->email = $input['email']; 
+      $institution->country = $input['country'];
+
+      if(!empty($input['acronym_institution']))
+         $institution->acronym = trim($input['acronym_institution']);   
+      else
+         $institution->acronym = null; 
+
       if(!empty($input['site']))
          $institution->site = trim($input['site']);   
       else
@@ -160,8 +165,6 @@ class InstitutionsController extends \BaseController {
       $institution->touch();
       $institution->save();   
 
-     
-
       if (Input::hasFile('photo') and Input::file('photo')->isValid())  {    
         $file = Input::file('photo');
         $ext = $file->getClientOriginalExtension();
@@ -171,9 +174,19 @@ class InstitutionsController extends \BaseController {
         $image->save(public_path().'/arquigrafia-avatars-inst/'.$institution->id.'.jpg');
         $file->move(public_path().'/arquigrafia-avatars-inst', $institution->id."_original.".strtolower($ext));                
       } 
+      static::updateHeaderInstitution($institution);
+      
       return Redirect::to("/institutions/{$institution->id}")->with('message', '<strong>Edição de perfil da instituição</strong><br>Dados alterados com sucesso'); 
       
     }    
+
+  }
+
+  public static function updateHeaderInstitution($institution){
+    if($institution != null){
+        $displayedInstitutionName = HelpTool::formattingLongText($institution->name, $institution->acronym, 25);
+        Session::put('displayInstitution', $displayedInstitutionName);
+    }
   }
 
 }
