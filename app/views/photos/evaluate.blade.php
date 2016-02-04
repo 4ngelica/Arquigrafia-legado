@@ -196,7 +196,7 @@
                 },
                 color: '#999999',
             }, 
-              @if ($owner != null && !Session::has('institutionId'))
+              
               {            
                 <?php $count = 0; ?> 
                 data: [
@@ -220,7 +220,7 @@
                   'Impressões de {{$owner->name}}'
                 @endif
             }
-            @endif
+           
             ]
         });
       });
