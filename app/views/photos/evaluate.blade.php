@@ -103,7 +103,7 @@
           </p>
           </div>
 
-@if (!empty($average))  
+@if (!empty($average))
   <div id="evaluation_average">
     <script src="http://code.highcharts.com/highcharts.js"></script>
     <script src="http://code.highcharts.com/modules/exporting.js"></script>
@@ -119,6 +119,7 @@
               '{{ $binomial->secondOption }}',       
             @endforeach
         ];    
+       
         $('#evaluation_average').highcharts({
             credits: {
                 enabled: false,
@@ -195,7 +196,7 @@
                 },
                 color: '#999999',
             }, 
-              @if ($owner != null)
+              @if ($owner != null && !Session::has('institutionId'))
               {            
                 <?php $count = 0; ?> 
                 data: [
@@ -269,6 +270,7 @@
 			<!--   SIDEBAR   -->
 
 			<div id="sidebar" class="four columns">
+
 				<!--   USUARIO   -->
 				
 				<!--   FIM - USUARIO   -->				
@@ -279,7 +281,6 @@
         @else
         <h3>Interpretação d{{$architectureName}} realizada por <a href="{{ URL::to("/users/".$owner->id) }}" id="name">{{$owner->name}}</a></h3> 
         @endif
-        
 	       <br>
          {{ Form::open(array('url' => "photos/{$photos->id}/saveEvaluation")) }}
          
@@ -385,7 +386,8 @@
           <?php } ?>
         
         </div>
-
+        
+        
       </br>
     </br>
 

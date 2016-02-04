@@ -3,9 +3,8 @@
     {
         var settings = $.extend({
             width:'300px',
-            height:'10px',
+            height:'5px',
             padding:'3px',
-            border:'1px solid',
             margin_top: '5px'
         }, options);
  
@@ -41,7 +40,7 @@
             console.log(value);
             console.log(progress);
             progressbar.width(width);
-            this.css({ 'color' : progress, 'border-color' : progress });
+            this.css({ 'color' : progress });
             progressbar.css({ 'background-color' : progress });
         };
 
@@ -52,7 +51,6 @@
             console.log(progress);
             this.css({ 
                 'color' : progress, 
-                'border-color' : progress
             }, 'slow');
             progressbar.css({ 'background-color': progress, }).animate({
                 'width': newWidth
@@ -71,7 +69,7 @@ function getProgressLevel(value) {
     if (value < 60) {
         return '#cd7f32';
     } else if (value < 80) {
-        return '#c0c0c0';
+        return '#eee';
     }
     return '#fdd017';
 }
