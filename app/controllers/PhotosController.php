@@ -28,10 +28,10 @@ class PhotosController extends \BaseController {
     if ( !isset($photos) ) {
       return Redirect::to('/');
     }
-    $user = null;
+    $user = null;    
     $user = Auth::user();
     $photo_owner = $photos->user; 
-    //dd($user);
+    
     $photo_institution = $photos->institution;     
     
     $tags = $photos->tags;
@@ -51,7 +51,7 @@ class PhotosController extends \BaseController {
       if(Session::has('institutionId')){
         $belongInstitution = Institution::belongInstitution($photos->id,Session::get('institutionId'));
         $hasInstitution = Institution::belongSomeInstitution($photos->id);
-        $institution = Institution::find(Session::get('institutionId'));         
+        $institution = Institution::find(Session::get('institutionId')); 
       } else{
         $hasInstitution = Institution::belongSomeInstitution($photos->id);
         
@@ -77,13 +77,10 @@ class PhotosController extends \BaseController {
 
     $license = Photo::licensePhoto($photos);
     $authorsList = $photos->authors->lists('name');
-    //
-    //echo URL::previous();
-
-   // echo strpos(, 'more');
+    
     $querySearch = "";
     $typeSearch = "";
-    //echo !strpos(URL::previous(),'more');
+    
     if(strpos(URL::previous(),'search') != false){
 
       if (strpos(URL::previous(),'more') !== false) {
@@ -101,13 +98,7 @@ class PhotosController extends \BaseController {
           $urlBack = "search/";              
         }
       }
-
     }
-    
-    /*if(Session::has('CurrPage')){
-      $currentPage = Session::get('CurrPage'); 
-    }*/
-
 
     return View::make('/photos/show',
       ['photos' => $photos, 'owner' => $photo_owner, 'follow' => $follow, 'tags' => $tags,
@@ -127,7 +118,7 @@ class PhotosController extends \BaseController {
       'querySearch' => $querySearch,
       'currentPage' => $currentPage,
       'typeSearch' => $typeSearch,
-      'urlBack' => $urlBack 
+      'urlBack' => $urlBack
     ]);
   }
 
@@ -1444,6 +1435,9 @@ class PhotosController extends \BaseController {
   }
 
   public function evaluate($photoId ) { 
+    if (Session::has('institutionId') ) {
+      return Redirect::to('/');
+    }
     if(isset($_SERVER['QUERY_STRING'])) parse_str($_SERVER['QUERY_STRING']);
     $user_id = Auth::user()->id;
     $source_page = Request::header('referer');
@@ -1495,7 +1489,7 @@ class PhotosController extends \BaseController {
       $checkedAreArchitecture= Evaluation::userAreArchitecture($photoId,$userId);
 
     }
-
+    
     return View::make('/photos/evaluate',
       [
         'photos' => $photo, 
@@ -1855,6 +1849,7 @@ class PhotosController extends \BaseController {
   }
 
   public function viewEvaluation($photoId, $userId ) {
+    
     return static::getEvaluation($photoId, $userId, false);
   }
 

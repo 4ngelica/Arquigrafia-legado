@@ -161,9 +161,11 @@
               <a onclick="notAuthorized();return false;" href="#" title="Faça o download" id="download" target="_blank"></a>
             </li>
             @endif
+            @if(!Session::has('institutionId'))
             <li>
               <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=sb' )}}" title="Registre suas impressões sobre {{$architectureName}}" id="evaluate" ></a>
             </li>
+            @endif
             <!-- LIKE-->
 
             @if( ! $photos->hasUserLike(Auth::user()) )
@@ -525,13 +527,16 @@
       </br>
 
       <!-- AVALIAÇÃO -->
-      @if (Auth::check())
+
+      @if (Auth::check() && !Session::has('institutionId'))
         <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=g' ) }}">
       @endif
-
+      
       @if (empty($average))
+        @if(!Session::has('institutionId'))
         <h4>Interpretações da arquitetura:</h4>
         <img src="/img/GraficoFixo.png" />
+        @endif
       @else
         <h4>
           <center>Média de Interpretações d{{ $architectureName }} </center>
@@ -540,7 +545,8 @@
         <div id="evaluation_average"></div>
       @endif
       
-      @if (Auth::check())
+
+      @if (Auth::check() && !Session::has('institutionId'))
         </a>
       @endif
 
@@ -687,7 +693,10 @@
                 enabled: true
               },
               color: '#999999',
-          }, {
+          },
+
+          @if(!Session::has('institutionId'))
+           {
               <?php $count = 0; ?>
               data: [
                 @if(isset($userEvaluations) && !$userEvaluations->isEmpty())
@@ -697,14 +706,16 @@
                   @endforeach
                 @endif
               ],
-              yAxis: 0,
+              yAxis: 0,              
               name: 'Sua impressão',
               marker: {
                 symbol: 'circle',
                 enabled: true
-              },
+              },              
               color: '#000000',
-          }]
+          }
+          @endif 
+          ]
       });
     });
 
@@ -732,4 +743,5 @@
    //location.reload();
 
   </script>
+  
 @stop

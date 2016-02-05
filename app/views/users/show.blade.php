@@ -304,7 +304,7 @@
 
 	<br>
 	<br>
-	@if(!Session::has('institutionId'))
+	
 	<!-- MINHAS AVALIAÇÕES -->
 	<div class="container">
 		<div class="twelve columns albums">
@@ -323,7 +323,7 @@
 			<div class="profile_box">
 				@if ($evaluatedPhotos->count() > 0)
 					@foreach($evaluatedPhotos as $evaluatedPhoto)
-						@if (Auth::check() && $user->id == Auth::user()->id)
+						@if (Auth::check() && $user->id == Auth::user()->id && !Session::has('institutionId'))
 							<div class="gallery_box">
 								<a href='{{"/photos/" . $evaluatedPhoto->id . "/evaluate/" }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">									
 									<img src="{{ URL::to("/arquigrafia-images/" . $evaluatedPhoto->id . "_home.jpg") }}" class="gallery_photo" />
@@ -358,7 +358,7 @@
 			</div>
 		</div>
 	</div>
-	@endif
+	
     
 		<!--   MODAL   -->
 	<div id="mask"></div>
