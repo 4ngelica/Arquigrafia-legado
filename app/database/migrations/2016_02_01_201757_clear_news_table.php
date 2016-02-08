@@ -31,7 +31,8 @@ class ClearNewsTable extends Migration {
 	 */
 	public function down()
 	{
-		
+		$q = "delete from news";		
+		DB::insert(DB::raw($q));
 	}
 
 }
