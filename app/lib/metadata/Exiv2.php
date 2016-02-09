@@ -56,7 +56,8 @@ class Exiv2 {
       else
         $this->authors .= $author["name"];
     }
-
+    if($metadata == null)
+      $metadata = [];
 		$this->photo = $photo;
 		$this->metadata = $metadata;
     $this->file_path = $file_path;
