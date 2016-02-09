@@ -9,25 +9,73 @@ class Exiv2 {
 	private $log;
 	private $photo;
 	private $file_path;
+  private $exif = [
+    'Make' => "Image",
+    'Model' => "Image",
+    'Orientation' => "Image",
+    'XResolution' => "Image",
+    'YResolution' => "Image",
+    'ResolutionUnit' => "Image",
+    'Software' => "Image",
+    'DateTime' => "Image",
+    'YCbCrPositioning' => "Image",
+    'THUMBNAIL' => "Thumbnail",
+    'ExposureTime' => "Photo",
+    'FNumber' => "Photo",
+    'ExposureProgram' => "Photo",
+    'ISOSpeedRatings' => "Photo",
+    'ExifVersion' => "Photo",
+    'DateTimeOriginal' => "Photo",
+    'DateTimeDigitized' => "Photo",
+    'ShutterSpeedValue' => "Photo",
+    'ApertureValue' => "Photo",
+    'BrightnessValue' => "Photo",
+    'MeteringMode' => "Photo",
+    'Flash' => "Photo",
+    'FocalLength' => "Photo",
+    'FlashpixVersion' => "Photo",
+    'ColorSpace' => "Photo",
+    'PixelXDimension' => "Photo",
+    'PixelYDimension' => "Photo",
+    'SensingMethod' => "Photo",
+    'ExposureMode' => "Photo",
+    'WhiteBalance' => "Photo",
+    'FocalLengthIn35mmFilm' => "Photo",
+    'SceneCaptureType' => "Photo"
+  ];
 
-	public function __construct($file_path, $photo) {
+	public function __construct($file_path, $photo, $metadata) {
+    $authors_list = $photo->authors;
+    $this->authors = "";
+    $size = count($authors_list);
+    $count = 0;
+    foreach($authors_list as $author) {
+      $count += 1;
+      if($count < $size)
+        $this->authors .= $author["name"] . "; ";
+      else
+        $this->authors .= $author["name"];
+    }
+
 		$this->photo = $photo;
-		$this->file_path = $file_path;
+		$this->metadata = $metadata;
+    $this->file_path = $file_path;
 	}
 
 	public function saveMetadata() {
-		$photo = $this->photo;
-		$this->setImageAuthor($photo->workAuthor);
-		$this->setArtist($photo->workAuthor, $photo->user->name);
-		$this->setCopyRight($photo->workAuthor,
+    $photo = $this->photo;
+
+		$this->setImageAuthor($this->authors);
+		$this->setArtist($photo->imageAuthor, $this->authors);
+		$this->setCopyRight($photo->imageAuthor,
 			new CreativeCommons_3_0($photo->allowCommercialUses, $photo->allowModifications));
 		$this->setDescription($photo->description);
-		$this->setUserComment($photo->aditionalImageComments);
+    $this->setUserComment($photo->aditionalImageComments);
+    $this->setGeneralMetadata($this->metadata, $this->exif);
 	}
 
-	public function setImageAuthor($author)
-	{
-		$command = sprintf("Exif.Image.XPAuthor %s", $this->toXP($author));
+  public function setImageAuthor($authors) {
+		$command = sprintf("Exif.Image.XPAuthor " . $this->toXP($authors));
 		$this->runExif2($command);
 	}
 
@@ -51,7 +99,26 @@ class Exiv2 {
 	public function setUserComment($userComment) {
 		$command = sprintf("Exif.Photo.UserComment %s", $userComment);
 		$this->runExif2($command);
-	}
+  }
+
+  public function setGeneralMetadata($metadata, $exif) {
+    foreach($metadata as $metadata_tag => $metadata_value) {
+      if(!array_key_exists($metadata_tag, $exif))
+        continue;
+      if(is_array($metadata_value)) {
+        $keys = array_keys($metadata_value);
+        if(is_string($keys[0])) {
+          foreach($keys as $key) {
+            $command = "Exif." . $this->exif[$metadata_tag] . "." . $key . " " .$metadata_value[$key];
+            $this->runExif2($command);
+          }
+          continue;
+        }
+      }
+      $command = "Exif." . $this->exif[$metadata_tag] . "." . $metadata_tag . " " .$metadata_value;
+      $this->runExif2($command);
+    }
+  }
 
 	private function toXP($string) {
 		$bytes = unpack('c*', $string);

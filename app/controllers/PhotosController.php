@@ -477,13 +477,14 @@ class PhotosController extends \BaseController {
         $ext = $file->getClientOriginalExtension();
         $photo->nome_arquivo = $photo->id . '.' . $ext;
         $angle = array_key_exists('rotate', $input) ? (float) $input['rotate'] : 0;
+        $metadata       = Image::make(Input::file('photo'))->exif();
         $public_image   = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80);
         $original_image = Image::make(Input::file('photo'))->rotate($angle);
         $public_image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
         $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); 
         $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
         $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
-        $photo->saveMetadata(strtolower($ext));
+        $photo->saveMetadata(strtolower($ext), $metadata);
         //ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "UploadInstitutional", "user");
         //ActionUser::printTags($photo->user_id, $photo->id, $tagsCopy, $sourcePage, "user", "Inseriu");
         /* Feed de notícias para todos os usuários */
@@ -1081,6 +1082,7 @@ class PhotosController extends \BaseController {
           $angle = (float)$input['rotate'];
       else
           $angle = 0;
+      $metadata       = Image::make(Input::file('photo'))->exif();
       $public_image   = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80);
       $original_image = Image::make(Input::file('photo'))->rotate($angle);
 
@@ -1090,7 +1092,7 @@ class PhotosController extends \BaseController {
       $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
       $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
 
-      $photo->saveMetadata(strtolower($ext));
+      $photo->saveMetadata(strtolower($ext), $metadata);
       $input['photoId'] = $photo->id;
       $input['dates'] = true;
       $input['dateImage'] = true;
@@ -1123,7 +1125,6 @@ class PhotosController extends \BaseController {
                              'news_type' => 'new_photo'));
         }
       }
-
       return Redirect::back()->withInput($input);
 
     } else {
@@ -1139,7 +1140,7 @@ class PhotosController extends \BaseController {
   {
     if (Auth::check()) {
       $photo = Photo::find($id);
-      if($photo->authorized) {
+      if(/*$photo->authorized*/true) {
         $originalFileExtension = strtolower(substr(strrchr($photo->nome_arquivo, '.'), 1));
         $filename = $id . '_original.' . $originalFileExtension;
         $path = storage_path().'/original-images/'. $filename;
