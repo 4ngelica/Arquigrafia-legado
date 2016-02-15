@@ -402,7 +402,7 @@
           <p>Ninguém comentou sobre {{$architectureName}}. Seja o primeiro!</p>
           
           @endif
-          
+          @if(!Session::get('institutionId'))
           <?php if (Auth::check()) { ?>
             
             {{ Form::open(array('url' => "photos/{$photos->id}/comment")) }}
@@ -434,7 +434,7 @@
           <?php } else { ?>            
             <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e comente sobre {{$architectureName}}</p>
           <?php } ?>
-          
+          @endif
           @if (isset($comments))
           
             @foreach($comments as $comment)
