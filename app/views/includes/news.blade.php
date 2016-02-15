@@ -55,9 +55,9 @@
     </a>
     <a href='{{ URL::to("/photos") . "/" . Comment::find($info->object_id)->photo_id }}' class="name">
       @if($info->data == null)
-        Usuário {{User::find($info->sender_id)->name}} realizou diversas ações nesta imagem. Confira!
+        {{User::find($info->sender_id)->name}} realizou diversas ações nesta imagem. Confira!
       @else
-        Usuários realizaram diversas ações nesta imagem. Confira!
+        Diversos usuários realizaram diversas ações nesta imagem. Confira!
       @endif
     </a>
     <br />
@@ -90,9 +90,9 @@
   </a>
   <a  href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
     @if($info->data == null)
-      Usuário {{User::find($info->sender_id)->name}} realizou diversas ações nesta imagem. Confira!
+      {{User::find($info->sender_id)->name}} realizou diversas ações nesta imagem. Confira!
     @else
-      Usuários realizaram diversas ações nesta imagem. Confira!
+      Diversos usuários realizaram diversas ações nesta imagem. Confira!
     @endif
   </a>
   <br />
@@ -172,9 +172,9 @@
   </a>
   <a  href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
     @if($info->data == null)
-      Usuário {{User::find($info->sender_id)->name}} realizou diversas ações nesta imagem. Confira!
+      {{User::find($info->sender_id)->name}} realizou diversas ações nesta imagem. Confira!
     @else
-      Usuários realizaram diversas ações nesta imagem. Confira!
+      Diversos usuários realizaram diversas ações nesta imagem. Confira!
     @endif  
   </a>
   <br />
