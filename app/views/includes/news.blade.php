@@ -183,8 +183,8 @@
 @elseif($info->news_type == 'check_evaluation')
 <div class="gallery_box">
   <a href='{{ URL::to("/photos") . "/" . $info->object_id . "/evaluate" }}'>                 
-   <!-- <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" /> -->
-   <img src="/img/GraficoFixo.png" class="gallery_photo"/>
+   <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
+    <img src="/img/mask-avaliacao.png" class="evaluated-mask">
   </a>
   <a href='{{ URL::to("/photos") . "/" . $info->object_id . "/evaluate" }}' class="name">
    Confira as últimas impressões sobre a imagem {{Photo::find($info->object_id)->name}} 
