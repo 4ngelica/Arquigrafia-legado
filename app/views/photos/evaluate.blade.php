@@ -284,14 +284,20 @@
 	       <br>
          {{ Form::open(array('url' => "photos/{$photos->id}/saveEvaluation")) }}
          
-         
+         @if (Auth::check() && $owner != null && $owner->id == Auth::user()->id && !Session::has('institutionId'))
          {{ Form::checkbox('knownArchitecture', 'yes', $checkedKnowArchitecture) }}
-         
+         @else
+         {{ Form::checkbox('knownArchitecture', 'yes', $checkedKnowArchitecture, ['disabled']) }}
+         @endif
 
          Eu conheço pessoalmente esta arquitetura.
 
 	       <br><br>
+         @if (Auth::check() && $owner != null && $owner->id == Auth::user()->id && !Session::has('institutionId'))
          {{ Form::checkbox('areArchitecture', 'yes', $checkedAreArchitecture) }}
+         @else
+         {{ Form::checkbox('areArchitecture', 'yes', $checkedAreArchitecture, ['disabled']) }}
+         @endif
          
 
          Estou no local.
@@ -360,11 +366,20 @@
                     </td>
                   </tr>
                 </table>
+                @if (Auth::check() && $owner != null && $owner->id == Auth::user()->id && !Session::has('institutionId'))
                 {{ Form::input('range', 'value-'.$binomial->id, $diff,
                   [ 'min' => '0',
                     'max' => '100',
                     'oninput' => 'outputUpdate(' . $binomial->id . ', value)' ])
                 }}
+                @else
+                {{ Form::input('range', 'value-'.$binomial->id, $diff,
+                  [ 'min' => '0',
+                    'max' => '100',
+                    'oninput' => 'outputUpdate(' . $binomial->id . ', value)',
+                    'disabled' ])
+                }}
+                @endif
               </p>
               <?php $count-- ?>
             @endforeach
