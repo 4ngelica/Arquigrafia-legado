@@ -4,10 +4,6 @@
 
 @foreach($news as $info)
 
-<?php 
-  $size = 1;   
-?>
-
 @if($info->news_type == 'new_photo')
 <!--Alguém que você segue inseriu uma foto-->
 <div class="gallery_box">
