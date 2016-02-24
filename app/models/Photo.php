@@ -119,10 +119,12 @@ class Photo extends Eloquent {
 		$view_path = public_path() . '/arquigrafia-images/' . $this->id . '_view.jpg';
 		$h200_path = public_path() . '/arquigrafia-images/' . $this->id . '_200h.jpg';
 		$home_path = public_path() . '/arquigrafia-images/' . $this->id . '_home.jpg';
+		$micro_path = public_path() . '/arquigrafia-images/' . $this->id . '_micro.jpg';
 		Exiv2::saveMetadata($original_path, $this, $metadata);
 		Exiv2::saveMetadata($view_path, $this, $metadata);
 		Exiv2::saveMetadata($h200_path, $this, $metadata);
 		Exiv2::saveMetadata($home_path, $this, $metadata);
+		Exiv2::saveMetadata($micro_path, $this, $metadata);
 	}
 
 	public static function paginateUserPhotos($user, $perPage = 24) {
