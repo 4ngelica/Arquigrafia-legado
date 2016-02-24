@@ -83,7 +83,7 @@ class Evaluation extends Eloquent {
 					}
 				}
 			}
-		}
+		}		
 		return $evaluations;			
 	}
 
