@@ -896,20 +896,24 @@ class PhotosController extends \BaseController {
             $angle = (float)$input['rotate'];
         else
             $angle = 0;
+        $metadata       = Image::make(Input::file('photo'))->exif();
         $public_image   = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80);
         $original_image = Image::make(Input::file('photo'))->rotate($angle);
         $create = true;
       }
-      elseif (array_key_exists('rotate', $input) and ($input['rotate'] != 0)) {
+      else {
         list($photo_id, $ext) = explode(".", $photo->nome_arquivo);
-        $path = storage_path().'/original-images/'.$photo->id.'_original.'.$ext;
-        $angle = (float)$input['rotate'];
-        $public_image   = Image::make($path)->rotate($angle)->encode('jpg', 80);
-        $original_image = Image::make($path)->rotate($angle);
-        $create = true;
+        $path                 = storage_path().'/original-images/'.$photo->id.'_original.'.$ext;
+        $metadata             = Image::make($path)->exif();
+        if (array_key_exists('rotate', $input) and ($input['rotate'] != 0)) {
+          $angle = (float)$input['rotate'];
+          $public_image   = Image::make($path)->rotate($angle)->encode('jpg', 80);
+          $original_image = Image::make($path)->rotate($angle);
+          $create = true;
+        }
+        else
+          $create = false;
       }
-      else
-        $create = false;
 
       if ($create) {
         $public_image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
@@ -917,8 +921,8 @@ class PhotosController extends \BaseController {
         $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
         $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
         $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
-        $photo->saveMetadata(strtolower($ext));
       }
+      $photo->saveMetadata(strtolower($ext), $metadata);
       // $source_page = Request::header('referer');
       // ActionUser::printTags($photo->user_id, $id, $tags_copy, $source_page, "user", "Editou");
       return Redirect::to("/photos/".$photo->id)->with('message', 
