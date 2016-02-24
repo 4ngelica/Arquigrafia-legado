@@ -112,9 +112,17 @@ class AlbumsController extends \BaseController {
 		$album = Album::find($id);
 		$institution = Institution::find( Session::get('institutionId') );
 		if ( is_null($album) || ! ( $user->equal($album->user) ||
-			(isset($institution) && $institution->equal($album->institution) ) ) ) {
+			(isset($institution) && $institution->equal($album->institution) )
+			 ) ) {
 			return Redirect::to('/');
 		}
+		if( !(isset($institution) && $album->institution_id == $institution->id )){
+			// dd(isset($institution)); true
+			// dd($institution->id); 1 logado
+			//dd($album->institution); null
+			return Redirect::to('/');
+		}
+
 		$album_photos = Photo::paginateAlbumPhotos($album);
 		if ( isset($institution) ) {
 			$other_photos = Photo::paginateInstitutionPhotosNotInAlbum($institution, $album);
