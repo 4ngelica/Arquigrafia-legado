@@ -13,7 +13,7 @@ class UpdateLikesTable extends Migration {
 
 	public function up()
 	{
-		Like::truncate();
+		//Like::truncate();
 		Schema::drop('likes');
 		Schema::create('likes', function (Blueprint $table) {
 			$table->bigIncrements('id');

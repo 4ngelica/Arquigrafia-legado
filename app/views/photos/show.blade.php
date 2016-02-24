@@ -113,7 +113,7 @@
         <!--   FOTO   -->
         <a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photos->id."_view.jpg" }}"
           title="{{ $photos->name }}" >
-          <img <?php if (!$photos->authorized) echo "oncontextmenu='return false'"?> class="single_view_image" style=""
+          <img <?php if (/*!$photos->authorized*/false) echo "oncontextmenu='return false'"?> class="single_view_image" style=""
             src="{{ URL::to("/arquigrafia-images")."/".$photos->id."_view.jpg" }}" />
         </a>
       </div>
@@ -152,7 +152,7 @@
             <li>
               <a href="{{ URL::to('/albums/get/list/' . $photos->id) }}" title="Adicione aos seus álbuns" id="plus"></a>
             </li>
-            @if($photos->authorized)
+            @if(/*$photos->authorized*/true)
             <li>
                 <a href="{{ asset('photos/download/'.$photos->id) }}" title="Faça o download" id="download" target="_blank"></a>
             </li>
