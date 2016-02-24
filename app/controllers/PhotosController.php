@@ -28,10 +28,10 @@ class PhotosController extends \BaseController {
     if ( !isset($photos) ) {
       return Redirect::to('/');
     }
-    $user = null;
+    $user = null;    
     $user = Auth::user();
     $photo_owner = $photos->user; 
-    //dd($user);
+    
     $photo_institution = $photos->institution;     
     
     $tags = $photos->tags;
@@ -51,7 +51,7 @@ class PhotosController extends \BaseController {
       if(Session::has('institutionId')){
         $belongInstitution = Institution::belongInstitution($photos->id,Session::get('institutionId'));
         $hasInstitution = Institution::belongSomeInstitution($photos->id);
-        $institution = Institution::find(Session::get('institutionId'));         
+        $institution = Institution::find(Session::get('institutionId')); 
       } else{
         $hasInstitution = Institution::belongSomeInstitution($photos->id);
         
@@ -77,13 +77,10 @@ class PhotosController extends \BaseController {
 
     $license = Photo::licensePhoto($photos);
     $authorsList = $photos->authors->lists('name');
-    //
-    //echo URL::previous();
-
-   // echo strpos(, 'more');
+    
     $querySearch = "";
     $typeSearch = "";
-    //echo !strpos(URL::previous(),'more');
+    
     if(strpos(URL::previous(),'search') != false){
 
       if (strpos(URL::previous(),'more') !== false) {
@@ -101,13 +98,7 @@ class PhotosController extends \BaseController {
           $urlBack = "search/";              
         }
       }
-
     }
-    
-    /*if(Session::has('CurrPage')){
-      $currentPage = Session::get('CurrPage'); 
-    }*/
-
 
     return View::make('/photos/show',
       ['photos' => $photos, 'owner' => $photo_owner, 'follow' => $follow, 'tags' => $tags,
@@ -127,7 +118,7 @@ class PhotosController extends \BaseController {
       'querySearch' => $querySearch,
       'currentPage' => $currentPage,
       'typeSearch' => $typeSearch,
-      'urlBack' => $urlBack 
+      'urlBack' => $urlBack
     ]);
   }
 
@@ -484,40 +475,39 @@ class PhotosController extends \BaseController {
         $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); 
         $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
         $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
+        //$photo->saveMetadata(strtolower($ext));
         $photo->saveMetadata(strtolower($ext), $metadata);
         //ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "UploadInstitutional", "user");
         //ActionUser::printTags($photo->user_id, $photo->id, $tagsCopy, $sourcePage, "user", "Inseriu");
         /* Feed de notícias para todos os usuários */
-        foreach (User::all() as $users) {
-          foreach ($users->news as $note) {
+          $institutional_news = DB::table('news')->where('user_id', '=', 0)->where('news_type', '=', 'new_institutional_photo')->get();
+          foreach ($institutional_news as $note) {
           if($note->news_type == 'new_institutional_photo' && $note->sender_id == Session::get('institutionId')) {
               $curr_note = $note;
             }
           }
           if(isset($curr_note)) {
-            $date = $curr_note->created_at;
+            $date = Carbon::createFromFormat('Y-m-d H:i:s', $curr_note->updated_at);
             if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
               News::create(array('object_type' => 'Photo',
                                  'object_id' => $photo->id,
-                                 'user_id' => $users->id,
+                                 'user_id' => 0,
                                  'sender_id' => $photo->institution_id,
                                  'news_type' => 'new_institutional_photo'
               ));
             }
             else {
-              $curr_note->object_id = $photo->id;
-              $curr_note->save();
+              DB::table('news')->where('id', $curr_note->id)->update(array('object_id' => $photo->id));
             }
           }
           else {
             News::create(array('object_type' => 'Photo',
                                'object_id' => $photo->id,
-                               'user_id' => $users->id,
+                               'user_id' => 0,
                                'sender_id' => $photo->institution_id,
                                'news_type' => 'new_institutional_photo'
             ));
           }
-        }
       } else {
         $messages = $validator->messages();
         return Redirect::to('/photos/uploadInstitutional')
@@ -1447,6 +1437,9 @@ class PhotosController extends \BaseController {
   }
 
   public function evaluate($photoId ) { 
+    if (Session::has('institutionId') ) {
+      return Redirect::to('/');
+    }
     if(isset($_SERVER['QUERY_STRING'])) parse_str($_SERVER['QUERY_STRING']);
     $user_id = Auth::user()->id;
     $source_page = Request::header('referer');
@@ -1498,7 +1491,7 @@ class PhotosController extends \BaseController {
       $checkedAreArchitecture= Evaluation::userAreArchitecture($photoId,$userId);
 
     }
-
+    
     return View::make('/photos/evaluate',
       [
         'photos' => $photo, 
@@ -1863,6 +1856,7 @@ class PhotosController extends \BaseController {
   }
 
   public function viewEvaluation($photoId, $userId ) {
+    
     return static::getEvaluation($photoId, $userId, false);
   }
 

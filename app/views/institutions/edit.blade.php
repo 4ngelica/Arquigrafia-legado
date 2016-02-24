@@ -87,6 +87,12 @@
             <div class="error">{{ $errors->first('name_institution') }} </div>
             </p>
           </div>
+          <div class="two columns alpha"><p>{{ Form::label('acronimo', 'Sigla ou acrônimo:') }}</p></div>
+          <div class="two columns omega">            
+            <p>{{Form::text('acronym_institution', $institution->acronym)}} <br>
+            <div class="error">{{ $errors->first('acronym_institution') }} </div>
+            </p>
+          </div>
 
           <div class="two columns alpha"><p>{{ Form::label('email', 'E-mail*:') }}</p></div>
           <div class="two columns omega">
@@ -146,7 +152,7 @@
           
           <div class="four columns alpha omega">            
             <br>            
-            <a href="{{ URL::to('/institution/' . $institution->id) }}" class='btn right'>VOLTAR</a>
+            <a href="{{ URL::to('/institutions/' . $institution->id) }}" class='btn right'>VOLTAR</a>
             {{ Form::submit("EDITAR", array('class'=>'btn right')) }}
           
           </div>
