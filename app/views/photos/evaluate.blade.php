@@ -214,11 +214,11 @@
                 },
                 color: '#000000',
                 name: 
-                @if (Auth::check() && $owner->id == Auth::user()->id && !Session::has('institutionId'))
-                  'Suas impressões' 
-                @else
+                <?php if (Auth::check() && $owner->id == Auth::user()->id && !Session::has('institutionId')){ ?>
+                  'Suas impressões'
+                <?php }else{ ?>
                   'Impressões de {{$owner->name}}'
-                @endif
+                <?php } ?>
             }
            
             ]
