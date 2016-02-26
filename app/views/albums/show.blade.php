@@ -49,10 +49,11 @@
 		<div class="twelve columns albums">
 			<hgroup class="profile_block_title">
 				<h3><i class="info"></i>Informações</h3>
-				@if ( Auth::check() && (($album->user_id == Auth::id() && !Session::has('institutionId')) || ($album->institution_id == Session::get('institutionId') && $album->institution_id != null)  ) )
+				@if ( Auth::check() && (($album->user_id == Auth::id() && $institutionlogged == false && $album->institution_id == NULL ) || ($institutionlogged == true && $album->institution_id == Session::get('institutionId') && $album->institution_id != null)  ) )
 					<a id="delete_button" class="album" href="{{ URL::to('/albums/' . $album->id) }}" title="Excluir álbum"></a>
 					<a id="edit_button" href="{{ URL::to('/albums/' . $album->id . '/edit')}}" title="Editar álbum"></a>
 				@endif
+				
 			</hgroup>
 			<ul>
 				@if ( Session::has('institutionId') )

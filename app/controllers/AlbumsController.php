@@ -46,11 +46,11 @@ class AlbumsController extends \BaseController {
 
 	public function show($id) {
 		$album = Album::find($id);
-		
-		
+		$institutionlogged = false;
 		if (is_null($album)) {
 			return Redirect::to('/');
 		}
+
 		$photos = $album->photos;
 		if (!is_null($album->institution)){			
 			$user = $album->institution;
@@ -59,12 +59,16 @@ class AlbumsController extends \BaseController {
 			$user = $album->user;				
 			$other_albums = Album::withUser($user)->whereNull('institution_id')->except($album)->get();
 		}
+		if(Session::has('institutionId'))
+			$institutionlogged = true;
+		
 		return View::make('albums.show')
 			->with([
 				'photos' => $photos,
 				'album' => $album,
 				'user' => $user,
-				'other_albums' => $other_albums
+				'other_albums' => $other_albums,
+				'institutionlogged'=> $institutionlogged
 			]);
 	}
 
@@ -109,20 +113,15 @@ class AlbumsController extends \BaseController {
 
 	public function edit($id) {
 		$user = Auth::user();
-		$album = Album::find($id);
+		$album = Album::find($id);		
 		$institution = Institution::find( Session::get('institutionId') );
-		if ( is_null($album) || ! ( $user->equal($album->user) ||
-			(isset($institution) && $institution->equal($album->institution) )
-			 ) ) {
-			return Redirect::to('/');
+		if ( Session::has('institutionId')) {
+			if(is_null($album) || !$institution->equal($album->institution)) 
+				return Redirect::to('/');			
+		} else if(is_null($album) || !($user->equal($album->user) && $album->institution_id == null)){
+				return Redirect::to('/');			
 		}
-		if( !(isset($institution) && $album->institution_id == $institution->id )){
-			// dd(isset($institution)); true
-			// dd($institution->id); 1 logado
-			//dd($album->institution); null
-			return Redirect::to('/');
-		}
-
+		
 		$album_photos = Photo::paginateAlbumPhotos($album);
 		if ( isset($institution) ) {
 			$other_photos = Photo::paginateInstitutionPhotosNotInAlbum($institution, $album);
