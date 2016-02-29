@@ -13,7 +13,8 @@
 						<a id="title_plus_button" class="title_plus" href="{{ URL::to('/albums/get/list/' . $photo->id)}}" title="Adicionar aos meus álbuns"></a>
 					@endif
 					
-					@if (Auth::check() && ((Auth::id() == $photo->user_id && !Session::has('institutionId')) || ( Session::has('institutionId') && Session::get('institutionId') == $photo->institution_id) ) )
+					@if (Auth::check() && ((Auth::id() == $photo->user_id && !isset($photo->institution_id) && !Session::has('institutionId')) ||
+					 ( Session::has('institutionId') && Session::get('institutionId') == $photo->institution_id) ) )
 							@if ( isset($album) )
 								<a id="title_delete_button" class="title_delete photo" href="{{ URL::to('/albums/' . $album->id . '/photos/' . $photo->id . '/remove') }}" title="Excluir imagem"></a>
 							@else

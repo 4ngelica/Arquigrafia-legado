@@ -44,7 +44,7 @@ class AlbumsController extends \BaseController {
 			]);
 	}
 
-	public function show($id) {
+	public function show($id) { 
 		$album = Album::find($id);
 		$institutionlogged = false;
 		if (is_null($album)) {
