@@ -47,7 +47,7 @@ $(document).ready(function(){
 			if ($(this).hasClass('album'))
 				$('#registration_delete p').html('Tem certeza que deseja excluir este álbum?');
 			else
-				$('#registration_delete p').html('Tem certeza que deseja excluir esta imagem?');
+				$('#registration_delete p').html('<center>Ao clicar em confirmar a imagem será excluída do seu perfil e álbum. </center> <br><center><strong> Tem certeza que deseja excluir esta imagem ?</strong></center>');
 			$('#mask').fadeIn('fast');
 			$('#confirmation_window').fadeIn('slow');
 		});		
