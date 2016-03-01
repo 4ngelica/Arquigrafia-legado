@@ -284,14 +284,20 @@
 	       <br>
          {{ Form::open(array('url' => "photos/{$photos->id}/saveEvaluation")) }}
          
-         
+         @if (Auth::check() && $owner != null && $owner->id == Auth::user()->id && !Session::has('institutionId'))
          {{ Form::checkbox('knownArchitecture', 'yes', $checkedKnowArchitecture) }}
-         
+         @else
+         {{ Form::checkbox('knownArchitecture', 'yes', $checkedKnowArchitecture, ['disabled']) }}
+         @endif
 
          Eu conheço pessoalmente esta arquitetura.
 
 	       <br><br>
+         @if (Auth::check() && $owner != null && $owner->id == Auth::user()->id && !Session::has('institutionId'))
          {{ Form::checkbox('areArchitecture', 'yes', $checkedAreArchitecture) }}
+         @else
+         {{ Form::checkbox('areArchitecture', 'yes', $checkedAreArchitecture, ['disabled']) }}
+         @endif
          
 
          Estou no local.
@@ -360,11 +366,20 @@
                     </td>
                   </tr>
                 </table>
+                @if (Auth::check() && $owner != null && $owner->id == Auth::user()->id && !Session::has('institutionId'))
                 {{ Form::input('range', 'value-'.$binomial->id, $diff,
                   [ 'min' => '0',
                     'max' => '100',
                     'oninput' => 'outputUpdate(' . $binomial->id . ', value)' ])
                 }}
+                @else
+                {{ Form::input('range', 'value-'.$binomial->id, $diff,
+                  [ 'min' => '0',
+                    'max' => '100',
+                    'oninput' => 'outputUpdate(' . $binomial->id . ', value)',
+                    'disabled' ])
+                }}
+                @endif
               </p>
               <?php $count-- ?>
             @endforeach
@@ -397,12 +412,12 @@
           <p></p>
           <?php $comments = $photos->comments; ?>         
           
-          @if (!isset($comments))          
+          @if (count($comments) == 0)          
          
           <p>Ninguém comentou sobre {{$architectureName}}. Seja o primeiro!</p>
           
           @endif
-          
+          @if(!Session::get('institutionId'))
           <?php if (Auth::check()) { ?>
             
             {{ Form::open(array('url' => "photos/{$photos->id}/comment")) }}
@@ -434,7 +449,7 @@
           <?php } else { ?>            
             <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e comente sobre {{$architectureName}}</p>
           <?php } ?>
-          
+          @endif
           @if (isset($comments))
           
             @foreach($comments as $comment)

@@ -485,18 +485,7 @@ class PhotosController extends \BaseController {
             }
           }
           if(isset($curr_note)) {
-            $date = Carbon::createFromFormat('Y-m-d H:i:s', $curr_note->updated_at);
-            if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
-              News::create(array('object_type' => 'Photo',
-                                 'object_id' => $photo->id,
-                                 'user_id' => 0,
-                                 'sender_id' => $photo->institution_id,
-                                 'news_type' => 'new_institutional_photo'
-              ));
-            }
-            else {
-              DB::table('news')->where('id', $curr_note->id)->update(array('object_id' => $photo->id));
-            }
+            DB::table('news')->where('id', $curr_note->id)->update(array('object_id' => $photo->id, 'updated_at' => Carbon::now('America/Sao_Paulo')));
           }
           else {
             News::create(array('object_type' => 'Photo',
@@ -1776,8 +1765,8 @@ class PhotosController extends \BaseController {
             if($note->sender_id == $user->id) {
               $date = $curr_note->created_at;
               if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
-                News::create(array('object_type' => 'User', 
-                                   'object_id' => $user->id, 
+                News::create(array('object_type' => 'Photo', 
+                                   'object_id' => $id, 
                                    'user_id' => $users->id, 
                                    'sender_id' => $user->id, 
                                    'news_type' => 'edited_photo'));
@@ -1785,8 +1774,8 @@ class PhotosController extends \BaseController {
             }
           }
           else {
-              News::create(array('object_type' => 'User', 
-                                 'object_id' => $user->id, 
+              News::create(array('object_type' => 'Photo', 
+                                 'object_id' => $id, 
                                  'user_id' => $users->id, 
                                  'sender_id' => $user->id, 
                                  'news_type' => 'edited_photo'));

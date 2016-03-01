@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ClearNewsTable extends Migration {
+class UpdateEvaluationNews extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,15 +12,11 @@ class ClearNewsTable extends Migration {
 	 */
 	public function up()
 	{
-		$q = "delete from news";		
+		$q = "delete from news where news_type = 'check_evaluation'";		
 		DB::insert(DB::raw($q));
 
 		$q  = "insert into news (object_type, object_id, user_id, sender_id, news_type, created_at, updated_at) ";
 		$q .= " values ('Evaluation', (select photo_id from binomial_evaluation where id >= all (select id from binomial_evaluation)), 0, 0, 'check_evaluation', now(), now())";		
-		DB::insert(DB::raw($q));
-
-		$q  = "insert into news (object_type, object_id, user_id, sender_id, news_type, created_at, updated_at) ";
-		$q .= " values ('Leaderboard', 0, 0, 0, 'check_leaderboard', now(), now())";		
 		DB::insert(DB::raw($q));
 	}
 
@@ -31,7 +27,7 @@ class ClearNewsTable extends Migration {
 	 */
 	public function down()
 	{
-		$q = "delete from news";		
+		$q = "delete from news where news_type = 'check_evaluation'";		
 		DB::insert(DB::raw($q));
 	}
 

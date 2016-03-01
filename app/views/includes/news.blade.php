@@ -4,10 +4,6 @@
 
 @foreach($news as $info)
 
-<?php 
-  $size = 1;   
-?>
-
 @if($info->news_type == 'new_photo')
 <!--Alguém que você segue inseriu uma foto-->
 <div class="gallery_box">
@@ -15,7 +11,7 @@
     <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
   </a>
   <a href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
-    {{User::find($info->sender_id)->name}} postou uma nova foto
+    {{User::find($info->sender_id)->name}} postou uma nova imagem
   </a>
   <br />
 </div>
@@ -25,7 +21,7 @@
     <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
   </a>
   <a href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
-    A instituição {{Institution::find($info->sender_id)->name}} postou uma nova foto
+    A instituição {{Institution::find($info->sender_id)->name}} postou uma nova imagem
   </a>
   <br />
 </div>
@@ -37,13 +33,13 @@
     </a>
     <a href='{{ URL::to("/photos") . "/" . Comment::find($info->object_id)->photo_id . "#" . $info->object_id}}' class="name">
       @if($info->data == null)
-        {{User::find($info->sender_id)->name}} comentou em uma foto
+        {{User::find($info->sender_id)->name}} comentou nesta imagem
       @else
         <?php 
           $users = explode(":", $info->data);
           $users_size = count($users);
         ?>
-        {{$users_size}} usuários comentaram em uma foto
+        {{$users_size}} usuários comentaram nesta imagem
       @endif
     </a>
     <br />
@@ -55,9 +51,9 @@
     </a>
     <a href='{{ URL::to("/photos") . "/" . Comment::find($info->object_id)->photo_id }}' class="name">
       @if($info->data == null)
-        Usuário {{User::find($info->sender_id)->name}} realizou diversas ações nesta foto. Confira!
+        {{User::find($info->sender_id)->name}} realizou diversas ações nesta imagem. Confira!
       @else
-        Usuários realizaram diversas ações nesta foto. Confira!
+        Diversos usuários realizaram diversas ações nesta imagem. Confira!
       @endif
     </a>
     <br />
@@ -72,13 +68,13 @@
   </a>
   <a  href='{{ URL::to("/photos") . "/" . $info->object_id . "/viewEvaluation/" . $info->sender_id}}' class="name">
     @if($info->data == null)
-      {{User::find($info->sender_id)->name}} avaliou uma foto
+      {{User::find($info->sender_id)->name}} avaliou esta imagem
       @else
         <?php 
           $users = explode(":", $info->data);
           $users_size = count($users);
         ?>
-        {{$users_size}} usuários avaliaram uma foto
+        {{$users_size}} usuários avaliaram esta imagem
       @endif
   </a>
   <br />
@@ -90,9 +86,9 @@
   </a>
   <a  href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
     @if($info->data == null)
-      Usuário {{User::find($info->sender_id)->name}} realizou diversas ações nesta foto. Confira!
+      {{User::find($info->sender_id)->name}} realizou diversas ações nesta imagem. Confira!
     @else
-      Usuários realizaram diversas ações nesta foto. Confira!
+      Diversos usuários realizaram diversas ações nesta imagem. Confira!
     @endif
   </a>
   <br />
@@ -118,7 +114,7 @@
     <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
   </a>
   <a href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
-    {{User::find($info->sender_id)->name}} editou uma foto
+    {{User::find($info->sender_id)->name}} editou esta imagem
   </a>
   <br />
 </div>
@@ -154,13 +150,13 @@
   </a>
   <a href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
     @if($info->data == null)
-      {{User::find($info->sender_id)->name}} gostou de uma foto
+      {{User::find($info->sender_id)->name}} gostou desta imagem
     @else
       <?php 
         $users = explode(":", $info->data);
         $users_size = count($users);
       ?>
-      {{$users_size}} usuários gostaram de uma foto
+      {{$users_size}} usuários gostaram desta imagem
     @endif
   </a>
   <br />
@@ -172,9 +168,9 @@
   </a>
   <a  href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
     @if($info->data == null)
-      Usuário {{User::find($info->sender_id)->name}} realizou diversas ações nesta foto. Confira!
+      {{User::find($info->sender_id)->name}} realizou diversas ações nesta imagem. Confira!
     @else
-      Usuários realizaram diversas ações nesta foto. Confira!
+      Diversos usuários realizaram diversas ações nesta imagem. Confira!
     @endif  
   </a>
   <br />
@@ -183,8 +179,8 @@
 @elseif($info->news_type == 'check_evaluation')
 <div class="gallery_box">
   <a href='{{ URL::to("/photos") . "/" . $info->object_id . "/evaluate" }}'>                 
-   <!-- <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" /> -->
-   <img src="/img/GraficoFixo.png" class="gallery_photo"/>
+   <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
+    <img src="/img/mask-avaliacao.png" class="evaluated-mask">
   </a>
   <a href='{{ URL::to("/photos") . "/" . $info->object_id . "/evaluate" }}' class="name">
    Confira as últimas impressões sobre a imagem {{Photo::find($info->object_id)->name}} 

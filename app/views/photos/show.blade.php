@@ -161,9 +161,11 @@
               <a onclick="notAuthorized();return false;" href="#" title="Faça o download" id="download" target="_blank"></a>
             </li>
             @endif
+            @if(!Session::has('institutionId'))
             <li>
               <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=sb' )}}" title="Registre suas impressões sobre {{$architectureName}}" id="evaluate" ></a>
             </li>
+            @endif
             <!-- LIKE-->
 
             @if( ! $photos->hasUserLike(Auth::user()) )
