@@ -320,19 +320,27 @@
               @endif
             </span>
           </hgroup>
-
-          @foreach($similarPhotos as $k => $similarPhoto)
-            @if($photos->id != $similarPhoto->id)
+          
+           @foreach($similarPhotos as $k => $similarPhoto)
+             @if($photos->id != $similarPhoto->id)
+               @if(!Session::has('institutionId'))
               <a  class="hovertext" href='{{"/photos/" . $similarPhoto->id . "/showSimilarAverage" }}'
                 class="gallery_photo" title="{{ $similarPhoto->name }}">
                 <img src="{{ URL::to("/arquigrafia-images/" . $similarPhoto->id . "_home.jpg") }}" class="gallery_photo" />
               </a>
+              @else 
+                <a  class="hovertext" href='{{"/photos/" . $similarPhoto->id  }}'
+                class="gallery_photo" title="{{ $similarPhoto->name }}">
+                <img src="{{ URL::to("/arquigrafia-images/" . $similarPhoto->id . "_home.jpg") }}" class="gallery_photo" />
+                </a>
+              @endif
               <!--
               <a href='{{"/photos/" . $similarPhoto->id . "/evaluate" }}' class="name">
                 <div class="innerbox">{{ $similarPhoto->name }}</div>
               </a>-->
-            @endif
-          @endforeach
+             @endif
+           @endforeach
+          
         </div>
       @endif
       <!-- -->

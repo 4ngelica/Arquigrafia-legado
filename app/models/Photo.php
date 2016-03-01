@@ -237,7 +237,7 @@ class Photo extends Eloquent {
 				//dd($avgPhotosBinomials);
 				foreach ($avgPhotosBinomials as $avgPhotoBinomial) {
 				//Log::info("Logging iterate avgPhotoBinomial pos ".$avgPhotoBinomial->avgPosition." param ".$avg->avgPosition);
-					if(abs($avgPhotoBinomial->avgPosition - $avg->avgPosition)<=5){
+					if(abs($avgPhotoBinomial->avgPosition - $avg->avgPosition)<=25){
 						$flag=true;
 						//echo $avgPhotoBinomial->photo_id;
 						//Log::info("Logging push ".$avgPhotoBinomial->photo_id);

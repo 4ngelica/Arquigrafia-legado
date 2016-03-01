@@ -36,7 +36,7 @@ class PhotosController extends \BaseController {
     
     $tags = $photos->tags;
     $binomials = Binomial::all()->keyBy('id');
-    $average = Evaluation::average($photos->id);
+    $average = Evaluation::average($photos->id); //dd($average);
     $evaluations = null;
     $photoliked = null;
     $follow = true;
@@ -1459,15 +1459,15 @@ class PhotosController extends \BaseController {
 
   private function getEvaluation($photoId, $userId, $isOwner) {
     $photo = Photo::find($photoId);
-    $binomials = Binomial::all()->keyBy('id');
-    $average = Evaluation::average($photo->id);
+    $binomials = Binomial::all()->keyBy('id'); 
+    $average = Evaluation::average($photo->id); 
     $evaluations = null;
     $averageAndEvaluations = null;
     $checkedKnowArchitecture = false;
     $checkedAreArchitecture = false;
     $user = null;
     $follow = true;
-
+    //echo $user_id; die();
     if ($userId != null) {
       $user = User::find($userId);
       if (Auth::check()) {
@@ -1475,7 +1475,7 @@ class PhotosController extends \BaseController {
           $follow = false;
         else
           $follow = true;
-      }
+    }
 
       $averageAndEvaluations= Evaluation::averageAndUserEvaluation($photo->id,$userId);
       $evaluations =  Evaluation::where("user_id",
@@ -1854,7 +1854,12 @@ class PhotosController extends \BaseController {
   }
 
   public function showSimilarAverage($photoId) {
-    return static::getEvaluation($photoId, null, false);
+    $isOwner = false;
+    if (Auth::check()) $userId = Auth::user()->id;     
+    $photo = Photo::find($photoId);     
+    if($photo->user_id == $userId ) $isOwner = true;
+   
+    return static::getEvaluation($photoId, $userId, $isOwner);
   }
 
   public function createCommentsMessage($commentsCount){
