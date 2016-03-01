@@ -412,7 +412,7 @@
           <p></p>
           <?php $comments = $photos->comments; ?>         
           
-          @if (!isset($comments))          
+          @if (count($comments) == 0)          
          
           <p>Ninguém comentou sobre {{$architectureName}}. Seja o primeiro!</p>
           
