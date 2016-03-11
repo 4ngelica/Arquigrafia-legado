@@ -29,7 +29,7 @@ class PagesController extends BaseController {
         if(Session::has('last_advanced_search'))
             Session::forget('last_advanced_search');
 
-        $photos = Photo::orderByRaw("RAND()")->take(350)->get();
+        $photos = Photo::orderByRaw("RAND()")->take(150)->get();
 
         if (Auth::check()) {
             $user_id = Auth::user()->id;
@@ -53,7 +53,7 @@ class PagesController extends BaseController {
 
     public function panel()
     { 
-        $photos = Photo::orderByRaw("RAND()")->take(350)->get();
+        $photos = Photo::orderByRaw("RAND()")->take(150)->get();
         return View::make('api.panel', ['photos' => $photos]);
     }
 
