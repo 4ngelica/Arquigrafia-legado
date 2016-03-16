@@ -241,6 +241,10 @@ class UsersController extends \BaseController {
       }
     }
     if (isset($user)) {
+      if ($user->active == 'no' && (Auth::validate(array('login' => $user->login, 'password' => $input["password"])) == true)) {
+        Session::put('login.message', 'Finalize seu cadastro acessando o link enviado ao seu e-mail.');
+        return Redirect::to('/users/login')->withInput(); 
+      }
       if ( Auth::attempt(array('login' => $user->login, 'password' => $input["password"],'active' => 'yes')) == true || 
           Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true  ) { 
         if ( Session::has('filter.login') ) //acionado pelo login
