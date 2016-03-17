@@ -262,9 +262,8 @@
     		
     </div> 
      @endif 
- 
-        
-        
+
+
 			</div>
 			<!--   FIM - COLUNA ESQUERDA   -->
 			<!--   SIDEBAR   -->
@@ -399,7 +398,19 @@
               <p>Faça o <a href="{{ URL::to('/users/login') }}">Login</a> e registre você também impressões sobre {{$architectureName}}</p>
             @endif            
           <?php } ?>
-        
+       
+
+   @if (Auth::check())
+     @if (isset($userEvaluations) && !$userEvaluations->isEmpty() && !Session::get('institutionId'))
+	@if($owner != null && $owner->id != Auth::user()->id )
+            <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
+            class="btn">
+              Registre você também impressões sobre {{$architectureName}}
+            </a> &nbsp;
+          @endif
+        @endif
+     @endif
+ 
         </div>
         
         
