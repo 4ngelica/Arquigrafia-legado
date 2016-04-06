@@ -1195,9 +1195,11 @@ class PhotosController extends \BaseController {
       /*News feed*/
       foreach ($user->followers as $users) {
         foreach ($users->news as $news) {
-          if ($news->news_type == 'commented_photo' && Comment::find($news->object_id)->photo_id == $id) {
+          if ($news->news_type == 'commented_photo') {
+            if($news->sender_id == $user->id) {
               $last_news = $news;
               $primary = 'commented_photo';
+            }
           }
           else if ($news->news_type == 'evaluated_photo' || $news->news_type == 'liked_photo') {
             if ($news->object_id == $id) {
@@ -1206,41 +1208,44 @@ class PhotosController extends \BaseController {
             }
           }
         }
-        if (isset($last_news)) {
+        if (isset($last_news)) {  
           $last_update = $last_news->updated_at;
-          if($last_update->diffInDays(Carbon::now('America/Sao_Paulo')) < 7) {
-            if ($news->sender_id == $user->id) {
-              $already_sent = true;
-            }
-            else if ($news->data != null) {
-              $data = explode(":", $news->data);
-              for($i = 1; $i < count($data); $i++) {
-                if($data[$i] == $user->id) {
-                  $already_sent = true;
-                }
+          if ($news->sender_id == $user->id) {
+            $already_sent = true;
+          }
+          else if ($news->data != null) {
+            $data = explode(":", $news->data);
+            for($i = 1; $i < count($data); $i++) {
+              if($data[$i] == $user->id) {
+                $already_sent = true;
               }
-            }
-            if (!isset($already_sent)) {
-              $data = $last_news->data . ":" . $user->id;
-              $last_news->data = $data;
-              $last_news->save();
-            }
-            if ($primary == 'other') {
-              if ($last_news->secondary_type == null) {
-                $last_news->secondary_type = 'commented_photo';
-              }
-              else if ($last_news->tertiary_type == null) {
-                $last_news->tertiary_type = 'commented_photo';
-              }
-              $last_news->save();
             }
           }
-          else {
-            News::create(array('object_type' => 'Comment', 
-                               'object_id' => $comment->id, 
-                               'user_id' => $users->id, 
-                               'sender_id' => $user->id, 
-                               'news_type' => 'commented_photo'));
+          if (!isset($already_sent)) {
+            $data = $last_news->data . ":" . $user->id;
+            $last_news->data = $data;
+            $last_news->save();
+          }
+          if ($primary == 'other') {
+            if ($last_news->secondary_type == null) {
+              $last_news->secondary_type = 'commented_photo';
+            }
+            else if ($last_news->tertiary_type == null) {
+              $last_news->tertiary_type = 'commented_photo';
+            }
+            $last_news->save();
+          }
+          else if($primary == 'commented_photo') {
+            if ($last_news->secondary_type == null && $last_news->tertiary_type == null) {
+                \DB::table('news')->where('id', $last_news->id)->update(array('object_id' => $comment->id, 'updated_at' => Carbon::now('America/Sao_Paulo')));
+            }
+            else {
+              News::create(array('object_type' => 'Comment', 
+                             'object_id' => $comment->id, 
+                             'user_id' => $users->id, 
+                             'sender_id' => $user->id, 
+                             'news_type' => 'commented_photo'));  
+            }
           }
         }
         else {
@@ -1308,9 +1313,11 @@ class PhotosController extends \BaseController {
         $user = Auth::user();
         foreach ($user->followers as $users) {
           foreach ($users->news as $news) {
-            if ($news->news_type == 'evaluated_photo' && $news->object_id == $id) {
-              $last_news = $news;
-              $primary = 'evaluated_photo';
+            if ($news->news_type == 'evaluated_photo') {
+              if ($news->sender_id == $user->id) {
+                $last_news = $news;
+                $primary = 'evaluated_photo';
+              }
             }
             else if ($news->news_type == 'liked_photo' || $news->news_type == 'commented_photo') {
               if ($news->object_id == $id) {
@@ -1330,39 +1337,43 @@ class PhotosController extends \BaseController {
           }
           if (isset($last_news)) {
             $last_update = $last_news->updated_at;
-            if($last_update->diffInDays(Carbon::now('America/Sao_Paulo')) < 7) {
-              if ($news->sender_id == $user->id) {
-                $already_sent = true;
-              }
-              else if ($news->data != null) {
-                $data = explode(":", $news->data);
-                for($i = 1; $i < count($data); $i++) {
-                  if($data[$i] == $user->id) {
-                    $already_sent = true;
-                  }
+            if ($news->sender_id == $user->id) {
+              $already_sent = true;
+            }
+            else if ($news->data != null) {
+              $data = explode(":", $news->data);
+              for($i = 1; $i < count($data); $i++) {
+                if($data[$i] == $user->id) {
+                  $already_sent = true;
                 }
-              }
-              if (!isset($already_sent)) {
-                $data = $last_news->data . ":" . $user->id;
-                $last_news->data = $data;
-                $last_news->save();
-              }
-              if ($primary == 'other') {
-                if ($last_news->secondary_type == null) {
-                  $last_news->secondary_type = 'evaluated_photo';
-                }
-                else if ($last_news->tertiary_type == null) {
-                  $last_news->tertiary_type = 'evaluated_photo';
-                }
-                $last_news->save();
               }
             }
-            else {
-              News::create(array('object_type' => 'Photo', 
-                                'object_id' => $id, 
-                                'user_id' => $users->id, 
-                                'sender_id' => $user->id, 
-                                'news_type' => 'evaluated_photo'));
+            if (!isset($already_sent)) {
+              $data = $last_news->data . ":" . $user->id;
+              $last_news->data = $data;
+              $last_news->save();
+            }
+            if ($primary == 'other') {
+              if ($last_news->secondary_type == null) {
+                $last_news->secondary_type = 'evaluated_photo';
+              }
+              else if ($last_news->tertiary_type == null) {
+                if ($last_news->secondary_type != 'evaluated_photo')
+                  $last_news->tertiary_type = 'evaluated_photo';
+              }
+              $last_news->save();
+            }
+            else if($primary == 'evaluated_photo') {
+              if ($last_news->secondary_type == null && $last_news->tertiary_type == null) {
+            \DB::table('news')->where('id', $last_news->id)->update(array('object_id' => $id, 'updated_at' => Carbon::now('America/Sao_Paulo')));
+              }
+              else {
+                News::create(array('object_type' => 'Photo', 
+                              'object_id' => $id, 
+                              'user_id' => $users->id, 
+                              'sender_id' => $user->id, 
+                              'news_type' => 'evaluated_photo'));  
+              }
             }
           }
           else {
