@@ -27,7 +27,15 @@
 			"app/models",
 			"app/database/migrations",
 			"app/database/seeds",
-			"app/tests/TestCase.php"
+			"app/tests/TestCase.php",
+			"app/models/Users",
+			"app/controllers/Users",
+			"app/models/Photos",
+			"app/controllers/Photos",
+			"app/controllers/Albums",
+			"app/models/Albums",
+			"app/controllers/Evaluations",
+			"app/models/Evaluations"
 		],
 		"psr-4": {
             "lib\\":"app/lib"

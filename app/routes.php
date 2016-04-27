@@ -84,19 +84,32 @@ Route::post('/albums/{id}/attach/photos', 'AlbumsController@attachPhotos');
 Route::get('/albums/{id}/paginate/photos', 'AlbumsController@paginateAlbumPhotos');
 Route::get('/albums/{id}/paginate/other/photos', 'AlbumsController@paginatePhotosNotInAlbum');
 
-
 /* COMMENTS */
 Route::post('/photos/{photo_id}/comment','PhotosController@comment');
 Route::get('/comments/{comment_id}/like','lib\gamification\controllers\LikesController@commentlike');
 Route::get('/comments/{comment_id}/dislike','lib\gamification\controllers\LikesController@commentdislike');
-
+ 
 /* EVALUATIONS */
+//Route::get('/evaluations/{photo_id}/saveEvaluation','EvaluationsController@saveEvaluation'); //store
+//Route::post('/evaluations/{photo_id}/saveEvaluation','EvaluationsController@saveEvaluation');
+Route::get('/evaluations','EvaluationsController@index');
+Route::get('/evaluations/{photo_id}/evaluate','EvaluationsController@evaluate');
+Route::get('/evaluations/{photo_id}/viewEvaluation/{user_id}','EvaluationsController@viewEvaluation'); //show
+Route::get('/evaluations/{photo_id}/showSimilarAverage/', 'EvaluationsController@showSimilarAverage'); 
+Route::post('/evaluations/{photo_id}/saveEvaluation','EvaluationsController@saveEvaluation');
+//With photos
+Route::get('/photos/{photo_id}/showSimilarAverage/', 'EvaluationsController@showSimilarAverage'); 
+Route::get('/photos/{photo_id}/evaluate','EvaluationsController@evaluate');
+Route::get('/photos/{photo_id}/viewEvaluation/{user_id}','EvaluationsController	@viewEvaluation');
+Route::resource('/evaluations','EvaluationsController');
+/*
 Route::get('/photos/{photo_id}/saveEvaluation','PhotosController@saveEvaluation');
 Route::post('/photos/{photo_id}/saveEvaluation','PhotosController@saveEvaluation');
 Route::get('/photos/{photo_id}/evaluate','PhotosController@evaluate');
 Route::post('/photos/{photo_id}/evaluate','PhotosController@evaluate');
 Route::get('/photos/{photo_id}/viewEvaluation/{user_id}','PhotosController@viewEvaluation');
-Route::get('/photos/{photo_id}/showSimilarAverage/', 'PhotosController@showSimilarAverage');
+Route::get('/photos/{photo_id}/showSimilarAverage/', 'PhotosController@showSimilarAverage'); */
+
 
 /* PHOTOS */
 Route::get('/photos/{id}/like', 'lib\gamification\controllers\LikesController@photolike');
