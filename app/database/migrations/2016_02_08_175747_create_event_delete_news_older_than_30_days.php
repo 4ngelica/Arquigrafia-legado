@@ -27,7 +27,7 @@ class CreateEventDeleteNewsOlderThan30Days extends Migration {
 	public function down()
 	{
 		$q = "DROP EVENT IF EXISTS `delete_old_news`";		
-		DB::insert(DB::raw($q));
+		DB::connection()->getPdo()->exec($q);
 	}
 
 }
