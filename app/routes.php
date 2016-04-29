@@ -97,7 +97,7 @@ Route::get('/evaluations/{photo_id}/evaluate','EvaluationsController@evaluate');
 Route::get('/evaluations/{photo_id}/viewEvaluation/{user_id}','EvaluationsController@viewEvaluation'); //show
 Route::get('/evaluations/{photo_id}/showSimilarAverage/', 'EvaluationsController@showSimilarAverage'); 
 Route::post('/evaluations/{photo_id}/saveEvaluation','EvaluationsController@saveEvaluation');
-//With photos
+//With photos para mudar as views.
 Route::get('/photos/{photo_id}/showSimilarAverage/', 'EvaluationsController@showSimilarAverage'); 
 Route::get('/photos/{photo_id}/evaluate','EvaluationsController@evaluate');
 Route::get('/photos/{photo_id}/viewEvaluation/{user_id}','EvaluationsController	@viewEvaluation');
@@ -117,9 +117,9 @@ Route::get('/photos/{id}/dislike', 'lib\gamification\controllers\LikesController
 Route::resource('/groups','GroupsController');
 Route::get('/photos/batch','PhotosController@batch');
 Route::get('/photos/upload','PhotosController@form');
-Route::get('/photos/uploadInstitutional','PhotosController@formInstitutional');
+/*Route::get('/photos/uploadInstitutional','PhotosController@formInstitutional');
 Route::get('/photos/{photo_id}/editInstitutional','PhotosController@editFormInstitutional');
-Route::put('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');
+Route::put('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');*/
 Route::get('/photos/migrar','PhotosController@migrar');
 Route::get('/photos/rollmigrar','PhotosController@rollmigrar');
 //Route::get('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');
@@ -141,9 +141,9 @@ Route::get('/readAll', 'NotificationsController@readAll');
 Route::get('/refreshBubble', 'NotificationsController@howManyUnread');
 
 /* INSTITUTIONS */
-Route::get('/institutions/{id}', 'InstitutionsController@show');
+/*Route::get('/institutions/{id}', 'InstitutionsController@show');
 Route::get('/institutions/{id}/edit', 'InstitutionsController@edit');
-Route::resource('/institutions','InstitutionsController');
+Route::resource('/institutions','InstitutionsController');*/
 
 /* SEARCH PAGE */
 Route::get('/search/paginate/other/photos', 'PagesController@paginatePhotosResult');

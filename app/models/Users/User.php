@@ -8,6 +8,7 @@ use lib\date\Date;
 
 use lib\gamification\traits\UserGamificationTrait;
 
+
 class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	use UserTrait, RemindableTrait;
@@ -80,11 +81,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	public function institutions(){
-		return $this->belongsToMany('Institution', 'friendship_institution','institution_id', 'following_user_id');
+		return $this->belongsToMany('modules\institutions\models\Institution', 'friendship_institution','institution_id', 'following_user_id');
 	}
 
 	public function followingInstitution(){
-		return $this->belongsToMany('Institution', 'friendship_institution','following_user_id', 'institution_id');
+		return $this->belongsToMany('modules\institutions\models\Institution', 'friendship_institution','following_user_id', 'institution_id');
 	}
 
 	public function roles()

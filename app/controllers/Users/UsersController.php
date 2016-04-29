@@ -8,6 +8,8 @@ use Facebook\FacebookRedirectLoginHelper;
 use Facebook\FacebookRequest;
 use Facebook\FacebookAuthorizationException;
 use Facebook\FacebookRequestException;
+use modules\institutions\models\Institution as Institution;
+use Illuminate\Database\Eloquent\Collection as Collection;
 
 class UsersController extends \BaseController {
 
@@ -203,7 +205,7 @@ class UsersController extends \BaseController {
   
   // formulário de login
   public function loginForm()
-  {
+  { 
     if (Auth::check())
       return Redirect::to('/');
 

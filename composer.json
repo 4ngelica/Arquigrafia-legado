@@ -38,7 +38,8 @@
 			"app/models/Evaluations"
 		],
 		"psr-4": {
-            "lib\\":"app/lib"
+            "lib\\":"app/lib",
+            "modules\\":"app/modules"
 		}
 	},
 	"scripts": {

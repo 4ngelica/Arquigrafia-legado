@@ -32,12 +32,12 @@ class Album extends \BaseModel {
 
 	public function institution()
 	{
-		return $this->belongsTo('Institution');
+		return $this->belongsTo('modules\institutions\models\Institution');
 	}
 
 	public function onlyInstitution()
 	{
-		return $this->belongsTo('Institution')->whereNull('user_id');
+		return $this->belongsTo('modules\institutions\models\Institution')->whereNull('user_id');
 	}
 
 	public function updateInfo($title, $description, $cover) {

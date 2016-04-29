@@ -1,10 +1,11 @@
 <?php
-
+//namespace app\models\Photos\Photo;
 use lib\draft\DraftingTrait;
 use lib\date\Date;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use lib\gamification\traits\LikableGamificationTrait;
 use Illuminate\Database\Eloquent\Collection as Collection;
+use modules\institutions\models\Institution;
 
 class Photo extends Eloquent {
 
@@ -79,7 +80,7 @@ class Photo extends Eloquent {
 
 	public function institution()
 	{
-		return $this->belongsTo('Institution');
+		return $this->belongsTo('modules\institutions\models\Institution');
 	}
 
 	public function tags()

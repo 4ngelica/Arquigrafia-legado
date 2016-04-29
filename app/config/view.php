@@ -15,7 +15,8 @@ return array(
 
 	'paths' => array(
 		__DIR__.'/../views',
-		__DIR__.'/../lib/gamification/views'
+		__DIR__.'/../lib/gamification/views',
+		__DIR__.'/../modules/institutions/views'
 	),
 
 	/*

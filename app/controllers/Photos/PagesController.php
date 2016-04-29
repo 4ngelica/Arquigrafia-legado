@@ -2,6 +2,7 @@
 
 use lib\utils\ActionUser;
 use lib\date\Date;
+use modules\institutions\models\Institution as Institution;
 
 
 class PagesController extends BaseController {
@@ -39,9 +40,10 @@ class PagesController extends BaseController {
             $user_or_visitor = "visitor";
             session_start();
             $user_id = session_id();
-        }
+        } 
         if(Session::has('institutionId')){
-            $institution = Institution::find(Session::get('institutionId'));             
+            $institution = Institution::find(Session::get('institutionId'));    
+                   
         }else{ 
             $institution = null;            
         }
