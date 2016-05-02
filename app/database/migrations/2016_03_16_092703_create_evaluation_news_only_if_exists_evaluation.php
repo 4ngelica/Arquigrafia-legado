@@ -29,7 +29,8 @@ class CreateEvaluationNewsOnlyIfExistsEvaluation extends Migration {
 	 */
 	public function down()
 	{
-		
+		$q = "delete from news where news_type = 'check_evaluation'";		
+		DB::insert(DB::raw($q));
 	}
 
 }
