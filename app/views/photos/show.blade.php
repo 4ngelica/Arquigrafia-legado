@@ -401,7 +401,7 @@
         <h3><i class="info"></i> Informações</h3>
           &nbsp; &nbsp;
           @if($belongInstitution)
-          <a href= '{{"/photos/" . $photos->id . "/editInstitutional" }}' title="Editar informações da imagem">
+          <a href= '{{"/institutions/" . $photos->id . "/form/edit" }}' title="Editar informações da imagem">
           <img src="{{ asset("img/edit.png") }}" width="16" height="16"/>
           </a>
           @endif

@@ -61,8 +61,8 @@ Route::resource('/users/institutionalLogin','UsersController@institutionalLogin'
 /* FOLLOW */
 Route::get('/friends/follow/{user_id}', 'UsersController@follow');
 Route::get('/friends/unfollow/{user_id}', 'UsersController@unfollow');
-Route::get('/friends/followInstitution/{institution_id}', 'InstitutionsController@followInstitution');
-Route::get('/friends/unfollowInstitution/{institution_id}', 'InstitutionsController@unfollowInstitution');
+/*Route::get('/friends/followInstitution/{institution_id}', 'InstitutionsController@followInstitution');
+Route::get('/friends/unfollowInstitution/{institution_id}', 'InstitutionsController@unfollowInstitution');*/
 
 // AVATAR 
 Route::get('/profile/10/showphotoprofile/{profile_id}', 'UsersController@profile');
@@ -125,8 +125,8 @@ Route::get('/photos/rollmigrar','PhotosController@rollmigrar');
 //Route::get('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');
 
 Route::get('/photos/download/{photo_id}','PhotosController@download');
-Route::get('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');
-Route::post('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');
+/*Route::get('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');
+Route::post('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');*/
 Route::resource('/photos','PhotosController');
 
 /* TAGS */

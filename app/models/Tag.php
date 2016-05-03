@@ -1,5 +1,5 @@
 <?php
-
+use modules\institutions\models\Institution;
 class Tag extends Eloquent {
 
   public $timestamps = false;
@@ -71,5 +71,84 @@ class Tag extends Eloquent {
 
   public function incrementReferences() {
     $this->count = $this->count == null ? 1 : $this->count + 1;
+  }
+
+  /*usado por institutions*/
+  public static function formatTags($tagsType){
+    $tagsType = array_map('trim', $tagsType);
+    $tagsType = array_map('mb_strtolower', $tagsType); 
+    $tagsType = array_unique($tagsType);    
+    return $tagsType;
+  }
+
+  public static function saveTags($tags,$photo)
+  {
+    try {
+      $saved_tags = [];
+      foreach ($tags as $t) {
+        $tag = Tag::where('name', $t)
+         ->whereIn('type', array('Acervo','Livre'))->first();
+        if ( is_null($tag) ) {
+          $tag = new Tag();
+          $tag->name = $t;
+          $tag->type = 'Livre';
+        }
+        if($tag->count == null) $tag->count = 0;
+        $tag->count++;
+        $tag->save();
+        $saved_tags[] = $tag->id;
+      }
+      $photo->tags()->sync($saved_tags, false);
+      $saved = true;
+
+    } catch (PDOException $e) {
+      Log::error("Logging exception, error to register tags");           
+      $saved = false;  
+    } 
+    return $saved;
+  }
+
+  public static function updateTags($newTags,$photo){
+  
+      $photo_tags = $photo->tags;
+      $allTags = Tag::allTagsPhoto($photo->id); 
+      //dd($allTags);
+      foreach ($allTags as $tag){   
+        $tag->count--;
+        $tag->save();                
+      }
+
+      foreach ($allTags as $alltag) {
+        $photo->tags()->detach($alltag->id);
+      }
+      try{    // dd($newTags); 
+        foreach ($newTags as $t) {            
+            $t = strtolower($t);           
+             
+            $tag = Tag::where('name', $t)
+                     ->whereIn('type', array('Acervo','Livre'))->first();
+             //        ->orWhere('type', 'Livre')
+                    // ->first();
+             //dd($tag);       
+            if(is_null($tag)){
+                $tag = new Tag();
+                $tag->name = $t;
+                $tag->type = 'Livre';
+                $tag->save();
+            }  
+            $photo->tags()->attach($tag->id);
+
+            if($tag->count == null)
+                $tag->count = 0;
+            $tag->count++;
+            $tag->save(); 
+        }
+        $saved = true;
+
+      }catch(PDOException $e){
+          Log::error("Logging exception, error to register tags");           
+          $saved = false;
+      }
+      return $saved;  
   }
 }

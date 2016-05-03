@@ -1,5 +1,5 @@
 <?php
-
+use modules\institutions\models\Institution as Institution;
 class TagsController extends \BaseController {
 
 	public function index()

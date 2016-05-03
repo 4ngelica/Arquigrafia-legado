@@ -1,5 +1,5 @@
 <?php
-
+use modules\institutions\models\Institution as Institution;
 class AlbumsController extends \BaseController {
 
 	public function __construct() {

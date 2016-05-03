@@ -1,19 +1,24 @@
 <?php
 
 /* INSTITUTIONS */
-/*Route::get('/photos/{id}/get/field', 'lib\gamification\controllers\QuestionsController@getField');
-Route::post('/photos/{id}/set/field', 'lib\gamification\controllers\QuestionsController@setField');
-Route::get('/rank/get', 'lib\gamification\controllers\ScoresController@getRankEval');
-Route::get('/leaderboard', 'lib\gamification\controllers\ScoresController@getLeaderboard');
-Route::get('/badges/{id}', 'lib\gamification\controllers\BadgesController@show'); */
-//TODO upload institutional
 Route::get('/institutions/{id}', 'modules\institutions\controllers\InstitutionsController@show');
 Route::get('/institutions/{id}/edit', 'modules\institutions\controllers\InstitutionsController@edit');
+Route::get('/institutions/form/upload','modules\institutions\controllers\InstitutionsController@formPhotos');
 //Route::get('/institutions/upload','modules\institutions\controllers\InstitutionsController@formInstitutional');
-Route::get('/institutions/upload','modules\institutions\controllers\InstitutionsController@form');
-Route::get('/institutions/{photo_id}/editInstitutional','modules\institutions\controllers\InstitutionsController@editFormInstitutional');
-Route::put('/institutions/{photo_id}/update/Institutional','modules\institutions\controllers\InstitutionsController@updateInstitutional');
-Route::resource('/institutions','modules\institutions\controllers\InstitutionsController');
+//Route::get('/institutions/save','modules\institutions\controllers\InstitutionsController@saveFormInstitutional');
+Route::post('/institutions/save','modules\institutions\controllers\InstitutionsController@saveFormPhotos');
+Route::get('/institutions/{photo_id}/form/edit','modules\institutions\controllers\InstitutionsController@editFormPhotos');
+Route::put('/institutions/{photo_id}/update/photo','modules\institutions\controllers\InstitutionsController@updateFormPhotos');
+
 /* FOLLOW */
 Route::get('/friends/followInstitution/{institution_id}', 'modules\institutions\controllers\InstitutionsController@followInstitution');
 Route::get('/friends/unfollowInstitution/{institution_id}', 'modules\institutions\controllers\InstitutionsController@unfollowInstitution');
+Route::resource('/institutions','modules\institutions\controllers\InstitutionsController');
+
+/*Route::get('/photos/uploadInstitutional','PhotosController@formInstitutional');
+Route::get('/photos/{photo_id}/editInstitutional','PhotosController@editFormInstitutional');
+Route::put('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');*/
+//Route::get('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');
+
+
+

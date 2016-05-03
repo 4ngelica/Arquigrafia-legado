@@ -54,9 +54,8 @@
 @section('content')
 
   <div class="container">
-  
 	<div id="registration">      
-      {{ Form::open(array('url'=>'photos/'.$photo->id.'/update/Institutional', 'method' => 'put', 'files'=> true)) }}           
+      {{ Form::open(array('url'=>'institutions/'.$photo->id.'/update/photo', 'method' => 'put', 'files'=> true)) }}           
   
       <div class="twelve columns row step-1">
       	<h1><span class="step-text">Edição de informações da imagem {{$photo->name}}</span></h1>

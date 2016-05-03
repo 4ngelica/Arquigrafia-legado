@@ -33,7 +33,7 @@ class Institution extends \Eloquent {
 
 	public static function belongInstitution($photo_id,$institution_id) {
 		$belong = false;
-		$photoInstitution = DB::table('photos')->where('id',$photo_id)
+		$photoInstitution = \DB::table('photos')->where('id',$photo_id)
 		->where('institution_id',$institution_id)->get();
 		//dd($photoInstitution);
 
@@ -46,7 +46,7 @@ class Institution extends \Eloquent {
 
 	public static function belongSomeInstitution($photo_id) {
 		$exist = false;
-	  	$valueInstitution = DB::table('photos')
+	  	$valueInstitution = \DB::table('photos')
       	  ->select('institution_id')
       	  ->where('id',$photo_id)
       	  ->first();

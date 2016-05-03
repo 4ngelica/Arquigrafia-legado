@@ -108,8 +108,7 @@
 	</script>
 	<div class="container">
 		<div>
-			<!--{{ Form::open(array('url'=>'photos', 'files'=> true)) }} -->
-			{{ Form::open(array('url' => "photos/savePhotoInstitutional", 'files'=> true , 'id'=>"formInstitutional")) }}
+			{{ Form::open(array('url' => "institutions/save", 'files'=> true , 'id'=>"formInstitutional")) }}
 				<div class="twelve columns row step-1">
 					<a href="{{ URL::to('/drafts') }}" class="right">Uploads incompletos</a>
 					<h1><span class="step-text">Upload</span></h1>
