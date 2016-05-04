@@ -49,7 +49,7 @@ class PagesController extends BaseController {
         }
         $source_page = Request::header('referer');
         ActionUser::printHomePage($user_id, $source_page, $user_or_visitor);
-
+        
         return View::make('index', ['photos' => $photos, 'institution' => $institution ]);
     }
 

@@ -1,46 +1,22 @@
 <?php
-//namespace app\controllers;
 
-//use app\controllers\Controller;
-//use app\controllers\Photos\PhotosController\Photo;
-//use Photos;
 use lib\utils\ActionUser;
 
 class EvaluationsController extends \BaseController {
 
-  // private $fphotos;
 
-   public function __construct()
-    {  // dd("dddh");
-      //dd(new app/controllers/Photos\PhotosController\Photos);
-    //    $this->fphotos = $fphotos;
-        //$this->photos = $photos; 
-    }
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
 	public function index()
 	{
-    dd("eval");
-		//
+    $evaluation = Evaluation::all();
+    return $evaluation;
 	}
 
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
 	public function show($id)
-	{ //$photoId = $id;
-    //$userId = Auth::user()->id;
-		//return static::getEvaluation($photoId, $userId, false);
+	{ return Redirect::to('/');
 	}
 
-    public function evaluate($photoId ) {
+  public function evaluate($photoId ) {
       if (Session::has('institutionId') ) {
         return Redirect::to('/');
       }
@@ -102,10 +78,6 @@ class EvaluationsController extends \BaseController {
         $checkedAreArchitecture= Evaluation::userAreArchitecture($photoId,$userId);
      }    
      
-     //$controller = new PhotosController;
-     //'commentsCount' => $photo->comments->count(), 
-        //'commentsMessage' => $this->photos->createCommentsMessage($photo->comments->count()),
-     //dd($photo->createCommentsMessage(0));
       return View::make('/evaluations/evaluate',
       [
         'photos' => $photo, 

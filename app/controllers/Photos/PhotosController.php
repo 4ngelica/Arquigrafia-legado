@@ -248,7 +248,7 @@ class PhotosController extends \BaseController {
     ]);
   }
 
-  public function getDraft($id) {
+  public function getDraft($id) { 
     $photo = Photo::onlyDrafts()->find($id);
     if ( is_null($photo) ) {
       return Redirect::to('/');
@@ -296,7 +296,7 @@ class PhotosController extends \BaseController {
     } elseif ( $photo->imageDateType == 'century' ) {
       $input['century_image'] = $photo->dataCriacao;
     }
-    return Redirect::to('/photos/uploadInstitutional')
+    return Redirect::to('/institutions/form/upload')
       ->withInput($input);
   }
 
@@ -404,73 +404,73 @@ class PhotosController extends \BaseController {
       else
         $input["tags"] = '';
 
-  if (Input::has('work_authors')){
-    $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
-    $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
-  }else
-    $input["work_authors"] = '';
+      if (Input::has('work_authors')){
+          $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
+          $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
+      }else
+          $input["work_authors"] = '';
  
   
-    $rules = array(
-      'photo_name' => 'required',
-      'photo_imageAuthor' => 'required',
-      'tags' => 'required',
-      'photo_country' => 'required',  
-      'photo_authorization_checkbox' => 'required',
-      'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',
-      //'photo_workDate' => 'date_format:"d/m/Y"',      
-      'photo_imageDate' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/'
-    );
+      $rules = array(
+        'photo_name' => 'required',
+        'photo_imageAuthor' => 'required',
+        'tags' => 'required',
+        'photo_country' => 'required',  
+        'photo_authorization_checkbox' => 'required',
+        'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',
+        //'photo_workDate' => 'date_format:"d/m/Y"',      
+        'photo_imageDate' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/'
+      );
 
-    $validator = Validator::make($input, $rules);
+      $validator = Validator::make($input, $rules);
 
-    if ($validator->fails()) {
-        $messages = $validator->messages();
-      //dd($messages);
-    return Redirect::to('/photos/upload')->with(['tags' => $input['tags'],
-      'decadeInput'=>$input["decade_select"],
-      'centuryInput'=>$input["century"],
-      'decadeImageInput'=>$input["decade_select_image"],
-      'centuryImageInput'=>$input["century_image"] ,
-      'work_authors'=>$input["work_authors"]     
-      ])->withErrors($messages);
-    } else {
+      if ($validator->fails()) {
+          $messages = $validator->messages();
+      
+          return Redirect::to('/photos/upload')->with(['tags' => $input['tags'],
+          'decadeInput'=>$input["decade_select"],
+          'centuryInput'=>$input["century"],
+          'decadeImageInput'=>$input["decade_select_image"],
+          'centuryImageInput'=>$input["century_image"] ,
+          'work_authors'=>$input["work_authors"]     
+          ])->withErrors($messages);
+      } else {
 
-    if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
-      $file = Input::file('photo');
-      $photo = new Photo();
+        if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
+            $file = Input::file('photo');
+            $photo = new Photo();
 
-      if ( !empty($input["photo_aditionalImageComments"]) )
-        $photo->aditionalImageComments = $input["photo_aditionalImageComments"];
-      $photo->allowCommercialUses = $input["photo_allowCommercialUses"];
-      $photo->allowModifications = $input["photo_allowModifications"];
-      $photo->city = $input["photo_city"];
-      $photo->country = $input["photo_country"];
-      if ( !empty($input["photo_description"]) )
-        $photo->description = $input["photo_description"];
-      if ( !empty($input["photo_district"]) )
-        $photo->district = $input["photo_district"];
-      if ( !empty($input["photo_imageAuthor"]) )
-        $photo->imageAuthor = $input["photo_imageAuthor"];
-      $photo->name = $input["photo_name"];
-      $photo->state = $input["photo_state"];
-      if ( !empty($input["photo_street"]) )
-        $photo->street = $input["photo_street"];
+            if ( !empty($input["photo_aditionalImageComments"]) )
+              $photo->aditionalImageComments = $input["photo_aditionalImageComments"];
+            $photo->allowCommercialUses = $input["photo_allowCommercialUses"];
+            $photo->allowModifications = $input["photo_allowModifications"];
+            $photo->city = $input["photo_city"];
+            $photo->country = $input["photo_country"];
+            if ( !empty($input["photo_description"]) )
+                $photo->description = $input["photo_description"];
+            if ( !empty($input["photo_district"]) )
+                $photo->district = $input["photo_district"];
+            if ( !empty($input["photo_imageAuthor"]) )
+                $photo->imageAuthor = $input["photo_imageAuthor"];
+            $photo->name = $input["photo_name"];
+            $photo->state = $input["photo_state"];
+            if ( !empty($input["photo_street"]) )
+                $photo->street = $input["photo_street"];
       //if ( !empty($input["photo_workAuthor"]) )
       //  $photo->workAuthor = $input["photo_workAuthor"];
       
-       if(!empty($input["workDate"])){             
-             $photo->workdate = $input["workDate"];
-             $photo->workDateType = "year";
-       }elseif(!empty($input["decade_select"])){             
-            $photo->workdate = $input["decade_select"];
-            $photo->workDateType = "decade";
-       }elseif (!empty($input["century"]) && $input["century"]!="NS") { 
-            $photo->workdate = $input["century"];
-            $photo->workDateType = "century";
-       }else{ 
-            $photo->workdate = NULL;
-       }
+            if(!empty($input["workDate"])){             
+               $photo->workdate = $input["workDate"];
+               $photo->workDateType = "year";
+            }elseif(!empty($input["decade_select"])){             
+               $photo->workdate = $input["decade_select"];
+               $photo->workDateType = "decade";
+            }elseif (!empty($input["century"]) && $input["century"]!="NS") { 
+               $photo->workdate = $input["century"];
+               $photo->workDateType = "century";
+            }else{ 
+               $photo->workdate = NULL;
+            }
 
       if(!empty($input["photo_imageDate"])){             
              $photo->dataCriacao = $this->date->formatDate($input["photo_imageDate"]);

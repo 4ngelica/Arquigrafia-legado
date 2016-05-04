@@ -61,8 +61,6 @@ Route::resource('/users/institutionalLogin','UsersController@institutionalLogin'
 /* FOLLOW */
 Route::get('/friends/follow/{user_id}', 'UsersController@follow');
 Route::get('/friends/unfollow/{user_id}', 'UsersController@unfollow');
-/*Route::get('/friends/followInstitution/{institution_id}', 'InstitutionsController@followInstitution');
-Route::get('/friends/unfollowInstitution/{institution_id}', 'InstitutionsController@unfollowInstitution');*/
 
 // AVATAR 
 Route::get('/profile/10/showphotoprofile/{profile_id}', 'UsersController@profile');
@@ -90,25 +88,12 @@ Route::get('/comments/{comment_id}/like','lib\gamification\controllers\LikesCont
 Route::get('/comments/{comment_id}/dislike','lib\gamification\controllers\LikesController@commentdislike');
  
 /* EVALUATIONS */
-//Route::get('/evaluations/{photo_id}/saveEvaluation','EvaluationsController@saveEvaluation'); //store
-//Route::post('/evaluations/{photo_id}/saveEvaluation','EvaluationsController@saveEvaluation');
 Route::get('/evaluations','EvaluationsController@index');
 Route::get('/evaluations/{photo_id}/evaluate','EvaluationsController@evaluate');
-Route::get('/evaluations/{photo_id}/viewEvaluation/{user_id}','EvaluationsController@viewEvaluation'); //show
+Route::get('/evaluations/{photo_id}/viewEvaluation/{user_id}','EvaluationsController@viewEvaluation'); 
 Route::get('/evaluations/{photo_id}/showSimilarAverage/', 'EvaluationsController@showSimilarAverage'); 
 Route::post('/evaluations/{photo_id}/saveEvaluation','EvaluationsController@saveEvaluation');
-//With photos para mudar as views.
-Route::get('/photos/{photo_id}/showSimilarAverage/', 'EvaluationsController@showSimilarAverage'); 
-Route::get('/photos/{photo_id}/evaluate','EvaluationsController@evaluate');
-Route::get('/photos/{photo_id}/viewEvaluation/{user_id}','EvaluationsController	@viewEvaluation');
 Route::resource('/evaluations','EvaluationsController');
-/*
-Route::get('/photos/{photo_id}/saveEvaluation','PhotosController@saveEvaluation');
-Route::post('/photos/{photo_id}/saveEvaluation','PhotosController@saveEvaluation');
-Route::get('/photos/{photo_id}/evaluate','PhotosController@evaluate');
-Route::post('/photos/{photo_id}/evaluate','PhotosController@evaluate');
-Route::get('/photos/{photo_id}/viewEvaluation/{user_id}','PhotosController@viewEvaluation');
-Route::get('/photos/{photo_id}/showSimilarAverage/', 'PhotosController@showSimilarAverage'); */
 
 
 /* PHOTOS */
@@ -117,16 +102,9 @@ Route::get('/photos/{id}/dislike', 'lib\gamification\controllers\LikesController
 Route::resource('/groups','GroupsController');
 Route::get('/photos/batch','PhotosController@batch');
 Route::get('/photos/upload','PhotosController@form');
-/*Route::get('/photos/uploadInstitutional','PhotosController@formInstitutional');
-Route::get('/photos/{photo_id}/editInstitutional','PhotosController@editFormInstitutional');
-Route::put('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');*/
 Route::get('/photos/migrar','PhotosController@migrar');
 Route::get('/photos/rollmigrar','PhotosController@rollmigrar');
-//Route::get('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');
-
 Route::get('/photos/download/{photo_id}','PhotosController@download');
-/*Route::get('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');
-Route::post('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');*/
 Route::resource('/photos','PhotosController');
 
 /* TAGS */
@@ -140,10 +118,7 @@ Route::get('/readAll', 'NotificationsController@readAll');
 
 Route::get('/refreshBubble', 'NotificationsController@howManyUnread');
 
-/* INSTITUTIONS */
-/*Route::get('/institutions/{id}', 'InstitutionsController@show');
-Route::get('/institutions/{id}/edit', 'InstitutionsController@edit');
-Route::resource('/institutions','InstitutionsController');*/
+
 
 /* SEARCH PAGE */
 Route::get('/search/paginate/other/photos', 'PagesController@paginatePhotosResult');

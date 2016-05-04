@@ -248,7 +248,7 @@
       @foreach($similarPhotos as $k => $similarPhoto)         
          @if($photos->id != $similarPhoto->id)  
               
-                <a  class="hovertext" href='{{"/photos/" . $similarPhoto->id . "/showSimilarAverage/" }}' class="gallery_photo" title="{{ $similarPhoto->name }}">                  
+                <a  class="hovertext" href='{{"/evaluations/" . $similarPhoto->id . "/showSimilarAverage/" }}' class="gallery_photo" title="{{ $similarPhoto->name }}">                  
                   <img src="{{ URL::to("/arquigrafia-images/" . $similarPhoto->id . "_home.jpg") }}" class="gallery_photo" />                 
                 </a>
                 <!--

@@ -77,7 +77,7 @@ class InstitutionsController extends \BaseController {
   /*Update dados da instituição*/
   public function update($id) {              
     $institution = Institution::find($id);
-   //dd($institution);
+   
     \Input::flash();    
     $input = \Input::only('name_institution', 'email', 'site', 'country', 'state', 'city', 
       'photo', 'address', 'phone','acronym_institution');  
@@ -202,6 +202,7 @@ class InstitutionsController extends \BaseController {
       'imageAuthor' => 'required',
       'image_date' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/'
     );
+    
     $rules = \Input::has('draft') ? array_except($rules, ['photo']) : $rules;
     $validator = \Validator::make($input, $rules);
     if ($validator->fails()) { 
@@ -682,6 +683,7 @@ class InstitutionsController extends \BaseController {
   }
 
   public static function updateHeaderInstitution($institution){
+
     if($institution != null){
         $displayedInstitutionName = HelpTool::formattingLongText($institution->name, $institution->acronym, 25);
         Session::put('displayInstitution', $displayedInstitutionName);
@@ -690,29 +692,27 @@ class InstitutionsController extends \BaseController {
 
 
   public function followInstitution($institution_id)
-  {
-    $logged_user = Auth::user();    
-    if ($logged_user == null)  return Redirect::to('/');
+  { 
+    $logged_user = Auth::user();
+    if ($logged_user == null)  return \Redirect::to('/');
 
-    $following = $logged_user->followingInstitution;   
+    $following = $logged_user->followingInstitution;
     if (!$following->contains($institution_id)) { 
-      $logged_user->followingInstitution()->attach($institution_id);
-         
+        $logged_user->followingInstitution()->attach($institution_id);         
     }      
-    return Redirect::to(URL::previous()); 
+    return \Redirect::to(\URL::previous()); 
   }
 
   public function unfollowInstitution($institution_id)
   {
     $logged_user = Auth::user();    
-    if ($logged_user == null)   return Redirect::to('/');
+    if ($logged_user == null)   return \Redirect::to('/');
 
     $following = $logged_user->followingInstitution;  
     
-    if ($following->contains($institution_id)) {
-      $logged_user->followingInstitution()->detach($institution_id);       
-    }
-    return Redirect::to(URL::previous()); 
+    if ($following->contains($institution_id)) 
+        $logged_user->followingInstitution()->detach($institution_id);           
+    return \Redirect::to(\URL::previous()); 
   } 
 
   public function sendNotification($id){ //$id=instit

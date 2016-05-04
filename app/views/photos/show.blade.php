@@ -163,7 +163,7 @@
             @endif
             @if(!Session::has('institutionId'))
             <li>
-              <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=sb' )}}" title="Registre suas impressões sobre {{$architectureName}}" id="evaluate" ></a>
+              <a href="{{ URL::to('/evaluations/' . $photos->id . '/evaluate?f=sb' )}}" title="Registre suas impressões sobre {{$architectureName}}" id="evaluate" ></a>
             </li>
             @endif
             <!-- LIKE-->
@@ -324,7 +324,7 @@
            @foreach($similarPhotos as $k => $similarPhoto)
              @if($photos->id != $similarPhoto->id)
                @if(!Session::has('institutionId'))
-              <a  class="hovertext" href='{{"/photos/" . $similarPhoto->id . "/showSimilarAverage" }}'
+              <a  class="hovertext" href='{{"/evaluations/" . $similarPhoto->id . "/showSimilarAverage" }}'
                 class="gallery_photo" title="{{ $similarPhoto->name }}">
                 <img src="{{ URL::to("/arquigrafia-images/" . $similarPhoto->id . "_home.jpg") }}" class="gallery_photo" />
               </a>
@@ -537,7 +537,7 @@
       <!-- AVALIAÇÃO -->
 
       @if (Auth::check() && !Session::has('institutionId'))
-        <a href="{{ URL::to('/photos/' . $photos->id . '/evaluate?f=g' ) }}">
+        <a href="{{ URL::to('/evaluations/' . $photos->id . '/evaluate?f=g' ) }}">
       @endif
       
       @if (empty($average))
@@ -560,18 +560,18 @@
 
       @if (Auth::check())
         @if (isset($userEvaluations) && !$userEvaluations->isEmpty() && !Session::get('institutionId'))
-          <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
+          <a href='{{"/evaluations/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
           class="btn">
             Clique aqui para alterar suas impressões
           </a> &nbsp;
         @else
           @if (empty($average) && !Session::get('institutionId'))
-            <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
+            <a href='{{"/evaluations/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
             class="btn">
               Seja o primeiro a registrar impressões sobre {{$architectureName}}
             </a> &nbsp;
           @elseif(!Session::get('institutionId'))
-            <a href='{{"/photos/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
+            <a href='{{"/evaluations/" . $photos->id . "/evaluate?f=c" }}' title="Interpretar" id="evaluate_button"
             class="btn">
               Registre você também impressões sobre {{$architectureName}}
             </a> &nbsp;
