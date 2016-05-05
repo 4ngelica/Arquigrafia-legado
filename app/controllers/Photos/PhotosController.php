@@ -1,10 +1,11 @@
 <?php
 //add
 use lib\utils\ActionUser;
-use lib\gamification\models\Badge;
-use modules\institutions\models\Institution as Institution;
 use Carbon\Carbon;
 use lib\date\Date;
+use lib\gamification\models\Badge;
+use modules\institutions\models\Institution as Institution;
+use modules\collaborative\models\Tag as Tag;
 
 class PhotosController extends \BaseController {
 
@@ -188,39 +189,6 @@ class PhotosController extends \BaseController {
 
   }
 
-  
-
-  public static function formatTags($tagsType){
-    $tagsType = array_map('trim', $tagsType);
-    $tagsType = array_map('mb_strtolower', $tagsType); 
-    $tagsType = array_unique($tagsType);    
-    return $tagsType;
-  }
-
-  public static function saveTags($tags,$photo){
-    try {
-      $saved_tags = [];
-      foreach ($tags as $t) {
-        $tag = Tag::where('name', $t)
-         ->whereIn('type', array('Acervo','Livre'))->first();
-        if ( is_null($tag) ) {
-          $tag = new Tag();
-          $tag->name = $t;
-          $tag->type = 'Livre';
-        }
-        if($tag->count == null) $tag->count = 0;
-        $tag->count++;
-        $tag->save();
-        $saved_tags[] = $tag->id;
-      }
-      $photo->tags()->sync($saved_tags, false);
-      $saved = true;
-    } catch(PDOException $e) {
-      Log::error("Logging exception, error to register tags");           
-      $saved = false;
-    }
-    return $saved;
-  }
 
   public function paginateDrafts() {
     $institution = Session::get('institutionId');
@@ -328,70 +296,7 @@ class PhotosController extends \BaseController {
     return Response::json(false);
   }
 
-  
 
-  public static function filterTagByType($photo,$tagType){
-      $tagsArea = $photo->tags->toJson();
-      $jsonTagsArea=json_decode($tagsArea);      
-      $arrayTags = array_filter($jsonTagsArea,function($item) use ($tagType){
-        return $item->type == $tagType;
-      });
-      $tagsTypeList = array(); 
-      foreach ($arrayTags as $value) {
-        array_push($tagsTypeList, $value->name);
-      }
-      return $tagsTypeList;
-  } 
-
-  public static function updateTags($newTags,$photo){
-  
-      $photo_tags = $photo->tags;
-      $allTags = Tag::allTagsPhoto($photo->id); 
-      //dd($allTags);
-      foreach ($allTags as $tag){   
-        $tag->count--;
-        $tag->save();                
-      }
-
-      foreach ($allTags as $alltag) {
-        $photo->tags()->detach($alltag->id);
-      }
-
-      try{    // dd($newTags); 
-        foreach ($newTags as $t) {            
-            $t = strtolower($t);           
-             
-            $tag = Tag::where('name', $t)
-                     ->whereIn('type', array('Acervo','Livre'))->first();
-             //        ->orWhere('type', 'Livre')
-                    // ->first();
-             //dd($tag);       
-            if(is_null($tag)){
-                $tag = new Tag();
-                $tag->name = $t;
-                $tag->type = 'Livre';
-                $tag->save();
-            }  
-
-            
-            
-            $photo->tags()->attach($tag->id);
-
-            if($tag->count == null)
-                $tag->count = 0;
-            $tag->count++;
-            $tag->save(); 
-        }
-        $saved = true;
-
-      }catch(PDOException $e){
-          Log::error("Logging exception, error to register tags");           
-          $saved = false;
-      }
-      return $saved;  
-  }
-
-  
 
     
 
@@ -516,8 +421,8 @@ class PhotosController extends \BaseController {
       $tags = explode(',', $input['tags']);
           
       if (!empty($tags)) {           
-              $tags = static::formatTags($tags);              
-              $tagsSaved = static::saveTags($tags,$photo);
+              $tags = Tag::formatTags($tags);              
+              $tagsSaved = Tag::saveTags($tags,$photo);
               
             if(!$tagsSaved){ 
                   $photo->forceDelete();
@@ -984,8 +889,8 @@ class PhotosController extends \BaseController {
         $tags = explode(',', $input['tags']);
 
         if(!empty($tags)) { 
-            $tags = static::formatTags($tags);              
-            $tagsSaved = static::updateTags($tags,$photo);
+            $tags = Tag::formatTags($tags);              
+            $tagsSaved = Tag::updateTags($tags,$photo);
 
             if(!$tagsSaved){
                 $photo->forceDelete();

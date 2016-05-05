@@ -108,8 +108,8 @@ Route::get('/photos/download/{photo_id}','PhotosController@download');
 Route::resource('/photos','PhotosController');
 
 /* TAGS */
-Route::get('/tags/json', 'TagsController@index');
-Route::get('/tags/refreshCount', 'TagsController@refreshCount');
+//Route::get('/tags/json', 'TagsController@index');
+//Route::get('/tags/refreshCount', 'TagsController@refreshCount');
 
 /* NOTIFICATIONS */
 Route::get('/notifications', 'NotificationsController@show');

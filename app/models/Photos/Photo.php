@@ -85,7 +85,7 @@ class Photo extends Eloquent {
 
 	public function tags()
 	{
-		return $this->belongsToMany('Tag', 'tag_assignments');
+		return $this->belongsToMany('modules\collaborative\models\Tag', 'tag_assignments');
 	}
 
 	public function authors()

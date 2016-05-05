@@ -23,7 +23,7 @@ App::before(function($request)
 
 	View::composer('includes.header', function($view) {
 		$institution = null;
-		if ( Session::has('institutionId') ) { 
+		if ( Session::has('institutionId') ) { 			
 			$institution = modules\institutions\models\Institution::find( Session::get('institutionId') );
 		}
 		$view->with('institution', $institution);

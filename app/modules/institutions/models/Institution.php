@@ -4,6 +4,8 @@ use Photo;
 use User;
 use Illuminate\Support\Collection as Collection;
 use Session;
+use modules\institutions\models\Employee;
+
 
 class Institution extends \Eloquent {
 
@@ -76,7 +78,7 @@ class Institution extends \Eloquent {
  	public static function RoleOfInstitutionalUser($userId)
 	{
 		$roles = \Role::where('name', 'LIKE', '%Respon%')->first();  
-        $query = \Employee::where('user_id', '=', $userId)
+        $query = Employee::where('user_id', '=', $userId)
                             ->where('institution_id', '=', Session::get('institutionId'))
                             ->where('role_id', '=',$roles->id)
                             ->first();

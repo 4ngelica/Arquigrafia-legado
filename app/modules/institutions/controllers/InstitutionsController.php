@@ -1,14 +1,15 @@
 <?php
-//namespace lib\gamification\controllers;
-//use lib\gamification\models\Badge;
+
 namespace modules\institutions\controllers;
-use modules\institutions\models\Institution;
+use lib\date\Date;
 use lib\utils\HelpTool;
+use modules\institutions\models\Institution;
+use modules\institutions\models\Employee as Employee;
+use modules\collaborative\models\Tag;
 use Session;  
 use Auth;
 use Photo;
 use News;
-use Tag;
 use Author;
 use Album;
 use Carbon\Carbon;
@@ -17,6 +18,13 @@ use Image;
 
 
 class InstitutionsController extends \BaseController {
+
+ protected $date;
+
+  public function __construct(Date $date = null)
+  {
+    $this->date = $date ?: new Date; 
+  }
 
   public function index()
   {

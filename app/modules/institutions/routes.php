@@ -15,10 +15,5 @@ Route::get('/friends/followInstitution/{institution_id}', 'modules\institutions\
 Route::get('/friends/unfollowInstitution/{institution_id}', 'modules\institutions\controllers\InstitutionsController@unfollowInstitution');
 Route::resource('/institutions','modules\institutions\controllers\InstitutionsController');
 
-/*Route::get('/photos/uploadInstitutional','PhotosController@formInstitutional');
-Route::get('/photos/{photo_id}/editInstitutional','PhotosController@editFormInstitutional');
-Route::put('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');*/
-//Route::get('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');
-
 
 
