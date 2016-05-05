@@ -21,16 +21,16 @@ class CascadingForeignUserIdOnDelete extends Migration {
 		$q = "ALTER TABLE `comments` DROP FOREIGN KEY `comments_user_id_foreign`; ALTER TABLE `comments` ADD CONSTRAINT `comments_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `arquigrafia`.`users`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;";		
 		DB::unprepared($q);
 
-		$q = "ALTER TABLE `employees` DROP FOREIGN KEY `employees_user_id_foreign`; ALTER TABLE `employess` ADD CONSTRAINT `employees_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `arquigrafia`.`users`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;";		
+		$q = "ALTER TABLE `employees` DROP FOREIGN KEY `employees_user_id_foreign`; ALTER TABLE `employees` ADD CONSTRAINT `employees_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `arquigrafia`.`users`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;";		
 		DB::unprepared($q);
 
-		$q = "ALTER TABLE `friendship` DROP FOREIGN KEY `friendship_following_id_foreign`; ALTER TABLE `frindship` ADD CONSTRAINT `friendship_following_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `arquigrafia`.`users`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;";		
+		$q = "ALTER TABLE `friendship` DROP FOREIGN KEY `friendship_following_id_foreign`; ALTER TABLE `friendship` ADD CONSTRAINT `friendship_following_id_foreign` FOREIGN KEY (`following_id`) REFERENCES `arquigrafia`.`users`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;";		
 		DB::unprepared($q);
 
-		$q = "ALTER TABLE `friendship` DROP FOREIGN KEY `friendship_followed_id_foreign`; ALTER TABLE `friendship` ADD CONSTRAINT `friendship_followed_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `arquigrafia`.`users`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;";		
+		$q = "ALTER TABLE `friendship` DROP FOREIGN KEY `friendship_followed_id_foreign`; ALTER TABLE `friendship` ADD CONSTRAINT `friendship_followed_id_foreign` FOREIGN KEY (`followed_id`) REFERENCES `arquigrafia`.`users`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;";		
 		DB::unprepared($q);	
 
-		$q = "ALTER TABLE `friendship_institution` DROP FOREIGN KEY `friendship_institution_following_user_id_foreign`; ALTER TABLE `friendship_institution` ADD CONSTRAINT `friendship_institution_following_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `arquigrafia`.`users`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;";		
+		$q = "ALTER TABLE `friendship_institution` DROP FOREIGN KEY `friendship_institution_following_user_id_foreign`; ALTER TABLE `friendship_institution` ADD CONSTRAINT `friendship_institution_following_user_id_foreign` FOREIGN KEY (`following_user_id`) REFERENCES `arquigrafia`.`users`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;";		
 		DB::unprepared($q);
 
 		$q = "ALTER TABLE `likes` DROP FOREIGN KEY `likes_user_id_foreign`; ALTER TABLE `likes` ADD CONSTRAINT `likes_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `arquigrafia`.`users`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;";		
@@ -52,7 +52,13 @@ class CascadingForeignUserIdOnDelete extends Migration {
 		DB::unprepared($q);	
 
 		$q = "ALTER TABLE `album_elements` DROP FOREIGN KEY `album_elements_album_id_foreign`; ALTER TABLE `album_elements` ADD CONSTRAINT `album_elements_album_id_foreign` FOREIGN KEY (`album_id`) REFERENCES `arquigrafia`.`albums`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;";		
-		DB::unprepared($q);			
+		DB::unprepared($q);
+
+		$q = "ALTER TABLE `tag_assignments` DROP FOREIGN KEY `tag_assignments_tag_id_foreign`; ALTER TABLE `tag_assignments` ADD CONSTRAINT `tag_assignments_tag_id_foreign` FOREIGN KEY (`tag_id`) REFERENCES `arquigrafia`.`tags`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;";		
+		DB::unprepared($q);		
+
+		$q = "ALTER TABLE `tag_assignments` DROP FOREIGN KEY `tag_assignments_photo_id_foreign`; ALTER TABLE `tag_assignments` ADD CONSTRAINT `tag_assignments_photo_id_foreign` FOREIGN KEY (`photo_id`) REFERENCES `arquigrafia`.`photos`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;";		
+		DB::unprepared($q);	
 	}
 
 	/**
