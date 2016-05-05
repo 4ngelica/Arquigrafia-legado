@@ -12,7 +12,7 @@ class AlterAlbunsDescriptionLength extends Migration {
 	 */
 	public function up()
 	{
-		DB::update("ALTER TABLE albuns MODIFY description varchar(1000)");
+		DB::update("ALTER TABLE albums MODIFY description varchar(1000)");
 	}
 
 	/**
@@ -22,7 +22,7 @@ class AlterAlbunsDescriptionLength extends Migration {
 	 */
 	public function down()
 	{
-		DB::update("ALTER TABLE albuns MODIFY description varchar(255)");
+		DB::update("ALTER TABLE albums MODIFY description varchar(255)");
 	}
 
 }
