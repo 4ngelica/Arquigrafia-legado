@@ -49,7 +49,10 @@ class CascadingForeignUserIdOnDelete extends Migration {
 		DB::unprepared($q);	
 
 		$q = "ALTER TABLE `user_badges` DROP FOREIGN KEY `user_badges_user_id_foreign`; ALTER TABLE `user_badges` ADD CONSTRAINT `user_badges_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `arquigrafia`.`users`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;";		
-		DB::unprepared($q);				
+		DB::unprepared($q);	
+
+		$q = "ALTER TABLE `album_elements` DROP FOREIGN KEY `album_elements_album_id_foreign`; ALTER TABLE `album_elements` ADD CONSTRAINT `album_elements_album_id_foreign` FOREIGN KEY (`album_id`) REFERENCES `arquigrafia`.`albums`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;";		
+		DB::unprepared($q);			
 	}
 
 	/**
