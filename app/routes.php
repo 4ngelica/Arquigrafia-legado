@@ -83,7 +83,6 @@ Route::get('/albums/{id}/paginate/photos', 'AlbumsController@paginateAlbumPhotos
 Route::get('/albums/{id}/paginate/other/photos', 'AlbumsController@paginatePhotosNotInAlbum');
 
 /* COMMENTS */
-Route::post('/photos/{photo_id}/comment','PhotosController@comment');
 Route::get('/comments/{comment_id}/like','lib\gamification\controllers\LikesController@commentlike');
 Route::get('/comments/{comment_id}/dislike','lib\gamification\controllers\LikesController@commentdislike');
  
@@ -95,10 +94,6 @@ Route::get('/evaluations/{photo_id}/showSimilarAverage/', 'EvaluationsController
 Route::post('/evaluations/{photo_id}/saveEvaluation','EvaluationsController@saveEvaluation');
 Route::resource('/evaluations','EvaluationsController');
 
-
-/* PHOTOS */
-Route::get('/photos/{id}/like', 'lib\gamification\controllers\LikesController@photolike');
-Route::get('/photos/{id}/dislike', 'lib\gamification\controllers\LikesController@photodislike');
 Route::resource('/groups','GroupsController');
 Route::get('/photos/batch','PhotosController@batch');
 Route::get('/photos/upload','PhotosController@form');
@@ -107,9 +102,6 @@ Route::get('/photos/rollmigrar','PhotosController@rollmigrar');
 Route::get('/photos/download/{photo_id}','PhotosController@download');
 Route::resource('/photos','PhotosController');
 
-/* TAGS */
-//Route::get('/tags/json', 'TagsController@index');
-//Route::get('/tags/refreshCount', 'TagsController@refreshCount');
 
 /* NOTIFICATIONS */
 Route::get('/notifications', 'NotificationsController@show');

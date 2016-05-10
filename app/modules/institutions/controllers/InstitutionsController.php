@@ -34,8 +34,6 @@ class InstitutionsController extends \BaseController {
 
   public function show($id) { 
     $institution = Institution::find($id);
-    //echo "show aqui?";
-    //dd($institution);
     if ( is_null($institution) ) {
       return \Redirect::to('/');
     }

@@ -95,7 +95,7 @@ class Photo extends Eloquent {
 
 	public function comments()
 	{
-		return $this->hasMany('Comment');
+		return $this->hasMany('modules\collaborative\models\Comment');
 	}
 
 	public function albums()

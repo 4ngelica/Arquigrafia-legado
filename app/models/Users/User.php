@@ -8,7 +8,7 @@ use lib\date\Date;
 
 use lib\gamification\traits\UserGamificationTrait;
 use modules\institutions\models\Institution;
-
+use modules\collaborative\models\Comment;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
 
@@ -44,7 +44,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 	public function comments()
 	{
-		return $this->hasMany('Comment');
+		return $this->hasMany('modules\collaborative\models\Comment');
 	}
 	public function evaluations()
 	{

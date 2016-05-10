@@ -170,11 +170,11 @@
 
             @if( ! $photos->hasUserLike(Auth::user()) )
               <li>
-                <a href="{{ URL::to('/photos/' . $photos->id . '/like' ) }}" id="like_button" title="Curtir"></a>
+                <a href="{{ URL::to('/like/' . $photos->id ) }}" id="like_button" title="Curtir"></a>
               </li>
             @else
               <li>
-                <a href="{{ URL::to('/photos/' . $photos->id . '/dislike' ) }}" id="like_button" class="dislike" title="Descurtir"></a>
+                <a href="{{ URL::to('/dislike/' . $photos->id ) }}" id="like_button" class="dislike" title="Descurtir"></a>
               </li>
             @endif
           </ul>
@@ -241,7 +241,7 @@
         @endif
 
         @if (Auth::check())
-          {{ Form::open(array('url' => "photos/{$photos->id}/comment")) }}
+          {{ Form::open(array('url' => "comments/{$photos->id}")) }}
             <div class="column alpha omega row">
               @if (Auth::user()->photo != "")
                 <img class="user_thumbnail" src="{{ asset(Auth::user()->photo); }}" />

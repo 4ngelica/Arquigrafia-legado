@@ -1,12 +1,12 @@
 <?php namespace lib\gamification\traits;
 
+use modules\collaborative\models\Like;
 use lib\gamification\models\Score;
-use lib\gamification\models\Like;
 
 trait LikableGamificationTrait { 
   public function likes()
   {
-    return $this->morphMany('lib\gamification\models\Like', 'likable');
+    return $this->morphMany('modules\collaborative\models\Like', 'likable');
   }
 
   public function hasUserLike($user) {
