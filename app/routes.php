@@ -83,8 +83,8 @@ Route::get('/albums/{id}/paginate/photos', 'AlbumsController@paginateAlbumPhotos
 Route::get('/albums/{id}/paginate/other/photos', 'AlbumsController@paginatePhotosNotInAlbum');
 
 /* COMMENTS */
-Route::get('/comments/{comment_id}/like','lib\gamification\controllers\LikesController@commentlike');
-Route::get('/comments/{comment_id}/dislike','lib\gamification\controllers\LikesController@commentdislike');
+//Route::get('/comments/{comment_id}/like','lib\gamification\controllers\LikesController@commentlike');
+//Route::get('/comments/{comment_id}/dislike','lib\gamification\controllers\LikesController@commentdislike');
  
 /* EVALUATIONS */
 Route::get('/evaluations','EvaluationsController@index');

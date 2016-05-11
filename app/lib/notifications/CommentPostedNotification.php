@@ -2,9 +2,8 @@
 namespace lib\notifications;
 
 use \Tricki\Notification\Models\Notification; 
-use modules\collaborative\models\Comment;
+use \modules\collaborative\models\Comment;
 use User;
-//use Comment;
 use Photo;
 
 class CommentPostedNotification extends \Tricki\Notification\Models\Notification

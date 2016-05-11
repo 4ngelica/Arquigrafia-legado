@@ -1,6 +1,7 @@
 <?php namespace lib\gamification\traits;
 
 use modules\collaborative\models\Like;
+use modules\collaborative\models\Comment;
 use lib\gamification\models\Score;
 
 trait LikableGamificationTrait { 

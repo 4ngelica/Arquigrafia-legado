@@ -32,5 +32,9 @@ class Comment extends \Eloquent {
       	$commentsMessage = 'Existem '. $commentsCount . ' comentários sobre esta imagem';
     	return $commentsMessage;
   }
+  public function likable()
+  {
+    return $this->morphTo();
+  }
 
 }

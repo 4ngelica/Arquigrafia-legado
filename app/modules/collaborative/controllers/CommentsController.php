@@ -1,6 +1,7 @@
 <?php
 namespace modules\collaborative\controllers;
 use modules\collaborative\models\Comment;
+use modules\collaborative\models\Like;
 use lib\date\Date;
 use lib\utils\ActionUser;
 use News;
@@ -9,6 +10,7 @@ use Photo;
 use Auth;
 use User;
 use Notification;
+use Carbon\Carbon;
 
 
 class CommentsController extends \BaseController {
@@ -20,8 +22,15 @@ class CommentsController extends \BaseController {
 	 */
 	public function index()
 	{ 
-		$comment = Comment::all();
-    return $comment;
+    $user = Auth::user(); 
+    $comment = Comment::find(36); 
+    //dd($comment->user_id);
+    $user_note = User::find($comment->user_id);
+    
+    //Notification::create('comment_liked', $user, $comment, [$user_note], null);
+    
+		//$comment = Comment::all();
+    //return $comment;
 	}
 
 	
@@ -127,7 +136,7 @@ class CommentsController extends \BaseController {
 
 
 // need to be modified
-    private function checkCommentCount($number_comment, $badge_name){
+  private function checkCommentCount($number_comment, $badge_name){
       $user = Auth::user();
       if(($user->badges()->where('name', $badge_name)->first()) != null){
         return;
@@ -136,65 +145,50 @@ class CommentsController extends \BaseController {
         $badge=Badge::where('name', $badge_name)->first();
         $user->badges()->attach($badge);
       }
+  }
+
+  public function commentLike($id) {
+
+    $comment = Comment::find($id);
+    $user = Auth::user();
+    $this->logLikeDislikeComment($user, $comment, "o comentário", "Curtiu", "user");
+    
+    if ($user->id != $comment->user_id) {
+        $user_note = User::find($comment->user_id);
+        //Notification::create('comment_liked', $user, $comment, [$user_note], null);
     }
+    $like = Like::getFirstOrCreate($comment, $user);
+    if (is_null($comment)) {
+      return \Response::json('fail');
+    }
+    return \Response::json([ 
+      'url' => \URL::to('/comments/' . $comment->id . '/' . 'dislike'),
+      'likes_count' => $comment->likes->count()]);
+  }
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
-	}
+  public function commentdislike($id) {
+    $comment = \Comment::find($id);
+    $user = \Auth::user();
+    $source_page = \Request::header('referer');
+    $this->logLikeDislike($user, $comment, "o comentário", "Descurtiu", "user");
+    try {
+      $like = Like::fromUser($user)->withLikable($comment)->first();
+      $like->delete();
+    } catch (Exception $e) {
+      //
+    }
+    if (is_null($comment)) {
+      return \Response::json('fail');
+    }
+    return \Response::json([ 
+      'url' => \URL::to('/comments/' . $comment->id . '/' . 'like'),
+      'likes_count' => $comment->likes->count()]);
+  }
 
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
+  private function logLikeDislikeComment($user, $likable, $photo_or_comment, $like_or_dislike, $user_or_visitor) {
+    $source_page = \Request::header('referer');
+    ActionUser::printLikeDislike($user->id, $likable->id, $source_page, $photo_or_comment, $like_or_dislike, $user_or_visitor);
+  }
 
 
 
