@@ -1,7 +1,6 @@
 <?php 
   $news = DB::table('news')->where('user_id', '=', Auth::user()->id)->orWhere('user_id', '=', 0)->orderBy('updated_at', 'desc')->take(6)->get(); 
 ?>
-
 @foreach($news as $info)
 @if($info->news_type == 'new_photo')
 <!--Alguém que você segue inseriu uma foto-->
@@ -25,12 +24,13 @@
   <br />
 </div>
 @elseif($info->news_type == 'commented_photo')<!--Alguém que você segue comentou uma foto-->
-  @if($info->secondary_type == NULL && $info->tertiary_type == NULL)
+  
+ @if($info->secondary_type == NULL && $info->tertiary_type == NULL)
   <div class="gallery_box">
-    <a href='{{ URL::to("/photos") . "/" . Comment::find($info->object_id)->photo_id . "#" . $info->object_id}}'>                 
-      <img src={{"/arquigrafia-images/" . Comment::find($info->object_id)->photo_id . "_home.jpg"}} title="{{ Photo::find(Comment::find($info->object_id)->photo_id)->name }}" class="gallery_photo" />
+    <a href='{{ URL::to("/photos") . "/" . modules\collaborative\models\Comment::find($info->object_id)->photo_id . "#" . $info->object_id}}'>                 
+      <img src={{"/arquigrafia-images/" . modules\collaborative\models\Comment::find($info->object_id)->photo_id . "_home.jpg"}} title="{{ Photo::find(modules\collaborative\models\Comment::find($info->object_id)->photo_id)->name }}" class="gallery_photo" />
     </a>
-    <a href='{{ URL::to("/photos") . "/" . Comment::find($info->object_id)->photo_id . "#" . $info->object_id}}' class="name">
+    <a href='{{ URL::to("/photos") . "/" . modules\collaborative\models\Comment::find($info->object_id)->photo_id . "#" . $info->object_id}}' class="name">
       @if($info->data == null)
         {{User::find($info->sender_id)->name}} comentou nesta imagem
       @else
@@ -45,10 +45,10 @@
   </div>
   @else
   <div class="gallery_box">
-    <a href='{{ URL::to("/photos") . "/" . Comment::find($info->object_id)->photo_id }}'>                 
-      <img src={{"/arquigrafia-images/" . Comment::find($info->object_id)->photo_id . "_home.jpg"}} title="{{ Photo::find(Comment::find($info->object_id)->photo_id)->name }}" class="gallery_photo" />
+    <a href='{{ URL::to("/photos") . "/" . modules\collaborative\models\Comment::find($info->object_id)->photo_id }}'>                 
+      <img src={{"/arquigrafia-images/" . modules\collaborative\models\Comment::find($info->object_id)->photo_id . "_home.jpg"}} title="{{ Photo::find(Comment::find($info->object_id)->photo_id)->name }}" class="gallery_photo" />
     </a>
-    <a href='{{ URL::to("/photos") . "/" . Comment::find($info->object_id)->photo_id }}' class="name">
+    <a href='{{ URL::to("/photos") . "/" . modules\collaborative\models\Comment::find($info->object_id)->photo_id }}' class="name">
       @if($info->data == null)
         {{User::find($info->sender_id)->name}} realizou diversas ações nesta imagem. Confira!
       @else
@@ -57,7 +57,11 @@
     </a>
     <br />
   </div>
-  @endif
+  @endif   
+
+
+
+
 @elseif($info->news_type == 'evaluated_photo')<!--Alguém que você segue avaliou uma foto-->
 @if($info->secondary_type == NULL && $info->tertiary_type == NULL)
 <div class="gallery_box">
@@ -207,3 +211,5 @@
 @endif
 
 @endforeach
+
+

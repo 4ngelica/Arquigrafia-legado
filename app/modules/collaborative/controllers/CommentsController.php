@@ -17,20 +17,12 @@ class CommentsController extends \BaseController {
 
 	/**
 	 * Display a listing of the resource.
-	 *
 	 * @return Response
 	 */
 	public function index()
 	{ 
-    $user = Auth::user(); 
-    $comment = Comment::find(36); 
-    //dd($comment->user_id);
-    $user_note = User::find($comment->user_id);
-    
-    //Notification::create('comment_liked', $user, $comment, [$user_note], null);
-    
-		//$comment = Comment::all();
-    //return $comment;
+		$comment = Comment::all();
+    return $comment;
 	}
 
 	
@@ -155,7 +147,7 @@ class CommentsController extends \BaseController {
     
     if ($user->id != $comment->user_id) {
         $user_note = User::find($comment->user_id);
-        //Notification::create('comment_liked', $user, $comment, [$user_note], null);
+        Notification::create('comment_liked', $user, $comment, [$user_note], null);
     }
     $like = Like::getFirstOrCreate($comment, $user);
     if (is_null($comment)) {
@@ -167,10 +159,10 @@ class CommentsController extends \BaseController {
   }
 
   public function commentdislike($id) {
-    $comment = \Comment::find($id);
-    $user = \Auth::user();
+    $comment = Comment::find($id);
+    $user = Auth::user();
     $source_page = \Request::header('referer');
-    $this->logLikeDislike($user, $comment, "o comentário", "Descurtiu", "user");
+    $this->logLikeDislikeComment($user, $comment, "o comentário", "Descurtiu", "user");
     try {
       $like = Like::fromUser($user)->withLikable($comment)->first();
       $like->delete();

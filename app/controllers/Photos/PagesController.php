@@ -3,7 +3,8 @@
 use lib\utils\ActionUser;
 use lib\date\Date;
 use modules\institutions\models\Institution as Institution;
-
+use modules\collaborative\models\Comment as Comment;
+use modules\collaborative\models\Like as Like;
 
 class PagesController extends BaseController {
 
