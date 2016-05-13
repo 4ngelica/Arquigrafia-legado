@@ -1,8 +1,9 @@
 <?php namespace lib\gamification\traits;
 
-use modules\collaborative\models\Like;
+use modules\collaborative\models\Like as Like;
 use modules\collaborative\models\Comment;
 use lib\gamification\models\Score;
+
 
 trait LikableGamificationTrait { 
   public function likes()
@@ -12,7 +13,8 @@ trait LikableGamificationTrait {
 
   public function hasUserLike($user) {
     if (\Auth::check()) {
-      $like = Like::fromUser($user)->withLikable($this)->first();
+        $like = \modules\collaborative\models\Like::fromUser($user)->withLikable($this)->first();
+        
       if ( ! is_null($like) ) {
         return true;
       }

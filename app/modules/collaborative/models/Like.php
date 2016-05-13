@@ -1,9 +1,11 @@
 <?php namespace modules\collaborative\models;
 use User;
+use lib\gamification\traits\LikableGamificationTrait;
 
 
 class Like extends \Eloquent {
 
+	use LikableGamificationTrait;
 	protected $table = "likes";
 	protected $fillable = [ 'user_id', 'likable_id', 'likable_type' ];
 	
@@ -13,7 +15,7 @@ class Like extends \Eloquent {
 	}
 
 	public function likable()
-	{
+	{	
 		return $this->morphTo();
 	}
 	
