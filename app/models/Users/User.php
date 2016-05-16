@@ -49,7 +49,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 	public function evaluations()
 	{
-		return $this->hasMany('Evaluation');
+		return $this->hasMany('modules\evaluations\models\Evaluation');
 	}
 
 	public function likes()

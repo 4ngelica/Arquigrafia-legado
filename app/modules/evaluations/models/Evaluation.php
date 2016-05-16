@@ -1,7 +1,9 @@
 <?php
-
-
-class Evaluation extends Eloquent {
+namespace modules\evaluations\models;
+use modules\evaluations\models\Binomial;
+use User;
+use Photo;
+class Evaluation extends \Eloquent {
 	
 
 	protected $fillable = ['photo_id','evaluationPosition','binomial_id','user_id','knownArchitecture', 'areArchitecture'];
@@ -26,8 +28,8 @@ class Evaluation extends Eloquent {
 	}
 
 	public static function average($id) {
-		 return DB::table('binomial_evaluation')
-			->select('binomial_id', DB::raw('avg(evaluationPosition) as avgPosition'))
+		 return \DB::table('binomial_evaluation')
+			->select('binomial_id', \DB::raw('avg(evaluationPosition) as avgPosition'))
 			->where('photo_id', $id)
 			->orderBy('binomial_id', 'asc')
 			->groupBy('binomial_id')->get();
@@ -35,7 +37,7 @@ class Evaluation extends Eloquent {
 
 
 	public static function userKnowsArchitecture($photoId,$userId){
-		   $result = DB::table('binomial_evaluation')
+		   $result = \DB::table('binomial_evaluation')
 			->select('knownArchitecture')
 			->where('photo_id', $photoId)
 			->where('user_id',$userId)->get();
@@ -48,7 +50,7 @@ class Evaluation extends Eloquent {
 	}
     
     public static function userAreArchitecture($photoId,$userId){
-        $result = DB::table('binomial_evaluation')
+        $result = \DB::table('binomial_evaluation')
             ->select('areArchitecture')
             ->where('photo_id', $photoId)
             ->where('user_id',$userId)->get();
@@ -60,15 +62,15 @@ class Evaluation extends Eloquent {
     }
 
 	public static function averageAndUserEvaluation($photoId,$userId) {
-		$avgPhotosBinomials = DB::table('binomial_evaluation')
-		->select('binomial_id', DB::raw('avg(evaluationPosition) as avgPosition'))
+		$avgPhotosBinomials = \DB::table('binomial_evaluation')
+		->select('binomial_id', \DB::raw('avg(evaluationPosition) as avgPosition'))
 		->where('photo_id', $photoId)
 		->orderBy('binomial_id', 'asc')
 		->groupBy('binomial_id')->get();
 
 		$evaluations = null;
 		if ($userId != null) {
-			$evaluations = DB::table('binomial_evaluation')
+			$evaluations = \DB::table('binomial_evaluation')
 			->select('id','photo_id','evaluationPosition','binomial_id','user_id')
 			->where('user_id', $userId)
 			->where("photo_id", $photoId)
@@ -124,7 +126,7 @@ class Evaluation extends Eloquent {
 	}
 
 	public function scopeWithAverage($query, $operator, $value) {
-		$aggregate = DB::raw('avg(evaluationPosition)');
+		$aggregate = \DB::raw('avg(evaluationPosition)');
 		return $query->having($aggregate, $operator, $value);
 	}
 
@@ -139,7 +141,7 @@ class Evaluation extends Eloquent {
 		}
 		$list_of_photos = array_map(function ($object) {
 				return $object->photo_id;
-			}, DB::select($query, $values));
+			}, \DB::select($query, $values));
 		return Photo::findMany($list_of_photos)->toArray();
 
 	}

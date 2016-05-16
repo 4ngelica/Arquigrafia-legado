@@ -33,9 +33,7 @@
 			"app/models/Photos",
 			"app/controllers/Photos",
 			"app/controllers/Albums",
-			"app/models/Albums",
-			"app/controllers/Evaluations",
-			"app/models/Evaluations"
+			"app/models/Albums"
 		],
 		"psr-4": {
             "lib\\":"app/lib",

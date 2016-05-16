@@ -89,3 +89,4 @@ require app_path().'/filters.php';
 require app_path().'/lib/gamification/gamification.php';
 require app_path().'/modules/institutions/institutions.php';
 require app_path().'/modules/collaborative/collaborative.php';
+require app_path().'/modules/evaluations/evaluations.php';

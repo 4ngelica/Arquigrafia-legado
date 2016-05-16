@@ -1,6 +1,17 @@
 <?php
-
+namespace modules\evaluations\controllers;
+use modules\evaluations\models\Evaluation;
+use modules\evaluations\models\Binomial;
 use lib\utils\ActionUser;
+use Session;  
+use Auth;
+use Photo;
+use News;
+use Carbon\Carbon;
+use View;
+use Input;
+use User;
+use Request;
 
 class EvaluationsController extends \BaseController {
 
@@ -13,12 +24,12 @@ class EvaluationsController extends \BaseController {
 
 
 	public function show($id)
-	{ return Redirect::to('/');
+	{ return \Redirect::to('/');
 	}
 
   public function evaluate($photoId ) {
       if (Session::has('institutionId') ) {
-        return Redirect::to('/');
+        return \Redirect::to('/');
       }
     
       if(isset($_SERVER['QUERY_STRING'])) parse_str($_SERVER['QUERY_STRING']);
@@ -78,7 +89,7 @@ class EvaluationsController extends \BaseController {
         $checkedAreArchitecture= Evaluation::userAreArchitecture($photoId,$userId);
      }    
      
-      return View::make('/evaluations/evaluate',
+      return View::make('evaluate',
       [
         'photos' => $photo, 
         'owner' => $user, 
@@ -233,10 +244,10 @@ class EvaluationsController extends \BaseController {
           $user_id = Auth::user()->id;
           $source_page = Request::header('referer');
           ActionUser::printEvaluation($user_id, $id, $source_page, "user", $insertion_edition, $evaluation_string);
-          return Redirect::to("/evaluations/{$id}/evaluate")->with('message', 
+          return \Redirect::to("/evaluations/{$id}/evaluate")->with('message', 
               '<strong>Avaliação salva com sucesso</strong><br>Abaixo você pode visualizar a média atual de avaliações');
       } else { // avaliação sem login        
-          return Redirect::to("/photos/{$id}")->with('message', 
+          return \Redirect::to("/photos/{$id}")->with('message', 
             '<strong>Erro na avaliação</strong><br>Faça login para poder avaliar');
       }//End if check
   }

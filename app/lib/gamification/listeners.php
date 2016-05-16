@@ -1,5 +1,7 @@
 <?php
   use lib\gamification\models\Leaderboard as Leaderboard;
+  use modules\evaluations\models\Evaluation as Evaluation;
+  use modules\evaluations\models\Binomial as Binomial;
 
   User::created (function ($user) {
     Leaderboard::createFromUser($user);

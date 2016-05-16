@@ -7,6 +7,7 @@ use lib\gamification\traits\LikableGamificationTrait;
 use Illuminate\Database\Eloquent\Collection as Collection;
 use modules\institutions\models\Institution;
 use modules\collaborative\models\Like as Like;
+use modules\evaluations\models\Evaluation as Evaluation;
 
 class Photo extends Eloquent {
 
@@ -106,7 +107,7 @@ class Photo extends Eloquent {
 
 	public function evaluations()
 	{
-		return $this->hasMany('Evaluation');
+		return $this->hasMany('modules\evaluations\models\Evaluation');
 	}
 
 	public function evaluators()

@@ -8,6 +8,8 @@ use modules\institutions\models\Institution as Institution;
 use modules\collaborative\models\Tag as Tag;
 use modules\collaborative\models\Comment as Comment;
 use modules\collaborative\models\Like as Like;
+use modules\evaluations\models\Evaluation as Evaluation;
+use modules\evaluations\models\Binomial as Binomial;
 
 class PhotosController extends \BaseController {
 
