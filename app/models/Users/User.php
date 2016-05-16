@@ -1,5 +1,5 @@
 <?php
-//namespace app\models\Users;
+
 use Illuminate\Auth\UserTrait;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
@@ -9,6 +9,7 @@ use lib\date\Date;
 use lib\gamification\traits\UserGamificationTrait;
 use modules\institutions\models\Institution;
 use modules\collaborative\models\Comment;
+use modules\collaborative\models\Like;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
 
@@ -53,7 +54,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	public function likes()
 	{
-		return $this->hasMany('Like');
+		return $this->hasMany('modules\collaborative\models\Like');
 	}
 	
 	public function albums()
