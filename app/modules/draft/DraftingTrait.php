@@ -1,4 +1,4 @@
-<?php namespace lib\draft;
+<?php namespace modules\draft;
 
 trait DraftingTrait {
   

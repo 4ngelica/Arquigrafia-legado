@@ -1,6 +1,6 @@
 <?php
 
-use lib\draft\DraftingTrait;
+use modules\draft\DraftingTrait;
 use lib\date\Date;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use lib\gamification\traits\LikableGamificationTrait;
