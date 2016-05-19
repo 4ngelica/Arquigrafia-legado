@@ -91,14 +91,6 @@ Route::get('/photos/download/{photo_id}','PhotosController@download');
 Route::resource('/photos','PhotosController');
 
 
-/* NOTIFICATIONS */
-Route::get('/notifications', 'NotificationsController@show');
-Route::get('/markRead/{id}', 'NotificationsController@read');
-Route::get('/readAll', 'NotificationsController@readAll');
-
-Route::get('/refreshBubble', 'NotificationsController@howManyUnread');
-
-
 /* SEARCH PAGE */
 Route::get('/search/paginate/other/photos', 'PagesController@paginatePhotosResult');
 Route::get('/search/more/paginate/other/photos', 'PagesController@paginatePhotosResultAdvance');
