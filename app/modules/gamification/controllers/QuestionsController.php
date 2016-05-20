@@ -1,4 +1,5 @@
-<?php namespace lib\gamification\controllers;
+<?php 
+namespace modules\gamification\controllers;
 
 class QuestionsController extends \BaseController {
 

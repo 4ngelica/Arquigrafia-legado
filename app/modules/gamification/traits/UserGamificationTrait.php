@@ -1,17 +1,18 @@
-<?php namespace lib\gamification\traits;
+<?php 
+namespace modules\gamification\traits;
 
-use lib\gamification\models\Score;
+use modules\gamification\models\Score;
 
 trait UserGamificationTrait {
 
   public function badges() {
-    return $this->belongsToMany('lib\gamification\models\Badge','user_badges')
+    return $this->belongsToMany('modules\gamification\models\Badge','user_badges')
       ->withTimestamps()
       ->withPivot('element_type', 'element_id');
   }
 
   public function ranks() {
-    return $this->hasMany('lib\gamification\models\Rank');
+    return $this->hasMany('modules\gamification\models\Rank');
   }
 
   public function scopeWithScoreType($query, $score_type) {

@@ -3,7 +3,7 @@
 use lib\utils\ActionUser;
 use Carbon\Carbon;
 use lib\date\Date;
-use lib\gamification\models\Badge;
+use modules\gamification\models\Badge;
 use modules\institutions\models\Institution as Institution;
 use modules\collaborative\models\Tag as Tag;
 use modules\collaborative\models\Comment as Comment;

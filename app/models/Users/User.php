@@ -6,7 +6,7 @@ use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use lib\date\Date;
 
-use lib\gamification\traits\UserGamificationTrait;
+use modules\gamification\traits\UserGamificationTrait;
 use modules\institutions\models\Institution;
 use modules\collaborative\models\Comment;
 use modules\collaborative\models\Like;

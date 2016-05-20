@@ -15,10 +15,11 @@ return array(
 
 	'paths' => array(
 		__DIR__.'/../views',
-		__DIR__.'/../lib/gamification/views',
+		//__DIR__.'/../lib/gamification/views',
 		__DIR__.'/../modules/institutions/views',
 		__DIR__.'/../modules/collaborative/views',
-		__DIR__.'/../modules/evaluations/views'
+		__DIR__.'/../modules/evaluations/views',
+		__DIR__.'/../modules/gamification/views'
 	),
 
 	/*

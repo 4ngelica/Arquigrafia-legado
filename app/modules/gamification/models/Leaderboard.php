@@ -1,5 +1,5 @@
-<?php namespace lib\gamification\models;
-
+<?php 
+namespace modules\gamification\models;
 use User;
 use Illuminate\Support\Collection as Collection;
 

@@ -1,5 +1,5 @@
-<?php namespace lib\gamification\models;
-
+<?php 
+namespace modules\gamification\models;
 use Carbon\Carbon;
 
 class Badge extends \Eloquent {

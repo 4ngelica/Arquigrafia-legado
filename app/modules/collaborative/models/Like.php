@@ -1,6 +1,6 @@
 <?php namespace modules\collaborative\models;
 use User;
-use lib\gamification\traits\LikableGamificationTrait;
+use modules\gamification\traits\LikableGamificationTrait;
 
 
 class Like extends \Eloquent {
