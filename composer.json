@@ -37,7 +37,8 @@
 		],
 		"psr-4": {
             "lib\\":"app/lib",
-            "modules\\":"app/modules"
+            "modules\\":"app/modules",
+            "subscriber\\":"app/subscriber"
 		}
 	},
 	"scripts": {

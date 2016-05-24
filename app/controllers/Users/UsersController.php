@@ -17,6 +17,7 @@ class UsersController extends \BaseController {
   {
     $this->beforeFilter('auth',
       array('only' => ['follow', 'unfollow']));
+    
   }
   
   public function index()
@@ -666,6 +667,8 @@ class UsersController extends \BaseController {
         $image = Image::make(Input::file('photo'))->encode('jpg', 80);         
         $image->save(public_path().'/arquigrafia-avatars/'.$user->id.'.jpg');
         $file->move(public_path().'/arquigrafia-avatars', $user->id."_original.".strtolower($ext)); 
+        Log::info('perfil');
+
         foreach ($user->followers as $users) {
           foreach ($users->news as $note) {
             if($note->news_type == 'new_profile_picture' && $note->sender_id == $user->id) {
@@ -676,20 +679,24 @@ class UsersController extends \BaseController {
             if($note->sender_id == $user->id) {
               $date = $curr_note->created_at;
               if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
-                News::create(array('object_type' => 'User', 
+                /*News::create(array('object_type' => 'User', 
                                    'object_id' => $user->id, 
                                    'user_id' => $users->id, 
                                    'sender_id' => $user->id, 
-                                   'news_type' => 'new_profile_picture'));
+                                   'news_type' => 'new_profile_picture'));*/
+                
+                Event::fire('user.newProfilePicture',[$user]);
               }
             }
           }
           else {
-              News::create(array('object_type' => 'User', 
+              /*News::create(array('object_type' => 'User', 
                                  'object_id' => $user->id, 
                                  'user_id' => $users->id, 
                                  'sender_id' => $user->id, 
-                                 'news_type' => 'new_profile_picture'));
+                                 'news_type' => 'new_profile_picture'));*/
+                
+                Event::fire('user.newProfilePicture',[$user]);
             }
         }        
       } 
@@ -704,20 +711,22 @@ class UsersController extends \BaseController {
             if($note->sender_id == $user->id) {
               $date = $curr_note->created_at;
               if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
-                News::create(array('object_type' => 'User', 
+                /*News::create(array('object_type' => 'User', 
                                    'object_id' => $user->id, 
                                    'user_id' => $users->id, 
                                    'sender_id' => $user->id, 
-                                   'news_type' => 'edited_profile'));
+                                   'news_type' => 'edited_profile'));*/
+                Event::fire('user.updateProfile',[$user]);
               }
             }
           }
           else {
-              News::create(array('object_type' => 'User', 
+              /*News::create(array('object_type' => 'User', 
                                  'object_id' => $user->id, 
                                  'user_id' => $users->id, 
                                  'sender_id' => $user->id, 
-                                 'news_type' => 'edited_profile'));
+                                 'news_type' => 'edited_profile'));*/
+              Event::fire('user.updateProfile',[$user]);
             }
         }
       }
