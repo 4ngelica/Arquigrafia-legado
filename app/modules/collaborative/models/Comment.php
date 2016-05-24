@@ -3,7 +3,8 @@ namespace modules\collaborative\models;
 use modules\collaborative\models\Tag;
 use Photo;
 use User;
-use lib\gamification\traits\LikableGamificationTrait;
+use modules\gamification\traits\LikableGamificationTrait;
+
 
 class Comment extends \Eloquent {
 

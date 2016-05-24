@@ -1,6 +1,7 @@
-<?php namespace lib\gamification\controllers;
+<?php 
+namespace modules\gamification\controllers;
 
-use lib\gamification\models\Badge;
+use modules\gamification\models\Badge;
 
 class BadgesController extends \BaseController {
 

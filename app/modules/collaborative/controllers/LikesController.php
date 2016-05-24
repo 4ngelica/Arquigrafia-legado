@@ -2,7 +2,8 @@
 use modules\collaborative\models\Like;
 use modules\collaborative\models\Comment;
 use lib\utils\ActionUser;
-use lib\gamification\models\Badge;
+
+use modules\gamification\models\Badge;
 use Notification;
 use Carbon\Carbon;
 

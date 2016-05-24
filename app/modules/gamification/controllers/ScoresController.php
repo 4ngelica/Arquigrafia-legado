@@ -1,6 +1,7 @@
-<?php namespace lib\gamification\controllers;
+<?php 
+namespace modules\gamification\controllers;
+use modules\gamification\models\Score;
 
-use lib\gamification\models\Score;
 
 class ScoresController extends \BaseController {
 

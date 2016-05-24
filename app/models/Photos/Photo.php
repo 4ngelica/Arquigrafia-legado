@@ -3,7 +3,8 @@
 use modules\draft\DraftingTrait;
 use lib\date\Date;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
-use lib\gamification\traits\LikableGamificationTrait;
+
+use modules\gamification\traits\LikableGamificationTrait;
 use Illuminate\Database\Eloquent\Collection as Collection;
 use modules\institutions\models\Institution;
 use modules\collaborative\models\Like as Like;
