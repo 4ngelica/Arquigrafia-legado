@@ -94,3 +94,6 @@ Route::resource('/photos','PhotosController');
 /* SEARCH PAGE */
 Route::get('/search/paginate/other/photos', 'PagesController@paginatePhotosResult');
 Route::get('/search/more/paginate/other/photos', 'PagesController@paginatePhotosResultAdvance');
+
+Event::subscribe('subscriber\UserSubscriber');
+
