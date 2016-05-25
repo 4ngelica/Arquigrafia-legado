@@ -499,34 +499,17 @@ class UsersController extends \BaseController {
     $following = $logged_user->following;
 
     
+    
     if ($user_id != $logged_user->id && !$following->contains($user_id)) {
-      $logged_user->following()->attach($user_id);
+      //Envio da Notificação
 
-      /*Envio de notificação*/
-      if ($user_id != $logged_user->id) {
-      $user_note = User::find($user_id);
-      foreach ($user_note->notifications as $notification) {
-        $info = $notification->render();
-        if ($info[0] == "follow" && $notification->read_at == null) {
-          $note_id = $notification->notification_id;
-          $note_user_id = $notification->id;
-          $note = $notification;
-        }
-      }
-      if (isset($note_id)) {
-        $note_from_table = DB::table("notifications")->where("id","=", $note_id)->get();
-        if (NotificationsController::isNotificationByUser($logged_user->id, $note_from_table[0]->sender_id, $note_from_table[0]->data) == false) {
-          $new_data = $note_from_table[0]->data . ":" . $logged_user->id;
-          DB::table("notifications")->where("id", "=", $note_id)->update(array("data" => $new_data, "created_at" => Carbon::now('America/Sao_Paulo')));
-          $note->created_at = Carbon::now('America/Sao_Paulo');
-          $note->save();  
-        }
-      }
-      else Notification::create('follow', $logged_user, $user_note, [$user_note], null);
-    }
+      Event::fire('user.followed', array($logged_user->id, (int)$user_id));
+
+      $logged_user->following()->attach($user_id);
 
       $logged_user_id = Auth::user()->id;
       $pageSource = Request::header('referer');
+
       ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "passou a seguir", "user");
     }
 
