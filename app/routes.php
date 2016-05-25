@@ -104,4 +104,5 @@ Route::get('/search/paginate/other/photos', 'PagesController@paginatePhotosResul
 Route::get('/search/more/paginate/other/photos', 'PagesController@paginatePhotosResultAdvance');
 
 Event::subscribe('subscriber\UserSubscriber');
+Event::subscribe('subscriber\PhotoSubscriber');
 

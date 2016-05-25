@@ -304,7 +304,8 @@ class PhotosController extends \BaseController {
 
     
 
-  public function store() {
+  public function store() 
+  {
       Input::flashExcept('tags', 'photo','work_authors');
       $input = Input::all();
 
@@ -316,8 +317,7 @@ class PhotosController extends \BaseController {
       if (Input::has('work_authors')){
           $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
           $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
-      }else
-          $input["work_authors"] = '';
+      }else $input["work_authors"] = '';
  
   
       $rules = array(
@@ -335,7 +335,7 @@ class PhotosController extends \BaseController {
 
       if ($validator->fails()) {
           $messages = $validator->messages();
-      
+
           return Redirect::to('/photos/upload')->with(['tags' => $input['tags'],
           'decadeInput'=>$input["decade_select"],
           'centuryInput'=>$input["century"],
@@ -365,8 +365,8 @@ class PhotosController extends \BaseController {
             $photo->state = $input["photo_state"];
             if ( !empty($input["photo_street"]) )
                 $photo->street = $input["photo_street"];
-      //if ( !empty($input["photo_workAuthor"]) )
-      //  $photo->workAuthor = $input["photo_workAuthor"];
+            //if ( !empty($input["photo_workAuthor"]) )
+            //  $photo->workAuthor = $input["photo_workAuthor"];
       
             if(!empty($input["workDate"])){             
                $photo->workdate = $input["workDate"];
@@ -381,124 +381,95 @@ class PhotosController extends \BaseController {
                $photo->workdate = NULL;
             }
 
-      if(!empty($input["photo_imageDate"])){             
-             $photo->dataCriacao = $this->date->formatDate($input["photo_imageDate"]);
-             $photo->imageDateType = "date";
-       }elseif(!empty($input["decade_select_image"])){             
-            $photo->dataCriacao = $input["decade_select_image"];
-            $photo->imageDateType = "decade";
-       }elseif (!empty($input["century_image"]) && $input["century_image"]!="NS") { 
-            $photo->dataCriacao = $input["century_image"];
-            $photo->imageDateType = "century";
-       }else{ 
-            $photo->dataCriacao = NULL;
-       }      
+            if(!empty($input["photo_imageDate"])){             
+                $photo->dataCriacao = $this->date->formatDate($input["photo_imageDate"]);
+                $photo->imageDateType = "date";
+            }elseif(!empty($input["decade_select_image"])){             
+                $photo->dataCriacao = $input["decade_select_image"];
+                $photo->imageDateType = "decade";
+            }elseif (!empty($input["century_image"]) && $input["century_image"]!="NS") { 
+                $photo->dataCriacao = $input["century_image"];
+                $photo->imageDateType = "century";
+            }else{ 
+                $photo->dataCriacao = NULL;
+            }      
       
-      $photo->nome_arquivo = $file->getClientOriginalName();
+            $photo->nome_arquivo = $file->getClientOriginalName();
 
-      $photo->user_id = Auth::user()->id;
-      $photo->dataUpload = date('Y-m-d H:i:s');
-      $photo->save();
+            $photo->user_id = Auth::user()->id;
+            $photo->dataUpload = date('Y-m-d H:i:s');
+            $photo->save();
       
 
-      if ( !empty($input["new_album-name"]) ) {
-        $album = Album::create([
-          'title' => $input["new_album-name"],
-          'description' => "",
-          'user' => Auth::user(),
-          'cover' => $photo,
-        ]);
-        if ( $album->isValid() ) {
-            DB::insert('insert into album_elements (album_id, photo_id) values (?, ?)', array($album->id, $photo->id));
-        }
-      }
-      elseif ( !empty($input["photo_album"]) ) {
-        DB::insert('insert into album_elements (album_id, photo_id) values (?, ?)', array($input["photo_album"], $photo->id));
-      }
-      $ext = $file->getClientOriginalExtension();
-      $photo->nome_arquivo = $photo->id.".".$ext;
-
-      $photo->save();
+            if ( !empty($input["new_album-name"]) ) {
+                $album = Album::create([
+                'title' => $input["new_album-name"],
+                'description' => "",
+                'user' => Auth::user(),
+                'cover' => $photo,
+                ]);
+                if ( $album->isValid() ) {
+                  DB::insert('insert into album_elements (album_id, photo_id) values (?, ?)', array($album->id, $photo->id));
+                }
+            } elseif ( !empty($input["photo_album"]) ) {
+                DB::insert('insert into album_elements (album_id, photo_id) values (?, ?)', array($input["photo_album"], $photo->id));
+            }
+            $ext = $file->getClientOriginalExtension();
+            $photo->nome_arquivo = $photo->id.".".$ext;
+            $photo->save();
      
 
-      $tags_copy = $input['tags'];
-      $tags = explode(',', $input['tags']);
+            $tags_copy = $input['tags'];
+            $tags = explode(',', $input['tags']);
           
-      if (!empty($tags)) {           
-              $tags = Tag::formatTags($tags);              
-              $tagsSaved = Tag::saveTags($tags,$photo);
+            if (!empty($tags)) {           
+                $tags = Tag::formatTags($tags);              
+                $tagsSaved = Tag::saveTags($tags,$photo);
               
-            if(!$tagsSaved){ 
+                if(!$tagsSaved){ 
                   $photo->forceDelete();
                   $messages = array('tags'=>array('Inserir pelo menos uma tag'));                  
                   return Redirect::to('/photos/upload')->with(['tags' => $input['tags']])->withErrors($messages);                  
+                }
             }
-      }
 
-      $author = new Author();
-      if (!empty($input["work_authors"])) {
-          $author->saveAuthors($input["work_authors"],$photo);
-      }
+            $author = new Author();
+            if (!empty($input["work_authors"])) {
+                $author->saveAuthors($input["work_authors"],$photo);
+            }
+            $input['autoOpenModal'] = 'true';  
+            $source_page = $input["pageSource"]; //get url of the source page through form
+            ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $source_page, "Upload", "user");
+            ActionUser::printTags($photo->user_id, $photo->id, $tags_copy, $source_page, "user", "Inseriu");
+
+            if(array_key_exists('rotate', $input))
+              $angle = (float)$input['rotate'];
+            else
+              $angle = 0;
+            $metadata       = Image::make(Input::file('photo'))->exif();
+            $public_image   = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80);
+            $original_image = Image::make(Input::file('photo'))->rotate($angle);
+
+            $public_image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
+            $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg');
+            $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
+            $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
+            $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
+
+            $photo->saveMetadata(strtolower($ext), $metadata);
+            $input['photoId'] = $photo->id;
+            $input['dates'] = true;
+            $input['dateImage'] = true;
             
-      $input['autoOpenModal'] = 'true';  
-      $source_page = $input["pageSource"]; //get url of the source page through form
-      ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $source_page, "Upload", "user");
-      ActionUser::printTags($photo->user_id, $photo->id, $tags_copy, $source_page, "user", "Inseriu");
+            Event::fire('photo.newPhoto',$photo);
+            
+            return Redirect::back()->withInput($input);
 
-      if(array_key_exists('rotate', $input))
-          $angle = (float)$input['rotate'];
-      else
-          $angle = 0;
-      $metadata       = Image::make(Input::file('photo'))->exif();
-      $public_image   = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80);
-      $original_image = Image::make(Input::file('photo'))->rotate($angle);
-
-      $public_image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
-      $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg');
-      $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
-      $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
-      $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
-
-      $photo->saveMetadata(strtolower($ext), $metadata);
-      $input['photoId'] = $photo->id;
-      $input['dates'] = true;
-      $input['dateImage'] = true;
-      //return Redirect::to("/photos/{$photo->id}");
-      foreach(Auth::user()->followers as $users) {
-        foreach ($users->news as $note) {
-          if($note->news_type == 'new_photo' && $note->sender_id == Auth::user()->id) {
-              $curr_note = $note;
-            }
-        }
-        if(isset($curr_note)) {
-          $date = $curr_note->created_at;
-          if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
-            News::create(array('object_type' => 'Photo', 
-                           'object_id' => $photo->id, 
-                           'user_id' => $users->id, 
-                           'sender_id' => Auth::user()->id, 
-                           'news_type' => 'new_photo'));
-          }
-          else {
-            $curr_note->object_id = $photo->id;
-            $curr_note->save();
-          }
-        }
-        else {
-          News::create(array('object_type' => 'Photo', 
-                             'object_id' => $photo->id, 
-                             'user_id' => $users->id, 
-                             'sender_id' => Auth::user()->id, 
-                             'news_type' => 'new_photo'));
+        } else {
+            $messages = $validator->messages();
+            return Redirect::to('/photos/upload')->withErrors($messages);
         }
       }
-      return Redirect::back()->withInput($input);
-
-    } else {
-    $messages = $validator->messages();
-      return Redirect::to('/photos/upload')->withErrors($messages);
-    }
- }
   }
   // ORIGINAL
   public function download($id)
@@ -833,32 +804,8 @@ class PhotosController extends \BaseController {
 
         /*News feed*/
         $user = User::find($photo->user_id);
-        foreach ($user->followers as $users) {
-          foreach ($users->news as $note) {
-            if($note->news_type == 'edited_photo' && $note->sender_id == $user->id) {
-              $curr_note = $note;
-            }
-          }
-          if(isset($curr_note)) {
-            if($note->sender_id == $user->id) {
-              $date = $curr_note->created_at;
-              if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
-                News::create(array('object_type' => 'Photo', 
-                                   'object_id' => $id, 
-                                   'user_id' => $users->id, 
-                                   'sender_id' => $user->id, 
-                                   'news_type' => 'edited_photo'));
-              }
-            }
-          }
-          else {
-              News::create(array('object_type' => 'Photo', 
-                                 'object_id' => $id, 
-                                 'user_id' => $users->id, 
-                                 'sender_id' => $user->id, 
-                                 'news_type' => 'edited_photo'));
-          }
-        }
+        Event::fire('photo.updatePhoto', array($user, $photo));
+
         return Redirect::to("/photos/{$photo->id}")->with('message', '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso');
       }
   }
