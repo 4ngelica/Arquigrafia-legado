@@ -15,5 +15,7 @@ Route::get('/dislike/{id}', 'modules\collaborative\controllers\LikesController@p
 Route::resource('/likes','modules\collaborative\controllers\LikesController');
 /*LIKE DISLIKE of COMMENT*/
 
- 
+/*EVENTS */
+Event::subscribe('modules\collaborative\subscriber\LikeSubscriber');
+Event::subscribe('modules\collaborative\subscriber\CommentSubscriber');
 
