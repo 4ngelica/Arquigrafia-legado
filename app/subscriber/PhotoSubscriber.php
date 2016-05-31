@@ -4,6 +4,7 @@ use User;
 use News;
 use Auth;
 use Carbon\Carbon; 
+
 class PhotoSubscriber
 {
 	public function onNewPhoto($photo)
@@ -60,8 +61,8 @@ class PhotoSubscriber
         }
 	}	
 
-
-	public function saveOnNews($objectType, $objectId,$userId,$senderId,$type){
+	public function saveOnNews($objectType, $objectId,$userId,$senderId,$type)
+  {
 		$news = new News();
 		$news->object_type = $objectType;
 		$news->object_id = $objectId;

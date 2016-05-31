@@ -208,20 +208,20 @@ class UsersController extends \BaseController {
   public function loginForm()
   { 
     if (Auth::check())
-      return Redirect::to('/');
+        return Redirect::to('/');
 
     session_start();
     $fb_config = Config::get('facebook');
     FacebookSession::setDefaultApplication($fb_config["id"], $fb_config["secret"]);
     $helper = new FacebookRedirectLoginHelper(url('/users/login/fb/callback'));
     $fburl = $helper->getLoginUrl(array(
-        'scope' => 'email',
+          'scope' => 'email',
     ));
       
     $institutions = Institution::institutionsList();
 
     if (!Session::has('filter.login') && !Session::has('login.message')) //nao foi acionado pelo filtro, retornar para pagina anterior
-      Session::put('url.previous', URL::previous());
+         Session::put('url.previous', URL::previous());
     
     return View::make('/modal/login')->with(['fburl' => $fburl,'institutions' => $institutions]);
   }
@@ -442,9 +442,7 @@ class UsersController extends \BaseController {
       }
       }
             
-    }
-    
-    
+    } 
   }
 
   public function getFacebookPicture() {
@@ -458,32 +456,8 @@ class UsersController extends \BaseController {
         fclose($file);
         $user->photo = '/arquigrafia-avatars/'.$user->id.'.jpg';
         $user->save();
-        foreach ($user->followers as $users) {
-          foreach ($users->news as $note) {
-            if($note->news_type == 'new_profile_picture') {
-              $curr_note = $note;
-            }
-          }
-          if(isset($curr_note)) {
-            if($note->sender_id == $user->id) {
-              $date = $note->created_at;
-              if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {
-                News::create(array('object_type' => 'User', 
-                                   'object_id' => $user->id, 
-                                   'user_id' => $users->id, 
-                                   'sender_id' => $user->id, 
-                                   'news_type' => 'new_profile_picture'));
-              }
-            }
-          }
-          else {
-              News::create(array('object_type' => 'User', 
-                                 'object_id' => $user->id, 
-                                 'user_id' => $users->id, 
-                                 'sender_id' => $user->id, 
-                                 'news_type' => 'new_profile_picture'));
-            }
-        }
+
+        Event::fire('user.newProfileFacebookPicture',[$user]); 
       }
     }
     return $user->photo;
@@ -667,7 +641,7 @@ class UsersController extends \BaseController {
         $image = Image::make(Input::file('photo'))->encode('jpg', 80);         
         $image->save(public_path().'/arquigrafia-avatars/'.$user->id.'.jpg');
         $file->move(public_path().'/arquigrafia-avatars', $user->id."_original.".strtolower($ext)); 
-        Log::info('perfil');
+        
         Event::fire('user.newProfilePicture',[$user]);
       
       } 
@@ -699,6 +673,7 @@ class UsersController extends \BaseController {
   }
 
   public function institutionalLogin() { 
+    Log::info("Login Institution");
     $login = Input::get('login');    
     $institutionId = Input::get('institution');
     $password = Input::get('password');
@@ -707,16 +682,15 @@ class UsersController extends \BaseController {
     Log::info("Result belong institution -> booleanExist=".$booleanExist);
 
     if ((Auth::attempt(array('login' => $login, 'password' => $password)) == true || 
-      Auth::attempt(array('email' => $login, 'password' => $password,'active' => 'yes')) == true) &&
-      $booleanExist == true){
-      $displayedInstitutionName = null;
-      $institution = Institution::find($institutionId);      
-      $displayedInstitutionName = HelpTool::formattingLongText($institution->name, $institution->acronym, 25);
-      Log::info("Valid access, redirect");
-      Session::put('institutionId', $institutionId);
-      Session::put('displayInstitution', $displayedInstitutionName);
-            
-      return Redirect::to('/');
+        Auth::attempt(array('email' => $login, 'password' => $password,'active' => 'yes')) == true) &&
+        $booleanExist == true){
+        $displayedInstitutionName = null;
+        $institution = Institution::find($institutionId);      
+        $displayedInstitutionName = HelpTool::formattingLongText($institution->name, $institution->acronym, 25);
+        Log::info("Valid access, redirect");
+        Session::put('institutionId', $institutionId);
+        Session::put('displayInstitution', $displayedInstitutionName);             
+        return Redirect::to('/');
     } else {
       Log::info("Invalid access, return message");
       return Response::json(false);

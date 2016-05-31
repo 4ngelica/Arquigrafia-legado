@@ -50,24 +50,42 @@ class UserSubscriber
 
 	}
 
+  public function onGetFacebookPicture($user)
+  {
+      foreach ($user->followers as $users) {
+          foreach ($users->news as $note) {
+            if($note->news_type == 'new_profile_picture') {
+              $curr_note = $note;
+            }
+          }
+          if(isset($curr_note)) {
+            if($note->sender_id == $user->id) {
+              $date = $note->created_at;
+              if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {                   
+                  Static::saveNewsRelatedUser('User', $user->id, $users->id, $user->id,'new_profile_picture');    
+              }
+            }
+          } else {
+              Static::saveNewsRelatedUser('User', $user->id, $users->id, $user->id,'new_profile_picture');
+             
+          }
+      }
+  }
 
-	public function saveNewsRelatedUser($objectType, $photo, $user, $type){
-		$news = new News();
-		$news->object_type = $objectType;
-		$news->object_id = $user->id;
-		$news->user_id = $user->id;
-		$news->sender_id =$user->id;
-		$news->news_type = $type;
-		$news->save();
-	}
+  public function saveNewsRelatedUser($objectType, $objectId, $userId, $senderId, $type){
+    $news = new News();
+    $news->object_type = $objectType;
+    $news->object_id = $objectId;
+    $news->user_id = $userId;
+    $news->sender_id =$senderId;
+    $news->news_type = $type;
+    $news->save();
+  }
 
 	public function subscribe($events){
 		$events->listen('user.newProfilePicture','subscriber\UserSubscriber@onNewProfilePicture');
 		$events->listen('user.updateProfile','subscriber\UserSubscriber@onUpdateProfile');
-
-
-
-
+    $events->listen('user.newProfileFacebookPicture','subscriber\UserSubscriber@onGetFacebookPicture');
 
 	}
 
