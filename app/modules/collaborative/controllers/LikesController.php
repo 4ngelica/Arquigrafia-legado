@@ -2,14 +2,14 @@
 use modules\collaborative\models\Like;
 use modules\collaborative\models\Comment;
 use lib\utils\ActionUser;
-
+use modules\news\models\News as News;
 use modules\gamification\models\Badge;
 use Notification;
 use Carbon\Carbon;
 
 class LikesController extends \BaseController {
 
-  public function photolike($id) {
+  public function photoLike($id) {
 
     $photo = \Photo::find($id);
     $user = \Auth::user();
@@ -101,7 +101,7 @@ class LikesController extends \BaseController {
     ]);
   }
 
-  public function photodislike($id) {
+  public function photoDislike($id) {
     $photo = \Photo::find($id);
     $user = \Auth::user();
     $this->logLikeDislike($user, $photo, "a foto", "Descurtiu", "user");

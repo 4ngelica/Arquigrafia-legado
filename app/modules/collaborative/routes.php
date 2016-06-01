@@ -10,8 +10,8 @@ Route::get('/comments/{comment_id}/dislike','modules\collaborative\controllers\C
 Route::resource('/comments','modules\collaborative\controllers\CommentsController');
 
 /* LIKE E DISLIKE */
-Route::get('/like/{id}', 'modules\collaborative\controllers\LikesController@photolike');
-Route::get('/dislike/{id}', 'modules\collaborative\controllers\LikesController@photodislike');
+Route::get('/like/{id}', 'modules\collaborative\controllers\LikesController@photoLike');
+Route::get('/dislike/{id}', 'modules\collaborative\controllers\LikesController@photoDislike');
 Route::resource('/likes','modules\collaborative\controllers\LikesController');
 /*LIKE DISLIKE of COMMENT*/
 

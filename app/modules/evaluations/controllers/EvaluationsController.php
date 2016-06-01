@@ -2,11 +2,11 @@
 namespace modules\evaluations\controllers;
 use modules\evaluations\models\Evaluation;
 use modules\evaluations\models\Binomial;
+use modules\news\models\News as News;
 use lib\utils\ActionUser;
 use Session;  
 use Auth;
 use Photo;
-use News;
 use Carbon\Carbon;
 use View;
 use Input;
@@ -17,17 +17,19 @@ class EvaluationsController extends \BaseController {
 
 
 	public function index()
-	{
+	{ 
     $evaluation = Evaluation::all();
     return $evaluation;
 	}
 
 
 	public function show($id)
-	{ return \Redirect::to('/');
+	{ 
+      return \Redirect::to('/');
 	}
 
-  public function evaluate($photoId ) {
+  public function evaluate($photoId ) 
+  {
       if (Session::has('institutionId') ) {
         return \Redirect::to('/');
       }
@@ -47,8 +49,9 @@ class EvaluationsController extends \BaseController {
 
 
 
-   public function viewEvaluation($photoId, $userId ) { 
-    return static::getEvaluation($photoId, $userId, false);
+   public function viewEvaluation($photoId, $userId) 
+   { 
+      return static::getEvaluation($photoId, $userId, false);
    }      
 
    public function showSimilarAverage($photoId) {
@@ -83,8 +86,10 @@ class EvaluationsController extends \BaseController {
      }
      if ($userId != null) {
         $averageAndEvaluations= Evaluation::averageAndUserEvaluation($photo->id,$userId);
-        $evaluations =  Evaluation::where("user_id",
-        $user->id)->where("photo_id", $photo->id)->orderBy("binomial_id", "asc")->get();
+        $evaluations =  Evaluation::where("user_id",$user->id)
+                                  ->where("photo_id", $photo->id)
+                                  ->orderBy("binomial_id", "asc")->get();
+
         $checkedKnowArchitecture= Evaluation::userKnowsArchitecture($photoId,$userId);
         $checkedAreArchitecture= Evaluation::userAreArchitecture($photoId,$userId);
      }    
@@ -117,16 +122,9 @@ class EvaluationsController extends \BaseController {
     //
   }
 
-  /** Store a newly created resource in storage.
-   * @return Response
-   */
-  public function store()
-  {
-    //
-  }
   
-  //saveEvaluation($id)
-  public function saveEvaluation($id)
+   /** saveEvaluation($id) */
+  public function store($id)
   {
       if (Auth::check()) {
           $evaluations =  Evaluation::where("user_id", Auth::id())->where("photo_id", $id)->get();
@@ -167,69 +165,7 @@ class EvaluationsController extends \BaseController {
                   ]);
                 $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
               }
-              /* News feed */
-              $user = Auth::user();
-              foreach ($user->followers as $users) {
-                foreach ($users->news as $news) {
-                  if ($news->news_type == 'evaluated_photo' && $news->object_id == $id) {
-                      $last_news = $news;
-                      $primary = 'evaluated_photo';
-                  }else if ($news->news_type == 'liked_photo' || $news->news_type == 'commented_photo') {
-                      if ($news->object_id == $id) {
-                          $last_news = $news;
-                          $primary = 'other';
-                      }else {
-                        $comment = Comment::find($news->object_id);
-                        if(!is_null($comment)) {
-                          if ($comment->photo_id == $id) {
-                                $last_news = $news;
-                                $primary = 'other';
-                           }
-                        }
-                      }
-                  }
-                }  //End for of news
-                if (isset($last_news)) {
-                    $last_update = $last_news->updated_at;
-                    if($last_update->diffInDays(Carbon::now('America/Sao_Paulo')) < 7) {
-                        if ($news->sender_id == $user->id) {
-                            $already_sent = true;
-                        }else if ($news->data != null) {
-                            $data = explode(":", $news->data);
-                          for($i = 1; $i < count($data); $i++) {
-                              if($data[$i] == $user->id) {
-                                  $already_sent = true;
-                              }
-                          }
-                        }
-                        if (!isset($already_sent)) {
-                            $data = $last_news->data . ":" . $user->id;
-                            $last_news->data = $data;
-                            $last_news->save();
-                        }
-                        if ($primary == 'other') {
-                            if ($last_news->secondary_type == null) {
-                                $last_news->secondary_type = 'evaluated_photo';
-                            }else if ($last_news->tertiary_type == null) {
-                                $last_news->tertiary_type = 'evaluated_photo';
-                            }
-                            $last_news->save();
-                        }
-                    }else {
-                          News::create(array('object_type' => 'Photo', 
-                            'object_id' => $id, 
-                            'user_id' => $users->id, 
-                            'sender_id' => $user->id, 
-                            'news_type' => 'evaluated_photo'));
-                    }  
-                }else {
-                      News::create(array('object_type' => 'Photo', 
-                          'object_id' => $id, 
-                          'user_id' => $users->id, 
-                          'sender_id' => $user->id, 
-                          'news_type' => 'evaluated_photo'));
-                }
-              }  //End For Followers
+            
           }else { 
               $insertion_edition = "Editou";
               foreach ($evaluations as $evaluation) {
