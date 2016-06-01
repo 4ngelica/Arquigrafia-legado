@@ -1,5 +1,6 @@
 <?php
 namespace modules\collaborative\controllers;
+
 use modules\collaborative\models\Comment;
 use modules\collaborative\models\Like;
 use lib\date\Date;
@@ -45,7 +46,9 @@ class CommentsController extends \BaseController {
         ActionUser::printComment($user->id, $source_page, "Inseriu", $comment->id, $id, "user");
       
         /*Envio de notificação*/
-        Event::fire('comment.create', array($user));
+        
+        \Event::fire('comment.create', array($user, $photo));
+        
 
         /*News feed*/
         foreach ($user->followers as $users) {
@@ -120,15 +123,11 @@ class CommentsController extends \BaseController {
   }
 
   public function commentLike($id) {
-
     $comment = Comment::find($id);
     $user = Auth::user();
-    $this->logLikeDislikeComment($user, $comment, "o comentário", "Curtiu", "user");
+
+    \Event::fire('comment.liked', array($user, $comment));
     
-    if ($user->id != $comment->user_id) {
-        $user_note = User::find($comment->user_id);
-        Notification::create('comment_liked', $user, $comment, [$user_note], null);
-    }
     $like = Like::getFirstOrCreate($comment, $user);
     if (is_null($comment)) {
       return \Response::json('fail');
@@ -138,17 +137,14 @@ class CommentsController extends \BaseController {
       'likes_count' => $comment->likes->count()]);
   }
 
-  public function commentdislike($id) {
+  public function commentDislike($id) {
     $comment = Comment::find($id);
     $user = Auth::user();
+
+    \Event::fire('comment.disliked', array($user, $comment));
+
     $source_page = \Request::header('referer');
-    $this->logLikeDislikeComment($user, $comment, "o comentário", "Descurtiu", "user");
-    try {
-      $like = Like::fromUser($user)->withLikable($comment)->first();
-      $like->delete();
-    } catch (Exception $e) {
-      //
-    }
+    
     if (is_null($comment)) {
       return \Response::json('fail');
     }

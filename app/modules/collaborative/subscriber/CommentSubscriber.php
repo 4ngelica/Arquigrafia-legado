@@ -1,11 +1,13 @@
 <?php
 namespace modules\collaborative\subscriber;
 use Users;
-use Comments;
+use modules\collaborative\models\Comment;
+use modules\collaborative\controllers\CommentsCntroller;
 
 class CommentSubscriber {
 
-	public function onCommentCreate($user){
+	public function onCommentCreate($user, $photo){
+        //notification
 		if ($user->id != $photo->user_id) { 
             $user_note = User::find($photo->user_id);
             foreach ($user_note->notifications as $notification) {
@@ -35,6 +37,6 @@ class CommentSubscriber {
 	}
 
 	public function subscribe($events){
-		$events->listen('comment.create', 'modules\collaborative\suvscriber\CommentSubscriber@onCommentCreate');
+		$events->listen('comment.create', 'modules\collaborative\subscriber\CommentSubscriber@onCommentCreate');
 	}
 }
