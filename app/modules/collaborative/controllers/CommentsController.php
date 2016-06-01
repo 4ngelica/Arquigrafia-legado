@@ -90,14 +90,14 @@ class CommentsController extends \BaseController {
                         $last_news->save();
                     }
                 } else {
-                    \News::create(array('object_type' => 'Comment', 
+                    News::create(array('object_type' => 'Comment', 
                                'object_id' => $comment->id, 
                                'user_id' => $users->id, 
                                'sender_id' => $user->id, 
                                'news_type' => 'commented_photo'));
                 }
             }else {
-                \News::create(array('object_type' => 'Comment', 
+                News::create(array('object_type' => 'Comment', 
                              'object_id' => $comment->id, 
                              'user_id' => $users->id, 
                              'sender_id' => $user->id, 

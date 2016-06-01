@@ -9,7 +9,7 @@
 
   Evaluation::created (function ($evaluation) {
     $min_id = Binomial::orderBy('id', 'asc')->first();
-    if ( $evaluation == $min_id ) {
+    if ( $evaluation->binomial_id == $min_id->id ) {
       Leaderboard::increaseUserScore($evaluation->user_id, 'evaluations');
     }
   });
