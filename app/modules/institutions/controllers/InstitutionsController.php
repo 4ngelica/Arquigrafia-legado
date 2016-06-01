@@ -312,24 +312,8 @@ class InstitutionsController extends \BaseController {
         $photo->saveMetadata(strtolower($ext), $metadata);
         //ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "UploadInstitutional", "user");
         //ActionUser::printTags($photo->user_id, $photo->id, $tagsCopy, $sourcePage, "user", "Inseriu");
-        /* Feed de notícias para todos os usuários */
-          $institutional_news = \DB::table('news')->where('user_id', '=', 0)->where('news_type', '=', 'new_institutional_photo')->get();
-          foreach ($institutional_news as $note) {
-          if($note->news_type == 'new_institutional_photo' && $note->sender_id == Session::get('institutionId')) {
-              $curr_note = $note;
-            }
-          }
-          if(isset($curr_note)) {
-            \DB::table('news')->where('id', $curr_note->id)->update(array('object_id' => $photo->id, 'updated_at' => Carbon::now('America/Sao_Paulo')));
-          }
-          else {
-            News::create(array('object_type' => 'Photo',
-                               'object_id' => $photo->id,
-                               'user_id' => 0,
-                               'sender_id' => $photo->institution_id,
-                               'news_type' => 'new_institutional_photo'
-            ));
-          }
+        
+          
       } else {
         $messages = $validator->messages();
         return \Redirect::to('/institutions/form/upload')

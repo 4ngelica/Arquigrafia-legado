@@ -86,6 +86,7 @@ class UserSubscriber
 		$events->listen('user.newProfilePicture','subscriber\UserSubscriber@onNewProfilePicture');
 		$events->listen('user.updateProfile','subscriber\UserSubscriber@onUpdateProfile');
     $events->listen('user.newProfileFacebookPicture','subscriber\UserSubscriber@onGetFacebookPicture');
+    
 
 	}
 

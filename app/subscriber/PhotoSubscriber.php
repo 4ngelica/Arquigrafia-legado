@@ -19,30 +19,22 @@ class PhotoSubscriber
                 if(isset($curr_note)) {
                     $date = $curr_note->created_at;
                     if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 0) {						
-						Static::saveOnNews('Photo', $photo->id,$users->id,Auth::user()->id,'new_photo');
-                        \Log::info("if-newfoto");                       
+						            Static::saveOnNews('Photo', $photo->id,$users->id,Auth::user()->id,'new_photo');
+                        
                     }else {
                       $curr_note->object_id = $photo->id;
                       $curr_note->save();
-                      \Log::info("else-newfoto");
+                      
                     }
                 }else {
                 	Static::saveOnNews('Photo', $photo->id,$users->id,Auth::user()->id,'new_photo');
-                    \Log::info("elseIsset-newfoto");
+                    
                 }
         }
-		/*$news = new News();
-	 News::create(array('object_type' => 'Photo',
-'object_id' => $photo->id,
-'user_id' => $users->id,
-'sender_id' => Auth::user()->id,
-'news_type' => 'new_photo'));
-} */
 	}
 
 	public function onUpdatePhoto($user, $photo)
-	{  \Log::info('onNewPhoto'.$user->name.'onNew'.$photo->name);
-		\Log::info(Carbon::now('America/Sao_Paulo'));
+	{ 
 		foreach ($user->followers as $users) {
           	foreach ($users->news as $note) {
             	if($note->news_type == 'edited_photo' && $note->sender_id == $user->id) {
