@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 class LikesController extends \BaseController {
 
-  public function photolike($id) {
+  public function photoLike($id) {
 
     $photo = \Photo::find($id);
     $user = \Auth::user();
@@ -101,16 +101,12 @@ class LikesController extends \BaseController {
     ]);
   }
 
-  public function photodislike($id) {
+  public function photoDislike($id) {
     $photo = \Photo::find($id);
     $user = \Auth::user();
-    $this->logLikeDislike($user, $photo, "a foto", "Descurtiu", "user");
-    try {
-      $like = Like::fromUser($user)->withLikable($photo)->first();
-      $like->delete();
-    } catch (Exception $e) {
-      //
-    }
+
+    \Event::fire('photo.dislike', array($user, $photo));
+
     if (is_null($photo)) {
       return \Response::json('fail');
     }
