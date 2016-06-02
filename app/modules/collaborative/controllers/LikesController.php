@@ -74,7 +74,7 @@ class LikesController extends \BaseController {
             }
           }
           else {
-            \News::create(array('object_type' => 'Photo', 
+            News::create(array('object_type' => 'Photo', 
                                 'object_id' => $id, 
                                 'user_id' => $users->id, 
                                 'sender_id' => $user->id, 
@@ -82,7 +82,7 @@ class LikesController extends \BaseController {
           }
         }
         else {
-          \News::create(array('object_type' => 'Photo', 
+          News::create(array('object_type' => 'Photo', 
                               'object_id' => $id, 
                               'user_id' => $users->id, 
                               'sender_id' => $user->id, 
