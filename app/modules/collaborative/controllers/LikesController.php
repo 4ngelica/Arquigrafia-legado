@@ -16,6 +16,9 @@ class LikesController extends \BaseController {
     if (is_null($photo)) {
       return \Response::json('fail');
     }
+
+    \Event::fire('photo.like', array($user, $photo));
+
     $this->logLikeDislike($user, $photo, "a foto", "Curtiu", "user");
     if ($user->id != $photo->user_id) {
       $user_note = \User::find($photo->user_id);
@@ -89,12 +92,9 @@ class LikesController extends \BaseController {
                               'news_type' => 'liked_photo'));
         }
       }
-      \Notification::create('photo_liked', $user, $photo, [$user_note], null);
     }
     $like = Like::getFirstOrCreate($photo, $user);
-    if ( ($badge = Badge::getDestaqueDaSemana($photo)) ) {
-      \Notification::create('badge_earned', $user, $badge, [$photo->user], null);
-    }
+    
     return \Response::json([ 
       'url' => \URL::to('/dislike/' . $photo->id),
       'likes_count' => $photo->likes->count()
@@ -106,6 +106,8 @@ class LikesController extends \BaseController {
     $user = \Auth::user();
 
     \Event::fire('photo.dislike', array($user, $photo));
+
+    $this->logLikeDislike($user, $photo, "a foto", "Descurtiu", "user");
 
     if (is_null($photo)) {
       return \Response::json('fail');
