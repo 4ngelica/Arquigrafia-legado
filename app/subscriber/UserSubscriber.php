@@ -2,26 +2,13 @@
 namespace subscriber;
 use User;
 use News;
-<<<<<<< HEAD
 use Notifications;
-
-=======
 use Carbon\Carbon; 
->>>>>>> 9fa9b04... subscriber user and photos
+
 class UserSubscriber
 {	
 	public function onNewProfilePicture($user)
-<<<<<<< HEAD
-	{
-		\Log::info('NewProfilePicture'.$user->name);
-		$news = new News();
-		$news->object_type = 'User';
-		$news->object_id   = $user->id;
-		$news->user_id     = $user->id;
-		$news->sender_id   = $user->id;
-		$news->news_type   = 'new_profile_picture';
-		$news->save();
-=======
+
 	{	\Log::info('NewProfilePicture'.$user->name);
 		foreach ($user->followers as $users) {
            foreach ($users->news as $note) {
@@ -40,7 +27,6 @@ class UserSubscriber
                  Static::saveNewsRelatedUser('User', null, $user,'new_profile_picture');
            }
         }  
->>>>>>> 9fa9b04... subscriber user and photos
 	}
 
 	public function onUpdateProfile($user)
@@ -89,25 +75,6 @@ class UserSubscriber
       }
   }
 
-<<<<<<< HEAD
-	public function saveNewsRelatedUser($objectType, $photo, $user, $type){
-		$news = new News();
-<<<<<<< HEAD
-		$news->object_type = 'User';
-		$news->object_id   = $user->id;
-		$news->user_id     = $user->id;
-		$news->sender_id   = $user->id;
-		$news->news_type   = 'edited_profile';
-=======
-		$news->object_type = $objectType;
-		$news->object_id = $user->id;
-		$news->user_id = $user->id;
-		$news->sender_id =$user->id;
-		$news->news_type = $type;
->>>>>>> 9fa9b04... subscriber user and photos
-		$news->save();
-	}
-=======
   public function saveNewsRelatedUser($objectType, $objectId, $userId, $senderId, $type){
     $news = new News();
     $news->object_type = $objectType;
@@ -117,7 +84,7 @@ class UserSubscriber
     $news->news_type = $type;
     $news->save();
   }
->>>>>>> cfb2f2f... add in subscriber to users
+
 
 	public function onUserFollowed($followingUserId, $followedUserId)
 	{
@@ -157,16 +124,9 @@ class UserSubscriber
 
 	public function subscribe($events){
 		$events->listen('user.newProfilePicture','subscriber\UserSubscriber@onNewProfilePicture');
-<<<<<<< HEAD
 		$events->listen('user.updateProfile'    ,'subscriber\UserSubscriber@onUpdateProfile');
 		$events->listen('user.followed'         ,'subscriber\UserSubscriber@onUserFollowed');
-
-
-
-=======
-		$events->listen('user.updateProfile','subscriber\UserSubscriber@onUpdateProfile');
     $events->listen('user.newProfileFacebookPicture','subscriber\UserSubscriber@onGetFacebookPicture');
->>>>>>> cfb2f2f... add in subscriber to users
 
 	}
 

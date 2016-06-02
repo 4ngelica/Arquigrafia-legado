@@ -92,4 +92,3 @@ require app_path().'/modules/collaborative/collaborative.php';
 require app_path().'/modules/evaluations/evaluations.php';
 require app_path().'/modules/notifications/notifications.php';
 require app_path().'/modules/gamification/gamification.php';
-//Event::subscribe('/subscriber/UserSubscriber');
