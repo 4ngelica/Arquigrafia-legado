@@ -2,12 +2,16 @@
 namespace subscriber;
 use User;
 use News;
+<<<<<<< HEAD
 use Notifications;
 
+=======
+use Carbon\Carbon; 
+>>>>>>> 9fa9b04... subscriber user and photos
 class UserSubscriber
-{	//editedProfile
-
+{	
 	public function onNewProfilePicture($user)
+<<<<<<< HEAD
 	{
 		\Log::info('NewProfilePicture'.$user->name);
 		$news = new News();
@@ -17,17 +21,68 @@ class UserSubscriber
 		$news->sender_id   = $user->id;
 		$news->news_type   = 'new_profile_picture';
 		$news->save();
+=======
+	{	\Log::info('NewProfilePicture'.$user->name);
+		foreach ($user->followers as $users) {
+           foreach ($users->news as $note) {
+              if($note->news_type == 'new_profile_picture' && $note->sender_id == $user->id) {
+                $curr_note = $note;
+              }
+           }
+           if(isset($curr_note)) {
+              if($note->sender_id == $user->id) {
+                $date = $curr_note->created_at;
+                if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {                 
+                  Static::saveNewsRelatedUser('User', null, $user,'new_profile_picture');
+                }
+             }
+           }else {
+                 Static::saveNewsRelatedUser('User', null, $user,'new_profile_picture');
+           }
+        }  
+>>>>>>> 9fa9b04... subscriber user and photos
 	}
 
 	public function onUpdateProfile($user)
 	{
 		\Log::info('edited_profile'.$user->name);
+		foreach ($user->followers as $users) {
+        	foreach ($users->news as $note) {
+            	if($note->news_type == 'edited_profile' && $note->sender_id == $user->id) {
+            		  $curr_note = $note;
+            	}
+          	}
+          	if(isset($curr_note)) {
+            	if($note->sender_id == $user->id) {
+              		$date = $curr_note->created_at;
+              		if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {                 
+                		Static::saveNewsRelatedUser('User', null, $user,'edited_profile');                 		
+              		}
+            	}
+          }
+          else {               
+              Static::saveNewsRelatedUser('User', null, $user,'edited_profile');
+            }
+        }
+
+	}
+
+
+	public function saveNewsRelatedUser($objectType, $photo, $user, $type){
 		$news = new News();
+<<<<<<< HEAD
 		$news->object_type = 'User';
 		$news->object_id   = $user->id;
 		$news->user_id     = $user->id;
 		$news->sender_id   = $user->id;
 		$news->news_type   = 'edited_profile';
+=======
+		$news->object_type = $objectType;
+		$news->object_id = $user->id;
+		$news->user_id = $user->id;
+		$news->sender_id =$user->id;
+		$news->news_type = $type;
+>>>>>>> 9fa9b04... subscriber user and photos
 		$news->save();
 	}
 
