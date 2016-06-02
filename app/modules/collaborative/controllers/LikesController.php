@@ -2,7 +2,7 @@
 use modules\collaborative\models\Like;
 use modules\collaborative\models\Comment;
 use lib\utils\ActionUser;
-
+use modules\news\models\News as News;
 use modules\gamification\models\Badge;
 use Notification;
 use Carbon\Carbon;

@@ -282,8 +282,8 @@
         <h3>Interpretação d{{$architectureName}} realizada por <a href="{{ URL::to("/users/".$owner->id) }}" id="name">{{$owner->name}}</a></h3> 
         @endif
 	       <br>
-         <!-- {{-- Form::open(array('url'=>'evaluations', 'files'=> false)) --}} -->
-         {{ Form::open(array('url' => "evaluations/{$photos->id}/saveEvaluation")) }} 
+         {{ Form::open(array('url'=>"evaluations/{$photos->id}", 'files'=> false)) }}
+         <!-- {{-- Form::open(array('url' => "evaluations/{$photos->id}/saveEvaluation")) --}} --> 
          
          @if (Auth::check() && $owner != null && $owner->id == Auth::user()->id && !Session::has('institutionId'))
          {{ Form::checkbox('knownArchitecture', 'yes', $checkedKnowArchitecture) }}
@@ -331,9 +331,10 @@
             <?php $count = $binomials->count() - 1; ?>
             @foreach($binomials->reverse() as $binomial)
               <?php
-                if ( isset($userEvaluations) && ! $userEvaluations->isEmpty() ) {
+                if ( isset($userEvaluations) && ! $userEvaluations->isEmpty() && $userEvaluations!=null) {
                   $userEvaluation = $userEvaluations->get($count);
-                  $diff = $userEvaluation->evaluationPosition;
+                  if($userEvaluations!=null)
+                   { $diff = $userEvaluation->evaluationPosition; }
                 } else {
                   $diff = $binomial->defaultValue;
                 }

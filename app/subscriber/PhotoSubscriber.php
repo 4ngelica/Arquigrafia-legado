@@ -1,8 +1,8 @@
 <?php
 namespace subscriber;
 use User;
-use News;
 use Auth;
+use modules\news\models\News as News;
 use Carbon\Carbon; 
 
 class PhotoSubscriber

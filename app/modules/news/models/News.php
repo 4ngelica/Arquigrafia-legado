@@ -1,7 +1,9 @@
 <?php
 namespace modules\news\models;
+use modules\collaborative\models\Comment as Comment;
 use User;
 use Log;
+use Auth;
 use \Session;
 use Illuminate\Support\Collection as Collection;
 use Carbon\Carbon; 
@@ -21,7 +23,6 @@ class News extends \Eloquent {
     	
         foreach ($institutional_news as $note) 
         {
-          Log::info("note-newType=".$note->news_type." sender_id=".$note->sender_id." int=".Session::get('institutionId') );
           if($note->news_type == $type && 
           	 $note->sender_id == Session::get('institutionId')) {
           		Log::info("enter");
@@ -29,20 +30,71 @@ class News extends \Eloquent {
             }
         }
         if(isset($curr_note)) {
-        	Log::info("updte");
-        	$currentNews = Static::specificNews($curr_note->id)->first();
-        	//dd($currentNews); 
+        	
+        	$currentNews = Static::specificNews($curr_note->id)->first();        	
         	$currentNews->updateCurrentNews($photo);
-            /*\DB::table('news')
-            ->where('id', $curr_note->id)
-            ->update(
-            	array('object_id' => $photo->id,
-             'updated_at' => Carbon::now('America/Sao_Paulo'))); */
         }else { 
-        	Log::info("creat");
         	Static::createNews('Photo',$photo->id,0,$photo->institution_id,$type);
         }
 
+    }
+
+    public static function registerPhotoEvaluated($evaluate,$type)
+    {
+        $user = Auth::user();
+        foreach ($user->followers as $users) {
+            foreach ($users->news as $news) {
+                if ($news->news_type == $type && $news->object_id == $evaluate->photo_id) {
+                      $last_news = $news;
+                      $primary = $type;
+                }else if ($news->news_type == 'liked_photo' || $news->news_type == 'commented_photo') {
+                    if ($news->object_id == $evaluate->photo_id) {
+                          $last_news = $news;
+                          $primary = 'other';
+                    }else {
+                        $comment = Comment::find($news->object_id);
+                        if(!is_null($comment)) {
+                          if ($comment->photo_id == $evaluate->photo_id) {
+                                $last_news = $news;
+                                $primary = 'other';
+                           }
+                        }
+                    }
+                }
+            }  
+            if (isset($last_news)) {
+                    $last_update = $last_news->updated_at;
+                    if($last_update->diffInDays(Carbon::now('America/Sao_Paulo')) < 7) {
+                        if ($news->sender_id == $user->id) {
+                            $already_sent = true;
+                        }else if ($news->data != null) {
+                            $data = explode(":", $news->data);
+                          for($i = 1; $i < count($data); $i++) {
+                              if($data[$i] == $user->id) {
+                                  $already_sent = true;
+                              }
+                          }
+                        }
+                        if (!isset($already_sent)) {
+                            $data = $last_news->data . ":" . $user->id;
+                            $last_news->data = $data;
+                            $last_news->save();
+                        }
+                        if ($primary == 'other') {
+                            if ($last_news->secondary_type == null) {
+                                $last_news->secondary_type = $type;
+                            }else if ($last_news->tertiary_type == null) {
+                                $last_news->tertiary_type = $type;
+                            }
+                            $last_news->save();
+                        }
+                    }else {
+                          Static::createNews('Photo',$evaluate->photo_id,$users->id,$user->id,$type);
+                    }  
+                }else {                       
+                      Static::createNews('Photo',$evaluate->photo_id,$users->id,$user->id,$type);
+                }
+              } 
     }
 
     public static function createNews($objectType, $objectId, $userId, $senderId, $type)
@@ -60,8 +112,7 @@ class News extends \Eloquent {
     {
     	$this->object_id = $photo->id;
         $this->updated_at = Carbon::now('America/Sao_Paulo');
-        $this->save();
-    	
+        $this->save();    	
     }
 
     public function scopeUser0NewsPhoto($query, $photo, $type) 
@@ -70,9 +121,8 @@ class News extends \Eloquent {
     }	
 
     public static function scopeSpecificNews($query, $currentId) 
-    {   //if ($news instanceof News) {
+    {   
 			return $query->where('id', '=', $currentId);
-		//} 
     }
 
     
