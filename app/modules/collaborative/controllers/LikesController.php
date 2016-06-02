@@ -16,15 +16,15 @@ class LikesController extends \BaseController {
     if (is_null($photo)) {
       return \Response::json('fail');
     }
+
+    \Event::fire('photo.like', array($user, $photo));
+
     $this->logLikeDislike($user, $photo, "a foto", "Curtiu", "user");
     if ($user->id != $photo->user_id) {
       $user_note = \User::find($photo->user_id);      
-      \Notification::create('photo_liked', $user, $photo, [$user_note], null);
     }
     $like = Like::getFirstOrCreate($photo, $user);
-    if ( ($badge = Badge::getDestaqueDaSemana($photo)) ) {
-      \Notification::create('badge_earned', $user, $badge, [$photo->user], null);
-    }
+    
     return \Response::json([ 
       'url' => \URL::to('/dislike/' . $photo->id),
       'likes_count' => $photo->likes->count()
@@ -35,7 +35,9 @@ class LikesController extends \BaseController {
     $photo = \Photo::find($id);
     $user = \Auth::user();
 
-   // \Event::fire('photo.dislike', array($user, $photo));
+    \Event::fire('photo.dislike', array($user, $photo));
+
+    $this->logLikeDislike($user, $photo, "a foto", "Descurtiu", "user");
 
     if (is_null($photo)) {
       return \Response::json('fail');
@@ -44,9 +46,6 @@ class LikesController extends \BaseController {
       'url' => \URL::to('/like/' . $photo->id),
       'likes_count' => $photo->likes->count()]);
   }
-
-
-
 
   private function logLikeDislike($user, $likable, $photo_or_comment, $like_or_dislike, $user_or_visitor) {
     $source_page = \Request::header('referer');

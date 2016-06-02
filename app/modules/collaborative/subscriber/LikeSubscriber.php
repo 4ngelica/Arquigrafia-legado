@@ -1,17 +1,23 @@
 <?php
 namespace modules\collaborative\subscriber;
 use Users;
-use Likes;
+use Notification;
+use modules\collaborative\models\Like;
+use modules\gamification\models\Badge;
 
 class LikeSubscriber {
 
-	public function onPhotoLiked($id) {
-		
-	    
-	}
+	public function onPhotoLiked($user, $photo) {
+		if ($user->id != $photo->user_id) {
+			Notification::create('photo_liked', $user, $photo, [$user_note], null);
+		}
+
+		if ( ($badge = Badge::getDestaqueDaSemana($photo)) ) {
+    		Notification::create('badge_earned', $user, $badge, [$photo->user], null);
+    	}
+    }
 
 	public function onPhotoDisliked($user, $photo){
-		$this->logLikeDislike($user, $photo, "a foto", "Descurtiu", "user");
 	    try {
 	      $like = Like::fromUser($user)->withLikable($photo)->first();
 	      $like->delete();
@@ -21,9 +27,6 @@ class LikeSubscriber {
 	}
 
 	public function onCommentLiked($user, $comment) {
-		
-	    $this->logLikeDislikeComment($user, $comment, "o comentário", "Curtiu", "user");
-    
 	    if ($user->id != $comment->user_id) {
 	        $user_note = User::find($comment->user_id);
 	        Notification::create('comment_liked', $user, $comment, [$user_note], null);
@@ -31,7 +34,6 @@ class LikeSubscriber {
 	}
 
 	public function onCommentDisliked($user, $comment) {
-		$this->logLikeDislikeComment($user, $comment, "o comentário", "Descurtiu", "user");
 	    try {
 	      $like = Like::fromUser($user)->withLikable($comment)->first();
 	      $like->delete();
