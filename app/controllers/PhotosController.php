@@ -1123,7 +1123,7 @@ class PhotosController extends \BaseController {
   {
     if (Auth::check()) {
       $photo = Photo::find($id);
-      if(/*$photo->authorized*/true) {
+      if($photo->authorized) {
         $originalFileExtension = strtolower(substr(strrchr($photo->nome_arquivo, '.'), 1));
         $filename = $id . '_original.' . $originalFileExtension;
         $path = storage_path().'/original-images/'. $filename;
