@@ -18,77 +18,7 @@ class LikesController extends \BaseController {
     }
     $this->logLikeDislike($user, $photo, "a foto", "Curtiu", "user");
     if ($user->id != $photo->user_id) {
-      $user_note = \User::find($photo->user_id);
-      /*News feed*/
-      foreach ($user->followers as $users) {
-        foreach ($users->news as $news) {
-          if ($news->news_type == 'liked_photo') {
-            if ($news->object_id == $id) {
-              $last_news = $news;
-              $primary = 'liked_photo';
-            }
-          }
-          else if ($news->news_type == 'evaluated_photo') {
-            if ($news->object_id == $id) {
-              $last_news = $news;
-              $primary = 'other';
-            }
-          }
-          else if ($news->news_type == 'commented_photo') {
-            $comment = Comment::find($news->object_id);
-            if(!is_null($comment)) {
-              if ($comment->photo_id == $id) {
-                $last_news = $news;
-                $primary = 'other';
-              }
-            }
-          }
-        }
-        if (isset($last_news)) {
-          $last_update = $last_news->updated_at;
-          if($last_update->diffInDays(Carbon::now('America/Sao_Paulo')) < 7) {
-            if ($news->sender_id == $user->id) {
-              $already_sent = true;
-            }
-            else if ($news->data != null) {
-              $data = explode(":", $news->data);
-              for($i = 1; $i < count($data); $i++) {
-                if($data[$i] == $user->id) {
-                  $already_sent = true;
-                }
-              }
-            }
-            if (!isset($already_sent)) {
-              $data = $last_news->data . ":" . $user->id;
-              $last_news->data = $data;
-              $last_news->save();
-            }
-            if ($primary == 'other') {
-              if ($last_news->secondary_type == null) {
-                $last_news->secondary_type = 'liked_photo';
-              }
-              else if ($last_news->tertiary_type == null) {
-                $last_news->tertiary_type = 'liked_photo';
-              }
-              $last_news->save();
-            }
-          }
-          else {
-            News::create(array('object_type' => 'Photo', 
-                                'object_id' => $id, 
-                                'user_id' => $users->id, 
-                                'sender_id' => $user->id, 
-                                'news_type' => 'liked_photo'));
-          }
-        }
-        else {
-          News::create(array('object_type' => 'Photo', 
-                              'object_id' => $id, 
-                              'user_id' => $users->id, 
-                              'sender_id' => $user->id, 
-                              'news_type' => 'liked_photo'));
-        }
-      }
+      $user_note = \User::find($photo->user_id);      
       \Notification::create('photo_liked', $user, $photo, [$user_note], null);
     }
     $like = Like::getFirstOrCreate($photo, $user);
@@ -105,7 +35,7 @@ class LikesController extends \BaseController {
     $photo = \Photo::find($id);
     $user = \Auth::user();
 
-    \Event::fire('photo.dislike', array($user, $photo));
+   // \Event::fire('photo.dislike', array($user, $photo));
 
     if (is_null($photo)) {
       return \Response::json('fail');

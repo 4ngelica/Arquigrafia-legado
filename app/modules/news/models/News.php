@@ -91,10 +91,75 @@ class News extends \Eloquent {
                     }else {
                           Static::createNews('Photo',$evaluate->photo_id,$users->id,$user->id,$type);
                     }  
-                }else {                       
+            }else {                       
                       Static::createNews('Photo',$evaluate->photo_id,$users->id,$user->id,$type);
+            }
+        } 
+    }
+
+    public static function eventLikedPhoto($likes, $type)
+    {
+        $user = Auth::user();
+        foreach ($user->followers as $users) {
+            foreach ($users->news as $news) {
+              if ($news->news_type == $type) {
+                if ($news->object_id == $likes->likable_id) {
+                  $last_news = $news;
+                  $primary = $type;
                 }
-              } 
+              }
+              else if ($news->news_type == $type) {
+                if ($news->object_id == $likes->likable_id) {
+                    $last_news = $news;
+                    $primary = 'other';
+                }
+              }
+              else if ($news->news_type == 'commented_photo') {
+                $comment = Comment::find($news->object_id);
+                if(!is_null($comment)) {
+                  if ($comment->photo_id == $likes->likable_id) {
+                    $last_news = $news;
+                    $primary = 'other';
+                  }
+                }
+              }
+            }
+        if (isset($last_news)) {
+            $last_update = $last_news->updated_at;
+              if($last_update->diffInDays(Carbon::now('America/Sao_Paulo')) < 7) {
+                if ($news->sender_id == $user->id) {
+                  $already_sent = true;
+                }
+                else if ($news->data != null) {
+                  $data = explode(":", $news->data);
+                  for($i = 1; $i < count($data); $i++) {
+                    if($data[$i] == $user->id) {
+                      $already_sent = true;
+                    }
+                  }
+                }
+                if (!isset($already_sent)) {
+                  $data = $last_news->data . ":" . $user->id;
+                  $last_news->data = $data;
+                  $last_news->save();
+                }
+                if ($primary == 'other') {
+                  if ($last_news->secondary_type == null) {
+                    $last_news->secondary_type = $type;
+                  }
+                  else if ($last_news->tertiary_type == null) {
+                    $last_news->tertiary_type = $type;
+                  }
+                  $last_news->save();
+                }
+              } else {
+                Static::createNews('Photo',$likes->likable_id,$users->id,$user->id,$type);                
+              }
+        }else {
+          Static::createNews('Photo',$likes->likable_id,$users->id,$user->id,$type);
+        }
+
+      }
     }
 
     public static function createNews($objectType, $objectId, $userId, $senderId, $type)
