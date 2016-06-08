@@ -560,8 +560,9 @@ class UsersController extends \BaseController {
         'login' => 'required',
         'email' => 'required|email',
         'user_password' => 'min:6|regex:/^[a-z0-9-@_]{6,10}$/|confirmed',        
-        'birthday' => 'date_format:"d/m/Y"'                  
-    );     
+        'birthday' => 'date_format:"d/m/Y"',
+        'photo' => 'max:2048|mimes:jpeg,jpg,png,gif'          
+    ); 
     if ($input['email'] !== $user->email)        
       $rules['email'] = 'required|email|unique:users';
 
@@ -625,11 +626,9 @@ class UsersController extends \BaseController {
         $image->save(public_path().'/arquigrafia-avatars/'.$user->id.'.jpg');
         $file->move(public_path().'/arquigrafia-avatars', $user->id."_original.".strtolower($ext)); 
         
-        Event::fire('user.newProfilePicture',[$user]);
       
-      } 
-      else {
-        Event::fire('user.updateProfile',[$user]);
+      } else {
+        
       }
       return Redirect::to("/users/{$user->id}")->with('message', '<strong>Edição de perfil do usuário</strong><br>Dados alterados com sucesso'); 
       

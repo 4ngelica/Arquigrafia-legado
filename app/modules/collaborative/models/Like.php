@@ -28,7 +28,8 @@ class Like extends \Eloquent {
 	}
 
 	public function scopeFromUser($query, $user) {
-		return $query->where('user_id', $user->id);
+		$a = $query->where('user_id', $user->id);		
+		return $a;
 	}
 
 	public function scopeWithLikable($query, $likable) {

@@ -3,6 +3,7 @@ namespace modules\collaborative\controllers;
 
 use modules\collaborative\models\Comment;
 use modules\collaborative\models\Like;
+use modules\gamification\models\Badge;
 use lib\date\Date;
 use lib\utils\ActionUser;
 use modules\news\models\News;
@@ -49,61 +50,7 @@ class CommentsController extends \BaseController {
         
         \Event::fire('comment.create', array($user, $photo));
         
-
-        /*News feed*/
-        foreach ($user->followers as $users) {
-            foreach ($users->news as $news) {  
-              if ($news->news_type == 'commented_photo' && Comment::find($news->object_id)->photo_id == $id) {
-                  $last_news = $news;
-                  $primary = 'commented_photo';
-              }else if ($news->news_type == 'evaluated_photo' || $news->news_type == 'liked_photo') {
-                if ($news->object_id == $id) {
-                  $last_news = $news;
-                  $primary = 'other';
-                }
-              }
-            }
-            if (isset($last_news)) {
-                $last_update = $last_news->updated_at;
-                if($last_update->diffInDays(Carbon::now('America/Sao_Paulo')) < 7) {
-                    if ($news->sender_id == $user->id) {
-                        $already_sent = true;
-                    }else if ($news->data != null) {
-                        $data = explode(":", $news->data);
-                        for($i = 1; $i < count($data); $i++) {
-                            if($data[$i] == $user->id) {
-                                $already_sent = true;
-                            }
-                        }
-                    }
-                    if (!isset($already_sent)) {
-                        $data = $last_news->data . ":" . $user->id;
-                        $last_news->data = $data;
-                        $last_news->save();
-                    }
-                    if ($primary == 'other') {
-                        if ($last_news->secondary_type == null) {
-                            $last_news->secondary_type = 'commented_photo';
-                        }else if ($last_news->tertiary_type == null) {
-                            $last_news->tertiary_type = 'commented_photo';
-                        }
-                        $last_news->save();
-                    }
-                } else {
-                    News::create(array('object_type' => 'Comment', 
-                               'object_id' => $comment->id, 
-                               'user_id' => $users->id, 
-                               'sender_id' => $user->id, 
-                               'news_type' => 'commented_photo'));
-                }
-            }else {
-                News::create(array('object_type' => 'Comment', 
-                             'object_id' => $comment->id, 
-                             'user_id' => $users->id, 
-                             'sender_id' => $user->id, 
-                             'news_type' => 'commented_photo'));
-            }
-        }  
+ 
         $this->checkCommentCount(5,'test');
         return \Redirect::to("/photos/{$id}");
       }
