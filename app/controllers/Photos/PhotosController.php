@@ -461,7 +461,7 @@ class PhotosController extends \BaseController {
             $input['dates'] = true;
             $input['dateImage'] = true;
             
-            Event::fire('photo.newPhoto',$photo);
+            
             
             return Redirect::back()->withInput($input);
 
@@ -778,7 +778,7 @@ class PhotosController extends \BaseController {
           $create = true;
         }else {
           list($photo_id, $ext) = explode(".", $photo->nome_arquivo);
-          $path                 = storage_path().'/original-images/'.$photo->id.'_original.'.$ext;
+          $path                 = storage_path().'/original-images/'.$photo->id.'_original.'.$ext;          
           $metadata             = Image::make($path)->exif();
 
           if (array_key_exists('rotate', $input) and ($input['rotate'] != 0)) {
@@ -804,7 +804,7 @@ class PhotosController extends \BaseController {
 
         /*News feed*/
         $user = User::find($photo->user_id);
-        Event::fire('photo.updatePhoto', array($user, $photo));
+        
 
         return Redirect::to("/photos/{$photo->id}")->with('message', '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso');
       }

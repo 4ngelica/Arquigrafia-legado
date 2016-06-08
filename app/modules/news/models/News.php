@@ -259,15 +259,60 @@ class News extends \Eloquent {
       }
   }
 
+  public static function eventNewPhoto($photo, $type)
+  {
+      foreach(Auth::user()->followers as $users) 
+      {
+          foreach ($users->news as $note) {
+            if($note->news_type == $type && $note->sender_id == Auth::user()->id) {
+              $curr_note = $note;
+            }
+          }
+          if(isset($curr_note)) {
+              $date = $curr_note->created_at;
+              if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {                                               
+                  Static::createNews('Photo', $photo->id,$users->id,Auth::user()->id,$type);               
+              }else {
+                $curr_note->object_id = $photo->id;
+                $curr_note->save();
+                
+              }
+          }else { 
+            Static::createNews('Photo', $photo->id,$users->id,Auth::user()->id,$type);              
+          }
+      }
+  }
+
+  public static function eventUpdatePhoto($photo, $type)
+  {
+      $user = User::find($photo->user_id);
+      foreach ($user->followers as $users) {
+          foreach ($users->news as $note) {
+            if($note->news_type == $type && $note->sender_id == $user->id) {
+                $curr_note = $note;
+            }
+          }
+          if(isset($curr_note)) {
+            if($note->sender_id == $user->id) {
+                $date = $curr_note->created_at;
+                if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7)  
+                    Static::createNews('Photo', $photo->id, $users->id, $user->id, $type);
+            }
+          }else {
+            Static::createNews('Photo', $photo->id, $users->id, $user->id, $type);
+          }
+      }
+  }
+
   public static function createNews($objectType, $objectId, $userId, $senderId, $type)
   {
 		$news = new News();
 		$news->object_type = $objectType;
-        $news->object_id = $objectId;
-        $news->user_id = $userId;
-        $news->sender_id = $senderId;
-        $news->news_type = $type;
-        $news->save();    
+    $news->object_id = $objectId;
+    $news->user_id = $userId;
+    $news->sender_id = $senderId;
+    $news->news_type = $type;
+    $news->save();    
 	}
 
   public function updateCurrentNews($photo)
