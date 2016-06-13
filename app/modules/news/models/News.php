@@ -304,6 +304,27 @@ class News extends \Eloquent {
       }
   }
 
+  public static function eventGetFacebookPicture($user, $type)
+  {
+      foreach ($user->followers as $users) {
+          foreach ($users->news as $note) {
+            if($note->news_type == $type) {
+              $curr_note = $note;
+            }
+          }
+          if(isset($curr_note)) {
+            if($note->sender_id == $user->id) {
+              $date = $note->created_at;
+              if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) { 
+                  Static::createNews('User', $user->id, $users->id, $user->id, $type);
+              }
+            }
+          } else {              
+              Static::createNews('User', $user->id, $users->id, $user->id, $type);
+          }
+      }
+  }
+
   public static function createNews($objectType, $objectId, $userId, $senderId, $type)
   {
 		$news = new News();

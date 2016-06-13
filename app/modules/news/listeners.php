@@ -8,13 +8,23 @@
   use modules\evaluations\models\Binomial as Binomial;
   use modules\institutions\models\Institution as Institution;
   use modules\institutions\models\Employee as Employee;
+
  
-  User::updated(function($user){
+  User::updated(function($user){       
       if(Input::hasFile('photo')){
     	   	News::eventNewPicture($user,'new_profile_picture'); 
     	}else{
     		  News::eventUpdateProfile($user,'edited_profile'); 
     	}
+  });
+
+  User::updating(function($user){
+      $user = User::find(1);
+      $results = $user->posts()->get();
+      //if(Input::has('btn_facebook')){
+        //  dd(Input::get('btn_facebook'));
+          //News::eventGetFacebookPicture($user,'new_profile_picture');
+      //}
   });
 
    /*modul gamifi */
@@ -23,6 +33,16 @@
   });
 
   /*modul gamifi  and institut*/
+  Photo::created (function ($photo) {
+    if (!$photo->hasInstitution() ) {
+        News::eventNewPhoto($photo, 'new_photo');
+        //gamifications
+        Leaderboard::increaseUserScore($photo->user_id, 'uploads');
+    }else{
+        //institutions
+        News::registerPhotoInstitutional($photo,'new_institutional_photo');
+    }
+  });
   
 
 //
@@ -41,6 +61,13 @@
   });
 
 //of gamification and binomial
+  Evaluation::created (function ($evaluation) {
+    $min_id = Binomial::orderBy('id', 'asc')->first();
+    if ( $evaluation->binomial_id == $min_id->id ) {
+      Leaderboard::increaseUserScore($evaluation->user_id, 'evaluations');
+      News::registerPhotoEvaluated($evaluation,'evaluated_photo'); 
+    }
+  });
 
   /*modules collaborative*/
   Like::created (function ($likes) { 
