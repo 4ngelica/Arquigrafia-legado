@@ -13,7 +13,7 @@
 @section('content')
 
   <div class="container">     
-    {{ Form::open(array('url'=>'users/' . $user->id, 'method' => 'put', 'files'=> true)) }}
+    {{ Form::open(array('url'=>'users/' . $user->id, 'method' => 'put', 'files'=> true, 'id'=>'frmEdit')) }}
     
     <div id="registration">
     
@@ -53,14 +53,22 @@
       </div>
 
       <script type="text/javascript">
-        function importPicture() {
-          alert("AA");
+        function importPicture() {          
           $.get("/getPicture")
             .done(function( data ) {
-               {
-                $('.profile-picture').attr('src', data);
-                alert(data);
-              }
+               {  var elementExists = document.getElementById("txtPicture");       
+                  if(elementExists == null){
+                      $('<input/>').attr({
+                      type:'hidden',
+                      name:'txtPicture',
+                      id:'txtPicture',
+                      value:'picture',
+                      readonly:'true' //,
+                      // disabled: 'true'
+                      }).appendTo('#frmEdit');
+                  } 
+                  $('.profile-picture').attr('src', data);                                     
+                }
             });
         }
       </script>

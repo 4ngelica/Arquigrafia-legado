@@ -456,8 +456,7 @@ class UsersController extends \BaseController {
         fclose($file);
         $user->photo = '/arquigrafia-avatars/'.$user->id.'.jpg';
         $user->save();
-
-        Event::fire('user.newProfileFacebookPicture',[$user]); 
+ 
       }
     }
     return $user->photo;

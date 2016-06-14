@@ -13,18 +13,14 @@
   User::updated(function($user){       
       if(Input::hasFile('photo')){
     	   	News::eventNewPicture($user,'new_profile_picture'); 
-    	}else{
+    	}else if (Input::has('txtPicture')) {
+          if(trim(Input::get('txtPicture')) == "picture"){ 
+
+              News::eventGetFacebookPicture($user,'new_profile_picture');
+          }
+      } else {
     		  News::eventUpdateProfile($user,'edited_profile'); 
     	}
-  });
-
-  User::updating(function($user){
-      $user = User::find(1);
-      $results = $user->posts()->get();
-      //if(Input::has('btn_facebook')){
-        //  dd(Input::get('btn_facebook'));
-          //News::eventGetFacebookPicture($user,'new_profile_picture');
-      //}
   });
 
    /*modul gamifi */

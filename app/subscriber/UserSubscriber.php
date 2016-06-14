@@ -54,32 +54,12 @@ class UserSubscriber
       
   }
 
-  public function onGetFacebookPicture($user)
-  {
-      foreach ($user->followers as $users) {
-          foreach ($users->news as $note) {
-            if($note->news_type == 'new_profile_picture') {
-              $curr_note = $note;
-            }
-          }
-          if(isset($curr_note)) {
-            if($note->sender_id == $user->id) {
-              $date = $note->created_at;
-              if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {                   
-                  Static::saveNewsRelatedUser('User', $user->id, $users->id, $user->id,'new_profile_picture');    
-              }
-            }
-          } else {
-              Static::saveNewsRelatedUser('User', $user->id, $users->id, $user->id,'new_profile_picture');
-             
-          }
-      }
-  }
+
 
   public function subscribe($events){
 
-    $events->listen('user.followed'                 ,'subscriber\UserSubscriber@onUserFollowed');
-    $events->listen('user.newProfileFacebookPicture','subscriber\UserSubscriber@onGetFacebookPicture');
+    $events->listen('user.followed' ,'subscriber\UserSubscriber@onUserFollowed');
+    
 
 	}
 

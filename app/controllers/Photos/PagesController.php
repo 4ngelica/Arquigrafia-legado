@@ -5,6 +5,9 @@ use lib\date\Date;
 use modules\institutions\models\Institution as Institution;
 use modules\collaborative\models\Comment as Comment;
 use modules\collaborative\models\Like as Like;
+use modules\evaluations\models\Binomial as Binomial;
+use modules\evaluations\models\Evaluation as Evaluation;
+use modules\collaborative\models\Tag as Tag;
 
 class PagesController extends BaseController {
 
