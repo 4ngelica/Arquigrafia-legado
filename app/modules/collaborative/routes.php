@@ -13,9 +13,12 @@ Route::resource('/comments','modules\collaborative\controllers\CommentsControlle
 Route::get('/like/{id}', 'modules\collaborative\controllers\LikesController@photoLike');
 Route::get('/dislike/{id}', 'modules\collaborative\controllers\LikesController@photoDislike');
 Route::resource('/likes','modules\collaborative\controllers\LikesController');
-/*LIKE DISLIKE of COMMENT*/
+
+/* GRUPOS */
+Route::resource('/groups','modules\collaborative\controllers\GroupsController');
 
 /*EVENTS */
 Event::subscribe('modules\collaborative\subscriber\LikeSubscriber');
 Event::subscribe('modules\collaborative\subscriber\CommentSubscriber');
+
 
