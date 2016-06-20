@@ -10,19 +10,18 @@
   use modules\institutions\models\Employee as Employee;
 
  
-  User::updated(function($user){       
-      if(Input::hasFile('photo')){
+  User::updated(function($user)
+  {
+      if(Input::hasFile('photo')){ 
     	   	News::eventNewPicture($user,'new_profile_picture'); 
     	}else if (Input::has('txtPicture')) {
           if(trim(Input::get('txtPicture')) == "picture"){ 
-
               News::eventGetFacebookPicture($user,'new_profile_picture');
           }
       } else {
     		  News::eventUpdateProfile($user,'edited_profile'); 
     	}
   });
-
    /*modul gamifi */
   User::created (function ($user) {
       Leaderboard::createFromUser($user);
