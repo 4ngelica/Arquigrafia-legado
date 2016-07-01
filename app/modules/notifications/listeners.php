@@ -1,9 +1,9 @@
 <?php
 use modules\notifications\models\Notification as Notification;
 use modules\collaborative\models\Like as Like;
-use moduels\collaborative\models\Comment as Comment;
-use Photo;
-use User;
+use modules\collaborative\models\Comment as Comment;
+//use Photos;
+//use User;
 
 Photo::deleted(function($photo){
 	$all_users = User::all();
@@ -36,14 +36,15 @@ Like::created(function($like){
 	if($like->likable_type = 'Photo'){
 		$photo = Photo::find($like->likable_id);
 		if ($user->id != $photo->user_id) {
-			Notification::create('photo_liked', $user, $photo, [$user_note], null);
+            $user_note = User::find($photo->user_id);
+			\Notification::create('photo_liked', $user, $photo, [$user_note], null);
 		}
 	}
 	else{
 		if ($user->id != $comment->user_id) {
 			$comment = Comment::find($like->likable_id);
 	        $user_note = User::find($comment->user_id);
-	        Notification::create('comment_liked', $user, $comment, [$user_note], null);
+	        \Notification::create('comment_liked', $user, $comment, [$user_note], null);
 	    }
 	}
 });
@@ -76,6 +77,6 @@ Comment::created(function($comment){
                 $note->save();  
             }
         }
-        else Notification::create('comment_posted', $user, $comment, [$user_note], null);
+        else \Notification::create('comment_posted', $user, $comment, [$user_note], null);
     }
 });
