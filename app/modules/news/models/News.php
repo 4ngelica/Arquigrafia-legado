@@ -19,21 +19,22 @@ class News extends \Eloquent {
 
   public static function registerPhotoInstitutional($photo, $type)
   {	
-    	$institutional_news = Static::user0NewsPhoto($photo,$type)->get();
-    	
+      $institutional_news = Static::user0NewsPhoto($photo,$type)->get();
+      
         foreach ($institutional_news as $note) 
-        {
+        { 
           if($note->news_type == $type && 
           	 $note->sender_id == Session::get('institutionId')) {
-          		Log::info("enter");
+          		
              	$curr_note = $note;
             }
-        }
+        } \log::info("NewType=".$note->news_type);
         if(isset($curr_note)) {
-        	
-        	$currentNews = Static::specificNews($curr_note->id)->first();        	
+        	\Log::info("Update");
+        	$currentNews = Static::specificNews($curr_note->id)->first();                 	
         	$currentNews->updateCurrentNews($photo);
         }else { 
+          \Log::info("Create");
         	Static::createNews('Photo',$photo->id,0,$photo->institution_id,$type);
         }
 
@@ -337,10 +338,10 @@ class News extends \Eloquent {
 	}
 
   public function updateCurrentNews($photo)
-  {
+  {   \Log::info("photo_id".$photo->id);
     	$this->object_id = $photo->id;
-        $this->updated_at = Carbon::now('America/Sao_Paulo');
-        $this->save();    	
+      $this->updated_at = Carbon::now('America/Sao_Paulo');
+      $this->save();    	
   }
 
   public function scopeUser0NewsPhoto($query, $photo, $type) 

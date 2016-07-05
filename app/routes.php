@@ -82,7 +82,6 @@ Route::post('/albums/{id}/attach/photos', 'AlbumsController@attachPhotos');
 Route::get('/albums/{id}/paginate/photos', 'AlbumsController@paginateAlbumPhotos');
 Route::get('/albums/{id}/paginate/other/photos', 'AlbumsController@paginatePhotosNotInAlbum');
 
-Route::resource('/groups','GroupsController');
 Route::get('/photos/batch','PhotosController@batch');
 Route::get('/photos/upload','PhotosController@form');
 Route::get('/photos/migrar','PhotosController@migrar');
