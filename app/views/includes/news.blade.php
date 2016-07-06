@@ -46,7 +46,7 @@
   @else
   <div class="gallery_box">
     <a href='{{ URL::to("/photos") . "/" . modules\collaborative\models\Comment::find($info->object_id)->photo_id }}'>                 
-      <img src={{"/arquigrafia-images/" . modules\collaborative\models\Comment::find($info->object_id)->photo_id . "_home.jpg"}} title="{{ Photo::find(Comment::find($info->object_id)->photo_id)->name }}" class="gallery_photo" />
+      <img src={{"/arquigrafia-images/" . modules\collaborative\models\Comment::find($info->object_id)->photo_id . "_home.jpg"}} title="{{ Photo::find(modules\collaborative\models\Comment::find($info->object_id)->photo_id)->name }}" class="gallery_photo" />
     </a>
     <a href='{{ URL::to("/photos") . "/" . modules\collaborative\models\Comment::find($info->object_id)->photo_id }}' class="name">
       @if($info->data == null)
