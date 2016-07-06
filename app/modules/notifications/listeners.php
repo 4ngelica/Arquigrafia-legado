@@ -33,7 +33,7 @@ Photo::deleted(function($photo){
 
 Like::created(function($like){
 	$user = User::find($like->user_id);
-	if($like->likable_type = 'Photo'){
+	if($like->likable_type == 'Photo'){
 		$photo = Photo::find($like->likable_id);
 		if ($user->id != $photo->user_id) {
             $user_note = User::find($photo->user_id);
@@ -41,8 +41,8 @@ Like::created(function($like){
 		}
 	}
 	else{
+        $comment = Comment::find($like->likable_id);
 		if ($user->id != $comment->user_id) {
-			$comment = Comment::find($like->likable_id);
 	        $user_note = User::find($comment->user_id);
 	        \Notification::create('comment_liked', $user, $comment, [$user_note], null);
 	    }
