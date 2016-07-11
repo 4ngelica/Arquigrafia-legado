@@ -15,6 +15,11 @@ use Request;
 
 class EvaluationsController extends \BaseController {
 
+  public function __construct()
+  {
+    $this->beforeFilter('auth',
+      array( 'except' => ['index','show'] ));
+  }
 
 	public function index()
 	{ 
@@ -79,12 +84,11 @@ class EvaluationsController extends \BaseController {
         $user = User::find($userId);
         if (Auth::check()) {
           if (Auth::user()->following->contains($user->id))
-            $follow = false;
+              $follow = false;
           else
-            $follow = true;
+              $follow = true;
         }
-     }
-     if ($userId != null) {
+     
         $averageAndEvaluations= Evaluation::averageAndUserEvaluation($photo->id,$userId);
         $evaluations =  Evaluation::where("user_id",$user->id)
                                   ->where("photo_id", $photo->id)

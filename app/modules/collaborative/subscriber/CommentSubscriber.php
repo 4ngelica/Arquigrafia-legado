@@ -1,8 +1,8 @@
 <?php
 namespace modules\collaborative\subscriber;
-use Users;
 use modules\collaborative\models\Comment;
 use modules\collaborative\controllers\CommentsCntroller;
+use User;
 
 class CommentSubscriber {
 
