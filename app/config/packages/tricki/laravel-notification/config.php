@@ -1,5 +1,5 @@
 <?php
 
 return array(
-	'namespace' => 'modules\notifications'
+	'namespace' => 'modules\models\notifications'
 );

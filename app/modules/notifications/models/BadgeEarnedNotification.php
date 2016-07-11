@@ -1,5 +1,5 @@
 <?php
-namespace modules\notifications;
+namespace modules\models\notifications;
 
 use \Tricki\Notification\Models\Notification;
 use User;

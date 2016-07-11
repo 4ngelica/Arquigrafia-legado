@@ -1,16 +1,16 @@
 <?php
-namespace modules\notifications;
+namespace modules\models\notifications;
 
 use \Tricki\Notification\Models\Notification; 
 use \modules\collaborative\models\Comment;
 use User;
 use Photo;
 
-class CommentPostedNotification extends \Tricki\Notification\Models\Notification
+class CommentLikedNotification extends \Tricki\Notification\Models\Notification
 {
-    public static $type = 'comment_posted';
+    public static $type = 'comment_liked';
 
-	public function render() {
+    public function render() {
         return array($this->getTypes(), 
                      $this->getSender(), 
                      $this->getPhotoID(), 
@@ -19,7 +19,7 @@ class CommentPostedNotification extends \Tricki\Notification\Models\Notification
                      $this->getSenderID(), 
                      $this->getPhotoOwnerID(), 
                      $this->getPhotoOwnerName(), 
-                     $this->getCommentID(),
+                     $this->getCommentID(), 
                      $this->getData()
                      );
     }

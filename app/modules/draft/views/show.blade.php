@@ -9,7 +9,7 @@
     <a href="{{ URL::previous() }}" class="row">Voltar para a página anterior</a>
     <br>
     <h1 class="row">Uploads incompletos (<span class="draft_count">{{ $drafts->getTotal() }}</span>)</h1>
-    @include('drafts.list')
+    @include('list')
   </div>
   <div id="mask"></div>
   <div id="draft_window" class="window">

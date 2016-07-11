@@ -28,7 +28,7 @@
     </tr>
   </thead>
   <tbody>
-    @include('drafts.draft_list')
+    @include('draft_list')
   </tbody>
 </table>
 <div class="three columns alpha omega">

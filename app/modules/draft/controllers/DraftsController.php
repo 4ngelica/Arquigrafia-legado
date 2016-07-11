@@ -1,5 +1,5 @@
 <?php 
-namespace modules\draft\drafts
+namespace modules\draft\controllers;
 use Photo;
 
 class DraftController extends BaseController {
