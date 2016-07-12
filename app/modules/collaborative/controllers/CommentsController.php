@@ -48,7 +48,7 @@ class CommentsController extends \BaseController {
       
         /*Envio de notificação*/
         
-        //\Event::fire('comment.create', array($user, $photo));
+        \Event::fire('comment.create', array($user, $photo));
         
  
         $this->checkCommentCount(5,'test');
