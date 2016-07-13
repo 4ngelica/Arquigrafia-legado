@@ -19,6 +19,5 @@ Route::resource('/groups','modules\collaborative\controllers\GroupsController');
 
 /*EVENTS */
 Event::subscribe('modules\collaborative\subscriber\LikeSubscriber');
-Event::subscribe('modules\collaborative\subscriber\CommentSubscriber');
 
 

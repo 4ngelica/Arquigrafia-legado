@@ -103,7 +103,6 @@ class CommentsController extends \BaseController {
   }
 
   private function logLikeDislikeComment($user, $likable, $photo_or_comment, $like_or_dislike, $user_or_visitor) {
-    //$this->logLikeDislikeComment($user, $likable, "o comentário", "Descurtiu", "user");
     $source_page = \Request::header('referer');
     ActionUser::printLikeDislike($user->id, $likable->id, $source_page, $photo_or_comment, $like_or_dislike, $user_or_visitor);
   }

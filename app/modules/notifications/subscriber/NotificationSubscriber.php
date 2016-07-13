@@ -8,7 +8,6 @@ class NotificationSubscriber {
 	public function onUserFollowed($followingUserId, $followedUserId)
 	{
 	  	//note = notification_user
-	  	//dd($followedUserId);
 	    $followedUser  = User::find($followedUserId);
 		$followingUser = User::find($followingUserId);
   		foreach ($followedUser->notifications as $notification) {
