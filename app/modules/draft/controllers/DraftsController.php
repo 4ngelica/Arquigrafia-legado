@@ -1,16 +1,24 @@
 <?php 
 namespace modules\draft\controllers;
+use lib\date\Date;
 use Photo;
 
-class DraftController extends BaseController {
+class DraftsController extends \BaseController {
 
+  public function __construct(Date $date = null)
+  {
+    $this->beforeFilter('auth',
+      array( 'except' => ['index','show'] ));
+    $this->date = $date ?: new Date; 
+  }
+  
   public function paginateDrafts() {
-    $institution = Session::get('institutionId');
-    $perPage = Input::get('perPage') ?: 50;
+    $institution = \Session::get('institutionId');
+    $perPage = \Input::get('perPage') ?: 50;
     $drafts = Photo::withInstitution($institution)->onlyDrafts()->paginate($perPage);
-    $view = View::make('draft_list')
+    $view = \View::make('draft_list')
       ->with([ 'drafts' => $drafts ])->render();
-    return Response::json([
+    return \Response::json([
         'view' => $view,
         'current_page' => $drafts->getCurrentPage(),
         'last_page' => $drafts->getLastPage(),
@@ -19,13 +27,13 @@ class DraftController extends BaseController {
   }
 
   public function listDrafts() {
-    $institution = Session::get('institutionId');
+    $institution = \Session::get('institutionId');
     if ( is_null($institution) ) {
-      return Redirect::to('/');
+      return \Redirect::to('/');
     }
     $drafts = Photo::with('tags')->withInstitution($institution)
       ->onlyDrafts()->paginate(100);
-    return View::make('show')->with([
+    return \View::make('show')->with([
       'drafts' => $drafts
     ]);
   }
@@ -33,7 +41,7 @@ class DraftController extends BaseController {
   public function getDraft($id) { 
     $photo = Photo::onlyDrafts()->find($id);
     if ( is_null($photo) ) {
-      return Redirect::to('/');
+      return \Redirect::to('/');
     }
     $input = array(
       'dates' => true,
@@ -78,35 +86,35 @@ class DraftController extends BaseController {
     } elseif ( $photo->imageDateType == 'century' ) {
       $input['century_image'] = $photo->dataCriacao;
     }
-    return Redirect::to('/institutions/form/upload')
+    return \Redirect::to('/institutions/form/upload')
       ->withInput($input);
   }
 
   public function deleteDraft() {
-    $id = Input::get('draft');
-    $last_page = Input::get('last_page');
-    $perPage = Input::get('per_page');
-    $institution = Session::get('institutionId');
+    $id = \Input::get('draft');
+    $last_page = \Input::get('last_page');
+    $perPage = \Input::get('per_page');
+    $institution = \Session::get('institutionId');
     $draft = Photo::withInstitution($institution)->onlyDrafts()->find($id);
     if ( !is_null($draft) ) {
       $draft->deleted_at = $draft->freshTimestampString();
       $draft->save();
       $drafts = Photo::withInstitution($institution)->onlyDrafts()->paginate($perPage);
       if ( $last_page > $drafts->getLastPage()) {
-        return Response::json([
+        return \Response::json([
           'refresh' => true,
-          'view' => View::make('draft_list')->with(compact('drafts'))->render(),
+          'view' => \View::make('draft_list')->with(compact('drafts'))->render(),
           'current_page' => $drafts->getCurrentPage(),
           'last_page' => $drafts->getLastPage(),
           'total_items' => $drafts->getTotal()
         ]);
       } else {
-        return Response::json([
+        return \Response::json([
             'refresh' => false,
             'total_items' => $drafts->getTotal()
           ]);
       }
     }
-    return Response::json(false);
+    return \Response::json(false);
   }
 }
