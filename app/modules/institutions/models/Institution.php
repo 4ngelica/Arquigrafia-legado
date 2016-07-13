@@ -11,8 +11,6 @@ class Institution extends \Eloquent {
 
 	protected $fillable = ['name','country'];
 
-	// public $timestamps = false;
-
 	public function employees()
 	{
 		return $this->hasMany('Employee');
@@ -37,7 +35,6 @@ class Institution extends \Eloquent {
 		$belong = false;
 		$photoInstitution = \DB::table('photos')->where('id',$photo_id)
 		->where('institution_id',$institution_id)->get();
-		//dd($photoInstitution);
 
 		if(!is_null($photoInstitution) && !empty($photoInstitution)){
 			$belong = true;
@@ -52,11 +49,9 @@ class Institution extends \Eloquent {
       	  ->select('institution_id')
       	  ->where('id',$photo_id)
       	  ->first();
-      	  //dd($valueInstitution);
      	if(!is_null($valueInstitution) && $valueInstitution->institution_id != null){
 			$exist = true;
 		}
-		//dd($exist);
 		return $exist;
 	}
 

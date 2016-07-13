@@ -308,11 +308,7 @@ class InstitutionsController extends \BaseController {
         $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); 
         $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
         $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
-        //$photo->saveMetadata(strtolower($ext));
-        $photo->saveMetadata(strtolower($ext), $metadata);
-        //ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $sourcePage, "UploadInstitutional", "user");
-        //ActionUser::printTags($photo->user_id, $photo->id, $tagsCopy, $sourcePage, "user", "Inseriu");
-        
+        $photo->saveMetadata(strtolower($ext), $metadata);        
           
       } else {
         $messages = $validator->messages();
@@ -372,15 +368,8 @@ class InstitutionsController extends \BaseController {
             $tagsArea = Session::pull('tagsArea');
             $tagsArea = explode(',', $tagsArea);
         } else {
-            $tagsArea = $photo->tags->lists('name');
-            //$tagsArea = static::filterTagByType($photo,"Acervo");      
+            $tagsArea = $photo->tags->lists('name');  
         }
-        /*if (Session::has('workAuthorInput')  )
-        {  
-            $workAuthorInput = Session::pull('workAuthorInput');      
-        }else{
-            $workAuthorInput = $photo->workAuthor;
-        } */
 
         if ( Session::has('work_authors') )
         {
@@ -401,19 +390,13 @@ class InstitutionsController extends \BaseController {
         $dateYear = Session::pull('workDate');
       }elseif($photo->workDateType == "year"){
         $dateYear = $photo->workdate;
-      }/*elseif($photo->workDateType == NULL && $photo->workdate!= "" && DateTime::createFromFormat('Y-m-d', $photo->workdate) == true){
-        $date = DateTime::createFromFormat("Y-m-d",$photo->workdate);
-        $dateYear = $date->format("Y");
-      }*/
+      }
 
       if(Session::has('imageDate')){        
         $imageDateCreated = Session::pull('imageDate');
       }elseif($photo->imageDateType == "date"){
         $imageDateCreated = $photo->dataCriacao;
-      }/*elseif($photo->imageDateType == NULL && $photo->imageDateType!= "" && DateTime::createFromFormat('Y-m-d', $photo->dataCriacao) == true){
-        $dateCreated = DateTime::createFromFormat("Y-m-d",$photo->dataCriacao);
-        $imageDateCreated = $dateCreated->format("Y");
-      }*/
+      }
 
       if(Session::has('decadeInput')){ 
          $decadeInput = Session::pull('decadeInput'); 
@@ -425,7 +408,6 @@ class InstitutionsController extends \BaseController {
          $centuryInput = Session::pull('centuryInput');
       }elseif($photo->workDateType == "century") {
          $centuryInput = $photo->workdate;
-         //dd($centuryInput);
       }
        
       if(Session::has('decadeImageInput')){ 
@@ -438,13 +420,11 @@ class InstitutionsController extends \BaseController {
          $centuryImageInput = Session::pull('centuryImageInput');
       }elseif($photo->imageDateType == "century") {
          $centuryImageInput = $photo->dataCriacao;
-         //dd($centuryInput);
       }
 
 
         return \View::make('edit-institutional')
           ->with(['photo' => $photo, 'tagsArea' => $tagsArea,
-          //'workAuthorInput' => $workAuthorInput,
           'dateYear' => $dateYear,
           'centuryInput'=> $centuryInput,
           'decadeInput' =>  $decadeInput,
@@ -511,7 +491,6 @@ class InstitutionsController extends \BaseController {
         'country' => 'required',
         'imageAuthor' => 'required',
         'photo' => 'max:10240|mimes:jpeg,jpg,png,gif',           
-          //'photo_workDate' => 'date_format:"d/m/Y"',
         'image_date' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
       );
 
@@ -665,8 +644,6 @@ class InstitutionsController extends \BaseController {
                   $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
           }
           $photo->saveMetadata(strtolower($ext), $metadata);
-          // $source_page = Request::header('referer');
-          // ActionUser::printTags($photo->user_id, $id, $tags_copy, $source_page, "user", "Editou");
           return \Redirect::to("/photos/".$photo->id)->with('message', 
           '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso');
       }
