@@ -75,9 +75,6 @@ class Evaluation extends \Eloquent {
 			->where('user_id', $userId)
 			->where("photo_id", $photoId)
 			->orderBy("binomial_id", "asc")->get();
-			//$evaluations = Evaluation::where("user_id", $userId)
-			//->where("photo_id", $photoId)->orderBy("binomial_id", "asc")->get(); 
-			//$arrayEvaluation = $evaluations->toArray();
 
 			foreach ($evaluations as $valuesEvaluation) {
 				foreach ($avgPhotosBinomials as $avgBinomials) {

@@ -18,7 +18,6 @@ class LikeSubscriber {
 	      $like = Like::fromUser($user)->withLikable($photo)->first();
 	      $like->delete();
 	    } catch (Exception $e) {
-	      //
 	    }
 	}
 
@@ -27,7 +26,6 @@ class LikeSubscriber {
 	      $like = Like::fromUser($user)->withLikable($comment)->first();
 	      $like->delete();
 	    } catch (Exception $e) {
-	      //
 	    }
 	}
 

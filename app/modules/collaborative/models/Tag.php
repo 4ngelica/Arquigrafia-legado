@@ -115,7 +115,6 @@ class Tag extends \Eloquent {
   
       $photo_tags = $photo->tags;
       $allTags = Tag::allTagsPhoto($photo->id); 
-      //dd($allTags);
       foreach ($allTags as $tag){   
         $tag->count--;
         $tag->save();                
@@ -124,15 +123,13 @@ class Tag extends \Eloquent {
       foreach ($allTags as $alltag) {
         $photo->tags()->detach($alltag->id);
       }
-      try{    // dd($newTags); 
+      try{
         foreach ($newTags as $t) {            
             $t = strtolower($t);           
              
             $tag = Tag::where('name', $t)
                      ->whereIn('type', array('Acervo','Livre'))->first();
-             //        ->orWhere('type', 'Livre')
-                    // ->first();
-             //dd($tag);       
+    
             if(is_null($tag)){
                 $tag = new Tag();
                 $tag->name = $t;
