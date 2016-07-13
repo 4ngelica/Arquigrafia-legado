@@ -1,6 +1,6 @@
 <?php
 
-use modules\draft\DraftingTrait;
+use modules\draft\traits\DraftingTrait;
 use lib\date\Date;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 

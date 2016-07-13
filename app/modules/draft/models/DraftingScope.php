@@ -1,4 +1,4 @@
-<?php namespace modules\draft;
+<?php namespace modules\draft\models;
 
 use \Illuminate\Database\Eloquent\Builder as Builder;
 

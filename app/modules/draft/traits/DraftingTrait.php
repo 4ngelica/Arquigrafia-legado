@@ -1,4 +1,6 @@
-<?php namespace modules\draft;
+<?php 
+namespace modules\draft\traits;
+use modules\draft\models\DraftingScope as DraftingScope;
 
 trait DraftingTrait {
   
