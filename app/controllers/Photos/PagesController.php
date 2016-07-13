@@ -121,7 +121,7 @@ class PagesController extends BaseController {
         ];
 
 
-        if(!empty($date) ){  //&& !isset($date)
+        if(!empty($date) ){ 
 
             if($date == 'di' ) $dateType = 'dataCriacao';          
             if ($date == 'du' ) $dateType = 'dataUpload';
@@ -166,7 +166,7 @@ class PagesController extends BaseController {
                 Input::get('bin'), Input::get('opt'), Input::get('val')
             );
         }
-        $pageVisited = 0;    //null; 
+        $pageVisited = 0;    
         $needle = trim(Input::get("q"));
         $txtcity = Input::get("city"); 
         $type = Input::get("t"); 
@@ -335,7 +335,7 @@ class PagesController extends BaseController {
         $fields = Input::only( array(
             'name', 'description', 'city', 'state', 'country', 
             'imageAuthor', 'dataCriacao', 'dataUpload', 'workdate', 'district',
-            'street', 'allowCommercialUses', 'allowModifications', 'institution_id'//,'workAuthor_area', $tags
+            'street', 'allowCommercialUses', 'allowModifications', 'institution_id'
         ));
         $fields = array_filter(array_map('trim', $fields));
 
@@ -377,12 +377,11 @@ class PagesController extends BaseController {
             }
         }
        
-        //Adding search by tags
-        //$tags = str_replace(array('\'', '"', '[', ']'), '', $fields['tags']);
+        //Adding search by tags        
         $tags = str_replace(array('\'', '"', '[', ']'), '', Input::get('tags'));
         $tags = Tag::transform($tags);
 
-        //$authorsArea = str_replace(array('","'), '";"', $fields['workAuthor_area']);
+        
         $authorsArea = str_replace(array('","'), '";"', Input::get('workAuthor_area'));    
         $authorsArea = str_replace(array('\'', '"', '[', ']'), '', $authorsArea);
         $authorsArea = Author::transform($authorsArea);
@@ -399,15 +398,9 @@ class PagesController extends BaseController {
          }
         $tags = $tags == '' ? [] : $tags;
 
-        /*if(Session::has('CurrPage') && Session::get('CurrPage')!= 1){ 
-           echo $pageRetrieved = Session::get('CurrPage');  
-            $haveSession = 1;   
-        }else{
-            Session::put('CurrPage',1);
-        } */
 
         $photos = $photos->count() == 0 ? [] : $photos;
-        //echo "=PGG=".Input::has('pg');
+        
         if(Input::has('pg') && $haveSession != 0 ) { 
              $pageVisited = 1; 
              Session::forget('CurrPage');
