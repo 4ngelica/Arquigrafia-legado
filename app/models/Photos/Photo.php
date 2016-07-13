@@ -161,9 +161,6 @@ class Photo extends Eloquent {
 		
 	}
 
-	
-
-
 	public static function paginateInstitutionPhotosNotInAlbum($inst, $album, $q = null, $perPage = 24) {
 		return static::notInAlbum($album, $q)
 			->withInstitution($inst)->paginate($perPage);
@@ -202,20 +199,11 @@ class Photo extends Eloquent {
 	}
 
 
-	public static function getLastUpdatePhotoByUser($user_id) {
-		//select user_id,id,dataUpload, created_at, updated_at
-		//from photos
-		//where user_id=1 order by updated_at desc limit 5;
-		//return $id;
-
+	public static function getLastUpdatePhotoByUser($user_id) {		
 		return $dataUpdate = Photo::where("user_id", $user_id)->orderBy('updated_at','desc')->first();
-		//return Date::dateDiff(date("Y-m-d H:i:s"),$dataUpdate->updated_at);
-		//date("Y-m-d H:i:s")
-
 	}
 	public static function getLastUploadPhotoByUser($user_id) {
 		return Photo::where("user_id", $user_id)->orderBy('dataUpload','desc')->first();
-		//return Date::dateDiff(date("Y-m-d H:i:s"),$dataUpload->dataUpload
 	}
 
 	public static function photosWithSimilarEvaluation($average,$idPhotoSelected) {
@@ -238,18 +226,15 @@ class Photo extends Eloquent {
 				//clean array for news id photo
 				$arrayPhotosId = array();
 				$flag=false;
-				//dd($avgPhotosBinomials);
+				
 				foreach ($avgPhotosBinomials as $avgPhotoBinomial) {
-				//Log::info("Logging iterate avgPhotoBinomial pos ".$avgPhotoBinomial->avgPosition." param ".$avg->avgPosition);
+				
 					if(abs($avgPhotoBinomial->avgPosition - $avg->avgPosition)<=25){
 						$flag=true;
-						//echo $avgPhotoBinomial->photo_id;
-						//Log::info("Logging push ".$avgPhotoBinomial->photo_id);
 						array_push($arrayPhotosId,$avgPhotoBinomial->photo_id);
 					}
 				}
 
-				//dd($arrayPhotosId);
 				if($flag == false){
 					Log::info("Logging break ");
 					$similarPhotos = array();
@@ -373,7 +358,6 @@ class Photo extends Eloquent {
 		return $query->where('name', 'LIKE', '%'. $needle .'%')
 			->orWhere('description', 'LIKE', '%'. $needle .'%')
 			->orWhere('imageAuthor', 'LIKE', '%' . $needle . '%')
-			//->orWhere('workAuthor', 'LIKE', '%'. $needle .'%')
 			->orWhere('country', 'LIKE', '%'. $needle .'%')
 			->orWhere('state', 'LIKE', '%'. $needle .'%')
 			->orWhere('city', 'LIKE', '%'. $needle .'%');
@@ -381,7 +365,7 @@ class Photo extends Eloquent {
 
 	public function scopeWithBinomials($query, $binomials) {
 		foreach($binomials as $binomial => $avg) {
-			$query->whereIn('photos.id', function ($sub_query) use ($binomial, $avg) { //id //photos.id 
+			$query->whereIn('photos.id', function ($sub_query) use ($binomial, $avg) { 
 				$sub_query->select('photo_id')->from('binomial_evaluation')
 					->whereRaw('binomial_id = ' . $binomial)
 					->groupBy('photo_id')
@@ -408,8 +392,7 @@ class Photo extends Eloquent {
 				$query->join('tags','tags.id','=','tag_assignments.tag_id');
 				$query->where(function($sub_query) use ($tags) {
 					foreach ($tags as $tag) {
-						$sub_query->orWhere('tags.name', '=', $tag);
-						//$sub_query->orWhere('tags.name', 'LIKE', '%' .  $tag. '%');
+						$sub_query->orWhere('tags.name', '=', $tag);						
 					}
 				});	
 		}
@@ -446,29 +429,19 @@ class Photo extends Eloquent {
 		return $this->date->formatDatePortugues($this->attributes['dataUpload']);
 	}
 
-	/*public function setDataCriacaoAttribute($raw_date) {
-		$this->attributes['dataCriacao'] = $this->date->formatDate($raw_date);
-	}
 
-	public function setWorkDateAttribute($raw_date) {
-		$this->attributes['workdate'] = $this->date->formatDate($raw_date);
-	}*/
 
 	public function getTranslatedDataCriacaoAttribute($raw_date) {
 		return $this->date->translate($this->attributes['dataCriacao']);
 	}
 
-	/*public function getTranslatedWorkdateAttribute($raw_date) {
-		return $this->date->translate($this->attributes['workdate']);		
-	}*/
 
-	public function getFormatWorkdateAttribute($dateWork,$type) {
-		//return $this->date->translate($this->attributes['workdate']);
+
+	public function getFormatWorkdateAttribute($dateWork,$type) {		
 		return  $this->date->formatToWorkDate($dateWork,$type);
 	}
 
-	public function getFormatDataCriacaoAttribute($dataCriacao,$type) {
-		//return $this->date->translate($this->attributes['workdate']);
+	public function getFormatDataCriacaoAttribute($dataCriacao,$type) {		
 		return  $this->date->formatToDataCriacao($dataCriacao,$type);
 	}
 
@@ -583,9 +556,7 @@ class Photo extends Eloquent {
 							$authorString.= $a." ";
 						}
 							
-					}	
-					//if(strlen($t) > 3)
-					//	$authorString.= ucwords($t)." ";
+					}
 				}
 				$first = false;	
 			}
@@ -600,8 +571,6 @@ class Photo extends Eloquent {
 		return ! is_null ($this->institution_id);
 	}
 
-
-	/////asaassa
 
 	public function scopeWithTagsName($query, $tag) {
 		if(!empty($tag)) { 				
@@ -626,7 +595,7 @@ class Photo extends Eloquent {
 	}
 
 
-	//busc Simples
+	//busca Simples
 	public function scopeWithAttributesBuilder($query, $needle) {
 		$qq = $query->orWhere('photos.name', 'LIKE', '%'. $needle .'%')
 			->orWhere('photos.description', 'LIKE', '%'. $needle .'%')
@@ -676,9 +645,7 @@ class Photo extends Eloquent {
 		->withTagsName($needle)
 		->orderBy('photos.id')
 		->groupBy('photos.id')
-		->paginate($perPage); 
-		//$resultSet = $query->get();    	
-    	//return $resultSet;
+		->paginate($perPage);
     	return $query;
 	}
 
@@ -687,8 +654,7 @@ class Photo extends Eloquent {
 		->withAuthorName($needle)
 		->orderBy('photos.id')
 		->groupBy('photos.id')
-		->paginate($perPage); 
-		//$resultSet = $query->get();		
+		->paginate($perPage); 		
     	
     	return $query;
 	}
@@ -699,8 +665,7 @@ class Photo extends Eloquent {
 	public function scopePhotosVarious($query, $photos, $q = null) { 
 		if(!empty($photos)) { 				
 				$query->where(function($sub_query) use ($photos) {
-					foreach ($photos as $photo) {
-						//echo $photo->id." ";
+					foreach ($photos as $photo) {				
 						$sub_query->orwhere('photos.id', '=', $photo->id);						
 					} })->whereMatches($q);	
 		}

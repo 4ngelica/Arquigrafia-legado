@@ -10,10 +10,9 @@ class Author extends Eloquent {
     return $this->belongsToMany('Photo', 'photo_author', 'author_id', 'photo_id');
   }
 
-  public static function getOrCreate($name) {
-   // $author = static::firstOrNew(['name' => $name]);
-    $author = Author::where('name', $name)->first();
-    //dd($author);
+  public static function getOrCreate($name) 
+  {
+    $author = Author::where('name', $name)->first();  
     if(is_null($author)){
       $author = new Author();
       $author->name = $name;
@@ -69,8 +68,7 @@ class Author extends Eloquent {
 
   public static function transform($raw_authors) {
     $authors = explode(';', $raw_authors);
-    $authors = array_map('trim', $authors);
-   // $authors = array_map('mb_strtolower', $authors);
+    $authors = array_map('trim', $authors);   
     $authors = array_filter($authors);
     return array_unique($authors);
   }

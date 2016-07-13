@@ -49,8 +49,8 @@ class Album extends \BaseModel {
 		
 	}
 
-	public static function create(array $attr) {
-		//dd($attr['user']);
+	public static function create(array $attr) 
+	{
 		$album = new Album;
 		$album->updateInfo($attr['title'], $attr['description'], $attr['cover']);
 		$album->creationDate = date('Y-m-d H:i:s');
