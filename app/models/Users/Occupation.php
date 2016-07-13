@@ -12,7 +12,6 @@ class Occupation extends Eloquent {
 	}
 
 	public static function userOccupation($user_id){
-		//$occupations = User::where('user_id', '=', $user_id)->toArray();
 		if($user_id != null){
 			$arrayOccupations = array();
 			$evaluations = DB::table('occupations')
@@ -21,7 +20,7 @@ class Occupation extends Eloquent {
 			
 			foreach ($evaluations as $valOccupations) {
 				 
-				 $arrayOccupations[] = $valOccupations; //->occupation;
+				 $arrayOccupations[] = $valOccupations;
 			}
 			 return $arrayOccupations;			
 		}	

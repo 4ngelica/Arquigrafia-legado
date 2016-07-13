@@ -8,11 +8,6 @@ class UsersRole extends Eloquent {
 	public static function valueUserRole($user_id){
 		$userRolesArray = array();
 		if($user_id != null){			
-			//$userRoles = UsersRole::where('user_id', '=', $user_id )->get();
-			/*$userRoles = DB::table('users_roles')
-			->select('role_id')
-			->where('user_id', $user_id)->get();*/
-
 			$userRoles = DB::table('roles')
 			->join('users_roles','roles.id','=','users_roles.role_id')
 			->select('roles.name')
