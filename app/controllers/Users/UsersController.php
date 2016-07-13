@@ -1,5 +1,4 @@
 <?php
-//namespace app\controllers\Users;
 use lib\utils\ActionUser;
 use lib\utils\HelpTool;
 use Carbon\Carbon; 
@@ -51,7 +50,7 @@ class UsersController extends \BaseController {
         session_start();
         $user_id = session_id();
     }
-    //
+
     $albums = $user->userAlbums; 
     $source_page = Request::header('referer');
     ActionUser::printSelectUser($user_id, $id, $source_page, $user_or_visitor);
@@ -107,7 +106,7 @@ class UsersController extends \BaseController {
       'verify_code' => $verify_code       
       ]);
 
-      // $user = User::userInformation($login);
+      
       $source_page = Request::header('referer');
       ActionUser::printNewAccount($user->id, $source_page, "arquigrafia", "user"); 
 
@@ -138,7 +137,7 @@ class UsersController extends \BaseController {
     }
     
     if (!$newUser){   
-            //erro
+            //error
             return Redirect::to('users/verify');
       }else{
           //update data of new user registered 
@@ -183,7 +182,7 @@ class UsersController extends \BaseController {
         $user->password = Hash::make($randomPassword);
         $user->oldAccount = 0; // usuário já tem senha nova
         $user->touch(); // touch já salva
-        // $user->save();
+       
         Mail::send('emails.users.reset-password', array('user' => $user,'email' => $email,'randomPassword' => $randomPassword),
          function($message) use($email) {  
                $message->to($email)
@@ -591,7 +590,7 @@ class UsersController extends \BaseController {
       Log::info("check=".Hash::check($input["old_password"], $user->password)."autenticar =".Auth::attempt(array('login' => $user->login,'password' => $input["old_password"]))); 
       
       if(Hash::check($input["old_password"], $user->password)){
-      //if ( Auth::attempt(array('login' => $user->login, 'password' => $input["old_password"])) == true) { 
+     
             if(!empty($input['user_password']) || trim($input['user_password']) != ""){
                 $user->password = Hash::make($input["user_password"]);  
             }else{
@@ -735,23 +734,6 @@ class UsersController extends \BaseController {
         /* Importa Photos, Comments, Evaluations, follows e followers, se existirem */
         $this->getAttributesFromTo($fb_acc, $arq_acc);
       }
-      /* Existe uma conta Stoa? */
-      /*if (!is_null($stoa_acc)) {
-        $stoa_boolean = true;
-        // Associa as contas 
-        DB::table('users')->where('id', '=', $arq_acc->id)->update(array('id_stoa' => $stoa_acc->id));
-        // Se uma foto já não foi importada, verifica se a conta Stoa tem uma foto e pega ela 
-        if (!isset($has_photo)) {
-          if ($stoa_acc->photo == "/arquigrafia-avatars/" . $stoa_acc->id . ".jpg") {
-            if (rename("/arquigrafia-avatars/" . $stoa_acc->id . ".jpg", "/arquigrafia-avatars/" . $arq_acc->id . ".jpg")) {
-            $arq_acc->photo = "/arquigrafia-avatars/" . $arq_acc->id . ".jpg";
-            $has_photo = true;
-            }
-          }
-        }
-        // Importa Photos, Comments, Evaluations, follows e followers, se existirem 
-        UsersController::getAttributesFromTo($stoa_acc, $arq_acc);
-      }*/
       /* Retorna uma mensagem dizendo quais contas foram integradas */
       $result = "Sua(s) conta(s): ";
       if (isset($fb_boolean)) {
@@ -773,41 +755,6 @@ class UsersController extends \BaseController {
       }
       return $result;
     }
-    /* Existe uma conta Facebook mas não uma Arquigrafia? */
-    /*if (!is_null($fb_acc) && is_null($arq_acc)) {
-      // A conta Facebook tem foto?
-      if ($fb_acc->photo == "/arquigrafia-avatars/" . $fb_acc->id . ".jpg") {
-        $has_photo = true;
-      }
-      // Existe uma conta Stoa? 
-      if (!is_null($stoa_acc)) {
-        $stoa_boolean = true;
-        // Associa as contas 
-        DB::table('users')->where('id', '=', $fb_acc->id)->update(array('id_stoa' => $stoa_acc->id));
-        // Se a conta Facebook não possuir foto e a conta Stoa possuir foto, pega essa foto
-        if (!isset($has_photo)) {
-          if ($stoa_acc->photo == "/arquigrafia-avatars/" . $stoa_acc->id . ".jpg") {
-            if (rename("/arquigrafia-avatars/" . $stoa_acc->id . ".jpg", "/arquigrafia-avatars/" . $fb_acc->id . ".jpg")) {
-            $fb_acc->photo = "/arquigrafia-avatars/" . $fb_acc->id . ".jpg";
-            $has_photo = true;
-            }
-          }
-        }
-        // Importa Photos, Comments, Evaluations, follows e followers, se existirem 
-        UsersController::getAttributesFromTo($stoa_acc, $fb_acc);
-      }
-      // Retorna uma mensagem dizendo quais contas foram integradas 
-      $result = "Sua conta: ";
-      if ($stoa_boolean) {
-        $result = $result . "Stoa";
-      }
-      $result = $result . " foi integrada à sua conta Facebook";
-      // Exclui a conta paralela do banco 
-      if (isset($stoa_boolean)) {
-        DB::table('users')->where('id', '=', $stoa_acc->id)->delete();
-      }
-      return $result;
-    }*/
   }
 
   private function getAttributesFromTo($accountFrom, $accountTo) {
