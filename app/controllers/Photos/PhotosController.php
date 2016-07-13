@@ -42,7 +42,7 @@ class PhotosController extends \BaseController {
     
     $tags = $photos->tags;
     $binomials = Binomial::all()->keyBy('id');
-    $average = Evaluation::average($photos->id); //dd($average);
+    $average = Evaluation::average($photos->id);
     $evaluations = null;
     $photoliked = null;
     $follow = true;
@@ -159,7 +159,6 @@ class PhotosController extends \BaseController {
 
     if ( Session::has('centuryInput') ) {
        $centuryInput = Session::pull('centuryInput');
-      //dd($century);
        $dates = true;
       }
     if ( Session::has('decadeInput') ){
@@ -169,7 +168,6 @@ class PhotosController extends \BaseController {
 
      if ( Session::has('centuryImageInput') ) {
        $centuryImageInput = Session::pull('centuryImageInput');
-      //dd($century);
        $dateImage = true;
       }
     if ( Session::has('decadeImageInput') ){
@@ -216,8 +214,7 @@ class PhotosController extends \BaseController {
         'tags' => 'required',
         'photo_country' => 'required',  
         'photo_authorization_checkbox' => 'required',
-        'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',
-        //'photo_workDate' => 'date_format:"d/m/Y"',      
+        'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',    
         'photo_imageDate' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/'
       );
 
@@ -255,8 +252,6 @@ class PhotosController extends \BaseController {
             $photo->state = $input["photo_state"];
             if ( !empty($input["photo_street"]) )
                 $photo->street = $input["photo_street"];
-            //if ( !empty($input["photo_workAuthor"]) )
-            //  $photo->workAuthor = $input["photo_workAuthor"];
       
             if(!empty($input["workDate"])){             
                $photo->workdate = $input["workDate"];
@@ -350,9 +345,7 @@ class PhotosController extends \BaseController {
             $input['photoId'] = $photo->id;
             $input['dates'] = true;
             $input['dateImage'] = true;
-            
-            
-            
+
             return Redirect::back()->withInput($input);
 
         } else {
@@ -393,13 +386,6 @@ class PhotosController extends \BaseController {
     }
   }
 
-  // COMMENT
-
-
-  // EVALUATE
-  //saveEvaluation
-  
-
   // BATCH RESIZE
   public function batch()
   {
@@ -409,11 +395,6 @@ class PhotosController extends \BaseController {
       // novo tamanho para home, o micro, para pré carregamento.
     $new = public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg';
       if (is_file($path) && !is_file($new)) $image = Image::make($path)->fit(32,20)->save($new);
-    /*
-    $image = Image::make($path)->save(public_path().'/arquigrafia-images/'.$newid.'_view.jpg');
-    $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$newid.'_200h.jpg');
-    $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$newid.'_home.jpg');
-    */
     }
     return "OK.";
   }
@@ -431,13 +412,6 @@ class PhotosController extends \BaseController {
     }
     return "OK.";
   }
-
- 
-//checkCommentCount
-
-
-
-
 
   public function edit($id) {
     if (Session::has('institutionId') ) {
@@ -475,10 +449,7 @@ class PhotosController extends \BaseController {
         $dateYear = Session::pull('workDate');
       }elseif($photo->workDateType == "year"){
         $dateYear = $photo->workdate;
-      }/*elseif($photo->workDateType == NULL && $photo->workdate!= "" && DateTime::createFromFormat('Y-m-d', $photo->workdate) == true){
-              $date = DateTime::createFromFormat("Y-m-d",$photo->workdate);
-              $dateYear = $date->format("Y");
-      }*/
+      }
 
       if(Session::has('decadeInput')){ 
          $decadeInput = Session::pull('decadeInput'); 
@@ -490,7 +461,6 @@ class PhotosController extends \BaseController {
          $centuryInput = Session::pull('centuryInput');
       }elseif($photo->workDateType == "century") {
          $centuryInput = $photo->workdate;
-         //dd($centuryInput);
       }
 
       if(Session::has('decadeImageInput')){ 
@@ -503,7 +473,6 @@ class PhotosController extends \BaseController {
          $centuryImageInput = Session::pull('centuryImageInput');
       }elseif($photo->imageDateType == "century") {
          $centuryImageInput = $photo->dataCriacao;
-         //dd($centuryInput);
       }
       
 
@@ -563,7 +532,6 @@ class PhotosController extends \BaseController {
         'photo_imageAuthor' => 'required',
         'tags' => 'required',
         'photo_country' => 'required',
-        //'photo_workDate' => 'date_format:"d/m/Y"',
         'photo_imageDate' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
         'photo' => 'max:10240|mimes:jpeg,jpg,png,gif'
 
@@ -596,7 +564,7 @@ class PhotosController extends \BaseController {
         $photo->name = $input["photo_name"];
         $photo->state = $input["photo_state"];
         $photo->street = $input["photo_street"];
-        //$photo->workAuthor = $input["photo_workAuthor"];     
+    
       
         if(!empty($input["workDate"])){             
             $photo->workdate = $input["workDate"];
@@ -692,10 +660,8 @@ class PhotosController extends \BaseController {
         $source_page = Request::header('referer');
         ActionUser::printTags($photo->user_id, $id, $tags_copy, $source_page, "user", "Editou");
 
-        /*News feed*/
         $user = User::find($photo->user_id);
         
-
         return Redirect::to("/photos/{$photo->id}")->with('message', '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso');
       }
   }
@@ -750,89 +716,4 @@ class PhotosController extends \BaseController {
     $photo->delete();
     return Redirect::to('/users/' . $photo->user_id);
   }
-
-//createCommentsMessage
-
-  /*public function evaluate($photoId ) { 
-    if (Session::has('institutionId') ) {
-      return Redirect::to('/');
-    }
-    if(isset($_SERVER['QUERY_STRING'])) parse_str($_SERVER['QUERY_STRING']);
-    $user_id = Auth::user()->id;
-    $source_page = Request::header('referer');
-    if(isset($f)) {
-    if($f == "sb") ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "pelo botão abaixo da imagem");
-    elseif($f == "c") ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "pelo botão abaixo do gráfico");
-    elseif($f == "g") ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "pelo gráfico");
-    }
-    else ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "diretamente");
-    return static::getEvaluation($photoId, Auth::user()->id, true);
-  } */
-  /*
-  public function viewEvaluation($photoId, $userId ) {
-    
-    return static::getEvaluation($photoId, $userId, false);
-  } */
-
-  /*public function showSimilarAverage($photoId) {
-    $isOwner = false;
-    if (Auth::check()) $userId = Auth::user()->id;     
-    $photo = Photo::find($photoId);     
-    if($photo->user_id == $userId ) $isOwner = true;
-   
-    return static::getEvaluation($photoId, $userId, $isOwner);
-  }*/
-  /*
-  private function getEvaluation($photoId, $userId, $isOwner) {
-    $photo = Photo::find($photoId);
-    $binomials = Binomial::all()->keyBy('id'); 
-    $average = Evaluation::average($photo->id); 
-    $evaluations = null;
-    $averageAndEvaluations = null;
-    $checkedKnowArchitecture = false;
-    $checkedAreArchitecture = false;
-    $user = null;
-    $follow = true;
-    //echo $user_id; die();
-    if ($userId != null) {
-      $user = User::find($userId);
-      if (Auth::check()) {
-        if (Auth::user()->following->contains($user->id))
-          $follow = false;
-        else
-          $follow = true;
-    }
-
-      $averageAndEvaluations= Evaluation::averageAndUserEvaluation($photo->id,$userId);
-      $evaluations =  Evaluation::where("user_id",
-        $user->id)->where("photo_id", $photo->id)->orderBy("binomial_id", "asc")->get();
-      $checkedKnowArchitecture= Evaluation::userKnowsArchitecture($photoId,$userId);
-      $checkedAreArchitecture= Evaluation::userAreArchitecture($photoId,$userId);
-
-    }
-    
-    return View::make('/photos/evaluate',
-      [
-        'photos' => $photo, 
-        'owner' => $user, 
-        'follow' => $follow, 
-        'tags' => $photo->tags, 
-        'commentsCount' => $photo->comments->count(), 
-        'commentsMessage' => static::createCommentsMessage($photo->comments->count()),
-        'average' => $average, 
-        'userEvaluations' => $evaluations,
-        'userEvaluationsChart' => $averageAndEvaluations, 
-        'binomials' => $binomials,
-        'architectureName' => Photo::composeArchitectureName($photo->name),
-        'similarPhotos'=>Photo::photosWithSimilarEvaluation($average,$photo->id),
-        'isOwner' => $isOwner,
-        'checkedKnowArchitecture' => $checkedKnowArchitecture,
-        'checkedAreArchitecture' => $checkedAreArchitecture
-      ]);
-  } */
-
-  //formInstitutional
-  //saveFormInstitutional
-  //editFormInstitutional
-  //updateInstitutional
 }
