@@ -15,6 +15,11 @@ use Request;
 
 class EvaluationsController extends \BaseController {
 
+  public function __construct()
+  {
+    $this->beforeFilter('auth',
+      array( 'except' => ['index','show'] ));
+  }
 
 	public function index()
 	{ 
@@ -79,12 +84,11 @@ class EvaluationsController extends \BaseController {
         $user = User::find($userId);
         if (Auth::check()) {
           if (Auth::user()->following->contains($user->id))
-            $follow = false;
+              $follow = false;
           else
-            $follow = true;
+              $follow = true;
         }
-     }
-     if ($userId != null) {
+     
         $averageAndEvaluations= Evaluation::averageAndUserEvaluation($photo->id,$userId);
         $evaluations =  Evaluation::where("user_id",$user->id)
                                   ->where("photo_id", $photo->id)
@@ -111,16 +115,6 @@ class EvaluationsController extends \BaseController {
         'checkedAreArchitecture' => $checkedAreArchitecture
       ]);
 	}
-
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return Response
-   */
-  public function create()
-  {
-    //
-  }
 
   
    /** saveEvaluation($id) */
@@ -181,7 +175,7 @@ class EvaluationsController extends \BaseController {
           $source_page = Request::header('referer');
           ActionUser::printEvaluation($user_id, $id, $source_page, "user", $insertion_edition, $evaluation_string);
           return \Redirect::to("/evaluations/{$id}/evaluate")->with('message', 
-              '<strong>Avaliação salva com sucesso</strong><br>Abaixo você pode visualizar a média atual de avaliações');
+              '<strong>Interpretação salva com sucesso</strong><br>Abaixo você pode visualizar a média atual de interpretações');
       } else { // avaliação sem login        
           return \Redirect::to("/photos/{$id}")->with('message', 
             '<strong>Erro na avaliação</strong><br>Faça login para poder avaliar');
@@ -190,41 +184,5 @@ class EvaluationsController extends \BaseController {
 
 
 
-
-
-/**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function edit($id)
-  {
-    //
-  }
-
-
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function update($id)
-  {
-    //
-  }
-
-
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function destroy($id)
-  {
-    //
-  }
 
 }

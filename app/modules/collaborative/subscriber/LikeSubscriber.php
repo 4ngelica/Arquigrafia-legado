@@ -8,7 +8,6 @@ use modules\gamification\models\Badge;
 class LikeSubscriber {
 
 	public function onPhotoLiked($user, $photo) {
-
 		if ( ($badge = Badge::getDestaqueDaSemana($photo)) ) {
     		Notification::create('badge_earned', $user, $badge, [$photo->user], null);
     	}
@@ -21,10 +20,6 @@ class LikeSubscriber {
 	    } catch (Exception $e) {
 	      //
 	    }
-	}
-
-	public function onCommentLiked($user, $comment) {
-
 	}
 
 	public function onCommentDisliked($user, $comment) {
