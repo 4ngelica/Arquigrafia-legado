@@ -15,12 +15,6 @@ Route::get('/test', function () {
   //testes
 });
 
-// /* DRAFTS */
-// Route::post('/drafts/delete', 'PhotosController@deleteDraft');
-// Route::get('/drafts/paginate', 'PhotosController@paginateDrafts');
-// Route::get('/drafts/{id}', 'PhotosController@getDraft');
-// Route::get('/drafts', 'PhotosController@listDrafts');
-/* IMPORTS */
 Route::get('/photos/import', 'ImportsController@import');
 
 /* phpinfo() */
@@ -94,6 +88,4 @@ Route::resource('/photos','PhotosController');
 Route::get('/search/paginate/other/photos', 'PagesController@paginatePhotosResult');
 Route::get('/search/more/paginate/other/photos', 'PagesController@paginatePhotosResultAdvance');
 
-//Event::subscribe('subscriber\UserSubscriber');
-Event::subscribe('subscriber\PhotoSubscriber');
 
