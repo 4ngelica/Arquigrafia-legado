@@ -76,5 +76,3 @@ class CommentPostedNotification extends \Tricki\Notification\Models\Notification
         return $this->data;
     }
 }
-
-?>

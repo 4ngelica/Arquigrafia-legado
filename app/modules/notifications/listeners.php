@@ -2,8 +2,6 @@
 use modules\notifications\models\Notification as Notification;
 use modules\collaborative\models\Like as Like;
 use modules\collaborative\models\Comment as Comment;
-//use Photos;
-//use User;
 
 Photo::deleted(function($photo){
 	$all_users = User::all();

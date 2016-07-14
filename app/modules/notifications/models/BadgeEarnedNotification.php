@@ -72,9 +72,4 @@ class BadgeEarnedNotification extends \Tricki\Notification\Models\Notification
         }
         return $this->badge;
     }
-
-
-
 }
-
-?>

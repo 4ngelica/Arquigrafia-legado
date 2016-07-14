@@ -57,5 +57,3 @@ class PhotoLikedNotification extends \Tricki\Notification\Models\Notification
         return $this->data;
     }
 }
-
-?>
