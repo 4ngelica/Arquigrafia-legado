@@ -66,6 +66,7 @@
 
   /*Collaborative Modules*/
   Like::created (function ($likes) { 
+    if($likes->likable_type == 'Photo')
       News::eventLikedPhoto($likes,'liked_photo'); 
   });
 
