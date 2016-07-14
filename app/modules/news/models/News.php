@@ -356,4 +356,3 @@ class News extends \Eloquent {
 
     
 }
-?>

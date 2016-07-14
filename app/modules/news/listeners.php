@@ -22,12 +22,12 @@
     		  News::eventUpdateProfile($user,'edited_profile'); 
     	}
   });
-   /*modul gamifi */
+   /*Module Gamification */
   User::created (function ($user) {
       Leaderboard::createFromUser($user);
   });
 
-  /*modul gamifi  and institut*/
+  /*Modules Gamification and Institution*/
   Photo::created (function ($photo) {
     if (!$photo->hasInstitution() ) {
         News::eventNewPhoto($photo, 'new_photo');
@@ -47,7 +47,7 @@
     }
   });
 
-  //of gamification
+  //Gamification Related
   Photo::deleted (function ($photo) {
     if ( ! $photo->hasInstitution() ) {
       Leaderboard::decreaseUserScore($photo->user_id, 'uploads');
@@ -55,7 +55,7 @@
     Leaderboard::decreaseUsersScores($photo->evaluators, 'evaluations');
   });
 
-//of gamification and binomial
+//Binomial and Gamification Related
   Evaluation::created (function ($evaluation) {
     $min_id = Binomial::orderBy('id', 'asc')->first();
     if ( $evaluation->binomial_id == $min_id->id ) {
@@ -64,7 +64,7 @@
     }
   });
 
-  /*modules collaborative*/
+  /*Collaborative Modules*/
   Like::created (function ($likes) { 
       News::eventLikedPhoto($likes,'liked_photo'); 
   });
