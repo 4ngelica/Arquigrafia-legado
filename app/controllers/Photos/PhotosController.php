@@ -666,14 +666,14 @@ class PhotosController extends \BaseController {
       }
   }
 
-  public function destroy($id) {
+  public function destroy($id) 
+  {
     $photo = Photo::find($id);
     foreach($photo->tags as $tag) {
       $tag->count = $tag->count - 1;
       $tag->save();
     }
     DB::table('tag_assignments')->where('photo_id', '=', $photo->id)->delete();
-
 
     $photo->delete();
     return Redirect::to('/users/' . $photo->user_id);

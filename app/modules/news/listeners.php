@@ -57,6 +57,14 @@
     Leaderboard::decreaseUsersScores($photo->evaluators, 'evaluations');
   });
 
+  Photo::deleting(function ($photo) {
+    if ( ! $photo->hasInstitution() ) {      
+      //delete activities in photo
+      News::deletePhotoActivities($photo,'delete');
+    }
+    
+  });
+
 //Binomial and Gamification Related
   Evaluation::created (function ($evaluation) {
     $min_id = Binomial::orderBy('id', 'asc')->first();

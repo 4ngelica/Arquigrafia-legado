@@ -355,27 +355,35 @@ class News extends \Eloquent {
 			return $query->where('id', '=', $currentId);
   }
 
+
   public static function deletePhotoActivities($photo,$type)
   {
-      $all_users = User::all();
-      foreach ($all_users as $users) {
-        foreach ($users->news as $news) {
-          if ($news->news_type == 'liked_photo' || $news->news_type == 'highlight_of_the_week' ||
-             $news->news_type == 'edited_photo' || $news->news_type == 'evaluated_photo' || 
-             $news->news_type == 'new_institutional_photo' || $news->news_type == 'new_photo') {
-                if ($news->object_id == $photo->id) {
-                    $news->delete();
-                }
-          }
-          if ($news->news_type == 'commented_photo') {
-               $object_comment = Comment::find($news->object_id);
-               $object_photo = Photo::find($object_comment->photo_id);
-            if ($photo->id == $object_photo->id) {
-               $news->delete();
-            }
+    $all_users = User::all();
+    foreach ($all_users as $users) {
+      foreach ($users->news as $news) {
+        if ($news->news_type == 'liked_photo' || $news->news_type == 'highlight_of_the_week' ||
+           $news->news_type == 'edited_photo' || $news->news_type == 'evaluated_photo' || $news->news_type == 'new_institutional_photo' || $news->news_type == 'new_photo') {
+          if ($news->object_id == $photo->id) {
+              $news->delete();
           }
         }
+        if ($news->news_type == 'commented_photo') {          
+            $object_comment = Comment::find($news->object_id);          
+           if (!is_null($object_comment)) {
+               
+                    if( $object_comment->photo_id  == $photo->id ){
+                      
+                        News::where('id','=', $news->id )
+                        ->where('news_type', $news->news_type)
+                        ->delete();
+                        $news->delete();
+
+                    }              
+           }
+
+        } //commented
       }
+    }
   }
 
 
