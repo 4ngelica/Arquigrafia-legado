@@ -673,23 +673,7 @@ class PhotosController extends \BaseController {
       $tag->save();
     }
     DB::table('tag_assignments')->where('photo_id', '=', $photo->id)->delete();
-    $all_users = User::all();
-    foreach ($all_users as $users) {
-      foreach ($users->news as $news) {
-        if ($news->news_type == 'liked_photo' || $news->news_type == 'highlight_of_the_week' || $news->news_type == 'edited_photo' || $news->news_type == 'evaluated_photo' || $news->news_type == 'new_institutional_photo' || $news->news_type == 'new_photo') {
-          if ($news->object_id == $photo->id) {
-            $news->delete();
-          }
-        }
-        if ($news->news_type == 'commented_photo') {
-          $object_comment = Comment::find($news->object_id);
-          $object_photo = Photo::find($object_comment->photo_id);
-          if ($photo->id == $object_photo->id) {
-            $news->delete();
-          }
-        }
-      }
-    }
+
 
     $photo->delete();
     return Redirect::to('/users/' . $photo->user_id);
