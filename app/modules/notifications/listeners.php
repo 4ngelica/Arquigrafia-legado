@@ -4,8 +4,9 @@ use modules\collaborative\models\Like as Like;
 use modules\collaborative\models\Comment as Comment;
 
 Photo::deleted(function($photo){
-	$all_users = User::all();
-	foreach ($users->notifications as $notes) {
+    $all_users = User::all();
+    foreach ($all_users as $users) {
+      foreach ($users->notifications as $notes) {
         $curr_note = DB::table('notifications')->where('id', $notes->notification_id)->first();
         if (!is_null($curr_note)) {
           if ($curr_note->type == 'photo_liked') {
@@ -17,9 +18,8 @@ Photo::deleted(function($photo){
           if ($curr_note->type = 'comment_liked' || $curr_note->type = 'comment_posted') {
             $note_photo = null;
             $note_comment = Comment::find($curr_note->object_id);
-            if (!is_null($note_comment)) $note_photo = Photo::find($note_comment->photo_id);
-            if(!is_null($note_photo)) {
-              if ($photo->id == $note_photo->id) {
+            if (!is_null($note_comment)) {
+              if ($photo->id == $note_comment->photo_id) {
                 DB::table('notifications')->where('id', $notes->notification_id)->delete();
                 $notes->delete();
               }
@@ -27,6 +27,7 @@ Photo::deleted(function($photo){
           }
         }
       }
+    }
 });
 
 Like::created(function($like){
