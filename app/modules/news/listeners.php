@@ -51,6 +51,8 @@
   Photo::deleted (function ($photo) {
     if ( ! $photo->hasInstitution() ) {
       Leaderboard::decreaseUserScore($photo->user_id, 'uploads');
+      //delete activities in photo
+      //News::deletePhotoActivities($photo,'delete');
     }
     Leaderboard::decreaseUsersScores($photo->evaluators, 'evaluations');
   });

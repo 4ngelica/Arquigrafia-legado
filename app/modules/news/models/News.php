@@ -167,51 +167,52 @@ class News extends \Eloquent {
 
 
   public static function eventCommentedPhoto($comment, $type)
-  { $user = Auth::user();
+  { $user = Auth::user(); 
     foreach ($user->followers as $users) 
-    {
-        foreach ($users->news as $news) {  
+    { 
+        foreach ($users->news as $news) {   \Log::info("tipoComment=".$news->object_id);
           if ($news->news_type == $type && Comment::find($news->object_id)->photo_id == $comment->photo_id) {
               $last_news = $news;
-              $primary = $type;
+              $primary = $type;              
           }else if ($news->news_type == 'evaluated_photo' || $news->news_type == 'liked_photo') {
               if ($news->object_id == $comment->photo_id) {
                 $last_news = $news;
-                $primary = 'other';
+                $primary = 'other';                
               }
           }
-        }
+        }  
         if (isset($last_news)) {
-            $last_update = $last_news->updated_at;
+            $last_update = $last_news->updated_at; \Log::info("compar=".$comment->photo_id);
             if($last_update->diffInDays(Carbon::now('America/Sao_Paulo')) < 7) {
                 if ($news->sender_id == $user->id) {
-                    $already_sent = true;
+                    $already_sent = true; \Log::info("compar=".$comment->photo_id);
                 }else if ($news->data != null) {
                     $data = explode(":", $news->data);
                     for($i = 1; $i < count($data); $i++) {
                         if($data[$i] == $user->id) {
                             $already_sent = true;
                         }
-                    }
+                    } \Log::info("nonull=".$comment->photo_id);
                 }
                 if (!isset($already_sent)) {
                     $data = $last_news->data . ":" . $user->id;
                     $last_news->data = $data;
-                    $last_news->save();
+                    $last_news->save(); \Log::info("ja=".$comment->photo_id);
                 }
                 if ($primary == 'other') {
                     if ($last_news->secondary_type == null) {
                         $last_news->secondary_type = $type;
                     }else if ($last_news->tertiary_type == null) {
                         $last_news->tertiary_type = $type;
-                    }
+                    } \Log::info("other=".$comment->photo_id);
                     $last_news->save();
                 }
-            } else {
+            } else { \Log::info("mesmo=".$comment->photo_id);
                 Static::createNews('Comment',$comment->id,$users->id,$user->id,$type);                
             }
-        }else {        
+        }else {        \Log::info("come=".$comment->photo_id);
             Static::createNews('Comment',$comment->id,$users->id,$user->id,$type); 
+            \Log::info("saved=".$comment->photo_id);
         }
     } 
   }
@@ -327,7 +328,7 @@ class News extends \Eloquent {
   }
 
   public static function createNews($objectType, $objectId, $userId, $senderId, $type)
-  {
+  { 
 		$news = new News();
 		$news->object_type = $objectType;
     $news->object_id = $objectId;
@@ -353,6 +354,30 @@ class News extends \Eloquent {
   {   
 			return $query->where('id', '=', $currentId);
   }
+
+  public static function deletePhotoActivities($photo,$type)
+  {
+      $all_users = User::all();
+      foreach ($all_users as $users) {
+        foreach ($users->news as $news) {
+          if ($news->news_type == 'liked_photo' || $news->news_type == 'highlight_of_the_week' ||
+             $news->news_type == 'edited_photo' || $news->news_type == 'evaluated_photo' || 
+             $news->news_type == 'new_institutional_photo' || $news->news_type == 'new_photo') {
+                if ($news->object_id == $photo->id) {
+                    $news->delete();
+                }
+          }
+          if ($news->news_type == 'commented_photo') {
+               $object_comment = Comment::find($news->object_id);
+               $object_photo = Photo::find($object_comment->photo_id);
+            if ($photo->id == $object_photo->id) {
+               $news->delete();
+            }
+          }
+        }
+      }
+  }
+
 
     
 }
