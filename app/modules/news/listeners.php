@@ -43,8 +43,8 @@
 //
   Photo::updated(function ($photo) {
     if (!$photo->hasInstitution() ) {
-      News::eventUpdatePhoto($photo, 'edited_photo');
-    }
+          News::eventUpdatePhoto($photo, 'edited_photo');
+        }
   });
 
   //Gamification Related
