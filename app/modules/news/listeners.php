@@ -11,14 +11,14 @@
 
  
   User::updated(function($user)
-  {
-      if(Input::hasFile('photo')){ 
+  {   
+      if(Input::hasFile('photo')){           
     	   	News::eventNewPicture($user,'new_profile_picture'); 
     	}else if (Input::has('txtPicture')) {
-          if(trim(Input::get('txtPicture')) == "picture"){ 
+          if(trim(Input::get('txtPicture')) == "picture"){             
               News::eventGetFacebookPicture($user,'new_profile_picture');
           }
-      } else {
+      } else {        
     		  News::eventUpdateProfile($user,'edited_profile'); 
     	}
   });
@@ -35,7 +35,8 @@
         Leaderboard::increaseUserScore($photo->user_id, 'uploads');
     }else{
         //institutions
-        News::registerPhotoInstitutional($photo,'new_institutional_photo');
+        if($photo->draft == NULL)
+           News::registerPhotoInstitutional($photo,'new_institutional_photo');
     }
   });
   
@@ -44,7 +45,7 @@
   Photo::updated(function ($photo) {
     if (!$photo->hasInstitution() ) {
           News::eventUpdatePhoto($photo, 'edited_photo');
-        }
+    }
   });
 
   //Gamification Related

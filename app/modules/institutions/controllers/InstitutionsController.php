@@ -57,7 +57,7 @@ class InstitutionsController extends \BaseController {
     }
     $drafts = Photo::withInstitution($institution)->onlyDrafts()->paginate(50);  
 
-    return \View::make('show', [
+    return \View::make('show-institution', [
       'institution' => $institution,
       'photos' => $photos,
       'follow' => $follow,
