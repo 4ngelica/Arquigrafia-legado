@@ -11,7 +11,7 @@ class Notification extends \Eloquent{
 		return $this->belongsToMany('User', 'notification_user');
 	}
 
-	public function isNotificationByUser($user_id, $note_sender_id, $note_data){
+	public static function isNotificationByUser($user_id, $note_sender_id, $note_data){
 		if ($user_id == $note_sender_id) return true;
 		elseif ($note_data != null) {
 			$users = explode(":", $note_data);

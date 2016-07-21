@@ -65,9 +65,8 @@ Comment::created(function($comment){
             }
         }
         if (isset($note_id)) {
-            $notificationUser = new Notification();
             $note_from_table = \DB::table("notifications")->where("id","=", $note_id)->get();
-            if ($notificationUser->isNotificationByUser($user->id, 
+            if (Notification::isNotificationByUser($user->id, 
             												   $note_from_table[0]->sender_id, 
             												   $note_from_table[0]->data) == false) {
                 $new_data = $note_from_table[0]->data . ":" . $user->id;

@@ -14,17 +14,16 @@ class NotificationSubscriber {
 		    $info = $notification->render();
 		    if ($info[0] == "follow" && $notification->read_at == null) {
 		      //checa para agrupar caso ja haja e nao seja lida
-		        $noteNotificationId = $notification->notificationId;
+		        $noteNotificationId = $notification->notificationI_id;
 		        $noteUserId = $notification->id;
 		        $note = $notification; //relativo a notification_user
 		    }
 	    }
 	    if (isset($noteNotificationId)) { //update
-	    	$notificationUser = new Notification();
-		    $notificationFromTable = DB::table("notifications")->where("id","=", $noteNotificationId)->get();
-		    if ($notificationUser->isNotificationByUser($followingUserId, 
-		                                                      $notificationFromTable[0]->sender_id, 
-		                                                      $notificationFromTable[0]->data) == false) {
+		    $notificationFromTable = \DB::table("notifications")->where("id","=", $noteNotificationId)->get();
+		    if (Notification::isNotificationByUser($followingUserId, 
+		                                           $notificationFromTable[0]->sender_id, 
+		                                           $notificationFromTable[0]->data) == false) {
 
 		        $newData = $notificationFromTable[0]->data . ":" . $loggedUser->id;
 
@@ -36,8 +35,9 @@ class NotificationSubscriber {
 		        $note->save();  
 		    }
 	    }
-	  	else //novo
+	  	else{ //novo
 	  		\Notification::create('follow', $followingUser, $followedUser, [$followedUser], null);
+	  	}
 	    
 	}
 	public function subscribe($events) {
