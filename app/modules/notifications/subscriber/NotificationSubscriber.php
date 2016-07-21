@@ -20,8 +20,9 @@ class NotificationSubscriber {
 		    }
 	    }
 	    if (isset($noteNotificationId)) { //update
+	    	$notificationUser = new Notification();
 		    $notificationFromTable = DB::table("notifications")->where("id","=", $noteNotificationId)->get();
-		    if (NotificationsController::isNotificationByUser($followingUserId, 
+		    if ($notificationUser->isNotificationByUser($followingUserId, 
 		                                                      $notificationFromTable[0]->sender_id, 
 		                                                      $notificationFromTable[0]->data) == false) {
 

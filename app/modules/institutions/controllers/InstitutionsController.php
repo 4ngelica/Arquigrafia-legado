@@ -695,8 +695,9 @@ class InstitutionsController extends \BaseController {
             }
           }
           if (isset($note_id)) {
+               $notificationUser = new Notification();
                $note_from_table = DB::table("notifications")->where("id","=", $note_id)->get();
-              if (NotificationsController::isNotificationByUser($logged_user->id, $note_from_table[0]->sender_id, $note_from_table[0]->data) == false) {
+              if ($notificationUser->isNotificationByUser($logged_user->id, $note_from_table[0]->sender_id, $note_from_table[0]->data) == false) {
                 $new_data = $note_from_table[0]->data . ":" . $logged_user->id;
                 DB::table("notifications")->where("id", "=", $note_id)->update(array("data" => $new_data, "created_at" => Carbon::now('America/Sao_Paulo')));
                 $note->created_at = Carbon::now('America/Sao_Paulo');
