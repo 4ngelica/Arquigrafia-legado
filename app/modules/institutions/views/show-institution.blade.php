@@ -101,7 +101,7 @@
           @endif
         </hgroup>
         <div class="profile_box">
-          @include('drafts.list')
+          @include('list')
         </div>
       </div>
     </div>
