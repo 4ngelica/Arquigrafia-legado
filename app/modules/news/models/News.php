@@ -28,7 +28,7 @@ class News extends \Eloquent {
           		
              	$curr_note = $note;
             }
-        } \log::info("NewType=".$note->news_type);
+        }
         if(isset($curr_note)) {
         	\Log::info("Update");
         	$currentNews = Static::specificNews($curr_note->id)->first();                 	
