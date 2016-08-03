@@ -56,11 +56,12 @@ class PhotosController extends \BaseController {
     if (Auth::check()) {
       if(Session::has('institutionId')){
         $belongInstitution = Institution::belongInstitution($photos->id,Session::get('institutionId'));
+        
         $hasInstitution = Institution::belongSomeInstitution($photos->id);
         $institution = Institution::find(Session::get('institutionId')); 
       } else{
         $hasInstitution = Institution::belongSomeInstitution($photos->id);
-        
+        //dd($hasInstitution);
         if(!is_null($photo_institution) && $user->followingInstitution->contains($photo_institution->id)){ 
          
            $followInstitution = false;
@@ -124,7 +125,8 @@ class PhotosController extends \BaseController {
       'querySearch' => $querySearch,
       'currentPage' => $currentPage,
       'typeSearch' => $typeSearch,
-      'urlBack' => $urlBack
+      'urlBack' => $urlBack,
+      'institutionId' => $photos->institution_id
     ]);
   }
 
