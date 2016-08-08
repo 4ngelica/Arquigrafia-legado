@@ -51,7 +51,9 @@
           <br>
         </div>
       </div>
-
+      <br>
+      <div class="error">{{ $errors->first('photo') }}</div>
+      <br>
       <script type="text/javascript">
         function importPicture() {          
           $.get("/getPicture")

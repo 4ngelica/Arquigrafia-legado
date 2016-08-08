@@ -9,19 +9,19 @@
   use modules\institutions\models\Institution as Institution;
   use modules\institutions\models\Employee as Employee;
 
- 
-  User::updated(function($user)
-  {   
-      if(Input::hasFile('photo')){           
-    	   	News::eventNewPicture($user,'new_profile_picture'); 
-    	}else if (Input::has('txtPicture')) {
-          if(trim(Input::get('txtPicture')) == "picture"){             
+  User::updating(function($user)
+  {  \Log::info("foto=".Input::hasFile('photo'));
+    if(Input::hasFile('photo')){          
+          News::eventNewPicture($user,'new_profile_picture'); 
+    }elseif (Input::has('txtPicture')) {
+      if(trim(Input::get('txtPicture')) == "picture"){             
               News::eventGetFacebookPicture($user,'new_profile_picture');
-          }
-      } else {        
-    		  News::eventUpdateProfile($user,'edited_profile'); 
-    	}
+      }
+    }else{
+         News::eventUpdateProfile($user,'edited_profile'); 
+    }      
   });
+
    /*Module Gamification */
   User::created (function ($user) {
       Leaderboard::createFromUser($user);
