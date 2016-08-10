@@ -301,10 +301,8 @@ class PhotosController extends \BaseController {
             } elseif ( !empty($input["photo_album"]) ) {
                 DB::insert('insert into album_elements (album_id, photo_id) values (?, ?)', array($input["photo_album"], $photo->id));
             }
-            $ext = $file->getClientOriginalExtension();
-            $photo->nome_arquivo = $photo->id.".".$ext;
-            $photo->save();
-     
+            $ext = $file->getClientOriginalExtension();  
+            Photo::fileNamePhoto($photo, $ext);    
 
             $tags_copy = $input['tags'];
             $tags = explode(',', $input['tags']);
