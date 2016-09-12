@@ -218,7 +218,7 @@ class News extends \Eloquent {
   }
 
   public static function eventNewPicture($user, $type)
-  {
+  { 
       foreach ($user->followers as $users) 
       {
            foreach ($users->news as $note) {
@@ -226,7 +226,7 @@ class News extends \Eloquent {
                 $curr_note = $note;
               }
            }
-           if(isset($curr_note)) {
+           if(isset($curr_note)) { 
               if($note->sender_id == $user->id) {
                 $date = $curr_note->created_at;
                 if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {   

@@ -700,6 +700,11 @@ class Photo extends Eloquent {
 					
 	}
 
+	public static function fileNamePhoto($photo,$ext)
+	{	
+		if($photo!= null)
+			Photo::where('id',$photo->id)->update(['nome_arquivo' => $photo->id.".".$ext ]); 		
+	}
 	
 
 }

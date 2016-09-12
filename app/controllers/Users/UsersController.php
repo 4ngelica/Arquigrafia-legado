@@ -604,9 +604,7 @@ class UsersController extends \BaseController {
             $messages = array('old_password'=>array('Precisa inserir a senha antiga')); 
             return Redirect::to('/users/' . $id . '/edit')->withErrors($messages);
        }      
-
-      $user->touch();
-      $user->save();   
+ 
 
       if ($input["institution"] != null or $input["occupation"] != null) {
         $occupation = Occupation::firstOrCreate(['user_id'=>$user->id]);
@@ -615,19 +613,20 @@ class UsersController extends \BaseController {
         $occupation->save();
       }
 
+
       if (Input::hasFile('photo') and Input::file('photo')->isValid())  {    
         $file = Input::file('photo');
         $ext = $file->getClientOriginalExtension();
+       
         $user->photo = "/arquigrafia-avatars/".$user->id.".jpg";
-        $user->save();
+        //$user->save();
         $image = Image::make(Input::file('photo'))->encode('jpg', 80);         
         $image->save(public_path().'/arquigrafia-avatars/'.$user->id.'.jpg');
-        $file->move(public_path().'/arquigrafia-avatars', $user->id."_original.".strtolower($ext)); 
-        
-      
-      } else {
-        
-      }
+        $file->move(public_path().'/arquigrafia-avatars', $user->id."_original.".strtolower($ext));        
+      } 
+      $user->touch();
+      $user->save(); 
+
       return Redirect::to("/users/{$user->id}")->with('message', '<strong>Edição de perfil do usuário</strong><br>Dados alterados com sucesso'); 
       
     }    
