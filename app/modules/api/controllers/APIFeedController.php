@@ -1,5 +1,6 @@
 <?php 
 namespace modules\api\controllers;
+use modules\institutions\models\Institution;
 
 class APIFeedController extends \BaseController {
 
@@ -19,7 +20,7 @@ class APIFeedController extends \BaseController {
 				array_push($result, ["photo" => $photo, "sender" => \User::find($photo->user_id)]);
 			}
 			else {
-				array_push($result, ["photo" => $photo, "sender" => \Institution::find($photo->institution_id)]);	
+				array_push($result, ["photo" => $photo, "sender" => Institution::find($photo->institution_id)]);	
 			}
 		}
 		return \Response::json($result);
@@ -43,7 +44,7 @@ class APIFeedController extends \BaseController {
 				array_push($result, ["photo" => $photo, "sender" => \User::find($photo->user_id)]);
 			}
 			else {
-				array_push($result, ["photo" => $photo, "sender" => \Institution::find($photo->institution_id)]);	
+				array_push($result, ["photo" => $photo, "sender" => Institution::find($photo->institution_id)]);	
 			}
 		}
 		return \Response::json($result);
@@ -56,7 +57,6 @@ class APIFeedController extends \BaseController {
 	public function loadMoreRecentPhotos() {
 		$input = \Input::all();
 		$max_id = $input["max_id"];
-
 		return \Response::json(\Photo::where('id', '<', $max_id)->orderBy('created_at', 'desc')->take(20)->get());
 	}
 }

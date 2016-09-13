@@ -1,6 +1,8 @@
 <?php
 namespace modules\api\controllers;
 use lib\utils\ActionUser;
+use modules\collaborative\models\Tag;
+use modules\institutions\models\Institution;
 
 class APISearchController extends \BaseController {
 
@@ -11,7 +13,7 @@ class APISearchController extends \BaseController {
         if ($needle != "") {        
             $tags = null;
             $allAuthors =  null;
-            $query = \Tag::where('name', 'LIKE', '%' . $needle . '%')->where('count', '>', 0);  
+            $query = Tag::where('name', 'LIKE', '%' . $needle . '%')->where('count', '>', 0);  
             $tags = $query->get(); 
             
             $allAuthors = \DB::table('authors')
@@ -34,7 +36,7 @@ class APISearchController extends \BaseController {
             });
             $photos =  $query->orderBy('created_at', 'DESC')->get();
 
-            $query = \Tag::where('name', '=', $needle); 
+            $query = Tag::where('name', '=', $needle); 
             $tags = $query->get();
             foreach ($tags as $tag) { 
                 $byTag = $tag->photos;                
@@ -48,7 +50,7 @@ class APISearchController extends \BaseController {
                 $photos = $photos->merge($byAuthor);                
             }
 
-            $query = \Institution::where(function($query) use($needle) {
+            $query = Institution::where(function($query) use($needle) {
                     $query->where('name', 'LIKE', '%'. $needle .'%');
                     $query->orWhere('acronym', '=',  $needle);
                 });
@@ -74,7 +76,7 @@ class APISearchController extends \BaseController {
         if ($needle != "") {        
             $tags = null;
             $allAuthors =  null;
-            $query = \Tag::where('name', 'LIKE', '%' . $needle . '%')->where('count', '>', 0);  
+            $query = Tag::where('name', 'LIKE', '%' . $needle . '%')->where('count', '>', 0);  
             $tags = $query->get(); 
             
             $allAuthors = \DB::table('authors')
@@ -97,7 +99,7 @@ class APISearchController extends \BaseController {
             });
             $photos =  $query->where('id', '<', $max_id)->orderBy('created_at', 'DESC')->get();
 
-            $query = \Tag::where('name', '=', $needle); 
+            $query = Tag::where('name', '=', $needle); 
             $tags = $query->get();
             foreach ($tags as $tag) { 
                 $byTag = $tag->photos;
@@ -119,7 +121,7 @@ class APISearchController extends \BaseController {
                 }                 
             }
 
-            $query = \Institution::where(function($query) use($needle) {
+            $query = Institution::where(function($query) use($needle) {
                     $query->where('name', 'LIKE', '%'. $needle .'%');
                     $query->orWhere('acronym', '=',  $needle);
                 });

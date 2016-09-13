@@ -1,12 +1,14 @@
 <?php 
 namespace modules\api\controllers;
 use lib\utils\ActionUser;
+use modules\evaluations\models\Evaluation;
+use modules\evaluations\models\Binomial;
 
 class APIEvaluationController extends \BaseController {
 
 	public function retrieveEvaluation($photoId, $userId) {
-		$binomials = \Binomial::all()->keyBy('id');
-		$evaluations =  \Evaluation::where("user_id",
+		$binomials = Binomial::all()->keyBy('id');
+		$evaluations =  Evaluation::where("user_id",
         $userId)->where("photo_id", $photoId)->orderBy("binomial_id", "asc")->get();
         $evaluations = $evaluations->keyBy('binomial_id');
         $result = [];
@@ -25,13 +27,13 @@ class APIEvaluationController extends \BaseController {
 		$input = \Input::all();
 		$input = $input["params"]["data"];
 
-		$evaluations =  \Evaluation::where("user_id",
+		$evaluations =  Evaluation::where("user_id",
         $userId)->where("photo_id", $photoId)->orderBy("binomial_id", "asc")->get();
-        $binomials = \Binomial::all();
+        $binomials = Binomial::all();
         $evaluation_sentence = "";
         if ($evaluations->isEmpty()) {
         	foreach ($binomials as $binomial) {
-        		$newEvaluation = \Evaluation::create([
+        		$newEvaluation = Evaluation::create([
             		'photo_id'=> $photoId,
             		'evaluationPosition'=> $input[$binomial->id],
             		'binomial_id'=> $binomial->id,
@@ -51,7 +53,7 @@ class APIEvaluationController extends \BaseController {
           		$evaluation->areArchitecture = $input["areArchitecture"];
           		$evaluation->evaluationPosition = $input[$evaluation->binomial_id];
           		$evaluation->save();
-                $evaluation_sentence = $evaluation_sentence . \Binomial::find($evaluation->binomial_id)->firstOption . "-" . \Binomial::find($evaluation->binomial_id)->secondOption . ": " . $input[$evaluation->binomial_id] . ", ";
+                $evaluation_sentence = $evaluation_sentence . Binomial::find($evaluation->binomial_id)->firstOption . "-" . Binomial::find($evaluation->binomial_id)->secondOption . ": " . $input[$evaluation->binomial_id] . ", ";
         	}
 
             /* Registro de logs */
@@ -61,9 +63,9 @@ class APIEvaluationController extends \BaseController {
 	}
 
     public function averageEvaluationValues($photoId, $userId) {
-        $result["binomials"] = \Binomial::all()->keyBy('id');
-        $result["average"] = \Evaluation::average($photoId);
-        $evaluations =  \Evaluation::where("user_id",
+        $result["binomials"] = Binomial::all()->keyBy('id');
+        $result["average"] = Evaluation::average($photoId);
+        $evaluations =  Evaluation::where("user_id",
         $userId)->where("photo_id", $photoId)->orderBy("binomial_id", "asc")->get();
         $evaluations = $evaluations->keyBy('binomial_id');
         $result["user_evaluation"] = $evaluations;

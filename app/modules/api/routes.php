@@ -1,4 +1,6 @@
 <?php
+Route::group(array('middleware' => 'cors', 'prefix' => 'api/'), function()
+{
  /* Controlador de fotos, usuários e adjacentes */
     Route::resource('photos', 'modules\api\controllers\APIPhotosController');
     Route::resource('users', 'modules\api\controllers\APIUsersController');
@@ -28,3 +30,4 @@
     Route::get('moreRecent', 'modules\api\controllers\APIFeedController@loadMoreRecentPhotos');
     Route::post('search', 'modules\api\controllers\APISearchController@search');
     Route::post('moreSearch', 'modules\api\controllers\APISearchController@moreSearch');
+});

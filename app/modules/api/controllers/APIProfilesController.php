@@ -1,5 +1,6 @@
 <?php 
 namespace modules\api\controllers;
+use modules\evaluations\models\Evaluation;
 
 class APIProfilesController extends \BaseController {
 
@@ -22,7 +23,7 @@ class APIProfilesController extends \BaseController {
 	}
 
 	public function getUserEvaluations($id) {
-		$evaluations = \Evaluation::where("user_id", $id)->groupBy('photo_id')->distinct()->orderBy('id', 'desc')->take(20)->get();
+		$evaluations = Evaluation::where("user_id", $id)->groupBy('photo_id')->distinct()->orderBy('id', 'desc')->take(20)->get();
 		return \Response::json(["photos" => \Photo::whereIn('id', $evaluations->lists('photo_id'))->get(), "max_id" => $evaluations[count($evaluations)-1]->id]);
 	}
 
@@ -30,7 +31,7 @@ class APIProfilesController extends \BaseController {
 		$input = \Input::all();
 		$max_id = $input["max_id"];
 
-		$evaluations = \Evaluation::where("user_id", $id)->where("id", "<", $max_id)->groupBy('photo_id')->distinct()->orderBy('id', 'desc')->take(20)->get();
+		$evaluations = Evaluation::where("user_id", $id)->where("id", "<", $max_id)->groupBy('photo_id')->distinct()->orderBy('id', 'desc')->take(20)->get();
 		return \Response::json(["photos" => \Photo::whereIn('id', $evaluations->lists('photo_id'))->get(), "max_id" => $evaluations[count($evaluations)-1]->id]);
 	}
 
