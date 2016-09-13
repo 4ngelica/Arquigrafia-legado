@@ -17,6 +17,12 @@ ClassLoader::addDirectories(array(
 	app_path().'/controllers',
 	app_path().'/models',
 	app_path().'/database/seeds',
+	app_path().'/controllers/Users',
+	app_path().'/models/Users',
+	//app_path().'/controllers/Evaluations',
+	//app_path().'/models/Evaluations',
+	app_path().'/controllers/Photos',
+	app_path().'/models/Photos',
 
 ));
 
@@ -80,4 +86,11 @@ App::down(function()
 
 require app_path().'/filters.php';
 
-require app_path().'/lib/gamification/gamification.php';
+require app_path().'/modules/institutions/institutions.php';
+require app_path().'/modules/collaborative/collaborative.php';
+require app_path().'/modules/evaluations/evaluations.php';
+require app_path().'/modules/notifications/notifications.php';
+require app_path().'/modules/gamification/gamification.php';
+require app_path().'/modules/news/news.php';
+require app_path().'/modules/draft/draft.php';
+require app_path().'/modules/api/api.php';

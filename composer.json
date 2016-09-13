@@ -11,7 +11,8 @@
 		"watson/validating": "0.10.*",
 		"maatwebsite/excel": "1.*",
 		"jaybizzle/crawler-detect" :"1.*",
-		"pda/pheanstalk": "2.1.*"
+		"pda/pheanstalk": "2.1.*",
+		"barryvdh/laravel-cors": "0.2.x"
 	},
 	"require-dev": {
 		"league/factory-muffin": "~2.1",
@@ -27,10 +28,18 @@
 			"app/models",
 			"app/database/migrations",
 			"app/database/seeds",
-			"app/tests/TestCase.php"
+			"app/tests/TestCase.php",
+			"app/models/Users",
+			"app/controllers/Users",
+			"app/models/Photos",
+			"app/controllers/Photos",
+			"app/controllers/Albums",
+			"app/models/Albums"
 		],
 		"psr-4": {
-            "lib\\":"app/lib"
+            "lib\\":"app/lib",
+            "modules\\":"app/modules",
+            "subscriber\\":"app/subscriber"
 		}
 	},
 	"scripts": {

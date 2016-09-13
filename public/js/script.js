@@ -24,8 +24,11 @@ $(document).ready(function(){
 			$('#registration_delete form').attr('action', this.href);
 			if ($(this).hasClass('album'))
 				$('#registration_delete p').html('Tem certeza que deseja excluir este álbum?');
-			else
+			else if($(this).hasClass('institution'))
+				$('#registration_delete p').html('A imagem institucional pode estar comentada,tem certeza que deseja excluir esta imagem?');
+			else	
 				$('#registration_delete p').html('A imagem pode estar avaliada,tem certeza que deseja excluir esta imagem?');
+					
 			$('#mask').fadeIn('fast');
 			$('#confirmation_window').fadeIn('slow');
 
@@ -47,7 +50,7 @@ $(document).ready(function(){
 			if ($(this).hasClass('album'))
 				$('#registration_delete p').html('Tem certeza que deseja excluir este álbum?');
 			else
-				$('#registration_delete p').html('Tem certeza que deseja excluir esta imagem?');
+				$('#registration_delete p').html('<center>Ao clicar em confirmar a imagem será excluída do seu perfil e álbum. </center> <br><center><strong> Tem certeza que deseja excluir esta imagem ?</strong></center>');
 			$('#mask').fadeIn('fast');
 			$('#confirmation_window').fadeIn('slow');
 		});		
