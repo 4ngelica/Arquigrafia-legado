@@ -27,7 +27,7 @@ class CreateEventDeleteInactiveAccounts extends Migration {
 	public function down()
 	{
 		$q = "DROP EVENT IF EXISTS `delete_inactive_accounts`";		
-		DB::insert(DB::raw($q));
+		DB::connection()->getPdo()->exec($q);
 	}
 
 }
