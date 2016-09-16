@@ -1,5 +1,6 @@
 <?php
 namespace modules\api\controllers;
+use modules\collaborative\models\Tag;
 
 class APITagsController extends \BaseController {
 	/**
@@ -9,7 +10,7 @@ class APITagsController extends \BaseController {
 	 */
 	public function index()
 	{
-		return \Response::json(\Tag::all()->toArray());
+		return \Response::json(Tag::all()->toArray());
 	}
 
 
