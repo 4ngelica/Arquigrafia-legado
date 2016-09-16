@@ -2,6 +2,7 @@
 namespace modules\api\controllers;
 use Photo;
 use lib\utils\ActionUser;
+use modules\collaborative\models\Tag;
 
 class APIPhotosController extends \BaseController {
 
@@ -89,8 +90,8 @@ class APIPhotosController extends \BaseController {
 
 			$finalTags = explode(",", $tags);
 
-			$tags = \PhotosController::formatTags($finalTags);
-			$tagsSaved = \PhotosController::saveTags($finalTags,$photo);
+			$tags = Tag::formatTags($finalTags);
+			$tagsSaved = Tag::saveTags($finalTags,$photo);
               
             if(!$tagsSaved){ 
                   $photo->forceDelete();
@@ -229,8 +230,8 @@ class APIPhotosController extends \BaseController {
 			else { 
 				$tags_copy = implode(",", $tags); 
 			}
-			$tags = \PhotosController::formatTags($tags);
-			$tagsSaved = \PhotosController::updateTags($tags,$photo);
+			$tags = Tag::formatTags($tags);
+			$tagsSaved = Tag::updateTags($tags,$photo);
 	          
 	        if(!$tagsSaved){ 
 	              $photo->forceDelete();
