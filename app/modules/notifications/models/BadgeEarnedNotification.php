@@ -1,4 +1,4 @@
-    <?php
+<?php
 namespace modules\notifications\models;
 
 use \Tricki\Notification\Models\Notification;
