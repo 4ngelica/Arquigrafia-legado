@@ -23,6 +23,12 @@ class APIFeedController extends \BaseController {
 				array_push($result, ["photo" => $photo, "sender" => Institution::find($photo->institution_id)]);	
 			}
 		}
+		if(empty($result)) {
+			$institutions_photos = DB::table('photos')->whereNull('deleted_at')->whereNotNull('institution_id')->orderBy('created_at', 'desc')->take(20)->get();
+			foreach ($institutions_photos as $photo) {
+				array_push($result, ["photo" => $photo, "sender" => Institution::find($photo->institution_id)]);
+			}
+		}
 		return \Response::json($result);
 	}
 
@@ -45,6 +51,12 @@ class APIFeedController extends \BaseController {
 			}
 			else {
 				array_push($result, ["photo" => $photo, "sender" => Institution::find($photo->institution_id)]);	
+			}
+		}
+		if(empty($result)) {
+			$institutions_photos = DB::table('photos')->whereNull('deleted_at')->whereNotNull('institution_id')->where('id', '<', $max_id)->orderBy('created_at', 'desc')->take(20)->get();
+			foreach ($institutions_photos as $photo) {
+				array_push($result, ["photo" => $photo, "sender" => Institution::find($photo->institution_id)]);
 			}
 		}
 		return \Response::json($result);
