@@ -42,7 +42,7 @@ class News extends \Eloquent {
 
   public static function registerPhotoEvaluated($evaluate,$type)
   {
-        $user = Auth::user();
+        $user = User::find($evaluate->user_id);
         foreach ($user->followers as $users) {
             foreach ($users->news as $news) {
                 if ($news->news_type == $type && $news->object_id == $evaluate->photo_id) {
@@ -262,25 +262,25 @@ class News extends \Eloquent {
   }
 
   public static function eventNewPhoto($photo, $type)
-  {  
-      foreach(User::find($photo->user_id)->followers as $users) 
+  {  $userObject=User::find($photo->user_id);
+      foreach($userObject->followers as $users) 
       {
           foreach ($users->news as $note) {
-            if($note->news_type == $type && $note->sender_id == Auth::user()->id) {
+            if($note->news_type == $type && $note->sender_id == $userObject->id) {
               $curr_note = $note;
             }
           }
           if(isset($curr_note)) {
               $date = $curr_note->created_at;
               if($date->diffInDays(Carbon::now('America/Sao_Paulo')) > 7) {                                               
-                  Static::createNews('Photo', $photo->id,$users->id,Auth::user()->id,$type);               
+                  Static::createNews('Photo', $photo->id,$users->id,$userObject->id,$type);               
               }else {
                 $curr_note->object_id = $photo->id;
                 $curr_note->save();
                 
               }
           }else { 
-            Static::createNews('Photo', $photo->id,$users->id,Auth::user()->id,$type);              
+            Static::createNews('Photo', $photo->id,$users->id,$userObject->id,$type);              
           }
       }
   }
