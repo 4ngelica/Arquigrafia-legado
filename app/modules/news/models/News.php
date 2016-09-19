@@ -262,8 +262,8 @@ class News extends \Eloquent {
   }
 
   public static function eventNewPhoto($photo, $type)
-  {
-      foreach(Auth::user()->followers as $users) 
+  {  
+      foreach(User::find($photo->user_id)->followers as $users) 
       {
           foreach ($users->news as $note) {
             if($note->news_type == $type && $note->sender_id == Auth::user()->id) {
