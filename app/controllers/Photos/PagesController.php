@@ -63,7 +63,7 @@ class PagesController extends BaseController {
         return View::make('api.panel', ['photos' => $photos]);
     }
 
-    private static function userPhotosSearch($needle) {
+    public static function userPhotosSearch($needle) {
         $query = User::where('id', '>', 0);
         $query->where('name', 'LIKE', '%'. $needle .'%');
         $userList = $query->get();    
