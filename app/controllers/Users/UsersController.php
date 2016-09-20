@@ -771,7 +771,7 @@ class UsersController extends \BaseController {
     DB::table('notification_user')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
     DB::table('likes')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
     DB::table('occupations')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
-    DB::table('scores')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
+    // DB::table('scores')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
     DB::table('users_roles')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
     DB::table('user_badges')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
     DB::table('employees')->where('user_id', '=', $accountFrom->id)->update(array('user_id' => $accountTo->id));
