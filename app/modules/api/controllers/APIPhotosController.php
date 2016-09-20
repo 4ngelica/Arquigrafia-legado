@@ -3,6 +3,7 @@ namespace modules\api\controllers;
 use Photo;
 use lib\utils\ActionUser;
 use modules\collaborative\models\Tag;
+use modules\institutions\models\Institution;
 
 class APIPhotosController extends \BaseController {
 
@@ -139,7 +140,7 @@ class APIPhotosController extends \BaseController {
 		$user_id = \Input::get("user_id");
 		$tags = $photo->tags->lists('name');
 		if (!is_null($photo->institution_id)) {
-			$sender = \Institution::find($photo->institution_id);
+			$sender = Institution::find($photo->institution_id);
 		}
 		$license = \Photo::licensePhoto($photo);
 		$authorsList = $photo->authors->lists('name');
