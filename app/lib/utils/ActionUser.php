@@ -97,6 +97,17 @@ class ActionUser {
         $log = new Logger('UpOrDownload_logger');
         ActionUser::addInfoToLog($log, $file_path, $info);
     }
+    //Photos Controller
+    public static function printEditOrDeletePhotoLog($user_id, $photo_id, $source_page, $edit_or_delete, $user_or_visitor) {
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        list($date_only) = explode(" ", $date_and_time);
+        $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
+        ActionUser::verifyTimeout($file_path, $user_id, $source_page);
+        $info = sprintf('[%s] ' . $edit_or_delete . ' da foto de ID nº: %d, pela página %s', $date_and_time, $photo_id, $source_page);
+
+        $log = new Logger('EditOrDelete_logger');
+        ActionUser::addInfoToLog($log, $file_path, $info);
+    }
     //Users Controller
     public static function printFollowOrUnfollowLog($user_id, $target_user_id, $source_page, $follow_or_unfollow, $user_or_visitor) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();

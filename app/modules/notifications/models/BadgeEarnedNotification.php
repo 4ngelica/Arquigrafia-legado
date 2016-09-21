@@ -3,7 +3,7 @@ namespace modules\notifications\models;
 
 use \Tricki\Notification\Models\Notification;
 use User;
-use lib\gamification\models\Badge;
+use modules\gamification\models\Badge;
 
 class BadgeEarnedNotification extends \Tricki\Notification\Models\Notification
 {
