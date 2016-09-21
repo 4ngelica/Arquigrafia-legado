@@ -61,8 +61,9 @@ class APISearchController extends \BaseController {
                 $photos = $photos->merge($byInstitution);
             }  
         }
-        $photos = $photos->sortByDesc('id')->take(20);
-
+        if (!is_null($photos)) {
+            $photos = $photos->sortByDesc('id')->take(20);
+        }
         /* Registro de logs */
         ActionUser::printSearch($user_id, 'mobile', $needle, 'user');
 
