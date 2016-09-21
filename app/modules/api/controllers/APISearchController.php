@@ -64,13 +64,15 @@ class APISearchController extends \BaseController {
         if (isset($photos)) {
             if (!is_null($photos)) {
                 $photos = $photos->sortByDesc('id')->take(20);
+
+                /* Registro de logs */
+                ActionUser::printSearch($user_id, 'mobile', $needle, 'user');
+
+                return \Response::json($photos);
             }
         }
-        
-        /* Registro de logs */
-        ActionUser::printSearch($user_id, 'mobile', $needle, 'user');
 
-        return \Response::json($photos);
+        return \Response::json("");
 	}
 
 	public function moreSearch() {
