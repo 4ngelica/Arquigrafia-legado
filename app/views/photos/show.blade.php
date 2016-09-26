@@ -181,6 +181,11 @@
                 <a href="{{ URL::to('/dislike/' . $photos->id ) }}" id="like_button" class="dislike" title="Descurtir"></a>
               </li>
             @endif
+            <!-- REPORT -->
+              <li>
+                <a href="{{ URL::to('/reports/showModalReport/' . $photos->id) }}" title="Reportar imagem" id="denounce_photo"></a>
+              </li>
+
           </ul>
         @else
           <div class="six columns alpha">
@@ -603,6 +608,12 @@
     <a class="close" href="#" title="FECHAR">Fechar</a>
     <div id="registration"></div>
   </div>
+  <!-- REport-->
+    <div id="form_window_notify" class="form window">
+        <a class="close" href="#" title="FECHAR">Fechar</a>
+        <div id="registration_notify"></div>
+    </div>
+<!-- FIM REport-->
   <div id="confirmation_window" class="window">
     <div id="registration_delete">
       <p></p>

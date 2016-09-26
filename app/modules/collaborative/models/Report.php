@@ -1,6 +1,9 @@
 <?php
+namespace modules\collaborative\models;
+use User;
+use Photo;
 
-class Report extends Eloquent {
+class Report extends \Eloquent {
 
   public $timestamps = true;
 

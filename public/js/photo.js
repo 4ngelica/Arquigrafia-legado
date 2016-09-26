@@ -48,6 +48,20 @@ $(document).ready(function() {
     });
   });
 
+  $('#denounce_photo').live('click', function(e){
+    e.preventDefault();
+    $.fancybox.close(true);
+    $('#mask').fadeIn('fast');
+    $('#form_window_notify').fadeIn('slow');
+    $.get(this.href).done(function(data) {
+      $("#registration_notify").empty();
+      $("#registration_notify").append(data);
+    })
+    .fail(function() {
+      console.error("Erro ao tentar carregar foto via AJAX!");
+    });
+  });
+
   $("#like_button").click(function(e) {
     var like_button = $(this);
     e.preventDefault();

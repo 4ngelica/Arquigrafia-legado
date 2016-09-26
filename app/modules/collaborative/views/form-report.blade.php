@@ -2,7 +2,7 @@
 <div id="reportPhoto" class="reportPhoto">
 
    <br>
-   {{ Form::open(array( 'url' => '/photos/reportPhoto')) }}
+   {{ Form::open(array( 'url' => '/reports/photo')) }}
    {{ Form::hidden('_photo', $photo_id) }}
 
    <div class="four columns"><p>{{ Form::label('DataType', 'Fotos / Dados') }}</p></div>

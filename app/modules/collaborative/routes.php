@@ -19,5 +19,10 @@ Route::resource('/groups','modules\collaborative\controllers\GroupsController');
 
 /*EVENTS */
 Event::subscribe('modules\collaborative\subscriber\LikeSubscriber');
+/*REPORTs*/
+Route::post('/reports/photo','modules\collaborative\controllers\ReportsController@reportPhoto');
+Route::get('/reports/showModalReport/{id}', 'modules\collaborative\controllers\ReportsController@showModalReportPhoto');
+//Route::get('/photos/showModalReport/{id}', 'ReportController@showModalReportPhoto');
+
 
 
