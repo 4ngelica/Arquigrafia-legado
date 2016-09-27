@@ -609,9 +609,9 @@
     <div id="registration"></div>
   </div>
   <!-- REport-->
-    <div id="form_window_notify" class="form window">
+    <div id="form_window_report" class="form window">
         <a class="close" href="#" title="FECHAR">Fechar</a>
-        <div id="registration_notify"></div>
+        <div id="registration_report"></div>
     </div>
 <!-- FIM REport-->
   <div id="confirmation_window" class="window">

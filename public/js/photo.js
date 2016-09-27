@@ -52,10 +52,10 @@ $(document).ready(function() {
     e.preventDefault();
     $.fancybox.close(true);
     $('#mask').fadeIn('fast');
-    $('#form_window_notify').fadeIn('slow');
+    $('#form_window_report').fadeIn('slow');
     $.get(this.href).done(function(data) {
-      $("#registration_notify").empty();
-      $("#registration_notify").append(data);
+      $("#registration_report").empty();
+      $("#registration_report").append(data);
     })
     .fail(function() {
       console.error("Erro ao tentar carregar foto via AJAX!");
