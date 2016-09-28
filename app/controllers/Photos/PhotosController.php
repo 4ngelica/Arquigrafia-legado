@@ -30,6 +30,15 @@ class PhotosController extends \BaseController {
 
   public function show($id)
   { 
+            // $actionContent['upload'] = null;
+            // $actionContent['tags_insert'] = "[aa,bb]";
+            // foreach($actionContent as $action=>$content)
+            //   {
+            //       echo $action . " <br> ";
+            //       echo $content . " <br> ";
+            //   }
+
+            //   die();
     $photos = Photo::find($id);
     if ( !isset($photos) ) {
       return Redirect::to('/');
@@ -324,8 +333,12 @@ class PhotosController extends \BaseController {
             }
             $input['autoOpenModal'] = 'true';  
             $source_page = $input["pageSource"]; //get url of the source page through form
-            ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $source_page, "Upload", "user");
-            ActionUser::printTags($photo->user_id, $photo->id, $tags_copy, $source_page, "user", "Inseriu");
+           // ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, $source_page, "Upload", "user");
+           // ActionUser::printTags($photo->user_id, $photo->id, $tags_copy, $source_page, "user", "Inseriu");
+
+            $actionContent['upload'] = NULL;
+            $actionContent['tags_insert'] = $tags_copy;
+            ActionUser::printEventLogs($photo->user_id, $photo->id, $source_page, $actionContent, 'Web');
 
             if(array_key_exists('rotate', $input))
               $angle = (float)$input['rotate'];

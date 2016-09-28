@@ -7,6 +7,7 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
 use Illuminate\Filesystem\Filesystem;
+use Auth;
 
 class ActionUser {
     public static function convertArrayObjectToString($array, $atribute) {
@@ -252,4 +253,41 @@ class ActionUser {
         $log = new Logger('Notification logger');
         ActionUser::addInfoToLog($log, $file_path, $info);
     }
+
+   // $photo->user_id, $photo->id, $source_page, $actionContent, 'mobile'
+     public static function printEventLogs($userId, $photoId, $sourcePage, $actionContent, $device) {
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        list($date_only) = explode(" ", $date_and_time);
+        if(Auth::check())
+            $userType = 'user';
+        else
+            $userType = 'visitor';
+
+        $filePath = ActionUser::createDirectoryAndFile($date_only, $userId, $sourcePage, $userType);
+        
+        ActionUser::verifyTimeout($filePath, $userId, $sourcePage);
+
+        foreach($actionContent as $action=>$content)
+          {
+              switch ($action) {
+                case "upload":  
+           //      \Log::info("actionccc =".$action."=C=>".$content);  
+                    $info = sprintf('[%s] ' . $action . ' da foto de ID nº: %d, pela página %s', $date_and_time, $photoId, $sourcePage);
+                    $titleLog ='UpOrDownload_logger';
+                    $log = new Logger($titleLog);
+                    ActionUser::addInfoToLog($log, $filePath, $info);
+                    break;
+                case "tags_insert":                       
+                    $info = sprintf('[%s] Inseriu as tags: ' . $content . '. Pertencentes a foto de ID nº: %d', $date_and_time, $photoId);                  
+                    $titleLog = 'Tags logger';        
+                    $log = new Logger($titleLog);
+                    ActionUser::addInfoToLog($log, $filePath, $info);            
+                    break;                
+              }
+          }
+
+    }
+
+
+
 }
