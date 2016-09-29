@@ -255,7 +255,7 @@ class ActionUser {
     }
 
    // $photo->user_id, $photo->id, $source_page, $actionContent, 'mobile'
-     public static function printEventLogs($userId, $photoId, $sourcePage, $actionContent, $device) {
+    public static function printEventLogs($userId, $photoId, $sourcePage, $actionContent, $device) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
         list($date_only) = explode(" ", $date_and_time);
         if(Auth::check())
@@ -271,23 +271,22 @@ class ActionUser {
           {
               switch ($action) {
                 case "upload":  
-           //      \Log::info("actionccc =".$action."=C=>".$content);  
+                    //      \Log::info("actionccc =".$action."=C=>".$content);  
                     $info = sprintf('[%s] ' . $action . ' da foto de ID nº: %d, pela página %s', $date_and_time, $photoId, $sourcePage);
-                    $titleLog ='UpOrDownload_logger';
-                    $log = new Logger($titleLog);
-                    ActionUser::addInfoToLog($log, $filePath, $info);
+                    ActionUser::generalAddInfoLogs('UpOrDownload_logger', $filePath, $info);
                     break;
                 case "tags_insert":                       
                     $info = sprintf('[%s] Inseriu as tags: ' . $content . '. Pertencentes a foto de ID nº: %d', $date_and_time, $photoId);                  
-                    $titleLog = 'Tags logger';        
-                    $log = new Logger($titleLog);
-                    ActionUser::addInfoToLog($log, $filePath, $info);            
+                    ActionUser::generalAddInfoLogs('Tags logger', $filePath, $info);
                     break;                
               }
           }
 
     }
 
-
+    public static function generalAddInfoLogs($titleLog, $filePath, $info) {
+        $log = new Logger($titleLog);
+        ActionUser::addInfoToLog($log, $filePath, $info);            
+    }
 
 }
