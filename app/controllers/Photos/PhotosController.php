@@ -30,15 +30,6 @@ class PhotosController extends \BaseController {
 
   public function show($id)
   { 
-            // $actionContent['upload'] = null;
-            // $actionContent['tags_insert'] = "[aa,bb]";
-            // foreach($actionContent as $action=>$content)
-            //   {
-            //       echo $action . " <br> ";
-            //       echo $content . " <br> ";
-            //   }
-
-            //   die();
     $photos = Photo::find($id);
     if ( !isset($photos) ) {
       return Redirect::to('/');

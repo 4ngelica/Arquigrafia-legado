@@ -271,7 +271,6 @@ class ActionUser {
           {
               switch ($action) {
                 case "upload":  
-                    //      \Log::info("actionccc =".$action."=C=>".$content);  
                     $info = sprintf('[%s] ' . $action . ' da foto de ID nº: %d, pela página %s', $date_and_time, $photoId, $sourcePage);
                     ActionUser::generalAddInfoLogs('UpOrDownload_logger', $filePath, $info);
                     break;
