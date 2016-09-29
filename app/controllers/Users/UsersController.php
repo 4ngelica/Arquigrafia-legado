@@ -254,7 +254,7 @@ class UsersController extends \BaseController {
         {  
           Session::forget('filter.login');
           $source_page = Request::header('referer');
-          ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+         // ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
           if (isset($integration_message)) {
             return Redirect::to('/')->with('msgWelcome', $integration_message);  
           }
@@ -266,7 +266,7 @@ class UsersController extends \BaseController {
           
           if (!empty($url)) {
             $source_page = Request::header('referer');
-            ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+            //ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
             //Redirect when user forget password
             if($url == URL::to('users/forget')){ 
               return Redirect::to('/');
@@ -281,14 +281,14 @@ class UsersController extends \BaseController {
 
           
           $source_page = Request::header('referer');
-          ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+          //ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
           if (isset($integration_message)) {
             return Redirect::to('/')->with('msgWelcome', $integration_message);  
           }
           return Redirect::to('/');
         }
         $source_page = Request::header('referer');
-        ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+       // ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
         if (isset($integration_message)) {
           return Redirect::to('/')->with('msgWelcome', $integration_message);  
         }
