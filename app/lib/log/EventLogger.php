@@ -11,7 +11,7 @@ use lib\utils\ActionUser;
 use Auth;
 
 class EventLogger {
-	public static function printInitialStatment($file_path, $user_id, $source_page) {
+	public static function printInitialStatment($file_path, $user_id, $source_page, $user_or_visitor) {
         $occupation_array = Occupation::userOccupation($user_id);
         $roles_array = UsersRole::valueUserRole($user_id);
         $user_occupation ="";
@@ -19,8 +19,12 @@ class EventLogger {
         $user_occupation = ActionUser::convertArrayObjectToString($occupation_array,'occupation');
         $user_roles = ActionUser::convertArrayObjectToString($roles_array,'name');
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
-        $info = sprintf('[%s] Acesso do usuário de ID nº: [%d], com ocupação [%s] e role [%s], a partir de [%s].', $date_and_time, $user_id, $user_occupation, $user_roles, $source_page);
-        
+        if ($user_or_visitor == "user") {
+            $info = sprintf('[%s] Acesso do usuário de ID nº: [%d], com ocupação [%s] e role [%s], a partir de [%s].', $date_and_time, $user_id, $user_occupation, $user_roles, $source_page);
+        }
+        else {
+            $info = sprintf('[%s] Acesso de visitante, a partir de [%s].', $date_and_time, $source_page);
+        }
         $log = new Logger('Access_logger');
         EventLogger::addInfoToLog($log, $file_path, $info);
     }
@@ -41,12 +45,12 @@ class EventLogger {
         if(!$filesystem->exists($file_path)) {
             $handle = fopen($file_path, 'a+');
             fclose($handle);
-            EventLogger::printInitialStatment($file_path, $user_id, $source_page);
+            EventLogger::printInitialStatment($file_path, $user_id, $source_page, $user_or_visitor);
         }
         return $file_path;
     }
 
-    public static function verifyTimeout($file_path, $user_id, $source_page) {
+    public static function verifyTimeout($file_path, $user_id, $source_page, $user_or_visitor) {
         $data = file($file_path);
         $line = $data[count($data)-1];
         sscanf($line, "[%s %s]", $date, $time);
@@ -59,7 +63,7 @@ class EventLogger {
             $result = "Timeout atingido, novo acesso detectado";
             $log = new Logger('Timeout_logger');
             EventLogger::addInfoToLog($log, $file_path, $result);
-            EventLogger::printInitialStatment($file_path, $user_id, $source_page);
+            EventLogger::printInitialStatment($file_path, $user_id, $source_page, $user_or_visitor);
         }
     }
 
@@ -72,15 +76,20 @@ class EventLogger {
         $log->addInfo($info);
     }
 
-    public static function printEventLogs($userId, $photoId, $sourcePage, $eventType, $eventContent, $device) {
+    public static function printEventLogs($photoId, $sourcePage, $eventType, $eventContent, $device) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
         list($date_only) = explode(" ", $date_and_time);
 
-        if(Auth::check()) $userType = 'user';
+        if(!isset($_SESSION)) session_start();
+        $userId = session_id();
+        if(Auth::check()) {
+            $userType = 'user';
+            $userId = Auth::user()->id;
+        }
         else $userType = 'visitor';
 
         $filePath = EventLogger::createDirectoryAndFile($date_only, $userId, $sourcePage, $userType);
-        EventLogger::verifyTimeout($filePath, $userId, $sourcePage);
+        EventLogger::verifyTimeout($filePath, $userId, $sourcePage, $userType);
 
         
         switch ($eventType) {
