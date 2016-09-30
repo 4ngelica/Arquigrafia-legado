@@ -43,8 +43,8 @@ class PagesController extends BaseController {
         }else{ 
             $institution = null;            
         }
-        $source_page = Request::url();
-        EventLogger::printEventLogs(null, $source_page, "home", null, "Web");
+        //$source_page = Request::url();
+        EventLogger::printEventLogs(null, "home", null, "Web");
         
         return View::make('index', ['photos' => $photos, 'institution' => $institution ]);
     }

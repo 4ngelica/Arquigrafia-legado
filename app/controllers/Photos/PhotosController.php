@@ -74,9 +74,9 @@ class PhotosController extends \BaseController {
         $follow = false;
       }
     }
-    $source_page = Request::header('referer');
+    //$source_page = Request::header('referer');
     //ActionUser::printSelectPhoto($user_id, $id, $source_page, $user_or_visitor);
-    EventLogger::printEventLogs($id, $source_page, "select_photo", null, "Web");
+    EventLogger::printEventLogs($id, "select_photo", null, "Web");
 
     $license = Photo::licensePhoto($photos);
     $authorsList = $photos->authors->lists('name');
@@ -319,10 +319,10 @@ class PhotosController extends \BaseController {
                 $author->saveAuthors($input["work_authors"],$photo);
             }
             $input['autoOpenModal'] = 'true';  
-            $source_page = $input["pageSource"]; //get url of the source page through form
+            //$source_page = $input["pageSource"]; //get url of the source page through form
             $eventContent['tags'] = $tags_copy;
-            EventLogger::printEventLogs($photo->user_id, $photo->id, $source_page, 'upload', NULL,'Web');
-            EventLogger::printEventLogs($photo->user_id, $photo->id, $source_page, 'insert_tags', $eventContent,'Web');
+            EventLogger::printEventLogs($photo->id, 'upload', NULL,'Web');
+            EventLogger::printEventLogs($photo->id, 'insert_tags', $eventContent,'Web');
 
 
             if(array_key_exists('rotate', $input))

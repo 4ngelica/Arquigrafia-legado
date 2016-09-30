@@ -1,5 +1,6 @@
 <?php
 namespace modules\notifications\controllers;
+use lib\log\EventLogger;
 use modules\nofifications\models\Notification;
 use lib\utils\ActionUser;
 use Illuminate\Support\Facades\Redirect;
@@ -14,14 +15,15 @@ class NotificationsController extends \BaseController {
 	public function show() { 
 		if (Auth::check()) {
 			$user = Auth::user();
-			$source_page = Request::header('referer');
-			ActionUser::printNotification($user->id, $source_page, "user");
 			$time_and_date_now = Carbon::now('America/Sao_Paulo');
 			foreach ($user->notifications as $notification) {
 				$time_and_date_note = Carbon::createFromFormat('Y-m-d H:i:s', $notification->updated_at);
 				if ($time_and_date_now->diffInMonths($time_and_date_note) > 1 && $notification->read_at != null) $notification->delete();
 			}
-			$max_notes = $user->notifications->count();	
+			$max_notes = $user->notifications->count();
+
+			//$source_page = Request::url();
+        	EventLogger::printEventLogs(null, "access_notification_page", null, "Web");	
 			return View::make('notifications')->with(['user'=>$user, 'max_notes'=>$max_notes]);
 		}
 		return Redirect::action('PagesController@home');

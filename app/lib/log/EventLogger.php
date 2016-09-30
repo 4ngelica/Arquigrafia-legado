@@ -76,7 +76,7 @@ class EventLogger {
         $log->addInfo($info);
     }
 
-    public static function printEventLogs($photoId, $sourcePage, $eventType, $eventContent, $device) {
+    public static function printEventLogs($photoId, $eventType, $eventContent, $device) {
         $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
         list($date_only) = explode(" ", $date_and_time);
 
@@ -87,6 +87,7 @@ class EventLogger {
             $userId = Auth::user()->id;
         }
         else $userType = 'visitor';
+        $sourcePage = \Request::server('HTTP_REFERER');
 
         $filePath = EventLogger::createDirectoryAndFile($date_only, $userId, $sourcePage, $userType);
         EventLogger::verifyTimeout($filePath, $userId, $sourcePage, $userType);
