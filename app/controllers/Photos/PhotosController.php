@@ -76,7 +76,7 @@ class PhotosController extends \BaseController {
     }
     $source_page = Request::header('referer');
     //ActionUser::printSelectPhoto($user_id, $id, $source_page, $user_or_visitor);
-    EventLogger::printEventLogs($user_id, $id, $source_page, "select_photo", null, $device);
+    EventLogger::printEventLogs($id, $source_page, "select_photo", null, "Web");
 
     $license = Photo::licensePhoto($photos);
     $authorsList = $photos->authors->lists('name');

@@ -1,6 +1,7 @@
 <?php
 
 use lib\utils\ActionUser;
+use lib\log\EventLogger;
 use lib\date\Date;
 use modules\institutions\models\Institution as Institution;
 use modules\collaborative\models\Comment as Comment;
@@ -35,24 +36,15 @@ class PagesController extends BaseController {
             Session::forget('last_advanced_search');
 
         $photos = Photo::orderByRaw("RAND()")->take(150)->get();
-
-        if (Auth::check()) {
-            $user_id = Auth::user()->id;
-            $user_or_visitor = "user";
-        }
-        else { 
-            $user_or_visitor = "visitor";
-            session_start();
-            $user_id = session_id();
-        } 
+ 
         if(Session::has('institutionId')){
             $institution = Institution::find(Session::get('institutionId'));    
                    
         }else{ 
             $institution = null;            
         }
-        $source_page = Request::header('referer');
-        ActionUser::printHomePage($user_id, $source_page, $user_or_visitor);
+        $source_page = Request::url();
+        EventLogger::printEventLogs(null, $source_page, "home", null, "Web");
         
         return View::make('index', ['photos' => $photos, 'institution' => $institution ]);
     }
