@@ -74,8 +74,6 @@ class PhotosController extends \BaseController {
         $follow = false;
       }
     }
-    //$source_page = Request::header('referer');
-    //ActionUser::printSelectPhoto($user_id, $id, $source_page, $user_or_visitor);
     EventLogger::printEventLogs($id, "select_photo", null, "Web");
 
     $license = Photo::licensePhoto($photos);
@@ -300,7 +298,6 @@ class PhotosController extends \BaseController {
             $ext = $file->getClientOriginalExtension();  
             Photo::fileNamePhoto($photo, $ext);    
 
-            $tags_copy = $input['tags'];
             $tags = explode(',', $input['tags']);
           
             if (!empty($tags)) {           
@@ -320,7 +317,7 @@ class PhotosController extends \BaseController {
             }
             $input['autoOpenModal'] = 'true';  
             //$source_page = $input["pageSource"]; //get url of the source page through form
-            $eventContent['tags'] = $tags_copy;
+            $eventContent['tags'] = $input['tags'];
             EventLogger::printEventLogs($photo->id, 'upload', NULL,'Web');
             EventLogger::printEventLogs($photo->id, 'insert_tags', $eventContent,'Web');
 
@@ -357,16 +354,13 @@ class PhotosController extends \BaseController {
   {
     if (Auth::check()) {
       $photo = Photo::find($id);
-      if(/*$photo->authorized*/true) {
+      if($photo->authorized) {
         $originalFileExtension = strtolower(substr(strrchr($photo->nome_arquivo, '.'), 1));
         $filename = $id . '_original.' . $originalFileExtension;
         $path = storage_path().'/original-images/'. $filename;
 
         if( File::exists($path) ) {
-
-          $user_id = Auth::user()->id;
-          $pageSource = Request::header('referer');
-          ActionUser::printUploadOrDownloadLog($user_id, $id, $pageSource, "Download", "user");
+          EventLogger::printEventLogs($id, 'download', null, 'Web');
 
           header('Content-Description: File Transfer');
           header("Content-Disposition: attachment; filename=\"". $filename ."\"");
@@ -655,8 +649,7 @@ class PhotosController extends \BaseController {
         }
         $photo->saveMetadata(strtolower($ext), $metadata);
 
-        $source_page = Request::header('referer');
-        ActionUser::printTags($photo->user_id, $id, $tags_copy, $source_page, "user", "Editou");
+        EventLogger::printEventLogs($id, 'editi_photo', null, 'Web');
 
         $user = User::find($photo->user_id);
         
