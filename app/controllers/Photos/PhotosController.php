@@ -1,6 +1,5 @@
 <?php
 //add
-use lib\utils\ActionUser;
 use lib\log\EventLogger;
 use Carbon\Carbon;
 use lib\date\Date;
@@ -74,8 +73,8 @@ class PhotosController extends \BaseController {
         $follow = false;
       }
     }
-    
-    EventLogger::printEventLogs($id, "select_photo", null, "Web");
+
+    EventLogger::printEventLogs($id, "select_photo", NULL, "Web");
 
     $license = Photo::licensePhoto($photos);
     $authorsList = $photos->authors->lists('name');
@@ -299,7 +298,6 @@ class PhotosController extends \BaseController {
             $ext = $file->getClientOriginalExtension();  
             Photo::fileNamePhoto($photo, $ext);    
 
-            $tags_copy = $input['tags'];
             $tags = explode(',', $input['tags']);
           
             if (!empty($tags)) {           
@@ -317,9 +315,9 @@ class PhotosController extends \BaseController {
             if (!empty($input["work_authors"])) {
                 $author->saveAuthors($input["work_authors"],$photo);
             }
-            $input['autoOpenModal'] = 'true';  
 
-            $eventContent['tags'] = $tags_copy;
+            $input['autoOpenModal'] = 'true'; 
+            $eventContent['tags'] = $input['tags'];
             EventLogger::printEventLogs($photo->id, 'upload', NULL,'Web');
             EventLogger::printEventLogs($photo->id, 'insert_tags', $eventContent,'Web');
 
@@ -355,10 +353,11 @@ class PhotosController extends \BaseController {
   {
     if (Auth::check()) {
       $photo = Photo::find($id);
-      if(/*$photo->authorized*/true) {
+      if($photo->authorized) {
         $originalFileExtension = strtolower(substr(strrchr($photo->nome_arquivo, '.'), 1));
         $filename = $id . '_original.' . $originalFileExtension;
         $path = storage_path().'/original-images/'. $filename;
+
 
         if( File::exists($path) ) { 
           EventLogger::printEventLogs($id,"download",NULL,"Web");
@@ -595,7 +594,6 @@ class PhotosController extends \BaseController {
         $photo->touch();
         $photo->save();
 
-        $tags_copy = $input['tags'];
         $tags = explode(',', $input['tags']);
 
         if(!empty($tags)) { 
@@ -647,10 +645,12 @@ class PhotosController extends \BaseController {
             $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
             $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
         }
+        $eventContent["tags"] = $input['tags'];
+        EventLogger::printEventLogs($id, 'edit_photo', null, 'Web');
+        EventLogger::printEventLogs($id, 'edit_tags', $eventContent, 'Web');
+
         $photo->saveMetadata(strtolower($ext), $metadata);
 
-        $eventContent['tags'] = $tags_copy;
-        EventLogger::printEventLogs($photo->id, 'edit_tags', $eventContent,'Web');
         
         return Redirect::to("/photos/{$photo->id}")->with('message', '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso');
       }

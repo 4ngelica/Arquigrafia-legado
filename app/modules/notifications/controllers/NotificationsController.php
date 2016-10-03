@@ -2,7 +2,6 @@
 namespace modules\notifications\controllers;
 use lib\log\EventLogger;
 use modules\nofifications\models\Notification;
-use lib\utils\ActionUser;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
 use Auth;
@@ -22,7 +21,6 @@ class NotificationsController extends \BaseController {
 			}
 			$max_notes = $user->notifications->count();
 
-			//$source_page = Request::url();
         	EventLogger::printEventLogs(null, "access_notification_page", null, "Web");	
 			return View::make('notifications')->with(['user'=>$user, 'max_notes'=>$max_notes]);
 		}

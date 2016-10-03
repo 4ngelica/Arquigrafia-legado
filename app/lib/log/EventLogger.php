@@ -82,11 +82,11 @@ class EventLogger {
 
         if(!isset($_SESSION)) session_start();
         $userId = session_id();
+        $userType = 'visitor';
         if(Auth::check()) {
             $userType = 'user';
             $userId = Auth::user()->id;
         }
-        else $userType = 'visitor';
         $sourcePage = \Request::server('HTTP_REFERER');
 
         $filePath = EventLogger::createDirectoryAndFile($date_only, $userId, $sourcePage, $userType);
@@ -100,7 +100,7 @@ class EventLogger {
                 break;
             case "new_account":
             	$info = sprintf('[%s] Nova conta criada pelo %s, ID nº: %d', 
-            					$date_and_time, $eventContent['origin'], $user_id);
+            					$date_and_time, $eventContent['origin'], $userId);
                 break;
             case "upload":  
                 $info = sprintf('[%s] Upload da foto de ID nº: %d, pela página %s via %s', 
@@ -120,15 +120,19 @@ class EventLogger {
                 break;
             case "follow":
             	$info = sprintf('[%s] Usuário de ID nº: %d passou a seguir o usuário de ID nº: %d, pela página %s via %s', 
-            					$date_and_time, $user_id, $eventContent['target_user_id'], $sourcePage, $device);
+            					$date_and_time, $userId, $eventContent['target_userId'], $sourcePage, $device);
                 break;
             case "unfollow":
                 $info = sprintf('[%s] Usuário de ID nº: %d deixou de seguir o usuário de ID nº: %d, pela página %s via %s', 
-                				$date_and_time, $user_id, $eventContent['target_user_id'], $sourcePage, $device);
+                				$date_and_time, $userId, $eventContent['target_userId'], $sourcePage, $device);
                 break;
             case "select_photo":
             	$info = sprintf('[%s] Selecionou a foto de ID nº: %d, pela página %s via %s', 
             					$date_and_time, $photoId, $sourcePage, $device);
+                break;
+            case "edit_photo":
+                $info = sprintf('[%s] Editou a foto de ID nº: %d, pela página %s via %s', 
+                                $date_and_time, $photoId, $sourcePage, $device);
                 break;
             case "insert_tags":                       
                 $info = sprintf('[%s] Inseriu as tags: %s. Pertencentes a foto de ID nº: %d, via %s', 
@@ -148,7 +152,7 @@ class EventLogger {
                 break;
             case "select_user":
             	$info = sprintf('[%s] Selecionou o usuário de ID nº: %d, pela página %s, via %s', 
-            		$date_and_time, $eventContent['target_user_id'], $sourcePage, $device);
+            		$date_and_time, $eventContent['target_userId'], $sourcePage, $device);
                 break;
             case "insert_comment":
              	$info = sprintf('[%s] Inseriu o comentário de ID nº: %d, na foto de ID nº: %d, pela página %s, via %s', 
@@ -185,9 +189,8 @@ class EventLogger {
             	$info = sprintf('[%s] Acessou a página de notificações pela página %s, via %s', $date_and_time, $sourcePage, $device);            	
                 break;
             default:
-            	Log::info('Ação não reconhecida');                
+                break;               
         }
-
         EventLogger::addInfoToLog('Logger', $filePath, $info);
     }
 
