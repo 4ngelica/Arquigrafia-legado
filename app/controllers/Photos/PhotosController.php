@@ -314,8 +314,8 @@ class PhotosController extends \BaseController {
             if (!empty($input["work_authors"])) {
                 $author->saveAuthors($input["work_authors"],$photo);
             }
-            $input['autoOpenModal'] = 'true';  
-            //$source_page = $input["pageSource"]; //get url of the source page through form
+            $input['autoOpenModal'] = 'true'; 
+
             $eventContent['tags'] = $input['tags'];
             EventLogger::printEventLogs($photo->id, 'upload', NULL,'Web');
             EventLogger::printEventLogs($photo->id, 'insert_tags', $eventContent,'Web');
@@ -594,7 +594,6 @@ class PhotosController extends \BaseController {
         $photo->touch();
         $photo->save();
 
-        $tags_copy = $input['tags'];
         $tags = explode(',', $input['tags']);
 
         if(!empty($tags)) { 
@@ -646,11 +645,11 @@ class PhotosController extends \BaseController {
             $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
             $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
         }
+        $eventContent["tags"] = $input['tags'];
+        EventLogger::printEventLogs($id, 'edit_photo', null, 'Web');
+        EventLogger::printEventLogs($id, 'edit_tags', $eventContent, 'Web');
+
         $photo->saveMetadata(strtolower($ext), $metadata);
-
-        EventLogger::printEventLogs($id, 'editi_photo', null, 'Web');
-
-        $user = User::find($photo->user_id);
         
         return Redirect::to("/photos/{$photo->id}")->with('message', '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso');
       }

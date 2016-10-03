@@ -133,6 +133,7 @@ class EventLogger {
             case "edit_photo":
                 $info = sprintf('[%s] Editou a foto de ID nº: %d, pela página %s via %s', 
                                 $date_and_time, $photoId, $sourcePage, $device);
+                break;
             case "insert_tags":                       
                 $info = sprintf('[%s] Inseriu as tags: %s. Pertencentes a foto de ID nº: %d, via %s', 
                 				$date_and_time, $eventContent['tags'], $photoId, $device);                  
@@ -188,9 +189,8 @@ class EventLogger {
             	$info = sprintf('[%s] Acessou a página de notificações pela página %s, via %s', $date_and_time, $sourcePage, $device);            	
                 break;
             default:
-            	Log::info('Ação não reconhecida');                
+                break;               
         }
-
         EventLogger::addInfoToLog('Logger', $filePath, $info);
     }
 
