@@ -1,6 +1,5 @@
 <?php
 //add
-use lib\utils\ActionUser;
 use lib\log\EventLogger;
 use Carbon\Carbon;
 use lib\date\Date;
