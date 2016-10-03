@@ -74,8 +74,7 @@ class PhotosController extends \BaseController {
         $follow = false;
       }
     }
-    //$source_page = Request::header('referer');
-    //ActionUser::printSelectPhoto($user_id, $id, $source_page, $user_or_visitor);
+    
     EventLogger::printEventLogs($id, "select_photo", null, "Web");
 
     $license = Photo::licensePhoto($photos);
@@ -319,11 +318,10 @@ class PhotosController extends \BaseController {
                 $author->saveAuthors($input["work_authors"],$photo);
             }
             $input['autoOpenModal'] = 'true';  
-            //$source_page = $input["pageSource"]; //get url of the source page through form
+
             $eventContent['tags'] = $tags_copy;
             EventLogger::printEventLogs($photo->id, 'upload', NULL,'Web');
             EventLogger::printEventLogs($photo->id, 'insert_tags', $eventContent,'Web');
-
 
             if(array_key_exists('rotate', $input))
               $angle = (float)$input['rotate'];
@@ -362,11 +360,8 @@ class PhotosController extends \BaseController {
         $filename = $id . '_original.' . $originalFileExtension;
         $path = storage_path().'/original-images/'. $filename;
 
-        if( File::exists($path) ) {
-
-          $user_id = Auth::user()->id;
-          $pageSource = Request::header('referer');
-          ActionUser::printUploadOrDownloadLog($user_id, $id, $pageSource, "Download", "user");
+        if( File::exists($path) ) { 
+          EventLogger::printEventLogs($id,"download",NULL,"Web");
 
           header('Content-Description: File Transfer');
           header("Content-Disposition: attachment; filename=\"". $filename ."\"");
@@ -374,7 +369,6 @@ class PhotosController extends \BaseController {
           header("Content-Transfer-Encoding: binary");
           header("Cache-Control: public");
           readfile($path);
-
           exit;
         }
       }
@@ -655,10 +649,8 @@ class PhotosController extends \BaseController {
         }
         $photo->saveMetadata(strtolower($ext), $metadata);
 
-        $source_page = Request::header('referer');
-        ActionUser::printTags($photo->user_id, $id, $tags_copy, $source_page, "user", "Editou");
-
-        $user = User::find($photo->user_id);
+        $eventContent['tags'] = $tags_copy;
+        EventLogger::printEventLogs($photo->id, 'edit_tags', $eventContent,'Web');
         
         return Redirect::to("/photos/{$photo->id}")->with('message', '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso');
       }

@@ -42,8 +42,8 @@ class PagesController extends BaseController {
                    
         }else{ 
             $institution = null;            
-        }
-        //$source_page = Request::url();
+        }         
+
         EventLogger::printEventLogs(null, "home", null, "Web");
         
         return View::make('index', ['photos' => $photos, 'institution' => $institution ]);
@@ -62,9 +62,8 @@ class PagesController extends BaseController {
         return $userList->lists('id');
     }
     
-    private static function streetAndCitySearch(&$needle,&$txtcity) {
-        Log::info("Logging info txtcity <".$txtcity.">");       
-
+    private static function streetAndCitySearch(&$needle,&$txtcity) 
+    {   
         $allowed = "/[^a-z\\.\/\sçáéíóúãàõ]/i";
         $txtstreet=  preg_replace($allowed,"",$needle);
         $txtstreet = rtrim($txtstreet);      
@@ -102,10 +101,8 @@ class PagesController extends BaseController {
         return $photos;   
     }
     
-    public static function yearSearch(&$needle,&$dateFilter,&$date){
-
-        
-
+    public static function yearSearch(&$needle,&$dateFilter,&$date)
+    {
         $dateFilter = [
             'di'=>'Data da Imagem',
             'du'=>'Data de Upload',
@@ -267,8 +264,9 @@ class PagesController extends BaseController {
                 session_start();
                 $user_id = session_id();
             }
-            $source_page = Request::header('referer');
-            ActionUser::printSearch($user_id, $source_page, $needle, $user_or_visitor);
+            $eventContent['search_query'] = $needle;
+            $eventContent['search_size'] = str_word_count($needle);
+            EventLogger::printEventLogs(NULL, 'search', $eventContent,'Web');
             
             if(Session::has('CurrPage') && Session::get('CurrPage')!= 1){ 
                 $pageRetrieved = Session::get('CurrPage');  
