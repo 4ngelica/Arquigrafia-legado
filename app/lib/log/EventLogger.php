@@ -95,7 +95,7 @@ class EventLogger {
         
         switch ($eventType) {
         	case "home":
-        		$info = sprintf('[%s] Acessou a home page, pela página %s via %s', 
+        		$info = sprintf('[%s] Acessou a home page, pela página %s, via %s', 
         						$date_and_time, $sourcePage, $device);
                 break;
             case "new_account":
@@ -103,35 +103,35 @@ class EventLogger {
             					$date_and_time, $eventContent['origin'], $userId);
                 break;
             case "upload":  
-                $info = sprintf('[%s] Upload da foto de ID nº: %d, pela página %s via %s', 
+                $info = sprintf('[%s] Upload da foto de ID nº: %d, pela página %s, via %s', 
                 	$date_and_time, $photoId, $sourcePage, $device);
                 break;
             case "download":
-            	$info = sprintf('[%s] Download da foto de ID nº: %d, pela página %s via %s', 
+            	$info = sprintf('[%s] Download da foto de ID nº: %d, pela página %s, via %s', 
                 	$date_and_time, $photoId, $sourcePage, $device);
                 break;
             case "edit":
-            	$info = sprintf('[%s] Edição da foto de ID nº: %d, pela página %s via %s', 
+            	$info = sprintf('[%s] Edição da foto de ID nº: %d, pela página %s, via %s', 
                 				$date_and_time, $photoId, $sourcePage, $device);
                 break;
             case "delete":
-            	$info = sprintf('[%s] Deleção da foto de ID nº: %d, pela página %s via %s', 
+            	$info = sprintf('[%s] Deleção da foto de ID nº: %d, pela página %s, via %s', 
                 				$date_and_time, $photoId, $sourcePage, $device);
                 break;
             case "follow":
-            	$info = sprintf('[%s] Usuário de ID nº: %d passou a seguir o usuário de ID nº: %d, pela página %s via %s', 
+            	$info = sprintf('[%s] Usuário de ID nº: %d passou a seguir o usuário de ID nº: %d, pela página %s, via %s', 
             					$date_and_time, $userId, $eventContent['target_userId'], $sourcePage, $device);
                 break;
             case "unfollow":
-                $info = sprintf('[%s] Usuário de ID nº: %d deixou de seguir o usuário de ID nº: %d, pela página %s via %s', 
+                $info = sprintf('[%s] Usuário de ID nº: %d deixou de seguir o usuário de ID nº: %d, pela página %s, via %s', 
                 				$date_and_time, $userId, $eventContent['target_userId'], $sourcePage, $device);
                 break;
             case "select_photo":
-            	$info = sprintf('[%s] Selecionou a foto de ID nº: %d, pela página %s via %s', 
+            	$info = sprintf('[%s] Selecionou a foto de ID nº: %d, pela página %s, via %s', 
             					$date_and_time, $photoId, $sourcePage, $device);
                 break;
             case "edit_photo":
-                $info = sprintf('[%s] Editou a foto de ID nº: %d, pela página %s via %s', 
+                $info = sprintf('[%s] Editou a foto de ID nº: %d, pela página %s, via %s', 
                                 $date_and_time, $photoId, $sourcePage, $device);
                 break;
             case "insert_tags":                       
@@ -152,7 +152,7 @@ class EventLogger {
                 break;
             case "select_user":
             	$info = sprintf('[%s] Selecionou o usuário de ID nº: %d, pela página %s, via %s', 
-            		$date_and_time, $eventContent['target_userId'], $sourcePage, $device);
+            		            $date_and_time, $eventContent['target_userId'], $sourcePage, $device);
                 break;
             case "insert_comment":
              	$info = sprintf('[%s] Inseriu o comentário de ID nº: %d, na foto de ID nº: %d, pela página %s, via %s', 
