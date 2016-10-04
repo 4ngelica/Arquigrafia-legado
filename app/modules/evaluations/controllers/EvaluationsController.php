@@ -4,6 +4,7 @@ use modules\evaluations\models\Evaluation;
 use modules\evaluations\models\Binomial;
 use modules\news\models\News as News;
 use lib\utils\ActionUser;
+use lib\log\EventLogger;
 use Session;  
 use Auth;
 use Photo;
@@ -42,11 +43,19 @@ class EvaluationsController extends \BaseController {
       if(isset($_SERVER['QUERY_STRING'])) parse_str($_SERVER['QUERY_STRING']);
       $user_id = Auth::user()->id;
       $source_page = Request::header('referer');
+      // if(isset($f)) {
+      //   if($f == "sb") ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "pelo botão abaixo da imagem");
+      //   elseif($f == "c") ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "pelo botão abaixo do gráfico");
+      //   elseif($f == "g") ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "pelo gráfico");
+      // }else ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "diretamente");
+
       if(isset($f)) {
-        if($f == "sb") ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "pelo botão abaixo da imagem");
-        elseif($f == "c") ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "pelo botão abaixo do gráfico");
-        elseif($f == "g") ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "pelo gráfico");
-      }else ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "diretamente");
+        if($f == "sb") $eventContent['object_source'] = 'pelo botão abaixo da imagem';
+        elseif($f == "c") $eventContent['object_source'] = 'pelo botão abaixo do gráfico';
+        elseif($f == "g") $eventContent['object_source'] = 'pelo gráfico';
+      }else $eventContent['object_source'] = 'diretamente';
+
+      EventLogger::printEventLogs(null, 'access_evaluation_page', $eventContent, 'Web');
         
       return static::getEvaluation($photoId, Auth::user()->id, true);
     }
@@ -173,7 +182,9 @@ class EvaluationsController extends \BaseController {
           } //end if evaluation empty
           $user_id = Auth::user()->id;
           $source_page = Request::header('referer');
-          ActionUser::printEvaluation($user_id, $id, $source_page, "user", $insertion_edition, $evaluation_string);
+          //ActionUser::printEvaluation($user_id, $id, $source_page, "user", $insertion_edition, $evaluation_string);
+          $eventContent['evaluation'] = $evaluation_string;
+          EventLogger::printEventLogs($id, 'insert_evaluation', $eventContent, 'Web');
           return \Redirect::to("/evaluations/{$id}/evaluate")->with('message', 
               '<strong>Interpretação salva com sucesso</strong><br>Abaixo você pode visualizar a média atual de interpretações');
       } else { // avaliação sem login        

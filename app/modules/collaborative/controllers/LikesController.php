@@ -2,6 +2,7 @@
 use modules\collaborative\models\Like;
 use modules\collaborative\models\Comment;
 use lib\utils\ActionUser;
+use lib\log\EventLogger;
 use modules\news\models\News as News;
 use modules\gamification\models\Badge;
 use Notification;
@@ -21,8 +22,11 @@ class LikesController extends \BaseController {
     }
 
     \Event::fire('photo.like', array($user, $photo));
+    $eventContent['target_type'] = 'foto';
+    $eventContent['target_id'] = $photo->id;
+    EventLogger::printEventLogs(null, 'like', $eventContent, 'Web');
 
-    $this->logLikeDislike($user, $photo, "a foto", "Curtiu", "user");
+    //$this->logLikeDislike($user, $photo, "a foto", "Curtiu", "user");
     if ($user->id != $photo->user_id) {
       $user_note = \User::find($photo->user_id);      
     }
@@ -38,7 +42,11 @@ class LikesController extends \BaseController {
   {
     $photo = \Photo::find($id);
     $user = \Auth::user();
-    $this->logLikeDislike($user, $photo, "a foto", "Descurtiu", "user");
+    //$this->logLikeDislike($user, $photo, "a foto", "Descurtiu", "user");
+    $eventContent['target_type'] = 'foto';
+    $eventContent['target_id'] = $photo->id;
+    EventLogger::printEventLogs(null, 'dislike', $eventContent, 'Web');
+
     /* */
     try {
       $like = Like::fromUser($user)->withLikable($photo)->first();

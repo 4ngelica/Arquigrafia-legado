@@ -100,7 +100,7 @@ class EventLogger {
                 break;
             case "new_account":
             	$info = sprintf('[%s] Nova conta criada pelo %s, ID nº: %d', 
-            					$date_and_time, $eventContent['origin'], $user_id);
+            					$date_and_time, $eventContent['origin'], $userId);
                 break;
             case "upload":  
                 $info = sprintf('[%s] Upload da foto de ID nº: %d, pela página %s via %s', 
@@ -120,11 +120,11 @@ class EventLogger {
                 break;
             case "follow":
             	$info = sprintf('[%s] Usuário de ID nº: %d passou a seguir o usuário de ID nº: %d, pela página %s via %s', 
-            					$date_and_time, $user_id, $eventContent['target_user_id'], $sourcePage, $device);
+            					$date_and_time, $userId, $eventContent['target_user_id'], $sourcePage, $device);
                 break;
             case "unfollow":
                 $info = sprintf('[%s] Usuário de ID nº: %d deixou de seguir o usuário de ID nº: %d, pela página %s via %s', 
-                				$date_and_time, $user_id, $eventContent['target_user_id'], $sourcePage, $device);
+                				$date_and_time, $userId, $eventContent['target_user_id'], $sourcePage, $device);
                 break;
             case "select_photo":
             	$info = sprintf('[%s] Selecionou a foto de ID nº: %d, pela página %s via %s', 
@@ -167,22 +167,28 @@ class EventLogger {
             					$date_and_time, $eventContent['search_size'], $eventContent['search_query'], $sourcePage, $device);
                 break;
             case "like":
-            	$info = sprintf('[%s] Curtiu %s, ID nº: %d, via %s', $date_and_time, $eventContent['target_type'], $eventContent['target_id'], $device);
+            	$info = sprintf('[%s] Curtiu %s, ID nº: %d, via %s', 
+                                $date_and_time, $eventContent['target_type'], $eventContent['target_id'], $device);
                 break;
             case "dislike":
-            	$info = sprintf('[%s] Descurtiu %s, ID nº: %d, via %s', $date_and_time, $eventContent['target_type'], $eventContent['target_id'], $device);
+            	$info = sprintf('[%s] Descurtiu %s, ID nº: %d, via %s', 
+                                $date_and_time, $eventContent['target_type'], $eventContent['target_id'], $device);
                 break;
             case "insert_evaluation":
-            	$info = sprintf('[%s] Inseriu avaliação na foto de ID nº: %d, com os seguintes valores %s pela página: %s, via %s', $date_and_time, $photoId, $eventContent['evaluation'], $sourcePage, $device);
+            	$info = sprintf('[%s] Inseriu avaliação na foto de ID nº: %d, com os seguintes valores %s pela página: %s, via %s', 
+                                $date_and_time, $photoId, $eventContent['evaluation'], $sourcePage, $device);
                 break;
             case "edit_evaluation":
-            	$info = sprintf('[%s] Editou avaliação na foto de ID nº: %d, com os seguintes valores %s pela página: %s, via %s', $date_and_time, $photoId, $eventContent['evaluation'], $sourcePage, $device);
+            	$info = sprintf('[%s] Editou avaliação na foto de ID nº: %d, com os seguintes valores %s pela página: %s, via %s', 
+                                $date_and_time, $photoId, $eventContent['evaluation'], $sourcePage, $device);
                 break;
             case "access_evaluation_page":
-            	$info = sprintf('[%s] Acessou a página de avaliação %s da página %s, via %s', $date_and_time, $eventContent['object_source'], $sourcePage, $device);
+            	$info = sprintf('[%s] Acessou a página de avaliação %s da página %s, via %s', 
+                                $date_and_time, $eventContent['object_source'], $sourcePage, $device);
                 break;
             case "access_notification_page":
-            	$info = sprintf('[%s] Acessou a página de notificações pela página %s, via %s', $date_and_time, $sourcePage, $device);            	
+            	$info = sprintf('[%s] Acessou a página de notificações pela página %s, via %s', 
+                                $date_and_time, $sourcePage, $device);            	
                 break;
             default:
             	Log::info('Ação não reconhecida');                

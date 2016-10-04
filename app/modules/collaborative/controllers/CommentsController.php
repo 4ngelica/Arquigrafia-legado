@@ -6,6 +6,7 @@ use modules\collaborative\models\Like;
 use modules\gamification\models\Badge;
 use lib\date\Date;
 use lib\utils\ActionUser;
+use lib\log\EventLogger;
 use modules\news\models\News;
 use Input;
 use Photo;
@@ -44,7 +45,9 @@ class CommentsController extends \BaseController {
         
         $user = Auth::user();
         $source_page = \Request::header('referer');
-        ActionUser::printComment($user->id, $source_page, "Inseriu", $comment->id, $id, "user");
+        //ActionUser::printComment($user->id, $source_page, "Inseriu", $comment->id, $id, "user");
+        $eventContent['comment_id'] = $comment->id;
+        EventLogger::printEventLogs($photo->id, 'insert_comment', $eventContent, 'Web');
       
         /*Envio de notificação*/
         
@@ -75,7 +78,10 @@ class CommentsController extends \BaseController {
 
     \Event::fire('comment.liked', array($user, $comment));
     
-    $this->logLikeDislikeComment($user, $comment, "o comentário", "Curtiu", "user");
+    //$this->logLikeDislikeComment($user, $comment, "o comentário", "Curtiu", "user");
+    $eventContent['target_type'] = 'comentário';
+    $eventContent['target_id'] = $comment->id;
+    EventLogger::printEventLogs(null, 'like', $eventContent, 'Web');
 
     $like = Like::getFirstOrCreate($comment, $user);
     if (is_null($comment)) {
@@ -91,6 +97,10 @@ class CommentsController extends \BaseController {
     $user = Auth::user();
 
     \Event::fire('comment.disliked', array($user, $comment));
+
+    $eventContent['target_type'] = 'comentário';
+    $eventContent['tager_id'] = $comment->id;
+    EventLogger::printEventLogs(null, 'dislike', $eventContent, 'Web');
 
     $source_page = \Request::header('referer');
     

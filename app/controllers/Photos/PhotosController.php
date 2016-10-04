@@ -656,7 +656,9 @@ class PhotosController extends \BaseController {
         $photo->saveMetadata(strtolower($ext), $metadata);
 
         $source_page = Request::header('referer');
-        ActionUser::printTags($photo->user_id, $id, $tags_copy, $source_page, "user", "Editou");
+        //ActionUser::printTags($photo->user_id, $id, $tags_copy, $source_page, "user", "Editou");
+        $eventContent['tags'] = $tags_copy;
+        EventLogger::printEventLogs($photo->id, 'edit_tags', $eventContent, 'Web');
 
         $user = User::find($photo->user_id);
         

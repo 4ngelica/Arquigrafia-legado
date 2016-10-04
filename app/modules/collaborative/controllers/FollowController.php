@@ -2,6 +2,7 @@
 
 namespace modules\collaborative\controllers;
 use lib\utils\ActionUser;
+use lib\log\EventLogger;
 use Auth;
 
 class FollowController extends \BaseController {
@@ -44,7 +45,9 @@ class FollowController extends \BaseController {
 
 	      $pageSource = \Request::header('referer');
 
-	      ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "passou a seguir", "user");
+	      //ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "passou a seguir", "user");
+	      $eventContent['target_user_id'] = $user_id;
+	      EventLogger::printEventLogs(null, 'follow', $eventContent, 'Web');
 	    }
 
 	    return \Redirect::to(\URL::previous()); // redirecionar para friends
@@ -119,7 +122,9 @@ class FollowController extends \BaseController {
 
 	      $logged_user_id = Auth::user()->id;
 	      $pageSource = \Request::header('referer'); //get url of the source page
-	      ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "deixou de seguir", "user");
+	      //ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "deixou de seguir", "user");
+	      $eventContent['target_user_id'] = $user_id;
+	      EventLogger::printEventLogs(null, 'unfollow', $eventContent, 'Web');
 	    }
 
 	    return \Redirect::to(\URL::previous()); // redirecionar para friends

@@ -706,7 +706,9 @@ class InstitutionsController extends \BaseController {
       }  
       $logged_user_id = Auth::user()->id;
       $pageSource = Request::header('referer');
-      ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "passou a seguir", "user");
+      //ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "passou a seguir", "user");
+      $eventContent['target_user_id'] = $user_id;
+      EventLogger::printEventLogs(null, 'follow', $eventContent, 'Web');
   }
 
   public function destroy($id) 
