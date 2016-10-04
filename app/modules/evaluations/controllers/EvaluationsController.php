@@ -180,9 +180,6 @@ class EvaluationsController extends \BaseController {
                   $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
               }
           } //end if evaluation empty
-          $user_id = Auth::user()->id;
-          $source_page = Request::header('referer');
-          //ActionUser::printEvaluation($user_id, $id, $source_page, "user", $insertion_edition, $evaluation_string);
           $eventContent['evaluation'] = $evaluation_string;
           EventLogger::printEventLogs($id, 'insert_evaluation', $eventContent, 'Web');
           return \Redirect::to("/evaluations/{$id}/evaluate")->with('message', 

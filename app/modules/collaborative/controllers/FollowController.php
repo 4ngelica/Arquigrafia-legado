@@ -41,12 +41,8 @@ class FollowController extends \BaseController {
 	      $logged_user_id = Auth::user()->id;
 
 	      \Event::fire('user.followed', array($logged_user_id, $user_id));
-	      echo("1");
 
-	      $pageSource = \Request::header('referer');
-
-	      //ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "passou a seguir", "user");
-	      $eventContent['target_user_id'] = $user_id;
+	      $eventContent['target_userId'] = $user_id;
 	      EventLogger::printEventLogs(null, 'follow', $eventContent, 'Web');
 	    }
 
@@ -120,10 +116,7 @@ class FollowController extends \BaseController {
 	    if ($user_id != $logged_user->id && $following->contains($user_id)) {
 	      $logged_user->following()->detach($user_id);
 
-	      $logged_user_id = Auth::user()->id;
-	      $pageSource = \Request::header('referer'); //get url of the source page
-	      //ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "deixou de seguir", "user");
-	      $eventContent['target_user_id'] = $user_id;
+	      $eventContent['target_userId'] = $user_id;
 	      EventLogger::printEventLogs(null, 'unfollow', $eventContent, 'Web');
 	    }
 

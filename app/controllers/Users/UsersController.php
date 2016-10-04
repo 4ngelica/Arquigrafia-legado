@@ -231,6 +231,7 @@ class UsersController extends \BaseController {
   { 
     $input = Input::all();   
     $user = User::userInformation($input["login"]);
+    $eventContent['origin'] = 'Arquigrafia';
     if (isset($user)) {
       $integration_message = $this->integrateAccounts($user->email);
     }
@@ -254,8 +255,7 @@ class UsersController extends \BaseController {
         if ( Session::has('filter.login') ) //acionado pelo login
         {  
           Session::forget('filter.login');
-          $source_page = Request::header('referer');
-         // ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+          EventLogger::printEventLogs(null, 'login', $eventContent, 'Web');
           if (isset($integration_message)) {
             return Redirect::to('/')->with('msgWelcome', $integration_message);  
           }
@@ -266,8 +266,7 @@ class UsersController extends \BaseController {
           $url = Session::pull('url.previous'); 
           
           if (!empty($url)) {
-            $source_page = Request::header('referer');
-            //ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+            EventLogger::printEventLogs(null, 'login', $eventContent, 'Web');
             //Redirect when user forget password
             if($url == URL::to('users/forget')){ 
               return Redirect::to('/');
@@ -281,15 +280,13 @@ class UsersController extends \BaseController {
           }
 
           
-          $source_page = Request::header('referer');
-          //ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+          EventLogger::printEventLogs(null, 'login', $eventContent, 'Web');
           if (isset($integration_message)) {
             return Redirect::to('/')->with('msgWelcome', $integration_message);  
           }
           return Redirect::to('/');
         }
-        $source_page = Request::header('referer');
-       // ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
+        EventLogger::printEventLogs(null, 'login', $eventContent, 'Web');
         if (isset($integration_message)) {
           return Redirect::to('/')->with('msgWelcome', $integration_message);  
         }
@@ -308,9 +305,7 @@ class UsersController extends \BaseController {
   public function logout()
   {
     if (Auth::check()) {
-      $user_id = Auth::user()->id;
-      $source_page = Request::header('referer');
-      ActionUser::printLoginOrLogout($user_id, $source_page, "Logout", "arquigrafia", "user");
+      EventLogger::printEventLogs(null, 'logout', null, 'Web');
 
       Auth::logout();
       Session::flush();
@@ -484,11 +479,7 @@ class UsersController extends \BaseController {
 
       $logged_user->following()->attach($user_id);
 
-      $logged_user_id = Auth::user()->id;
-      $pageSource = Request::header('referer');
-
-      //ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "passou a seguir", "user");
-      $eventContent['target_user_id'] = $user_id;
+      $eventContent['target_userId'] = $user_id;
       EventLogger::printEventLogs(null, 'follow', $eventContent, 'Web');
     }
 
@@ -508,10 +499,7 @@ class UsersController extends \BaseController {
     if ($user_id != $logged_user->id && $following->contains($user_id)) {
       $logged_user->following()->detach($user_id);
 
-      $logged_user_id = Auth::user()->id;
-      $pageSource = Request::header('referer'); //get url of the source page
-      //ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "deixou de seguir", "user");
-      $eventContent['target_user_id'] = $user_id;
+      $eventContent['target_userId'] = $user_id;
       EventLogger::printEventLogs(null, 'unfollow', $eventContent, 'Web');
     }
 

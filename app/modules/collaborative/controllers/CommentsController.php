@@ -44,8 +44,7 @@ class CommentsController extends \BaseController {
       	$photo->comments()->save($comment);
         
         $user = Auth::user();
-        $source_page = \Request::header('referer');
-        //ActionUser::printComment($user->id, $source_page, "Inseriu", $comment->id, $id, "user");
+        
         $eventContent['comment_id'] = $comment->id;
         EventLogger::printEventLogs($photo->id, 'insert_comment', $eventContent, 'Web');
       

@@ -1,6 +1,5 @@
 <?php
 //add
-use lib\utils\ActionUser;
 use lib\log\EventLogger;
 use Carbon\Carbon;
 use lib\date\Date;
@@ -74,9 +73,8 @@ class PhotosController extends \BaseController {
         $follow = false;
       }
     }
-    //$source_page = Request::header('referer');
-    //ActionUser::printSelectPhoto($user_id, $id, $source_page, $user_or_visitor);
-    EventLogger::printEventLogs($id, "select_photo", null, "Web");
+
+    EventLogger::printEventLogs($id, "select_photo", NULL, "Web");
 
     $license = Photo::licensePhoto($photos);
     $authorsList = $photos->authors->lists('name');
@@ -300,7 +298,6 @@ class PhotosController extends \BaseController {
             $ext = $file->getClientOriginalExtension();  
             Photo::fileNamePhoto($photo, $ext);    
 
-            $tags_copy = $input['tags'];
             $tags = explode(',', $input['tags']);
           
             if (!empty($tags)) {           
@@ -318,12 +315,11 @@ class PhotosController extends \BaseController {
             if (!empty($input["work_authors"])) {
                 $author->saveAuthors($input["work_authors"],$photo);
             }
-            $input['autoOpenModal'] = 'true';  
-            //$source_page = $input["pageSource"]; //get url of the source page through form
-            $eventContent['tags'] = $tags_copy;
+
+            $input['autoOpenModal'] = 'true'; 
+            $eventContent['tags'] = $input['tags'];
             EventLogger::printEventLogs($photo->id, 'upload', NULL,'Web');
             EventLogger::printEventLogs($photo->id, 'insert_tags', $eventContent,'Web');
-
 
             if(array_key_exists('rotate', $input))
               $angle = (float)$input['rotate'];
@@ -357,16 +353,14 @@ class PhotosController extends \BaseController {
   {
     if (Auth::check()) {
       $photo = Photo::find($id);
-      if(/*$photo->authorized*/true) {
+      if($photo->authorized) {
         $originalFileExtension = strtolower(substr(strrchr($photo->nome_arquivo, '.'), 1));
         $filename = $id . '_original.' . $originalFileExtension;
         $path = storage_path().'/original-images/'. $filename;
 
-        if( File::exists($path) ) {
 
-          $user_id = Auth::user()->id;
-          $pageSource = Request::header('referer');
-          ActionUser::printUploadOrDownloadLog($user_id, $id, $pageSource, "Download", "user");
+        if( File::exists($path) ) { 
+          EventLogger::printEventLogs($id,"download",NULL,"Web");
 
           header('Content-Description: File Transfer');
           header("Content-Disposition: attachment; filename=\"". $filename ."\"");
@@ -374,7 +368,6 @@ class PhotosController extends \BaseController {
           header("Content-Transfer-Encoding: binary");
           header("Cache-Control: public");
           readfile($path);
-
           exit;
         }
       }
@@ -601,7 +594,6 @@ class PhotosController extends \BaseController {
         $photo->touch();
         $photo->save();
 
-        $tags_copy = $input['tags'];
         $tags = explode(',', $input['tags']);
 
         if(!empty($tags)) { 
@@ -653,14 +645,12 @@ class PhotosController extends \BaseController {
             $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
             $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
         }
+        $eventContent["tags"] = $input['tags'];
+        EventLogger::printEventLogs($id, 'edit_photo', null, 'Web');
+        EventLogger::printEventLogs($id, 'edit_tags', $eventContent, 'Web');
+
         $photo->saveMetadata(strtolower($ext), $metadata);
 
-        $source_page = Request::header('referer');
-        //ActionUser::printTags($photo->user_id, $id, $tags_copy, $source_page, "user", "Editou");
-        $eventContent['tags'] = $tags_copy;
-        EventLogger::printEventLogs($photo->id, 'edit_tags', $eventContent, 'Web');
-
-        $user = User::find($photo->user_id);
         
         return Redirect::to("/photos/{$photo->id}")->with('message', '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso');
       }

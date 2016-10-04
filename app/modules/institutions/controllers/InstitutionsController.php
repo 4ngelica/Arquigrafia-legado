@@ -682,7 +682,7 @@ class InstitutionsController extends \BaseController {
     return \Redirect::to(\URL::previous()); 
   } 
 
-  public function sendNotification($id){ //$id=instit
+  public function sendNotification($id){ 
       $logged_user = Auth::user();
       if ($id != $logged_user->id) {
           $institution_notified = Institution::find($id);
@@ -704,11 +704,6 @@ class InstitutionsController extends \BaseController {
           }
           else Notification::create('follow', $logged_user, $user_note, [$user_note], null);
       }  
-      $logged_user_id = Auth::user()->id;
-      $pageSource = Request::header('referer');
-      //ActionUser::printFollowOrUnfollowLog($logged_user_id, $user_id, $pageSource, "passou a seguir", "user");
-      $eventContent['target_user_id'] = $user_id;
-      EventLogger::printEventLogs(null, 'follow', $eventContent, 'Web');
   }
 
   public function destroy($id) 
