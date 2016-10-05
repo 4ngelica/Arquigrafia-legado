@@ -25,9 +25,18 @@ class PagesController extends BaseController {
         
     }
 
+    public function landing()
+    {
+        
+        //return Redirect::action('PagesController@home');
+        //Redirect::to('/photos/upload')
+        //Redirect::to('/users/' . $photo->user_id);
+        return View::make('landing');
+
+    }
 
     public function home()
-    { 
+    {   
         if(Session::has('last_search'))
             Session::forget('last_search');
 
