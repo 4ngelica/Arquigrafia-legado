@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<body>
+
 <head>
 <title>Bem-vindo ao Arquigrafia!</title>
 <link href="{{ URL::to("/") }}/css/main.css" rel="stylesheet">
@@ -9,13 +9,13 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/jquery-ui.min.js"></script>
 
-<link href="{{ URL::to("/") }}/css/jquery-ui.structure.min.css" rel="stylesheet">
-<link href="{{ URL::to("/") }}/css/jquery-ui.min.css" rel="stylesheet">
-<link href="{{ URL::to("/") }}/css/jquery-ui.theme.min.css" rel="stylesheet">
+<link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui.structure.min.css" rel="stylesheet">
+<link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui.min.css" rel="stylesheet">
+<link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui.theme.min.css" rel="stylesheet">
 
 <script src="{{ URL::to("/") }}/js/main.js"></script>
 </head>
-
+<body>
 <div class="menu-navegacao">
 	<a href="#page1"><div class="pag active">
 	</div></a>
@@ -42,8 +42,8 @@
 </div>
 
 
-	<div class="header-page">
-	<?xml version="1.0" encoding="utf-8"?>
+<div class="header-page">
+<?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -98,7 +98,7 @@ Log in
 		<div style="display:flex;justify-content:center;align-items:center;text-align:center;height:100vh;">
 			<div class="column-4" style="padding: 0;">
 
-	<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -329,10 +329,7 @@ interconexão entre pessoas, paisagens, cidades e edifícios.
 			e urbanismo.</div>
 
 			</div> 
-
-
 		</div>
-
 		</div>
 	</div>
 
@@ -478,15 +475,14 @@ interconexão entre pessoas, paisagens, cidades e edifícios.
 </g>
 </svg>
 
-
-			</div>
+</div>
 			
-			<div class="column-3" style="width: 37.5%; align-content:center; align-items:center; display:inline-grid; height: 580px;">
+<div class="column-3" style="width: 37.5%; align-content:center; align-items:center; display:inline-grid; height: 580px;">
 
-				<div class="title-taggear">Não se esqueça de
+<div class="title-taggear">Não se esqueça de 
 taggear suas fotos!</div>
 			
-			<div class="texto-taggear">As tags são uma importante ferramenta para a dinâmica de pesquisa no Arquigrafia. <br/>
+<div class="texto-taggear">As tags são uma importante ferramenta para a dinâmica de pesquisa no Arquigrafia. <br/>
 					<br/>
 Insira tags para referenciar os elementos mais relevantes nas imagens. Assim, você facilitará as suas futuras buscas e as de outros usuários!</div>
 			</div>
@@ -522,8 +518,8 @@ Que características predominam nessa arquitetura? Registre as suas impressões 
 </div>
 			</div> 
 
-			<div class="column-5" style="width: 60%;">
-					<?xml version="1.0" encoding="utf-8"?>
+<div class="column-5" style="width: 60%;">
+<?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -603,7 +599,7 @@ Assim, quando estiver próximo a um edifício que lhe interessa, você conseguir
 				<img src="img/mapa-temp.png">
 					<?xml version="1.0" encoding="utf-8"?>
 		<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-		<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 		<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="905px"
 			 height="380px" viewBox="0 0 905 380" enable-background="new 0 0 905 380" xml:space="preserve" style="z-index: 99999;">
 		<g id="Layer_2">
@@ -633,15 +629,13 @@ Assim, quando estiver próximo a um edifício que lhe interessa, você conseguir
 		</g>
 		</svg>
 
-			<img class="hover-image" id="img-liberdade" src="img/map-liberdade.png">
-			<img class="hover-image" id="img-aclimacao" src="img/map-aclimacao.png">
-			<img class="hover-image" id="img-masp" src="img/map-masp.png">
-			<img class="hover-image" id="img-conjuntonacional" src="img/map-conjuntonacional.png">
-			<img class="hover-image" id="img-mis" src="img/map-mis.png">
-			<img class="hover-image" id="img-paraiso" src="img/map-paraiso.png">
-			<img class="hover-image" id="img-fiesp" src="img/map-fiesp.png">
-
-
+			<img class="hover-image" id="img-liberdade" src="{{ asset('img/map-liberdade.png')}}" >
+			<img class="hover-image" id="img-aclimacao" src="{{ asset('img/map-aclimacao.png')}}">
+			<img class="hover-image" id="img-masp" src="{{ asset('img/map-masp.png')}}">
+			<img class="hover-image" id="img-conjuntonacional" src="{{ asset('img/map-conjuntonacional.png')}}">
+			<img class="hover-image" id="img-mis" src="{{ asset('img/map-mis.png')}}">
+			<img class="hover-image" id="img-paraiso" src="{{ asset('img/map-paraiso.png')}}">
+			<img class="hover-image" id="img-fiesp" src="{{ asset('img/map-fiesp.png')}}">
 			</div>
 			
 
@@ -681,11 +675,15 @@ Assim, quando estiver próximo a um edifício que lhe interessa, você conseguir
 					</div>
 					</a>
 					<!--   END BOTÃO CADASTRO FINAL  -->
+					</br>
+					</br>
 
 					<div style="font-size: 20px;color:#7f7f7f;-webkit-font-smoothing: antialiased;
--moz-osx-font-smoothing: grayscale;">Já tem cadastro?</div>
+-moz-osx-font-smoothing: grayscale;padding-top: 50px;padding-right: 180px">
+					Já tem cadastro?</div>
 					
-
+					</br>
+					</br>	
 					<!--   BOTÃO LOGIN FINAL  -->
 					<a href="{{ URL::to("/users/login/") }}">
 					<div class="login-final">
@@ -693,18 +691,19 @@ Assim, quando estiver próximo a um edifício que lhe interessa, você conseguir
 					</div>
 					</a>
 					<!--  END BOTÃO LOGIN FINAL  -->
-				</br>
+				
+					</br>
+					</br>	
 
 
-
-						<div class="playstore"><img src="img/playstore.png"></div>
+					<div class="playstore"><img src="{{ asset('img/playstore.png')}}"></div>
 					</div>
 
 				</div>	
 				</div>
 
 				<div class="column-2" style="padding: 0; width: 33.3333333%; margin-top: 75px;">
-						<img src="img/app-iphone.png">
+						<img src="{{ asset('img/app-iphone.png')}}">
 				</div>
 			</div>  
 		</div>
