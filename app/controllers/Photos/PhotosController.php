@@ -666,6 +666,8 @@ class PhotosController extends \BaseController {
     DB::table('tag_assignments')->where('photo_id', '=', $photo->id)->delete();
 
     $photo->delete();
+    
+    EventLogger::printEventLogs($id, "delete", null, "Web");
     return Redirect::to('/users/' . $photo->user_id);
   }
 }

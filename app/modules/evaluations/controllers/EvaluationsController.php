@@ -3,7 +3,6 @@ namespace modules\evaluations\controllers;
 use modules\evaluations\models\Evaluation;
 use modules\evaluations\models\Binomial;
 use modules\news\models\News as News;
-use lib\utils\ActionUser;
 use lib\log\EventLogger;
 use Session;  
 use Auth;
@@ -41,20 +40,11 @@ class EvaluationsController extends \BaseController {
       }
     
       if(isset($_SERVER['QUERY_STRING'])) parse_str($_SERVER['QUERY_STRING']);
-      $user_id = Auth::user()->id;
-      $source_page = Request::header('referer');
-      // if(isset($f)) {
-      //   if($f == "sb") ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "pelo botão abaixo da imagem");
-      //   elseif($f == "c") ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "pelo botão abaixo do gráfico");
-      //   elseif($f == "g") ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "pelo gráfico");
-      // }else ActionUser::printEvaluationAccess($user_id, $photoId, $source_page, "user", "diretamente");
-
       if(isset($f)) {
         if($f == "sb") $eventContent['object_source'] = 'pelo botão abaixo da imagem';
         elseif($f == "c") $eventContent['object_source'] = 'pelo botão abaixo do gráfico';
         elseif($f == "g") $eventContent['object_source'] = 'pelo gráfico';
-      }else $eventContent['object_source'] = 'diretamente';
-
+      } else $eventContent['object_source'] = 'diretamente';
       EventLogger::printEventLogs(null, 'access_evaluation_page', $eventContent, 'Web');
         
       return static::getEvaluation($photoId, Auth::user()->id, true);
@@ -155,7 +145,6 @@ class EvaluationsController extends \BaseController {
           $binomials = Binomial::all();
           // Fazer um loop por cada e salvar como uma avaliação
           if ($evaluations->isEmpty()) {
-              $insertion_edition = "Inseriu";
               foreach ($binomials as $binomial) {
                 $bid = $binomial->id;
                 $newEvaluation = Evaluation::create([
@@ -168,9 +157,8 @@ class EvaluationsController extends \BaseController {
                   ]);
                 $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
               }
-            
+          EventLogger::printEventLogs($id, 'insert_evaluation', ['evaluation' => $evaluation_string], 'Web');
           }else { 
-              $insertion_edition = "Editou";
               foreach ($evaluations as $evaluation) {
                   $bid = $evaluation->binomial_id;
                   $evaluation->evaluationPosition = $input['value-'.$bid];
@@ -179,9 +167,8 @@ class EvaluationsController extends \BaseController {
                   $evaluation->save();
                   $evaluation_string = $evaluation_string . $evaluation_names[$i++] . ": " . $input['value-'.$bid] . ", ";
               }
+              EventLogger::printEventLogs($id, 'edit_evaluation', ['evaluation' => $evaluation_string], 'Web');
           } //end if evaluation empty
-          $eventContent['evaluation'] = $evaluation_string;
-          EventLogger::printEventLogs($id, 'insert_evaluation', $eventContent, 'Web');
           return \Redirect::to("/evaluations/{$id}/evaluate")->with('message', 
               '<strong>Interpretação salva com sucesso</strong><br>Abaixo você pode visualizar a média atual de interpretações');
       } else { // avaliação sem login        

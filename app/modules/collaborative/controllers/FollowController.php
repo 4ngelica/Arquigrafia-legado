@@ -1,7 +1,6 @@
 <?php
 
 namespace modules\collaborative\controllers;
-use lib\utils\ActionUser;
 use lib\log\EventLogger;
 use Auth;
 
