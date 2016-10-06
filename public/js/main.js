@@ -1,16 +1,16 @@
 $(document).ready(function() {
 
+	window.scrollTo(0,0);
+
 	var nav_buttons = $(".menu-navegacao a");
-	var previously_clicked = "";
 
 	nav_buttons.each(function() {
 
 		$(this).click(function (event) {
 			event.preventDefault();
 
-			if (previously_clicked != "") {
-				previously_clicked.children().removeClass("active");
-			}
+			var previously_clicked = $(".active");
+			previously_clicked.removeClass("active");
 			$(this).children().addClass("active");
 
 			var go_to = $(this).attr("href");
@@ -18,11 +18,25 @@ $(document).ready(function() {
 			$("html, body").animate({
 				scrollTop: $(go_to).offset().top
 			}, 900, 'easeInOutQuart');
-
-			previously_clicked = $(this);
 		});
 
 	});
+
+	var sections_height = $(window).height();
+	$(window).scroll(function() {
+		var scroll_position = $(window).scrollTop();
+		for (var i = 1; i <= 7; i++) {
+			if (scroll_position >= sections_height*(i-1) && scroll_position <= sections_height*i) {
+				var active_section = $("#page" + i.toString());
+				if (!active_section.hasClass("active")) {
+					console.log(active_section.attr("id"));
+					var previously_clicked = $(".active");
+					previously_clicked.removeClass("active");
+					$('.menu-navegacao a[href="#page' + i + '"] div').addClass("active");
+				}
+			}
+		}
+	})
 
 	var pins = $(".georref-hover");
 

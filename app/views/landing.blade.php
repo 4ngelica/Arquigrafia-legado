@@ -675,15 +675,12 @@ Assim, quando estiver próximo a um edifício que lhe interessa, você conseguir
 					</div>
 					</a>
 					<!--   END BOTÃO CADASTRO FINAL  -->
-					</br>
-					</br>
+			
 
 					<div style="font-size: 20px;color:#7f7f7f;-webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;padding-top: 50px;padding-right: 180px">
 					Já tem cadastro?</div>
-					
-					</br>
-					</br>	
+						
 					<!--   BOTÃO LOGIN FINAL  -->
 					<a href="{{ URL::to("/users/login/") }}">
 					<div class="login-final">
@@ -691,13 +688,13 @@ Assim, quando estiver próximo a um edifício que lhe interessa, você conseguir
 					</div>
 					</a>
 					<!--  END BOTÃO LOGIN FINAL  -->
-				
-					</br>
-					</br>	
 
-
-					<div class="playstore"><img src="{{ asset('img/playstore.png')}}"></div>
+					<div style="color: white; background-color: black; margin-top: 30px;" class="login-final">
+							<a href="{{ URL::to("/home") }}" style="color:white;">Ir para o site</a>
 					</div>
+					<!--<div class="playstore"><img src="{{ asset('img/playstore.png')}}"></div>-->
+					</div>
+					
 
 				</div>	
 				</div>
