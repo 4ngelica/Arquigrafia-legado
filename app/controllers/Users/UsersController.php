@@ -243,10 +243,10 @@ class UsersController extends \BaseController {
         return Redirect::to('/users/login')->withInput();
       }
     }
-    if (isset($user)) {
+    if (isset($user)) { 
       if ($user->active == 'no' && (Auth::validate(array('login' => $user->login, 'password' => $input["password"])) == true)) {
         Session::put('login.message', 'Finalize seu cadastro acessando o link enviado ao seu e-mail.');
-        return Redirect::to('/users/login')->withInput(); 
+            return Redirect::to('/users/login')->withInput(); 
       }
       if ( Auth::attempt(array('login' => $user->login, 'password' => $input["password"],'active' => 'yes')) == true || 
           Auth::attempt(array('email' => $input["login"], 'password' => $input["password"],'active' => 'yes')) == true  ) { 
@@ -274,7 +274,10 @@ class UsersController extends \BaseController {
                 return Redirect::to('/home')->with('msgWelcome', "Bem-vind@ ".ucfirst($user->name).".");
             
             }else{
-              return Redirect::to($url);
+              if($url == URL::to("/")."/")
+                  return Redirect::to('/home');
+              else  
+                  return Redirect::to($url);
             }
 
           }

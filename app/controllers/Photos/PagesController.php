@@ -27,11 +27,8 @@ class PagesController extends BaseController {
 
     public function landing()
     {
-        //return Redirect::action('PagesController@home');
-        //Redirect::to('/photos/upload')
-        //Redirect::to('/users/' . $photo->user_id);
-        $photos = "hello";
-        return View::make('landing',['photos' => $photos]);
+        
+        return View::make('landing');
 
     }
 
