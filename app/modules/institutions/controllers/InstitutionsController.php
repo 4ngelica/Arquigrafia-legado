@@ -35,7 +35,7 @@ class InstitutionsController extends \BaseController {
   public function show($id) { 
     $institution = Institution::find($id);
     if ( is_null($institution) ) {
-      return \Redirect::to('/');
+      return \Redirect::to('/home');
     }
     $photos = $institution->photos()->get()->reverse(); 
     $follow = null;
@@ -69,11 +69,11 @@ class InstitutionsController extends \BaseController {
   /*Editar dados da instituição*/
   public function edit($id) {     
     if (!Session::has('institutionId') ) {
-      return Redirect::to('/');
+      return Redirect::to('/home');
     }
 
     $institution = Institution::find($id); 
-    if ( is_null($institution) )   return Redirect::to('/');
+    if ( is_null($institution) )   return Redirect::to('/home');
      
     return \View::make('edit', [
       'institution' => $institution      
@@ -159,7 +159,7 @@ class InstitutionsController extends \BaseController {
   public function formPhotos()
   { 
     if ( ! Session::has('institutionId') ) {
-        return Redirect::to('/');
+        return Redirect::to('/home');
     }
 
     $user_id = Auth::id();
@@ -361,7 +361,7 @@ class InstitutionsController extends \BaseController {
     $logged_user = Auth::User();
     $institution_id = Session::get('institutionId');
     if ($logged_user == null || $institution_id == null) {
-        return \Redirect::to('/');
+        return \Redirect::to('/home');
     } elseif ($institution_id == $photo->institution_id) {
         if (Session::has('tagsArea'))
         {
@@ -436,7 +436,7 @@ class InstitutionsController extends \BaseController {
           'work_authors' => $work_authors
           ] ); 
     }    
-    return Redirect::to('/');
+    return Redirect::to('/home');
   }
 
   /* Salvar edição do formulario institutional*/
@@ -661,7 +661,7 @@ class InstitutionsController extends \BaseController {
   public function followInstitution($institution_id)
   { 
     $logged_user = Auth::user();
-    if ($logged_user == null)  return \Redirect::to('/');
+    if ($logged_user == null)  return \Redirect::to('/home');
 
     $following = $logged_user->followingInstitution;
     if (!$following->contains($institution_id)) { 
@@ -673,7 +673,7 @@ class InstitutionsController extends \BaseController {
   public function unfollowInstitution($institution_id)
   {
     $logged_user = Auth::user();    
-    if ($logged_user == null)   return \Redirect::to('/');
+    if ($logged_user == null)   return \Redirect::to('/home');
 
     $following = $logged_user->followingInstitution;  
     

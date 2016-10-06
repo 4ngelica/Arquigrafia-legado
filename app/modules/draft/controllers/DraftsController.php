@@ -29,7 +29,7 @@ class DraftsController extends \BaseController {
   public function listDrafts() {
     $institution = \Session::get('institutionId');
     if ( is_null($institution) ) {
-      return \Redirect::to('/');
+      return \Redirect::to('/home');
     }
     $drafts = Photo::with('tags')->withInstitution($institution)
       ->onlyDrafts()->paginate(100);
@@ -41,7 +41,7 @@ class DraftsController extends \BaseController {
   public function getDraft($id) { 
     $photo = Photo::onlyDrafts()->find($id);
     if ( is_null($photo) ) {
-      return \Redirect::to('/');
+      return \Redirect::to('/home');
     }
     $input = array(
       'dates' => true,

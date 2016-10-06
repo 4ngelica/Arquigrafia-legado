@@ -67,7 +67,7 @@ class UsersController extends \BaseController {
   // show create account form
   public function account()
   {
-    if (Auth::check()) return Redirect::to('/');
+    if (Auth::check()) return Redirect::to('/home');
     return View::make('/modal/account');
   }
 
@@ -207,7 +207,7 @@ class UsersController extends \BaseController {
   public function loginForm()
   { 
     if (Auth::check())
-        return Redirect::to('/');
+        return Redirect::to('/home');
 
     session_start();
     $fb_config = Config::get('facebook');
@@ -256,9 +256,9 @@ class UsersController extends \BaseController {
           $source_page = Request::header('referer');
           ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
           if (isset($integration_message)) {
-            return Redirect::to('/')->with('msgWelcome', $integration_message);  
+            return Redirect::to('/home')->with('msgWelcome', $integration_message);  
           }
-          return Redirect::intended('/');
+          return Redirect::intended('/home');
         }
         if ( Session::has('url.previous') )
         {
@@ -269,9 +269,9 @@ class UsersController extends \BaseController {
             ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
             //Redirect when user forget password
             if($url == URL::to('users/forget')){ 
-              return Redirect::to('/');
+              return Redirect::to('/home');
             }elseif(!empty($input["firstTime"])){ 
-                return Redirect::to('/')->with('msgWelcome', "Bem-vind@ ".ucfirst($user->name).".");
+                return Redirect::to('/home')->with('msgWelcome', "Bem-vind@ ".ucfirst($user->name).".");
             
             }else{
               return Redirect::to($url);
@@ -283,16 +283,16 @@ class UsersController extends \BaseController {
           $source_page = Request::header('referer');
           ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
           if (isset($integration_message)) {
-            return Redirect::to('/')->with('msgWelcome', $integration_message);  
+            return Redirect::to('/home')->with('msgWelcome', $integration_message);  
           }
-          return Redirect::to('/');
+          return Redirect::to('/home');
         }
         $source_page = Request::header('referer');
         ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "arquigrafia", "user");
         if (isset($integration_message)) {
-          return Redirect::to('/')->with('msgWelcome', $integration_message);  
+          return Redirect::to('/home')->with('msgWelcome', $integration_message);  
         }
-        return Redirect::to('/');
+        return Redirect::to('/home');
       } else {
   			Session::put('login.message', 'Usuário e/ou senha inválidos, tente novamente.');
         return Redirect::to('/users/login')->withInput();
@@ -313,9 +313,9 @@ class UsersController extends \BaseController {
 
       Auth::logout();
       Session::flush();
-      return Redirect::to('/');
+      return Redirect::to('/home');
     }
-    return Redirect::to('/');
+    return Redirect::to('/home');
   }
   
   // facebook login NÃO ESTA SENDO USADO
@@ -393,9 +393,9 @@ class UsersController extends \BaseController {
         $source_page = Request::header('referer');
         ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "facebook", "user");
         if (isset($integration_message)) {
-          return Redirect::to('/')->with('msgWelcome', $integration_message);  
+          return Redirect::to('/home')->with('msgWelcome', $integration_message);  
         }
-        return Redirect::to('/')->with('msgWelcome', "Bem-vindo {$user->name}!");
+        return Redirect::to('/home')->with('msgWelcome', "Bem-vindo {$user->name}!");
         
       } else {
         $query = User::where('email', '=', $fbmail)->first();
@@ -406,9 +406,9 @@ class UsersController extends \BaseController {
           $source_page = Request::header('referer');
           ActionUser::printLoginOrLogout($query->id, $source_page, "Login", "facebook", "user");
           if (isset($integration_message)) {
-            return Redirect::to('/')->with('msgWelcome', $integration_message);  
+            return Redirect::to('/home')->with('msgWelcome', $integration_message);  
           }
-          return Redirect::to('/')->with('msgWelcome', "Bem-vindo {$query->name}!");
+          return Redirect::to('/home')->with('msgWelcome', "Bem-vindo {$query->name}!");
         }
         else {
         $user = new User;
@@ -441,7 +441,7 @@ class UsersController extends \BaseController {
         $source_page = Request::header('referer');
         ActionUser::printNewAccount($user->id, $source_page, "facebook", "user");
 
-        return Redirect::to('/')->with('message', 'Sua conta foi criada com sucesso!');
+        return Redirect::to('/home')->with('message', 'Sua conta foi criada com sucesso!');
       }
       }
             
@@ -470,7 +470,7 @@ class UsersController extends \BaseController {
     $logged_user = Auth::user();
     
     if ($logged_user == null) //futuramente, adicionar filtro de login
-       return Redirect::to('/');
+       return Redirect::to('/home');
 
     $following = $logged_user->following;
 
@@ -497,7 +497,7 @@ class UsersController extends \BaseController {
     $logged_user = Auth::user();
     
     if ($logged_user == null) //futuramente, adicionar filtro de login
-      return Redirect::to('/');
+      return Redirect::to('/home');
 
     $following = $logged_user->following;
 
@@ -535,7 +535,7 @@ class UsersController extends \BaseController {
  */
   public function edit($id) {     
     if (Session::has('institutionId') ) {
-      return Redirect::to('/');
+      return Redirect::to('/home');
     }
 
     $user = User::find($id);
@@ -673,7 +673,7 @@ class UsersController extends \BaseController {
         Log::info("Valid access, redirect");
         Session::put('institutionId', $institutionId);
         Session::put('displayInstitution', $displayedInstitutionName);             
-        return Redirect::to('/');
+        return Redirect::to('/home');
     } else {
       Log::info("Invalid access, return message");
       return Response::json(false);

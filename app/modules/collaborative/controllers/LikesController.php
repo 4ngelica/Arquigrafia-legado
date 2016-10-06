@@ -10,7 +10,7 @@ use Carbon\Carbon;
 class LikesController extends \BaseController {
 
   public function index(){
-    return \Redirect::to('/');
+    return \Redirect::to('/home');
   }
   public function photoLike($id) {
 

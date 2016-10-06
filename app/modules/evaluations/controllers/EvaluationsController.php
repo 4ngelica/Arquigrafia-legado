@@ -30,13 +30,13 @@ class EvaluationsController extends \BaseController {
 
 	public function show($id)
 	{ 
-      return \Redirect::to('/');
+      return \Redirect::to('/home');
 	}
 
   public function evaluate($photoId ) 
   {
       if (Session::has('institutionId') ) {
-        return \Redirect::to('/');
+        return \Redirect::to('/home');
       }
     
       if(isset($_SERVER['QUERY_STRING'])) parse_str($_SERVER['QUERY_STRING']);

@@ -27,7 +27,7 @@ class FollowController extends \BaseController {
 		$logged_user = Auth::user();
     
 	    if ($logged_user == null) //futuramente, adicionar filtro de login
-	       return \Redirect::to('/');
+	       return \Redirect::to('/home');
 
 	    $following = $logged_user->following;
 
@@ -109,7 +109,7 @@ class FollowController extends \BaseController {
 		$logged_user = Auth::user();
     
 	    if ($logged_user == null) //futuramente, adicionar filtro de login
-	      return \Redirect::to('/');
+	      return \Redirect::to('/home');
 
 	    $following = $logged_user->following;
 
