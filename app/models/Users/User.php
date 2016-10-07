@@ -5,6 +5,7 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use lib\date\Date;
+use lib\log\EventLogger;
 
 use modules\gamification\traits\UserGamificationTrait;
 use modules\institutions\models\Institution;
@@ -134,6 +135,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 			$user->site = $stoa_user->homepage;
 		$user->save();
 
+		EventLogger::printEventLogs(null, "new_account", ["origin" => "Stoa"], "Web");
 		return $user;
 	}
 

@@ -1,6 +1,5 @@
 <?php
 
-use lib\utils\ActionUser;
 use lib\log\EventLogger;
 use lib\date\Date;
 use modules\institutions\models\Institution as Institution;
@@ -264,9 +263,8 @@ class PagesController extends BaseController {
                 session_start();
                 $user_id = session_id();
             }
-            $eventContent['search_query'] = $needle;
-            $eventContent['search_size'] = str_word_count($needle);
-            EventLogger::printEventLogs(NULL, 'search', $eventContent,'Web');
+
+            EventLogger::printEventLogs(NULL, 'search', ['search_query' => $needle, 'search_size' => str_word_count($needle)],'Web');
             
             if(Session::has('CurrPage') && Session::get('CurrPage')!= 1){ 
                 $pageRetrieved = Session::get('CurrPage');  

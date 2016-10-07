@@ -5,7 +5,6 @@ use modules\collaborative\models\Comment;
 use modules\collaborative\models\Like;
 use modules\gamification\models\Badge;
 use lib\date\Date;
-use lib\utils\ActionUser;
 use lib\log\EventLogger;
 use modules\news\models\News;
 use Input;
@@ -45,8 +44,7 @@ class CommentsController extends \BaseController {
         
         $user = Auth::user();
         
-        $eventContent['comment_id'] = $comment->id;
-        EventLogger::printEventLogs($photo->id, 'insert_comment', $eventContent, 'Web');
+        EventLogger::printEventLogs($photo->id, 'insert_comment', ['comment_id' => $comment->id], 'Web');
       
         /*Envio de notificação*/
         
@@ -77,9 +75,7 @@ class CommentsController extends \BaseController {
 
     \Event::fire('comment.liked', array($user, $comment));
     
-    $eventContent['target_type'] = 'comentário';
-    $eventContent['target_id'] = $id;
-    EventLogger::printEventLogs(null, 'like', $eventContent, 'Web');
+    EventLogger::printEventLogs(null, 'like', ["target_type" => 'comentário', "target_id" => $id], 'Web');
 
     $like = Like::getFirstOrCreate($comment, $user);
     if (is_null($comment)) {
@@ -107,12 +103,4 @@ class CommentsController extends \BaseController {
       'url' => \URL::to('/comments/' . $comment->id . '/' . 'like'),
       'likes_count' => $comment->likes->count()]);
   }
-
-  private function logLikeDislikeComment($user, $likable, $photo_or_comment, $like_or_dislike, $user_or_visitor) {
-    $source_page = \Request::header('referer');
-    ActionUser::printLikeDislike($user->id, $likable->id, $source_page, $photo_or_comment, $like_or_dislike, $user_or_visitor);
-  }
-
-
-
 }

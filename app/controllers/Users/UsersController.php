@@ -1,5 +1,4 @@
 <?php
-use lib\utils\ActionUser;
 use lib\log\EventLogger;
 use lib\utils\HelpTool;
 use Carbon\Carbon; 
@@ -41,20 +40,10 @@ class UsersController extends \BaseController {
       $follow = true;
       $followInstitution = true;
     }
-    
-    if (Auth::check()) {
-        $user_id = Auth::user()->id;
-        $user_or_visitor = "user";
-    }
-    else { 
-        $user_or_visitor = "visitor";
-        session_start();
-        $user_id = session_id();
-    }
 
     $albums = $user->userAlbums; 
-    $source_page = Request::header('referer');
-    ActionUser::printSelectUser($user_id, $id, $source_page, $user_or_visitor);
+
+    EventLogger::printEventLogs(null, "select_user", ["target_userId" => $id], "Web");
 
     return View::make('/users/show',['user' => $user, 'photos' => $photos, 'follow' => $follow,
       'evaluatedPhotos' => Photo::getEvaluatedPhotosByUser($user),
@@ -107,9 +96,7 @@ class UsersController extends \BaseController {
       'verify_code' => $verify_code       
       ]);
 
-      
-      $source_page = Request::header('referer');
-      ActionUser::printNewAccount($user->id, $source_page, "arquigrafia", "user"); 
+      EventLogger::printEventLogs(null, "new_account", ["origin" => "Arquigrafia"], "Web"); 
 
         //send email to user created
        Mail::send('emails.users.verify', array('name' => $name, 'email' => $email, 'login' => $login ,'verifyCode' => $verify_code), 
@@ -231,7 +218,6 @@ class UsersController extends \BaseController {
   { 
     $input = Input::all();   
     $user = User::userInformation($input["login"]);
-    $eventContent['origin'] = 'Arquigrafia';
     if (isset($user)) {
       $integration_message = $this->integrateAccounts($user->email);
     }
@@ -255,7 +241,7 @@ class UsersController extends \BaseController {
         if ( Session::has('filter.login') ) //acionado pelo login
         {  
           Session::forget('filter.login');
-          EventLogger::printEventLogs(null, 'login', $eventContent, 'Web');
+          EventLogger::printEventLogs(null, 'login', ["origin" => "Arquigrafia"], 'Web');
           if (isset($integration_message)) {
             return Redirect::to('/')->with('msgWelcome', $integration_message);  
           }
@@ -266,7 +252,7 @@ class UsersController extends \BaseController {
           $url = Session::pull('url.previous'); 
           
           if (!empty($url)) {
-            EventLogger::printEventLogs(null, 'login', $eventContent, 'Web');
+            EventLogger::printEventLogs(null, 'login', ["origin" => "Arquigrafia"], 'Web');
             //Redirect when user forget password
             if($url == URL::to('users/forget')){ 
               return Redirect::to('/');
@@ -280,13 +266,13 @@ class UsersController extends \BaseController {
           }
 
           
-          EventLogger::printEventLogs(null, 'login', $eventContent, 'Web');
+          EventLogger::printEventLogs(null, 'login', ["origin" => "Arquigrafia"], 'Web');
           if (isset($integration_message)) {
             return Redirect::to('/')->with('msgWelcome', $integration_message);  
           }
           return Redirect::to('/');
         }
-        EventLogger::printEventLogs(null, 'login', $eventContent, 'Web');
+        EventLogger::printEventLogs(null, 'login', ["origin" => "Arquigrafia"], 'Web');
         if (isset($integration_message)) {
           return Redirect::to('/')->with('msgWelcome', $integration_message);  
         }
@@ -386,8 +372,7 @@ class UsersController extends \BaseController {
           $user->save();
         }
 
-        $source_page = Request::header('referer');
-        ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "facebook", "user");
+        EventLogger::printEventLogs(null, "login", ["origin" => "Facebook"], "Web");
         if (isset($integration_message)) {
           return Redirect::to('/')->with('msgWelcome', $integration_message);  
         }
@@ -399,8 +384,7 @@ class UsersController extends \BaseController {
           $query->id_facebook = $fbid;
           $query->save();
           Auth::loginUsingId($query->id);
-          $source_page = Request::header('referer');
-          ActionUser::printLoginOrLogout($query->id, $source_page, "Login", "facebook", "user");
+          EventLogger::printEventLogs(null, "login", ["origin" => "Facebook"], "Web");
           if (isset($integration_message)) {
             return Redirect::to('/')->with('msgWelcome', $integration_message);  
           }
@@ -434,8 +418,7 @@ class UsersController extends \BaseController {
         $user->photo = '/arquigrafia-avatars/'.$user->id.'.jpg';
         $user->save();
         
-        $source_page = Request::header('referer');
-        ActionUser::printNewAccount($user->id, $source_page, "facebook", "user");
+        EventLogger::printEventLogs(null, "new_account", ["origin" => "Facebook"], "Web"); 
 
         return Redirect::to('/')->with('message', 'Sua conta foi criada com sucesso!');
       }
@@ -479,8 +462,7 @@ class UsersController extends \BaseController {
 
       $logged_user->following()->attach($user_id);
 
-      $eventContent['target_userId'] = $user_id;
-      EventLogger::printEventLogs(null, 'follow', $eventContent, 'Web');
+      EventLogger::printEventLogs(null, 'follow', ['target_userId' => $user_id], 'Web');
     }
 
     return Redirect::to(URL::previous()); // redirecionar para friends
@@ -499,8 +481,7 @@ class UsersController extends \BaseController {
     if ($user_id != $logged_user->id && $following->contains($user_id)) {
       $logged_user->following()->detach($user_id);
 
-      $eventContent['target_userId'] = $user_id;
-      EventLogger::printEventLogs(null, 'unfollow', $eventContent, 'Web');
+      EventLogger::printEventLogs(null, 'unfollow', ['target_userId' => $user_id], 'Web');
     }
 
     return Redirect::to(URL::previous()); // redirecionar para friends
@@ -643,8 +624,7 @@ class UsersController extends \BaseController {
     $user = User::stoa($stoa_user);
     Auth::loginUsingId($user->id);
     
-    $source_page = Request::header('referer');
-    ActionUser::printLoginOrLogout($user->id, $source_page, "Login", "stoa", "user");
+    EventLogger::printEventLogs(null, "login", ["origin" => "Stoa"], "Web"); 
     return Response::json(true);
   }
 
