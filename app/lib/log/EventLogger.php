@@ -171,12 +171,12 @@ class EventLogger {
             					$date_and_time, $eventContent['search_size'], $eventContent['search_query'], $sourcePage, $device);
                 break;
             case "like":
-            	$info = sprintf('[%s] Curtiu %s, ID nº: %d, via %s', 
-                                $date_and_time, $eventContent['target_type'], $eventContent['target_id'], $device);
+            	$info = sprintf('[%s] Curtiu %s, ID nº: %d, pela página %s, via %s', 
+                                $date_and_time, $eventContent['target_type'], $eventContent['target_id'], $sourcePage, $device);
                 break;
             case "dislike":
-            	$info = sprintf('[%s] Descurtiu %s, ID nº: %d, via %s', 
-                                $date_and_time, $eventContent['target_type'], $eventContent['target_id'], $device);
+            	$info = sprintf('[%s] Descurtiu %s, ID nº: %d, pela página %s, via %s', 
+                                $date_and_time, $eventContent['target_type'], $eventContent['target_id'], $sourcePage, $device);
                 break;
             case "insert_evaluation":
             	$info = sprintf('[%s] Inseriu avaliação na foto de ID nº: %d, com os seguintes valores %s pela página: %s, via %s', 

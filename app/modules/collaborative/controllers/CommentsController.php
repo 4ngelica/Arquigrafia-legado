@@ -77,9 +77,8 @@ class CommentsController extends \BaseController {
 
     \Event::fire('comment.liked', array($user, $comment));
     
-    //$this->logLikeDislikeComment($user, $comment, "o comentário", "Curtiu", "user");
     $eventContent['target_type'] = 'comentário';
-    $eventContent['target_id'] = $comment->id;
+    $eventContent['target_id'] = $id;
     EventLogger::printEventLogs(null, 'like', $eventContent, 'Web');
 
     $like = Like::getFirstOrCreate($comment, $user);
@@ -98,10 +97,8 @@ class CommentsController extends \BaseController {
     \Event::fire('comment.disliked', array($user, $comment));
 
     $eventContent['target_type'] = 'comentário';
-    $eventContent['tager_id'] = $comment->id;
+    $eventContent['target_id'] = $id;
     EventLogger::printEventLogs(null, 'dislike', $eventContent, 'Web');
-
-    $source_page = \Request::header('referer');
     
     if (is_null($comment)) {
       return \Response::json('fail');

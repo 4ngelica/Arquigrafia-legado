@@ -10,7 +10,7 @@ class APITagsController extends \BaseController {
 	 */
 	public function index()
 	{
-		return \Response::json(Tag::all()->toArray());
+		return \Response::json(Tag::where('type', 'Acervo')->get()->toArray());
 	}
 
 

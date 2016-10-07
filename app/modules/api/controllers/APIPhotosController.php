@@ -2,6 +2,7 @@
 namespace modules\api\controllers;
 use Photo;
 use lib\utils\ActionUser;
+use lib\log\EventLogger;
 use modules\collaborative\models\Tag;
 use modules\institutions\models\Institution;
 
@@ -14,7 +15,7 @@ class APIPhotosController extends \BaseController {
 	 */
 	public function index()
 	{
-		return \Response::json(\Photo::all()->toArray());
+		return \Response::json(\Photo::where('draft', null)->get()->toArray());
 	}
 
 
@@ -118,8 +119,8 @@ class APIPhotosController extends \BaseController {
 	        $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
 	        $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
 
-	        ActionUser::printUploadOrDownloadLog($photo->user_id, $photo->id, 'mobile', 'Upload', 'user');
-	        ActionUser::printTags($photo->user_id, $photo->id, $tags_copy, 'mobile', "user", "Inseriu");
+	        EventLogger::printEventLogs($photo->id, 'upload', null, 'mobile');
+	        EventLogger::printEventLogs($photo->id, 'insert_tags', ['tags' => $tags_copy], 'mobile');
 	        return $photo->id;
 
 		}
@@ -146,7 +147,7 @@ class APIPhotosController extends \BaseController {
 		$authorsList = $photo->authors->lists('name');
 
 		/* Registro de logs */
-		ActionUser::printSelectPhoto($user_id, $id, "mobile", "user");
+		EventLogger::printEventLogs($id, 'select_photo', null, 'mobile');
 
 		return \Response::json(["photo" => $photo, "sender" => $sender, "license" => $license, 
 			"authors" => $authorsList, "tags" => $tags]);
@@ -263,8 +264,8 @@ class APIPhotosController extends \BaseController {
 	        $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
 	    }
 
-	    ActionUser::printEditOrDeletePhotoLog($photo->user_id, $photo->id, 'mobile', 'Editou', 'user');
-	    ActionUser::printTags($photo->user_id, $photo->id, $tags_copy, 'mobile', "user", "Editou");
+	    EventLogger::printEventLogs($photo->id, 'edit', null, 'mobile');
+	    EventLogger::printEventLogs($photo->id, 'edit_tags', ['tags' => $tags_copy], 'mobile');
         return $photo->id;
 
 		
@@ -295,7 +296,7 @@ class APIPhotosController extends \BaseController {
 	    \DB::table('tag_assignments')->where('photo_id', '=', $photo->id)->delete();
 	    $photo->delete();
 
-	    ActionUser::printEditOrDeletePhotoLog($photo->user_id, $photo->id, 'mobile', 'Deletou', 'user');
+	    EventLogger::printEventLogs($photo->id, 'delete', null, 'mobile');
 	    return \Response::json(array(
 				'code' => 200,
 				'message' => 'Operacao realizada com sucesso'));

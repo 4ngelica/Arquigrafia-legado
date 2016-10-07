@@ -1,6 +1,7 @@
 <?php 
 namespace modules\api\controllers;
 use lib\utils\ActionUser;
+use lib\log\EventLogger;
 use modules\evaluations\models\Evaluation;
 use modules\evaluations\models\Binomial;
 
@@ -45,7 +46,7 @@ class APIEvaluationController extends \BaseController {
          	}
 
             /* Registro de logs */
-            ActionUser::printEvaluation($userId, $photoId, 'mobile', 'user', 'Inseriu', $evaluation_sentence);
+            EventLogger::printEventLogs($photoId, 'insert_evaluation', ['evaluation' => $evaluation_sentence], 'mobile');
         }
         else {
         	foreach ($evaluations as $evaluation) {
@@ -57,7 +58,7 @@ class APIEvaluationController extends \BaseController {
         	}
 
             /* Registro de logs */
-            ActionUser::printEvaluation($userId, $photoId, 'mobile', 'user', 'Editou', $evaluation_sentence);
+            EventLogger::printEventLogs($photoId, 'edit_evaluation', ['evaluation' => $evaluation_sentence], 'mobile');
         }
 		\Response::json($input);
 	}

@@ -1,6 +1,7 @@
 <?php
 namespace modules\api\controllers;
 use lib\utils\ActionUser;
+use lib\logger\EventLogger;
 
 class APILogInController extends \BaseController {
 
@@ -12,7 +13,7 @@ class APILogInController extends \BaseController {
 			$user->save();
 
 			/* Registro de logs */
-			ActionUser::printLoginOrLogout($user->id, 'mobile', 'login', 'arquigrafia', 'user');
+			EventLogger::printEventLogs(null, 'login', ['origin' => 'aplicativo'], 'Web');
 
 			return \Response::json(['login' => $input["login"], 'token' => $user->mobile_token, 'id' => $user->id, 'valid' => 'true', 'msg' => 'Login efetuado com sucesso.']);
 		}
@@ -39,7 +40,7 @@ class APILogInController extends \BaseController {
 				$user->save();
 
 				/* Registro de logs */
-				ActionUser::printLoginOrLogout($user->id, 'mobile', 'logout', 'arquigrafia', 'user');
+				EventLogger::printEventLogs(null, 'logout', null, 'Web');
 
 				return \Response::json(['logged_out' => 'true']);
 			}

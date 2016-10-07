@@ -1,6 +1,7 @@
 <?php
 namespace modules\api\controllers;
 use lib\utils\ActionUser;
+use lib\logEventLogger;
 use modules\collaborative\models\Tag;
 use modules\institutions\models\Institution;
 
@@ -66,7 +67,9 @@ class APISearchController extends \BaseController {
                 $photos = $photos->sortByDesc('id')->take(20);
 
                 /* Registro de logs */
-                ActionUser::printSearch($user_id, 'mobile', $needle, 'user');
+                $eventContent['search_query'] = $needle;
+                $eventContent['search_size'] = str_word_count($needle);
+                EventLogger::printEventLogs(NULL, 'search', $eventContent,'mobile');
 
                 return \Response::json($photos);
             }
