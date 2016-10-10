@@ -119,8 +119,9 @@ class APIPhotosController extends \BaseController {
 	        $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
 	        $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
 
-	        EventLogger::printEventLogs($photo->id, 'upload', null, 'mobile');
-	        EventLogger::printEventLogs($photo->id, 'insert_tags', ['tags' => $tags_copy], 'mobile');
+	        EventLogger::printEventLogs($photo->id, 'upload', ['user' => $photo->user_id], 'mobile');
+	        EventLogger::printEventLogs($photo->id, 'insert_tags', 
+	        							['tags' => $tags_copy, 'user' => $photo->user_id], 'mobile');
 	        return $photo->id;
 
 		}
@@ -147,7 +148,7 @@ class APIPhotosController extends \BaseController {
 		$authorsList = $photo->authors->lists('name');
 
 		/* Registro de logs */
-		EventLogger::printEventLogs($id, 'select_photo', null, 'mobile');
+		EventLogger::printEventLogs($id, 'select_photo', ['user' => $photo->user_id], 'mobile');
 
 		return \Response::json(["photo" => $photo, "sender" => $sender, "license" => $license, 
 			"authors" => $authorsList, "tags" => $tags]);
@@ -264,8 +265,9 @@ class APIPhotosController extends \BaseController {
 	        $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
 	    }
 
-	    EventLogger::printEventLogs($photo->id, 'edit', null, 'mobile');
-	    EventLogger::printEventLogs($photo->id, 'edit_tags', ['tags' => $tags_copy], 'mobile');
+	    EventLogger::printEventLogs($photo->id, 'edit', ['user' => $photo->user_id], 'mobile');
+	    EventLogger::printEventLogs($photo->id, 'edit_tags', 
+	    							['tags' => $tags_copy, 'user' => $photo->user_id], 'mobile');
         return $photo->id;
 
 		
@@ -296,7 +298,7 @@ class APIPhotosController extends \BaseController {
 	    \DB::table('tag_assignments')->where('photo_id', '=', $photo->id)->delete();
 	    $photo->delete();
 
-	    EventLogger::printEventLogs($photo->id, 'delete', null, 'mobile');
+	    EventLogger::printEventLogs($photo->id, 'delete', ['user' => $photo->user_id], 'mobile');
 	    return \Response::json(array(
 				'code' => 200,
 				'message' => 'Operacao realizada com sucesso'));
