@@ -86,6 +86,9 @@ class EventLogger {
         if(Auth::check()) {
             $userType = 'user';
             $userId = Auth::user()->id;
+        } elseif ($device == 'mobile') {
+            $userType = 'user';
+            $userId = $eventContent['user'];
         }
         $sourcePage = \Request::server('HTTP_REFERER');
 

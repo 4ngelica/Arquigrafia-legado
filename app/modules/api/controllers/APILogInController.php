@@ -13,7 +13,7 @@ class APILogInController extends \BaseController {
 			$user->save();
 
 			/* Registro de logs */
-			EventLogger::printEventLogs(null, 'login', ['origin' => 'aplicativo'], 'Web');
+			EventLogger::printEventLogs(null, 'login', ['origin' => 'aplicativo', 'user' => $user->id], 'mobile');
 
 			return \Response::json(['login' => $input["login"], 'token' => $user->mobile_token, 'id' => $user->id, 'valid' => 'true', 'msg' => 'Login efetuado com sucesso.']);
 		}
@@ -40,7 +40,7 @@ class APILogInController extends \BaseController {
 				$user->save();
 
 				/* Registro de logs */
-				EventLogger::printEventLogs(null, 'logout', null, 'Web');
+				EventLogger::printEventLogs(null, 'logout', ['user' => $user->id], 'mobile');
 
 				return \Response::json(['logged_out' => 'true']);
 			}

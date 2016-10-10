@@ -46,7 +46,8 @@ class APIEvaluationController extends \BaseController {
          	}
 
             /* Registro de logs */
-            EventLogger::printEventLogs($photoId, 'insert_evaluation', ['evaluation' => $evaluation_sentence], 'mobile');
+            EventLogger::printEventLogs($photoId, 'insert_evaluation', 
+                                        ['evaluation' => $evaluation_sentence, 'user' => $userId], 'mobile');
         }
         else {
         	foreach ($evaluations as $evaluation) {
@@ -58,7 +59,8 @@ class APIEvaluationController extends \BaseController {
         	}
 
             /* Registro de logs */
-            EventLogger::printEventLogs($photoId, 'edit_evaluation', ['evaluation' => $evaluation_sentence], 'mobile');
+            EventLogger::printEventLogs($photoId, 'edit_evaluation', 
+                                        ['evaluation' => $evaluation_sentence, 'user' => $user_id], 'mobile');
         }
 		\Response::json($input);
 	}
