@@ -13,7 +13,7 @@ class ImportsController extends \BaseController {
   public function import() {
     $acervoreview = User::whereLogin('acervoreview')->first();
     if ( ! $acervoreview->equal( Auth::user() ) ) {
-      return \Redirect::to('/');
+      return \Redirect::to('/home');
     }
     $root = public_path() . '/arquigrafia-imports/';
 
@@ -22,7 +22,7 @@ class ImportsController extends \BaseController {
 
     $acervoquapa = User::whereLogin('acervoquapa')->first();
     $this->importOdsFiles($acervoquapa, $root . 'acervoquapa');
-    return \Redirect::to('/');
+    return \Redirect::to('/home');
   }
 
   public function importOdsFiles($user, $root) {

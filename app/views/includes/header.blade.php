@@ -3,7 +3,7 @@
     <div class="twelve columns">
 	  	<!--   LOGO   -->
       <div class="four columns alpha">
-        <a href="{{ URL::to("/") }}" id="logo"></a>
+        <a href="{{ URL::to("/home") }}" id="logo"></a>
         <p id="beta">beta</p>
       </div>
       

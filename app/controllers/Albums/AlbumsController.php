@@ -48,7 +48,7 @@ class AlbumsController extends \BaseController {
 		$album = Album::find($id);
 		$institutionlogged = false;
 		if (is_null($album)) {
-			return Redirect::to('/');
+			return Redirect::to('/home');
 		}
 
 		$photos = $album->photos;
@@ -117,9 +117,9 @@ class AlbumsController extends \BaseController {
 		$institution = Institution::find( Session::get('institutionId') );
 		if ( Session::has('institutionId')) {
 			if(is_null($album) || !$institution->equal($album->institution)) 
-				return Redirect::to('/');			
+				return Redirect::to('/home');			
 		} else if(is_null($album) || !($user->equal($album->user) && $album->institution_id == null)){
-				return Redirect::to('/');			
+				return Redirect::to('/home');			
 		}
 		
 		$album_photos = Photo::paginateAlbumPhotos($album);
@@ -164,7 +164,7 @@ class AlbumsController extends \BaseController {
 
 	public function updateInfo($id) {
 		$album = Album::find($id);
-		if ( is_null($album) ) { return Redirect::to('/');	}
+		if ( is_null($album) ) { return Redirect::to('/home');	}
 		$title = Input::get('title');
 		$description = Input::get('description');
 		$cover = Photo::find( Input::get('cover') );

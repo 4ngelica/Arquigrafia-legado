@@ -32,7 +32,7 @@ class PhotosController extends \BaseController {
   { 
     $photos = Photo::find($id);
     if ( !isset($photos) ) {
-      return Redirect::to('/');
+      return Redirect::to('/home');
     }
     $user = null;    
     $user = Auth::user();
@@ -128,7 +128,7 @@ class PhotosController extends \BaseController {
   public function form()
   {
     if (Session::has('institutionId') ) {
-      return Redirect::to('/');
+      return Redirect::to('/home');
     }
     $pageSource = Request::header('referer');
     if(empty($pageSource)) $pageSource = '';
@@ -406,7 +406,7 @@ class PhotosController extends \BaseController {
 
   public function edit($id) {
     if (Session::has('institutionId') ) {
-      return Redirect::to('/');
+      return Redirect::to('/home');
     }
     $photo = Photo::find($id);
     $logged_user = Auth::User();

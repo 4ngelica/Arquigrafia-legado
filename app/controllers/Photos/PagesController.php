@@ -25,9 +25,15 @@ class PagesController extends BaseController {
         
     }
 
+    public function landing()
+    {
+        
+        return View::make('landing');
+
+    }
 
     public function home()
-    { 
+    {   
         if(Session::has('last_search'))
             Session::forget('last_search');
 
