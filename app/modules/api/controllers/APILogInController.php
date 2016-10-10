@@ -1,7 +1,7 @@
 <?php
 namespace modules\api\controllers;
 use lib\utils\ActionUser;
-use lib\logger\EventLogger;
+use lib\log\EventLogger;
 
 class APILogInController extends \BaseController {
 
