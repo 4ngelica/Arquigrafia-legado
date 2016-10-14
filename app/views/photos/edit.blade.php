@@ -275,12 +275,12 @@
 
             <br>
              <div class="form-row">
-              <input type="radio" name="photo_allowCommercialUses" value="YES" id="photo_allowCommercialUses" {{$photo->allowCommercialUses == 'YES' ? "checked" : ""}}>
-              <label for="photo_allowCommercialUses">Sim</label><br class="clear">
+              <input type="radio" name="photo_allowCommercialUses" value="YES" id="photo_allowCommercialUsesYES" {{$photo->allowCommercialUses == 'YES' ? "checked" : ""}}>
+              <label for="photo_allowCommercialUsesYES">Sim</label><br class="clear">
              </div>
              <div class="form-row">
-              <input type="radio" name="photo_allowCommercialUses" value="NO" id="photo_allowCommercialUses" {{$photo->allowCommercialUses == 'NO' ? "checked" : ""}}>
-              <label for="photo_allowCommercialUses">Não</label><br class="clear">
+              <input type="radio" name="photo_allowCommercialUses" value="NO" id="photo_allowCommercialUsesNO" {{$photo->allowCommercialUses == 'NO' ? "checked" : ""}}>
+              <label for="photo_allowCommercialUsesNO">Não</label><br class="clear">
              </div>
             
           </div>
@@ -288,16 +288,16 @@
             Permitir modificações em sua imagem?
             <br>
             <div class="form-row">
-              <input type="radio" name="photo_allowModifications" value="YES" id="photo_allowModifications" {{$photo->allowModifications == 'YES' ? "checked" : ""}}>
-              <label for="question_3-5">Sim</label><br class="clear">
+              <input type="radio" name="photo_allowModifications" value="YES" id="photo_allowModificationsYES" {{$photo->allowModifications == 'YES' ? "checked" : ""}}>
+              <label for="photo_allowModificationsYES">Sim</label><br class="clear">
             </div>
            	<div class="form-row">
-              <input type="radio" name="photo_allowModifications" value="YES_SA" id="photo_allowModifications" {{$photo->allowModifications == 'YES_SA' ? "checked" : ""}}>
-              <label for="question_3-5">Sim, contanto que os outros compartilhem de forma semelhante</label><br class="clear">
+              <input type="radio" name="photo_allowModifications" value="YES_SA" id="photo_allowModificationsYES_SA" {{$photo->allowModifications == 'YES_SA' ? "checked" : ""}}>
+              <label for="photo_allowModificationsYES_SA">Sim, contanto que os outros compartilhem de forma semelhante</label><br class="clear">
              </div>
            	<div class="form-row">
-              <input type="radio" name="photo_allowModifications" value="NO" id="photo_allowModifications" {{$photo->allowModifications == 'NO' ? "checked" : ""}}>
-              <label for="question_3-5">Não</label><br class="clear">
+              <input type="radio" name="photo_allowModifications" value="NO" id="photo_allowModificationsNO" {{$photo->allowModifications == 'NO' ? "checked" : ""}}>
+              <label for="photo_allowModificationsNO">Não</label><br class="clear">
             </div>
             
           </div>

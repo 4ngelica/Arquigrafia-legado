@@ -356,7 +356,7 @@
     <div class="twelve columns omega row">
     <h4>Licença</h4>
     <div class="form-group">
-    *{{ Form::checkbox('photo_authorization_checkbox', 1, true) }}
+    *{{ Form::checkbox('photo_authorization_checkbox', 1, true, ['id' => 'photo_authorization_checkbox']) }}
     {{ Form::label('photo_authorization_checkbox', '&nbsp;Sou o autor da imagem ou possuo permissão expressa do autor para disponibilizá-la no Arquigrafia')}}
     <br><div class="error">{{ $errors->first('photo_authorization_checkbox') }}</div>
     </div>
@@ -370,11 +370,11 @@
     <br>
     <div class="form-row">
     <input type="radio" name="photo_allowCommercialUses" value="YES" id="photo_allowCommercialUsesYES" checked="checked">
-    <label for="photo_allowCommercialUses">Sim</label><br class="clear">
+    <label for="photo_allowCommercialUsesYES">Sim</label><br class="clear">
     </div>
     <div class="form-row">
     <input type="radio" name="photo_allowCommercialUses" value="NO" id="photo_allowCommercialUsesNO">
-    <label for="photo_allowCommercialUses">Não</label><br class="clear">
+    <label for="photo_allowCommercialUsesNO">Não</label><br class="clear">
     </div>
     </div>
     <div class="four columns" id="creative_commons_right_form">
@@ -382,15 +382,15 @@
     <br>
     <div class="form-row">
     <input type="radio" name="photo_allowModifications" value="YES" id="photo_allowModificationsYES" checked="checked">
-    <label for="question_3-5">Sim</label><br class="clear">
+    <label for="photo_allowModificationsYES">Sim</label><br class="clear">
     </div>
     <div class="form-row">
     <input type="radio" name="photo_allowModifications" value="YES_SA" id="photo_allowModificationsYES_SA">
-    <label for="question_3-5">Sim, contanto que os outros compartilhem de forma semelhante</label><br class="clear">
+    <label for="photo_allowModificationsYES_SA">Sim, contanto que os outros compartilhem de forma semelhante</label><br class="clear">
     </div>
     <div class="form-row">
     <input type="radio" name="photo_allowModifications" value="NO" id="photo_allowModificationsNO">
-    <label for="question_3-5">Não</label><br class="clear">
+    <label for="photo_allowModificationsNO">Não</label><br class="clear">
     </div>
     </div>
     <div class="twelve columns">

@@ -498,11 +498,11 @@
 						<br>
 						 <div class="form-row">
 							<input type="radio" onclick="authorization()" name="allowCommercialUses" value="YES" id="allowCommercialUsesYES" checked="checked">
-							<label for="allowCommercialUses">Sim</label><br class="clear">
+							<label for="allowCommercialUsesYES">Sim</label><br class="clear">
 						 </div>
 						 <div class="form-row">
 							<input type="radio" onclick="authorization()" name="allowCommercialUses" value="NO" id="allowCommercialUsesNO">
-							<label for="allowCommercialUses">Não</label><br class="clear">
+							<label for="allowCommercialUsesNO">Não</label><br class="clear">
 						 </div>
 					</div>
 					<div class="four columns" id="creative_commons_right_form">
@@ -510,15 +510,15 @@
 						<br>
 						<div class="form-row">
 							<input type="radio" onclick="authorization()" name="allowModifications" value="YES" id="allowModificationsYES" checked="checked">
-							<label for="allowModifications">Sim</label><br class="clear">
+							<label for="allowModificationsYES">Sim</label><br class="clear">
 						</div>
 						<div class="form-row">
 							<input type="radio" onclick="authorization()" name="allowModifications" value="YES_SA" id="allowModificationsYES_SA">
-							<label for="allowModifications">Sim, contanto que os outros compartilhem de forma semelhante</label><br class="clear">
+							<label for="allowModificationsYES_SA">Sim, contanto que os outros compartilhem de forma semelhante</label><br class="clear">
 						</div>
 						<div class="form-row">
 							<input type="radio" onclick="authorization()" name="allowModifications" value="NO" id="allowModificationsNO">
-							<label for="allowModifications">Não</label><br class="clear">
+							<label for="allowModificationsNO">Não</label><br class="clear">
 						</div>
 					</div>
 					<!--<div class="twelve columns omega row">
