@@ -42,7 +42,7 @@
 </div>
 
 
-<div class="header-page">
+<div class="header-page" id="header-pagina">
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -63,24 +63,24 @@
 <div class="search-field">
 <form id="tfnewsearch" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8">	
 	<input type="text" class="tftextinput" name="q" size="21" maxlength="120" value="">
-	<input type="submit" value="search" class="tfbutton">
+	<input type="submit" value="search" class="tfbutton" style="background:none;" />
 	<input type="hidden" value="8" name="perPage" />
 </form>
 </div>
 <!--   END BOTÃO DA BARRA DE BUSCA   -->
 <!--   BOTÃO CADASTRO SUPERIOR  -->
-<a href="{{ URL::to("/users/account") }}">
 <div class="cadastro-button">
-Criar uma conta
+<a href="{{ URL::to("/users/account") }}">Criar uma conta</a>
 </div>
-</a>
+
 <!--   END BOTÃO CADASTRO SUPERIOR  -->
+
+
 <!--   BOTÃO LOGIN SUPERIOR  -->
-<a href="{{ URL::to("/users/login/") }}">
 <div class="login-button">
-Log in
+<a href="{{ URL::to("/users/login/") }}">Log in</a>
 </div>
-</a>
+
 <!--  END BOTÃO LOGIN SUPERIOR  -->
 </div>
 </div>
@@ -95,7 +95,7 @@ Log in
 		<div class="row">
 
 		<div style="display:flex;justify-content:center;align-items:center;text-align:center;height:100vh;">
-			<div class="column-4" style="padding: 0;">
+			<div class="column-4" style="padding: 0; width: 42%;">
 
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -146,7 +146,7 @@ Log in
 
 	</div>
 
-	<div class="bottom-page">
+	<div id="bottom-page">
 				<a href="#page2">Como suas fotos podem se somar ao acervo do Arquigrafia?</a>
 		</div>
 
@@ -173,7 +173,7 @@ arquitetura mais interessantes e envie no Arquigrafia!</div>
 estudantes de arquitetura, fotógrafos e pessoas que se interessam por arquitetura.<br/>
 <br/>
 Gostou de alguma foto do Arquigrafia?<br/>
-Comente e baixe as imagens que você quiser! Faça upload de uma foto para compartilhar!<br/>  
+Comente e baixe as imagens que você quiser! <br />Faça upload de uma foto para compartilhar!<br/>  
 <br/>
 Outros usuários também farão o mesmo com as fotos que você subir, favorecendo a
 interconexão entre pessoas, paisagens, cidades e edifícios. 
@@ -510,7 +510,7 @@ Insira tags para referenciar os elementos mais relevantes nas imagens. Assim, vo
 				<div class="texto-grafico">
 A arquitetura pode ser entendida como a relação entre aspectos antagônicos: o aberto e o fechado, a simetria e assimetria, a vertical e a horizontal, etc. <br/>
 <br/>
-Que características predominam nessa arquitetura? Registre as suas impressões no Arquigrafia!
+Que características predominam nessa arquitetura? <br/> Registre as suas impressões no Arquigrafia!
 </div>
 			</div> 
 
@@ -595,41 +595,44 @@ Assim, quando estiver próximo a um edifício que lhe interessa, você conseguir
 		<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 		<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="905px"
-			 height="380px" viewBox="0 0 905 380" enable-background="new 0 0 905 380" xml:space="preserve" style="z-index: 99999;">
+			 height="380px" viewBox="0 0 905 380" enable-background="new 0 0 905 380" xml:space="preserve" style="z-index: 99999; height: auto;">
 		<g id="Layer_2">
 		</g>
 		<g id="Layer_1">
-			<path id="fiesp" class="georref-hover" fill="#1D1D1B" d="M410.049,135.315c-3.866,0-9.668,1.758-9.668,8.789c0,3.516,7.735,15.82,9.668,19.336
-				c1.933-3.516,9.668-15.82,9.668-19.336C419.717,137.073,413.918,135.315,410.049,135.315z M410.049,147.18
-				c-1.699,0-3.076-1.377-3.076-3.076s1.377-3.076,3.076-3.076s3.076,1.377,3.076,3.076S411.749,147.18,410.049,147.18z"/>
-			<path id="aclimacao" class="georref-hover" fill="#1D1D1B" d="M694.72,217.311c-3.865,0-9.668,1.758-9.668,8.789c0,3.516,7.734,15.82,9.668,19.336
-				c1.932-3.516,9.668-15.82,9.668-19.336C704.388,219.068,698.589,217.311,694.72,217.311z M694.72,229.176
-				c-1.699,0-3.076-1.377-3.076-3.076s1.377-3.076,3.076-3.076s3.076,1.377,3.076,3.076S696.419,229.176,694.72,229.176z"/>
-			<path id="masp" class="georref-hover" fill="#1D1D1B" d="M349.507,74.117c-3.866,0-9.668,1.758-9.668,8.789c0,3.516,7.735,15.821,9.668,19.336
-				c1.933-3.516,9.668-15.821,9.668-19.336C359.175,75.875,353.376,74.117,349.507,74.117z M349.507,85.982
-				c-1.699,0-3.076-1.377-3.076-3.076s1.377-3.076,3.076-3.076s3.076,1.377,3.076,3.076S351.206,85.982,349.507,85.982z"/>
-			<path id="conjuntonacional" class="georref-hover" fill="#1D1D1B" d="M259.384,6.982c-3.867,0-9.668,1.758-9.668,8.789c0,3.516,7.734,15.82,9.668,19.336
-				c1.932-3.516,9.668-15.82,9.668-19.336C269.052,8.74,263.253,6.982,259.384,6.982z M259.384,18.848
-				c-1.699,0-3.076-1.377-3.076-3.076s1.377-3.076,3.076-3.076s3.076,1.377,3.076,3.076S261.083,18.848,259.384,18.848z"/>
-			<path id="paraiso" class="georref-hover" fill="#1D1D1B" d="M446.717,266.311c-3.867,0-9.668,1.758-9.668,8.789c0,3.516,7.734,15.82,9.668,19.336
-				c1.932-3.516,9.672-15.82,9.672-19.336C456.39,268.068,450.586,266.311,446.717,266.311z M446.717,278.176
-				c-1.699,0-3.076-1.377-3.076-3.076s1.377-3.076,3.076-3.076s3.076,1.377,3.076,3.076S448.417,278.176,446.717,278.176z"/>
-			<path id="liberdade" class="georref-hover" fill="#1D1D1B" d="M663.722,50.982c-3.867,0-9.668,1.758-9.668,8.789c0,3.516,7.734,15.82,9.668,19.336
-				c1.932-3.516,9.668-15.82,9.668-19.336C673.39,52.74,667.591,50.982,663.722,50.982z M663.722,62.848
-				c-1.699,0-3.076-1.377-3.076-3.076s1.377-3.076,3.076-3.076s3.076,1.377,3.076,3.076S665.421,62.848,663.722,62.848z"/>
-			<path id="mis" class="georref-hover" fill="#1D1D1B" d="M76.716,245.436c-3.866,0-9.668,1.758-9.668,8.789c0,3.516,7.735,15.82,9.668,19.336
-				c1.933-3.516,9.668-15.82,9.668-19.336C86.384,247.193,80.585,245.436,76.716,245.436z M76.716,257.301
-				c-1.699,0-3.076-1.377-3.076-3.076s1.377-3.076,3.076-3.076s3.076,1.377,3.076,3.076S78.415,257.301,76.716,257.301z"/>
+
+<path id="masp" class="georref-hover" fill="#1D1D1B" d="M532.404,225.592c-5.497,0-13.742,2.499-13.742,12.493c0,4.997,10.994,22.487,13.742,27.484
+	c2.746-4.997,13.742-22.487,13.742-27.484C546.146,228.091,537.904,225.592,532.404,225.592z M532.404,242.457
+	c-2.415,0-4.372-1.956-4.372-4.372c0-2.415,1.957-4.373,4.372-4.373s4.372,1.958,4.372,4.373
+	C536.776,240.501,534.819,242.457,532.404,242.457z"/>
+<path fill="#1D1D1B" d="M-269.025,309.621c-3.866,0-9.668,1.758-9.668,8.789c0,3.516,7.735,15.82,9.668,19.336
+	c1.933-3.516,9.668-15.82,9.668-19.336C-259.357,311.379-265.156,309.621-269.025,309.621z M-269.025,321.486
+	c-1.699,0-3.076-1.377-3.076-3.076s1.377-3.076,3.076-3.076s3.076,1.377,3.076,3.076S-267.326,321.486-269.025,321.486z"/>
+<path id="conjuntonacional" class="georref-hover" fill="#1D1D1B" d="M394.376,133.024c-5.497,0-13.742,2.499-13.742,12.493c0,4.997,10.994,22.487,13.742,27.484
+	c2.746-4.997,13.742-22.487,13.742-27.484C408.118,135.523,399.876,133.024,394.376,133.024z M394.376,149.89
+	c-2.415,0-4.372-1.956-4.372-4.372c0-2.415,1.957-4.373,4.372-4.373s4.372,1.958,4.372,4.373
+	C398.748,147.934,396.791,149.89,394.376,149.89z"/>
+<path id="paulista" class="georref-hover" fill="#1D1D1B" d="M316.404,52.592c-5.497,0-13.742,2.499-13.742,12.493c0,4.997,10.994,22.487,13.742,27.484
+	c2.746-4.997,13.742-22.487,13.742-27.484C330.146,55.091,321.904,52.592,316.404,52.592z M316.404,69.457
+	c-2.415,0-4.372-1.956-4.372-4.372c0-2.415,1.957-4.373,4.372-4.373s4.372,1.958,4.372,4.373
+	C320.776,67.501,318.819,69.457,316.404,69.457z"/>
+<path id="gazeta" class="georref-hover" fill="#1D1D1B" d="M591.404,309.592c-5.497,0-13.742,2.499-13.742,12.493c0,4.997,10.994,22.487,13.742,27.484
+	c2.746-4.997,13.742-22.487,13.742-27.484C605.146,312.091,596.904,309.592,591.404,309.592z M591.404,326.457
+	c-2.415,0-4.372-1.956-4.372-4.372c0-2.415,1.957-4.373,4.372-4.373s4.372,1.958,4.372,4.373
+	C595.776,324.501,593.819,326.457,591.404,326.457z"/>
+<path id="trianon" class="georref-hover" fill="#1D1D1B" d="M457,257.135c-5.497,0-13.742,2.499-13.742,12.493c0,4.997,10.994,22.487,13.742,27.484
+	c2.746-4.997,13.742-22.487,13.742-27.484C470.742,259.634,462.5,257.135,457,257.135z M457,274c-2.415,0-4.372-1.956-4.372-4.372
+	c0-2.415,1.957-4.373,4.372-4.373s4.372,1.958,4.372,4.373C461.372,272.044,459.415,274,457,274z"/>
+</svg>
+
+
 		</g>
 		</svg>
 
-			<img class="hover-image" id="img-liberdade" src="{{ asset('img/map-liberdade.png')}}" >
-			<img class="hover-image" id="img-aclimacao" src="{{ asset('img/map-aclimacao.png')}}">
+			<img class="hover-image" id="img-paulista" src="{{ asset('img/map-paulista.png')}}" >
+			<img class="hover-image" id="img-gazeta" src="{{ asset('img/map-gazeta.png')}}">
 			<img class="hover-image" id="img-masp" src="{{ asset('img/map-masp.png')}}">
 			<img class="hover-image" id="img-conjuntonacional" src="{{ asset('img/map-conjuntonacional.png')}}">
-			<img class="hover-image" id="img-mis" src="{{ asset('img/map-mis.png')}}">
-			<img class="hover-image" id="img-paraiso" src="{{ asset('img/map-paraiso.png')}}">
-			<img class="hover-image" id="img-fiesp" src="{{ asset('img/map-fiesp.png')}}">
+			<img class="hover-image" id="img-trianon" src="{{ asset('img/map-trianon.png')}}">
 			</div>
 			
 
@@ -672,7 +675,7 @@ Assim, quando estiver próximo a um edifício que lhe interessa, você conseguir
 			
 
 					<div style="font-size: 20px;color:#7f7f7f;-webkit-font-smoothing: antialiased;
--moz-osx-font-smoothing: grayscale;padding-top: 50px;padding-right: 180px">
+-moz-osx-font-smoothing: grayscale;">
 					Já tem cadastro?</div>
 						
 					<!--   BOTÃO LOGIN FINAL  -->
@@ -683,7 +686,7 @@ Assim, quando estiver próximo a um edifício que lhe interessa, você conseguir
 					</a>
 					<!--  END BOTÃO LOGIN FINAL  -->
 
-					<div style="color: white; background-color: black; margin-top: 30px;" class="login-final">
+					<div class="botao-refsite">
 							<a href="{{ URL::to("/home") }}" style="color:white;">Ir para o site</a>
 					</div>
 					<!--<div class="playstore"><img src="{{ asset('img/playstore.png')}}"></div>-->
