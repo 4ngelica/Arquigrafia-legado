@@ -23,7 +23,7 @@
 					@endif
 					
 					@if (Auth::check() && $photo->institution_id !="" && Session::get('institutionId') == $photo->institution_id)
-					<a id="title_edit_button" href="{{ URL::to('/photos/' . $photo->id . '/editInstitutional')}}" title="Editar imagem"></a>
+					<a id="title_edit_button" href="{{ URL::to('/institutions/' . $photo->id . '/form/edit')}}" title="Editar imagem"></a>
 					@elseif (Auth::check() && Auth::id() == $photo->user_id &&  !Session::has('institutionId') && !isset($photo->institution_id)  )
 					<a id="title_edit_button" href="{{ URL::to('/photos/' . $photo->id . '/edit')}}" title="Editar imagem"></a>
 					@endif

@@ -13,7 +13,7 @@
 @section('content')
 
   <div class="container">     
-    {{ Form::open(array('url'=>'users/' . $user->id, 'method' => 'put', 'files'=> true)) }}
+    {{ Form::open(array('url'=>'users/' . $user->id, 'method' => 'put', 'files'=> true, 'id'=>'frmEdit')) }}
     
     <div id="registration">
     
@@ -40,7 +40,7 @@
         <div class="four columns alpha">          
           <p>{{ Form::label('photo','Alterar foto:') }}
           @if($user->id_facebook != null)
-            <a class="btn import-face" onclick="importPicture()">
+            <a id="btn_facebook" class="btn import-face" onclick="importPicture()">
               <img class="facebook-logo" src="{{ asset('/img/Facebook_logo_square.png') }}">
               <span>Importar foto do facebook</span>
             </a>
@@ -51,14 +51,26 @@
           <br>
         </div>
       </div>
-
+      <br>
+      <div class="error">{{ $errors->first('photo') }}</div>
+      <br>
       <script type="text/javascript">
-        function importPicture() {
+        function importPicture() {          
           $.get("/getPicture")
             .done(function( data ) {
-               {
-                $('.profile-picture').attr('src', data);
-              }
+               {  var elementExists = document.getElementById("txtPicture");       
+                  if(elementExists == null){
+                      $('<input/>').attr({
+                      type:'hidden',
+                      name:'txtPicture',
+                      id:'txtPicture',
+                      value:'picture',
+                      readonly:'true' //,
+                      // disabled: 'true'
+                      }).appendTo('#frmEdit');
+                  } 
+                  $('.profile-picture').attr('src', data);                                     
+                }
             });
         }
       </script>

@@ -9,7 +9,7 @@ $(document).ready(function() {
 		$.post('/users/stoaLogin', data)
 		.done(function(success) {
 			if (success) {
-				window.location.replace('/');
+				window.location.replace('/home');
 			} else {
 				form.find('p.error').show();
 			}

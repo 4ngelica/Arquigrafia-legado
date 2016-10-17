@@ -7,6 +7,7 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
 use Illuminate\Filesystem\Filesystem;
+use Auth;
 
 class ActionUser {
     public static function convertArrayObjectToString($array, $atribute) {
@@ -95,6 +96,17 @@ class ActionUser {
         $info = sprintf('[%s] ' . $up_or_down . ' da foto de ID nº: %d, pela página %s', $date_and_time, $photo_id, $source_page);
 
         $log = new Logger('UpOrDownload_logger');
+        ActionUser::addInfoToLog($log, $file_path, $info);
+    }
+    //Photos Controller
+    public static function printEditOrDeletePhotoLog($user_id, $photo_id, $source_page, $edit_or_delete, $user_or_visitor) {
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        list($date_only) = explode(" ", $date_and_time);
+        $file_path = ActionUser::createDirectoryAndFile($date_only, $user_id, $source_page, $user_or_visitor);
+        ActionUser::verifyTimeout($file_path, $user_id, $source_page);
+        $info = sprintf('[%s] ' . $edit_or_delete . ' da foto de ID nº: %d, pela página %s', $date_and_time, $photo_id, $source_page);
+
+        $log = new Logger('EditOrDelete_logger');
         ActionUser::addInfoToLog($log, $file_path, $info);
     }
     //Users Controller
@@ -241,4 +253,39 @@ class ActionUser {
         $log = new Logger('Notification logger');
         ActionUser::addInfoToLog($log, $file_path, $info);
     }
+
+   // $photo->user_id, $photo->id, $source_page, $actionContent, 'mobile'
+    public static function printEventLogs($userId, $photoId, $sourcePage, $actionContent, $device) {
+        $date_and_time = Carbon::now('America/Sao_Paulo')->toDateTimeString();
+        list($date_only) = explode(" ", $date_and_time);
+        if(Auth::check())
+            $userType = 'user';
+        else
+            $userType = 'visitor';
+
+        $filePath = ActionUser::createDirectoryAndFile($date_only, $userId, $sourcePage, $userType);
+        
+        ActionUser::verifyTimeout($filePath, $userId, $sourcePage);
+
+        foreach($actionContent as $action=>$content)
+          {
+              switch ($action) {
+                case "upload":  
+                    $info = sprintf('[%s] ' . $action . ' da foto de ID nº: %d, pela página %s', $date_and_time, $photoId, $sourcePage);
+                    ActionUser::generalAddInfoLogs('UpOrDownload_logger', $filePath, $info);
+                    break;
+                case "tags_insert":                       
+                    $info = sprintf('[%s] Inseriu as tags: ' . $content . '. Pertencentes a foto de ID nº: %d', $date_and_time, $photoId);                  
+                    ActionUser::generalAddInfoLogs('Tags logger', $filePath, $info);
+                    break;                
+              }
+          }
+
+    }
+
+    public static function generalAddInfoLogs($titleLog, $filePath, $info) {
+        $log = new Logger($titleLog);
+        ActionUser::addInfoToLog($log, $filePath, $info);            
+    }
+
 }

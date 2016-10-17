@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use lib\gamification\models\Badge;
+use modules\gamification\models\Badge;
 
 class DestaqueSemanaBadge extends Migration {
 

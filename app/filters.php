@@ -23,8 +23,8 @@ App::before(function($request)
 
 	View::composer('includes.header', function($view) {
 		$institution = null;
-		if ( Session::has('institutionId') ) {
-			$institution = Institution::find( Session::get('institutionId') );
+		if ( Session::has('institutionId') ) { 			
+			$institution = modules\institutions\models\Institution::find( Session::get('institutionId') );
 		}
 		$view->with('institution', $institution);
 	});
@@ -84,7 +84,7 @@ Route::filter('auth.basic', function()
 
 Route::filter('guest', function()
 {
-	if (Auth::check()) return Redirect::to('/');
+	if (Auth::check()) return Redirect::to('/home');
 });
 
 /*

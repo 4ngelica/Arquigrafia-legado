@@ -15,18 +15,13 @@ Route::get('/test', function () {
   //testes
 });
 
-/* DRAFTS */
-Route::post('/drafts/delete', 'PhotosController@deleteDraft');
-Route::get('/drafts/paginate', 'PhotosController@paginateDrafts');
-Route::get('/drafts/{id}', 'PhotosController@getDraft');
-Route::get('/drafts', 'PhotosController@listDrafts');
-/* IMPORTS */
 Route::get('/photos/import', 'ImportsController@import');
 
 /* phpinfo() */
 Route::get('/info/', function(){ return View::make('i'); });
 
-Route::get('/', 'PagesController@home');
+Route::get('/', 'PagesController@landing');
+Route::get('/home', 'PagesController@home');
 Route::get('/panel', 'PagesController@panel');
 Route::get('/project', function() { return View::make('project'); });
 Route::get('/faq', function() { return View::make('faq'); });
@@ -61,8 +56,6 @@ Route::resource('/users/institutionalLogin','UsersController@institutionalLogin'
 /* FOLLOW */
 Route::get('/friends/follow/{user_id}', 'UsersController@follow');
 Route::get('/friends/unfollow/{user_id}', 'UsersController@unfollow');
-Route::get('/friends/followInstitution/{institution_id}', 'InstitutionsController@followInstitution');
-Route::get('/friends/unfollowInstitution/{institution_id}', 'InstitutionsController@unfollowInstitution');
 
 // AVATAR 
 Route::get('/profile/10/showphotoprofile/{profile_id}', 'UsersController@profile');
@@ -84,54 +77,16 @@ Route::post('/albums/{id}/attach/photos', 'AlbumsController@attachPhotos');
 Route::get('/albums/{id}/paginate/photos', 'AlbumsController@paginateAlbumPhotos');
 Route::get('/albums/{id}/paginate/other/photos', 'AlbumsController@paginatePhotosNotInAlbum');
 
-
-/* COMMENTS */
-Route::post('/photos/{photo_id}/comment','PhotosController@comment');
-Route::get('/comments/{comment_id}/like','lib\gamification\controllers\LikesController@commentlike');
-Route::get('/comments/{comment_id}/dislike','lib\gamification\controllers\LikesController@commentdislike');
-
-/* EVALUATIONS */
-Route::get('/photos/{photo_id}/saveEvaluation','PhotosController@saveEvaluation');
-Route::post('/photos/{photo_id}/saveEvaluation','PhotosController@saveEvaluation');
-Route::get('/photos/{photo_id}/evaluate','PhotosController@evaluate');
-Route::post('/photos/{photo_id}/evaluate','PhotosController@evaluate');
-Route::get('/photos/{photo_id}/viewEvaluation/{user_id}','PhotosController@viewEvaluation');
-Route::get('/photos/{photo_id}/showSimilarAverage/', 'PhotosController@showSimilarAverage');
-
-/* PHOTOS */
-Route::get('/photos/{id}/like', 'lib\gamification\controllers\LikesController@photolike');
-Route::get('/photos/{id}/dislike', 'lib\gamification\controllers\LikesController@photodislike');
-Route::resource('/groups','GroupsController');
 Route::get('/photos/batch','PhotosController@batch');
 Route::get('/photos/upload','PhotosController@form');
-Route::get('/photos/uploadInstitutional','PhotosController@formInstitutional');
-Route::get('/photos/{photo_id}/editInstitutional','PhotosController@editFormInstitutional');
-Route::put('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');
 Route::get('/photos/migrar','PhotosController@migrar');
 Route::get('/photos/rollmigrar','PhotosController@rollmigrar');
-//Route::get('/photos/{photo_id}/update/Institutional','PhotosController@updateInstitutional');
-
 Route::get('/photos/download/{photo_id}','PhotosController@download');
-Route::get('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');
-Route::post('/photos/savePhotoInstitutional','PhotosController@saveFormInstitutional');
 Route::resource('/photos','PhotosController');
 
-/* TAGS */
-Route::get('/tags/json', 'TagsController@index');
-Route::get('/tags/refreshCount', 'TagsController@refreshCount');
-
-/* NOTIFICATIONS */
-Route::get('/notifications', 'NotificationsController@show');
-Route::get('/markRead/{id}', 'NotificationsController@read');
-Route::get('/readAll', 'NotificationsController@readAll');
-
-Route::get('/refreshBubble', 'NotificationsController@howManyUnread');
-
-/* INSTITUTIONS */
-Route::get('/institutions/{id}', 'InstitutionsController@show');
-Route::get('/institutions/{id}/edit', 'InstitutionsController@edit');
-Route::resource('/institutions','InstitutionsController');
 
 /* SEARCH PAGE */
 Route::get('/search/paginate/other/photos', 'PagesController@paginatePhotosResult');
 Route::get('/search/more/paginate/other/photos', 'PagesController@paginatePhotosResultAdvance');
+
+

@@ -12,10 +12,13 @@ class AddDraftColumnToPhotosTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::table('photos', function(Blueprint $table)
+		if(!Schema::hasColumn('photos', 'draft'))
 		{
-			$table->timestamp('draft')->nullable()->default(null);
-		});
+			Schema::table('photos', function(Blueprint $table)
+			{
+				$table->timestamp('draft')->nullable()->default(null);
+			});
+		}
 	}
 
 	/**

@@ -876,3 +876,20 @@ p.position { font-size: 20px; }
 div.draft { font-size: 14px !important; }
 .form-table.drafts { text-align: left; }
 .form-table.drafts td, .form-table.drafts th { padding: 5px; border-bottom: 1px solid; }
+
+/* lightbox - report */
+#form_window_report { width: 400px; min-height: 200px; background: #fff; position: fixed; top: 40%; left: 50%; margin: -240px 0 0 -340px; padding: 25px; -moz-border-radius: 2px; border-radius: 2px; display: none; z-index: 1001; } /* position: absolute; */
+/*#form_window label { width: 100px; display: inline-block; color: #777; text-align: left; vertical-align: top; line-height: 27px; }*/
+#form_window_report textarea { border: solid 1px #EEEEEE; padding: 3px; margin: 2px 0 2px 5px; font-size: 11px; }
+#form_window_report input { border: solid 1px #eee; padding: 3px; margin: 2px 0 2px 5px; }
+#form_window_report select { margin: 3px; }
+#form_window_report input.text { width: 123px; }
+#form_window_report .date { width: 29px; }
+
+/*#form_window_notify a.close { float: right; text-align: center; margin-bottom: 10px; }
+#form_window_notify a.close:hover { background-position: -160px -216px; text-decoration: underline; }
+*/#form_window_report .email, #form_window_report .website { width: 123px; }
+#form_window_report input.submit { background: url(../img/sprite.png) -222px -195px; height: 20px; width: 54px; padding: 0; margin: 0; border: none; float: right; }
+#form_window_report input.submit:hover { background-position: -222px -216px; }
+
+#denounce_photo { display: block; width: 20px; height: 20px; margin-left: 4px; background-image: url('../img/i-denounce.png'); }
