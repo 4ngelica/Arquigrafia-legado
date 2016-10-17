@@ -227,7 +227,7 @@ body {
     margin: 5px 10px;
     height: 25px;
     width: 200px;
-    color: #d1d1d1;
+    color: #0f0f0f;
 }
 
 .tfbutton {
@@ -242,7 +242,9 @@ float: right;
 border: none;
 font-size: 0;
 background-color: none;
+cursor: pointer;
 }
+
 
 .cadastro-button:hover {
     background: #0f0f0f;
@@ -251,7 +253,7 @@ background-color: none;
     border: 2px solid #0f0f0f;
 }
 
-.cadastro-button a:hover {
+.cadastro-button:hover a {
     color: #fff;
     transition: linear 0.1s;
 }
@@ -264,7 +266,7 @@ background-color: none;
     border: 2px solid #0f0f0f;
 }
 
-.login-button a:hover {
+.login-button:hover a {
     color: #fff;
     transition: linear 0.1s;
 }
@@ -603,12 +605,12 @@ div.hover:hover div.appear {
     -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 line-height: 1.3;
-margin-bottom: 50px;
+margin-bottom: 40px;
 }
 
 .buttons-final {
-    width: 210px;
-display: inline-table;
+    display: inline-table;
+    float: left;
 }
 
 .cadastro-final {
@@ -636,14 +638,18 @@ display: inline-table;
 
 .botao-refsite {
    cursor: pointer;
-    padding: 5px 10px;
+    padding: 7px 10px;
     font-size: 24px;
     border: 2px solid #0f0f0f;
     background-color: #0f0f0f;
     color: #000;
     margin: 3px 0 20px 5px;
     border-radius: 3px;
-    margin-top: 30px;
+    margin-top: 49px;
+    float: left;
+    width: 160px;
+    height: 52px;
+    opacity: 0.8;
 }
 
 
@@ -654,27 +660,45 @@ display: inline-table;
     border: 2px solid #000;
 }
 
+
+
+.cadastro-final:hover a {
+    color: #fff;
+    transition: linear 0.1s;
+}
+
+
 .login-final:hover {
     background: #000;
-    color: #fff;
     transition: linear 0.1s;
     border: 2px solid #000;
 }
 
-.botao-refsite:hover {
-    background: #e5e5e5;
+
+.login-final:hover a {
     color: #fff;
     transition: linear 0.1s;
-    border: 2px solid #e5e5e5;
+}
+
+.botao-refsite:hover {
+    opacity: 1;
+    transition: linear 0.1s;
 }
 
 .playstore {
     opacity: 0.8;
-    margin: 50px 0 0;
+    margin: 30px 0 0 10px;
+    cursor: pointer;
+    width: 180px;
+float: left;
+color: #868686;
+height: auto;
+font-size: 14px;
 }
 
 .playstore:hover {
     opacity: 1;
+    transition: linear 0.1s;
 }
 
 

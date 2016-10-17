@@ -165,7 +165,7 @@
 			<div class="column-8" style="padding: 0;">
 
 			<div class="title-loginpage">É simples: crie uma conta, escolha suas imagens de
-arquitetura mais interessantes e envie no Arquigrafia!</div>
+arquitetura mais interessantes e compartilhe no Arquigrafia!</div>
 			
 			<div class="column-5">
 
@@ -502,7 +502,7 @@ Insira tags para referenciar os elementos mais relevantes nas imagens. Assim, vo
 		<div class="row">
 
 		<div style="display:flex;justify-content:center;align-items:center;height:100vh;">
-			<div class="column-8" style="padding: 0;display:flex;justify-content:center;align-items:center;">
+			<div class="column-8" style="padding: 0;display:flex;justify-content:center;align-items:center; margin-top: -30px;">
 
 			<div class="column-3" style="width: 40%; padding: 0;">
 				<div class="title-grafico">O que conecta arquiteturas de tempos <br/>e lugares distintos? </div>
@@ -666,11 +666,11 @@ Assim, quando estiver próximo a um edifício que lhe interessa, você conseguir
 
 					<div class="buttons-final">
 					<!--   BOTÃO CADASTRO FINAL  -->	
-					<a href="{{ URL::to("/users/account") }}">	
 					<div class="cadastro-final">
+					<a href="{{ URL::to("/users/account") }}">	
 					Criar uma conta
-					</div>
 					</a>
+					</div>
 					<!--   END BOTÃO CADASTRO FINAL  -->
 			
 
@@ -679,17 +679,17 @@ Assim, quando estiver próximo a um edifício que lhe interessa, você conseguir
 					Já tem cadastro?</div>
 						
 					<!--   BOTÃO LOGIN FINAL  -->
-					<a href="{{ URL::to("/users/login/") }}">
 					<div class="login-final">
+						<a href="{{ URL::to("/users/login/") }}">
 					Fazer log in
+						</a>
 					</div>
-					</a>
 					<!--  END BOTÃO LOGIN FINAL  -->
 
 					<div class="botao-refsite">
 							<a href="{{ URL::to("/home") }}" style="color:white;">Ir para o site</a>
 					</div>
-					<!--<div class="playstore"><img src="{{ asset('img/playstore.png')}}"></div>-->
+					<div class="playstore">Disponível em breve!<img src="{{ asset('img/playstore.png')}}"></div>
 					</div>
 					
 
