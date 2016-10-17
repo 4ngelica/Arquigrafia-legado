@@ -165,7 +165,7 @@
 			<div class="column-8" style="padding: 0;">
 
 			<div class="title-loginpage">É simples: crie uma conta, escolha suas imagens de
-arquitetura mais interessantes e envie no Arquigrafia!</div>
+arquitetura mais interessantes e compartilhe no Arquigrafia!</div>
 			
 			<div class="column-5">
 
