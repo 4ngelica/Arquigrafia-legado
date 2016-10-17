@@ -8,14 +8,14 @@
    <div class="four columns"><p>{{ Form::label('DataType', 'Fotos / Dados') }}</p></div>
    <div class="four columns row">
       <p>{{ Form::checkbox('reportTypeData[]', 'Image' ) }} <label>Imagem</label></p>
-      <p>{{ Form::checkbox('reportTypeData[]', 'Title' ) }} <label>Titulo</label></p>
+      <p>{{ Form::checkbox('reportTypeData[]', 'Title' ) }} <label>Título</label></p>
       <p>{{ Form::checkbox('reportTypeData[]', 'Author' ) }} <label>Autor</label></p>
       <p>{{ Form::checkbox('reportTypeData[]', 'Description' ) }} <label>Descrição</label></p>
       <p>{{ Form::checkbox('reportTypeData[]', 'Adress' ) }} <label>Endereço</label></p>      
       <div class="error"></div>   
    </div>
    <div class="four columns row"> 
-   <p>Tipo de denuncia:</p> 
+   <p>Tipo de denúncia:</p> 
     {{Form::select('reportType', array('default' => 'Selecione uma opção') + array('inapropriado' => 'Conteúdo inapropriado', 'repetido' => 'Conteúdo repetido'), 'default')}}          
     <div class="errorReportType"></div>   
    </div>
