@@ -25,11 +25,16 @@ class PagesController extends BaseController {
         
     }
 
-    public function landing()
+    public function landing($language = null)
     {
-        
+        if($language == "en"){
+             App::setLocale('en');
+            
+        }else{
+            App::setLocale('pt');
+            
+        }   
         return View::make('landing');
-
     }
 
     public function home()

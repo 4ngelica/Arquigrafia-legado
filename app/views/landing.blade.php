@@ -80,7 +80,6 @@
 <div class="login-button">
 <a href="{{ URL::to("/users/login/") }}">Log in</a>
 </div>
-
 <!--  END BOTÃO LOGIN SUPERIOR  -->
 </div>
 </div>
@@ -109,7 +108,7 @@
 		13.976,17.023 13.976,71.074 63.72,71.074 63.72,10.784 7.492,10.784 7.492,77.312 71.658,77.312 	"/>
 </g>
 <text transform="matrix(1.0338 0 0 1 83.8008 56.7783)" fill="#010101" font-family="'Roboto'" font-size="67.2074">ARQUIGRAFIA</text>
-<text transform="matrix(1.0338 0 0 1 82.7573 79.3887)" fill="#010101" font-family="'Roboto'" font-size="18.1581">Seu ambiente colaborativo de imagens de arquitetura </text>
+<text transform="matrix(1.0338 0 0 1 82.7573 79.3887)" fill="#010101" font-family="'Roboto'" font-size="18.1581">{{trans('landing.titleLogo')}} </text>
 </svg>
 
 <div class="buttons-inicio">
@@ -118,7 +117,7 @@
 					<!--   BOTÃO CADASTRO INICIO   -->	
 					<a href="{{ URL::to("/users/account") }}">	
 					<div class="cadastro-inicio">
-						Criar uma conta
+						{{trans('landing.textBtnCount')}}
 					</div>
 					</a>
 					<!--   END BOTÃO CADASTRO INICIO   -->
@@ -126,7 +125,7 @@
 					<!--   BOTÃO LOGIN INICIO  -->
 					<a href="{{ URL::to("/users/login/") }}">
 					<div class="login-inicio">
-						Fazer log in
+						{{ trans('landing.textLogIn1') }}
 					</div>
 					</a>
 					<!--  END BOTÃO LOGIN INICIO  -->
@@ -147,7 +146,7 @@
 	</div>
 
 	<div id="bottom-page">
-				<a href="#page2">Como suas fotos podem se somar ao acervo do Arquigrafia?</a>
+				<a href="#page2">{{trans('landing.textPage1')}}</a>
 		</div>
 
 </div>
@@ -164,19 +163,11 @@
 		<div style="display:flex;justify-content:center;align-items:center;height:100vh;">
 			<div class="column-8" style="padding: 0;">
 
-			<div class="title-loginpage">É simples: crie uma conta, escolha suas imagens de
-arquitetura mais interessantes e compartilhe no Arquigrafia!</div>
+			<div class="title-loginpage">{{trans('landing.titlePage2')}}</div>
 			
 			<div class="column-5">
 
-			<div class="texto-loginpage">Seja parte de uma comunidade de arquitetos,
-estudantes de arquitetura, fotógrafos e pessoas que se interessam por arquitetura.<br/>
-<br/>
-Gostou de alguma foto do Arquigrafia?<br/>
-Comente e baixe as imagens que você quiser! <br />Faça upload de uma foto para compartilhar!<br/>  
-<br/>
-Outros usuários também farão o mesmo com as fotos que você subir, favorecendo a
-interconexão entre pessoas, paisagens, cidades e edifícios. 
+			<div class="texto-loginpage">{{trans('landing.paragraphPage2')}}
 			</div>
 			</div>
 

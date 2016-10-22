@@ -20,7 +20,7 @@ Route::get('/photos/import', 'ImportsController@import');
 /* phpinfo() */
 Route::get('/info/', function(){ return View::make('i'); });
 
-Route::get('/', 'PagesController@landing');
+Route::get('/{language?}', 'PagesController@landing');
 Route::get('/home', 'PagesController@home');
 Route::get('/panel', 'PagesController@panel');
 Route::get('/project', function() { return View::make('project'); });
