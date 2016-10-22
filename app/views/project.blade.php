@@ -21,11 +21,11 @@
         <img class="left" src="img/project_photos/equipe2.jpg" alt="Texto alternativo da foto" title="Reuniões e workshops internos dos membros do projeto Arquigrafia" />
         <img class="left" src="img/project_photos/equipe3.jpg" alt="Texto alternativo da foto" title="Reuniões e workshops internos dos membros do projeto Arquigrafia" />
         </div>
-        <p>Desde 2011 a equipe do projeto ARQUIGRAFIA realiza também um trabalho de conservação e digitalização do acervo original de imagens fotográficas do Setor Audiovisual da Biblioteca da FAU e solicita aos autores de imagens uma autorização específica para difusão de tais fotografias na Internet para fins acadêmicos e de difusão, voltados ao ensino e à pesquisa.</p>
-        
+        <p>Desde 2011 a equipe do projeto ARQUIGRAFIA realiza também um trabalho de conservação e digitalização do acervo original de imagens fotográficas do Setor Audiovisual da Biblioteca da FAU e solicita aos autores de imagens uma autorização específica para difusão de tais fotografias na Internet para fins acadêmicos e de difusão, voltados ao ensino e à pesquisa. Mais informações podem ser encontradas no <a href="https://issuu.com/arturrozestraten0/docs/manualarquigrafia_completo-final" target="_blank">MANUAL DE PROCEDIMENTOS TÉCNICOS</a>. </p>
+       
         <p>O ARQUIGRAFIA recebeu o primeiro prêmio da Agência de Inovação USP na categoria de Tecnologias Sociais Aplicadas e Humanas em 2011. Em 2012 o projeto recebeu chancela do Ministério da Cultura por sua relevante contribuição à cultura brasileira. Em 2014 o ARQUIGRAFIA foi o projeto selecionado pelo Ministério da Cultura para representar o país na área de Arquitetura no Edital Cultura na Copa.</p>
         
-        <p>A equipe do projeto trabalha neste momento para deixar disponível para download um aplicativo Android para acesso ao sistema via smartphones e tablets. Espera-se, assim, estimular os usuários – estudantes de arquitetura, professores, arquitetos, fotógrafos e demais interessados no assunto –, a navegar no acervo georeferenciado do ARQUIGRAFIA enquanto circulam pelas cidades, visualizando as imagens disponíveis, interagindo com outros usuários, e também colaborando para o crescimento contínuo do acervo sempre que enviarem suas próprias imagens para o sistema, com os direitos autorais preservados por licenças Creative Commons.</p>
+        <p>A equipe do projeto trabalha neste momento para disponibilizar um aplicativo Android para acesso ao sistema via smartphones e tablets. Espera-se, assim, estimular os usuários – estudantes de arquitetura, professores, arquitetos, fotógrafos e demais interessados no assunto –, a navegar no acervo georeferenciado do ARQUIGRAFIA enquanto circulam pelas cidades, visualizando as imagens disponíveis, interagindo com outros usuários, e também colaborando para o crescimento contínuo do acervo sempre que enviarem suas próprias imagens para o sistema, com os direitos autorais preservados por licenças Creative Commons.</p>
         <p>Saiba mais: <a href="http://nap.usp.br/naweb/?projetos=arquigrafia" target="_blank">nap.usp.br/naweb/?projetos=arquigrafia</a></p>
         
       </div>
@@ -43,7 +43,12 @@
         <h3>Pesquisadores colaboradores</h3>
         <ul>
           <li><small><a href="http://lattes.cnpq.br/4507073071352893" target="_blank">Prof. Dr. Marco Aurélio Gerosa - IMEUSP</a></small></li>
-          <li><small><a href="http://lattes.cnpq.br/5382764179565796" target="_blank">Profa. Dra. Maria Laura Martinez - ECAUSP </a></small></li>
+ <li><small><a href="http://lattes.cnpq.br/4531433505351729" target="_blank">Profa. Dra. Vania Mara Alves Lima - ECAUSP</a></small></li>
+  <li><small><a href="http://lattes.cnpq.br/9499155021568732" target="_bb
+lank">Profa. Dra. Cibele Araujo C. M. dos Santos- ECAUSP</a></small></li>
+      
+
+   <li><small><a href="http://lattes.cnpq.br/5382764179565796" target="_blank">Profa. Dra. Maria Laura Martinez - ECAUSP </a></small></li>
           <li><small><a href="http://lattes.cnpq.br/2342739419247924" target="_blank">Prof. Dr. Fabio Kon - IMEUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/4574831233204082" target="_blank">Prof. Dr. Julio Roberto Katinsky - FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/3841951853755817" target="_blank">Prof. Dr. Luiz Américo de Souza Munari - FAUUSP</a></small></li>
@@ -51,7 +56,6 @@
           <li><small><a href="http://lattes.cnpq.br/6695382764766281" target="_blank">Profa. Dra. Roberta Lima Gomes - Informática UFES</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/7471111924336519" target="_blank">Prof. Dr. Magnos Martinello - Informática UFES</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/3498148304153540" target="_blank">Prof. Dr. Juliano Maranhão - FDUSP</a></small></li>
-          <li><small><a href="http://lattes.cnpq.br/4531433505351729" target="_blank">Profa. Dra. Vania Mara Alves Lima - ECAUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/0348490713417429" target="_blank">Profa. Dra. Leliane Nunes de Barros - IMEUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/8548608291351316" target="_blank">Profa. Dra. Renata Wassermann - IMEUSP</a></small></li>          
           <li><small><a href="http://www.usp.br/fau/fau/secoes/biblio/index.html" target="_blank">Dina Uliana - Diretora biblioteca FAUUSP</a></small></li>
@@ -96,7 +100,7 @@
           <li><small><a href="#" target="_blank">Isabella Mendonça - Graduanda IMEUSP</a></small></li>
           <li><small><a href="#" target="_blank">Jéssica Maria Neves Lúcio - Graduanda FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/7744501085310153" target="_blank">Joel Marques de Sousa – Graduando FAUUSP</a></small></li>
-          <li><small><a href="http://lattes.cnpq.br/1443121258201396" target="_blank">Juliana Alves Sumiya – Graduanda FAUUSP</a></small></li>
+          <li><small><a href="http://lattes.cnpq.br/1443121258201396" target="_blank">Juliana Alves Sumiya – Graduanda FAUUSP</a></smal></li>
           <li><small><a href="#" target="_blank">Karina Silva de Souza - Graduanda FAUUSP</a></small></li>
           <li><small><a href="#" target="_blank">Kevin Ritschel - Graduando FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/7328149928743537" target="_blank">Lucas Caracik - Graduando em IC FAUUSP</a></small></li>
@@ -106,7 +110,9 @@
           <li><small><a href="#" target="_blank">Marina de Souza Barbosa Ferreira - Graduanda ECAUSP</a></small></li>                  
           <li><small><a href="http://lattes.cnpq.br/1280093125646759" target="_blank">Martim Passos - Graduando FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/0439483635062120" target="_blank">Nita Napoleão Encola - Graduanda ECAUSP</a></small></li>
-          <li><small><a href="http://lattes.cnpq.br/3651519169799285" target="_blank">Rafael Marinaro Verona - Graduando IMEUSP</a></small></li>
+<li><small><a href="http://lattes.cnpq.br/6652237968214791" target="_blank">Andre Felipe Costa Silva - 
+Graduado - FTT</a></small></li>        
+  <li><small><a href="http://lattes.cnpq.br/3651519169799285" target="_blank">Rafael Marinaro Verona - Graduando IMEUSP</a></small></li>
 		      <li><small><a href="#" target="_blank">Renato Massao Maeda da Silva - Graduando IMEUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/0223428961992896" target="_blank">Renato Veras de Paiva - Graduando ECAUSP</a></small></li>
           <li><small><a href="#" target="_blank">Rodrigo Ciorciari Salandim - Graduando EACHUSP</a></small></li>
