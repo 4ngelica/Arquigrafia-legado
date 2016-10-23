@@ -134,7 +134,7 @@ body {
         cursor: pointer;
         height: 16px;
         margin-bottom: 15px;
-        opacity: .4;
+        opacity: .8;
         position: relative;
         width: 16px;
         box-sizing: border-box;
@@ -269,6 +269,19 @@ cursor: pointer;
 .login-button:hover a {
     color: #fff;
     transition: linear 0.1s;
+}
+
+
+.lang-button {
+   float: right;
+padding: 10px;
+font-size: 14px;
+color: #0f0f0f;
+opacity: .8;
+}
+
+.lang-button:hover {
+    opacity: 1;
 }
 
 

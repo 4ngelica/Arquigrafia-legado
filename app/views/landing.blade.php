@@ -68,11 +68,12 @@
 </form>
 </div>
 <!--   END BOTÃO DA BARRA DE BUSCA   -->
+
+
 <!--   BOTÃO CADASTRO SUPERIOR  -->
 <div class="cadastro-button">
 <a href="{{ URL::to("/users/account") }}">Criar uma conta</a>
 </div>
-
 <!--   END BOTÃO CADASTRO SUPERIOR  -->
 
 
@@ -81,6 +82,12 @@
 <a href="{{ URL::to("/users/login/") }}">Log in</a>
 </div>
 <!--  END BOTÃO LOGIN SUPERIOR  -->
+
+
+<!-- BOTÕES LINGUAS -->
+<div class="lang-button"><a href="">en</a></div>
+<div class="lang-button"><a href="">pt</a></div>
+<!-- END BOTÕES LINGUAS -->
 </div>
 </div>
 
@@ -509,7 +516,7 @@ Que características predominam nessa arquitetura? <br/> Registre as suas impres
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="600px" height="370px" viewBox="0 0 600 370" enable-background="new 0 0 600 370" xml:space="preserve" style="margin-top: 50px; background: rgba(0,0,0,0.6);">
+	 width="600px" height="370px" viewBox="0 0 600 370" enable-background="new 0 0 600 370" xml:space="preserve" style="margin-top: 50px; background: rgba(0,0,0,0.6); width:100%;">
 <circle fill="#FFFFFF" cx="151.949" cy="50.004" r="4.547"/>
 <circle fill="#FFFFFF" cx="427.663" cy="105.808" r="4.547"/>
 <circle fill="#FFFFFF" cx="194.939" cy="160.786" r="4.547"/>
