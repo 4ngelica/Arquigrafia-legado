@@ -260,7 +260,7 @@ class UsersController extends \BaseController {
                 return Redirect::to('/home')->with('msgWelcome', "Bem-vind@ ".ucfirst($user->name).".");
             
             }else{
-              if($url == URL::to("/")."/")
+              if($url == URL::to("/")."/" || strpos($url, '/landing') !== false)
                   return Redirect::to('/home');
               else  
                   return Redirect::to($url);

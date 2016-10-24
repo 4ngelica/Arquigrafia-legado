@@ -85,8 +85,8 @@
 
 
 <!-- BOTÕES LINGUAS -->
-<div class="lang-button"><a href="">en</a></div>
-<div class="lang-button"><a href="">pt</a></div>
+<div class="lang-button"><a href="{{ URL::to("/landing/en") }}">en</a></div>
+<div class="lang-button"><a href="{{ URL::to("/landing/pt") }}">pt</a></div>
 <!-- END BOTÕES LINGUAS -->
 </div>
 </div>
@@ -314,15 +314,10 @@
 
 		<div style="display:flex;justify-content:center;align-items:center;text-align:center;height:100vh;">
 			<div class="column-4" style="padding: 0;">
-			<img src="img/redesocial.png">
+			<img src="{{ asset('img/redesocial.png')}}">
 
-			<div class="title-redesocial">O Arquigrafia também é uma rede social</div>
-			
-			<div class="texto-redesocial">Experimente compartilhar imagens, curtir,
-			pesquisar, organizar álbuns, debater e 
-			construir conhecimento sobre arquitetura
-			e urbanismo.</div>
-
+			<div class="title-redesocial">{{ trans('landing.titlePage3') }}</div>
+			<div class="texto-redesocial">{{ trans('landing.paragraphPage3') }}</div>
 			</div> 
 		</div>
 		</div>
@@ -473,12 +468,9 @@
 			
 <div class="column-3" style="width: 37.5%; align-content:center; align-items:center; display:inline-grid; height: 580px;">
 
-<div class="title-taggear">Não se esqueça de 
-taggear suas fotos!</div>
+<div class="title-taggear">{{ trans('landing.titlePage4') }}</div>
 			
-<div class="texto-taggear">As tags são uma importante ferramenta para a dinâmica de pesquisa no Arquigrafia. <br/>
-					<br/>
-Insira tags para referenciar os elementos mais relevantes nas imagens. Assim, você facilitará as suas futuras buscas e as de outros usuários!</div>
+<div class="texto-taggear">{{ trans('landing.paragraphPage4') }}</div>
 			</div>
 
 
@@ -503,13 +495,11 @@ Insira tags para referenciar os elementos mais relevantes nas imagens. Assim, vo
 			<div class="column-8" style="padding: 0;display:flex;justify-content:center;align-items:center; margin-top: -30px;">
 
 			<div class="column-3" style="width: 40%; padding: 0;">
-				<div class="title-grafico">O que conecta arquiteturas de tempos <br/>e lugares distintos? </div>
+				<div class="title-grafico">{{ trans('landing.titlePage5') }}</div>
 				
 				<div class="texto-grafico">
-A arquitetura pode ser entendida como a relação entre aspectos antagônicos: o aberto e o fechado, a simetria e assimetria, a vertical e a horizontal, etc. <br/>
-<br/>
-Que características predominam nessa arquitetura? <br/> Registre as suas impressões no Arquigrafia!
-</div>
+					{{ trans('landing.paragraphPage5') }}
+				</div>
 			</div> 
 
 <div class="column-5" style="width: 60%;">
@@ -538,19 +528,19 @@ Que características predominam nessa arquitetura? <br/> Registre as suas impres
 <line opacity="0.3" fill="none" stroke="#FFFFFF" stroke-miterlimit="10" x1="88.682" y1="160.764" x2="514.651" y2="160.764"/>
 <line opacity="0.3" fill="none" stroke="#FFFFFF" stroke-miterlimit="10" x1="89.487" y1="216.92" x2="515.458" y2="216.92"/>
 <line opacity="0.3" fill="none" stroke="#FFFFFF" stroke-miterlimit="10" x1="89.839" y1="271.483" x2="515.81" y2="271.483"/>
-<text transform="matrix(1 0 0 1 140.606 28.8872)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="19.0922">Média de interpretações da FAU-USP</text>
-<text transform="matrix(1 0 0 1 38.106 59.3716)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">Aberta</text>
-<text transform="matrix(1 0 0 1 35.4595 110.0688)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">Interna</text>
-<text transform="matrix(1 0 0 1 19.1724 165.2529)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">Complexa</text>
-<text transform="matrix(1 0 0 1 21.3013 219.8164)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">Simétrica</text>
-<text transform="matrix(1 0 0 1 9.5205 275.2695)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">Translúcida</text>
-<text transform="matrix(1 0 0 1 16.6924 330.8047)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">Horizontal</text>
-<text transform="matrix(1 0 0 1 528.9961 60.0112)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">Fechada</text>
-<text transform="matrix(1 0 0 1 528.7471 110.0688)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">Externa</text>
-<text transform="matrix(1 0 0 1 527.5898 164.8184)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">Simples</text>
-<text transform="matrix(1 0 0 1 528.293 219.9834)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">Assimétrica</text>
-<text transform="matrix(1 0 0 1 528.376 275.2695)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">Opaca</text>
-<text transform="matrix(1 0 0 1 528.3955 331.0732)" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">Vertical</text>
+<text transform="matrix(1 0 0 1 140.606 28.8872)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="19.0922">Average interpretations of FAU-USP</text>
+<text transform="matrix(1 0 0 1 38.106 59.3716)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">{{ trans('landing.txtPag5Open')}}</text>
+<text transform="matrix(1 0 0 1 35.4595 110.0688)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">{{ trans('landing.txtPag5Internal') }}</text>
+<text transform="matrix(1 0 0 1 19.1724 165.2529)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">{{ trans('landing.txtPag5Complex') }}</text>
+<text transform="matrix(1 0 0 1 21.3013 219.8164)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">{{ trans('landing.txtPag5Symmetric') }}</text>
+<text transform="matrix(1 0 0 1 9.5205 275.2695)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">{{ trans('landing.txtPag5Translucent') }}</text>
+<text transform="matrix(1 0 0 1 16.6924 330.8047)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">{{ trans('landing.txtPag5Horizontal') }}</text>
+<text transform="matrix(1 0 0 1 528.9961 60.0112)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">{{ trans('landing.txtPag5Close') }}</text>
+<text transform="matrix(1 0 0 1 528.7471 110.0688)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">{{ trans('landing.txtPag5External') }}</text>
+<text transform="matrix(1 0 0 1 527.5898 164.8184)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">{{ trans('landing.txtPag5Simple') }}</text>
+<text transform="matrix(1 0 0 1 528.293 219.9834)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">{{ trans('landing.txtPag5Asymmetric') }}</text>
+<text transform="matrix(1 0 0 1 528.376 275.2695)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">{{ trans('landing.txtPag5Opaque') }}</text>
+<text transform="matrix(1 0 0 1 528.3955 331.0732)" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">{{ trans('landing.txtPag5Vertical') }}</text>
 <text transform="matrix(1 0 0 1 85.2295 345.6855)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">0</text>
 <text transform="matrix(1 0 0 1 187.5371 345.0664)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">25</text>
 <text transform="matrix(1 0 0 1 294.4531 345.417)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">50</text>
@@ -580,16 +570,15 @@ Que características predominam nessa arquitetura? <br/> Registre as suas impres
 		<div style="display:flex;justify-content:center;align-items:center;height:100vh;">
 			<div class="column-7" style="padding: 0;">
 
-			<div class="title-georef">Georreferenciamento</div>
+			<div class="title-georef">{{ trans('landing.titlePage6') }}</div>
 
-			<div class="texto-georef">Por fim, não deixe de colocar a localização de suas imagens no mapa.
-Assim, quando estiver próximo a um edifício que lhe interessa, você conseguirá buscar outras imagens disponíveis do mesmo local, através do aplicativo do Arquigrafia em seu smartphone.
+			<div class="texto-georef">{{ trans('landing.paragraphPage6') }}
 
 			</div>
 
 
 			<div id="mapa-georref">
-				<img src="img/mapa-temp.png">
+				<img src="{{ asset('img/mapa-temp.png')}}">
 		<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 		<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="905px"
@@ -657,16 +646,16 @@ Assim, quando estiver próximo a um edifício que lhe interessa, você conseguir
 
 				<div class="column-4" style="padding: 0; width: 66.6666667%">
 				<div style="width: 75%; text-align: center;">
-					<div class="title-final" style="text-align: left;">Pronto para colaborar?</div>
+					<div class="title-final" style="text-align: left;">{{ trans('landing.titlePage7') }}</div>
 
-					<div class="texto-final" style="text-align: left;">Cadastre-se, crie seu login e participe da construção dessa constelação de imagens de arquitetura!</div>
+					<div class="texto-final" style="text-align: left;">{{ trans('landing.paragraphPage7') }}</div>
 
 
 					<div class="buttons-final">
 					<!--   BOTÃO CADASTRO FINAL  -->	
 					<div class="cadastro-final">
 					<a href="{{ URL::to("/users/account") }}">	
-					Criar uma conta
+					{{ trans('landing.textBtnCount') }}
 					</a>
 					</div>
 					<!--   END BOTÃO CADASTRO FINAL  -->
@@ -674,20 +663,20 @@ Assim, quando estiver próximo a um edifício que lhe interessa, você conseguir
 
 					<div style="font-size: 20px;color:#7f7f7f;-webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;">
-					Já tem cadastro?</div>
+					{{ trans('landing.registerBtn') }}</div>
 						
 					<!--   BOTÃO LOGIN FINAL  -->
 					<div class="login-final">
 						<a href="{{ URL::to("/users/login/") }}">
-					Fazer log in
+						{{ trans('landing.textLogIn1') }}
 						</a>
 					</div>
 					<!--  END BOTÃO LOGIN FINAL  -->
 
 					<div class="botao-refsite">
-							<a href="{{ URL::to("/home") }}" style="color:white;">Ir para o site</a>
+							<a href="{{ URL::to("/home") }}" style="color:white;">{{ trans('landing.siteBtn')}}</a>
 					</div>
-					<div class="playstore">Disponível em breve!<img src="{{ asset('img/playstore.png')}}"></div>
+					<div class="playstore">{{trans('landing.txtSoon')}}<img src="{{ asset('img/playstore.png')}}"></div>
 					</div>
 					
 
