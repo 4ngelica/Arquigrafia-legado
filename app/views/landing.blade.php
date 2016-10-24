@@ -61,7 +61,7 @@
 <div class="buttons">
 <!--   BOTÃO DA BARRA DE BUSCA   -->
 <div class="search-field">
-<form id="tfnewsearch" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8">	
+<form id="tfnewsearch" action="{{ URL::to("/") }}/search" method="get" accept-charset="UTF-8">	
 	<input type="text" class="tftextinput" name="q" size="21" maxlength="120" value="">
 	<input type="submit" value="search" class="tfbutton">
 	<input type="hidden" value="8" name="perPage" />

@@ -303,6 +303,4 @@ class APIPhotosController extends \BaseController {
 				'code' => 200,
 				'message' => 'Operacao realizada com sucesso'));
 	}
-
-
 }
