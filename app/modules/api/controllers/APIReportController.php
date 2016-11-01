@@ -1,6 +1,7 @@
 <?php
 namespace modules\api\controllers;
 use modules\collaborative\models\Tag;
+use modules\collaborative\models\Report;
 
 class APIReportController extends \BaseController {
 	/**
@@ -91,7 +92,7 @@ class APIReportController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function report($id)
+	public function report()
 	{
 		\Input::flash();
 	    $input = \Input::all();
@@ -99,23 +100,27 @@ class APIReportController extends \BaseController {
 		$rules = array(
 	        'data_type_report' => 'required',
 	        'type_report'      => 'required',
-	        'user_id'          => 'required'
+	        'user_id'          => 'required',
+	        'photo_id'         => 'required'
 	    ); 
+	 	$input = $input['params'];
 	    $validator = \Validator::make($input, $rules);   
 
 		if ($validator->fails()) {
-	      $messages = $validator->messages();
+	      
 	      return \Response::json(array(
 				'code' => 400,
 				'message' => 'Erro ao validar.'));
 	    } else {
-			$photo_id = $id;
-	        $user = $input['user_id'];
-			$photo = Photo::find($photo_id);
+	        $user = \User::find($input['user_id']);
+			$photo = \Photo::find($input['photo_id']);
 			$reportTypeDataAll =$input["data_type_report"];
 			$reportType =$input["type_report"];
-	        $comment =$input["observation_report"];        
-	        //$reportTypeData = implode(",", array_values($reportTypeDataAll));
+			if(!empty($input["observation_report"]))
+	        	$comment =$input["observation_report"];
+	        else
+	        	$comment = "";        
+	        $reportTypeData = implode(",", array_values($reportTypeDataAll));
 			$result = Report::getFirstOrCreate($user, $photo, $reportTypeData, $comment,$reportType);
 	    	return \Response::json(array(
 				'code' => 200,

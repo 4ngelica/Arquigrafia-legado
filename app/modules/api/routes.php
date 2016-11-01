@@ -7,7 +7,7 @@ Route::group(array('middleware' => 'cors', 'prefix' => 'api/'), function()
     Route::resource('tags'     , 'modules\api\controllers\APITagsController');
     Route::resource('authors'  , 'modules\api\controlles\APIAuthorsControllers');
     /* Denuncias */
-    Route::post('photos/{id}/report', 'modules\api\controllers\APIReportController@report');
+    Route::post('photos/report', 'modules\api\controllers\APIReportController@report');
     /* Controlador de autenticação */
     Route::post('login', 'modules\api\controllers\APILogInController@verify_credentials');
     Route::post('auth', 'modules\api\controllers\APILogInController@validate_mobile_token');
