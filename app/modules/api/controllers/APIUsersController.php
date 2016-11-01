@@ -33,20 +33,35 @@ class APIUsersController extends \BaseController {
 	public function store()
 	{
 		//Validação do input
-		$input = Input::all();
+		$input = \Input::all();
+		$input = $input['data'];
 		$rules = Array( 'name'     => 'required',
-						'email'    => 'required',
+						'email'    => 'required|email|unique:users',
 						'password' => 'required',
-						'login'    => 'required');
-		$validator = Validator::make($input, $rules);
+						'login'    => 'required',
+						'terms'    => 'required');
+		$validator = \Validator::make($input, $rules);
 
 		if($validator->fails()){
-			return ;
+			$messages = $validator->messages();
+      		return \Response::json($messages);
 		}
+		else {
+			$user = \User::create(['name' => $input["name"],
+      							  'email' => $input["email"],
+      							  'password' => \Hash::make($input["password"]),
+      							  'login' => $input["login"]     
+      							 ]);
+			$user->mobile_token = \Hash::make(str_random(10));
+			$user->active = 'yes';
+          	$user->verify_code = null;
+          	$user->save();
 
-		//Armazenamento
-		$photo = new Photo;
+          	/* Registro de logs */
+          	EventLogger::printEventLogs(null, "new_account", ["origin" => "Arquigrafia"], "mobile"); 
 
+			return \Response::json(['login' => $input["login"], 'token' => $user->mobile_token, 'id' => $user->id, 'valid' => 'true', 'msg' => 'Cadastro efetuado com sucesso.']);
+		}
 	}
 
 
