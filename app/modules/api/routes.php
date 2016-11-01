@@ -6,6 +6,8 @@ Route::group(array('middleware' => 'cors', 'prefix' => 'api/'), function()
     Route::resource('users', 'modules\api\controllers\APIUsersController');
     Route::resource('tags'     , 'modules\api\controllers\APITagsController');
     Route::resource('authors'  , 'modules\api\controlles\APIAuthorsControllers');
+    /* Denuncias */
+    Route::post('photos/{id}/report', 'modules\api\controllers\APIReportController@report');
     /* Controlador de autenticação */
     Route::post('login', 'modules\api\controllers\APILogInController@verify_credentials');
     Route::post('auth', 'modules\api\controllers\APILogInController@validate_mobile_token');
@@ -30,4 +32,5 @@ Route::group(array('middleware' => 'cors', 'prefix' => 'api/'), function()
     Route::get('moreRecent', 'modules\api\controllers\APIFeedController@loadMoreRecentPhotos');
     Route::post('search', 'modules\api\controllers\APISearchController@search');
     Route::post('moreSearch', 'modules\api\controllers\APISearchController@moreSearch');
+
 });
