@@ -16,12 +16,11 @@ return array(
 						interconnection between people,
 						landscapes, cities and buildings.',
 	'titlePage3' =>'Arquigrafia is also a social network',			
-	'paragraphPage3' =>'Try sharing pictures, like, research, organize albums, debate and build 
-						knowledge about architecture and urbanism',
+	'paragraphPage3' =>	'Try to share, give like, search images, organize albums, discuss and build 
+						knowledge about architecture and Urbanism.',
 	'titlePage4' =>'Don’t forget to tag your photos!',			
-	'paragraphPage4' =>'Tags are an important tool to optimize research in Arquigrafia.<br/><br/>
-						Insert tags to identify the most important elements in an image. Doing so you will improve 
-						yours and other users future searches!',
+	'paragraphPage4' =>'Tags are an important tool to optimize research in Arquigrafia.<br/><br/>						
+						Enter tags to identify the most relevant elements in the images. So, you will improve yours and others future searches of users.',
 	'titlePage5' =>'What connects architectures from different times<br/> and places? ',			
 	'paragraphPage5' =>'Architecture can be understood as the relationship between opposite aspects such as: how 
 						open and how close, symmetry and asymmetry, vertical and horizontal, etc.</br><br/>
@@ -41,16 +40,14 @@ return array(
 	'txtPag5Horizontal' => 'Horizontal',
 	'txtPag5Vertical' => 'Vertical',			
 	'titlePage6' =>'Georeferencing',			
-	'paragraphPage6' =>'Last, be sure to put the GPS location of your images on the map. Thus, when you are near to 
-						a building you like, you can look for other available images of this place in Arquigrafia
-						using the App in your smartphone.',
+	'paragraphPage6' =>'Finally, be sure to put the GPS location of your images on the map. Thus, when you are near to a building that interests you, you can search for other available images of this place in Arquigrafia using the App in your smartphone.',
+
 	'titlePage7' =>'Ready to collaborate?',			
 	'paragraphPage7' =>'Register, create a login and engage in the makeup of this architectural images constellation!',
-
 	'textBtnCount' => 'Sign up',
 	'textLogIn1' => 'Log in',	
 	'registerBtn' => 'Already registered?',
-	'siteBtn' => 'Go site',
+	'siteBtn' => 'Go to site',
 	'txtSoon' => 'Available soon!'
 
 );
