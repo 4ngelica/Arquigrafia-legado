@@ -36,7 +36,7 @@ class ReportsController extends \BaseController {
         $comment =$input["reportComment"];        
         $reportTypeData = implode(",", array_values($reportTypeDataAll));
 		$result = Report::getFirstOrCreate($user, $photo, $reportTypeData, $comment,$reportType);
-    	return \Redirect::to('/photos/'.$photo->id)->with('message', '<strong>Imagem reportada com sucesso</strong>');
+    	return \Redirect::to('/photos/'.$photo->id)->with('message', '<strong>Denúncia enviada com sucesso</strong>');
     }
 	
 	}

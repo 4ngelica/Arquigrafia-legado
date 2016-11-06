@@ -1,4 +1,4 @@
-<h4>Ajude a reportar a foto</h4>
+<h4>Ajude a denunciar o conteúdo inadequado</h4>
 <div id="reportPhoto" class="reportPhoto">
 
    <br>
