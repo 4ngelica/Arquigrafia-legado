@@ -37,7 +37,8 @@ class InstitutionsController extends \BaseController {
     if ( is_null($institution) ) {
       return \Redirect::to('/home');
     }
-    $photos = $institution->photos()->get()->reverse(); 
+    $photos = $institution->photos()->limit(100)->get()->reverse(); 
+
     $follow = null;
     $responsible = false;
 

@@ -1,11 +1,11 @@
 <?php
 
 return array(
-    'titleLogo' => 'Your universe of architectural images',
+    'titleLogo' => 'Your collaborative environment of architectural images', 
     'textPage1' => 'How can your pictures join the Arquigrafia collection?',
-	'titlePage2' => 'Its easy: create an account, choose your most interesting architectural images and 
-					share in Arquigrafia!',
-	'paragraphPage2' => 'Become part of a community of architects, architecture students, 
+	'titlePage2' => "It's easy: create an account, choose your most interesting architectural images and 
+					share in Arquigrafia!",
+	'paragraphPage2' => 'Become part of an architects community, architecture students, 
 						photographers and people  interested in architecture.<br/>
 						<br/>
 						Do you like any picture in Arquigrafia?<br/>
@@ -17,7 +17,7 @@ return array(
 						landscapes, cities and buildings.',
 	'titlePage3' =>'Arquigrafia is also a social network',			
 	'paragraphPage3' =>	'Try to share, give like, search images, organize albums, discuss and build 
-						knowledge about architecture and Urbanism.',
+						knowledge about architecture and urbanism.',
 	'titlePage4' =>'Don’t forget to tag your photos!',			
 	'paragraphPage4' =>'Tags are an important tool to optimize research in Arquigrafia.<br/><br/>						
 						Enter tags to identify the most relevant elements in the images. So, you will improve yours and others future searches of users.',
