@@ -59,7 +59,7 @@ class APIUsersController extends \BaseController {
           	$user->save();
 
           	/* Registro de logs */
-          	EventLogger::printEventLogs(null, "new_account", ["origin" => "Arquigrafia"], "mobile"); 
+          	EventLogger::printEventLogs(null, "new_account", ["origin" => "Arquigrafia", "user" => $user->id], "mobile"); 
 
 			return \Response::json(['login' => $input["login"], 'token' => $user->mobile_token, 'id' => $user->id, 'valid' => 'true', 'msg' => 'Cadastro efetuado com sucesso.']);
 		}
