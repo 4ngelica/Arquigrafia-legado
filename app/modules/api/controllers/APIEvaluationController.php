@@ -60,7 +60,7 @@ class APIEvaluationController extends \BaseController {
 
             /* Registro de logs */
             EventLogger::printEventLogs($photoId, 'edit_evaluation', 
-                                        ['evaluation' => $evaluation_sentence, 'user' => $user_id], 'mobile');
+                                        ['evaluation' => $evaluation_sentence, 'user' => $userId], 'mobile');
         }
 		\Response::json($input);
 	}
