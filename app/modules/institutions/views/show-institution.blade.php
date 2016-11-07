@@ -68,7 +68,7 @@
             id="single_view_contact_add" title="Edite o seu perfil">Editar perfil</a><br />
         @endif
       </div>
-      <div class="count">Imagens compartilhadas({{ count($photos) }})</div>
+      <div class="count">Últimas imagens compartilhadas({{ count($photos) }})</div>
     </div>
   </div>
   <!-- GALERIA DO USUÁRIO -->

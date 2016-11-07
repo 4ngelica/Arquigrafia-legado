@@ -75,7 +75,7 @@
 			@endif	
 			  
 	        </div>
-	      	<div class="count">Imagens compartilhadas ({{ count($photos) }})</div>
+	      	<div class="count">Últimas imagens compartilhadas ({{ count($photos) }})</div>
 	      </div>
 	    </div>
     

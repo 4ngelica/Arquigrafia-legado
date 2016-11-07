@@ -30,7 +30,7 @@ class UsersController extends \BaseController {
   { 
     $user = User::whereid($id)->first();
     $institutionFollowed = $user->followingInstitution;
-    $photos = $user->photos()->get()->reverse();
+    $photos = $user->photos()->limit(100)->get()->reverse(); 
     if (Auth::check()) {   
       if (Auth::user()->following->contains($user->id))
         $follow = false;

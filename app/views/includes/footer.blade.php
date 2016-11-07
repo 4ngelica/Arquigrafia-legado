@@ -63,8 +63,9 @@ a.async=true;a.type="text/javascript";b.parentNode.insertBefore(a,b)}, 1);
         </ul>
         <ul>
           <li><a href="http://www.quapa.fau.usp.br/quapa_desenv/default.htm" title="QUAPÁ" id="quapa" target="_blank"></a></li>
-          <li><a href="http://www.vitruvius.com.br/" title="Vitruvius" id="vitruvius" target="_blank"></a></li>
-          <li><a href="http://www.archdaily.com.br/br" title="ArchDaily Brasil" id="archdaily" target="_blank"></a></li>
+          <li><a href="http://www.vitruvius.com.br/" title="Vitruvius" id="vitruvius" target="_blank"></a></li>      
+          <li><a href="http://www.scansystem.com.br/" title="Scan system" id="scansystem" 
+            target="_blank"><img src="{{ asset('img/scan-system.png')}}" height="37" ></a></li>
         </ul>
         <ul class="last">
           <li><a href="http://www.bench.com.br/" title="Benchmark" id="benchmark" target="_blank"></a></li>

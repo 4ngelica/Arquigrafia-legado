@@ -183,7 +183,7 @@
             @endif
             <!-- REPORT -->
               <li>
-                <a href="{{ URL::to('/reports/showModalReport/' . $photos->id) }}" title="Reportar imagem" id="denounce_photo"></a>
+                <a href="{{ URL::to('/reports/showModalReport/' . $photos->id) }}" title="Denunciar imagem" id="denounce_photo"></a>
               </li>
 
           </ul>

@@ -1,6 +1,5 @@
 <?php
 namespace modules\api\controllers;
-use lib\utils\ActionUser;
 use lib\log\EventLogger;
 use modules\collaborative\models\Tag;
 use modules\institutions\models\Institution;

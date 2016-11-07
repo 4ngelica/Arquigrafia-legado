@@ -1,5 +1,6 @@
 <?php
 namespace modules\api\controllers;
+use lib\log\EventLogger;
 
 class APIUsersController extends \BaseController {
 	
@@ -37,14 +38,14 @@ class APIUsersController extends \BaseController {
 		$input = $input['data'];
 		$rules = Array( 'name'     => 'required',
 						'email'    => 'required|email|unique:users',
-						'password' => 'required',
-						'login'    => 'required',
+						'password' => 'required|min:6|',
+						'login'    => 'required|regex:/^[a-z0-9-_]{3,20}$/|unique:users',
 						'terms'    => 'required');
 		$validator = \Validator::make($input, $rules);
 
 		if($validator->fails()){
 			$messages = $validator->messages();
-      		return \Response::json($messages);
+      		return \Response::json(['valid' => 'false', 'errors' => $messages]);
 		}
 		else {
 			$user = \User::create(['name' => $input["name"],
@@ -58,7 +59,7 @@ class APIUsersController extends \BaseController {
           	$user->save();
 
           	/* Registro de logs */
-          	EventLogger::printEventLogs(null, "new_account", ["origin" => "Arquigrafia"], "mobile"); 
+          	EventLogger::printEventLogs(null, "new_account", ["origin" => "Arquigrafia", "user" => $user->id], "mobile"); 
 
 			return \Response::json(['login' => $input["login"], 'token' => $user->mobile_token, 'id' => $user->id, 'valid' => 'true', 'msg' => 'Cadastro efetuado com sucesso.']);
 		}

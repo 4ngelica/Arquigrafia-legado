@@ -54,8 +54,8 @@
 		11.769,15.737 11.769,30.641 23.954,30.641 23.954,12.544 8.448,12.544 8.448,33.833 27.275,33.833 27.275,24.254 27.275,9.349 
 		5.124,9.349 5.124,37.029 30.599,37.029 30.599,6.153 1.804,6.153 1.804,40.224 34.665,40.224 	"/>
 </g>
-<text transform="matrix(1.0338 0 0 1 42.2119 27.9512)" fill="#010101" font-family="'Roboto'" font-size="32.453">ARQUIGRAFIA</text>
-<text transform="matrix(1.0338 0 0 1 41.708 39.5527)" fill="#010101" font-family="'Roboto'" font-size="8.7682">Seu ambiente colaborativo de imagens de arquitetura </text>
+<text transform="matrix(1.0338 0 0 1 42.2119 27.9512)" fill="#010101" font-family="'Roboto'" font-size="24.453"><a href="{{ URL::to("/home") }}" >ARQUIGRAFIA</a></text>
+<text transform="matrix(1.0338 0 0 1 41.708 39.5527)" fill="#010101" font-family="'Roboto'" font-size="8.7682">Seu universo de imagens de arquitetura </text>
 </svg>
 
 <div class="buttons">
