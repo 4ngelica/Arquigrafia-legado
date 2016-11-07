@@ -1,5 +1,6 @@
 <?php
 namespace modules\api\controllers;
+use lib\log\EventLogger;
 
 class APIUsersController extends \BaseController {
 	
