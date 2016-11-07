@@ -45,7 +45,7 @@ class APIUsersController extends \BaseController {
 
 		if($validator->fails()){
 			$messages = $validator->messages();
-      		return \Response::json($messages);
+      		return \Response::json(['valid' => 'false', 'errors' => $messages]);
 		}
 		else {
 			$user = \User::create(['name' => $input["name"],
