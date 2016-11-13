@@ -66,6 +66,16 @@ class InstitutionsController extends \BaseController {
       'drafts' => $drafts
     ]);
   }  
+  
+  public function allimages($id) {
+	    $institution = Institution::find($id); 
+		$photos = $institution->photos();
+		
+		return \View::make('PhotosInstitution', [
+      'institution' => $institution, 
+      'photos' => $photos	  
+    ]);
+  }
 
   /*Editar dados da instituição*/
   public function edit($id) {     
