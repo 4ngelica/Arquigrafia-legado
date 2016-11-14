@@ -484,8 +484,8 @@
 						</div>
 						<div class="form-row">
 							{{ Form::radio('authorized', '0', false,
-								['id' => 'authorized', 'onclick' => 'disableLicencenseChoice()']) }}
-							<label for="authorized">Aguardando autorização do autor</label><br class="clear">
+								['id' => 'unauthorized', 'onclick' => 'disableLicencenseChoice()']) }}
+							<label for="unauthorized">Aguardando autorização do autor</label><br class="clear">
 						 </div>
 					</div>
 					<div class="twelve columns omega row">
