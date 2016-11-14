@@ -67,15 +67,7 @@ class InstitutionsController extends \BaseController {
     ]);
   }  
   
-  public function allimages($id) {
-	    $institution = Institution::find($id); 
-		$photos = $institution->photos();
-		
-		return \View::make('PhotosInstitution', [
-      'institution' => $institution, 
-      'photos' => $photos	  
-    ]);
-  }
+  
 
   /*Editar dados da instituição*/
   public function edit($id) {     
@@ -730,5 +722,84 @@ class InstitutionsController extends \BaseController {
     return \Redirect::to('/institutions/' . $photo->institution_id);
   }
 
+  public function allImages($id) {
+      $institution = Institution::find($id); 
+      $photos = $institution->photos()->get()->reverse();
+      $name_institution = $institution->name;
+
+      $url= null;
+      $maxPage = 0;
+      $photosAll = $photos->count();
+
+      if($photos->count() != 0){          
+                $photosPages = Institution::paginatePhotosInstitution($id); 
+                $photosTotal = $photosPages->getTotal(); 
+                $maxPage = $photosPages->getLastPage(); 
+                
+                //$url = URL::to('/institutions/'.$id.'/allphotos'. '/paginate/other/photos/');                 
+
+                Session::put('last_paginate',
+                ['photos' => $photos,
+                'url' => $url,'photosTotal' => $photosTotal , 'maxPage' => $maxPage,
+                'photosAll' => $photosAll, 'page' => 1]); //, 'pageVisited'=> $pageVisited 
+
+                // if(Input::has('pg') && $haveSession != 0 ) { 
+                //     $pageVisited = 1; 
+                //     Session::forget('CurrPage');
+                // }
+            }else{                
+                Session::forget('last_search');
+                Session::forget('CurrPage');
+                Session::forget('paginationSession');
+            } 
+
+    return \View::make('images-institution',[ 'institution' => $institution, 
+                'institutionName' => $name_institution, 'photos' => $photos,                
+                'url' => $url,
+                'photosTotal' => $photosTotal , 'maxPage' => $maxPage,
+                'photosAll' => $photosAll, 'id' => $id, 'page'=>1 ]);
+  }
+
+  public function paginatePhotosResult() {
+        
+        if(Session::has('last_paginate')){
+            Log::info("si session fotos");
+            $lastSearch = Session::get('last_paginate');
+            $photos = $lastSearch['photos'];
+        }
+        $institution = Input::has('inst') ? Input::get('inst') : ''; 
+        
+        $pagination = Institution::paginatePhotosInstitutionAll($photos);       
+
+        return $this->paginationResponseSearch($pagination, 'add');
+    }
+
+  private function paginationResponseSearch($photos, $type) {
+        Log::info("paginateRsp");
+        $count = $photos->getTotal();
+        $perPage = $photos->getPerPage();
+        $page = $photos->getCurrentPage();
+       Log::info("count====".$count);
+       
+        $fromPage = $photos->getFrom();         
+        $toPage = $photos->getTo();
+        
+        Log::info("Response>> CurrPage=".$page." FromPage=".$fromPage." ToPage=".$toPage." count=".$count." perPage=".$perPage);
+        
+        Session::put('FromPage', $fromPage); 
+        Session::put('ToPage', $toPage);      
+        Session::put('CurrPage', $page); 
+       
+        $response = [];
+        $response['content'] = \View::make('includes.result_images')
+            ->with(['photos' => $photos, 'page' => $page, 'type' => $type])
+            ->render();
+        $response['maxPage'] = $photos->getLastPage();
+        $response['empty'] = ($photos->count() == 0);
+        $response['count'] = $count;
+       
+
+        return Response::json($response);
+    }  
 
 }

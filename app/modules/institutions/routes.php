@@ -7,7 +7,8 @@ Route::get('/institutions/form/upload','modules\institutions\controllers\Institu
 Route::post('/institutions/save','modules\institutions\controllers\InstitutionsController@saveFormPhotos');
 Route::get('/institutions/{photo_id}/form/edit','modules\institutions\controllers\InstitutionsController@editFormPhotos');
 Route::put('/institutions/{photo_id}/update/photo','modules\institutions\controllers\InstitutionsController@updateFormPhotos');
-Route::get('/institutions/{id}/allphotos', 'modules\institutions\controllers\InstitutionsController@allimages');
+
+Route::get('/institutions/{id}/allphotos', 'modules\institutions\controllers\InstitutionsController@allImages');
 
 /* FOLLOW */
 Route::get('/friends/followInstitution/{institution_id}', 'modules\institutions\controllers\InstitutionsController@followInstitution');
