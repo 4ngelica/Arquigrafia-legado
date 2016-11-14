@@ -173,8 +173,8 @@ input.search_bar_button { background: url(../img/sprite.png) -330px 0; height: 2
 #complete_search_bar input.text { display: block; width: 109px; height: 20px; line-height: 20px; padding: 0 3px; background: url(../img/sprite.png) -651px -79px; float: left; }
 #complete_search_bar input.submit { display: block; width: 58px; height: 20px; line-height: 20px; margin: 0 0 0 20px; background: url(../img/sprite.png) -23px -238px; float: left; }
 #complete_search_bar input.submit:hover { background: url(../img/sprite.png) -23px -259px; cursor: pointer; }
-/* calendário */
-.ui-widget-header { background: none #CB9833 !important; border: 1px solid #CB9833 !important; }
+/* calendário #CB9833 */
+.ui-widget-header { background: none #eeeeee !important; border: 1px solid #eeeeee !important; }
 /* erros e mensagens */
 .message {color: #4AA02C; border: solid 1px #ddd; border-radius: 5px; padding: 10px; text-align: center; margin: 0 0 20px; }
 .message strong {font-size: 13px; font-weight: bold; text-transform: uppercase;}
