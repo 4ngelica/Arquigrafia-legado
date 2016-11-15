@@ -3,7 +3,9 @@
 ?>
 
 <table id="{{ $type . '_page' . $page }}" class="page form-table" width="100%" border="0"
-	cellspacing="0" cellpadding="0">	
+	cellspacing="0" cellpadding="0">
+
+		<p>{{ Form::hidden('inst', $id) }}</p>	
 	@foreach($photos as $photo)
 		@if ($count % 6 == 0)
 		<tr>

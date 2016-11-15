@@ -78,5 +78,37 @@ class Institution extends \Eloquent {
                             ->where('role_id', '=',$roles->id)
                             ->first();
         return $query;
-	}	
+	}
+
+	public function scopePhotosVarious($query, $photos, $q = null) { 
+		if(!empty($photos)) { 				
+				$query->where(function($sub_query) use ($photos) {
+					foreach ($photos as $photo) {				
+						$sub_query->orwhere('photos.id', '=', $photo->id);						
+					} })->whereMatches($q);	
+		}
+		return $query;
+	}
+
+
+	public static function paginatePhotosInstitution($id,$perPage = 36){
+		
+			//$qq = static::PhotosVarious($photos, $q)->orderBy('photos.created_at', 'DESC')->paginate($perPage);		
+			$institution = Institution::find($id); 
+		  	$paginate = $institution->photos()->paginate($perPage);
+		  	return $paginate;
+		
+			
+	}
+
+
+
+
+
+	public static function paginatePhotosInstitutionAll($photos,$perPage = 36 ) {
+			$paginate = $photos->paginate($perPage);
+			return $paginate;
+	}
+
 }
+
