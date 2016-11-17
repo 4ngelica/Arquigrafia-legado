@@ -19,7 +19,7 @@
           -->
           <!--   FIM - MENU INSTITUCIONAL   -->
         <!--   MENU DE BUSCA   -->
-        <form id="search_buttons_area" action="{{ URL::to("/") }}/search" method="get" accept-charset="UTF-8">
+        <form id="search_buttons_area" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8">
           <!--   BARRA DE BUSCA   -->
           <input type="text" class="search_bar" id="search_bar" name="q" value=""/>
 

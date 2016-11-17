@@ -81,7 +81,7 @@ lank">Profa. Dra. Cibele Araujo C. M. dos Santos- ECAUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/2605934447999302" target="_blank">José Teodoro - Mestre IMEUSP</a></small></li>   
           <li><small><a href="http://lattes.cnpq.br/0284126139128849" target="_blank">Laécio Freitas Chaves – Mestrando IMEUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/7328149928743537" target="_blank">Lucas Caracik - Mestrando FAUUSP</a></small></li>
-          <li><small><a href="http://lattes.cnpq.br/3965923523593288" target="_blank">Lucas Santos de Oliveira - Mestre IMEUSP</a> </small></li>
+          <li><small><a href="http://lattes.cnpq.br/3965923523593288" target="_blank">Lucas Santos de Oliveira - Mestre IMEUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/4891767216267666" target="_blank">Marisol Solis Yucra - Mestre IMEUSP</a></small></li>  
           <li><small><a href="http://lattes.cnpq.br/8776038016041917" target="_blank">Straus Michalsky - Mestre IMEUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/3873062445569152" target="_blank">Victor Williams Stafusa da Silva – Mestre IMEUSP</a></small> </li>
@@ -91,10 +91,6 @@ lank">Profa. Dra. Cibele Araujo C. M. dos Santos- ECAUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/6990273997861459" target="_blank">Ana Carolina Rodrigues Prado - Graduanda ECAUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/8774245848990982" target="_blank">Ana Clara de Souza Santana - Graduanda FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/0957536683446907" target="_blank">Ana Cláudia dos Santos Martins - Graduada ECAUSP</a></small></li>
-          
-          <li><small><a href="http://lattes.cnpq.br/" target="_blank"> - Graduanda ECAUSP</a></small></li>
-          
-
           <li><small><a href="http://lattes.cnpq.br/6652237968214791" target="_blank">Andre Felipe Costa Silva - Graduado - FTT</a></small></li>
           <li><small><a href="#" target="_blank">André Jin Teh Chou – Graduado FAUUSP</a></small></li>          
           <li><small><a href="http://lattes.cnpq.br/3715644973427707" target="_blank">Bhakta Krpa das Santos - Graduado FAUUSP</a></small></li>
@@ -107,7 +103,7 @@ lank">Profa. Dra. Cibele Araujo C. M. dos Santos- ECAUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/8575623926462001" target="_blank"> Gabriel Barbosa Barros Lima - Graduando FAUUSP</a></small></li>                 
           <li><small><a href="http://lattes.cnpq.br/6605070572538127" target="_blank">Giuliano Salvatore Fiusa Magnelli - Graduando FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/5529848738416350" target="_blank">Guilherme A. Nogueira Cesar - Graduando FAUUSP</a></small></li>
-          <li><small><a href="#" target="_blank">Guilherme Dias - Graduando IMEUSP</a></small></li>          
+          <li><small><a href="http://lattes.cnpq.br/5810408155272985" target="_blank">Guilherme Dias - Graduando IMEUSP</a></small></li>          
           <li><small><a href="#" target="_blank">Helena Laura Rissoni Bou Ghosson</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/7968062612895669" target="_blank">Ilka Apocalypse Jóia Paulini - Graduanda FAUUSP</a></small></li>
           <li><small><a href="#" target="_blank">Isabella Mendonça - Graduanda IMEUSP</a></small></li>
@@ -120,15 +116,16 @@ lank">Profa. Dra. Cibele Araujo C. M. dos Santos- ECAUSP</a></small></li>
           <li><small><a href="#" target="_blank">Karina Silva de Souza - Graduanda FAUUSP</a></small></li>
           <li><small><a href="#" target="_blank">Kevin Ritschel - Graduando FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/2299448573847893" target="_blank">Larissa Braga Duarte - Graduanda ECAUSP</a></small></li>
+          <li><small><a href="http://lattes.cnpq.br/5867519537430171" target="_blank">Letícia Santos - Graduanda ECAUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/0908900989509491" target="_blank">Luciana Molinari Monteforte - Graduanda FAUUSP</a></small></li>
+          <li><small><a href="http://lattes.cnpq.br/2715696756070221" target="_blank">Lúcia Tateishi Destro - Graduanda ECAUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/3119344631524602" target="_blank">Maria Gabriela Feitosa dos Santos - Graduanda FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/5038915867638908" target="_blank">Marianna Kinuyo Kuraoka - Graduanda FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/5724207285929196" target="_blank">Marina de Souza Barbosa Ferreira - Graduanda ECAUSP</a></small></li> 
           <li><small><a href="http://lattes.cnpq.br/5640868302201412" target="_blank">Marina Souza Germano de Lemos - Graduanda ECAUSP</a></small></li> 
           <li><small><a href="http://lattes.cnpq.br/1280093125646759" target="_blank">Martim Passos - Graduando FAUUSP</a></small></li>
-          <li><small><a href="http://lattes.cnpq.br/0439483635062120" target="_blank">Nita Napoleão Encola - Graduanda ECAUSP</a></small></li>
-        
-  <li><small><a href="http://lattes.cnpq.br/3651519169799285" target="_blank">Rafael Marinaro Verona - Graduando IMEUSP</a></small></li>
+          <li><small><a href="http://lattes.cnpq.br/0439483635062120" target="_blank">Nita Napoleão Encola - Graduanda ECAUSP</a></small></li>        
+          <li><small><a href="http://lattes.cnpq.br/3651519169799285" target="_blank">Rafael Marinaro Verona - Graduando IMEUSP</a></small></li>
 		      <li><small><a href="#" target="_blank">Renato Massao Maeda da Silva - Graduando IMEUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/0223428961992896" target="_blank">Renato Veras de Paiva - Graduando ECAUSP</a></small></li>
           <li><small><a href="#" target="_blank">Rodrigo Ciorciari Salandim - Graduando EACHUSP</a></small></li>
