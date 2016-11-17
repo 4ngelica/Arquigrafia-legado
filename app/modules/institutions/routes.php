@@ -8,9 +8,12 @@ Route::post('/institutions/save','modules\institutions\controllers\InstitutionsC
 Route::get('/institutions/{photo_id}/form/edit','modules\institutions\controllers\InstitutionsController@editFormPhotos');
 Route::put('/institutions/{photo_id}/update/photo','modules\institutions\controllers\InstitutionsController@updateFormPhotos');
 
+Route::get('/institutions/{id}/allphotos', 'modules\institutions\controllers\InstitutionsController@allImages');
+
 /* FOLLOW */
 Route::get('/friends/followInstitution/{institution_id}', 'modules\institutions\controllers\InstitutionsController@followInstitution');
 Route::get('/friends/unfollowInstitution/{institution_id}', 'modules\institutions\controllers\InstitutionsController@unfollowInstitution');
+
 Route::resource('/institutions','modules\institutions\controllers\InstitutionsController');
 
 

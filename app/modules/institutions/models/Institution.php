@@ -10,6 +10,7 @@ use modules\institutions\models\Employee;
 class Institution extends \Eloquent {
 
 	protected $fillable = ['name','country'];
+	protected $softDelete = true;
 
 	public function employees()
 	{
@@ -78,5 +79,16 @@ class Institution extends \Eloquent {
                             ->where('role_id', '=',$roles->id)
                             ->first();
         return $query;
-	}	
+	}
+
+
+
+	public static function paginatePhotosInstitution($id,$institution,$perPage = 30){			
+			return $institution->photos()->orderBy('photos.created_at', 'DESC')->paginate($perPage);
+	}
+
+
+
+
 }
+

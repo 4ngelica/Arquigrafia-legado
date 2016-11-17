@@ -68,7 +68,11 @@
             id="single_view_contact_add" title="Edite o seu perfil">Editar perfil</a><br />
         @endif
       </div>
-      <div class="count">Últimas imagens compartilhadas({{ count($photos) }})</div>
+      <div class="countside">Últimas imagens compartilhadas({{ count($photos) }})</div>
+	  
+	  <div class="count"><br><a href="{{ URL::to('/institutions/' . $institution->id . '/allphotos/') }}"
+              id="single_view_contact_add">Ver todas></a><br /></div>
+	  
     </div>
   </div>
   <!-- GALERIA DO USUÁRIO -->

@@ -14,6 +14,7 @@ use Author;
 use Album;
 use Carbon\Carbon;
 use Image;
+use URL;
 
 
 
@@ -66,6 +67,8 @@ class InstitutionsController extends \BaseController {
       'drafts' => $drafts
     ]);
   }  
+  
+  
 
   /*Editar dados da instituição*/
   public function edit($id) {     
@@ -720,5 +723,55 @@ class InstitutionsController extends \BaseController {
     return \Redirect::to('/institutions/' . $photo->institution_id);
   }
 
+  public function allImages($id) 
+  {
+      $institution = Institution::find($id);  
+      $photos = Institution::paginatePhotosInstitution($id,$institution);       
+      return \View::make('images-institution')->with(array('photos'=>$photos,'institution' => $institution ));
+  }
+
+  
+
+  public function paginatePhotosInstitution() {
+        
+        if(Session::has('last_paginate')){
+            Log::info("Passou");
+            $lastPaginate = Session::get('last_paginate');
+            $photos = $lastPaginate['photos'];
+        }
+        $institution = Input::has('inst') ? Input::get('inst') : ''; 
+        
+        $pagination = Institution::paginatePhotosInstitutionAll($photos);       
+        //Log::info("paginateRsp".$pagination);
+        return $this->paginationResponseSearch($pagination, 'add');
+    }
+
+  private function paginationResponseSearch($photos, $type) {
+        Log::info("paginateRsp");
+        $count = $photos->getTotal();
+        $perPage = $photos->getPerPage();
+        $page = $photos->getCurrentPage();
+        Log::info("count====".$count);
+       
+        $fromPage = $photos->getFrom();         
+        $toPage = $photos->getTo();
+        
+        Log::info("Response>> CurrPage=".$page." FromPage=".$fromPage." ToPage=".$toPage." count=".$count." perPage=".$perPage);
+        
+        Session::put('FromPage', $fromPage); 
+        Session::put('ToPage', $toPage);      
+        Session::put('CurrPage', $page); 
+       
+        $response = [];
+        $response['content'] = \View::make('includes.result_images')
+            ->with(['photos' => $photos, 'page' => $page, 'type' => $type])
+            ->render();
+        $response['maxPage'] = $photos->getLastPage();
+        $response['empty'] = ($photos->count() == 0);
+        $response['count'] = $count;
+       
+
+        return Response::json($response);
+    }  
 
 }
