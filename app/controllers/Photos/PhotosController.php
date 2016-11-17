@@ -376,34 +376,8 @@ class PhotosController extends \BaseController {
       return "Você só pode fazer o download se estiver logado, caso tenha usuário e senha, faça novamente o login.";
     }
   }
-
-  // BATCH RESIZE
-  public function batch()
-  {
-    $photos = Photo::all();
-    foreach ($photos as $photo) {
-      $path = public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg';
-      // novo tamanho para home, o micro, para pré carregamento.
-    $new = public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg';
-      if (is_file($path) && !is_file($new)) $image = Image::make($path)->fit(32,20)->save($new);
-    }
-    return "OK.";
-  }
+ 
   
-  // BATCH REGENERATE
-  public function batchRegenerate()
-  {
-    $photos = Photo::all();
-    foreach ($photos as $photo) {
-      $path = public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg';
-    $image = Image::make($path);
-    $image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg');
-    $image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
-    $image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
-    }
-    return "OK.";
-  }
-
   public function edit($id) {
     if (Session::has('institutionId') ) {
       return Redirect::to('/home');
