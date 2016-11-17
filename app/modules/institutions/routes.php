@@ -14,10 +14,6 @@ Route::get('/institutions/{id}/allphotos', 'modules\institutions\controllers\Ins
 Route::get('/friends/followInstitution/{institution_id}', 'modules\institutions\controllers\InstitutionsController@followInstitution');
 Route::get('/friends/unfollowInstitution/{institution_id}', 'modules\institutions\controllers\InstitutionsController@unfollowInstitution');
 
-/*Pagination*/
-Route::get('/institutions/allphotos/paginate/other/photos/','modules\institutions\controllers\InstitutionsController@paginatePhotosInstitution');
-//Route::get('/search/paginate/other/photos', 'PagesController@paginatePhotosResult');
-
 Route::resource('/institutions','modules\institutions\controllers\InstitutionsController');
 
 

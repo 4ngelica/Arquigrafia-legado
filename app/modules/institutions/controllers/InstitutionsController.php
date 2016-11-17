@@ -723,70 +723,14 @@ class InstitutionsController extends \BaseController {
     return \Redirect::to('/institutions/' . $photo->institution_id);
   }
 
-  public function allImages($id) {
-
-      $institution = Institution::find($id);
-      $name_institution = $institution->name;      
-      $photos = $institution->photos()->orderBy('photos.created_at', 'DESC')->paginate(1);
-      
-      return \View::make('images-institution')->with(array('photos'=>$photos,'institution' => $institution ,'institutionName' => $name_institution));
+  public function allImages($id) 
+  {
+      $institution = Institution::find($id);  
+      $photos = Institution::paginatePhotosInstitution($id,$institution);       
+      return \View::make('images-institution')->with(array('photos'=>$photos,'institution' => $institution ));
   }
 
-  public function allImages2($id) {
-      $institution = Institution::find($id); 
-      $photos = $institution->photos()->get()->reverse();
-      $name_institution = $institution->name;
-
-      $url= null;
-      $maxPage = 0;      
-      $pageRetrieved = 1;
-      $pageVisited = 0; 
-      $photosAll = 0;
-      $photosTotal = 0;
-      $photosPages = null;      
-      $haveSession = 0;
-      $pageLinked = 0;
-
-      if(Session::has('CurrPage') && Session::get('CurrPage')!= 1){ 
-          $pageRetrieved = Session::get('CurrPage');  
-          $haveSession = 1;   
-      }
-
-      if($photos->count() != 0){          
-          $photosPages = Institution::paginatePhotosInstitution($id); 
-          $photosTotal = $photosPages->getTotal(); 
-          //dd($photosPages);
-          //dd($photosTotal);
-
-          $maxPage = $photosPages->getLastPage(); 
-          $photosAll = $photos->count();
-          
-          //$url = URL::to('/institutions/'.$id.'/allphotos'. '/paginate/other/photos/');                 
-          $url = URL::to('/institutions/allphotos/paginate/other/photos/');
-                      //  /institutions/allphotos/paginate/other/photos/
-          ///search/paginate/other/photos
-          //$url = URL::to('/search'. '/paginate/other/photos/')
-
-          Session::put('last_paginate',
-              ['photos' => $photos, 'url' => $url,'photosTotal' => $photosTotal , 'maxPage' => $maxPage,
-               'photosAll' => $photosAll, 'pageVisited'=> $pageVisited, 'page' => $pageRetrieved]);  
-
-          if($haveSession != 0 ) { 
-              $pageVisited = 1; 
-              Session::forget('CurrPage');
-          }      
-      }else{                
-            Session::forget('last_paginate');
-            Session::forget('CurrPage');
-            Session::forget('paginationSession');
-      } 
-
-    return \View::make('images-institution',[ 'institution' => $institution, 
-                'institutionName' => $name_institution, 'photos' => $photosPages,                
-                'url' => $url, 'page' => $pageRetrieved,
-                'photosTotal' => $photosTotal , 'maxPage' => $maxPage,
-                'photosAll' => $photosAll, 'id' => $id,'pageVisited'=> $pageVisited ]);
-  }
+  
 
   public function paginatePhotosInstitution() {
         

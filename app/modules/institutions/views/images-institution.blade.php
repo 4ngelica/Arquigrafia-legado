@@ -12,11 +12,20 @@
     <script type="text/javascript">
     
     $(window).load(function() {
-       $('.pagination li span').addClass('page-ini-span');
-       
+       $("span:contains('«')").addClass('page-ini-span');
+       $("span:contains('»')").addClass('page-end-span');
+
        $('a[rel="prev"]').addClass("link-ini");
        $('a[rel="next"]').addClass("link-end");
      
+       if (document.querySelector('.page-ini-span') !== null) {
+            $( ".page-ini-span" ).empty();        
+       }
+
+        if (document.querySelector('.page-end-span') !== null) {
+            $( ".page-end-span" ).empty(); 
+        }
+
        var thumb = "<?php echo URL::to('/').'/img/btnNext.png';?>";
        var thumbIni = "<?php echo URL::to('/').'/img/btnPrev.png';?>";
 
@@ -29,15 +38,12 @@
       }
 
       if ($('a[rel="next"]').hasClass("link-end")) {  
-           $( ".link-end" ).empty();
-           
-           $( ".link-end" ).append( 
-               //$('<img>').attr('src',thumb).attr('line-height','50');
+           $( ".link-end" ).empty();           
+           $( ".link-end" ).append(                
                $('<img>').attr({
                 src:thumb, 
                 'vertical-align':'top' 
               })
-
             );
       }
 
