@@ -14,6 +14,7 @@ use Author;
 use Album;
 use Carbon\Carbon;
 use Image;
+use URL;
 
 
 
@@ -723,54 +724,81 @@ class InstitutionsController extends \BaseController {
   }
 
   public function allImages($id) {
+
+      $institution = Institution::find($id);
+      $name_institution = $institution->name;      
+      $photos = $institution->photos()->orderBy('photos.created_at', 'DESC')->paginate(1);
+      
+      return \View::make('images-institution')->with(array('photos'=>$photos,'institution' => $institution ,'institutionName' => $name_institution));
+  }
+
+  public function allImages2($id) {
       $institution = Institution::find($id); 
       $photos = $institution->photos()->get()->reverse();
       $name_institution = $institution->name;
 
       $url= null;
-      $maxPage = 0;
-      $photosAll = $photos->count();
+      $maxPage = 0;      
+      $pageRetrieved = 1;
+      $pageVisited = 0; 
+      $photosAll = 0;
+      $photosTotal = 0;
+      $photosPages = null;      
+      $haveSession = 0;
+      $pageLinked = 0;
+
+      if(Session::has('CurrPage') && Session::get('CurrPage')!= 1){ 
+          $pageRetrieved = Session::get('CurrPage');  
+          $haveSession = 1;   
+      }
 
       if($photos->count() != 0){          
-                $photosPages = Institution::paginatePhotosInstitution($id); 
-                $photosTotal = $photosPages->getTotal(); 
-                $maxPage = $photosPages->getLastPage(); 
-                
-                //$url = URL::to('/institutions/'.$id.'/allphotos'. '/paginate/other/photos/');                 
+          $photosPages = Institution::paginatePhotosInstitution($id); 
+          $photosTotal = $photosPages->getTotal(); 
+          //dd($photosPages);
+          //dd($photosTotal);
 
-                Session::put('last_paginate',
-                ['photos' => $photos,
-                'url' => $url,'photosTotal' => $photosTotal , 'maxPage' => $maxPage,
-                'photosAll' => $photosAll, 'page' => 1]); //, 'pageVisited'=> $pageVisited 
+          $maxPage = $photosPages->getLastPage(); 
+          $photosAll = $photos->count();
+          
+          //$url = URL::to('/institutions/'.$id.'/allphotos'. '/paginate/other/photos/');                 
+          $url = URL::to('/institutions/allphotos/paginate/other/photos/');
+                      //  /institutions/allphotos/paginate/other/photos/
+          ///search/paginate/other/photos
+          //$url = URL::to('/search'. '/paginate/other/photos/')
 
-                // if(Input::has('pg') && $haveSession != 0 ) { 
-                //     $pageVisited = 1; 
-                //     Session::forget('CurrPage');
-                // }
-            }else{                
-                Session::forget('last_search');
-                Session::forget('CurrPage');
-                Session::forget('paginationSession');
-            } 
+          Session::put('last_paginate',
+              ['photos' => $photos, 'url' => $url,'photosTotal' => $photosTotal , 'maxPage' => $maxPage,
+               'photosAll' => $photosAll, 'pageVisited'=> $pageVisited, 'page' => $pageRetrieved]);  
+
+          if($haveSession != 0 ) { 
+              $pageVisited = 1; 
+              Session::forget('CurrPage');
+          }      
+      }else{                
+            Session::forget('last_paginate');
+            Session::forget('CurrPage');
+            Session::forget('paginationSession');
+      } 
 
     return \View::make('images-institution',[ 'institution' => $institution, 
-                'institutionName' => $name_institution, 'photos' => $photos,                
-                'url' => $url,
+                'institutionName' => $name_institution, 'photos' => $photosPages,                
+                'url' => $url, 'page' => $pageRetrieved,
                 'photosTotal' => $photosTotal , 'maxPage' => $maxPage,
-                'photosAll' => $photosAll, 'id' => $id, 'page'=>1 ]);
+                'photosAll' => $photosAll, 'id' => $id,'pageVisited'=> $pageVisited ]);
   }
 
-  public function paginatePhotosResult() {
+  public function paginatePhotosInstitution() {
         
         if(Session::has('last_paginate')){
-            Log::info("si session fotos");
-            $lastSearch = Session::get('last_paginate');
-            $photos = $lastSearch['photos'];
+            Log::info("Passou");
+            $lastPaginate = Session::get('last_paginate');
+            $photos = $lastPaginate['photos'];
         }
         $institution = Input::has('inst') ? Input::get('inst') : ''; 
         
         $pagination = Institution::paginatePhotosInstitutionAll($photos);       
-
+        //Log::info("paginateRsp".$pagination);
         return $this->paginationResponseSearch($pagination, 'add');
     }
 
@@ -779,7 +807,7 @@ class InstitutionsController extends \BaseController {
         $count = $photos->getTotal();
         $perPage = $photos->getPerPage();
         $page = $photos->getCurrentPage();
-       Log::info("count====".$count);
+        Log::info("count====".$count);
        
         $fromPage = $photos->getFrom();         
         $toPage = $photos->getTo();

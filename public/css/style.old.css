@@ -894,3 +894,9 @@ div.draft { font-size: 14px !important; }
 #form_window_report input.submit:hover { background-position: -222px -216px; }
 
 #denounce_photo { display: block; width: 20px; height: 20px; margin-left: 4px; background-image: url('../img/i-denounce.png'); }
+
+ul.pagination li{ width: auto; float: left; height: 50px; line-height: 35px; list-style-type: none; margin-right: 8px; vertical-align: middle;}
+li.active{ color: #000; font-size: 15px; font-weight: bold;}
+ul.pagination li a { font-size: 14px; text-decoration: underline; }
+
+

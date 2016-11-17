@@ -71,7 +71,7 @@
       <div class="countside">Últimas imagens compartilhadas({{ count($photos) }})</div>
 	  
 	  <div class="count"><br><a href="{{ URL::to('/institutions/' . $institution->id . '/allphotos/') }}"
-              id="single_view_contact_add">Ver Todas</a><br /></div>
+              id="single_view_contact_add">Ver todas></a><br /></div>
 	  
     </div>
   </div>

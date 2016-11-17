@@ -106,6 +106,7 @@ class Institution extends \Eloquent {
 
 
 	public static function paginatePhotosInstitutionAll($photos,$perPage = 36 ) {
+			dd($photos); die();
 			$paginate = $photos->paginate($perPage);
 			return $paginate;
 	}
