@@ -61,7 +61,10 @@ class APIPhotosController extends \BaseController {
 
 			//if ( !empty($input["photo_aditionalImageComments"]) )
 	        //$photo->aditionalImageComments = $input["photo_aditionalImageComments"];
-	      	$photo->allowCommercialUses = $input["photo_allowCommercialUses"];
+	      	if($input["photo_allowCommercialUses"] == "true")
+	        	$photo->allowCommercialUses = true;
+	        else
+	        	$photo->allowCommercialUses = false;
 	        $photo->authorized = $input["authorized"];
 	        $photo->allowModifications = $input["photo_allowModifications"];
 	        if( !empty($input["photo_city"]) )
@@ -195,7 +198,11 @@ class APIPhotosController extends \BaseController {
 
 		//if ( !empty($input["photo_aditionalImageComments"]) )
         //$photo->aditionalImageComments = $input["photo_aditionalImageComments"];
-      	$photo->allowCommercialUses = $input["photo_allowCommercialUses"];
+        if($input["photo_allowCommercialUses"] == "true")
+        	$photo->allowCommercialUses = true;
+        else
+        	$photo->allowCommercialUses = false;
+      	
         $photo->authorized = $input["authorized"];
         $photo->allowModifications = $input["photo_allowModifications"];
         if( !empty($input["photo_city"]) )
