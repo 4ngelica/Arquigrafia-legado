@@ -253,12 +253,12 @@ class APIPhotosController extends \BaseController {
            $photo->workdate = NULL;
         }
 
-        if (Input::has('work_authors')){
+        if (\Input::has('work_authors')){
             $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
             $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
         }else $input["work_authors"] = ''; 
 
-        $author = new Author();
+        $author = new \Author();
         if (!empty($input["work_authors"])) {
             $author->saveAuthors($input["work_authors"],$photo);
         }
