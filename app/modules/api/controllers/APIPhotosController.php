@@ -2,16 +2,25 @@
 namespace modules\api\controllers;
 use Photo;
 use lib\log\EventLogger;
+use lib\date\Date;
 use modules\collaborative\models\Tag;
 use modules\institutions\models\Institution;
 
 class APIPhotosController extends \BaseController {
 
+
+	protected $date;
+
+	public function __construct(Date $date = null)
+	{
+	    $this->date = $date ?: new Date; 
+	}
 	/**
 	 * Display a listing of the resource.
 	 *
 	 * @return Response
 	 */
+
 	public function index()
 	{
 		return \Response::json(\Photo::where('draft', null)->get()->toArray());
