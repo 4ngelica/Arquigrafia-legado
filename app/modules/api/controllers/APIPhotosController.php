@@ -81,6 +81,30 @@ class APIPhotosController extends \BaseController {
 	          $photo->state = $input["photo_state"];
 	        if ( !empty($input["photo_street"]) )
 	          $photo->street = $input["photo_street"];
+
+	      	if(!empty($input["workDate"])){             
+               $photo->workdate = $input["workDate"];
+               $photo->workDateType = "year";
+           	}else{ 
+               $photo->workdate = NULL;
+            }
+
+            if (Input::has('work_authors')){
+	            $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
+	            $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
+	        }else $input["work_authors"] = ''; 
+
+            $author = new Author();
+            if (!empty($input["work_authors"])) {
+                $author->saveAuthors($input["work_authors"],$photo);
+            }
+
+           	if(!empty($input["photo_imageDate"])){             
+                $photo->dataCriacao = $this->date->formatDate($input["photo_imageDate"]);
+                $photo->imageDateType = "date";
+            }else{ 
+                $photo->dataCriacao = NULL;
+            } 
 	      	$photo->user_id = $input["user_id"];
 	      	$photo->dataUpload = date('Y-m-d H:i:s');
 	      	$photo->nome_arquivo = $file->getClientOriginalName();
@@ -221,6 +245,30 @@ class APIPhotosController extends \BaseController {
           $photo->street = $input["photo_street"];
       	$photo->user_id = $input["user_id"];
       	$photo->dataUpload = date('Y-m-d H:i:s');
+
+      	if(!empty($input["workDate"])){             
+               $photo->workdate = $input["workDate"];
+               $photo->workDateType = "year";
+       	}else{ 
+           $photo->workdate = NULL;
+        }
+
+        if (Input::has('work_authors')){
+            $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
+            $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
+        }else $input["work_authors"] = ''; 
+
+        $author = new Author();
+        if (!empty($input["work_authors"])) {
+            $author->saveAuthors($input["work_authors"],$photo);
+        }
+
+       	if(!empty($input["photo_imageDate"])){             
+            $photo->dataCriacao = $this->date->formatDate($input["photo_imageDate"]);
+            $photo->imageDateType = "date";
+        }else{ 
+            $photo->dataCriacao = NULL;
+        } 
 
       	$photo->touch();
 		$photo->save();
