@@ -103,6 +103,7 @@ class APIPhotosController extends \BaseController {
 	            $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
 	        }else $input["work_authors"] = ''; 
 
+	        
             $author = new \Author();
             if (!empty($input["work_authors"])) {
                 $author->saveAuthors($input["work_authors"],$photo);
@@ -266,19 +267,20 @@ class APIPhotosController extends \BaseController {
             $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
             $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
         }else $input["work_authors"] = ''; 
-
         $author = new \Author();
+      
         if (!empty($input["work_authors"])) {
-            $author->saveAuthors($input["work_authors"],$photo);
+            $author->updateAuthors($input["work_authors"],$photo);
+        }else{
+            $author->deleteAuthorPhoto($photo);
         }
 
-       	if(!empty($input["photo_imageDate"])){             
+       	if(!empty($input["photo_imageDate"])){                		   
             $photo->dataCriacao = $this->date->formatDate($input["photo_imageDate"]);
             $photo->imageDateType = "date";
         }else{ 
             $photo->dataCriacao = NULL;
         } 
-
       	$photo->touch();
 		$photo->save();
 
