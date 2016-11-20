@@ -99,6 +99,8 @@ class APIPhotosController extends \BaseController {
            	}else{ 
                $photo->workdate = NULL;
             }
+            $photo->save();
+            
             \Log::info("work author = ".$input["work_authors"]);
             if (\Input::has('work_authors')){
             	\Log::info("work_authors inside if");
