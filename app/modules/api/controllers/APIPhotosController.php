@@ -90,13 +90,8 @@ class APIPhotosController extends \BaseController {
 	          $photo->state = $input["photo_state"];
 	        if ( !empty($input["photo_street"]) )
 	          $photo->street = $input["photo_street"];
-
-	      	\Log::info("authorized = ".$input["authorized"]);
 	      	
-	      	if($input['authorized'] == false || $input['authorized'] == null)
-      			$photo->authorized = 0;
-      		else
-      			$photo->authorized = 1;
+      		$photo->authorized = $input["authorized"]
   			
 	      	if(!empty($input["workDate"])){  
                $photo->workdate = $input["workDate"];
