@@ -277,7 +277,19 @@ class APIPhotosController extends \BaseController {
            $photo->workdate = NULL;
         }
 
-        if (\Input::has('work_authors')){
+        
+
+       	if(!empty($input["photo_imageDate"])){                		   
+            $photo->dataCriacao = $this->date->formatDate($input["photo_imageDate"]);
+            $photo->imageDateType = "date";
+        }else{ 
+            $photo->dataCriacao = NULL;
+        } 
+      	$photo->touch();
+		$photo->save();
+
+
+		if (\Input::has('work_authors')){
             $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
             $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
         }else $input["work_authors"] = ''; 
@@ -288,15 +300,6 @@ class APIPhotosController extends \BaseController {
         }else{
             $author->deleteAuthorPhoto($photo);
         }
-
-       	if(!empty($input["photo_imageDate"])){                		   
-            $photo->dataCriacao = $this->date->formatDate($input["photo_imageDate"]);
-            $photo->imageDateType = "date";
-        }else{ 
-            $photo->dataCriacao = NULL;
-        } 
-      	$photo->touch();
-		$photo->save();
 
 		$tags = $input["tags"];
 		$tags_copy = "";
@@ -329,7 +332,7 @@ class APIPhotosController extends \BaseController {
 			$ext = $file->getClientOriginalExtension();
 	  		$photo->nome_arquivo = $photo->id.".".$ext;
 
-	  		$photo->save();
+	  		
 
 	  		$metadata       = \Image::make(\Input::file('photo'))->exif();
 		        // $public_image   = \Image::make(\Input::file('photo'))->rotate($angle)->encode('jpg', 80);
@@ -342,6 +345,7 @@ class APIPhotosController extends \BaseController {
 	        $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
 	        $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
 	        $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
+	        $photo->save();
 	    }
 
 	    EventLogger::printEventLogs($photo->id, 'edit', ['user' => $photo->user_id], 'mobile');
