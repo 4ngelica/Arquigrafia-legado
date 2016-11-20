@@ -74,7 +74,7 @@ class APIPhotosController extends \BaseController {
 	        	$photo->allowCommercialUses = 'YES';
 	        else
 	        	$photo->allowCommercialUses = 'NO';
-	        $photo->authorized = $input["authorized"];
+	        
 	        $photo->allowModifications = $input["photo_allowModifications"];
 	        if( !empty($input["photo_city"]) )
 	          $photo->city = $input["photo_city"];
@@ -92,7 +92,11 @@ class APIPhotosController extends \BaseController {
 	          $photo->street = $input["photo_street"];
 
 	      	\Log::info("authorized = ".$input["authorized"]);
-	      	$photo->authorized = $input["authorized"];
+	      	
+	      	if($input['authorized'] == false || $input['authorized'] == null)
+      			$photo->authorized = 0;
+      		else
+      			$photo->authorized = 1;
   			
 	      	if(!empty($input["workDate"])){  
                $photo->workdate = $input["workDate"];
