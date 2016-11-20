@@ -91,6 +91,11 @@ class APIPhotosController extends \BaseController {
 	        if ( !empty($input["photo_street"]) )
 	          $photo->street = $input["photo_street"];
 
+	      	if($input['authorized'] == true)
+	      		$photo->authorized = 1;
+	      	else
+	      		$photo->authorized = 0;
+
 	      	\Log::info("workDate = ".$input["workDate"]);
 	      	if(!empty($input["workDate"])){    
 	      	   \Log::info("workDate inside if");         
@@ -262,6 +267,11 @@ class APIPhotosController extends \BaseController {
           $photo->street = $input["photo_street"];
       	$photo->user_id = $input["user_id"];
       	$photo->dataUpload = date('Y-m-d H:i:s');
+
+      	if($input['authorized'] == true)
+      		$photo->authorized = 1;
+      	else
+      		$photo->authorized = 0;
 
       	if(!empty($input["workDate"])){             
                $photo->workdate = $input["workDate"];
