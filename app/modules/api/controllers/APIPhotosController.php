@@ -98,22 +98,8 @@ class APIPhotosController extends \BaseController {
                $photo->workDateType = "year";
            	}else{ 
                $photo->workdate = NULL;
-            }
-            $photo->save();
+            }            
             
-            \Log::info("work author = ".$input["work_authors"]);
-            if (\Input::has('work_authors')){
-            	\Log::info("work_authors inside if");
-	            $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
-	            $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
-	        }else $input["work_authors"] = ''; 
-
-	        
-            $author = new \Author();
-            if (!empty($input["work_authors"])) {
-            	\Log::info("is going to save work_authors inside if");
-                $author->saveAuthors($input["work_authors"],$photo);
-            }
             \Log::info("photo_imageDate = ".$input["photo_imageDate"]);
            	if(!empty($input["photo_imageDate"])){   
            		\Log::info("photo_imageDate inside if");          
@@ -127,6 +113,20 @@ class APIPhotosController extends \BaseController {
 	      	$photo->nome_arquivo = $file->getClientOriginalName();
 
 			$photo->save();
+
+			\Log::info("work author = ".$input["work_authors"]);
+
+            if (\Input::has('work_authors')){
+            	\Log::info("work_authors inside if");
+	            $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
+	            $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
+	        }else $input["work_authors"] = ''; 
+
+			$author = new \Author();
+            if (!empty($input["work_authors"])) {
+            	\Log::info("is going to save work_authors inside if");
+                $author->saveAuthors($input["work_authors"],$photo);
+            }
 
 			$tags = str_replace("\"", "", $input["tags"]);
 			$tags = str_replace("[", "", $tags);
