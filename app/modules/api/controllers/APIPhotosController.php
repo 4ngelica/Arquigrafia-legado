@@ -91,23 +91,22 @@ class APIPhotosController extends \BaseController {
 	        if ( !empty($input["photo_street"]) )
 	          $photo->street = $input["photo_street"];
 
+
 	      	if($input['authorized'] == true)
 	      		$photo->authorized = 1;
 	      	else
 	      		$photo->authorized = 0;
+	      	
+	      	if(!empty($input["workDate"])){  
 
-	      	\Log::info("workDate = ".$input["workDate"]);
-	      	if(!empty($input["workDate"])){    
-	      	   \Log::info("workDate inside if");         
                $photo->workdate = $input["workDate"];
                $photo->workDateType = "year";
            	}else{ 
                $photo->workdate = NULL;
             }            
             
-            \Log::info("photo_imageDate = ".$input["photo_imageDate"]);
-           	if(!empty($input["photo_imageDate"])){   
-           		\Log::info("photo_imageDate inside if");          
+            
+           	if(!empty($input["photo_imageDate"])){  
                 $photo->dataCriacao = $this->date->formatDate($input["photo_imageDate"]);
                 $photo->imageDateType = "date";
             }else{ 
@@ -119,17 +118,17 @@ class APIPhotosController extends \BaseController {
 
 			$photo->save();
 
-			\Log::info("work author = ".$input["work_authors"]);
+			
 
             if (\Input::has('work_authors')){
-            	\Log::info("work_authors inside if");
+            	
 	            $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
 	            $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
 	        }else $input["work_authors"] = ''; 
 
 			$author = new \Author();
             if (!empty($input["work_authors"])) {
-            	\Log::info("is going to save work_authors inside if");
+            	
                 $author->saveAuthors($input["work_authors"],$photo);
             }
 
