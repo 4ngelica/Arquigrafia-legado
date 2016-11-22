@@ -35,7 +35,7 @@ class APIUsersController extends \BaseController {
 	{
 		//Validação do input
 		$input = \Input::all();
-		$input = $input['data'];
+		//$input = $input['data'];
 		$rules = Array( 'name'     => 'required',
 						'email'    => 'required|email|unique:users',
 						'password' => 'required|min:6|',
