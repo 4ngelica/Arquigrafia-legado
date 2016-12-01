@@ -244,26 +244,28 @@ class Photo extends Eloquent {
 				if($i==0){
 					$similarPhotos = $arrayPhotosId;
 				}
-
+				
 			$similarPhotos = array_intersect($similarPhotos, $arrayPhotosId);
+
 			$i++;
 
 			}
 			//To remove repeted values
 			$similarPhotos = array_unique($similarPhotos);
 
-
-
 			//To obtain name of similarPhotos
 			foreach ($similarPhotos as $similarPhotosId ) {
-
-				$similarPhotosDB = DB::table('photos')
-				->select('id', 'name')
-				->where('id',$similarPhotosId )
-				->get();
-
-				array_push($arrayPhotosDB,$similarPhotosDB[0]);
-
+				//echo $similarPhotosId;
+				//echo "<br>";
+				$photoObj = Photo::where('id',$similarPhotosId)->whereNull('deleted_at')->first();
+				
+				if(!empty($photoObj) && !is_null($photoObj)){
+					$similarPhotosDB = DB::table('photos')
+					->select('id', 'name')
+					->where('id',$photoObj->id)				
+					->get();
+					array_push($arrayPhotosDB,$similarPhotosDB[0]);
+				} 			
 			}
 		}
 
