@@ -35,7 +35,7 @@ class APIUsersController extends \BaseController {
 	{
 		//Validação do input
 		$input = \Input::all();
-		//$input = $input['data'];
+		$input = $input['data'];
 		$rules = Array( 'name'     => 'required',
 						'email'    => 'required|email|unique:users',
 						'password' => 'required|min:6|',
@@ -57,6 +57,13 @@ class APIUsersController extends \BaseController {
 			$user->active = 'yes';
           	$user->verify_code = null;
           	$user->save();
+          	$email = $input["email"];
+
+          	\Mail::send('emails.users.welcome', array('name' => $input["name"], 'email' => $input["email"], 'login' => $input["login"]), 
+          function($msg) use($email) {
+            $msg->to($email)
+                ->subject('[Arquigrafia]- Cadastro de Usuário');
+        });
 
           	/* Registro de logs */
           	EventLogger::printEventLogs(null, "new_account", ["origin" => "Arquigrafia", "user" => $user->id], "mobile"); 
