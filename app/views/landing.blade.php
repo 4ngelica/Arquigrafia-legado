@@ -676,7 +676,8 @@
 					<div class="botao-refsite">
 							<a href="{{ URL::to("/home") }}" style="color:white;">{{ trans('landing.siteBtn')}}</a>
 					</div>
-					<div class="playstore">{{trans('landing.txtSoon')}}<img src="{{ asset('img/playstore.png')}}"></div>
+					<div class="playstore"><a href="https://play.google.com/store/apps/details?id=com.ionicframework.arquigrafiamobile302511" target="_blank"><img src="{{ asset('img/playstore.png')}}"></a>
+					</div>
 					</div>
 					
 
