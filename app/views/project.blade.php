@@ -15,17 +15,25 @@
         <!--   CONTEÚDO SOBRE O PROJETO   -->
         <h1>O Projeto</h1>
         
-        <p>O ARQUIGRAFIA é um ambiente colaborativo digital público, sem fins lucrativos, dedicado à difusão de imagens de arquitetura, com especial atenção à arquitetura brasileira. Este projeto é desenvolvido na Faculdade de Arquitetura e Urbanismo da Universidade de São Paulo (FAUUSP), em parceria com o Instituto de Matemática e Estatística (IMEUSP) e a Escola de Comunicação e Artes (ECAUSP). Abrigado desde 2012 no Núcleo de Apoio à Pesquisa em Ambientes Colaborativos na Web (NaWEB), o ARQUIGRAFIA recebeu ao longo de sua história apoio da RNP, da FAPESP, do CNPq e das Pró-Reitorias de Pesquisa e de Cultura e Extensão da USP. O objetivo principal deste projeto é contribuir para o estudo, a docência, a pesquisa e a difusão da cultura arquitetônica e urbanística, ao promover interações colaborativas entre pessoas e instituições na Internet.</p>
+        <p>A internet é comumente usada como espaço de pesquisa e trocas de conhecimento, é nesse contexto que surge o projeto Arquigrafia www.arquigrafia.org.br, um ambiente colaborativo de imagens de arquitetura na web. </p>
+        <p>Nesse espaço público, aberto e gratuito o Arquigrafia empreende a construção de uma coleção de imagens digitais de edifícios e espaços urbanos do Brasil e da comunidade lusófona, a partir da colaboração de usuários particulares - estudantes, arquitetos, pesquisadores, docentes, fotógrafos, leigos interessados no tema - e usuários institucionais: bibliotecas, museus, grupos de pesquisa, institutos públicos e privados.
+        </p>             
+        
+        <p>Nascido em 2008 na Universidade de São Paulo, na Faculdade de Arquitetura e Urbanismo (FAUUSP) como um projeto multidisciplinar em parceria com pesquisadores do Instituto de Matemática e Estatística (IMEUSP), da Escola de Comunicação e Artes (ECAUSP) e da Faculdade de Direito do Largo S.Francisco (FDUSP), o Arquigrafia tem como objetivo principal contribuir de maneira complementar para o ensino e difusão da cultura arquitetônica e urbanística por meio de interações e juízos críticos sobre imagens digitais.</p>
         <div class="project-photos clearfix">
         <img class="left" src="img/project_photos/equipe1.jpg" alt="Texto alternativo da foto" title="Reuniões e workshops internos dos membros do projeto Arquigrafia" />
         <img class="left" src="img/project_photos/equipe2.jpg" alt="Texto alternativo da foto" title="Reuniões e workshops internos dos membros do projeto Arquigrafia" />
         <img class="left" src="img/project_photos/equipe3.jpg" alt="Texto alternativo da foto" title="Reuniões e workshops internos dos membros do projeto Arquigrafia" />
         </div>
-        <p>Desde 2011 a equipe do projeto ARQUIGRAFIA realiza também um trabalho de conservação e digitalização do acervo original de imagens fotográficas do Setor Audiovisual da Biblioteca da FAU e solicita aos autores de imagens uma autorização específica para difusão de tais fotografias na Internet para fins acadêmicos e de difusão, voltados ao ensino e à pesquisa. Mais informações podem ser encontradas no <a href="https://issuu.com/arturrozestraten0/docs/manualarquigrafia_completo-final" target="_blank">MANUAL DE PROCEDIMENTOS TÉCNICOS</a>. </p>
-       
-        <p>O ARQUIGRAFIA recebeu o primeiro prêmio da Agência de Inovação USP na categoria de Tecnologias Sociais Aplicadas e Humanas em 2011. Em 2012 o projeto recebeu chancela do Ministério da Cultura por sua relevante contribuição à cultura brasileira. Em 2014 o ARQUIGRAFIA foi o projeto selecionado pelo Ministério da Cultura para representar o país na área de Arquitetura no Edital Cultura na Copa.</p>
-        
-        <p>A equipe do projeto trabalha neste momento para disponibilizar um aplicativo Android para acesso ao sistema via smartphones e tablets. Espera-se, assim, estimular os usuários – estudantes de arquitetura, professores, arquitetos, fotógrafos e demais interessados no assunto –, a navegar no acervo georeferenciado do ARQUIGRAFIA enquanto circulam pelas cidades, visualizando as imagens disponíveis, interagindo com outros usuários, e também colaborando para o crescimento contínuo do acervo sempre que enviarem suas próprias imagens para o sistema, com os direitos autorais preservados por licenças Creative Commons.</p>
+
+        <p>Desde então, com o apoio da RNP, FAPESP, do CNPq, das Pró-reitorias de Pesquisa e de Cultura e Extensão da USP e da Diretoria da FAUUSP o projeto se constitui em um laboratório de pesquisa para todas essas áreas de conhecimento, produzindo conhecimento, desenvolvendo tecnologia e fomentando pesquisas em nível de graduação e pós-graduação e formando jovens pesquisadores.</p>
+        <p>Online desde 2011, o  Arquigrafia é hoje um ambiente colaborativo temático com cerca de 10 mil imagens de arquiteturas e espaços urbanos, disponibilizadas para livre acesso, com direitos autorais protegidos por licenças Creative Commons. </p>
+        <p>Em parceria com a Seção de Material Iconográfico da Biblioteca da FAUUSP, a equipe do Arquigrafia desenvolve um intenso trabalho de conservação de material fotográfico original, digitalização e difusão web que faculta o acesso público e gratuito a um dos mais relevantes acervos de imagens fotográficas de arquitetura e urbanismo. Historicamente, o acervo também se constitui desde os anos 1960 de maneira colaborativa, com doações de estudantes, professores e pesquisadores.</p>
+        <p>Como reconhecimento dos esforços realizados, o Arquigrafia recebeu o primeiro prêmio na categoria “Tecnologias Sociais Aplicadas e Humanas” da Agência de Inovação USP em novembro de 2011; recebeu em 2013 uma chancela do Ministério da Cultura (MinC) pela relevância da iniciativa para a cultura brasileira e seu mapeamento, e foi o projeto selecionado no edital público “Cultura na Copa 2014” (MinC) na área de Arquitetura. </p>
+        <p>Para participar e colaborar com o Arquigrafia basta acessar o site, criar um login e começar a interagir com outros usuários e com um universo de imagens digitais originais e em boa parte inéditas. Cada imagem disponível no site está catalogada e georreferenciada, e é possível inserir comentários e registros de impressões sobre as características das arquiteturas e espaços urbanos representados. O site tem várias funcionalidades e, para usuários cadastrados, permite download de imagens em alta resolução.</p>
+        <p>Agora o Arquigrafia está acessível também como aplicativo Android para smartphones, o que possibilita colocar o sistema “na palma da mão” de quem circula pelas cidades. Com isso os usuários podem comparar as transformações que um edifício ou um trecho urbano sofreram no tempo, além de poder realizar novas fotografias in loco e subir suas contribuições com novas imagens também georreferenciadas no sistema. Novas versões futuras do aplicativo permitirão em breve configurar city tours e promover uma maior interação entre usuários diretamente nos ambientes urbanos.</p>
+
+
         <p>Saiba mais: <a href="http://nap.usp.br/naweb/?projetos=arquigrafia" target="_blank">nap.usp.br/naweb/?projetos=arquigrafia</a></p>
         
       </div>
@@ -57,11 +65,17 @@ lank">Profa. Dra. Cibele Araujo C. M. dos Santos- ECAUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/7471111924336519" target="_blank">Prof. Dr. Magnos Martinello - Informática UFES</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/3498148304153540" target="_blank">Prof. Dr. Juliano Maranhão - FDUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/0348490713417429" target="_blank">Profa. Dra. Leliane Nunes de Barros - IMEUSP</a></small></li>
-          <li><small><a href="http://lattes.cnpq.br/8548608291351316" target="_blank">Profa. Dra. Renata Wassermann - IMEUSP</a></small></li>          
-          <li><small><a href="http://www.usp.br/fau/fau/secoes/biblio/index.html" target="_blank">Dina Uliana - Diretora biblioteca FAUUSP</a></small></li>
+          <li><small><a href="http://lattes.cnpq.br/8548608291351316" target="_blank">Profa. Dra. Renata Wassermann - IMEUSP</a></small></li> 
+
+          <li><small><a href="http://www.usp.br/fau/fau/secoes/biblio/index.html" target="_blank">Amarílis M.G. Corrêa - Diretora biblioteca FAUUSP</a></small></li>
+
           <li><small><a href="http://lattes.cnpq.br/4131992141506749" target="_blank">Eliana de Azevedo Marques - Biblioteca FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/7542993440465891" target="_blank">Elizabete da Cruz Neves - Biblioteca FAUUSP</a></small></li>
           <li><small><a href="http://www.usp.br/fau/fau/secoes/biblio/index.html" target="_blank">Rejane Alves - Biblioteca FAUUSP</a></small></li>
+          <li><small><a href="http://www.usp.br/fau/fau/secoes/biblio/index.html" target="_blank">Giselle Ferreira Brito - Biblioteca FAUUSP</a></small></li>
+          <li><small><a href="http://www.usp.br/fau/fau/secoes/biblio/index.html" target="_blank">Leticia de A. Sampaio - Biblioteca FAUUSP</a></small></li>
+
+
           <li><small><a href="http://www.cristianomascaro.com.br/" target="_blank">Prof. Dr. Cristiano Mascaro - Consultor de fotografia</a></small></li>
           <li><small><a href="http://www2.nelsonkon.com.br/" target="_blank">Arq. Nelson Kon - Consultor de fotografia</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/9781300883115022" target="_blank">Arq. Rodrigo Luiz Minot Gutierrez - SENAC / UNIUBE</a></small></li>          
@@ -87,7 +101,7 @@ lank">Profa. Dra. Cibele Araujo C. M. dos Santos- ECAUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/3873062445569152" target="_blank">Victor Williams Stafusa da Silva – Mestre IMEUSP</a></small> </li>
         
           <li><small><a href="#" target="_blank">Amanda Stenghel - Graduada FAUUSP</a></small></li>
-          <li><small><a href="http://lattes.cnpq.br/5252662321991762" target="_blank">Ana Carolina Batista de Abreu Bernardo Pereira - Graduanda FAUUSP</a></small></li>
+          <li><small><a href="http://lattes.cnpq.br/5252662321991762" target="_blank">Ana Carolina B. de A. B. Pereira - Graduanda FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/6990273997861459" target="_blank">Ana Carolina Rodrigues Prado - Graduanda ECAUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/8774245848990982" target="_blank">Ana Clara de Souza Santana - Graduanda FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/0957536683446907" target="_blank">Ana Cláudia dos Santos Martins - Graduada ECAUSP</a></small></li>
@@ -104,13 +118,13 @@ lank">Profa. Dra. Cibele Araujo C. M. dos Santos- ECAUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/6605070572538127" target="_blank">Giuliano Salvatore Fiusa Magnelli - Graduando FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/5529848738416350" target="_blank">Guilherme A. Nogueira Cesar - Graduando FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/5810408155272985" target="_blank">Guilherme Dias - Graduando IMEUSP</a></small></li>          
-          <li><small><a href="#" target="_blank">Helena Laura Rissoni Bou Ghosson</a></small></li>
+          <li><small><a href="http://lattes.cnpq.br/8838443950268334" target="_blank">Helena Laura Rissoni Bou Ghosson - Graduanda FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/7968062612895669" target="_blank">Ilka Apocalypse Jóia Paulini - Graduanda FAUUSP</a></small></li>
           <li><small><a href="#" target="_blank">Isabella Mendonça - Graduanda IMEUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/8654048459213535" target="_blank">Izadora Feldner Graci - Graduanda ECAUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/7257576955528883" target="_blank">Jéssica Carvalho Silva - Graduanda FAUUSP</a></small></li>
           <li><small><a href="#" target="_blank">Jéssica Maria Neves Lúcio - Graduanda FAUUSP</a></small></li>
-          <li><small><a href="http://lattes.cnpq.br/1859317407982613" target="_blank">João Henrique Kersul Faria</a></small></li>
+          <li><small><a href="http://lattes.cnpq.br/1859317407982613" target="_blank">João Henrique Kersul Faria - Graduando PoliUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/7744501085310153" target="_blank">Joel Marques de Sousa – Graduando FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/1443121258201396" target="_blank">Juliana Alves Sumiya – Graduanda FAUUSP</a></smal></li>
           <li><small><a href="#" target="_blank">Karina Silva de Souza - Graduanda FAUUSP</a></small></li>
@@ -134,7 +148,7 @@ lank">Profa. Dra. Cibele Araujo C. M. dos Santos- ECAUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/6238515721855943" target="_blank">Tatiana Kuchar – Graduanda FAUUSP</a></small></li>
           <li><small><a href="http://lattes.cnpq.br/1506056214423087" target="_blank">Thaísa Peres Takeyama Miyahara – Graduanda FAUUSP</a></small></li>
           <li><small><a href="#" target="_blank">Valdeci Antônio dos Santos - Graduando ECAUSP</a></small></li>
-          <li><small><a href="http://lattes.cnpq.br/42513603" target="_blank">Victor Luís Vital Martins - Graduando FAUUSP</a></small></li>
+          <li><small><a href="http://lattes.cnpq.br/4251360309382055" target="_blank">Victor Luís Vital Martins - Graduando FAUUSP</a></small></li>
         </ul>
         <br>
         
