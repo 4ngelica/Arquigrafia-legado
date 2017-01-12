@@ -39,7 +39,9 @@ class Photo extends Eloquent {
 		'state',
 		'street',
 		'tombo',
+		'type',
 		'user_id',
+		'video',
 		'workAuthor',
 		'workdate',
 	];
@@ -114,6 +116,20 @@ class Photo extends Eloquent {
 	public function evaluators()
 	{
 		return $this->belongsToMany('User', 'binomial_evaluation');
+	}
+
+	public static function extractVideoId($url){
+		$array1 = explode("://", $url);
+		$array2 = explode("/", $array1[count($array1) - 1]);
+		if( strpos($array2[1], 'watch') !== false){
+			//tem watch
+			$array3 = explode("=", $array2[1]);
+			$array4 = explode("&", $array3[1]);
+			return $array4[0];
+		} else {
+			$array3 = explode("?", $array2[1]);
+			return $array3[0];
+		}
 	}
 
 	public function saveMetadata($originalFileExtension, $metadata)

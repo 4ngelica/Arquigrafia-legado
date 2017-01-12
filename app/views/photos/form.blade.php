@@ -102,6 +102,8 @@
     {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
     <br></br>
     <div class="error">{{ $errors->first('photo') }}</div>
+    <div class="two columns alpha">{{ Form::label('video', 'Vídeo:') }}</div>
+    <div class="two columns omega"><p>{{ Form::text('video') }}</p></div>
     </p>
     </div>
     <br>
@@ -162,6 +164,22 @@
     </div>
     <div class="five columns alpha">
     <textarea name="tags" id="tags" cols="60" rows="1" style="display: none;"></textarea>
+    </div>
+    </td>
+    </tr>
+    <tr>
+    <td>
+    <div class="four columns alpha" id="media_type">
+    Tipo de Mídia:
+    <br>
+    <div class="form-row">
+    <input type="radio" name="type" value="photo" id="type_photo" checked="checked">
+    <label for="type_photo">Foto</label><br class="clear">
+    </div>
+    <div class="form-row">
+    <input type="radio" name="type" value="video" id="type_video">
+    <label for="type_video">Vídeo</label><br class="clear">
+    </div>
     </div>
     </td>
     </tr>

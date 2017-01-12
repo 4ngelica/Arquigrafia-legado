@@ -208,16 +208,19 @@ class PhotosController extends \BaseController {
         'photo_name' => 'required',
         'photo_imageAuthor' => 'required',
         'tags' => 'required',
+        'type' => 'required',
         'photo_country' => 'required',  
         'photo_authorization_checkbox' => 'required',
-        'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',    
-        'photo_imageDate' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/'
+        'photo' => 'max:10240|required_without_all:video|mimes:jpeg,jpg,png,gif',    
+        'photo_imageDate' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
+        'video' => 'required_without_all:photo'
       );
 
       $validator = Validator::make($input, $rules);
 
       if ($validator->fails()) {
           $messages = $validator->messages();
+          dd('foi aqui');
 
           return Redirect::to('/photos/upload')->with(['tags' => $input['tags'],
           'decadeInput'=>$input["decade_select"],
@@ -228,7 +231,7 @@ class PhotosController extends \BaseController {
           ])->withErrors($messages);
       } else {
 
-        if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
+        if ( ( Input::hasFile('photo') and Input::file('photo')->isValid() ) || !empty($input["video"]) ) {
             $file = Input::file('photo');
             $photo = new Photo();
 
@@ -238,8 +241,11 @@ class PhotosController extends \BaseController {
             $photo->allowModifications = $input["photo_allowModifications"];
             $photo->city = $input["photo_city"];
             $photo->country = $input["photo_country"];
+            $photo->type = $input["type"];
             if ( !empty($input["photo_description"]) )
                 $photo->description = $input["photo_description"];
+            if ( !empty($input["video"]) )
+                $photo->video = $input["video"];
             if ( !empty($input["photo_district"]) )
                 $photo->district = $input["photo_district"];
             if ( !empty($input["photo_imageAuthor"]) )
@@ -275,7 +281,7 @@ class PhotosController extends \BaseController {
                 $photo->dataCriacao = NULL;
             }      
       
-            $photo->nome_arquivo = $file->getClientOriginalName();
+            
 
             $photo->user_id = Auth::user()->id;
             $photo->dataUpload = date('Y-m-d H:i:s');
@@ -295,8 +301,7 @@ class PhotosController extends \BaseController {
             } elseif ( !empty($input["photo_album"]) ) {
                 DB::insert('insert into album_elements (album_id, photo_id) values (?, ?)', array($input["photo_album"], $photo->id));
             }
-            $ext = $file->getClientOriginalExtension();  
-            Photo::fileNamePhoto($photo, $ext);    
+            
 
             $tags = explode(',', $input['tags']);
           
@@ -321,21 +326,32 @@ class PhotosController extends \BaseController {
             EventLogger::printEventLogs($photo->id, 'upload', NULL,'Web');
             EventLogger::printEventLogs($photo->id, 'insert_tags', $eventContent,'Web');
 
-            if(array_key_exists('rotate', $input))
-              $angle = (float)$input['rotate'];
-            else
-              $angle = 0;
-            $metadata       = Image::make(Input::file('photo'))->exif();
-            $public_image   = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80);
-            $original_image = Image::make(Input::file('photo'))->rotate($angle);
+            if($input["type"] == "photo") {
+              $photo->nome_arquivo = $file->getClientOriginalName();
+              $ext = $file->getClientOriginalExtension();  
+              Photo::fileNamePhoto($photo, $ext);    
 
-            $public_image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
-            $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg');
-            $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
-            $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
-            $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
+              if(array_key_exists('rotate', $input))
+                $angle = (float)$input['rotate'];
+              else
+                $angle = 0;
+              $metadata       = Image::make(Input::file('photo'))->exif();
+              $public_image   = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80);
+              $original_image = Image::make(Input::file('photo'))->rotate($angle);
 
-            $photo->saveMetadata(strtolower($ext), $metadata);
+              $public_image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
+              $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg');
+              $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
+              $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
+              $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
+
+              $photo->saveMetadata(strtolower($ext), $metadata);
+            } else {
+              $videoUrl = $input['video'];
+              $photo->video = Photo::extractVideoId($videoUrl);
+              $photo->nome_arquivo = "https://img.youtube.com/vi" . $photo->video . "/sddefault.jpg";
+            }
+            $photo->save();
             $input['photoId'] = $photo->id;
             $input['dates'] = true;
             $input['dateImage'] = true;
