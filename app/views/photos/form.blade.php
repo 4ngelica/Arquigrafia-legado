@@ -89,7 +89,7 @@
     {{ Form::open(array('url'=>'photos', 'files'=> true)) }}
     <div class="twelve columns row step-1">
     <h1><span class="step-text">Upload</span></h1>
-    <div class="four columns alpha">
+    <div id="divPhoto" class="four columns alpha">
     <img src="" id="preview_photo">
     <div id="image_rotate" style="display:none;">
     <br></br>
@@ -102,9 +102,12 @@
     {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
     <br></br>
     <div class="error">{{ $errors->first('photo') }}</div>
+    
+    </p>
+    </div>
+    <div id="divVideo" class="twelve columns alpha">
     <div class="two columns alpha">{{ Form::label('video', 'Vídeo:') }}</div>
     <div class="two columns omega"><p>{{ Form::text('video') }}</p></div>
-    </p>
     </div>
     <br>
     </div>
@@ -424,6 +427,18 @@
     
     <script type="text/javascript">
     $(document).ready(function() {
+        $('input[type=radio][name=type][value=photo]').prop("checked", true);
+        $('#divVideo').hide();
+        $('input[type=radio][name=type]').change(function(){
+            if(this.value == "video"){
+                $('#divVideo').show();
+                $('#divPhoto').hide();
+            } if(this.value == "photo") {
+                $('#divVideo').hide();
+                $('#divPhoto').show();
+            }
+        });
+
         if({{Input::old('autoOpenModal','false')}}){    
             $( "#dialog-confirm" ).html("<b>Cadastro de imagem realizado com sucesso!</b> <br><br> Gostaria de utilizar os dados da imagem cadastrada para o próximo upload?");
             $( "#dialog-confirm" ).dialog({

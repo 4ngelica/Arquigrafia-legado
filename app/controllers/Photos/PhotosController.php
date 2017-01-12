@@ -348,8 +348,9 @@ class PhotosController extends \BaseController {
               $photo->saveMetadata(strtolower($ext), $metadata);
             } else {
               $videoUrl = $input['video'];
-              $photo->video = Photo::extractVideoId($videoUrl);
-              $photo->nome_arquivo = "https://img.youtube.com/vi" . $photo->video . "/sddefault.jpg";
+              $videoUrl = Photo::extractVideoId($videoUrl);
+              $photo->video = "https://youtube.com/embed/" . $videoUrl;
+              $photo->nome_arquivo = "https://img.youtube.com/vi" . $videoUrl . "/sddefault.jpg";
             }
             $photo->save();
             $input['photoId'] = $photo->id;

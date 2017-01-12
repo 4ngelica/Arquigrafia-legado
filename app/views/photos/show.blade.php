@@ -115,11 +115,15 @@
         <!--   FIM - NOME / STATUS DA FOTO   -->
 
         <!--   FOTO   -->
-        <a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photos->id."_view.jpg" }}"
+        @if ($photos->type == 'photo')
+          <a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photos->id."_view.jpg" }}"
           title="{{ $photos->name }}" >
+        @else
+          <iframe width="560" height="315" src="{{$photos->video}}" frameborder="0" allowfullscreen></iframe>
           <img <?php if (/*!$photos->authorized*/false) echo "oncontextmenu='return false'"?> class="single_view_image" style=""
             src="{{ URL::to("/arquigrafia-images")."/".$photos->id."_view.jpg" }}" />
         </a>
+        @endif
       </div>
 
       <!--   BOX DE BOTOES DA IMAGEM   -->
