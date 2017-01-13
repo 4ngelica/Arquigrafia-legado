@@ -619,7 +619,7 @@ class PhotosController extends \BaseController {
           $public_image   = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80);
           $original_image = Image::make(Input::file('photo'))->rotate($angle);
           $create = true;
-        }else {
+        }elseif ($input["type"] == "photo")) {
           list($photo_id, $ext) = explode(".", $photo->nome_arquivo);
           $path                 = storage_path().'/original-images/'.$photo->id.'_original.'.$ext;          
           $metadata             = Image::make($path)->exif();

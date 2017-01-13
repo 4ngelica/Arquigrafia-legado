@@ -20,10 +20,16 @@
 			<!-- <p>{{-- $page --}}</p> -->
 			<input type="hidden" id="pageCur" value="{{$page}}">
 			<a class="hovertext" href='{{ URL::to("/photos/{$photo->id}") }}' class="gallery_photo2" title="{{ $photo->name }}">
+			@if ($photo->type == "video")
 			<img 
-			class="gallery_photo2" class="cls_image_search"  src="{{ URL::to('/arquigrafia-images/' . $photo->id . '_home.jpg') }}"
-				class="img_photo {{ $position }}" data-id="{{ $photo->id }}"
-				 >
+				class="gallery_photo2" class="cls_image_search"  src="{{ $photo->nome_arquivo }}"
+				class="img_photo {{ $position }}" data-id="{{ $photo->id }}">
+			@else
+				<img 
+				class="gallery_photo2" class="cls_image_search"  src="{{ URL::to('/arquigrafia-images/' . $photo->id . '_home.jpg') }}"
+					class="img_photo {{ $position }}" data-id="{{ $photo->id }}"
+					 >
+			@endif
 			</a>	
 
 		    
