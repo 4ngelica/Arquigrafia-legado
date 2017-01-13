@@ -121,13 +121,13 @@ class Photo extends Eloquent {
 	public static function extractVideoId($url){
 		$array1 = explode("://", $url);
 		$array2 = explode("/", $array1[count($array1) - 1]);
-		if( strpos($array2[1], 'watch') !== false){
+		if( strpos($array2[count($array2) - 1], 'watch') !== false){
 			//tem watch
-			$array3 = explode("=", $array2[1]);
+			$array3 = explode("=", $array2[count($array2) - 1]);
 			$array4 = explode("&", $array3[1]);
 			return $array4[0];
 		} else {
-			$array3 = explode("?", $array2[1]);
+			$array3 = explode("?", $array2[count($array2) - 1]);
 			return $array3[0];
 		}
 	}

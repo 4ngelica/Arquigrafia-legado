@@ -582,6 +582,7 @@ class PhotosController extends \BaseController {
           $photo->nome_arquivo = $photo->id.".".$ext;
         } elseif ($input["type"] == "video") {
           $videoUrl = $input['video'];
+          $videoUrl = Photo::extractVideoId($videoUrl);
           $photo->video = "https://youtube.com/embed/" . $videoUrl;
           $photo->nome_arquivo = "https://img.youtube.com/vi" . $videoUrl . "/sddefault.jpg";
         }
@@ -610,6 +611,7 @@ class PhotosController extends \BaseController {
             $author->deleteAuthorPhoto($photo);
         }
 
+        $create = false;
         if (Input::hasFile('photo') and Input::file('photo')->isValid() and $input["type"] == "photo") {
           if(array_key_exists('rotate', $input))
               $angle = (float)$input['rotate'];
@@ -619,7 +621,7 @@ class PhotosController extends \BaseController {
           $public_image   = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80);
           $original_image = Image::make(Input::file('photo'))->rotate($angle);
           $create = true;
-        }elseif ($input["type"] == "photo")) {
+        }elseif ($input["type"] == "photo") {
           list($photo_id, $ext) = explode(".", $photo->nome_arquivo);
           $path                 = storage_path().'/original-images/'.$photo->id.'_original.'.$ext;          
           $metadata             = Image::make($path)->exif();
@@ -639,12 +641,13 @@ class PhotosController extends \BaseController {
             $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
             $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
             $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
+            $photo->saveMetadata(strtolower($ext), $metadata);
         }
         $eventContent["tags"] = $input['tags'];
         EventLogger::printEventLogs($id, 'edit_photo', null, 'Web');
         EventLogger::printEventLogs($id, 'edit_tags', $eventContent, 'Web');
 
-        $photo->saveMetadata(strtolower($ext), $metadata);
+        
 
         
         return Redirect::to("/photos/{$photo->id}")->with('message', '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso');

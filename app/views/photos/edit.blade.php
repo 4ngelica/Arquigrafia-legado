@@ -92,7 +92,7 @@
         </div>  
         <div id="divVideo" class="twelve columns alpha">
           <div class="two columns alpha">{{ Form::label('video', 'Vídeo:') }}</div>
-          <div class="two columns omega"><p>{{ Form::text('video') }}</p></div>
+          <div class="two columns omega"><p>{{ Form::text('video', $photo->video) }}</p></div>
         </div>
       </div> 
 
@@ -159,12 +159,14 @@
                   Tipo de Mídia:
                   <br>
                   <div class="form-row">
-                    <input type="radio" name="type" value="photo" id="type_photo" checked="checked">
+                    <input type="radio" name="type" value="photo" id="type_photo" checked="checked" 
+                      {{$photo->type == 'photo' ? "checked" : ""}}>
+                      {{$photo->type == NULL ? "checked" : ""}}
                     <label for="type_photo">Foto</label><br class="clear">
                   </div>
                   <div class="form-row">
-                    <input type="radio" name="type" value="video" id="type_video">
-                    <label for="type_video">Vídeo</label><br class="clear">
+                    <input type="radio" name="type" value="video" id="type_video" {{$photo->type == 'video' ? "checked" : ""}}>
+                    <label for="type_video">Vídeo</label><br class="clear" >
                   </div>
                 </div>
               </td>
