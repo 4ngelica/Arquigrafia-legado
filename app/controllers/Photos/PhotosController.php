@@ -220,7 +220,6 @@ class PhotosController extends \BaseController {
 
       if ($validator->fails()) {
           $messages = $validator->messages();
-          dd('foi aqui');
 
           return Redirect::to('/photos/upload')->with(['tags' => $input['tags'],
           'decadeInput'=>$input["decade_select"],
@@ -513,6 +512,7 @@ class PhotosController extends \BaseController {
         'photo_name' => 'required',
         'photo_imageAuthor' => 'required',
         'tags' => 'required',
+        'type' => 'required',
         'photo_country' => 'required',
         'photo_imageDate' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
         'photo' => 'max:10240|mimes:jpeg,jpg,png,gif'
@@ -540,14 +540,14 @@ class PhotosController extends \BaseController {
         $photo->allowModifications = $input["photo_allowModifications"];
         $photo->city = $input["photo_city"];
         $photo->country = $input["photo_country"];
+        $photo->type = $input["type"];
         $photo->description = $input["photo_description"];
         $photo->district = $input["photo_district"];
         $photo->imageAuthor = $input["photo_imageAuthor"];
         $photo->name = $input["photo_name"];
         $photo->state = $input["photo_state"];
         $photo->street = $input["photo_street"];
-    
-      
+
         if(!empty($input["workDate"])){             
             $photo->workdate = $input["workDate"];
             $photo->workDateType = "year";
@@ -576,10 +576,14 @@ class PhotosController extends \BaseController {
         }  
 
 
-        if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
+        if (Input::hasFile('photo') and Input::file('photo')->isValid() and $input["type"] == "photo") {
           $file = Input::file('photo');
           $ext = $file->getClientOriginalExtension();
           $photo->nome_arquivo = $photo->id.".".$ext;
+        } elseif ($input["type"] == "video") {
+          $videoUrl = $input['video'];
+          $photo->video = "https://youtube.com/embed/" . $videoUrl;
+          $photo->nome_arquivo = "https://img.youtube.com/vi" . $videoUrl . "/sddefault.jpg";
         }
         //update o field update_at
         $photo->touch();
@@ -606,7 +610,7 @@ class PhotosController extends \BaseController {
             $author->deleteAuthorPhoto($photo);
         }
 
-        if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
+        if (Input::hasFile('photo') and Input::file('photo')->isValid() and $input["type"] == "photo") {
           if(array_key_exists('rotate', $input))
               $angle = (float)$input['rotate'];
           else
