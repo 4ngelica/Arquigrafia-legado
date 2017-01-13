@@ -338,7 +338,7 @@
   </div>
   <script type="text/javascript">
     $(document).ready(function() {
-      if( $('input[type=radio][name=type]').value == "video" ){
+      if( $('#type_video').prop("checked", true ) ){
         $('#divVideo').show();
         $('#divPhoto').hide();
       } else {
