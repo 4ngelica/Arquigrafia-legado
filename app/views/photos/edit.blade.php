@@ -353,7 +353,7 @@
     $(document).ready(function() {
       var typeSaved  = "{{ $type }}";
       var typeChecked  = "{{Input::old('type')}}";
-      alert(typeChecked);
+      
       if(typeChecked == null || typeChecked == ""){
           if(typeSaved == "photo" ){               
               document.getElementById('type_photo').checked = true;           
@@ -380,14 +380,6 @@
       }
       
 
-
-      // if( $('#type_video').prop("checked", true ) ){
-      //   $('#divVideo').show();
-      //   $('#divPhoto').hide();
-      // } else {
-      //   $('#divVideo').hide();
-      //   $('#divPhoto').show();
-      // }
       $('input[type=radio][name=type]').change(function(){
         if(this.value == "video"){
           $('#divVideo').show();
