@@ -66,7 +66,20 @@
       
       <div class="twelve columns row step-1">
       	<h1><span class="step-text">Edição de informações da imagem {{$photo->name}}</span></h1>
-        
+        <div class="eleven columns alpha" id="media_type">
+                  
+                  <br>
+                  <div class="form-row">
+                    <input type="radio" name="type" value="photo" id="type_photo" checked="checked" 
+                      {{$photo->type == 'photo' ? "checked" : ""}}>
+                      {{$photo->type == NULL ? "checked" : ""}}
+                    <label for="type_photo">Foto</label><br class="clear">
+                  </div>
+                  <div class="form-row">
+                    <input type="radio" name="type" value="video" id="type_video" {{$photo->type == 'video' ? "checked" : ""}}>
+                    <label for="type_video">Vídeo</label><br class="clear" >
+                  </div>
+                </div>
         <div id="divPhoto" class="four columns alpha">
             <a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" >
             <img id="old_image" class="single_view_image" style="" src="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" />
@@ -83,6 +96,7 @@
             <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), -Math.PI/2);">Girar 90° para esquerda</a>
             <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), Math.PI/2);">Girar 90° para direita</a>
           </div>
+
           <p>
             {{ Form::label('photo','Alterar imagem:') }} 
             {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
@@ -90,10 +104,22 @@
             <div class="error">{{ $errors->first('photo') }}</div>
           </p>
         </div>  
+
         <div id="divVideo" class="twelve columns alpha">
-          <div class="two columns alpha">{{ Form::label('video', 'Vídeo:') }}</div>
-          <div class="two columns omega"><p>{{ Form::text('video', $photo->video) }}</p></div>
-        </div>
+        </br>  
+        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube:') }}</div>          
+        
+        <p>{{ Form::text('video', $video, array('id' => 'video','style'=>'width:280px')) }} <br> 
+            <div class="error">{{ $errors->first('video') }}</div>
+        </p>
+        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            Ex. https://www.youtube.com/watch?v=XXXXXXXX</p>
+    </div>
+
+
       </div> 
 
       
@@ -155,20 +181,7 @@
             </tr>
             <tr>
               <td>
-                <div class="four columns alpha" id="media_type">
-                  Tipo de Mídia:
-                  <br>
-                  <div class="form-row">
-                    <input type="radio" name="type" value="photo" id="type_photo" checked="checked" 
-                      {{$photo->type == 'photo' ? "checked" : ""}}>
-                      {{$photo->type == NULL ? "checked" : ""}}
-                    <label for="type_photo">Foto</label><br class="clear">
-                  </div>
-                  <div class="form-row">
-                    <input type="radio" name="type" value="video" id="type_video" {{$photo->type == 'video' ? "checked" : ""}}>
-                    <label for="type_video">Vídeo</label><br class="clear" >
-                  </div>
-                </div>
+                
               </td>
             </tr>
           </table>
@@ -338,13 +351,43 @@
   </div>
   <script type="text/javascript">
     $(document).ready(function() {
-      if( $('#type_video').prop("checked", true ) ){
-        $('#divVideo').show();
-        $('#divPhoto').hide();
-      } else {
-        $('#divVideo').hide();
-        $('#divPhoto').show();
+      var typeSaved  = "{{ $type }}";
+      var typeChecked  = "{{Input::old('type')}}";
+      alert(typeChecked);
+      if(typeChecked == null || typeChecked == ""){
+          if(typeSaved == "photo" ){               
+              document.getElementById('type_photo').checked = true;           
+              $('#divVideo').hide();
+              $('#divPhoto').show();
+          }else{
+              document.getElementById('type_video').checked = true;
+                  $('#divVideo').show();
+                  $('#divPhoto').hide();            
+          }
+      }else{
+        //checkado
+        if(typeChecked == "video" ){               
+                document.getElementById('type_video').checked = true;
+                $('#divVideo').show();
+                $('#divPhoto').hide();
+        }else{
+            document.getElementById('type_photo').checked = true;
+            document.getElementById('video').value = null;
+            $('#divVideo').hide();
+            $('#divPhoto').show();
+            
+        }
       }
+      
+
+
+      // if( $('#type_video').prop("checked", true ) ){
+      //   $('#divVideo').show();
+      //   $('#divPhoto').hide();
+      // } else {
+      //   $('#divVideo').hide();
+      //   $('#divPhoto').show();
+      // }
       $('input[type=radio][name=type]').change(function(){
         if(this.value == "video"){
           $('#divVideo').show();
@@ -381,7 +424,7 @@
             $work_authors = explode (";", Input::old('work_authors')); ?>
         @endif
         
-        @if (isset($work_authors) && $work_authors != null)
+        @if (isset($work_authors) && $work_authors != null && !empty($work_authors))
                               // console.log("AC = "+ auth);
             @foreach ( $work_authors as $work_author )
                 $('#work_authors').textext()[0].tags().addTags([ {{ '"' . $work_author . '"' }} ]);

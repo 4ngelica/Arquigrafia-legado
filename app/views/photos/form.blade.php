@@ -118,9 +118,7 @@
     </div>
     <div id="divVideo" class="twelve columns alpha">
         </br>  
-        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube:') }}</div>
-        <!--<div class="two columns omega"><p>{{ Form::text('video') }}</p></div>-->        
-        
+        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube:') }}</div>      
         <p>{{ Form::text('video', $video, array('id' => 'video','style'=>'width:280px')) }} <br>   
                 
             <div class="error">{{ $errors->first('video') }}</div>
@@ -443,12 +441,8 @@
         
         var typeChecked  = "{{Input::old('type')}}";
 
-        //alert(typeChecked);
-      //  $('input[type=radio][name=type][value=photo]').prop("checked", true);
-      //  $('#divVideo').hide();
-        //alert(document.getElementById('type_video').checked);
-        if(typeChecked == "video" ){
-                //alert("pas");
+        
+        if(typeChecked == "video" ){               
                 document.getElementById('type_video').checked = true;
                 $('#divVideo').show();
                 $('#divPhoto').hide();
@@ -457,15 +451,7 @@
             document.getElementById('video').value = null;
             $('#divVideo').hide();
             $('#divPhoto').show();
-             /*if(document.getElementById('type_video').checked ) {
-                alert("video");
-                $('#divVideo').show();
-                $('#divPhoto').hide();
-            }else if(document.getElementById('type_photo').checked ) {
-                alert("photo");
-                $('#divVideo').hide();
-                $('#divPhoto').show();
-            }*/
+            
         }
 
        
@@ -479,20 +465,6 @@
                 $('#divPhoto').show();
             }
         });
-        
-        /*
-            var videoChecked = "<?php echo $video?>";
-        alert(videoChecked);
-        if(videoChecked != null && videoChecked != "" ){
-            alert("no");
-             $('#divVideo').show();
-             $('#divPhoto').hide();
-        }else{
-            alert("sim");
-            $('#divVideo').hide();
-            $('#divPhoto').show();
-        }
-        */
 
 
         if({{Input::old('autoOpenModal','false')}}){    
