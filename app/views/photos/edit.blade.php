@@ -159,9 +159,9 @@
                   Tipo de Mídia:
                   <br>
                   <div class="form-row">
-                    <input type="radio" name="type" value="photo" id="type_photo" checked="checked" 
-                      {{$photo->type == 'photo' ? "checked" : ""}}>
-                      {{$photo->type == NULL ? "checked" : ""}}
+                    <input type="radio" name="type" value="photo" id="type_photo"
+                      {{$photo->type == 'photo' ? "checked" : ""}}
+                      {{$photo->type == NULL ? "checked" : ""}}>
                     <label for="type_photo">Foto</label><br class="clear">
                   </div>
                   <div class="form-row">
@@ -338,13 +338,13 @@
   </div>
   <script type="text/javascript">
     $(document).ready(function() {
-      if( $('#type_video').prop("checked", true ) ){
+      @if ($photo->type == 'video')
         $('#divVideo').show();
         $('#divPhoto').hide();
-      } else {
+      @else
         $('#divVideo').hide();
         $('#divPhoto').show();
-      }
+      @endif
       $('input[type=radio][name=type]').change(function(){
         if(this.value == "video"){
           $('#divVideo').show();
