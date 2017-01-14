@@ -182,7 +182,9 @@ class PhotosController extends \BaseController {
       'autoOpenModal'=>$input['autoOpenModal'],
       'dates' => $dates,
       'dateImage' => $dateImage,
-      'work_authors'=>$work_authors   
+      'work_authors'=>$work_authors,
+      'type' => null,
+      'video'=> null  
       ]);
 
   }
@@ -203,7 +205,7 @@ class PhotosController extends \BaseController {
           $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
       }else $input["work_authors"] = '';
  
-  
+      $regexYoutube = '/^https:\/\/www\.youtube\.com\/(embed\/|watch\?v=)\S+$/';
       $rules = array(
         'photo_name' => 'required',
         'photo_imageAuthor' => 'required',
@@ -213,20 +215,27 @@ class PhotosController extends \BaseController {
         'photo_authorization_checkbox' => 'required',
         'photo' => 'max:10240|required_without_all:video|mimes:jpeg,jpg,png,gif',    
         'photo_imageDate' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
-        'video' => 'required_without_all:photo'
+        //'video' => 'required_without_all:photo',
+        'video' => array('regex:'.$regexYoutube,'required_without_all:photo')
       );
+
+      if($input["type"] == "photo"){       
+        $input["video"] = null;
+      }
 
       $validator = Validator::make($input, $rules);
 
       if ($validator->fails()) {
           $messages = $validator->messages();
-
+          
           return Redirect::to('/photos/upload')->with(['tags' => $input['tags'],
           'decadeInput'=>$input["decade_select"],
           'centuryInput'=>$input["century"],
           'decadeImageInput'=>$input["decade_select_image"],
           'centuryImageInput'=>$input["century_image"] ,
-          'work_authors'=>$input["work_authors"]     
+          'work_authors'=>$input["work_authors"],
+          'type'=> $input["type"],
+          'video' => $input["video"]     
           ])->withErrors($messages);
       } else {
 
@@ -456,7 +465,6 @@ class PhotosController extends \BaseController {
          $centuryImageInput = $photo->dataCriacao;
       }
       
-
       return View::make('photos.edit')
         ->with(['photo' => $photo, 'tags' => $tags,
             'dateYear' => $dateYear,
@@ -464,7 +472,9 @@ class PhotosController extends \BaseController {
             'decadeInput' =>  $decadeInput,
             'centuryImageInput'=> $centuryImageInput,
             'decadeImageInput' =>  $decadeImageInput,
-            'work_authors' => $work_authors
+            'work_authors' => $work_authors,
+            'type' => $photo->type,
+            'video' => $photo->video
           ] );
     }
     return Redirect::action('PagesController@home');
@@ -480,11 +490,14 @@ class PhotosController extends \BaseController {
       else
         $input["tags"] = '';
 
-      if (Input::has('work_authors')){
+      
+      Log::info("auth =>".$input["work_authors"] );
+      if (Input::has('work_authors') && !empty($input["work_authors"])){
+        
         $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
         $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
       }else  $input["work_authors"] = '';
-    
+      
       $workDate = "";
       $decadeInput = "";
       $centuryInput = "";
@@ -508,6 +521,7 @@ class PhotosController extends \BaseController {
          $centuryInput = $input["century"];
       }
 
+      $regexYoutube = '/^https:\/\/www\.youtube\.com\/(embed\/|watch\?v=)\S+$/';
       $rules = array(
         'photo_name' => 'required',
         'photo_imageAuthor' => 'required',
@@ -515,9 +529,13 @@ class PhotosController extends \BaseController {
         'type' => 'required',
         'photo_country' => 'required',
         'photo_imageDate' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
-        'photo' => 'max:10240|mimes:jpeg,jpg,png,gif'
-
+        'photo' => 'max:10240|mimes:jpeg,jpg,png,gif',
+         'video' => array('regex:'.$regexYoutube)
           );
+
+      if($input["type"] == "photo"){       
+        $input["video"] = null;
+      }
 
       $validator = Validator::make($input, $rules);
 
@@ -530,7 +548,9 @@ class PhotosController extends \BaseController {
           'decadeImageInput'=>$decadeImageInput,
           'centuryImageInput'=>$centuryImageInput,  
           'imageDateCreated' => $imageDateCreated,
-          'work_authors'=>$input["work_authors"] 
+          'work_authors'=>$input["work_authors"],
+          'type'=> $input["type"],
+          'video' => $input["video"] 
           ])->withErrors($messages);
 
       } else{
@@ -576,15 +596,19 @@ class PhotosController extends \BaseController {
         }  
 
 
-        if (Input::hasFile('photo') and Input::file('photo')->isValid() and $input["type"] == "photo") {
-          $file = Input::file('photo');
-          $ext = $file->getClientOriginalExtension();
-          $photo->nome_arquivo = $photo->id.".".$ext;
-        } elseif ($input["type"] == "video") {
+        if ($input["type"] == "video") {
           $videoUrl = $input['video'];
           $videoUrl = Photo::extractVideoId($videoUrl);
           $photo->video = "https://youtube.com/embed/" . $videoUrl;
           $photo->nome_arquivo = "https://img.youtube.com/vi" . $videoUrl . "/sddefault.jpg";
+          $photo->type = "video";
+        }else{
+          if (Input::hasFile('photo') and Input::file('photo')->isValid() and $input["type"] == "photo") {
+              $file = Input::file('photo');
+              $ext = $file->getClientOriginalExtension();
+              $photo->nome_arquivo = $photo->id.".".$ext;
+              $photo->type = "photo";
+          }
         }
         //update o field update_at
         $photo->touch();

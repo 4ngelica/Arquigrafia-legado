@@ -89,6 +89,17 @@
     {{ Form::open(array('url'=>'photos', 'files'=> true)) }}
     <div class="twelve columns row step-1">
     <h1><span class="step-text">Upload</span></h1>
+    <div class="eleven columns alpha" id="media_type">        
+        <br>
+        <div class="form-row">
+            <input type="radio" name="type" value="photo" id="type_photo" checked="checked">
+            <label for="type_photo">Foto</label><br class="clear">
+        </div>
+        <div class="form-row">
+            <input type="radio" name="type" value="video" id="type_video">
+            <label for="type_video">Vídeo</label><br class="clear">
+        </div>
+    </div>
     <div id="divPhoto" class="four columns alpha">
     <img src="" id="preview_photo">
     <div id="image_rotate" style="display:none;">
@@ -106,8 +117,19 @@
     </p>
     </div>
     <div id="divVideo" class="twelve columns alpha">
-    <div class="two columns alpha">{{ Form::label('video', 'Vídeo:') }}</div>
-    <div class="two columns omega"><p>{{ Form::text('video') }}</p></div>
+        </br>  
+        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube:') }}</div>      
+        <p>{{ Form::text('video', $video, array('id' => 'video','style'=>'width:280px')) }} <br>   
+                
+            <div class="error">{{ $errors->first('video') }}</div>
+        </p>
+        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            Ex. https://www.youtube.com/watch?v=XXXXXXXX</p>
+
+
     </div>
     <br>
     </div>
@@ -172,18 +194,7 @@
     </tr>
     <tr>
     <td>
-    <div class="four columns alpha" id="media_type">
-    Tipo de Mídia:
-    <br>
-    <div class="form-row">
-    <input type="radio" name="type" value="photo" id="type_photo" checked="checked">
-    <label for="type_photo">Foto</label><br class="clear">
-    </div>
-    <div class="form-row">
-    <input type="radio" name="type" value="video" id="type_video">
-    <label for="type_video">Vídeo</label><br class="clear">
-    </div>
-    </div>
+<!-- midia-->
     </td>
     </tr>
     </table>
@@ -427,8 +438,24 @@
     
     <script type="text/javascript">
     $(document).ready(function() {
-        $('input[type=radio][name=type][value=photo]').prop("checked", true);
-        $('#divVideo').hide();
+        
+        var typeChecked  = "{{Input::old('type')}}";
+
+        
+        if(typeChecked == "video" ){               
+                document.getElementById('type_video').checked = true;
+                $('#divVideo').show();
+                $('#divPhoto').hide();
+        }else{
+            document.getElementById('type_photo').checked = true;
+            document.getElementById('video').value = null;
+            $('#divVideo').hide();
+            $('#divPhoto').show();
+            
+        }
+
+       
+        
         $('input[type=radio][name=type]').change(function(){
             if(this.value == "video"){
                 $('#divVideo').show();
@@ -438,6 +465,7 @@
                 $('#divPhoto').show();
             }
         });
+
 
         if({{Input::old('autoOpenModal','false')}}){    
             $( "#dialog-confirm" ).html("<b>Cadastro de imagem realizado com sucesso!</b> <br><br> Gostaria de utilizar os dados da imagem cadastrada para o próximo upload?");
