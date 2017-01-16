@@ -300,7 +300,7 @@ opacity: .8;
     -webkit-filter: grayscale(100%);
     filter: gray;
     filter: grayscale(100%);
-    z-index: 0;
+    z-index: 2;
 }
 
 
@@ -321,14 +321,30 @@ display: flex;
 justify-content: center;
 align-items: center;
 margin-top: -60px;
-background: rgba(178,178,178,0.8);
+background: rgba(178,178,178,0.5);
 -webkit-font-smoothing: antialiased;
 font-size: 20px;
 }
 
+    .seta {
+       position: absolute;
+       bottom: 10%;
+       width: 100%;
+       text-align: center;
+
+        img {
+            width: 100px;
+            opacity: 0.9;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+
 #bottom-page:hover {
     cursor: pointer;
-    background: rgba(178,178,178,1);
+    background: rgba(178,178,178,0.7);
 }
 
 #bottom-page a {
@@ -714,7 +730,28 @@ font-size: 14px;
     transition: linear 0.1s;
 }
 
+.header-main { 
+    padding: 15px;
+    position: absolute;
+    width: 100%;
 
+    .search-field {
+        border: none;
+        padding: 3px;
+        background: rgba(255,255,255,0.3);
+        float: left;
+    }
 
+    img {
+        height: 40px !important;
+        float: left;
+        margin-right: 10px;
+    }
 
-
+    .cadastro-button {
+        background: rgba(255,255,255,0.3);
+        color: #fff;
+        border: none;
+        padding: 9px;
+    }
+}
