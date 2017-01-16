@@ -101,6 +101,11 @@ i.info {background-position: -121px 0;}
 i.notification {background-position: -202px 0px; }
 i.upload {background-position: -402px 0px; }
 i.badges { padding: 4px 22px 0 0; background: url(../img/i-badge.png) no-repeat; }
+.iconVideo { position: absolute; 
+  background: url(../img/icone-big.png) center center no-repeat; z-index: 1; 
+  background-size: contain; left: 50%; top: 50%; width: 50%; height: 50%; max-width: 113px; 
+  max-height: 113px; transform: translate(-50%, -50%); -webkit-transform: translate(-50%, -50%); 
+  -ms-transform: translate(-50%, -50%);}
 
 /* forms */
 form p {margin: 3px 0;}

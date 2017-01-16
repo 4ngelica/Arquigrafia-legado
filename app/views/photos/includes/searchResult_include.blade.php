@@ -10,13 +10,7 @@
 		@endif
 		<td width="143" class="{{ $type }}">
 			<div style=" width: 155px; height: 110px;position: relative;" >
-			@if ($photo->type == "video")
-			  <div id="iconeVideo" style="position: absolute; 
-			  background: url( '{{asset('img/icone-big.png')}}' ) center center no-repeat; z-index: 1; 
-			  background-size: contain; left: 50%; top: 50%; width: 80%; height: 80%; max-width: 113px; 
-			  max-height: 113px; transform: translate(-50%, -50%); -webkit-transform: translate(-50%, -50%); 
-			  -ms-transform: translate(-50%, -50%);"></div>
-			@endif
+			
 			<!-- <input type="checkbox" class="{{'ch_photo'}}" id="{{ 'photo_' . $photo->id }}"
 				name="{{ 'photos_' . $type . '[]' }}" value="{{ $photo->id }}"> -->
 			@if ($count % 6 < 3)
@@ -26,7 +20,12 @@
 			@endif
 			<!-- <p>{{-- $page --}}</p> -->
 			<input type="hidden" id="pageCur" value="{{$page}}">
+
+			@if ($photo->type == "video")
+				<a href=href='{{ URL::to("/photos/{$photo->id}") }}'><div class="iconVideo" ></div><a/>
+			@endif
 			<a class="hovertext" href='{{ URL::to("/photos/{$photo->id}") }}' class="gallery_photo2" title="{{ $photo->name }}">
+
 			@if ($photo->type == "video")
 			<img 
 				class="gallery_photo2" class="cls_image_search"  src="{{ $photo->nome_arquivo }}"
@@ -38,7 +37,6 @@
 					 >
 			@endif
 			</a>	
-
 		    
 		</div>
 	</td>
