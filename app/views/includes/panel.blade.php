@@ -13,9 +13,15 @@
 	<div class="layer" data-depth="0.2">
     <a href='{{ URL::to("/photos/{$photo->id}") }}'>
 		<?php 
-		$micropath = '/arquigrafia-images/'. $photo->id . '_micro.jpg'; 
-		if ($size==1) $path = '/arquigrafia-images/'. $photo->id . '_home.jpg'; 
-		else $path = '/arquigrafia-images/'. $photo->id . '_view.jpg';
+    if ($photo->type == 'video'){
+      $micropath = $photo->nome_arquivo;
+      $path = $photo->nome_arquivo;
+    }
+    else {
+		  $micropath = '/arquigrafia-images/'. $photo->id . '_micro.jpg'; 
+		  if ($size==1) $path = '/arquigrafia-images/'. $photo->id . '_home.jpg'; 
+		  else $path = '/arquigrafia-images/'. $photo->id . '_view.jpg';
+    }
 		?>
 		<img src="{{ asset( $micropath ) }}" data-src="{{ asset( $path ) }}" title="{{ $photo->name }}">
     </a>
