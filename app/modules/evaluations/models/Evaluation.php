@@ -5,7 +5,7 @@ use User;
 use Photo;
 class Evaluation extends \Eloquent {
 	
-
+	protected $softDelete = true;
 	protected $fillable = ['photo_id','evaluationPosition','binomial_id','user_id','knownArchitecture', 'areArchitecture'];
 
 	protected $table = 'binomial_evaluation';

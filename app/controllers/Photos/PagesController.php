@@ -48,17 +48,6 @@ class PagesController extends BaseController {
         if(Session::has('last_advanced_search'))
             Session::forget('last_advanced_search');
 
-        $photos = Photo::all();
-        
-        foreach ($photos as $photo) {            
-            $originalFileExtension = strtolower(substr(strrchr($photo->nome_arquivo, '.'), 1));
-            $original_image = storage_path().'/original-images/'.$photo->id."_original.".strtolower($originalFileExtension);
-        
-            if (!file_exists ($original_image)) {
-                $photo->delete();
-            }
-        }
-
         $photos = Photo::orderByRaw("RAND()")->take(150)->get();
  
         if(Session::has('institutionId')){
