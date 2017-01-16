@@ -112,7 +112,6 @@
 				<div class="twelve columns row step-1">
 					<a href="{{ URL::to('/drafts') }}" class="right">Uploads incompletos</a>
 					<h1><span class="step-text">Upload</span></h1>
-					<div id="divPhoto">
 					<div class="four columns alpha">
 						<img src="" id="preview_photo">
 												<div id="image_rotate" style="display:none;">
@@ -132,11 +131,6 @@
 						<br>
 					</div>
 				</div>
-				</div>
-				<div id="divVideo" class="twelve columns alpha">
-    				<div class="two columns alpha">{{ Form::label('video', 'Vídeo:') }}</div>
-    				<div class="two columns omega"><p>{{ Form::text('video') }}</p></div>
-    			</div>
 				<div id="registration" class="twelve columns row step-2">
 					<h1><span class="step-text">Dados da imagem</span></h1>
 					<p>(*) Campos obrigatórios.</p>
@@ -322,22 +316,6 @@
 								</div>
 								</td>
 							</tr>
-							<tr>
-							    <td>
-								    <div class="four columns alpha" id="media_type">
-								    	Tipo de Mídia:
-								    	<br>
-								    	<div class="form-row">
-								    		<input type="radio" name="type" value="photo" id="type_photo" checked="checked">
-								    		<label for="type_photo">Foto</label><br class="clear">
-								    	</div>
-								    	<div class="form-row">
-								    		<input type="radio" name="type" value="video" id="type_video">
-								    		<label for="type_video">Vídeo</label><br class="clear">
-								    	</div>
-								    </div>
-							    </td>
-						    </tr>
 						</table>
 					</div>
 					<br class="clear">
@@ -602,17 +580,6 @@
 </script>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('input[type=radio][name=type][value=photo]').prop("checked", true);
-        $('#divVideo').hide();
-        $('input[type=radio][name=type]').change(function(){
-            if(this.value == "video"){
-                $('#divVideo').show();
-                $('#divPhoto').hide();
-            } if(this.value == "photo") {
-                $('#divVideo').hide();
-                $('#divPhoto').show();
-            }
-        });
 		if ({{ Input::old('autoOpenModal','false') }}) {
 			var text;
 			var url;

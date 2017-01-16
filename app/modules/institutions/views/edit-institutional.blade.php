@@ -54,12 +54,12 @@
 @section('content')
 
   <div class="container">
-	<div id="registration">      
+  <div id="registration">      
       {{ Form::open(array('url'=>'institutions/'.$photo->id.'/update/photo', 'method' => 'put', 'files'=> true)) }}           
   
       <div class="twelve columns row step-1">
-      	<h1><span class="step-text">Edição de informações da imagem {{$photo->name}}</span></h1>
-          <div id="divPhoto" class="four columns alpha">
+        <h1><span class="step-text">Edição de informações da imagem {{$photo->name}}</span></h1>
+          <div class="four columns alpha">
             <a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" >
             <img id="old_image" class="single_view_image" style="" src="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" />
             </a>
@@ -81,24 +81,20 @@
             <br></br>
             <div class="error">{{ $errors->first('photo') }}</div>
           </p>
-        </div>
-        <div id="divVideo" class="twelve columns alpha">
-          <div class="two columns alpha">{{ Form::label('video', 'Vídeo:') }}</div>
-          <div class="two columns omega"><p>{{ Form::text('video', $photo->video) }}</p></div>
         </div>   
 
       </div> 
 
       
       <div id="registration" class="twelve columns row step-2">         
-      	          
+                  
           
           <h4>Campos obrigatórios (*)</h4>
           <br class="clear">
          <!-- <h4>Campos complementares</h4>-->
           
           <div class="eight columns alpha row">
-          	<table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
+            <table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
             <tr>
                 <td>
                   <div class="two columns alpha">
@@ -269,24 +265,6 @@
                 </div>
               </td>
             </tr>
-            <tr>
-              <td>
-                <div class="four columns alpha" id="media_type">
-                  Tipo de Mídia:
-                  <br>
-                  <div class="form-row">
-                    <input type="radio" name="type" value="photo" id="type_photo"
-                      {{$photo->type == 'photo' ? "checked" : ""}}
-                      {{$photo->type == NULL ? "checked" : ""}}>
-                    <label for="type_photo">Foto</label><br class="clear">
-                  </div>
-                  <div class="form-row">
-                    <input type="radio" name="type" value="video" id="type_video" {{$photo->type == 'video' ? "checked" : ""}}>
-                    <label for="type_video">Vídeo</label><br class="clear" >
-                  </div>
-                </div>
-              </td>
-            </tr>
             </table>
           </div>
           <br class="clear">
@@ -430,29 +408,13 @@
       </div>
       
       {{ Form::close() }}
-	  
-	</div>
+    
+  </div>
 
   </div>
   <script type="text/javascript">
   $(document).ready(function() {
     /* Methods to be called when all html document be ready */
-    @if ($photo->type == 'video')
-        $('#divVideo').show();
-        $('#divPhoto').hide();
-      @else
-        $('#divVideo').hide();
-        $('#divPhoto').show();
-      @endif
-      $('input[type=radio][name=type]').change(function(){
-        if(this.value == "video"){
-          $('#divVideo').show();
-          $('#divPhoto').hide();
-        } if(this.value == "photo") {
-          $('#divVideo').hide();
-          $('#divPhoto').show();
-        }
-      });
     showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));
 
     //authors
