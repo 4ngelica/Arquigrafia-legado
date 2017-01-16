@@ -357,7 +357,7 @@ class PhotosController extends \BaseController {
             } else {
               $videoUrl = $input['video'];
               $videoUrl = Photo::extractVideoId($videoUrl);
-              $photo->video = "https://youtube.com/embed/" . $videoUrl;
+              $photo->video = "https://www.youtube.com/embed/" . $videoUrl;
               $photo->nome_arquivo = "https://img.youtube.com/vi/" . $videoUrl . "/sddefault.jpg";
             }
             $photo->save();
@@ -553,7 +553,8 @@ class PhotosController extends \BaseController {
           'video' => $input["video"] 
           ])->withErrors($messages);
 
-      } else{
+      } else{    
+        
         if ( !empty($input["photo_aditionalImageComments"]) )
             $photo->aditionalImageComments = $input["photo_aditionalImageComments"];
         $photo->allowCommercialUses = $input["photo_allowCommercialUses"];
@@ -599,7 +600,7 @@ class PhotosController extends \BaseController {
         if ($input["type"] == "video") {
           $videoUrl = $input['video'];
           $videoUrl = Photo::extractVideoId($videoUrl);
-          $photo->video = "https://youtube.com/embed/" . $videoUrl;
+          $photo->video = "https://www.youtube.com/embed/" . $videoUrl;
           $photo->nome_arquivo = "https://img.youtube.com/vi/" . $videoUrl . "/sddefault.jpg";
           $photo->type = "video";
         }else{
@@ -608,6 +609,7 @@ class PhotosController extends \BaseController {
               $ext = $file->getClientOriginalExtension();
               $photo->nome_arquivo = $photo->id.".".$ext;
               $photo->type = "photo";
+              $photo->video = NULL;
           }
         }
         //update o field update_at

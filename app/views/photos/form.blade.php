@@ -118,18 +118,14 @@
     </div>
     <div id="divVideo" class="twelve columns alpha">
         </br>  
-        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube:') }}</div>      
-        <p>{{ Form::text('video', $video, array('id' => 'video','style'=>'width:280px')) }} <br>   
-                
+        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube:') }}</div>  
+        <div class="four columns alpha">    
+            <p>{{ Form::text('video', $video, array('id' => 'video','style'=>'width:280px')) }} <br>
+            </p>
             <div class="error">{{ $errors->first('video') }}</div>
-        </p>
-        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            Ex. https://www.youtube.com/watch?v=XXXXXXXX</p>
-
-
+            <p>Ex. https://www.youtube.com/watch?v=XXXXXXXX ou <br>
+                https://www.youtube.com/embed/XXXXXXXX</p>
+        </div>
     </div>
     <br>
     </div>

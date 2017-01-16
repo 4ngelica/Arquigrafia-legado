@@ -108,15 +108,13 @@
         <div id="divVideo" class="twelve columns alpha">
         </br>  
         <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube:') }}</div>          
-        
-        <p>{{ Form::text('video', $video, array('id' => 'video','style'=>'width:280px')) }} <br> 
-            <div class="error">{{ $errors->first('video') }}</div>
-        </p>
-        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            Ex. https://www.youtube.com/watch?v=XXXXXXXX</p>
+        <div class="four columns alpha">  
+            <p>{{ Form::text('video', $video, array('id' => 'video','style'=>'width:280px')) }} <br> 
+             </p> 
+             <div class="error">{{ $errors->first('video') }}</div>
+             <p>Ex. https://www.youtube.com/watch?v=XXXXXXXX ou <br>
+                https://www.youtube.com/embed/XXXXXXXX</p>
+        </div>
     </div>
 
 
@@ -180,22 +178,7 @@
               </td>
             </tr>
             <tr>
-              <td>
-                <div class="four columns alpha" id="media_type">
-                  Tipo de Mídia:
-                  <br>
-                  <div class="form-row">
-                    <input type="radio" name="type" value="photo" id="type_photo"
-                      {{$photo->type == 'photo' ? "checked" : ""}}
-                      {{$photo->type == NULL ? "checked" : ""}}>
-                    <label for="type_photo">Foto</label><br class="clear">
-                  </div>
-                  <div class="form-row">
-                    <input type="radio" name="type" value="video" id="type_video" {{$photo->type == 'video' ? "checked" : ""}}>
-                    <label for="type_video">Vídeo</label><br class="clear" >
-                  </div>
-                </div>
-              </td>
+              
             </tr>
           </table>
           </div>
@@ -369,17 +352,26 @@
       
       if(typeChecked == null || typeChecked == ""){
           if(typeSaved == "photo" ){               
-              document.getElementById('type_photo').checked = true;           
+              document.getElementById('type_photo').checked = true; 
+              document.getElementById('video').value = "";          
               $('#divVideo').hide();
               $('#divPhoto').show();
           }else{
+            
+              var elem = document.getElementById('old_image');
+              elem.parentNode.removeChild(elem);
               document.getElementById('type_video').checked = true;
                   $('#divVideo').show();
                   $('#divPhoto').hide();            
           }
       }else{
-        //checkado
-        if(typeChecked == "video" ){               
+        //checkado       
+
+        if(typeChecked == "video" ){   
+                if(typeSaved == "video" ){
+                    var elem = document.getElementById('old_image');
+                    elem.parentNode.removeChild(elem);
+                } 
                 document.getElementById('type_video').checked = true;
                 $('#divVideo').show();
                 $('#divPhoto').hide();
@@ -393,7 +385,6 @@
       }
       
 
->>>>>>> 4c01e41a42a691de1d93094808a6e3bca29a485b
       $('input[type=radio][name=type]').change(function(){
         if(this.value == "video"){
           $('#divVideo').show();
