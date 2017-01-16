@@ -2,6 +2,13 @@
 
 	@foreach($photos as $photo)
 		<div class="item h2">
+			@if ($photo->type == "video")
+			  <div id="iconeVideo" style="position: absolute; 
+			  background: url( '{{asset('img/icone-big.png')}}' ) center center no-repeat; z-index: 1; 
+			  background-size: contain; left: 50%; top: 50%; width: 80%; height: 80%; max-width: 113px; 
+			  max-height: 113px; transform: translate(-50%, -50%); -webkit-transform: translate(-50%, -50%); 
+			  -ms-transform: translate(-50%, -50%);"></div>
+			@endif
 			<div class="layer" data-depth="0.2">
 				<a href='{{ URL::to("/photos/{$photo->id}") }}'>
 					<?php
