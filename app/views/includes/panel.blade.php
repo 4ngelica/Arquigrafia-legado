@@ -10,8 +10,18 @@
 ?>
 
 <div class="item h<?php echo $size; ?>">
+  @if ($photo->type == "video")
+  <div id="iconeVideo" style="position: absolute;
+    background: url( '{{asset('img/icone-big.png')}}' ) center center no-repeat;
+    width: 80%;
+    height: 80%;
+    z-index: 1;
+    background-size: contain;
+    margin: 7% 10%;"></div>
+  @endif
 	<div class="layer" data-depth="0.2">
     <a href='{{ URL::to("/photos/{$photo->id}") }}'>
+      
 		<?php 
     if ($photo->type == 'video'){
       $micropath = $photo->nome_arquivo;
