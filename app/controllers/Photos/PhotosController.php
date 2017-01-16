@@ -358,7 +358,7 @@ class PhotosController extends \BaseController {
               $videoUrl = $input['video'];
               $videoUrl = Photo::extractVideoId($videoUrl);
               $photo->video = "https://youtube.com/embed/" . $videoUrl;
-              $photo->nome_arquivo = "https://img.youtube.com/vi" . $videoUrl . "/sddefault.jpg";
+              $photo->nome_arquivo = "https://img.youtube.com/vi/" . $videoUrl . "/sddefault.jpg";
             }
             $photo->save();
             $input['photoId'] = $photo->id;
@@ -600,7 +600,7 @@ class PhotosController extends \BaseController {
           $videoUrl = $input['video'];
           $videoUrl = Photo::extractVideoId($videoUrl);
           $photo->video = "https://youtube.com/embed/" . $videoUrl;
-          $photo->nome_arquivo = "https://img.youtube.com/vi" . $videoUrl . "/sddefault.jpg";
+          $photo->nome_arquivo = "https://img.youtube.com/vi/" . $videoUrl . "/sddefault.jpg";
           $photo->type = "video";
         }else{
           if (Input::hasFile('photo') and Input::file('photo')->isValid() and $input["type"] == "photo") {
