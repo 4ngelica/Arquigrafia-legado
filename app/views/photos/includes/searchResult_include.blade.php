@@ -22,7 +22,7 @@
 			<input type="hidden" id="pageCur" value="{{$page}}">
 
 			@if ($photo->type == "video")
-				<a href=href='{{ URL::to("/photos/{$photo->id}") }}'><div class="iconVideo" ></div><a/>
+				<a href='{{ URL::to("/photos/{$photo->id}") }}'><div class="iconVideo" ></div><a/>
 			@endif
 			<a class="hovertext" href='{{ URL::to("/photos/{$photo->id}") }}' class="gallery_photo2" title="{{ $photo->name }}">
 
