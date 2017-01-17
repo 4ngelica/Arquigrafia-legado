@@ -205,7 +205,7 @@ class PhotosController extends \BaseController {
           $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
       }else $input["work_authors"] = '';
  
-      $regexYoutube = '/^https:\/\/www\.youtube\.com\/(embed\/|watch\?v=)\S+$/';
+      $regexVideo = '/^(https:\/\/www\.youtube\.com\/(embed\/|watch\?v=)\S+|https:\/\/(player\.)?vimeo\.com\/(video\/)?\S+)$/';
       $rules = array(
         'photo_name' => 'required',
         'photo_imageAuthor' => 'required',
@@ -215,8 +215,7 @@ class PhotosController extends \BaseController {
         'photo_authorization_checkbox' => 'required',
         'photo' => 'max:10240|required_without_all:video|mimes:jpeg,jpg,png,gif',    
         'photo_imageDate' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
-        //'video' => 'required_without_all:photo',
-        'video' => array('regex:'.$regexYoutube,'required_without_all:photo')
+        'video' => array('regex:'.$regexVideo,'required_without_all:photo')
       );
 
       if($input["type"] == "photo"){       
@@ -356,9 +355,11 @@ class PhotosController extends \BaseController {
               $photo->saveMetadata(strtolower($ext), $metadata);
             } else {
               $videoUrl = $input['video'];
-              $videoUrl = Photo::extractVideoId($videoUrl);
-              $photo->video = "https://www.youtube.com/embed/" . $videoUrl;
-              $photo->nome_arquivo = "https://img.youtube.com/vi/" . $videoUrl . "/sddefault.jpg";
+              $array = Photo::getVideoNameAndFile($videoUrl);
+          
+              $photo->video = $array['video'];
+              $photo->nome_arquivo = $array['file'];
+              $photo->type = "video";
             }
             $photo->save();
             $input['photoId'] = $photo->id;
@@ -521,7 +522,7 @@ class PhotosController extends \BaseController {
          $centuryInput = $input["century"];
       }
 
-      $regexYoutube = '/^https:\/\/www\.youtube\.com\/(embed\/|watch\?v=)\S+$/';
+      $regexVideo = '/^(https:\/\/www\.youtube\.com\/(embed\/|watch\?v=)\S+|https:\/\/(player\.)?vimeo\.com\/(video\/)?\S+)$/';
       $rules = array(
         'photo_name' => 'required',
         'photo_imageAuthor' => 'required',
@@ -530,7 +531,7 @@ class PhotosController extends \BaseController {
         'photo_country' => 'required',
         'photo_imageDate' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
         'photo' => 'max:10240|mimes:jpeg,jpg,png,gif',
-         'video' => array('regex:'.$regexYoutube)
+         'video' => array('regex:'.$regexVimeo)
           );
 
       if($input["type"] == "photo"){       
@@ -599,9 +600,11 @@ class PhotosController extends \BaseController {
 
         if ($input["type"] == "video") {
           $videoUrl = $input['video'];
-          $videoUrl = Photo::extractVideoId($videoUrl);
-          $photo->video = "https://www.youtube.com/embed/" . $videoUrl;
-          $photo->nome_arquivo = "https://img.youtube.com/vi/" . $videoUrl . "/sddefault.jpg";
+          $array = Photo::getVideoNameAndFile($videoUrl);
+          
+          $photo->video = $array['video'];
+          $photo->nome_arquivo = $array['file'];
+          
           $photo->type = "video";
         }else{
           if (Input::hasFile('photo') and Input::file('photo')->isValid() and $input["type"] == "photo") {

@@ -118,19 +118,19 @@
     </div>
     <div id="divVideo" class="twelve columns alpha">
         </br>  
-        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube:') }}</div>  
+        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube ou vimeo:') }}</div>  
         <div class="four columns alpha">    
             <p>{{ Form::text('video', $video, array('id' => 'video','style'=>'width:280px')) }} <br>
             </p>
             <div class="error">{{ $errors->first('video') }}</div>
-            <p>Ex. https://www.youtube.com/watch?v=XXXXXXXX ou <br>
-                https://www.youtube.com/embed/XXXXXXXX</p>
+            <p>Ex. https://www.youtube.com/watch?v=XXXXXXXX  <br>
+                ou  https://vimeo.com/XXXXXXXX</p>
         </div>
     </div>
     <br>
     </div>
     <div id="registration" class="twelve columns row step-2">
-    <h1><span class="step-text">Dados da imagem</span></h1>
+    <h1><span class="step-text">Informações da imagem</span></h1>
     </br>
     <h4>Campos obrigatórios (*)</h4>
     <p>{{ Form::hidden('pageSource', $pageSource) }} </p>
@@ -152,12 +152,13 @@
     </tr>
     <tr>
     <td>
-    <div class="two columns alpha"><p>{{ Form::label('photo_imageAuthor', 'Autor da imagem*:') }}</p></div>
+    <div class="two columns alpha"><p>{{ Form::label('photo_imageAuthor', 'Autor(es) da imagem*:') }}</p></div>
     <div class="three columns omega">
     <p>
     {{ Form::text('photo_imageAuthor', $user->name) }} <br>
     <div class="error">{{ $errors->first('photo_imageAuthor') }}</div>
     </p>
+    <p>Separe os autores diferentes com ;</p>
     </div>
     </td>
     </tr>

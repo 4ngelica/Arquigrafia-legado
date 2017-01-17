@@ -441,7 +441,7 @@
       @endif
       <div id="imageAuthor_container">
       @if ( !empty($photos->imageAuthor) )
-        <h4>Autor da Imagem:</h4>
+        <h4>Autor(es) da Imagem:</h4>
         <p>
           <a href="{{ URL::to("/search?q=".$photos->imageAuthor)}}">
             {{ $photos->imageAuthor }}

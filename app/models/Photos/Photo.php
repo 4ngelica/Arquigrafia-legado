@@ -132,6 +132,23 @@ class Photo extends Eloquent {
 		}
 	}
 
+	public static function getVideoNameAndFile($url) {
+		$videoUrl = Photo::extractVideoId($url);
+	    if( strpos($input['video'], 'vimeo') !== false ){//vimeo
+	    	$video = "https://player.vimeo.com/video/" . $videoUrl;
+	        $hash = unserialize(file_get_contents("http://vimeo.com/api/v2/video/" . $videoUrl . ".php"));
+	        $file = $hash[0]['thumbnail_medium'];
+	    } else {
+	        $video = "https://www.youtube.com/embed/" . $videoUrl;
+	        $file = "https://img.youtube.com/vi/" . $videoUrl . "/sddefault.jpg";
+	    }
+
+		$final = array('file'  => $file,
+					   'video' => $video);
+
+		return $final;
+	}
+
 	public function saveMetadata($originalFileExtension, $metadata)
 	{
 		$original_path = storage_path() . '/original-images/';

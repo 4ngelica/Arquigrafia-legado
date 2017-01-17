@@ -22,6 +22,7 @@
   @endif
   <!--   MEIO DO SITE - ÁREA DE NAVEGAÇÃO   -->
   <div id="content">
+    <?= Photo::extractVideoId('https://player.vimeo.com/video/194805158') ?>
   @if(Auth::user())
     <?php $news = DB::table('news')->where('user_id', '=', Auth::user()->id)->orWhere('user_id', '=', 0)->orderBy('updated_at', 'desc')->take(6)->get(); ?>
     @if(!is_null($news))

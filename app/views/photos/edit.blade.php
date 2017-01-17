@@ -107,13 +107,13 @@
 
         <div id="divVideo" class="twelve columns alpha">
         </br>  
-        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube:') }}</div>          
+        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube ou vimeo:') }}</div>          
         <div class="four columns alpha">  
             <p>{{ Form::text('video', $video, array('id' => 'video','style'=>'width:280px')) }} <br> 
              </p> 
              <div class="error">{{ $errors->first('video') }}</div>
              <p>Ex. https://www.youtube.com/watch?v=XXXXXXXX ou <br>
-                https://www.youtube.com/embed/XXXXXXXX</p>
+                ou  https://vimeo.com/XXXXXXXX</p>
         </div>
     </div>
 
@@ -139,11 +139,12 @@
             </tr>
             <tr>
              
-			  <div class="two columns alpha"><p>{{ Form::label('photo_imageAuthor', 'Autor da imagem*:') }}</p></div>
+			  <div class="two columns alpha"><p>{{ Form::label('photo_imageAuthor', 'Autor(es) da imagem*:') }}</p></div>
 				<div class="three columns">				
         <p>{{ Form::text('photo_imageAuthor', $photo->imageAuthor) }} <br>
 				  <div class="error">{{ $errors->first('photo_imageAuthor') }}</div>
         </p>
+        <p>Separe os autores diferentes com ;</p>
 			  </div>
             </tr>
             <tr>
