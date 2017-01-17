@@ -134,7 +134,7 @@ class Photo extends Eloquent {
 
 	public static function getVideoNameAndFile($url) {
 		$videoUrl = Photo::extractVideoId($url);
-	    if( strpos($input['video'], 'vimeo') !== false ){//vimeo
+	    if( strpos($url, 'vimeo') !== false ){//vimeo
 	    	$video = "https://player.vimeo.com/video/" . $videoUrl;
 	        $hash = unserialize(file_get_contents("http://vimeo.com/api/v2/video/" . $videoUrl . ".php"));
 	        $file = $hash[0]['thumbnail_medium'];
