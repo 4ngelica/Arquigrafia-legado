@@ -439,7 +439,7 @@
         var typeChecked  = "{{Input::old('type')}}";
 
         
-        if(typeChecked == "video" ){               
+        if(typeChecked == "video" ){
                 document.getElementById('type_video').checked = true;
                 $('#divVideo').show();
                 $('#divPhoto').hide();

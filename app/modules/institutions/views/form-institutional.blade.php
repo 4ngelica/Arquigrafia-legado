@@ -112,8 +112,20 @@
 				<div class="twelve columns row step-1">
 					<a href="{{ URL::to('/drafts') }}" class="right">Uploads incompletos</a>
 					<h1><span class="step-text">Upload</span></h1>
-					<div class="four columns alpha">
-						<img src="" id="preview_photo">
+					<div class="eleven columns alpha" id="media_type">        
+				        <br>
+				        <div class="form-row">
+				            <input type="radio" name="type" value="photo" id="type_photo" checked="checked">
+				            <label for="type_photo">Foto</label><br class="clear">
+				        </div>
+				        <div class="form-row">
+				            <input type="radio" name="type" value="video" id="type_video">
+				            <label for="type_video">Vídeo</label><br class="clear">
+				        </div>
+				    </div>
+					<div id="divPhoto">
+						<div class="four columns alpha">
+							<img src="" id="preview_photo">
 												<div id="image_rotate" style="display:none;">
 												<br></br>
 												<a class="btn right" onclick="Rotate(document.getElementById('preview_photo'),
@@ -122,17 +134,29 @@
 														-Math.PI/2);">Girar 90° para esquerda</a>
 												</div>
 												<br></br>
-						<p>
-							{{ Form::label('photo','Imagem:') }}
-							{{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
-							<div class="error">{{ $errors->first('photo') }}</div>
+							<p>
+								{{ Form::label('photo','Imagem:') }}
+								{{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
+								<div class="error">{{ $errors->first('photo') }}</div>
 														<br></br>
-						</p>
-						<br>
+							</p>
+							<br>
+						</div>
+					</div>
+					<div id="divVideo" class="twelve columns alpha">
+						</br>  
+				        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube ou vimeo:') }}</div>  
+				        <div class="four columns alpha">    
+				            <p>{{ Form::text('video', $video, array('id' => 'video','style'=>'width:280px')) }} <br>
+				            </p>
+				            <div class="error">{{ $errors->first('video') }}</div>
+				            <p>Ex. https://www.youtube.com/watch?v=XXXXXXXX  <br>
+				                ou  https://vimeo.com/XXXXXXXX</p>
+				        </div>
 					</div>
 				</div>
 				<div id="registration" class="twelve columns row step-2">
-					<h1><span class="step-text">Dados da imagem</span></h1>
+					<h1><span class="step-text">Informações da imagem</span></h1>
 					<p>(*) Campos obrigatórios.</p>
 					<p>{{ Form::hidden('pageSource', $pageSource) }} </p>
 					@if ( Input::old('draft_id', false) )
@@ -399,13 +423,14 @@
 							</tr>
 							<tr><td>
 
-									<div class="two columns alpha"><p>{{ Form::label('imageAuthor', 'Autor da imagem*:') }}</p></div>
+									<div class="two columns alpha"><p>{{ Form::label('imageAuthor', 'Autor(es) da imagem*:') }}</p></div>
 									<div class="two columns omega">
 										<p>
 											{{ Form::text('imageAuthor', $institution->name) }}
 											 <br>
 											<div class="error">{{ $errors->first('imageAuthor') }}</div>
 										</p>
+										<p>Separe os autores diferentes com ;</p>
 									</div>
 								</td>
 							</tr>
@@ -580,6 +605,32 @@
 </script>
 <script type="text/javascript">
 	$(document).ready(function() {
+
+		var typeChecked  = "{{Input::old('type')}}";
+
+        
+        if(typeChecked == "video" ){
+                document.getElementById('type_video').checked = true;
+                $('#divVideo').show();
+                $('#divPhoto').hide();
+        }else{
+            document.getElementById('type_photo').checked = true;
+            document.getElementById('video').value = null;
+            $('#divVideo').hide();
+            $('#divPhoto').show();
+            
+        }
+
+        $('input[type=radio][name=type]').change(function(){
+            if(this.value == "video"){
+                $('#divVideo').show();
+                $('#divPhoto').hide();
+            } if(this.value == "photo") {
+                $('#divVideo').hide();
+                $('#divPhoto').show();
+            }
+        });
+
 		if ({{ Input::old('autoOpenModal','false') }}) {
 			var text;
 			var url;

@@ -181,6 +181,8 @@ class InstitutionsController extends \BaseController {
       'institution' => $institution,
       'albums' => $albums,
       'dates' => $dates,
+      'type' => null,
+      'video'=> null
     ]);
   }
    /* Salvar formulario institutional*/
@@ -331,6 +333,7 @@ class InstitutionsController extends \BaseController {
         return \Redirect::to('/institutions/form/upload')
           ->withInput($input)->withErrors($messages);      
       }
+      //dd('<pre>' . $photo . '</pre>');
       $photo->save();
       $tags = explode(',', $input['tagsArea']);
       if (!empty($tags)) {
