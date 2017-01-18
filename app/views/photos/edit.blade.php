@@ -65,7 +65,7 @@
       {{ Form::open(array('url'=>'photos/' . $photo->id, 'method' => 'put', 'files'=> true)) }}           
       
       <div class="twelve columns row step-1">
-      	<h1><span class="step-text">Edição de informações da imagem {{$photo->name}}</span></h1>
+      	<h1><span class="step-text">Edição de informações de {{$photo->name}}</span></h1>
         <div class="eleven columns alpha" id="media_type">
                   
                   <br>
@@ -139,12 +139,12 @@
             </tr>
             <tr>
              
-			  <div class="two columns alpha"><p>{{ Form::label('photo_imageAuthor', 'Autor(es) da imagem*:') }}</p></div>
+			  <div class="two columns alpha"><p>{{ Form::label('photo_imageAuthor', 'Autor(es) da imagem/video*:') }}</p></div>
 				<div class="three columns">				
         <p>{{ Form::text('photo_imageAuthor', $photo->imageAuthor) }} <br>
 				  <div class="error">{{ $errors->first('photo_imageAuthor') }}</div>
         </p>
-        <p>Separe os autores diferentes com ;</p>
+        <p>Separe os autores diferentes com ";"</p>
 			  </div>
             </tr>
             <tr>
