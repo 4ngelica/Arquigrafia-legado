@@ -438,7 +438,10 @@ class InstitutionsController extends \BaseController {
          $centuryImageInput = $photo->dataCriacao;
       }
 
-
+      if($photo->type == NULL){
+          $photo->type = "photo";
+      }
+      
         return \View::make('edit-institutional')
           ->with(['photo' => $photo, 'tagsArea' => $tagsArea,
           'dateYear' => $dateYear,
@@ -449,7 +452,9 @@ class InstitutionsController extends \BaseController {
           'imageDateCreated' => $imageDateCreated,
           'user' => $logged_user,
           'institution' => $photo->institution,
-          'work_authors' => $work_authors
+          'work_authors' => $work_authors,
+          'type' => $photo->type,
+          'video' => $photo->video
           ] ); 
     }    
     return Redirect::to('/home');
@@ -510,6 +515,9 @@ class InstitutionsController extends \BaseController {
         'image_date' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
         'video' => array('regex:'.$regexVideo)
       );
+      if($input["type"] == "photo"){       
+        $input["video"] = null;
+      }
 
       $validator = \Validator::make($input, $rules);
 
@@ -523,7 +531,9 @@ class InstitutionsController extends \BaseController {
           'decadeImageInput' => $decadeImageInput,
           'centuryImageInput' => $centuryImageInput,          
           'imageDateCreated' => $imageDateCreated,
-          'work_authors'=> $input["work_authors"] 
+          'work_authors'=> $input["work_authors"],
+          'type'=> $input["type"],
+          'video' => $input["video"]  
           ])->withErrors($messages); 
       }else{ 
           if(!empty($input["aditionalImageComments"]) )
@@ -600,16 +610,20 @@ class InstitutionsController extends \BaseController {
           $photo->dataUpload = date('Y-m-d H:i:s');
           $photo->institution_id = Session::get('institutionId');
           
-          if(\Input::hasFile('photo') and \Input::file('photo')->isValid() and $input["type"] == "photo") {
+          if ($input["type"] == "video") {
+              $videoUrl = $input['video'];
+              $array = Photo::getVideoNameAndFile($videoUrl);
+              $photo->video = $array['video'];
+              $photo->nome_arquivo = $array['file'];
+              $photo->type = "video";
+          }else{
+            if(\Input::hasFile('photo') and \Input::file('photo')->isValid() and $input["type"] == "photo") {
               $file = \Input::file('photo');              
               $ext = $file->getClientOriginalExtension();
               $photo->nome_arquivo = $photo->id.".".$ext;
-          } elseif ($input["type"] == "video") {
-            $videoUrl = $input['video'];
-            $array = Photo::getVideoNameAndFile($videoUrl);
-            $photo->video = $array['video'];
-            $photo->nome_arquivo = $array['file'];
-            $photo->type = "video";
+              $photo->type = "photo";
+              $photo->video = NULL;
+            } 
           }
 
           $photo->touch();
@@ -651,6 +665,7 @@ class InstitutionsController extends \BaseController {
               list($photo_id, $ext) = explode(".", $photo->nome_arquivo);
               $path                 = storage_path().'/original-images/'.$photo->id.'_original.'.$ext;
               $metadata             = Image::make($path)->exif();
+
               if (array_key_exists('rotate', $input) and ($input['rotate'] != 0)) {
                   $angle = (float)$input['rotate'];
                   $public_image   = Image::make($path)->rotate($angle)->encode('jpg', 80);
@@ -666,8 +681,9 @@ class InstitutionsController extends \BaseController {
                   $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
                   $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
                   $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
+                  $photo->saveMetadata(strtolower($ext), $metadata);
           }
-          $photo->saveMetadata(strtolower($ext), $metadata);
+          
           return \Redirect::to("/photos/".$photo->id)->with('message', 
           '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso');
       }
