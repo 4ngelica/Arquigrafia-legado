@@ -531,7 +531,7 @@ class PhotosController extends \BaseController {
         'photo_country' => 'required',
         'photo_imageDate' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
         'photo' => 'max:10240|mimes:jpeg,jpg,png,gif',
-         'video' => array('regex:'.$regexVimeo)
+         'video' => array('regex:'.$regexVideo)
           );
 
       if($input["type"] == "photo"){       

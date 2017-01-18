@@ -199,18 +199,21 @@ class InstitutionsController extends \BaseController {
       $input["work_authors"] = '';
     }
     
+    $regexVideo = '/^(https:\/\/www\.youtube\.com\/(embed\/|watch\?v=)\S+|https:\/\/(player\.)?vimeo\.com\/(video\/)?\S+)$/';
     $rules = array(
       'support' => 'required',
       'tombo' => 'required',
       'hygieneDate' => 'date_format:"d/m/Y"|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
       'backupDate' => 'date_format:"d/m/Y"|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
       'characterization' => 'required',  
-      'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',
+      'photo' => 'max:10240|required_without_all:video|mimes:jpeg,jpg,png,gif',
       'photo_name' => 'required',
       'tagsArea' => 'required',
+      'type' =>'required',
       'country' => 'required',
       'imageAuthor' => 'required',
-      'image_date' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/'
+      'image_date' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
+      'video' => array('regex:'.$regexVideo,'required_without_all:photo')
     );
     
     $rules = \Input::has('draft') ? array_except($rules, ['photo']) : $rules;
@@ -239,6 +242,7 @@ class InstitutionsController extends \BaseController {
       $photo->cataloguingTime = date('Y-m-d H:i:s');
       $photo->UserResponsible = $input["userResponsible"];          
       $photo->name = $input["photo_name"];
+      $photo->type = $input["type"];
       if ( !empty($input["description"]) ) {
         $photo->description = $input["description"];
       }
@@ -297,7 +301,7 @@ class InstitutionsController extends \BaseController {
       if (\Input::has('draft')) {
         $photo->nome_arquivo = 'draft';
         $photo->draft();
-      } elseif (\Input::hasFile('photo') && \Input::file('photo')->isValid()) {
+      } elseif (\Input::hasFile('photo') && \Input::file('photo')->isValid() && $input["type"] == "photo") {
         $file = \Input::file('photo');
         $photo->nome_arquivo = $file->getClientOriginalName();
         $photo->removeDraft();
@@ -314,6 +318,14 @@ class InstitutionsController extends \BaseController {
         $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
         $photo->saveMetadata(strtolower($ext), $metadata);        
           
+      } elseif ($input["type"] == "video") {
+        $videoUrl = $input['video'];
+        $array = Photo::getVideoNameAndFile($videoUrl);
+    
+        $photo->video = $array['video'];
+        $photo->nome_arquivo = $array['file'];
+        $photo->type = "video";
+
       } else {
         $messages = $validator->messages();
         return \Redirect::to('/institutions/form/upload')
@@ -482,20 +494,21 @@ class InstitutionsController extends \BaseController {
       }elseif(\Input::has('century_image')){
          $centuryImageInput = $input["century_image"];
       }
-
+      $regexVideo = '/^(https:\/\/www\.youtube\.com\/(embed\/|watch\?v=)\S+|https:\/\/(player\.)?vimeo\.com\/(video\/)?\S+)$/';
       $rules = array(
         'support' => 'required',
         'tombo' => 'required',      
         'hygieneDate' => 'date_format:"d/m/Y"',
         'backupDate' => 'date_format:"d/m/Y"',
         'characterization' => 'required',
-      
+        'type' => 'required',
         'photo_name' => 'required',
         'tagsArea' => 'required',
         'country' => 'required',
         'imageAuthor' => 'required',
         'photo' => 'max:10240|mimes:jpeg,jpg,png,gif',           
         'image_date' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
+        'video' => array('regex:'.$regexVideo)
       );
 
       $validator = \Validator::make($input, $rules);
@@ -562,6 +575,7 @@ class InstitutionsController extends \BaseController {
           }
              
           $photo->country = $input["country"];
+          $photo->type = $input["type"];
           if ( !empty($input["state"]) )
                $photo->state = $input["state"];
           else $photo->state = null;   
@@ -586,10 +600,16 @@ class InstitutionsController extends \BaseController {
           $photo->dataUpload = date('Y-m-d H:i:s');
           $photo->institution_id = Session::get('institutionId');
           
-          if(\Input::hasFile('photo') and \Input::file('photo')->isValid()) {
+          if(\Input::hasFile('photo') and \Input::file('photo')->isValid() and $input["type"] == "photo") {
               $file = \Input::file('photo');              
               $ext = $file->getClientOriginalExtension();
               $photo->nome_arquivo = $photo->id.".".$ext;
+          } elseif ($input["type"] == "video") {
+            $videoUrl = $input['video'];
+            $array = Photo::getVideoNameAndFile($videoUrl);
+            $photo->video = $array['video'];
+            $photo->nome_arquivo = $array['file'];
+            $photo->type = "video";
           }
 
           $photo->touch();
@@ -617,8 +637,8 @@ class InstitutionsController extends \BaseController {
           }else{
                 $author->deleteAuthorPhoto($photo);
           }
-                    
-          if (\Input::hasFile('photo') and \Input::file('photo')->isValid()) {
+          $create = false;          
+          if (\Input::hasFile('photo') and \Input::file('photo')->isValid() and $input["type"] == "photo") {
               if(array_key_exists('rotate', $input))
                 $angle = (float)$input['rotate'];
               else
@@ -627,7 +647,7 @@ class InstitutionsController extends \BaseController {
               $public_image   = Image::make(\Input::file('photo'))->rotate($angle)->encode('jpg', 80);
               $original_image = Image::make(\Input::file('photo'))->rotate($angle);
               $create = true;
-          }else {
+          }elseif ($input["type"] == "photo") {
               list($photo_id, $ext) = explode(".", $photo->nome_arquivo);
               $path                 = storage_path().'/original-images/'.$photo->id.'_original.'.$ext;
               $metadata             = Image::make($path)->exif();
