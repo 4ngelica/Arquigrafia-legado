@@ -130,7 +130,7 @@
     <br>
     </div>
     <div id="registration" class="twelve columns row step-2">
-    <h1><span class="step-text">Informações da imagem</span></h1>
+    <h1><span class="step-text">Informações</span></h1>
     </br>
     <h4>Campos obrigatórios (*)</h4>
     <p>{{ Form::hidden('pageSource', $pageSource) }} </p>
@@ -152,13 +152,13 @@
     </tr>
     <tr>
     <td>
-    <div class="two columns alpha"><p>{{ Form::label('photo_imageAuthor', 'Autor(es) da imagem*:') }}</p></div>
+    <div class="two columns alpha"><p>{{ Form::label('photo_imageAuthor', 'Autor(es) da imagem/video*:') }}</p></div>
     <div class="three columns omega">
     <p>
     {{ Form::text('photo_imageAuthor', $user->name) }} <br>
     <div class="error">{{ $errors->first('photo_imageAuthor') }}</div>
     </p>
-    <p>Separe os autores diferentes com ;</p>
+    <p>Separe os autores diferentes com ";"</p>
     </div>
     </td>
     </tr>
