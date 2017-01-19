@@ -160,15 +160,17 @@
             <li>
               <a href="{{ URL::to('/albums/get/list/' . $photos->id) }}" title="Adicione aos seus álbuns" id="plus"></a>
             </li>
-            @if(/*$photos->authorized*/true)
-            <li>
+            @if($type != "video")
+              @if($photos->authorized)               
+              <li>
                 <a href="{{ asset('photos/download/'.$photos->id) }}" title="Faça o download" id="download" target="_blank"></a>
-            </li>
-            @else
-            <li>
+              </li>
+             @else
+              <li>
               <a onclick="notAuthorized();return false;" href="#" title="Faça o download" id="download" target="_blank"></a>
-            </li>
-            @endif
+              </li>
+             @endif
+            @endif 
             @if(!Session::has('institutionId'))
             <li>
               <a href="{{ URL::to('/evaluations/' . $photos->id . '/evaluate?f=sb' )}}" title="Registre suas impressões sobre {{$architectureName}}" id="evaluate" ></a>

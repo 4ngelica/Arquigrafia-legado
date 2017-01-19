@@ -424,13 +424,13 @@
 							<tr><td>
 
 									<div class="two columns alpha"><p>{{ Form::label('imageAuthor', 'Autor(es) da imagem*:') }}</p></div>
-									<div class="two columns omega">
+									<div class="five columns omega">
 										<p>
-											{{ Form::text('imageAuthor', $institution->name) }}
+											{{ Form::text('imageAuthor', $institution->name, array('id' => 'imageAuthor','style'=>'width:280px')) }}
 											 <br>
 											<div class="error">{{ $errors->first('imageAuthor') }}</div>
 										</p>
-										<p>Separe os autores diferentes com ;</p>
+										<p>Separe os autores diferentes com ";"</p>
 									</div>
 								</td>
 							</tr>

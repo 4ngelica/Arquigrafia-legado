@@ -236,7 +236,7 @@ class InstitutionsController extends \BaseController {
         //$photo->nome_arquivo = 'draft';
         //$photo->draft();
       }
-      if (( \Input::hasFile('photo') and \Input::file('photo')->isValid() ) || !empty($input["video"]) )
+      if (( \Input::hasFile('photo') and \Input::file('photo')->isValid() ) || !empty($input["video"]) ){
       //elseif(\Input::hasFile('photo') && \Input::file('photo')->isValid() && $input["type"] == "photo"){
         $photo = new Photo;  
         $photo->support = $input["support"];
