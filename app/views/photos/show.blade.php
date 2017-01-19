@@ -441,7 +441,7 @@
       @endif
       <div id="imageAuthor_container">
       @if ( !empty($photos->imageAuthor) )
-        <h4>Autor(es) da Imagem ou video:</h4>
+        <h4>Autor(es) {{ $type == "video" ? "do video" : "da Imagem " }} :</h4>          
         <p>
           <a href="{{ URL::to("/search?q=".$photos->imageAuthor)}}">
             {{ $photos->imageAuthor }}
@@ -463,7 +463,7 @@
       
       <div id="workAuthor_container">
       @if (!empty($authorsList) )
-        <h4>Autor da Obra:</h4>
+        <h4>Autor(es) da Obra:</h4>
         <p><?php $i=1; ?>
           @foreach ($authorsList as $authors)
 

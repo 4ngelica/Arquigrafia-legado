@@ -432,7 +432,7 @@
             <div id="dialog-confirm" title=" "></div>
           </div>        
       </div>
-      
+      <p><?php //dd($work_authors); ?></p>
       {{ Form::close() }}
     
   </div>
@@ -450,10 +450,7 @@
               document.getElementById('video').value = "";          
               $('#divVideo').hide();
               $('#divPhoto').show();
-          }else{
-            // if(typeSaved != null && typeSaved != ""){
-            //   alert("-ddd"+typeSaved);
-            // }            
+          }else{                       
               var elem = document.getElementById('old_image');
               elem.parentNode.removeChild(elem);
               document.getElementById('type_video').checked = true;
@@ -491,21 +488,25 @@
         }
     });
 
+    
     /* Methods to be called when all html document be ready */
     showTags({{json_encode($tagsArea)}},$('#tagsArea'),$('#tags_input'));
 
     //authors
     $('#work_authors').textext({ plugins: 'tags' });
-
-        @if(Input::old('work_authors')!= null)
-            <?php //print_r(Input::old('work_authors'));
-            $work_authors = explode (";", Input::old('work_authors')); ?>
+      //alert('{{Input::old('work_authors')}}');
+        @if(Input::old('work_authors') != null)
+            //explode
+            <?php $work_authors = explode ('","', Input::old('work_authors')); ?>            
         @endif
-        
-        @if (isset($work_authors) && $work_authors != null)
-                              // console.log("AC = "+ auth);
-            @foreach ( $work_authors as $work_author )
-                $('#work_authors').textext()[0].tags().addTags([ {{ '"' . $work_author . '"' }} ]);
+        var string_author = "";
+        @if (isset($work_authors) && $work_authors != null)            
+            @foreach ( $work_authors as $work_author )   
+                string_author = '{{$work_author}}';
+                string_author = string_author.replace('["',"");
+                string_author = string_author.replace('"]',"");
+                
+                $('#work_authors').textext()[0].tags().addTags([ string_author ]);
             @endforeach
         @endif       
 
