@@ -120,7 +120,8 @@ class PhotosController extends \BaseController {
       'currentPage' => $currentPage,
       'typeSearch' => $typeSearch,
       'urlBack' => $urlBack,
-      'institutionId' => $photos->institution_id
+      'institutionId' => $photos->institution_id,
+      'type'=> $photos->type
     ]);
   }
 
@@ -410,6 +411,7 @@ class PhotosController extends \BaseController {
     }
     $photo = Photo::find($id);
     $logged_user = Auth::User();
+    $work_authors = null;
     if ($logged_user == null) {
       return Redirect::action('PagesController@home');
     }

@@ -380,6 +380,7 @@ class InstitutionsController extends \BaseController {
     $photo = Photo::find($id);
     $logged_user = Auth::User();
     $institution_id = Session::get('institutionId');
+    $work_authors = null;
     if ($logged_user == null || $institution_id == null) {
         return \Redirect::to('/home');
     } elseif ($institution_id == $photo->institution_id) {
@@ -391,12 +392,12 @@ class InstitutionsController extends \BaseController {
             $tagsArea = $photo->tags->lists('name');  
         }
 
-        if ( Session::has('work_authors') )
-        {
+        if (Session::has('work_authors'))
+        {   
             $work_authors = Session::pull('work_authors');
             $work_authors = explode(';', $work_authors);
-        }else{
-            $work_authors = $photo->authors->lists('name');
+        }else{ 
+            $work_authors = $photo->authors->lists('name'); 
         }
 
       $dateYear = "";
@@ -475,8 +476,8 @@ class InstitutionsController extends \BaseController {
         $input["tagsArea"] = '';      
       } 
      
-      if (\Input::has('work_authors')){
-          $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
+      if (\Input::has('work_authors')){ 
+          $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);            
           $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
       }else
           $input["work_authors"] = '';
@@ -526,7 +527,7 @@ class InstitutionsController extends \BaseController {
       $validator = \Validator::make($input, $rules);
 
       if($validator->fails()) { 
-          $messages = $validator->messages();          
+          $messages = $validator->messages();  
           return \Redirect::to('/institutions/'.$photo->id.'/form/edit')->with([
           'tagsArea' => $input['tagsArea'], 
           'decadeInput'=>$decadeInput,

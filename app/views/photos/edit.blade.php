@@ -417,15 +417,15 @@
         $('#work_authors').textext({ plugins: 'tags' });
 
         @if(Input::old('work_authors')!= null)
-
-            <?php //print_r(Input::old('work_authors'));
-            $work_authors = explode (";", Input::old('work_authors')); ?>
+            <?php $work_authors = explode ('","', Input::old('work_authors')); ?>
         @endif
-        
+        var string_author = "";
         @if (isset($work_authors) && $work_authors != null && !empty($work_authors))
-                              // console.log("AC = "+ auth);
             @foreach ( $work_authors as $work_author )
-                $('#work_authors').textext()[0].tags().addTags([ {{ '"' . $work_author . '"' }} ]);
+                string_author = '{{$work_author}}';
+                string_author = string_author.replace('["',"");
+                string_author = string_author.replace('"]',"");
+                $('#work_authors').textext()[0].tags().addTags([ string_author ]);
             @endforeach
         @endif
       
