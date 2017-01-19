@@ -236,160 +236,158 @@ class InstitutionsController extends \BaseController {
         //$photo->nome_arquivo = 'draft';
         //$photo->draft();
       }
-      if (( \Input::hasFile('photo') and \Input::file('photo')->isValid() ) || !empty($input["video"]) ){
-      //elseif(\Input::hasFile('photo') && \Input::file('photo')->isValid() && $input["type"] == "photo"){
-        $photo = new Photo;  
-        $photo->support = $input["support"];
-        $photo->tombo = $input["tombo"];
-        $photo->subject = $input["subject"];
-        if(!empty($input["hygieneDate"])) {
-          $photo->hygieneDate = $this->date->formatDate($input["hygieneDate"]);
-        }
-        if(!empty($input["backupDate"]) ) {
-          $photo->backupDate = $this->date->formatDate($input["backupDate"]);
-        }
-        $photo->characterization = $input["characterization"];
-        $photo->cataloguingTime = date('Y-m-d H:i:s');
-        $photo->UserResponsible = $input["userResponsible"];          
-        $photo->name = $input["photo_name"];
-        $photo->type = $input["type"];
-        if ( !empty($input["description"]) ) {
-          $photo->description = $input["description"];
-        }
-        if (!empty($input["workDate"])) {
-          $photo->workdate = $input["workDate"];
-          $photo->workDateType = "year";
-        } elseif (!empty($input["decade_select"])) {
-          $photo->workdate = $input["decade_select"];
-          $photo->workDateType = "decade";
-        } elseif (!empty($input["century"]) && $input["century"] != "NS") {
-          $photo->workdate = $input["century"];
-          $photo->workDateType = "century";
-        } else { 
-          $photo->workdate = NULL;
-          $photo->workDateType = NULL;
-        }
-        if (!empty($input["image_date"])) {
-          $photo->dataCriacao = $this->date->formatDate($input["image_date"]);
-          $photo->imageDateType = "date";
-        } elseif (!empty($input["decade_select_image"])) {
-          $photo->dataCriacao = $input["decade_select_image"];
-          $photo->imageDateType = "decade";
-        } elseif (!empty($input["century_image"]) && $input["century_image"]!="NS") {
-          $photo->dataCriacao = $input["century_image"];
-          $photo->imageDateType = "century";
-        } else {
-          $photo->dataCriacao = NULL;
-          $photo->imageDateType = NULL;
-        }
-        $photo->country = $input["country"];
-        if ( !empty($input["state"]) ) {
-          $photo->state = $input["state"];
-        }
-        if ( !empty($input["city"]) ) {
-          $photo->city = $input["city"];
-        }
-        if ( !empty($input["street"]) ) {
-          $photo->street = $input["street"];
-        }
-        if ( !empty($input["imageAuthor"]) ) {
-          $photo->imageAuthor = $input["imageAuthor"];
-        }
-        if ( !empty($input["observation"]) ) {
-          $photo->observation = $input["observation"];
-        }
-        if ( !empty($input["aditionalImageComments"]) ) {
-          $photo->aditionalImageComments = $input["aditionalImageComments"];
-        }
-        $photo->allowCommercialUses = $input["allowCommercialUses"];
-        $photo->allowModifications = $input["allowModifications"];
-        $photo->authorized = $input["authorized"];
-        $photo->user_id = Auth::id();
-        $photo->dataUpload = date('Y-m-d H:i:s');  
-
-        $photo->save();
-        
-        $photo->institution_id = Session::get('institutionId');
-
-        if (\Input::has('draft')){
-          $photo->nome_arquivo = 'draft';
-          $photo->draft();
-        } elseif ($input["type"] == "video") {
-          $videoUrl = $input['video'];
-          $array = Photo::getVideoNameAndFile($videoUrl);        
-          $photo->video = $array['video'];
-          $photo->nome_arquivo = $array['file'];
-          $photo->type = "video";
-        }else{
-            if(\Input::hasFile('photo') and \Input::file('photo')->isValid() and $input["type"] == "photo") {
-                $file = \Input::file('photo');
-                $photo->nome_arquivo = $file->getClientOriginalName();
-                //$photo->removeDraft();          
-                $ext = $file->getClientOriginalExtension();
-                $photo->nome_arquivo = $photo->id . '.' . $ext;
-                $photo->type = "photo";
-                $photo->video = NULL;
+      if (( \Input::hasFile('photo') and \Input::file('photo')->isValid() ) || !empty($input["video"])){
+            $photo = new Photo;  
+            $photo->support = $input["support"];
+            $photo->tombo = $input["tombo"];
+            $photo->subject = $input["subject"];
+            if(!empty($input["hygieneDate"])) {
+              $photo->hygieneDate = $this->date->formatDate($input["hygieneDate"]);
             }
-        }
-      
+            if(!empty($input["backupDate"]) ) {
+              $photo->backupDate = $this->date->formatDate($input["backupDate"]);
+            }
+            $photo->characterization = $input["characterization"];
+            $photo->cataloguingTime = date('Y-m-d H:i:s');
+            $photo->UserResponsible = $input["userResponsible"];          
+            $photo->name = $input["photo_name"];
+            $photo->type = $input["type"];
+            if ( !empty($input["description"]) ) {
+              $photo->description = $input["description"];
+            }
+            if (!empty($input["workDate"])) {
+              $photo->workdate = $input["workDate"];
+              $photo->workDateType = "year";
+            } elseif (!empty($input["decade_select"])) {
+              $photo->workdate = $input["decade_select"];
+              $photo->workDateType = "decade";
+            } elseif (!empty($input["century"]) && $input["century"] != "NS") {
+              $photo->workdate = $input["century"];
+              $photo->workDateType = "century";
+            } else { 
+              $photo->workdate = NULL;
+              $photo->workDateType = NULL;
+            }
+            if (!empty($input["image_date"])) {
+              $photo->dataCriacao = $this->date->formatDate($input["image_date"]);
+              $photo->imageDateType = "date";
+            } elseif (!empty($input["decade_select_image"])) {
+              $photo->dataCriacao = $input["decade_select_image"];
+              $photo->imageDateType = "decade";
+            } elseif (!empty($input["century_image"]) && $input["century_image"]!="NS") {
+              $photo->dataCriacao = $input["century_image"];
+              $photo->imageDateType = "century";
+            } else {
+              $photo->dataCriacao = NULL;
+              $photo->imageDateType = NULL;
+            }
+            $photo->country = $input["country"];
+            if ( !empty($input["state"]) ) {
+              $photo->state = $input["state"];
+            }
+            if ( !empty($input["city"]) ) {
+              $photo->city = $input["city"];
+            }
+            if ( !empty($input["street"]) ) {
+              $photo->street = $input["street"];
+            }
+            if ( !empty($input["imageAuthor"]) ) {
+              $photo->imageAuthor = $input["imageAuthor"];
+            }
+            if ( !empty($input["observation"]) ) {
+              $photo->observation = $input["observation"];
+            }
+            if ( !empty($input["aditionalImageComments"]) ) {
+              $photo->aditionalImageComments = $input["aditionalImageComments"];
+            }
+            $photo->allowCommercialUses = $input["allowCommercialUses"];
+            $photo->allowModifications = $input["allowModifications"];
+            $photo->authorized = $input["authorized"];
+            $photo->user_id = Auth::id();
+            $photo->dataUpload = date('Y-m-d H:i:s');  
 
-        if ( !empty($input["new_album-name"]) ) {
-            $album = Album::create([
-            'title' => $input["new_album-name"],
-            'description' => "",
-            'user' => Auth::user(),
-            'cover' => $photo,
-            'institution' => Institution::find(Session::get('institutionId')),
-          ]);
-          if ( $album->isValid() ) {
-            $photo->albums()->attach($album);
-          }
-        } elseif ( !empty($input["photo_album"]) ) {
-          $photo->albums()->sync([$input["photo_album"]], false);
-        }
+            $photo->save();
+            
+            $photo->institution_id = Session::get('institutionId');
 
-        $tags = explode(',', $input['tagsArea']);
-        if (!empty($tags)) {
-          $tags = Tag::formatTags($tags);              
-          $tagsSaved = Tag::saveTags($tags,$photo);
-          if (!$tagsSaved) {
-            $photo->forceDelete();
-            $messages = ['tagsArea' => ['Inserir pelo menos uma tag']];
-            return \Redirect::to('/institutions/form/upload')
-              ->withInput($input)->withErrors($messages);
-          }
-        }
-        
-        if (!empty($input["work_authors"])) {
-          $author = new Author();
-          $author->saveAuthors($input["work_authors"],$photo);
-        }   
-        
-        
-        if($input["type"] == "photo") {
-          $angle = array_key_exists('rotate', $input) ? (float) $input['rotate'] : 0;
-          $metadata       = Image::make(\Input::file('photo'))->exif();
-          $public_image   = Image::make(\Input::file('photo'))->rotate($angle)->encode('jpg', 80);
-          $original_image = Image::make(\Input::file('photo'))->rotate($angle);
-          $public_image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
-          $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); 
-          $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
-          $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
-          $photo->saveMetadata(strtolower($ext), $metadata);         
-        }
-        $photo->save();
-        $input['autoOpenModal'] = 'true';
-        $sourcePage = $input["pageSource"]; //get url of the source page through form
-        $input['photoId'] = $photo->id;
-        $input['dates'] = true;
-        $input['dateImage'] = true;
-        unset($input['draft_id']);       
-        
-        return \Redirect::back()->withInput($input);
+            if (\Input::has('draft')){
+              $photo->nome_arquivo = 'draft';
+              $photo->draft();
+            } elseif ($input["type"] == "video") {
+              $videoUrl = $input['video'];
+              $array = Photo::getVideoNameAndFile($videoUrl);        
+              $photo->video = $array['video'];
+              $photo->nome_arquivo = $array['file'];
+              $photo->type = "video";
+            }else{
+                if(\Input::hasFile('photo') and \Input::file('photo')->isValid() and $input["type"] == "photo") {
+                    $file = \Input::file('photo');
+                    $photo->nome_arquivo = $file->getClientOriginalName();
+                    //$photo->removeDraft();          
+                    $ext = $file->getClientOriginalExtension();
+                    $photo->nome_arquivo = $photo->id . '.' . $ext;
+                    $photo->type = "photo";
+                    $photo->video = NULL;
+                }
+            }
+          
 
-      }//else of \Input::hasFile ....
-    else{
-      $messages = $validator->messages();
+            if ( !empty($input["new_album-name"]) ) {
+                $album = Album::create([
+                'title' => $input["new_album-name"],
+                'description' => "",
+                'user' => Auth::user(),
+                'cover' => $photo,
+                'institution' => Institution::find(Session::get('institutionId')),
+              ]);
+              if ( $album->isValid() ) {
+                $photo->albums()->attach($album);
+              }
+            } elseif ( !empty($input["photo_album"]) ) {
+              $photo->albums()->sync([$input["photo_album"]], false);
+            }
+
+            $tags = explode(',', $input['tagsArea']);
+            if (!empty($tags)) {
+              $tags = Tag::formatTags($tags);              
+              $tagsSaved = Tag::saveTags($tags,$photo);
+              if (!$tagsSaved) {
+                $photo->forceDelete();
+                $messages = ['tagsArea' => ['Inserir pelo menos uma tag']];
+                return \Redirect::to('/institutions/form/upload')
+                  ->withInput($input)->withErrors($messages);
+              }
+            }
+            
+            if (!empty($input["work_authors"])) {
+              $author = new Author();
+              $author->saveAuthors($input["work_authors"],$photo);
+            }   
+            
+            
+            if($input["type"] == "photo") {
+              $angle = array_key_exists('rotate', $input) ? (float) $input['rotate'] : 0;
+              $metadata       = Image::make(\Input::file('photo'))->exif();
+              $public_image   = Image::make(\Input::file('photo'))->rotate($angle)->encode('jpg', 80);
+              $original_image = Image::make(\Input::file('photo'))->rotate($angle);
+              $public_image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
+              $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); 
+              $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
+              $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
+              $photo->saveMetadata(strtolower($ext), $metadata);         
+            }
+            $photo->save();
+            $input['autoOpenModal'] = 'true';
+            $sourcePage = $input["pageSource"]; //get url of the source page through form
+            $input['photoId'] = $photo->id;
+            $input['dates'] = true;
+            $input['dateImage'] = true;
+            unset($input['draft_id']);       
+            
+            return \Redirect::back()->withInput($input);
+
+      } else{
+        $messages = $validator->messages();
         return \Redirect::to('/institutions/form/upload')
           ->withInput($input)->withErrors($messages); 
       }
