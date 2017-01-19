@@ -233,9 +233,10 @@ class InstitutionsController extends \BaseController {
     } else {
       if (\Input::has('draft_id')) {
         $photo = Photo::onlyDrafts()->find(\Input::get('draft_id'));
-        $photo->nome_arquivo = 'draft';
-        $photo->draft();
-      }elseif (( \Input::hasFile('photo') and \Input::file('photo')->isValid() ) || !empty($input["video"]) ) {     
+        //$photo->nome_arquivo = 'draft';
+        //$photo->draft();
+      }
+      if (( \Input::hasFile('photo') and \Input::file('photo')->isValid() ) || !empty($input["video"]) )
       //elseif(\Input::hasFile('photo') && \Input::file('photo')->isValid() && $input["type"] == "photo"){
         $photo = new Photo;  
         $photo->support = $input["support"];
@@ -310,12 +311,15 @@ class InstitutionsController extends \BaseController {
         
         $photo->institution_id = Session::get('institutionId');
 
-        if ($input["type"] == "video") {
-            $videoUrl = $input['video'];
-            $array = Photo::getVideoNameAndFile($videoUrl);        
-            $photo->video = $array['video'];
-            $photo->nome_arquivo = $array['file'];
-            $photo->type = "video";
+        if (\Input::has('draft')){
+          $photo->nome_arquivo = 'draft';
+          $photo->draft();
+        } elseif ($input["type"] == "video") {
+          $videoUrl = $input['video'];
+          $array = Photo::getVideoNameAndFile($videoUrl);        
+          $photo->video = $array['video'];
+          $photo->nome_arquivo = $array['file'];
+          $photo->type = "video";
         }else{
             if(\Input::hasFile('photo') and \Input::file('photo')->isValid() and $input["type"] == "photo") {
                 $file = \Input::file('photo');
@@ -327,7 +331,6 @@ class InstitutionsController extends \BaseController {
                 $photo->video = NULL;
             }
         }
-        //dd($photo); 
       
 
         if ( !empty($input["new_album-name"]) ) {

@@ -432,7 +432,6 @@
             <div id="dialog-confirm" title=" "></div>
           </div>        
       </div>
-      <p><?php //dd($work_authors); ?></p>
       {{ Form::close() }}
     
   </div>
