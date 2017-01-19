@@ -218,7 +218,7 @@ class InstitutionsController extends \BaseController {
       'video' => array('regex:'.$regexVideo,'required_without_all:photo')
     );
     
-    $rules = \Input::has('draft') ? array_except($rules, ['photo']) : $rules;
+    $rules = \Input::has('draft') ? array_except($rules, ['photo', 'video']) : $rules;
     $validator = \Validator::make($input, $rules);
     if ($validator->fails()) { 
       $messages = $validator->messages();       
@@ -301,6 +301,7 @@ class InstitutionsController extends \BaseController {
       $photo->institution_id = Session::get('institutionId');
       
       if (\Input::has('draft')) {
+        //dd('oi'); 
         $photo->nome_arquivo = 'draft';
         $photo->draft();
       } elseif (\Input::hasFile('photo') && \Input::file('photo')->isValid() && $input["type"] == "photo") {
