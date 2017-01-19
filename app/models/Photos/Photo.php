@@ -44,6 +44,9 @@ class Photo extends Eloquent {
 		'video',
 		'workAuthor',
 		'workdate',
+		'support',
+		'authorized',
+		'institution_id',
 	];
 
 	static $allowModificationsList = [
