@@ -18,7 +18,12 @@
 	      
 	    </a>
 		  <a href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
-		      {{User::find($info->sender_id)->name}} postou uma nova imagem
+		      {{User::find($info->sender_id)->name}} 
+			@if($photos->type == "video")	
+                                postou um novo vídeo
+                        @else		
+				postou uma nova imagem
+			@endif
 	 	</a>
 			  <br />
 	</div>
@@ -33,7 +38,12 @@
 			        @endif
 				</a>
 				<a href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
-				        A instituição {{modules\institutions\models\Institution::find($info->sender_id)->name}} postou uma nova imagem
+				        A instituição {{modules\institutions\models\Institution::find($info->sender_id)->name}} 
+				 @if($photos->type == "video")
+					postou um novo vídeo
+				 @else
+					postou uma nova imagem
+				 @endif
 				</a>
 				<br />
 				</div>
@@ -126,15 +136,18 @@
 				        <br />
 					</div>
 					@elseif($info->news_type == 'edited_photo')<!--Alguém que você segue editou uma foto-->
-					<div class="gallery_box">
-					  <a href='{{ URL::to("/photos") . "/" . $info->object_id }}'>                 
-					      <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
-					        </a>
-						  <a href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
-						      {{User::find($info->sender_id)->name}} editou esta imagem
+					
+					@if(Photo::find($info->object_id)->type != "video")
+						<div class="gallery_box">
+					  		<a href='{{ URL::to("/photos") . "/" . $info->object_id }}'>                 
+					      			<img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
+					        	</a>
+						 	 <a href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
+						      		{{User::find($info->sender_id)->name}} editou esta imagem
 						        </a>
-							  <br />
-							  </div>
+							<br />
+						 </div>
+					@endif
 							  @elseif($info->news_type == 'edited_profile')<!--Alguém que você segue editou o perfil-->
 							  <div class="gallery_box">
 							    <a href='{{ URL::to("/users") . "/" . $info->object_id }}'>                 
