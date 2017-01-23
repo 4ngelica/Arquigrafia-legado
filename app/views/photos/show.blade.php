@@ -8,7 +8,7 @@
   <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4fdf62121c50304d"></script>
   
   <!-- Google Maps API -->
-  <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBuBk5ghbTdpdm_nBWg6xHEzdRXdryK6rU&callback=initMap"></script>
   <script type="text/javascript">
   $(document).ready(function(){
 
@@ -115,11 +115,15 @@
         <!--   FIM - NOME / STATUS DA FOTO   -->
 
         <!--   FOTO   -->
-        <a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photos->id."_view.jpg" }}"
+        @if ($photos->type == 'video')
+          <iframe width="560" height="315" src="{{$photos->video}}" frameborder="0" allowfullscreen></iframe>
+        @else
+          <a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photos->id."_view.jpg" }}"
           title="{{ $photos->name }}" >
-          <img <?php if (/*!$photos->authorized*/false) echo "oncontextmenu='return false'"?> class="single_view_image" style=""
-            src="{{ URL::to("/arquigrafia-images")."/".$photos->id."_view.jpg" }}" />
-        </a>
+            <img <?php if (/*!$photos->authorized*/false) echo "oncontextmenu='return false'"?> class="single_view_image" style=""
+              src="{{ URL::to("/arquigrafia-images")."/".$photos->id."_view.jpg" }}" />
+          </a>
+        @endif
       </div>
 
       <!--   BOX DE BOTOES DA IMAGEM   -->
@@ -156,15 +160,17 @@
             <li>
               <a href="{{ URL::to('/albums/get/list/' . $photos->id) }}" title="Adicione aos seus álbuns" id="plus"></a>
             </li>
-            @if(/*$photos->authorized*/true)
-            <li>
+            @if($type != "video")
+              @if($photos->authorized)               
+              <li>
                 <a href="{{ asset('photos/download/'.$photos->id) }}" title="Faça o download" id="download" target="_blank"></a>
-            </li>
-            @else
-            <li>
+              </li>
+             @else
+              <li>
               <a onclick="notAuthorized();return false;" href="#" title="Faça o download" id="download" target="_blank"></a>
-            </li>
-            @endif
+              </li>
+             @endif
+            @endif 
             @if(!Session::has('institutionId'))
             <li>
               <a href="{{ URL::to('/evaluations/' . $photos->id . '/evaluate?f=sb' )}}" title="Registre suas impressões sobre {{$architectureName}}" id="evaluate" ></a>
@@ -437,7 +443,7 @@
       @endif
       <div id="imageAuthor_container">
       @if ( !empty($photos->imageAuthor) )
-        <h4>Autor da Imagem:</h4>
+        <h4>Autor(es) {{ $type == "video" ? "do video" : "da Imagem " }} :</h4>          
         <p>
           <a href="{{ URL::to("/search?q=".$photos->imageAuthor)}}">
             {{ $photos->imageAuthor }}
@@ -459,7 +465,7 @@
       
       <div id="workAuthor_container">
       @if (!empty($authorsList) )
-        <h4>Autor da Obra:</h4>
+        <h4>Autor(es) da Obra:</h4>
         <p><?php $i=1; ?>
           @foreach ($authorsList as $authors)
 

@@ -120,7 +120,8 @@ class PhotosController extends \BaseController {
       'currentPage' => $currentPage,
       'typeSearch' => $typeSearch,
       'urlBack' => $urlBack,
-      'institutionId' => $photos->institution_id
+      'institutionId' => $photos->institution_id,
+      'type'=> $photos->type
     ]);
   }
 
@@ -182,7 +183,9 @@ class PhotosController extends \BaseController {
       'autoOpenModal'=>$input['autoOpenModal'],
       'dates' => $dates,
       'dateImage' => $dateImage,
-      'work_authors'=>$work_authors   
+      'work_authors'=>$work_authors,
+      'type' => null,
+      'video'=> null  
       ]);
 
   }
@@ -203,32 +206,40 @@ class PhotosController extends \BaseController {
           $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
       }else $input["work_authors"] = '';
  
-  
+      $regexVideo = '/^(https:\/\/www\.youtube\.com\/(embed\/|watch\?v=)\S+|https:\/\/(player\.)?vimeo\.com\/(video\/)?\S+)$/';
       $rules = array(
         'photo_name' => 'required',
         'photo_imageAuthor' => 'required',
         'tags' => 'required',
+        'type' => 'required',
         'photo_country' => 'required',  
         'photo_authorization_checkbox' => 'required',
-        'photo' => 'max:10240|required|mimes:jpeg,jpg,png,gif',    
-        'photo_imageDate' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/'
+        'photo' => 'max:10240|required_without_all:video|mimes:jpeg,jpg,png,gif',    
+        'photo_imageDate' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
+        'video' => array('regex:'.$regexVideo,'required_without_all:photo')
       );
+
+      if($input["type"] == "photo"){       
+        $input["video"] = null;
+      }
 
       $validator = Validator::make($input, $rules);
 
       if ($validator->fails()) {
           $messages = $validator->messages();
-
+          
           return Redirect::to('/photos/upload')->with(['tags' => $input['tags'],
           'decadeInput'=>$input["decade_select"],
           'centuryInput'=>$input["century"],
           'decadeImageInput'=>$input["decade_select_image"],
           'centuryImageInput'=>$input["century_image"] ,
-          'work_authors'=>$input["work_authors"]     
+          'work_authors'=>$input["work_authors"],
+          'type'=> $input["type"],
+          'video' => $input["video"]     
           ])->withErrors($messages);
       } else {
 
-        if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
+        if ( ( Input::hasFile('photo') and Input::file('photo')->isValid() ) || !empty($input["video"]) ) {
             $file = Input::file('photo');
             $photo = new Photo();
 
@@ -238,8 +249,11 @@ class PhotosController extends \BaseController {
             $photo->allowModifications = $input["photo_allowModifications"];
             $photo->city = $input["photo_city"];
             $photo->country = $input["photo_country"];
+            $photo->type = $input["type"];
             if ( !empty($input["photo_description"]) )
                 $photo->description = $input["photo_description"];
+            if ( !empty($input["video"]) )
+                $photo->video = $input["video"];
             if ( !empty($input["photo_district"]) )
                 $photo->district = $input["photo_district"];
             if ( !empty($input["photo_imageAuthor"]) )
@@ -275,7 +289,7 @@ class PhotosController extends \BaseController {
                 $photo->dataCriacao = NULL;
             }      
       
-            $photo->nome_arquivo = $file->getClientOriginalName();
+            
 
             $photo->user_id = Auth::user()->id;
             $photo->dataUpload = date('Y-m-d H:i:s');
@@ -295,8 +309,7 @@ class PhotosController extends \BaseController {
             } elseif ( !empty($input["photo_album"]) ) {
                 DB::insert('insert into album_elements (album_id, photo_id) values (?, ?)', array($input["photo_album"], $photo->id));
             }
-            $ext = $file->getClientOriginalExtension();  
-            Photo::fileNamePhoto($photo, $ext);    
+            
 
             $tags = explode(',', $input['tags']);
           
@@ -321,21 +334,35 @@ class PhotosController extends \BaseController {
             EventLogger::printEventLogs($photo->id, 'upload', NULL,'Web');
             EventLogger::printEventLogs($photo->id, 'insert_tags', $eventContent,'Web');
 
-            if(array_key_exists('rotate', $input))
-              $angle = (float)$input['rotate'];
-            else
-              $angle = 0;
-            $metadata       = Image::make(Input::file('photo'))->exif();
-            $public_image   = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80);
-            $original_image = Image::make(Input::file('photo'))->rotate($angle);
+            if($input["type"] == "photo") {
+              $photo->nome_arquivo = $file->getClientOriginalName();
+              $ext = $file->getClientOriginalExtension();  
+              Photo::fileNamePhoto($photo, $ext);    
 
-            $public_image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
-            $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg');
-            $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
-            $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
-            $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
+              if(array_key_exists('rotate', $input))
+                $angle = (float)$input['rotate'];
+              else
+                $angle = 0;
+              $metadata       = Image::make(Input::file('photo'))->exif();
+              $public_image   = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80);
+              $original_image = Image::make(Input::file('photo'))->rotate($angle);
 
-            $photo->saveMetadata(strtolower($ext), $metadata);
+              $public_image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
+              $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg');
+              $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
+              $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
+              $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
+
+              $photo->saveMetadata(strtolower($ext), $metadata);
+            } else {
+              $videoUrl = $input['video'];
+              $array = Photo::getVideoNameAndFile($videoUrl);
+          
+              $photo->video = $array['video'];
+              $photo->nome_arquivo = $array['file'];
+              $photo->type = "video";
+            }
+            $photo->save();
             $input['photoId'] = $photo->id;
             $input['dates'] = true;
             $input['dateImage'] = true;
@@ -384,6 +411,7 @@ class PhotosController extends \BaseController {
     }
     $photo = Photo::find($id);
     $logged_user = Auth::User();
+    $work_authors = null;
     if ($logged_user == null) {
       return Redirect::action('PagesController@home');
     }
@@ -440,7 +468,6 @@ class PhotosController extends \BaseController {
          $centuryImageInput = $photo->dataCriacao;
       }
       
-
       return View::make('photos.edit')
         ->with(['photo' => $photo, 'tags' => $tags,
             'dateYear' => $dateYear,
@@ -448,7 +475,9 @@ class PhotosController extends \BaseController {
             'decadeInput' =>  $decadeInput,
             'centuryImageInput'=> $centuryImageInput,
             'decadeImageInput' =>  $decadeImageInput,
-            'work_authors' => $work_authors
+            'work_authors' => $work_authors,
+            'type' => $photo->type,
+            'video' => $photo->video
           ] );
     }
     return Redirect::action('PagesController@home');
@@ -464,11 +493,14 @@ class PhotosController extends \BaseController {
       else
         $input["tags"] = '';
 
-      if (Input::has('work_authors')){
+      
+      Log::info("auth =>".$input["work_authors"] );
+      if (Input::has('work_authors') && !empty($input["work_authors"])){
+        
         $input["work_authors"] = str_replace(array('","'), '";"', $input["work_authors"]);    
         $input["work_authors"] = str_replace(array( '"','[', ']'), '', $input["work_authors"]);    
       }else  $input["work_authors"] = '';
-    
+      
       $workDate = "";
       $decadeInput = "";
       $centuryInput = "";
@@ -492,15 +524,21 @@ class PhotosController extends \BaseController {
          $centuryInput = $input["century"];
       }
 
+      $regexVideo = '/^(https:\/\/www\.youtube\.com\/(embed\/|watch\?v=)\S+|https:\/\/(player\.)?vimeo\.com\/(video\/)?\S+)$/';
       $rules = array(
         'photo_name' => 'required',
         'photo_imageAuthor' => 'required',
         'tags' => 'required',
+        'type' => 'required',
         'photo_country' => 'required',
         'photo_imageDate' => 'date_format:d/m/Y|regex:/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/',
-        'photo' => 'max:10240|mimes:jpeg,jpg,png,gif'
-
+        'photo' => 'max:10240|mimes:jpeg,jpg,png,gif',
+         'video' => array('regex:'.$regexVideo)
           );
+
+      if($input["type"] == "photo"){       
+        $input["video"] = null;
+      }
 
       $validator = Validator::make($input, $rules);
 
@@ -513,24 +551,27 @@ class PhotosController extends \BaseController {
           'decadeImageInput'=>$decadeImageInput,
           'centuryImageInput'=>$centuryImageInput,  
           'imageDateCreated' => $imageDateCreated,
-          'work_authors'=>$input["work_authors"] 
+          'work_authors'=>$input["work_authors"],
+          'type'=> $input["type"],
+          'video' => $input["video"] 
           ])->withErrors($messages);
 
-      } else{
+      } else{    
+        
         if ( !empty($input["photo_aditionalImageComments"]) )
             $photo->aditionalImageComments = $input["photo_aditionalImageComments"];
         $photo->allowCommercialUses = $input["photo_allowCommercialUses"];
         $photo->allowModifications = $input["photo_allowModifications"];
         $photo->city = $input["photo_city"];
         $photo->country = $input["photo_country"];
+        $photo->type = $input["type"];
         $photo->description = $input["photo_description"];
         $photo->district = $input["photo_district"];
         $photo->imageAuthor = $input["photo_imageAuthor"];
         $photo->name = $input["photo_name"];
         $photo->state = $input["photo_state"];
         $photo->street = $input["photo_street"];
-    
-      
+
         if(!empty($input["workDate"])){             
             $photo->workdate = $input["workDate"];
             $photo->workDateType = "year";
@@ -559,10 +600,22 @@ class PhotosController extends \BaseController {
         }  
 
 
-        if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
-          $file = Input::file('photo');
-          $ext = $file->getClientOriginalExtension();
-          $photo->nome_arquivo = $photo->id.".".$ext;
+        if ($input["type"] == "video") {
+          $videoUrl = $input['video'];
+          $array = Photo::getVideoNameAndFile($videoUrl);
+          
+          $photo->video = $array['video'];
+          $photo->nome_arquivo = $array['file'];
+          
+          $photo->type = "video";
+        }else{
+          if (Input::hasFile('photo') and Input::file('photo')->isValid() and $input["type"] == "photo") {
+              $file = Input::file('photo');
+              $ext = $file->getClientOriginalExtension();
+              $photo->nome_arquivo = $photo->id.".".$ext;
+              $photo->type = "photo";
+              $photo->video = NULL;
+          }
         }
         //update o field update_at
         $photo->touch();
@@ -589,7 +642,8 @@ class PhotosController extends \BaseController {
             $author->deleteAuthorPhoto($photo);
         }
 
-        if (Input::hasFile('photo') and Input::file('photo')->isValid()) {
+        $create = false;
+        if (Input::hasFile('photo') and Input::file('photo')->isValid() and $input["type"] == "photo") {
           if(array_key_exists('rotate', $input))
               $angle = (float)$input['rotate'];
           else
@@ -598,7 +652,7 @@ class PhotosController extends \BaseController {
           $public_image   = Image::make(Input::file('photo'))->rotate($angle)->encode('jpg', 80);
           $original_image = Image::make(Input::file('photo'))->rotate($angle);
           $create = true;
-        }else {
+        }elseif ($input["type"] == "photo") {
           list($photo_id, $ext) = explode(".", $photo->nome_arquivo);
           $path                 = storage_path().'/original-images/'.$photo->id.'_original.'.$ext;          
           $metadata             = Image::make($path)->exif();
@@ -618,12 +672,13 @@ class PhotosController extends \BaseController {
             $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
             $public_image->fit(32,20)->save(public_path().'/arquigrafia-images/'.$photo->id.'_micro.jpg');
             $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
+            $photo->saveMetadata(strtolower($ext), $metadata);
         }
         $eventContent["tags"] = $input['tags'];
         EventLogger::printEventLogs($id, 'edit_photo', null, 'Web');
         EventLogger::printEventLogs($id, 'edit_tags', $eventContent, 'Web');
 
-        $photo->saveMetadata(strtolower($ext), $metadata);
+        
 
         
         return Redirect::to("/photos/{$photo->id}")->with('message', '<strong>Edição de informações da imagem</strong><br>Dados alterados com sucesso');

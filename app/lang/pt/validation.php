@@ -215,6 +215,9 @@ return array(
         'site' => array(
             'url' => 'O site deve ter o formato do URL.',
         ),
+        'video' => array(
+            'regex' => 'O link de Youtube não tem o formato adequado.',
+        ),
         
     ), 
 

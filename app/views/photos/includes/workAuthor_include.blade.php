@@ -1,5 +1,5 @@
 <div class="{{$first_column}} columns alpha">
-  <p>{{ Form::label('photo_workAuthor', 'Autor da obra:') }}</p>
+  <p>{{ Form::label('photo_workAuthor', 'Autor(es) da obra:') }}</p>
 </div>
 <div class="{{ $type_field }} columns">
      <p>

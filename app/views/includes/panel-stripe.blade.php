@@ -2,10 +2,22 @@
 
 	@foreach($photos as $photo)
 		<div class="item h2">
+			
 			<div class="layer" data-depth="0.2">
 				<a href='{{ URL::to("/photos/{$photo->id}") }}'>
-					<img src='{{ URL::to("/arquigrafia-images/{$photo->id}_micro.jpg") }}'
-						data-src='{{ URL::to("/arquigrafia-images/{$photo->id}_home.jpg") }}' title="{{ $photo->name }}">
+					@if ($photo->type == "video")
+			  			<div class="iconVideo"></div>
+					@endif
+					<?php
+							if($photo->type == 'video'){
+						        $micropath = $photo->nome_arquivo;
+						        $path = $photo->nome_arquivo;
+						    }else{
+						          $micropath = '/arquigrafia-images/'. $photo->id . '_micro.jpg';
+						          $path = '/arquigrafia-images/'. $photo->id . '_home.jpg'; 
+						    }
+				    ?>
+					<img src="{{ asset( $micropath ) }}" data-src="{{ asset( $path ) }}" title="{{ $photo->name }}">
 				</a>
 				<div class="item-title">
 					<p>{{ $photo->name }}</p>

@@ -1,5 +1,4 @@
 <?php
-
 use modules\draft\traits\DraftingTrait;
 use lib\date\Date;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
@@ -39,9 +38,14 @@ class Photo extends Eloquent {
 		'state',
 		'street',
 		'tombo',
+		'type',
 		'user_id',
+		'video',
 		'workAuthor',
 		'workdate',
+		'support',
+		'authorized',
+		'institution_id',
 	];
 
 	static $allowModificationsList = [
@@ -114,6 +118,37 @@ class Photo extends Eloquent {
 	public function evaluators()
 	{
 		return $this->belongsToMany('User', 'binomial_evaluation');
+	}
+
+	public static function extractVideoId($url){
+		$array1 = explode("://", $url);
+		$array2 = explode("/", $array1[count($array1) - 1]);
+		if( strpos($array2[count($array2) - 1], 'watch') !== false){
+			//tem watch
+			$array3 = explode("=", $array2[count($array2) - 1]);
+			$array4 = explode("&", $array3[1]);
+			return $array4[0];
+		} else {
+			$array3 = explode("?", $array2[count($array2) - 1]);
+			return $array3[0];
+		}
+	}
+
+	public static function getVideoNameAndFile($url) {
+		$videoUrl = Photo::extractVideoId($url);
+	    if( strpos($url, 'vimeo') !== false ){//vimeo
+	    	$video = "https://player.vimeo.com/video/" . $videoUrl;
+	        $hash = unserialize(file_get_contents("http://vimeo.com/api/v2/video/" . $videoUrl . ".php"));
+	        $file = $hash[0]['thumbnail_medium'];
+	    } else {
+	        $video = "https://www.youtube.com/embed/" . $videoUrl;
+	        $file = "https://img.youtube.com/vi/" . $videoUrl . "/sddefault.jpg";
+	    }
+
+		$final = array('file'  => $file,
+					   'video' => $video);
+
+		return $final;
 	}
 
 	public function saveMetadata($originalFileExtension, $metadata)
@@ -244,9 +279,8 @@ class Photo extends Eloquent {
 				if($i==0){
 					$similarPhotos = $arrayPhotosId;
 				}
-				
-			$similarPhotos = array_intersect($similarPhotos, $arrayPhotosId);
 
+			$similarPhotos = array_intersect($similarPhotos, $arrayPhotosId);
 			$i++;
 
 			}
@@ -255,17 +289,16 @@ class Photo extends Eloquent {
 
 			//To obtain name of similarPhotos
 			foreach ($similarPhotos as $similarPhotosId ) {
-				//echo $similarPhotosId;
-				//echo "<br>";
 				$photoObj = Photo::where('id',$similarPhotosId)->whereNull('deleted_at')->first();
-				
-				if(!empty($photoObj) && !is_null($photoObj)){
-					$similarPhotosDB = DB::table('photos')
-					->select('id', 'name')
-					->where('id',$photoObj->id)				
-					->get();
-					array_push($arrayPhotosDB,$similarPhotosDB[0]);
-				} 			
+
+ 				if(!empty($photoObj) && !is_null($photoObj)){
+ 					$similarPhotosDB = DB::table('photos')
+ 					->select('id', 'name')
+ 					->where('id',$photoObj->id)				
+ 					->get();
+ 					array_push($arrayPhotosDB,$similarPhotosDB[0]);
+ 				} 	
+
 			}
 		}
 
@@ -710,3 +743,4 @@ class Photo extends Eloquent {
 	
 
 }
+

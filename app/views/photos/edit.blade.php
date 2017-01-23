@@ -65,9 +65,22 @@
       {{ Form::open(array('url'=>'photos/' . $photo->id, 'method' => 'put', 'files'=> true)) }}           
       
       <div class="twelve columns row step-1">
-      	<h1><span class="step-text">Edição de informações da imagem {{$photo->name}}</span></h1>
-        
-        <div class="four columns alpha">
+      	<h1><span class="step-text">Edição de informações de {{$photo->name}}</span></h1>
+        <div class="eleven columns alpha" id="media_type">
+                  
+                  <br>
+                  <div class="form-row">
+                    <input type="radio" name="type" value="photo" id="type_photo" checked="checked" 
+                      {{$photo->type == 'photo' ? "checked" : ""}}>
+                      {{$photo->type == NULL ? "checked" : ""}}
+                    <label for="type_photo">Foto</label><br class="clear">
+                  </div>
+                  <div class="form-row">
+                    <input type="radio" name="type" value="video" id="type_video" {{$photo->type == 'video' ? "checked" : ""}}>
+                    <label for="type_video">Vídeo</label><br class="clear" >
+                  </div>
+                </div>
+        <div id="divPhoto" class="four columns alpha">
             <a class="fancybox" href="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" >
             <img id="old_image" class="single_view_image" style="" src="{{ URL::to("/arquigrafia-images")."/".$photo->id."_view.jpg" }}" />
             </a>
@@ -83,6 +96,7 @@
             <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), -Math.PI/2);">Girar 90° para esquerda</a>
             <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), Math.PI/2);">Girar 90° para direita</a>
           </div>
+
           <p>
             {{ Form::label('photo','Alterar imagem:') }} 
             {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
@@ -90,6 +104,20 @@
             <div class="error">{{ $errors->first('photo') }}</div>
           </p>
         </div>  
+
+        <div id="divVideo" class="twelve columns alpha">
+        </br>  
+        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube ou vimeo:') }}</div>          
+        <div class="four columns alpha">  
+            <p>{{ Form::text('video', $video, array('id' => 'video','style'=>'width:280px')) }} <br> 
+             </p> 
+             <div class="error">{{ $errors->first('video') }}</div>
+             <p>Ex. https://www.youtube.com/watch?v=XXXXXXXX ou <br>
+                ou  https://vimeo.com/XXXXXXXX</p>
+        </div>
+    </div>
+
+
       </div> 
 
       
@@ -111,11 +139,12 @@
             </tr>
             <tr>
              
-			  <div class="two columns alpha"><p>{{ Form::label('photo_imageAuthor', 'Autor da imagem*:') }}</p></div>
+			  <div class="two columns alpha"><p>{{ Form::label('photo_imageAuthor', 'Autor(es) da imagem/video*:') }}</p></div>
 				<div class="three columns">				
         <p>{{ Form::text('photo_imageAuthor', $photo->imageAuthor) }} <br>
 				  <div class="error">{{ $errors->first('photo_imageAuthor') }}</div>
         </p>
+        <p>Separe os autores diferentes com ";"</p>
 			  </div>
             </tr>
             <tr>
@@ -148,6 +177,9 @@
 
                
               </td>
+            </tr>
+            <tr>
+              
             </tr>
           </table>
           </div>
@@ -316,6 +348,53 @@
   </div>
   <script type="text/javascript">
     $(document).ready(function() {
+      var typeSaved  = "{{ $type }}";
+      var typeChecked  = "{{Input::old('type')}}";
+      
+      if(typeChecked == null || typeChecked == ""){
+          if(typeSaved == "photo" ){               
+              document.getElementById('type_photo').checked = true; 
+              document.getElementById('video').value = "";          
+              $('#divVideo').hide();
+              $('#divPhoto').show();
+          }else{
+            
+              var elem = document.getElementById('old_image');
+              elem.parentNode.removeChild(elem);
+              document.getElementById('type_video').checked = true;
+                  $('#divVideo').show();
+                  $('#divPhoto').hide();            
+          }
+      }else{
+        //checkado       
+
+        if(typeChecked == "video" ){   
+                if(typeSaved == "video" ){
+                    var elem = document.getElementById('old_image');
+                    elem.parentNode.removeChild(elem);
+                } 
+                document.getElementById('type_video').checked = true;
+                $('#divVideo').show();
+                $('#divPhoto').hide();
+        }else{
+            document.getElementById('type_photo').checked = true;
+            document.getElementById('video').value = null;
+            $('#divVideo').hide();
+            $('#divPhoto').show();
+            
+        }
+      }
+      
+
+      $('input[type=radio][name=type]').change(function(){
+        if(this.value == "video"){
+          $('#divVideo').show();
+          $('#divPhoto').hide();
+        } if(this.value == "photo") {
+          $('#divVideo').hide();
+          $('#divPhoto').show();
+        }
+    }); 
      $('#tags').textext({ plugins: 'tags' });
       
       @foreach($tags as $tag)
@@ -338,15 +417,15 @@
         $('#work_authors').textext({ plugins: 'tags' });
 
         @if(Input::old('work_authors')!= null)
-
-            <?php //print_r(Input::old('work_authors'));
-            $work_authors = explode (";", Input::old('work_authors')); ?>
+            <?php $work_authors = explode ('","', Input::old('work_authors')); ?>
         @endif
-        
-        @if (isset($work_authors) && $work_authors != null)
-                              // console.log("AC = "+ auth);
+        var string_author = "";
+        @if (isset($work_authors) && $work_authors != null && !empty($work_authors))
             @foreach ( $work_authors as $work_author )
-                $('#work_authors').textext()[0].tags().addTags([ {{ '"' . $work_author . '"' }} ]);
+                string_author = '{{$work_author}}';
+                string_author = string_author.replace('["',"");
+                string_author = string_author.replace('"]',"");
+                $('#work_authors').textext()[0].tags().addTags([ string_author ]);
             @endforeach
         @endif
       

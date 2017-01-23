@@ -10,6 +10,7 @@
 		@endif
 		<td width="143" class="{{ $type }}">
 			<div style=" width: 155px; height: 110px;position: relative;" >
+			
 			<!-- <input type="checkbox" class="{{'ch_photo'}}" id="{{ 'photo_' . $photo->id }}"
 				name="{{ 'photos_' . $type . '[]' }}" value="{{ $photo->id }}"> -->
 			@if ($count % 6 < 3)
@@ -19,13 +20,23 @@
 			@endif
 			<!-- <p>{{-- $page --}}</p> -->
 			<input type="hidden" id="pageCur" value="{{$page}}">
-			<a class="hovertext" href='{{ URL::to("/photos/{$photo->id}") }}' class="gallery_photo2" title="{{ $photo->name }}">
-			<img 
-			class="gallery_photo2" class="cls_image_search"  src="{{ URL::to('/arquigrafia-images/' . $photo->id . '_home.jpg') }}"
-				class="img_photo {{ $position }}" data-id="{{ $photo->id }}"
-				 >
-			</a>	
 
+			@if ($photo->type == "video")
+				<a href='{{ URL::to("/photos/{$photo->id}") }}'><div class="iconVideo" ></div><a/>
+			@endif
+			<a class="hovertext" href='{{ URL::to("/photos/{$photo->id}") }}' class="gallery_photo2" title="{{ $photo->name }}">
+
+			@if ($photo->type == "video")
+			<img 
+				class="gallery_photo2" class="cls_image_search"  src="{{ $photo->nome_arquivo }}"
+				class="img_photo {{ $position }}" data-id="{{ $photo->id }}">
+			@else
+				<img 
+				class="gallery_photo2" class="cls_image_search"  src="{{ URL::to('/arquigrafia-images/' . $photo->id . '_home.jpg') }}"
+					class="img_photo {{ $position }}" data-id="{{ $photo->id }}"
+					 >
+			@endif
+			</a>	
 		    
 		</div>
 	</td>

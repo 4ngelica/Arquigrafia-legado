@@ -45,6 +45,7 @@
 <div class="header-page" id="header-pagina">
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<a href="{{ URL::to("/home") }}" >
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="260px" height="45px" viewBox="0 0 260 45" enable-background="new 0 0 260 45" xml:space="preserve">
 <g>
@@ -54,9 +55,10 @@
 		11.769,15.737 11.769,30.641 23.954,30.641 23.954,12.544 8.448,12.544 8.448,33.833 27.275,33.833 27.275,24.254 27.275,9.349 
 		5.124,9.349 5.124,37.029 30.599,37.029 30.599,6.153 1.804,6.153 1.804,40.224 34.665,40.224 	"/>
 </g>
-<text transform="matrix(1.0338 0 0 1 42.2119 27.9512)" fill="#010101" font-family="'Roboto'" font-size="24.453"><a href="{{ URL::to("/home") }}" >ARQUIGRAFIA</a></text>
+<text transform="matrix(1.0338 0 0 1 42.2119 27.9512)" fill="#010101" font-family="'Roboto'" font-size="24.453">ARQUIGRAFIA</text>
 <text transform="matrix(1.0338 0 0 1 41.708 39.5527)" fill="#010101" font-family="'Roboto'" font-size="8.7682">Seu universo de imagens de arquitetura </text>
 </svg>
+</a>
 
 <div class="buttons">
 <!--   BOTÃO DA BARRA DE BUSCA   -->
@@ -94,17 +96,35 @@
 
 <!-- PÁGINA 1 --> 
 
+
 <div class="fullscreen_post_bg">
 
-	<div id="page1" class="wrapper">
+<!-- HEADER PAGINA INICIAL -->
+	<div class="header-main">
+		<a href="{{ URL::to("/home") }}" ><img src="{{ asset('img/logoarq-header.png')}}" /></a>
+		<div class="cadastro-button"><a href="{{ URL::to("/home") }}" >Ir para o site >></a></div>
+		<div class="lang-button"><a href="{{ URL::to("/landing/en") }}">en</a></div>
+		<div class="lang-button"><a href="{{ URL::to("/landing/pt") }}">pt</a></div>
+		<div class="search-field">
+			<form id="tfnewsearch" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" target="_blank">	
+				<input type="text" class="tftextinput" style="color:#000" name="q" size="21" maxlength="120" value="">
+				<input type="submit" value="search" class="tfbutton" style="background:none;" />
+				<input type="hidden" value="8" name="perPage" />
+			</form>
+		</div>
+	</div>
+<!-- END HEADER PAGINA INICIAL -->
 
+	<div id="page1" class="wrapper">
 		<div class="row">
 
 		<div style="display:flex;justify-content:center;align-items:center;text-align:center;height:100vh;">
+
 			<div class="column-4" style="padding: 0; width: 42%;">
 
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<a href="{{ URL::to("/home") }}" >
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="540px" height="90px" viewBox="0 0 540 90" enable-background="new 0 0 540 90" xml:space="preserve">
 <g>
@@ -117,6 +137,7 @@
 <text transform="matrix(1.0338 0 0 1 83.8008 56.7783)" fill="#010101" font-family="'Roboto'" font-size="67.2074">ARQUIGRAFIA</text>
 <text transform="matrix(1.0338 0 0 1 82.7573 79.3887)" fill="#010101" font-family="'Roboto'" font-size="18.1581">{{trans('landing.titleLogo')}} </text>
 </svg>
+</a>
 
 <div class="buttons-inicio">
 
@@ -149,12 +170,16 @@
 
 		</div>
 
-
 	</div>
+
+	<div class="seta">
+			<img src="{{ asset('img/arrow-landing.png')}}" />
+	</div>
+
 
 	<div id="bottom-page">
 				<a href="#page2">{{trans('landing.textPage1')}}</a>
-		</div>
+	</div>
 
 </div>
 
@@ -460,40 +485,25 @@
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 278.5005 271.8062)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="17.0962">avenida</text>
 	
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 74.894 422.7412)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="20.2152">inteligência coletiva</text>
-
 </g>
 </svg>
-
 </div>
 			
 <div class="column-3" style="width: 37.5%; align-content:center; align-items:center; display:inline-grid; height: 580px;">
-
 <div class="title-taggear">{{ trans('landing.titlePage4') }}</div>
 			
 <div class="texto-taggear">{{ trans('landing.paragraphPage4') }}</div>
 			</div>
-
-
 			</div> 
 		</div>
-
 		</div>
 	</div>
-
-
-
 	<!-- PÁGINA 5 -->
-
-
-
 <div class="fullscreen_grafico_bg">
 	<div id="page5" class="wrapper" style="opacity: 1;">
-
 		<div class="row">
-
 		<div style="display:flex;justify-content:center;align-items:center;height:100vh;">
 			<div class="column-8" style="padding: 0;display:flex;justify-content:center;align-items:center; margin-top: -30px;">
-
 			<div class="column-3" style="width: 40%; padding: 0;">
 				<div class="title-grafico">{{ trans('landing.titlePage5') }}</div>
 				
@@ -501,7 +511,6 @@
 					{{ trans('landing.paragraphPage5') }}
 				</div>
 			</div> 
-
 <div class="column-5" style="width: 60%;">
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -547,36 +556,20 @@
 <text transform="matrix(1 0 0 1 400.2949 345.6855)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">75</text>
 <text transform="matrix(1 0 0 1 503.4912 345.335)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">100</text>
 </svg>
-
-
 			</div>
-
 		</div>	
 		</div>
-
 		</div>
 	</div>
 </div>
-
-
-
 <!-- PÁGINA 6 --> 
-
-
 	<div id="page6" class="wrapper">
-
 		<div class="row">
-
 		<div style="display:flex;justify-content:center;align-items:center;height:100vh;">
 			<div class="column-7" style="padding: 0;">
-
 			<div class="title-georef">{{ trans('landing.titlePage6') }}</div>
-
 			<div class="texto-georef">{{ trans('landing.paragraphPage6') }}
-
 			</div>
-
-
 			<div id="mapa-georref">
 				<img src="{{ asset('img/mapa-temp.png')}}">
 		<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
@@ -586,7 +579,6 @@
 		<g id="Layer_2">
 		</g>
 		<g id="Layer_1">
-
 <path id="masp" class="georref-hover" fill="#1D1D1B" d="M532.404,225.592c-5.497,0-13.742,2.499-13.742,12.493c0,4.997,10.994,22.487,13.742,27.484
 	c2.746-4.997,13.742-22.487,13.742-27.484C546.146,228.091,537.904,225.592,532.404,225.592z M532.404,242.457
 	c-2.415,0-4.372-1.956-4.372-4.372c0-2.415,1.957-4.373,4.372-4.373s4.372,1.958,4.372,4.373
@@ -610,11 +602,8 @@
 	c2.746-4.997,13.742-22.487,13.742-27.484C470.742,259.634,462.5,257.135,457,257.135z M457,274c-2.415,0-4.372-1.956-4.372-4.372
 	c0-2.415,1.957-4.373,4.372-4.373s4.372,1.958,4.372,4.373C461.372,272.044,459.415,274,457,274z"/>
 </svg>
-
-
 		</g>
 		</svg>
-
 			<img class="hover-image" id="img-paulista" src="{{ asset('img/map-paulista.png')}}" >
 			<img class="hover-image" id="img-gazeta" src="{{ asset('img/map-gazeta.png')}}">
 			<img class="hover-image" id="img-masp" src="{{ asset('img/map-masp.png')}}">
@@ -622,35 +611,19 @@
 			<img class="hover-image" id="img-trianon" src="{{ asset('img/map-trianon.png')}}">
 			</div>
 			
-
-
-
-
 			</div> 
 		</div>
-
 		</div>
 	</div>
-
-
-
 <!-- PÁGINA 7 --> 
-
-
 	<div id="page7" class="wrapper">
-
 		<div class="row">
-
 		<div style="display:flex;justify-content:center;align-items:center;height:100vh;">
 			<div class="column-6">
-
 				<div class="column-4" style="padding: 0; width: 66.6666667%">
 				<div style="width: 75%; text-align: center;">
 					<div class="title-final" style="text-align: left;">{{ trans('landing.titlePage7') }}</div>
-
 					<div class="texto-final" style="text-align: left;">{{ trans('landing.paragraphPage7') }}</div>
-
-
 					<div class="buttons-final">
 					<!--   BOTÃO CADASTRO FINAL  -->	
 					<div class="cadastro-final">
@@ -660,7 +633,6 @@
 					</div>
 					<!--   END BOTÃO CADASTRO FINAL  -->
 			
-
 					<div style="font-size: 20px;color:#7f7f7f;-webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;">
 					{{ trans('landing.registerBtn') }}</div>
@@ -672,7 +644,6 @@
 						</a>
 					</div>
 					<!--  END BOTÃO LOGIN FINAL  -->
-
 					<div class="botao-refsite">
 							<a href="{{ URL::to("/home") }}" style="color:white;">{{ trans('landing.siteBtn')}}</a>
 					</div>
@@ -680,19 +651,14 @@
 					</div>
 					</div>
 					
-
 				</div>	
 				</div>
-
 				<div class="column-2" style="padding: 0; width: 33.3333333%; margin-top: 75px;">
 						<img src="{{ asset('img/app-iphone.png')}}">
 				</div>
 			</div>  
 		</div>
-
 		</div>
 	</div>
-
-
 </body>
 </html>

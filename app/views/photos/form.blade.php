@@ -89,7 +89,18 @@
     {{ Form::open(array('url'=>'photos', 'files'=> true)) }}
     <div class="twelve columns row step-1">
     <h1><span class="step-text">Upload</span></h1>
-    <div class="four columns alpha">
+    <div class="eleven columns alpha" id="media_type">        
+        <br>
+        <div class="form-row">
+            <input type="radio" name="type" value="photo" id="type_photo" checked="checked">
+            <label for="type_photo">Foto</label><br class="clear">
+        </div>
+        <div class="form-row">
+            <input type="radio" name="type" value="video" id="type_video">
+            <label for="type_video">Vídeo</label><br class="clear">
+        </div>
+    </div>
+    <div id="divPhoto" class="four columns alpha">
     <img src="" id="preview_photo">
     <div id="image_rotate" style="display:none;">
     <br></br>
@@ -102,12 +113,24 @@
     {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
     <br></br>
     <div class="error">{{ $errors->first('photo') }}</div>
+    
     </p>
+    </div>
+    <div id="divVideo" class="twelve columns alpha">
+        </br>  
+        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube ou vimeo:') }}</div>  
+        <div class="four columns alpha">    
+            <p>{{ Form::text('video', $video, array('id' => 'video','style'=>'width:280px')) }} <br>
+            </p>
+            <div class="error">{{ $errors->first('video') }}</div>
+            <p>Ex. https://www.youtube.com/watch?v=XXXXXXXX  <br>
+                ou  https://vimeo.com/XXXXXXXX</p>
+        </div>
     </div>
     <br>
     </div>
     <div id="registration" class="twelve columns row step-2">
-    <h1><span class="step-text">Dados da imagem</span></h1>
+    <h1><span class="step-text">Informações</span></h1>
     </br>
     <h4>Campos obrigatórios (*)</h4>
     <p>{{ Form::hidden('pageSource', $pageSource) }} </p>
@@ -129,12 +152,13 @@
     </tr>
     <tr>
     <td>
-    <div class="two columns alpha"><p>{{ Form::label('photo_imageAuthor', 'Autor da imagem*:') }}</p></div>
+    <div class="two columns alpha"><p>{{ Form::label('photo_imageAuthor', 'Autor(es) da imagem/video*:') }}</p></div>
     <div class="three columns omega">
     <p>
     {{ Form::text('photo_imageAuthor', $user->name) }} <br>
     <div class="error">{{ $errors->first('photo_imageAuthor') }}</div>
     </p>
+    <p>Separe os autores diferentes com ";"</p>
     </div>
     </td>
     </tr>
@@ -163,6 +187,11 @@
     <div class="five columns alpha">
     <textarea name="tags" id="tags" cols="60" rows="1" style="display: none;"></textarea>
     </div>
+    </td>
+    </tr>
+    <tr>
+    <td>
+<!-- midia-->
     </td>
     </tr>
     </table>
@@ -406,6 +435,35 @@
     
     <script type="text/javascript">
     $(document).ready(function() {
+        
+        var typeChecked  = "{{Input::old('type')}}";
+
+        
+        if(typeChecked == "video" ){
+                document.getElementById('type_video').checked = true;
+                $('#divVideo').show();
+                $('#divPhoto').hide();
+        }else{
+            document.getElementById('type_photo').checked = true;
+            document.getElementById('video').value = null;
+            $('#divVideo').hide();
+            $('#divPhoto').show();
+            
+        }
+
+       
+        
+        $('input[type=radio][name=type]').change(function(){
+            if(this.value == "video"){
+                $('#divVideo').show();
+                $('#divPhoto').hide();
+            } if(this.value == "photo") {
+                $('#divVideo').hide();
+                $('#divPhoto').show();
+            }
+        });
+
+
         if({{Input::old('autoOpenModal','false')}}){    
             $( "#dialog-confirm" ).html("<b>Cadastro de imagem realizado com sucesso!</b> <br><br> Gostaria de utilizar os dados da imagem cadastrada para o próximo upload?");
             $( "#dialog-confirm" ).dialog({
