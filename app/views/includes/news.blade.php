@@ -29,8 +29,13 @@
 	</div>
 	@elseif($info->news_type == 'new_institutional_photo')<!--Uma instituição inseriu uma foto-->
 			  <div class="gallery_box">
-			    <a href='{{ URL::to("/photos") . "/" . $info->object_id }}'>                 
-			        <img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
+			    <a href='{{ URL::to("/photos") . "/" . $info->object_id }}'>  
+			    	@if($photos->type == "video")
+	  					<div class="iconVideo"></div>
+               			<iframe width="560" height="315" src="{{$photos->video}}" frameborder="0" allowfullscreen></iframe>
+               		@else	
+			        	<img src={{"/arquigrafia-images/" . $info->object_id . "_home.jpg"}} title="{{ Photo::find($info->object_id)->name }}" class="gallery_photo" />
+			        @endif
 				</a>
 				<a href='{{ URL::to("/photos") . "/" . $info->object_id }}' class="name">
 				        A instituição {{modules\institutions\models\Institution::find($info->sender_id)->name}} 

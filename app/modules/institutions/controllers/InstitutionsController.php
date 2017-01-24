@@ -167,6 +167,7 @@ class InstitutionsController extends \BaseController {
     }
 
     $user_id = Auth::id();
+    $exist = false;
     $institution = Institution::find(Session::get('institutionId'));
     $albumsInstitutional = \Album::withInstitution($institution)->get();
     $albums = [ "" => "Escolha o álbum" ];
@@ -231,13 +232,16 @@ class InstitutionsController extends \BaseController {
         ->withInput($input)->withErrors($messages); 
 
     } else {
-      if (\Input::has('draft_id')) {
-        $photo = Photo::onlyDrafts()->find(\Input::get('draft_id'));
-        //$photo->nome_arquivo = 'draft';
-        //$photo->draft();
-      }
-      if (( \Input::hasFile('photo') and \Input::file('photo')->isValid() ) || !empty($input["video"])){
-            $photo = new Photo;  
+            if (\Input::has('draft_id')) {
+              $photo = Photo::onlyDrafts()->find(\Input::get('draft_id'));        
+              $exist = true;
+            }
+
+            if ( !isset($photo) ) {
+              $photo = new Photo;
+            }
+            
+            //$photo = new Photo;  
             $photo->support = $input["support"];
             $photo->tombo = $input["tombo"];
             $photo->subject = $input["subject"];
@@ -305,32 +309,44 @@ class InstitutionsController extends \BaseController {
             $photo->authorized = $input["authorized"];
             $photo->user_id = Auth::id();
             $photo->dataUpload = date('Y-m-d H:i:s');  
-
-            $photo->save();
-            
             $photo->institution_id = Session::get('institutionId');
 
+                $photo->draft = NULL;            
+
             if (\Input::has('draft')){
-              $photo->nome_arquivo = 'draft';
-              $photo->draft();
-            } elseif ($input["type"] == "video") {
-              $videoUrl = $input['video'];
-              $array = Photo::getVideoNameAndFile($videoUrl);        
-              $photo->video = $array['video'];
-              $photo->nome_arquivo = $array['file'];
-              $photo->type = "video";
-            }else{
-                if(\Input::hasFile('photo') and \Input::file('photo')->isValid() and $input["type"] == "photo") {
-                    $file = \Input::file('photo');
-                    $photo->nome_arquivo = $file->getClientOriginalName();
-                    //$photo->removeDraft();          
-                    $ext = $file->getClientOriginalExtension();
-                    $photo->nome_arquivo = $photo->id . '.' . $ext;
-                    $photo->type = "photo";
-                    $photo->video = NULL;
-                }
+               $photo->nome_arquivo = 'draft';
+               $photo->draft();
+               $photo->type = NULL;
+            }elseif(\Input::hasFile('photo') and \Input::file('photo')->isValid() and $input["type"] == "photo") {
+                        $file = \Input::file('photo');
+                        $photo->nome_arquivo = $file->getClientOriginalName();
+                        $photo->removeDraft(); 
+                        $photo->save();         
+                        $ext = $file->getClientOriginalExtension();
+                        $photo->nome_arquivo = $photo->id . '.' . $ext;
+                        $photo->type = "photo";
+                        $photo->video = NULL;
+
+                          $angle = array_key_exists('rotate', $input) ? (float) $input['rotate'] : 0;
+                          $metadata       = Image::make(\Input::file('photo'))->exif();
+                          $public_image   = Image::make(\Input::file('photo'))->rotate($angle)->encode('jpg', 80);
+                          $original_image = Image::make(\Input::file('photo'))->rotate($angle);
+                          $public_image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
+                          $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); 
+                          $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
+                          $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
+                          $photo->saveMetadata(strtolower($ext), $metadata);   
+            }elseif (!empty($input["video"])){                
+                    $videoUrl = $input['video'];
+                    $array = Photo::getVideoNameAndFile($videoUrl);        
+                    $photo->video = $array['video'];
+                    $photo->nome_arquivo = $array['file'];
+                    $photo->type = "video";
             }
-          
+           
+            
+             $photo->save();
+           
 
             if ( !empty($input["new_album-name"]) ) {
                 $album = Album::create([
@@ -364,34 +380,24 @@ class InstitutionsController extends \BaseController {
               $author->saveAuthors($input["work_authors"],$photo);
             }   
             
-            
-            if($input["type"] == "photo") {
-              $angle = array_key_exists('rotate', $input) ? (float) $input['rotate'] : 0;
-              $metadata       = Image::make(\Input::file('photo'))->exif();
-              $public_image   = Image::make(\Input::file('photo'))->rotate($angle)->encode('jpg', 80);
-              $original_image = Image::make(\Input::file('photo'))->rotate($angle);
-              $public_image->widen(600)->save(public_path().'/arquigrafia-images/'.$photo->id.'_view.jpg');
-              $public_image->heighten(220)->save(public_path().'/arquigrafia-images/'.$photo->id.'_200h.jpg'); 
-              $public_image->fit(186, 124)->encode('jpg', 70)->save(public_path().'/arquigrafia-images/'.$photo->id.'_home.jpg');
-              $original_image->save(storage_path().'/original-images/'.$photo->id."_original.".strtolower($ext));
-              $photo->saveMetadata(strtolower($ext), $metadata);         
-            }
-            $photo->save();
+           
+           
             $input['autoOpenModal'] = 'true';
             $sourcePage = $input["pageSource"]; //get url of the source page through form
             $input['photoId'] = $photo->id;
             $input['dates'] = true;
             $input['dateImage'] = true;
             unset($input['draft_id']);       
-            
-            return \Redirect::back()->withInput($input);
 
-      } else{
-        $messages = $validator->messages();
-        return \Redirect::to('/institutions/form/upload')
-          ->withInput($input)->withErrors($messages); 
-      }
-    }
+            return \Redirect::back()->withInput($input);
+      } 
+
+      // else{ 
+      //   $messages = $validator->messages();
+      //   return \Redirect::to('/institutions/form/upload')
+      //     ->withInput($input)->withErrors($messages); 
+      // }
+    
   }
 
   /* Edição do formulario institutional*/
