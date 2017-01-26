@@ -562,11 +562,9 @@
 					</div>-->
 
 					<div class="twelve columns">
-						<input name="enviar" type="submit" class="btn" value="ENVIAR">
-						<input name="draft" type="submit" class="btn"
-							value="SALVAR INFORMAÇÕES SEM A IMAGEM">
-						<!--<input type="button" id="btnOpenDialogRepopulate" value="ENVIAR" class="btn">-->
-						<div id="dialog-confirm" title=" "></div>
+						<div><input name="enviar" type="submit" class="btn" value="ENVIAR"></div>
+						<div id="divDraftButton"><input name="draft" type="submit" class="btn" value="SALVAR INFORMAÇÕES SEM A IMAGEM"></div>
+ 						<div id="dialog-confirm" title=" "></div>
 					</div>
 				</div>
 			{{ Form::close() }}
@@ -613,21 +611,24 @@
                 document.getElementById('type_video').checked = true;
                 $('#divVideo').show();
                 $('#divPhoto').hide();
+                $('#divDraftButton').hide();
         }else{
             document.getElementById('type_photo').checked = true;
             document.getElementById('video').value = null;
             $('#divVideo').hide();
             $('#divPhoto').show();
-            
+            $('#divDraftButton').show();            
         }
 
         $('input[type=radio][name=type]').change(function(){
             if(this.value == "video"){
                 $('#divVideo').show();
                 $('#divPhoto').hide();
+                $('#divDraftButton').hide();
             } if(this.value == "photo") {
                 $('#divVideo').hide();
                 $('#divPhoto').show();
+                $('#divDraftButton').show();
             }
         });
 

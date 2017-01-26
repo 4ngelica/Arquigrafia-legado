@@ -86,7 +86,7 @@ class Photo extends Eloquent {
 		return $this->belongsTo('User');
 	}
 
-	public function institutions()
+	public function institution()
 	{
 		return $this->belongsTo('modules\institutions\models\Institution');
 	}
