@@ -12,7 +12,7 @@ class APIFeedController extends \BaseController {
 		$users_ids = $following_users->lists('id');
 		$institutions_ids = $following_institutions->lists('id');
 		$users_photos = \DB::table('photos')->whereNull('deleted_at')->whereNull('institution_id')->whereIn('user_id', $users_ids);
-		$institutions_photos = \DB::table('photos')->whereNull('deleted_at')->whereIn('institution_id', $institutions_ids);
+		$institutions_photos = \DB::table('photos')->whereNull('deleted_at')->whereNull('draft')->whereIn('institution_id', $institutions_ids);
 		$all_photos = $institutions_photos->union($users_photos)->orderBy('created_at', 'desc')->take(20)->get();
 		$result = [];
 		foreach ($all_photos as $photo) {
@@ -24,7 +24,7 @@ class APIFeedController extends \BaseController {
 			}
 		}
 		if(empty($result)) {
-			$institutions_photos = \DB::table('photos')->whereNull('deleted_at')->whereNotNull('institution_id')->orderBy('created_at', 'desc')->take(20)->get();
+			$institutions_photos = \DB::table('photos')->whereNull('deleted_at')->whereNull('draft')->whereNotNull('institution_id')->orderBy('created_at', 'desc')->take(20)->get();
 			foreach ($institutions_photos as $photo) {
 				array_push($result, ["photo" => $photo, "sender" => Institution::find($photo->institution_id)]);
 			}
@@ -54,7 +54,7 @@ class APIFeedController extends \BaseController {
 			}
 		}
 		if(empty($result)) {
-			$institutions_photos = \DB::table('photos')->whereNull('deleted_at')->whereNotNull('institution_id')->where('id', '<', $max_id)->orderBy('created_at', 'desc')->take(20)->get();
+			$institutions_photos = \DB::table('photos')->whereNull('deleted_at')->whereNull('draft')->whereNotNull('institution_id')->where('id', '<', $max_id)->orderBy('created_at', 'desc')->take(20)->get();
 			foreach ($institutions_photos as $photo) {
 				array_push($result, ["photo" => $photo, "sender" => Institution::find($photo->institution_id)]);
 			}
