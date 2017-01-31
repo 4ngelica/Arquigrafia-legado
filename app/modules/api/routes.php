@@ -10,6 +10,7 @@ Route::group(array('middleware' => 'cors', 'prefix' => 'api/'), function()
     Route::post('photos/report', 'modules\api\controllers\APIReportController@report');
     /* Controlador de autenticação */
     Route::post('login', 'modules\api\controllers\APILogInController@verify_credentials');
+    Route::post('login_facebook', 'modules\api\controllers\APILogInController@verify_credentials_facebook');
     Route::post('auth', 'modules\api\controllers\APILogInController@validate_mobile_token');
     Route::post('logout', 'modules\api\controllers\APILogInController@log_out');
     /* Controlador de feed */

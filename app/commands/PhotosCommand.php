@@ -1,25 +1,20 @@
 <?php
-
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-
 class PhotosCommand extends Command {
-
 	/**
 	 * The console command name.
 	 *
 	 * @var string
 	 */
 	protected $name = 'PhotoRegenerate';
-
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
 	protected $description = 'Command description.';
-
 	/**
 	 * Create a new command instance.
 	 *
@@ -29,7 +24,6 @@ class PhotosCommand extends Command {
 	{
 		parent::__construct();
 	}
-
 	/**
 	 * Execute the console command.
 	 *
@@ -37,9 +31,26 @@ class PhotosCommand extends Command {
 	 */
 	public function fire()
 	{
-		$photos = Photo::all();
+		$date = $this->option('date');
+		if($date == null)
+			$photos = Photo::all();
+		else {
+			try {
+				$date = strtotime($date);				
+				$date = date('Y-m-d', $date);				
+				$photos = Photo::where('created_at', '>=', $date)->get();
+			} catch (Exception $e){
+				$this->error($e);
+				return;
+			}
+		}
+		$this->info('Verifying ' . count($photos) . ' photos...');
+			
 		foreach ($photos as $photo) {
 			$original_image = '';
+			//checks if it's video
+			if($photo->type == 'video')
+				continue;
 			//checks if original files exists
 			if(\File::exists('app/storage/original-images/' . $photo->id . '_original.jpg'))  
 				$original_image = 'app/storage/original-images/' . $photo->id . '_original.jpg';
@@ -54,9 +65,7 @@ class PhotosCommand extends Command {
 				continue;
 			}
 			
-
 			$sizes = ['200h', 'home', 'micro', 'view'];
-
 			for($i = 0; $i < count($sizes); $i++){
 				try {
 					$path = public_path().'/arquigrafia-images/'.$photo->id.'_'.$sizes[$i].'.jpg';
@@ -81,10 +90,8 @@ class PhotosCommand extends Command {
 					$this->error('Error when resizing image ' . $photo->id . '_' . $sizes[$i] . ': ' . $e->getMessage());
 				}
 			}
-
 		}
 	}
-
 	/**
 	 * Get the console command arguments.
 	 *
@@ -96,7 +103,6 @@ class PhotosCommand extends Command {
 			array('example', InputArgument::OPTIONAL, 'An example argument.'),
 		);
 	}
-
 	/**
 	 * Get the console command options.
 	 *
@@ -106,7 +112,7 @@ class PhotosCommand extends Command {
 	{
 		return array(
 			array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
+			array('date', 'd', InputOption::VALUE_OPTIONAL, 'Defines the date to start regenerating photos (DD-MM-YYYY).', null),
 		);
 	}
-
 }
