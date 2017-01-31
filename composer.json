@@ -12,7 +12,8 @@
 		"maatwebsite/excel": "1.*",
 		"jaybizzle/crawler-detect" :"1.*",
 		"pda/pheanstalk": "2.1.*",
-		"barryvdh/laravel-cors": "0.2.x"
+		"barryvdh/laravel-cors": "0.2.x",
+		"cmgmyr/messenger": "~1.0"
 	},
 	"require-dev": {
 		"league/factory-muffin": "~2.1",
