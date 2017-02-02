@@ -94,3 +94,4 @@ require app_path().'/modules/gamification/gamification.php';
 require app_path().'/modules/news/news.php';
 require app_path().'/modules/draft/draft.php';
 require app_path().'/modules/api/api.php';
+require app_path().'/modules/chat/chat.php';
