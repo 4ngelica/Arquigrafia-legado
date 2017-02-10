@@ -42,6 +42,10 @@ class ThreadsController extends \BaseController {
 
 	public function destroy($userId) {
 		$input = Input::all();
+		$user = User::find($userId);
+		$thread = Thread::find($input['chat_id']);
+		$participant = Participant::where('user_id', $userId)->where('thread_id', $thread->id)->first();
+		$participant->delete();
 		return View::make('test', ['output' => 'destroy']);
 	}
 
@@ -53,6 +57,8 @@ class ThreadsController extends \BaseController {
 
 	public function show($userId, $chatId) {
 		$thread = Thread::find($chatId);
+		$messages = $thread->messages();
+		$participants = $thread->participants();
 		return View::make('test', ['output' => $thread]);
 	}
 }
