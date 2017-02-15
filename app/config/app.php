@@ -129,6 +129,7 @@ return array(
     'lib\metadata\Exiv2ServiceProvider',
     'Barryvdh\Cors\CorsServiceProvider',
     'Cmgmyr\Messenger\MessengerServiceProvider',
+		'Artdarek\Pusherer\PushererServiceProvider',
 	),
 
 	/*

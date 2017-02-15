@@ -11,9 +11,19 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
+use Artdarek\Pusherer\Facades\Pusherer;
 
 class ThreadsController extends \BaseController {
-	public function test($id){
+	public function test($id) {
+		// Pegar o chat que estamos
+		// Através do chat pegar os participantes
+		// Remover quem enviou
+		// Enviar vários eventos para cada participante
+
+		// Send notification to Pusher
+    $message = "This is just an example message!";
+   	Pusherer::trigger('my-channel', 'my-event', array( 'message' => $message ));
+
 		$thread = new Thread();
 		$thread->scopeForUser(\DB::table('users'), 1);
 		return View::make('test', ['output' => $thread]);
