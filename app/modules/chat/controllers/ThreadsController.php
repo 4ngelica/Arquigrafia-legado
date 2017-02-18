@@ -26,7 +26,7 @@ class ThreadsController extends \BaseController {
 
 		$thread = new Thread();
 		$thread->scopeForUser(\DB::table('users'), 1);
-		return View::make('test', ['output' => $thread]);
+		return View::make('test', ['output' => $thread, 'user_id' => $id]);
 	}
 
 	public function create($userId) {
@@ -44,7 +44,8 @@ class ThreadsController extends \BaseController {
 		$participant->last_read = Carbon::now();
 		$participant->save();
 
-		$thread->addParticipants($input['participants']);
+		$participants = explode(',', $input['participants']);
+		$thread->addParticipants($participants);
 
 
 		return View::make('test', ['output' => 'create']);
