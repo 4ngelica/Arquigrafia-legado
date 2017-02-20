@@ -28,7 +28,7 @@ class MessagesController extends \BaseController {
 		foreach($participants as $participant) {
 			if($participant->user_id == $id)
 				continue;
-			Pusherer::trigger('2_channel', 'new_message', array( 'message' => $message ));;
+			Pusherer::trigger('my-channel', 'my-event', array( 'name' => 'John', 'message' => $message->body ));;
 		}
 
 	}

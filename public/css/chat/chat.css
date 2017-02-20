@@ -1,0 +1,12 @@
+#chatbox {
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 50px;
+  height: 400px;
+  background-color: grey;
+  padding: 20px;
+}
+
+.chat-message {
+  color: white;
+}

@@ -21,8 +21,8 @@ class ThreadsController extends \BaseController {
 		// Enviar vários eventos para cada participante
 
 		// Send notification to Pusher
-    $message = "This is just an example message!";
-   	Pusherer::trigger('my-channel', 'my-event', array( 'message' => $message ));
+    // $message = "This is just an example message!";
+   // 	Pusherer::trigger('my-channel', 'my-event', array( 'message' => $message ));
 
 		$thread = new Thread();
 		$thread->scopeForUser(\DB::table('users'), 1);
