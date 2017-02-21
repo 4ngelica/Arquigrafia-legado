@@ -2,6 +2,7 @@
 
 namespace modules\chat\controllers;
 
+use User;
 use Carbon\Carbon;
 use Cmgmyr\Messenger\Models\Thread;
 use Cmgmyr\Messenger\Models\Message;
@@ -29,29 +30,32 @@ class ThreadsController extends \BaseController {
 
 		$thread = new Thread();
 		$thread->scopeForUser(\DB::table('users'), 1);
-		return View::make('test', ['output' => $thread, 'user_id' => $id, 'user_name' => $user->name]);
+		return View::make('chats', ['output' => $thread, 'user_id' => $id, 'user_name' => $user->name]);
 	}
 
 	public function create($userId) {
-		$input = Input::all();
-		$thread = new Thread();
-		$thread->subject = $input['subject'];
-		$thread->save();
+		try {
+			$input = Input::all();
+			$thread = new Thread();
+			$subject = null;
+			$thread->save();
 
-		//tratamento de recebimento da lista de participantes, assumindo array
+			//tratamento de recebimento da lista de participantes, assumindo array
 
-		//usuario inicial
-		$participant = new Participant();
-		$participant->thread_id = $thread->id;
-		$participant->user_id = $userId;
-		$participant->last_read = Carbon::now();
-		$participant->save();
+			//usuario inicial
+			$participant = new Participant();
+			$participant->thread_id = $thread->id;
+			$participant->user_id = $userId;
+			$participant->last_read = Carbon::now();
+			$participant->save();
 
-		$participants = explode(',', $input['participants']);
-		$thread->addParticipants($participants);
+			$participants = $input['participants'];
+			$thread->addParticipants($participants);
 
-
-		return View::make('test', ['output' => 'create']);
+			return \Response::json($thread->id);
+		} catch (Exception $error) {
+			return \Response::json('Erro ao realizar operação.', 500);
+		}
 	}
 
 	public function destroy($userId) {
@@ -64,15 +68,23 @@ class ThreadsController extends \BaseController {
 	}
 
 	public function index($userId) {
-		$thread = new Thread();
-		$thread->scopeForUser(\DB::table('users'), $userId);
-		return View::make('test', ['output' => 'index']);
+		$user = User::find($userId);
+		$threads = $user->threads()->get();
+		$array = array();
+
+		for($i = 0; $i < count($threads); $i++) {
+			$participants = $threads[$i]->participants()->get();
+			$last_message = $messages = Message::where('thread_id', $threads[$i]->id)->orderBy('id', 'desc')->take(1)->get();
+			array_push($array, [$i => ['thread' => $threads[0], 'participants' => $participants], 'last_message' => $last_message]);
+		}
+		
+		return View::make('chats', ['data' => $array, 'user_id' => $userId, 'user_name' => $user->name]);
 	}
 
 	public function show($userId, $chatId) {
 		$thread = Thread::find($chatId);
-		$messages = $thread->messages();
-		$participants = $thread->participants();
+		$messages = $thread->messages()->get();
+		$participants = $thread->participants()->get();
 		return View::make('test', ['output' => $thread]);
 	}
 }
