@@ -24,9 +24,12 @@ class ThreadsController extends \BaseController {
     // $message = "This is just an example message!";
    // 	Pusherer::trigger('my-channel', 'my-event', array( 'message' => $message ));
 
+		// Getting current user info
+		$user = \User::find($id);
+
 		$thread = new Thread();
 		$thread->scopeForUser(\DB::table('users'), 1);
-		return View::make('test', ['output' => $thread, 'user_id' => $id]);
+		return View::make('test', ['output' => $thread, 'user_id' => $id, 'user_name' => $user->name]);
 	}
 
 	public function create($userId) {

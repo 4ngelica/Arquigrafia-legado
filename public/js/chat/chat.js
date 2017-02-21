@@ -6,8 +6,8 @@ function connectPusher() {
     encrypted: true
   });
 
-  var channel = pusher.subscribe('my-channel');
-  channel.bind('my-event', function(data) {
+  var channel = pusher.subscribe("1");
+  channel.bind(`${userID}`, function(data) {
     showMessage(data.name, data.message);
   });
 }
@@ -16,29 +16,45 @@ function showMessage(userName, message) {
   $('#chat-list').append(`<li class='chat-message'><b>${userName}:</b> ${message}</li>`);
 }
 
+function sendMessage() {
+  thread_id = $('#thread-id-input').val();
+  message = $('#message-input').val();
+  sendData = {
+    thread_id,
+    message,
+  };
+
+  // Showing own message on chat
+  showMessage(userName, message);
+
+  // Cleaning message-input field
+  $('#message-input').val("");
+
+  $.ajax({
+      type: "POST",
+      url : `/users/${userID}/chats/test`,
+      data: sendData,
+      success : function(data){
+        console.log(data);
+      }
+  }, "json");
+}
+
 /**
- * ON READY DOCUMENT
+ * ON DOCUMENT READY
 **/
 $(document).ready(function() {
-  // Connecting site with Pusher
+  // Connecting client with Pusher
   connectPusher();
 
   // Event when click on send-message button
   $("#send-message").click(function () {
-    thread_id = $('#thread-id-input').val();
-    message = $('#message-input').val();
-    sendData = {
-      thread_id,
-      message,
-    };
+    sendMessage();
+  });
 
-    $.ajax({
-        type: "POST",
-        url : "/users/1/chats/test",
-        data: sendData,
-        success : function(data){
-          console.log(data);
-        }
-    }, "json");
+  // When press enter on message-input
+  $('#message-input').keypress(function (e) {
+    // If pressed ENTER
+    if (e.which == 13) sendMessage();
   });
 });

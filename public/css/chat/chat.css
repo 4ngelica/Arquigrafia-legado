@@ -1,10 +1,23 @@
+#chat-input-box {
+  width: 50%;
+  margin: 0 auto;
+}
+
 #chatbox {
   width: 50%;
   margin: 0 auto;
-  margin-top: 50px;
+  margin-top: 20px;
   height: 400px;
   background-color: grey;
   padding: 20px;
+}
+
+#thread-id-input {
+  width: 30px;
+}
+
+#message-input {
+  width: 70%;
 }
 
 .chat-message {

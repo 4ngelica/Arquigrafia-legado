@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\View;
 use Artdarek\Pusherer\Facades\Pusherer;
 
 class MessagesController extends \BaseController {
-	public function sendMessage($id){
+	public function sendMessage($id) {
+		// Saving message
 		$input = Input::all();
 		$message = new Message();
 		$message->thread_id = $input['thread_id'];
@@ -22,13 +23,20 @@ class MessagesController extends \BaseController {
 		$message->user_id = $id;
 		$message->save();
 
-		//MessagesController::sendEvents($id, $message->thread_id, $message);
+		// Getting current user data
+		$user = \User::find($id);
+
+		// Find thread that we wanna send the message
 		$thread = Thread::find($message->thread_id);
+		// Getting all participants from that thread
 		$participants = $thread->participants()->get();
+		// Sending pusherer events
 		foreach($participants as $participant) {
+			// If the participant is the logged user, don't sender the Pusher event
 			if($participant->user_id == $id)
 				continue;
-			Pusherer::trigger('my-channel', 'my-event', array( 'name' => 'John', 'message' => $message->body ));;
+			// Sending Pusher event
+			Pusherer::trigger(strval($message->thread_id), strval($participant->user_id), array( 'name' => $user->name, 'message' => $message->body ));;
 		}
 
 	}
