@@ -36,9 +36,17 @@ class MessagesController extends \BaseController {
 			if($participant->user_id == $id)
 				continue;
 			// Sending Pusher event
-			Pusherer::trigger(strval($message->thread_id), strval($participant->user_id), array( 'name' => $user->name, 'message' => $message->body ));;
+			Pusherer::trigger(strval($participant->user_id), strval($message->thread_id), array( 'name' => $user->name, 'message' => $message->body ));;
 		}
 
+	}
+
+	public function getMessages(){
+		$input = Input::all();
+		$id = $input['thread_id'];
+		$thread = Thread::find($id);
+		$messages = $thread->messages()->get();
+		return \Response::json($messages);
 	}
 
 	private static function sendEvents($userId, $threadId, $message){
