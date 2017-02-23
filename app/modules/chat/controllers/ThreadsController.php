@@ -51,7 +51,14 @@ class ThreadsController extends \BaseController {
 
 			$participants = $input['participants'];
 			$thread->addParticipants($participants);
+			$participants = $thread->participants()->get();
 
+			foreach($participants as $participant){
+				if($participant->user_id == $userId)
+					continue;
+				Pusherer::trigger($participant->user_id, 'new_thread', array( 'thread' => $thread ));
+			}
+			
 			return \Response::json($thread->id);
 		} catch (Exception $error) {
 			return \Response::json('Erro ao realizar operação.', 500);
@@ -73,11 +80,14 @@ class ThreadsController extends \BaseController {
 		$array = array();
 
 		for($i = 0; $i < count($threads); $i++) {
-			$participants = $threads[$i]->participants()->get();
+			$participants = $threads[$i]->participants()->with(array('user' => function($query) {
+				$query->select('id', 'name');
+			}))->get();
+			$names = $threads[$i]->participantsString($userId);
 			$last_message = $messages = Message::where('thread_id', $threads[$i]->id)->orderBy('id', 'desc')->take(1)->get();
-			array_push($array, [$i => ['thread' => $threads[0], 'participants' => $participants], 'last_message' => $last_message]);
+			array_push($array, [$i => ['thread' => $threads[0], 'participants' => $participants, 
+									   'names' => $names], 'last_message' => $last_message]);
 		}
-		
 		return View::make('chats', ['data' => $array, 'user_id' => $userId, 'user_name' => $user->name]);
 	}
 
