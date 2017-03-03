@@ -15,8 +15,10 @@
         // Defining variables pushed from PHP
         var userID = {{ $user_id }};
         var userName = "{{ $user_name }}";
-				var currentThreadID = 1;
 				var currentMessages = [];
+				var currentChats = {{ json_encode($data) }};
+				var currentChat;
+				console.log(currentChats);
     </script>
 
 @stop
@@ -27,7 +29,7 @@
 		<div class="five columns alpha">
 			<div class="wrapper-flex">
 				<h2>Mensagens</h2>
-				<div class="new-message"><a href="">Nova conversa</a></div>
+				<div class="new-message"><a href="#" onclick="pressedNewChat();">Nova conversa</a></div>
 			</div>
 			<hr>
 
@@ -61,16 +63,16 @@
 
 <script>
 	$(function() {                       //run when the DOM is ready
-  $(".wrapper-single-conversation").click(function() {  //use a class, since your ID gets mangled
-    $(".wrapper-single-conversation.active").removeClass("active");
-    $(this).addClass("active");      //add the class to the clicked element
-  });
-});
+  	$(".wrapper-single-conversation").click(function() {  //use a class, since your ID gets mangled
+	    $(".wrapper-single-conversation.active").removeClass("active");
+	    $(this).addClass("active");      //add the class to the clicked element
+  	});
+	});
 </script>
 
 <!-- HANDLEBARS TEMPLATES -->
 <script id="chat-item-template" type="text/x-handlebars-template">
-	<div class="wrapper-single-conversation">
+	<div class="wrapper-single-conversation" onclick="pressedChat(@{{ chatIndex }});">
 		<div class="single-avatar">
 			<a href=""><img class="avatar-image" src="@{{ avatarURL }}" /></a>
 		</div>
