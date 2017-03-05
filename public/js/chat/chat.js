@@ -12,8 +12,15 @@ function connectPusher() {
 
   // Binding to new message received
   channel.bind('new_message', function(data) {
+    // Setting the current chat last message
+    setLastMessage(data.thread_id, data.message);
+
+    // Rendering chat items
+    renderChatItems();
+
     // If the currentChat displayed is the chat that the message arrived
     if (currentChat.thread.id === data.thread_id) {
+      console.log("ENTROUU", currentChat.thread.id);
       // Adding the new message to message block
       currentMessages.push(data.message);
       // Rendering messages again
@@ -22,8 +29,10 @@ function connectPusher() {
   });
 
   // Binding to new thread created
-  channel.bind('new_thread', function(data) {
-    console.log(data);
+  channel.bind('new_thread', function(newChat) {
+    currentChats.push(newChat);
+    // Re-rendering the chats
+    renderChatItems();
   });
 }
 
@@ -121,11 +130,28 @@ function renderMessages() {
   $('#chat').scrollTop($('#chat-messages').height())
 }
 
+function sortChatItems() {
+  currentChats.sort(function(obj1, obj2) {
+    a = 0;
+    b = 0;
+    if (obj1.last_message) a = new Date(obj1.last_message.created_at);
+    if (obj2.last_message) b = new Date(obj2.last_message.created_at);
+    return a>b ? -1 : a<b ? 1 : 0;
+  });
+}
+
 // Rendering chats
 function renderChatItems() {
+  // Cleaning HTML
+  $('#chat-items').html('');
+
+  // Sorting Chat Items on the right order
+  sortChatItems();
+
+  // Rendering chats
   currentChats.forEach(function(chat, index) {
     // Setting currentChat if it's the first chat
-    if (index === 0) currentChat = chat;
+    if (typeof currentChat === 'undefined' && index === 0) currentChat = chat;
 
     var source = $("#chat-item-template").html();
     var template = Handlebars.compile(source);
@@ -172,13 +198,22 @@ function sendMessage() {
     message,
   };
 
-  // Showing own message on chat
-  currentMessages.push({
+  // Setting the last message
+  const lastMessage = {
     body: message,
     created_at: new Date().toLocaleString(),
     user_id: userID,
-  });
+  }
+  // Push the last message to the array
+  currentMessages.push(lastMessage);
 
+  // Setting the current chat last message
+  setLastMessage(currentChat.thread.id, lastMessage);
+
+  // Rendering chat items
+  renderChatItems();
+
+  // Rendering all messags
   renderMessages();
 
   // Cleaning message-input field
@@ -227,6 +262,14 @@ function pressedChat(chatIndex) {
   currentChat = currentChats[chatIndex];
   console.log(currentChat);
   renderCurrentChat();
+}
+
+function setLastMessage(threadID, lastMessage) {
+  currentChats.forEach(function(chat, index) {
+    if (chat.thread.id === threadID) {
+      currentChats[index].last_message = lastMessage;
+    }
+  });
 }
 
 /**

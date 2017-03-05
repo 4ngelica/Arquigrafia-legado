@@ -59,11 +59,13 @@ class ThreadsController extends \BaseController {
 			$participants = $thread->participants()->get();
 
 			foreach($participants as $participant){
-				// If the current participant user_id equals the current userId, continue
-				if($participant->user_id == $userId)
-					continue;
+				// Getting the chat name
+				$names = $thread->participantsString($participant->user_id);
+
 				// Triggering event with Pusherer
-				Pusherer::trigger(strval($participant->user_id), 'new_thread', array( 'thread' => $thread ));
+				Pusherer::trigger(strval($participant->user_id), 'new_thread', array(
+					'thread' => $thread, 'participants' => $participants, 'names' => $names
+				));
 			}
 
 			return \Response::json($thread->id);

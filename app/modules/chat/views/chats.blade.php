@@ -18,7 +18,7 @@
 				var currentMessages = [];
 				var currentChats = {{ json_encode($data) }};
 				var currentChat;
-				console.log(currentChats);
+				console.log("Current Chats", currentChats);
     </script>
 
 @stop
