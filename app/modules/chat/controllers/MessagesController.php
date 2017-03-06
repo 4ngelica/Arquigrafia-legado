@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Artdarek\Pusherer\Facades\Pusherer;
+use lib\log\EventLogger;
 
 class MessagesController extends \BaseController {
 	public function sendMessage($id) {
@@ -39,6 +40,7 @@ class MessagesController extends \BaseController {
 			Pusherer::trigger(strval($participant->user_id), strval($message->thread_id), array( 'name' => $user->name, 'message' => $message->body ));;
 		}
 
+		EventLogger::printEventLogs(null, 'new_message', ['thread' => $thread->id, 'message' => $message->id], 'Web');
 	}
 
 	public function getMessages(){

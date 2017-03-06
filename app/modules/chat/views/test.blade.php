@@ -3,18 +3,18 @@
 @section('head')
 
 <title>Arquigrafia - Teste </title>
-<link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/checkbox.css" />
-<link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/chat/chat.css" />
-<link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/jquery.fancybox.css" />
-<script src="https://js.pusher.com/3.2/pusher.min.js"></script>
-<script type="text/javascript" src="{{ URL::to("/") }}/js/jquery.fancybox.pack.js"></script>
-<script type="text/javascript" src="{{ URL::to("/") }}/js/photo.js"></script>
-<script type="text/javascript" src="{{ URL::to("/") }}/js/chat/chat.js"></script>
-<script type="text/javascript">
-	// Defining variables pushed from PHP
-	var userID = {{ $user_id }};
-	var userName = "{{ $user_name }}";
-</script>
+	<link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/checkbox.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/chat/chat.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/jquery.fancybox.css" />
+	<script src="https://js.pusher.com/3.2/pusher.min.js"></script>
+	<script type="text/javascript" src="{{ URL::to("/") }}/js/jquery.fancybox.pack.js"></script>
+	<script type="text/javascript" src="{{ URL::to("/") }}/js/photo.js"></script>
+	<script type="text/javascript" src="{{ URL::to("/") }}/js/chat/chat.js"></script>
+	<script type="text/javascript">
+		// Defining variables pushed from PHP
+		var userID = {{ $user_id }};
+		var userName = "{{ $user_name }}";
+	</script>
 
 @stop
 

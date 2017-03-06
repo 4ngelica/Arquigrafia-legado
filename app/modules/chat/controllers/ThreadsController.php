@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Artdarek\Pusherer\Facades\Pusherer;
+use lib\log\EventLogger;
 
 class ThreadsController extends \BaseController {
 	public function test($id) {
@@ -35,6 +36,18 @@ class ThreadsController extends \BaseController {
 
 	public function create($userId) {
 		try {
+			//validacao de duplicatas de threads entre 2 usuarios
+			if(count($input['participants']) == 1){
+				$threads = User::find($userId)->threads()->get();
+				foreach($threads as $try){
+					if(count($try->participants()->get()) != 2)
+						continue;
+					if(
+						$try->hasParticipant($input['participants'][0]))
+						return \Response::json($try->id);
+				}
+			}
+
 			$input = Input::all();
 			$thread = new Thread();
 			$subject = null;
@@ -58,6 +71,7 @@ class ThreadsController extends \BaseController {
 					continue;
 				Pusherer::trigger($participant->user_id, 'new_thread', array( 'thread' => $thread ));
 			}
+			EventLogger::printEventLogs(null, 'new_thread', ['thread' => $thread->id, 'participants' => $participants], 'Web');
 			
 			return \Response::json($thread->id);
 		} catch (Exception $error) {
@@ -68,9 +82,11 @@ class ThreadsController extends \BaseController {
 	public function destroy($userId) {
 		$input = Input::all();
 		$user = User::find($userId);
-		$thread = Thread::find($input['chat_id']);
+		$thread = Thread::find($input['thread_id']);
 		$participant = Participant::where('user_id', $userId)->where('thread_id', $thread->id)->first();
 		$participant->delete();
+		if(count($thread->participants()->get()) < 2)
+			$thread->delete();
 		return View::make('test', ['output' => 'destroy']);
 	}
 
