@@ -106,7 +106,7 @@ class ThreadsController extends \BaseController {
 
 		for($i = 0; $i < count($threads); $i++) {
 			$participants = $threads[$i]->participants()->with(array('user' => function($query) {
-				$query->select('id', 'name');
+				$query->select('id', 'name', 'lastName', 'avatar');
 			}))->get();
 			$names = $threads[$i]->participantsString($userId);
 			$last_message = Message::where('thread_id', $threads[$i]->id)->orderBy('id', 'desc')->take(1)->get()->first();
@@ -127,7 +127,7 @@ class ThreadsController extends \BaseController {
 		$input = Input::all();
 		$text = $input['text'];
 		$result = User::where('name', 'LIKE', '%' . $text . '%')->orWhere('lastName', 
-			'LIKE', '%' . $text . '%')->orderBy('name')->select('id', 'name', 'lastName')->get();
+			'LIKE', '%' . $text . '%')->orderBy('name')->select('id', 'name', 'lastName', 'avatar')->get();
 		return \Response::json($result);
 	}
 
@@ -137,7 +137,7 @@ class ThreadsController extends \BaseController {
 			$thread = Thread::find($input['thread_id']);
 			$thread->markAsRead($userId);
 			return \Response::json(true);
-		} catch {
+		} catch (Exception $error){
 			return \Response::json(false);
 		}
 	}
