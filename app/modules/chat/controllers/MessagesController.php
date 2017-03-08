@@ -37,7 +37,7 @@ class MessagesController extends \BaseController {
 			if($participant->user_id == $id)
 				continue;
 			// Sending Pusher event
-			Pusherer::trigger(strval($participant->user_id), strval($message->thread_id), array( 'name' => $user->name, 'message' => $message->body ));;
+			Pusherer::trigger(strval($participant->user_id), 'new_message', array( 'thread_id' => $thread->id, 'message' => $message ));;
 		}
 
 		EventLogger::printEventLogs(null, 'new_message', ['thread' => $thread->id, 'message' => $message->id], 'Web');
@@ -51,7 +51,4 @@ class MessagesController extends \BaseController {
 		return \Response::json($messages);
 	}
 
-	private static function sendEvents($userId, $threadId, $message){
-
-	}
 }

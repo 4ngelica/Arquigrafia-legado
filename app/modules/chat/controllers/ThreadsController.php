@@ -34,7 +34,7 @@ class ThreadsController extends \BaseController {
 		return View::make('chats', ['output' => $thread, 'user_id' => $id, 'user_name' => $user->name]);
 	}
 
-	public function create($userId) {
+	public function store($userId) {
 		try {
 			//validacao de duplicatas de threads entre 2 usuarios
 			if(count($input['participants']) == 1){
@@ -53,26 +53,35 @@ class ThreadsController extends \BaseController {
 			$subject = null;
 			$thread->save();
 
-			//tratamento de recebimento da lista de participantes, assumindo array
+			/*
+			 * Creating a list of participants, to create a thread
+			 */
 
-			//usuario inicial
+			// Creating initial participant
 			$participant = new Participant();
 			$participant->thread_id = $thread->id;
 			$participant->user_id = $userId;
 			$participant->last_read = Carbon::now();
 			$participant->save();
 
+			// On the input variable, this function receives an array of participants ids
 			$participants = $input['participants'];
+			// Creating the participants with participants ids array
 			$thread->addParticipants($participants);
+			// Getting all the participants from the current thread
 			$participants = $thread->participants()->get();
 
 			foreach($participants as $participant){
-				if($participant->user_id == $userId)
-					continue;
-				Pusherer::trigger($participant->user_id, 'new_thread', array( 'thread' => $thread ));
+				// Getting the chat name
+				$names = $thread->participantsString($participant->user_id);
+
+				// Triggering event with Pusherer
+				Pusherer::trigger(strval($participant->user_id), 'new_thread', array(
+					'thread' => $thread, 'participants' => $participants, 'names' => $names
+				));
 			}
 			EventLogger::printEventLogs(null, 'new_thread', ['thread' => $thread->id, 'participants' => $participants], 'Web');
-			
+
 			return \Response::json($thread->id);
 		} catch (Exception $error) {
 			return \Response::json('Erro ao realizar operação.', 500);
@@ -100,9 +109,9 @@ class ThreadsController extends \BaseController {
 				$query->select('id', 'name');
 			}))->get();
 			$names = $threads[$i]->participantsString($userId);
-			$last_message = $messages = Message::where('thread_id', $threads[$i]->id)->orderBy('id', 'desc')->take(1)->get();
-			array_push($array, [$i => ['thread' => $threads[0], 'participants' => $participants, 
-									   'names' => $names], 'last_message' => $last_message]);
+			$last_message = Message::where('thread_id', $threads[$i]->id)->orderBy('id', 'desc')->take(1)->get()->first();
+			array_push($array, ['thread' => $threads[$i], 'participants' => $participants,
+									   'names' => $names, 'last_message' => $last_message]);
 		}
 		return View::make('chats', ['data' => $array, 'user_id' => $userId, 'user_name' => $user->name]);
 	}
@@ -112,5 +121,24 @@ class ThreadsController extends \BaseController {
 		$messages = $thread->messages()->get();
 		$participants = $thread->participants()->get();
 		return View::make('test', ['output' => $thread]);
+	}
+
+	public function searchUser(){
+		$input = Input::all();
+		$text = $input['text'];
+		$result = User::where('name', 'LIKE', '%' . $text . '%')->orWhere('lastName', 
+			'LIKE', '%' . $text . '%')->orderBy('name')->select('id', 'name', 'lastName')->get();
+		return \Response::json($result);
+	}
+
+	public function markThreadAsRead($userId){
+		try{
+			$input = Input::all();
+			$thread = Thread::find($input['thread_id']);
+			$thread->markAsRead($userId);
+			return \Response::json(true);
+		} catch {
+			return \Response::json(false);
+		}
 	}
 }
