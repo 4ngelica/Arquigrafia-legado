@@ -6,10 +6,12 @@
     <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/checkbox.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/chat/chat.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/jquery.fancybox.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/searchable-option-list/sol.css" />
     <script src="https://js.pusher.com/3.2/pusher.min.js"></script>
     <script type="text/javascript" src="{{ URL::to("/") }}/js/jquery.fancybox.pack.js"></script>
     <script type="text/javascript" src="{{ URL::to("/") }}/js/photo.js"></script>
     <script type="text/javascript" src="{{ URL::to("/") }}/js/chat/chat.js"></script>
+    <script type="text/javascript" src="{{ URL::to("/") }}/js/searchable-option-list/sol.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.min.js"></script>
     <script type="text/javascript">
         // Defining variables pushed from PHP
@@ -18,6 +20,7 @@
 				var currentMessages = [];
 				var currentChats = {{ json_encode($data) }};
 				var currentChat;
+				var usersSearch = []; // Users shown on search
 				console.log("Current Chats", currentChats);
     </script>
 
@@ -30,6 +33,10 @@
 			<div class="wrapper-flex">
 				<h2>Mensagens</h2>
 				<div class="new-message"><a href="#" onclick="pressedNewChat();">Nova conversa</a></div>
+			</div>
+			<div>
+				<select id="select-users" name="character" multiple="multiple">
+				</select>
 			</div>
 			<hr>
 

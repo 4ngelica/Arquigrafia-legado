@@ -36,6 +36,34 @@ function connectPusher() {
   });
 }
 
+function configureSOL() {
+  $('#select-users').searchableOptionList({
+    showSelectAll: false,
+    maxHeight: '180px',
+  });
+}
+
+var timerId; // This variable stores the last timer id
+function onChangeSOLText() {
+  // Wait some time to SOL initializes before setting the change event
+  setTimeout(function() {
+    // Setting on input change event
+    $('.sol-input-container :input').on('input', function() {
+      // If theres a timerId, clear
+      if (timerId) clearTimeout(timerId);
+      // Adds a timedOut event
+      timerId = window.setTimeout(function() {
+        // Getting input value
+        inputValue = $('.sol-input-container :input').val();
+        if (inputValue.length > 2) {
+          // Searching users
+          searchUsers(inputValue);
+        }
+      }, 300);
+    });
+  }, 10);
+}
+
 // Add zero to hour
 function addZero(i) {
   if (i < 10) i = "0" + i;
@@ -272,12 +300,39 @@ function setLastMessage(threadID, lastMessage) {
   });
 }
 
+function searchUsers(name) {
+  params = {
+    text: name,
+  };
+
+  $.ajax({
+      type: "POST",
+      url : '/users/searchName',
+      data: params,
+      success : function(users) {
+        usersSearch = users;
+        console.log(users);
+
+        $('#select-users').html('');
+        users.map(function (user, index) {
+          $('#select-users')
+            .append(`<option value="${users[index].id}">${users[index].name}</option>`);
+        })
+
+        configureSOL();
+      }
+  }, "json");
+}
+
 /**
  * ON DOCUMENT READY
 **/
 $(document).ready(function() {
   // Connecting client with Pusher
   connectPusher();
+
+  // Initializing Search-Option-List
+  configureSOL();
 
   // Event when click on send-message button
   $("#send-message").click(function () {
@@ -293,4 +348,7 @@ $(document).ready(function() {
   // Render Chat Items
   renderChatItems();
   renderCurrentChat();
+
+  // Initializing Search-Option-List onChangeText event
+  onChangeSOLText();
 });

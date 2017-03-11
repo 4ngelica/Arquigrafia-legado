@@ -12,11 +12,13 @@ class CreateBlocksTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('blocks', function(Blueprint $table){
+		Schema::create('blocks', function(Blueprint $table) {
 			$table->bigIncrements('id');
+			$table->bigInteger('user_id')->unsigned();
+			$table->bigInteger('blocked_id')->unsigned();
 			$table->foreign('user_id')->references('id')->on('users');
 			$table->foreign('blocked_id')->references('id')->on('users');
-		})
+		});
 	}
 
 	/**
