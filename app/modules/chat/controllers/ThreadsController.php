@@ -37,16 +37,16 @@ class ThreadsController extends \BaseController {
 	public function store($userId) {
 		try {
 			//validacao de duplicatas de threads entre 2 usuarios
-			if(count($input['participants']) == 1){
-				$threads = User::find($userId)->threads()->get();
-				foreach($threads as $try){
-					if(count($try->participants()->get()) != 2)
-						continue;
-					if(
-						$try->hasParticipant($input['participants'][0]))
-						return \Response::json($try->id);
-				}
-			}
+			// if(count($input['participants']) == 1){
+			// 	$threads = User::find($userId)->threads()->get();
+			// 	foreach($threads as $try){
+			// 		if(count($try->participants()->get()) != 2)
+			// 			continue;
+			// 		if(
+			// 			$try->hasParticipant($input['participants'][0]))
+			// 			return \Response::json($try->id);
+			// 	}
+			// }
 
 			$input = Input::all();
 			$thread = new Thread();
@@ -80,7 +80,7 @@ class ThreadsController extends \BaseController {
 					'thread' => $thread, 'participants' => $participants, 'names' => $names
 				));
 			}
-			EventLogger::printEventLogs(null, 'new_thread', ['thread' => $thread->id, 'participants' => $participants], 'Web');
+			// EventLogger::printEventLogs(null, 'new_thread', ['thread' => $thread->id, 'participants' => $participants], 'Web');
 
 			return \Response::json($thread->id);
 		} catch (Exception $error) {
@@ -124,10 +124,7 @@ class ThreadsController extends \BaseController {
 	}
 
 	public function searchUser(){
-		$input = Input::all();
-		$text = $input['text'];
-		$result = User::where('name', 'LIKE', '%' . $text . '%')->orWhere('lastName',
-			'LIKE', '%' . $text . '%')->orderBy('name')->select('id', 'name', 'lastName')->get();
+		$result = User::all();
 		return \Response::json($result);
 	}
 

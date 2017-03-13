@@ -324,3 +324,12 @@ input.submit-button {
   width: 40px;
   height: 40px;
 }
+
+#select-users-container {
+  display: flex;
+  flex-direction: row;
+}
+
+#select-users {
+  width: 100%;
+}

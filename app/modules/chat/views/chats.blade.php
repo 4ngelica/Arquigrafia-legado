@@ -21,6 +21,7 @@
 				var currentChats = {{ json_encode($data) }};
 				var currentChat;
 				var usersSearch = []; // Users shown on search
+				var sol; // Selectable options list
 				console.log("Current Chats", currentChats);
     </script>
 
@@ -34,9 +35,9 @@
 				<h2>Mensagens</h2>
 				<div class="new-message"><a href="#" onclick="pressedNewChat();">Nova conversa</a></div>
 			</div>
-			<div>
-				<select id="select-users" name="character" multiple="multiple">
-				</select>
+			<div id="select-users-container">
+				<select id="select-users" name="character" multiple="multiple"></select>
+				<button id="btn-create-chat">OK</button>
 			</div>
 			<hr>
 

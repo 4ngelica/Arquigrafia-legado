@@ -37,31 +37,9 @@ function connectPusher() {
 }
 
 function configureSOL() {
-  $('#select-users').searchableOptionList({
+  sol = $('#select-users').searchableOptionList({
     showSelectAll: false,
-    maxHeight: '180px',
   });
-}
-
-var timerId; // This variable stores the last timer id
-function onChangeSOLText() {
-  // Wait some time to SOL initializes before setting the change event
-  setTimeout(function() {
-    // Setting on input change event
-    $('.sol-input-container :input').on('input', function() {
-      // If theres a timerId, clear
-      if (timerId) clearTimeout(timerId);
-      // Adds a timedOut event
-      timerId = window.setTimeout(function() {
-        // Getting input value
-        inputValue = $('.sol-input-container :input').val();
-        if (inputValue.length > 2) {
-          // Searching users
-          searchUsers(inputValue);
-        }
-      }, 300);
-    });
-  }, 10);
 }
 
 // Add zero to hour
@@ -257,9 +235,20 @@ function sendMessage() {
   }, "json");
 }
 
-function createChat(newParticipantID) {
+function createChat() {
+  selectedInputs = sol.getSelection();
+  selectedUserIDs = [];
+  for (var i = 0; i < selectedInputs.length; i += 1) {
+     selectedUserIDs.push($(selectedInputs[i]).data('sol-item').value);
+  }
+
+  if (selectedUserIDs.length === 0) {
+    alert('Você precisa selecionar pelo menos um usuário!')
+    return;
+  }
+
   data = {
-    participants: [newParticipantID],
+    participants: selectedUserIDs,
   }
 
   $.ajax({
@@ -267,16 +256,15 @@ function createChat(newParticipantID) {
       url : `/users/${userID}/chats`,
       data: data,
       success : function(data){
-        console.log(data);
+        console.log('CHAT CRIADO', data);
+        configureSOL();
+        $('#select-users-container').hide();
       }
   }, "json");
 }
 
 function pressedNewChat() {
-  // Getting the user ID
-  var newParticipantID = prompt("Entre o ID do usuário:", "");
-  // Creating a chat with user
-  createChat(newParticipantID);
+  $('#select-users-container').toggle();
 }
 
 // Render current chat header and messages
@@ -301,18 +289,11 @@ function setLastMessage(threadID, lastMessage) {
 }
 
 function searchUsers(name) {
-  params = {
-    text: name,
-  };
-
   $.ajax({
       type: "POST",
       url : '/users/searchName',
-      data: params,
       success : function(users) {
-        usersSearch = users;
-        console.log(users);
-
+        console.log('USERS', users);
         $('#select-users').html('');
         users.map(function (user, index) {
           $('#select-users')
@@ -331,12 +312,14 @@ $(document).ready(function() {
   // Connecting client with Pusher
   connectPusher();
 
-  // Initializing Search-Option-List
-  configureSOL();
-
   // Event when click on send-message button
   $("#send-message").click(function () {
     sendMessage();
+  });
+
+  // Event when click on btn-create-chat button
+  $("#btn-create-chat").click(function () {
+    createChat();
   });
 
   // When press enter on message-input
@@ -349,6 +332,8 @@ $(document).ready(function() {
   renderChatItems();
   renderCurrentChat();
 
-  // Initializing Search-Option-List onChangeText event
-  onChangeSOLText();
+  // Hiding select users container at the begining
+  $('#select-users-container').hide();
+  // Getting all users -- JUST FOR TESTING
+  searchUsers();
 });
