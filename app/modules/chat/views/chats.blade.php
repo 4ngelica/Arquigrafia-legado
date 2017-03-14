@@ -80,7 +80,7 @@
 
 <!-- HANDLEBARS TEMPLATES -->
 <script id="chat-item-template" type="text/x-handlebars-template">
-	<div class="wrapper-single-conversation" onclick="pressedChat(@{{ chatIndex }});">
+	<div id="chat-item-@{{chatIndex}}" class="wrapper-single-conversation" onclick="pressedChat(@{{ chatIndex }});">
 		<div class="single-avatar">
 			<a href=""><img class="avatar-image" src="@{{ avatarURL }}" /></a>
 		</div>

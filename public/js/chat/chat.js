@@ -36,6 +36,7 @@ function connectPusher() {
   });
 }
 
+// Initializes searchableOptionList
 function configureSOL() {
   sol = $('#select-users').searchableOptionList({
     showSelectAll: false,
@@ -68,7 +69,7 @@ function renderMessageBlock(position, messageBlock) {
   // Setting content to be rendered
   var context = {
     messages: messageBlock,
-    avatarURL: 'http://www.gruener-baum-wuerzburg.de/images/avatar/avt-2.jpg',
+    avatarURL: '/img/avatar-48.png',
     hours: hours,
   };
   var html = template(context);
@@ -171,15 +172,21 @@ function renderChatItems() {
       chatIndex: index,
       chatName: chat.names,
       lastMessage: lastMessage,
-      avatarURL: 'http://www.gruener-baum-wuerzburg.de/images/avatar/avt-2.jpg',
+      avatarURL: '/img/avatar-48.png',
     };
     var html = template(context);
     $('#chat-items').append(html)
+
+    // Setting chat as active
+    if (currentChat === chat) {
+      setChatActive(index);
+    }
   });
 }
 
 // Getting messages from server
 function getMessages() {
+  if (!currentChat) return;
   params = {
     thread_id: currentChat.thread.id,
   };
@@ -235,6 +242,7 @@ function sendMessage() {
   }, "json");
 }
 
+// Get the selected users and creates a chat
 function createChat() {
   selectedInputs = sol.getSelection();
   selectedUserIDs = [];
@@ -263,13 +271,14 @@ function createChat() {
   }, "json");
 }
 
+// Called when pressed New Chat
 function pressedNewChat() {
   $('#select-users-container').toggle();
 }
 
 // Render current chat header and messages
 function renderCurrentChat() {
-  renderChatHeader(currentChat.names);
+  if (currentChat) renderChatHeader(currentChat.names);
   getMessages();
 }
 
@@ -277,9 +286,22 @@ function renderCurrentChat() {
 function pressedChat(chatIndex) {
   currentChat = currentChats[chatIndex];
   console.log(currentChat);
+  setChatActive(chatIndex);
   renderCurrentChat();
 }
 
+// Sets the chat as active
+function setChatActive(chatIndex) {
+  for (var i_chats = 0; i_chats < currentChats.length; i_chats += 1) {
+    if (i_chats === chatIndex) {
+      $(`#chat-item-${i_chats}`).addClass('active');
+    } else {
+      $(`#chat-item-${i_chats}`).removeClass('active');
+    }
+  }
+}
+
+// Sets the last message for a specific thread
 function setLastMessage(threadID, lastMessage) {
   currentChats.forEach(function(chat, index) {
     if (chat.thread.id === threadID) {
@@ -288,7 +310,8 @@ function setLastMessage(threadID, lastMessage) {
   });
 }
 
-function searchUsers(name) {
+// Getting users
+function searchUsers() {
   $.ajax({
       type: "POST",
       url : '/users/searchName',
@@ -325,7 +348,11 @@ $(document).ready(function() {
   // When press enter on message-input
   $('#message-input').keypress(function (e) {
     // If pressed ENTER
-    if (e.which == 13) sendMessage();
+    if (e.which == 13) {
+      sendMessage();
+      // Prevent enter on text area
+      if(event.preventDefault) event.preventDefault();
+    }
   });
 
   // Render Chat Items
