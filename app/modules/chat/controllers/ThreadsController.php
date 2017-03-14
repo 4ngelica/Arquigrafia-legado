@@ -27,26 +27,30 @@ class ThreadsController extends \BaseController {
    // 	Pusherer::trigger('my-channel', 'my-event', array( 'message' => $message ));
 
 		// Getting current user info
-		$user = \User::find($id);
+		// $user = \User::find($id);
 
-		$thread = new Thread();
-		$thread->scopeForUser(\DB::table('users'), 1);
-		return View::make('chats', ['output' => $thread, 'user_id' => $id, 'user_name' => $user->name]);
+		// $thread = new Thread();
+		// $thread->scopeForUser(\DB::table('users'), 1);
+		// return View::make('chats', ['output' => $thread, 'user_id' => $id, 'user_name' => $user->name]);
 	}
 
-	public function store($userId) {
+	public function store() {
+		$user = Auth::user();
 		try {
+			//validacao 50 participantes
+			if(count($input['participants']) >= 49)
+				throw new Exception('Limite de participantes excedido.');
 			//validacao de duplicatas de threads entre 2 usuarios
-			// if(count($input['participants']) == 1){
-			// 	$threads = User::find($userId)->threads()->get();
-			// 	foreach($threads as $try){
-			// 		if(count($try->participants()->get()) != 2)
-			// 			continue;
-			// 		if(
-			// 			$try->hasParticipant($input['participants'][0]))
-			// 			return \Response::json($try->id);
-			// 	}
-			// }
+			if(count($input['participants']) == 1){
+				$threads = $user->threads()->get();
+				foreach($threads as $try){
+					if(count($try->participants()->get()) != 2)
+						continue;
+					if(
+						$try->hasParticipant($input['participants'][0]))
+						return \Response::json($try->id);
+				}
+			}
 
 			$input = Input::all();
 			$thread = new Thread();
@@ -60,7 +64,7 @@ class ThreadsController extends \BaseController {
 			// Creating initial participant
 			$participant = new Participant();
 			$participant->thread_id = $thread->id;
-			$participant->user_id = $userId;
+			$participant->user_id = $user->id;
 			$participant->last_read = Carbon::now();
 			$participant->save();
 
@@ -80,7 +84,7 @@ class ThreadsController extends \BaseController {
 					'thread' => $thread, 'participants' => $participants, 'names' => $names
 				));
 			}
-			// EventLogger::printEventLogs(null, 'new_thread', ['thread' => $thread->id, 'participants' => $participants], 'Web');
+			EventLogger::printEventLogs(null, 'new_thread', ['thread' => $thread->id, 'participants' => $participants], 'Web');
 
 			return \Response::json($thread->id);
 		} catch (Exception $error) {
@@ -88,51 +92,55 @@ class ThreadsController extends \BaseController {
 		}
 	}
 
-	public function destroy($userId) {
+	public function destroy($id) {
+		$user = Auth::user();
 		$input = Input::all();
-		$user = User::find($userId);
-		$thread = Thread::find($input['thread_id']);
-		$participant = Participant::where('user_id', $userId)->where('thread_id', $thread->id)->first();
+		$thread = Thread::find($id);
+		$participant = Participant::where('user_id', $user->id)->where('thread_id', $thread->id)->first();
 		$participant->delete();
 		if(count($thread->participants()->get()) < 2)
 			$thread->delete();
 		return View::make('test', ['output' => 'destroy']);
 	}
 
-	public function index($userId) {
-		$user = User::find($userId);
+	public function index() {
+		$user = Auth::user();
 		$threads = $user->threads()->get();
 		$array = array();
 
 		for($i = 0; $i < count($threads); $i++) {
 			$participants = $threads[$i]->participants()->with(array('user' => function($query) {
-				$query->select('id', 'name', 'lastName');
+				$query->select('id', 'name', 'lastName', 'photo');
 			}))->get();
-			$names = $threads[$i]->participantsString($userId);
+			$names = $threads[$i]->participantsString($user->id);
 			$last_message = Message::where('thread_id', $threads[$i]->id)->orderBy('id', 'desc')->take(1)->get()->first();
 			array_push($array, ['thread' => $threads[$i], 'participants' => $participants,
 									   'names' => $names, 'last_message' => $last_message]);
 		}
-		return View::make('chats', ['data' => $array, 'user_id' => $userId, 'user_name' => $user->name]);
+		return View::make('chats', ['data' => $array, 'user_id' => $user->id, 'user_name' => $user->name]);
 	}
 
-	public function show($userId, $chatId) {
-		$thread = Thread::find($chatId);
+	public function show($id) {
+		$thread = Thread::find($id);
 		$messages = $thread->messages()->get();
 		$participants = $thread->participants()->get();
 		return View::make('test', ['output' => $thread]);
 	}
 
 	public function searchUser(){
-		$result = User::all();
+		$input = Input::all();
+		$text = $input['text'];
+		$result = User::where('name', 'LIKE', '%' . $text . '%')->orWhere('lastName', 
+			'LIKE', '%' . $text . '%')->orderBy('name')->select('id', 'name', 'lastName', 'photo')->get();
 		return \Response::json($result);
 	}
 
-	public function markThreadAsRead($userId){
+	public function markThreadAsRead(){
+		$user = Auth::user();
 		try{
 			$input = Input::all();
 			$thread = Thread::find($input['thread_id']);
-			$thread->markAsRead($userId);
+			$thread->markAsRead($user->id);
 			return \Response::json(true);
 		} catch (Exception $error){
 			return \Response::json(false);

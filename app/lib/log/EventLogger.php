@@ -199,11 +199,11 @@ class EventLogger {
                 break;
             case "new_thread":
                 $info = sprintf('[%s] Criou o chat %s com os usuários %s pela página %s, via %s', 
-                                $date_and_time, $eventContent['thread'], $eventContent['participants'], $source_page, $device);
+                                $date_and_time, $eventContent['thread'], $eventContent['participants'], $sourcePage, $device);
                 break;
             case "new_message":
                 $info = sprintf('[%s] Criou a mensagem %s para o chat %s pela página %s, via %s', 
-                                $date_and_time, $eventContent['message'], $eventContent['thread'], $source_page, $device);
+                                $date_and_time, $eventContent['message'], $eventContent['thread'], $sourcePage, $device);
                 break;
             default:
                 break;               
