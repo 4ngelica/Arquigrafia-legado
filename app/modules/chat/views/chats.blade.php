@@ -33,7 +33,7 @@
 		<div class="five columns alpha">
 			<div class="wrapper-flex">
 				<h2>Mensagens</h2>
-				<div class="new-message"><a href="#" onclick="pressedNewChat();">Nova conversa</a></div>
+				<div class="new-message"><a href="#" onclick="pressedNewChat();">NOVA CONVERSA</a></div>
 			</div>
 			<div id="select-users-container">
 				<select id="select-users" name="character" multiple="multiple"></select>

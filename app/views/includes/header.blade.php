@@ -89,6 +89,10 @@
             </div>
           </li>
 
+          <li>
+            <div class="new-message"><a href="#" onclick="pressedNewChat();">MENSAGENS</a></div>
+          </li>
+
         <!-- <li><a href="{{ URL::to("/badges") }}" id="badge" title="Vizualizar badges">&nbsp;</a></li>-->
 
 

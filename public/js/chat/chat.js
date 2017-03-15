@@ -273,7 +273,7 @@ function createChat() {
 
 // Called when pressed New Chat
 function pressedNewChat() {
-  $('#select-users-container').toggle();
+  $('#select-users-container').toggle(200);
 }
 
 // Render current chat header and messages
