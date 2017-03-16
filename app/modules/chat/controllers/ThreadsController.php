@@ -16,24 +16,6 @@ use Artdarek\Pusherer\Facades\Pusherer;
 use lib\log\EventLogger;
 
 class ThreadsController extends \BaseController {
-	public function test($id) {
-		// Pegar o chat que estamos
-		// Através do chat pegar os participantes
-		// Remover quem enviou
-		// Enviar vários eventos para cada participante
-
-		// Send notification to Pusher
-    // $message = "This is just an example message!";
-   // 	Pusherer::trigger('my-channel', 'my-event', array( 'message' => $message ));
-
-		// Getting current user info
-		// $user = \User::find($id);
-
-		// $thread = new Thread();
-		// $thread->scopeForUser(\DB::table('users'), 1);
-		// return View::make('chats', ['output' => $thread, 'user_id' => $id, 'user_name' => $user->name]);
-	}
-
 	public function store() {
 		$input = Input::all();
 		$user = Auth::user();
@@ -105,6 +87,8 @@ class ThreadsController extends \BaseController {
 	}
 
 	public function index() {
+		if(!Auth::check())
+			return Redirect::to('/users/login');
 		$user = Auth::user();
 		$threads = $user->threads()->get();
 		$array = array();
