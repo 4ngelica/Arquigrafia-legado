@@ -348,3 +348,7 @@ input.submit-button {
     cursor: pointer;
     color: #fff;
 }
+
+.not-seen {
+  background-color: #FFAAAA;
+}

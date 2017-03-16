@@ -15,9 +15,10 @@ use Artdarek\Pusherer\Facades\Pusherer;
 use lib\log\EventLogger;
 
 class MessagesController extends \BaseController {
-	public function store($id) {
+	public function store() {
 		// Saving message
 		$input = Input::all();
+		$id = $input['user_id'];
 		$message = new Message();
 		$message->thread_id = $input['thread_id'];
 		$message->body = $input['message'];
@@ -37,7 +38,7 @@ class MessagesController extends \BaseController {
 			if($participant->user_id == $id)
 				continue;
 			// Sending Pusher event
-			Pusherer::trigger(strval($participant->user_id), 'new_message', array( 'thread_id' => $thread->id, 'message' => $message ));;
+			Pusherer::trigger(strval($participant->user_id), 'new_message', array( 'thread_id' => $thread->id, 'message' => $message, 'user_id' => $id ));;
 		}
 
 		EventLogger::printEventLogs(null, 'new_message', ['thread' => $thread->id, 'message' => $message->id], 'Web');

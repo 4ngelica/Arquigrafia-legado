@@ -20,11 +20,12 @@ function connectPusher() {
 
     // If the currentChat displayed is the chat that the message arrived
     if (currentChat.thread.id === data.thread_id) {
-      console.log("ENTROUU", currentChat.thread.id);
       // Adding the new message to message block
       currentMessages.push(data.message);
       // Rendering messages again
       renderMessages();
+      // If we are at the current thread, we automatically have to mark that the chat is read
+      setChatAsRead(currentChat.thread.id);
     }
   });
 
@@ -36,10 +37,37 @@ function connectPusher() {
   });
 }
 
+// Gets the participant with userID from Current Chat
+function getParticipantFromChat(userIDRequired, chat) {
+  participants = chat.participants;
+  for (var pCount = 0; pCount < participants.length; pCount++) {
+    if (userIDRequired == participants[pCount].user.id) {
+      return participants[pCount];
+    }
+  }
+}
+
 // Initializes searchableOptionList
 function configureSOL() {
   sol = $('#select-users').searchableOptionList({
     showSelectAll: false,
+    maxHeight: 100,
+    data: '/data/users.json',
+    converter: function (sol, rawData) {
+      var solData = [];
+
+      for (var i = 0; i < rawData.length; i++) {
+        option = {
+          "type": "option",
+          "value": rawData[i].id,
+          "label": rawData[i].name,
+        };
+
+        solData.push(option);
+      }
+
+      return solData;
+    },
   });
 }
 
@@ -59,7 +87,8 @@ function renderMessageBlock(position, messageBlock) {
   // Setting hours
   var createdAt = new Date(messageBlock[messageBlock.length - 1]['created_at']);
   var hours = `${addZero(createdAt.getHours())}:${addZero(createdAt.getMinutes())}`;
-
+  var participant = getParticipantFromChat(messageBlock[0].user_id, currentChat);
+  console.log('MESSAGE BLOCK', messageBlock);
   // Defining source
   var source;
   if (position === 'right') source = $("#message-right-block-template").html();
@@ -71,6 +100,7 @@ function renderMessageBlock(position, messageBlock) {
     messages: messageBlock,
     avatarURL: '/img/avatar-48.png',
     hours: hours,
+    userName: participant.user.name,
   };
   var html = template(context);
 
@@ -147,6 +177,27 @@ function sortChatItems() {
   });
 }
 
+function checkThreadRead(chat) {
+  lastMessage = chat.last_message;
+  // If there's no last message, I read the chat
+  if (!lastMessage) return true;
+  // If the last message is mine, I read the chat
+  if (lastMessage.user_id === userID) return true;
+
+  // Checking if we've already read the message
+  participant = getParticipantFromChat(userID, chat);
+  lastMessageTime = new Date(lastMessage.created_at).getTime();
+  lastReadTime = new Date(participant.last_read).getTime();
+
+  // Returning that thread is read if the date is bigger than the message time
+  if (lastReadTime > lastMessageTime) {
+    return true;
+  } else {
+    return false;
+  }
+
+}
+
 // Rendering chats
 function renderChatItems() {
   // Cleaning HTML
@@ -172,6 +223,7 @@ function renderChatItems() {
       chatIndex: index,
       chatName: chat.names,
       lastMessage: lastMessage,
+      notRead: !checkThreadRead(chat),
       avatarURL: '/img/avatar-48.png',
     };
     var html = template(context);
@@ -192,8 +244,8 @@ function getMessages() {
   };
 
   $.ajax({
-      type: "POST",
-      url : '/threads/messages',
+      type: "GET",
+      url : '/messages',
       data: params,
       success : function(messages) {
         console.log(messages);
@@ -209,6 +261,7 @@ function sendMessage() {
   sendData = {
     thread_id: currentChat.thread.id,
     message,
+    user_id: userID,
   };
 
   // Setting the last message
@@ -232,9 +285,10 @@ function sendMessage() {
   // Cleaning message-input field
   $('#message-input').val('');
 
+  // Sending message to server
   $.ajax({
       type: "POST",
-      url : `/users/${userID}/chats/test`,
+      url : `/messages`,
       data: sendData,
       success : function(data){
         console.log(data);
@@ -261,7 +315,7 @@ function createChat() {
 
   $.ajax({
       type: "POST",
-      url : `/users/${userID}/chats`,
+      url : `/chats`,
       data: data,
       success : function(data){
         console.log('CHAT CRIADO', data);
@@ -282,12 +336,47 @@ function renderCurrentChat() {
   getMessages();
 }
 
+// This functions send to API that this chat is read
+function setChatAsRead(threadID) {
+  // Payload data to send
+  data = {
+    thread_id: threadID,
+  }
+
+  $.ajax({
+      type: "POST",
+      url : `/chats/read`,
+      data: data,
+      success : function(data) {
+        console.log('CHAT MARCADO COMO LIDO', data);
+        // Marking chat as read locally
+        // Mapping through all chats and checkin which one is the thread that we wanna set as read
+        currentChats = currentChats.map(function (chat) {
+          if (chat.thread.id === threadID) {
+            // Map through all participants and check which is one is the current user
+            chat.participants = chat.participants.map(function (participant) {
+              // If the participant is the current user, we set the last read to now
+              if(participant.user_id === userID) {
+                participant.last_read = new Date();
+              }
+              return participant;
+            })
+          }
+          return chat;
+        });
+        // Rendering chat items again
+        renderChatItems();
+      }
+  }, "json");
+}
+
 // This function is called when the user clicks on a chat
 function pressedChat(chatIndex) {
   currentChat = currentChats[chatIndex];
   console.log(currentChat);
   setChatActive(chatIndex);
   renderCurrentChat();
+  setChatAsRead(currentChat.thread.id);
 }
 
 // Sets the chat as active
@@ -362,5 +451,5 @@ $(document).ready(function() {
   // Hiding select users container at the begining
   $('#select-users-container').hide();
   // Getting all users -- JUST FOR TESTING
-  searchUsers();
+  configureSOL();
 });

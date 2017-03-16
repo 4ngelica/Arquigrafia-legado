@@ -35,6 +35,7 @@ class ThreadsController extends \BaseController {
 	}
 
 	public function store() {
+		$input = Input::all();
 		$user = Auth::user();
 		try {
 			//validacao 50 participantes
@@ -78,11 +79,11 @@ class ThreadsController extends \BaseController {
 			foreach($participants as $participant){
 				// Getting the chat name
 				$names = $thread->participantsString($participant->user_id);
+				// Adding user object to participant
+				$participant->user = \User::find($participant->user_id);
 
 				// Triggering event with Pusherer
-				Pusherer::trigger(strval($participant->user_id), 'new_thread', array(
-					'thread' => $thread, 'participants' => $participants, 'names' => $names
-				));
+				Pusherer::trigger(strval($participant->user_id), 'new_thread', array('thread' => $thread, 'participants' => $participants, 'names' => $names));
 			}
 			EventLogger::printEventLogs(null, 'new_thread', ['thread' => $thread->id, 'participants' => $participants], 'Web');
 
@@ -130,7 +131,7 @@ class ThreadsController extends \BaseController {
 	public function searchUser(){
 		$input = Input::all();
 		$text = $input['text'];
-		$result = User::where('name', 'LIKE', '%' . $text . '%')->orWhere('lastName', 
+		$result = User::where('name', 'LIKE', '%' . $text . '%')->orWhere('lastName',
 			'LIKE', '%' . $text . '%')->orderBy('name')->select('id', 'name', 'lastName', 'photo')->get();
 		return \Response::json($result);
 	}
