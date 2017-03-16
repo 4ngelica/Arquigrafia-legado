@@ -90,7 +90,7 @@
           </li>
 
           <li>
-            <div class="new-message"><a href="#" onclick="pressedNewChat();">MENSAGENS</a></div>
+            <div class="new-message"><a href="{{ URL::to('/chats') }}">MENSAGENS</a></div>
           </li>
 
         <!-- <li><a href="{{ URL::to("/badges") }}" id="badge" title="Vizualizar badges">&nbsp;</a></li>-->
