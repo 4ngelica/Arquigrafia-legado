@@ -129,9 +129,9 @@ class ThreadsController extends \BaseController {
 			$input = Input::all();
 			$thread = Thread::find($input['thread_id']);
 			$thread->markAsRead($user->id);
-			return \Response::json("true");
+			return \Response::json(true);
 		} catch (Exception $error){
-			return \Response::json("false");
+			return \Response::json(false);
 		}
 	}
 }
