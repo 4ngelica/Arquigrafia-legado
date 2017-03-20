@@ -435,12 +435,12 @@ $(document).ready(function() {
   });
 
   // When press enter on message-input
-  $('#message-input').keypress(function (event) {
+  $('#message-input').keypress(function (e) {
     // If pressed ENTER
     if (e.which == 13) {
       sendMessage();
       // Prevent enter on text area
-      if(event.preventDefault) event.preventDefault();
+      if(e.preventDefault) e.preventDefault();
     }
   });
 
