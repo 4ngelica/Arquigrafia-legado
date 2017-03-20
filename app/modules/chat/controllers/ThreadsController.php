@@ -20,17 +20,20 @@ class ThreadsController extends \BaseController {
 		$input = Input::all();
 		$user = Auth::user();
 		try {
+			if(!is_array($input['participants']))
+				throw new Exception('Invalid participants format.');
 			//validacao 50 participantes
 			if(count($input['participants']) >= 49)
-				throw new Exception('Limite de participantes excedido.');
+				throw new Exception('Participants\' limit exceeded.');
+			if(in_array($user->id, $input['participants']))
+				throw new Exception('Can\'t create a chat with the same user.');
 			//validacao de duplicatas de threads entre 2 usuarios
 			if(count($input['participants']) == 1){
 				$threads = $user->threads()->get();
 				foreach($threads as $try){
 					if(count($try->participants()->get()) != 2)
 						continue;
-					if(
-						$try->hasParticipant($input['participants'][0]))
+					if($try->hasParticipant($input['participants'][0]))
 						return \Response::json($try->id);
 				}
 			}
@@ -126,9 +129,9 @@ class ThreadsController extends \BaseController {
 			$input = Input::all();
 			$thread = Thread::find($input['thread_id']);
 			$thread->markAsRead($user->id);
-			return \Response::json(true);
+			return \Response::json("true");
 		} catch (Exception $error){
-			return \Response::json(false);
+			return \Response::json("false");
 		}
 	}
 }
