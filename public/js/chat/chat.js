@@ -435,7 +435,7 @@ $(document).ready(function() {
   });
 
   // When press enter on message-input
-  $('#message-input').keypress(function (e) {
+  $('#message-input').keypress(function (event) {
     // If pressed ENTER
     if (e.which == 13) {
       sendMessage();
