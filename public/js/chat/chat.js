@@ -85,8 +85,16 @@ function renderChatHeader(userName) {
 // Render a message block (one block of messages)
 function renderMessageBlock(position, messageBlock) {
   // Setting hours
+  var now = new Date();
   var createdAt = new Date(messageBlock[messageBlock.length - 1]['created_at']);
-  var hours = `${addZero(createdAt.getHours())}:${addZero(createdAt.getMinutes())}`;
+
+  //Checks if message is from today. If not, display full date
+  if(now.getDate() != createdAt.getDate() || now.getMonth() != createdAt.getMonth() ||
+     now.getFullYear() != createdAt.getFullYear())
+    var hours = `${addZero(createdAt.getDate())}/${addZero(createdAt.getMonth())} ${addZero(createdAt.getHours())}:${addZero(createdAt.getMinutes())}`
+  else
+    var hours = `${addZero(createdAt.getHours())}:${addZero(createdAt.getMinutes())}`;
+
   var participant = getParticipantFromChat(messageBlock[0].user_id, currentChat);
   console.log('MESSAGE BLOCK', messageBlock);
   // Defining source
