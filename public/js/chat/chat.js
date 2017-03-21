@@ -136,21 +136,21 @@ function renderMessages() {
     }
 
     // If the message is from me, and the last message was from me
-    if ((int)message['user_id'] === userID && lastRendered === 'me') {
+    if (parseInt(message['user_id']) === userID && lastRendered === 'me') {
       messageBlock.push(message)
     }
     // Else if the message is from me, and the last message was from you
-    else if ((int)message['user_id'] === userID && lastRendered === 'you') {
+    else if (parseInt(message['user_id']) === userID && lastRendered === 'you') {
       renderMessageBlock('right', messageBlock);
       messageBlock = [message];
       lastRendered = 'me';
     }
     // Else if the message is from you, and the last message is from you
-    else if ((int)message['user_id'] !== userID && lastRendered === 'you') {
+    else if (parseInt(message['user_id']) !== userID && lastRendered === 'you') {
       messageBlock.push(message);
     }
     // Else if the message is from you, but the last message is from me
-    else if ((int)message['user_id'] !== userID && lastRendered !== 'you') {
+    else if (parseInt(message['user_id']) !== userID && lastRendered !== 'you') {
       renderMessageBlock('left', messageBlock);
       messageBlock = [message];
       lastRendered = 'you';
