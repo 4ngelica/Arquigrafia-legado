@@ -267,7 +267,7 @@ function sendMessage() {
   // Setting the last message
   const lastMessage = {
     body: message,
-    created_at: new Date().toLocaleString(),
+    created_at: new Date().toString(),
     user_id: userID,
   }
   // Push the last message to the array
