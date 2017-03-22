@@ -37,7 +37,7 @@ function connectPusher() {
   });
 }
 
-// Gets the participant with userID from Current Chat
+// Gets the participant with userID from a chat
 function getParticipantFromChat(userIDRequired, chat) {
   participants = chat.participants;
   for (var pCount = 0; pCount < participants.length; pCount++) {
