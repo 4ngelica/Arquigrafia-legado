@@ -37,7 +37,7 @@ function connectPusher() {
   });
 }
 
-// Gets the participant with userID from Current Chat
+// Gets the participant with userID from a chat
 function getParticipantFromChat(userIDRequired, chat) {
   participants = chat.participants;
   for (var pCount = 0; pCount < participants.length; pCount++) {
@@ -85,8 +85,17 @@ function renderChatHeader(userName) {
 // Render a message block (one block of messages)
 function renderMessageBlock(position, messageBlock) {
   // Setting hours
-  var createdAt = new Date(messageBlock[messageBlock.length - 1]['created_at']);
-  var hours = `${addZero(createdAt.getHours())}:${addZero(createdAt.getMinutes())}`;
+  var now = moment();
+  var createdAt = moment(messageBlock[messageBlock.length - 1]['created_at']);
+
+  console.log(messageBlock[messageBlock.length - 1]['created_at']);
+
+  //Checks if message is from today. If not, display full date
+  if(now.format('DD/MM/YYYY') !== createdAt.format('DD/MM/YYYY'))
+    var hours = createdAt.format('DD/MM HH:mm');
+  else
+    var hours = createdAt.format('HH:mm');
+
   var participant = getParticipantFromChat(messageBlock[0].user_id, currentChat);
   console.log('MESSAGE BLOCK', messageBlock);
   // Defining source
@@ -95,10 +104,14 @@ function renderMessageBlock(position, messageBlock) {
   else source = $("#message-left-block-template").html();
   // Compiling template
   var template = Handlebars.compile(source);
+  //Selecting avatar
+  var avatar = '/img/avatar-48.png';
+  if(participant['user']['photo'] !== null)
+    avatar = participant['user']['photo'];
   // Setting content to be rendered
   var context = {
     messages: messageBlock,
-    avatarURL: '/img/avatar-48.png',
+    avatarURL: avatar,
     hours: hours,
     userName: participant.user.name,
   };
@@ -115,10 +128,13 @@ function renderMessages() {
 
   // Defining last rendered message;
   var lastRendered; // Can be 'me' or 'you'
+  var lastId = null; //The last user id used
   var messageBlock; // Array of messages to be rendered
 
   for (var i = 0; i < currentMessages.length; i += 1) {
     var message = currentMessages[i];
+    if(i > 0)
+      lastId = currentMessages[i - 1]['user_id'];
 
     // If it is the first iteration
     if (typeof lastRendered === 'undefined') {
@@ -147,7 +163,14 @@ function renderMessages() {
     }
     // Else if the message is from you, and the last message is from you
     else if (parseInt(message['user_id']) !== userID && lastRendered === 'you') {
-      messageBlock.push(message);
+      //If the previous message was from the same user
+      if(lastId === parseInt(message['user_id']))
+        messageBlock.push(message);
+      else {
+        renderMessageBlock('right', messageBlock);
+        messageBlock = [message];
+        lastRendered = 'you';
+      }
     }
     // Else if the message is from you, but the last message is from me
     else if (parseInt(message['user_id']) !== userID && lastRendered !== 'you') {
@@ -171,12 +194,13 @@ function sortChatItems() {
   currentChats.sort(function(obj1, obj2) {
     a = 0;
     b = 0;
-    if (obj1.last_message) a = new Date(obj1.last_message.created_at);
-    if (obj2.last_message) b = new Date(obj2.last_message.created_at);
+    if (obj1.last_message) a = moment(obj1.last_message.created_at).valueOf();
+    if (obj2.last_message) b = moment(obj2.last_message.created_at).valueOf();
     return a>b ? -1 : a<b ? 1 : 0;
   });
 }
 
+// Checks if thread is read or not
 function checkThreadRead(chat) {
   lastMessage = chat.last_message;
   // If there's no last message, I read the chat
@@ -186,8 +210,8 @@ function checkThreadRead(chat) {
 
   // Checking if we've already read the message
   participant = getParticipantFromChat(userID, chat);
-  lastMessageTime = new Date(lastMessage.created_at).getTime();
-  lastReadTime = new Date(participant.last_read).getTime();
+  lastMessageTime = moment(lastMessage.created_at).valueOf();
+  lastReadTime = moment(participant.last_read).valueOf();
 
   // Returning that thread is read if the date is bigger than the message time
   if (lastReadTime > lastMessageTime) {
@@ -267,7 +291,7 @@ function sendMessage() {
   // Setting the last message
   const lastMessage = {
     body: message,
-    created_at: new Date().toString(),
+    created_at: moment().format(),
     user_id: userID,
   }
   // Push the last message to the array
@@ -357,7 +381,7 @@ function setChatAsRead(threadID) {
             chat.participants = chat.participants.map(function (participant) {
               // If the participant is the current user, we set the last read to now
               if(participant.user_id === userID) {
-                participant.last_read = new Date();
+                participant.last_read = moment().format();
               }
               return participant;
             })

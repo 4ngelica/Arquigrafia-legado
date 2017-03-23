@@ -59,13 +59,13 @@ class ThreadsController extends \BaseController {
 			// Creating the participants with participants ids array
 			$thread->addParticipants($participants);
 			// Getting all the participants from the current thread
-			$participants = $thread->participants()->get();
+			$participants = $thread->participants()->with(array('user' => function($query) {
+				$query->select('id', 'name', 'lastName', 'photo');
+			}))->get();
 
 			foreach($participants as $participant){
 				// Getting the chat name
 				$names = $thread->participantsString($participant->user_id);
-				// Adding user object to participant
-				$participant->user = \User::find($participant->user_id);
 
 				// Triggering event with Pusherer
 				Pusherer::trigger(strval($participant->user_id), 'new_thread', array('thread' => $thread, 'participants' => $participants, 'names' => $names));
