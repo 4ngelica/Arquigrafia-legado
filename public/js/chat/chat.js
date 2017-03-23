@@ -104,10 +104,14 @@ function renderMessageBlock(position, messageBlock) {
   else source = $("#message-left-block-template").html();
   // Compiling template
   var template = Handlebars.compile(source);
+  //Selecting avatar
+  var avatar = '/img/avatar-48.png';
+  if(participant['user']['photo'] !== null)
+    avatar = participant['user']['photo'];
   // Setting content to be rendered
   var context = {
     messages: messageBlock,
-    avatarURL: '/img/avatar-48.png',
+    avatarURL: avatar,
     hours: hours,
     userName: participant.user.name,
   };
@@ -124,10 +128,13 @@ function renderMessages() {
 
   // Defining last rendered message;
   var lastRendered; // Can be 'me' or 'you'
+  var lastId = null; //The last user id used
   var messageBlock; // Array of messages to be rendered
 
   for (var i = 0; i < currentMessages.length; i += 1) {
     var message = currentMessages[i];
+    if(i > 0)
+      lastId = currentMessages[i - 1]['user_id'];
 
     // If it is the first iteration
     if (typeof lastRendered === 'undefined') {
@@ -156,7 +163,14 @@ function renderMessages() {
     }
     // Else if the message is from you, and the last message is from you
     else if (parseInt(message['user_id']) !== userID && lastRendered === 'you') {
-      messageBlock.push(message);
+      //If the previous message was from the same user
+      if(lastId === parseInt(message['user_id']))
+        messageBlock.push(message);
+      else {
+        renderMessageBlock('right', messageBlock);
+        messageBlock = [message];
+        lastRendered = 'you';
+      }
     }
     // Else if the message is from you, but the last message is from me
     else if (parseInt(message['user_id']) !== userID && lastRendered !== 'you') {
