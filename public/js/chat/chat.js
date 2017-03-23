@@ -134,13 +134,13 @@ function renderMessages() {
   for (var i = 0; i < currentMessages.length; i += 1) {
     var message = currentMessages[i];
     if(i > 0)
-      lastId = currentMessages[i - 1]['user_id'];
+      lastId = parseInt(currentMessages[i - 1]['user_id']);
 
     // If it is the first iteration
     if (typeof lastRendered === 'undefined') {
       // Saving the first messageBlock
       messageBlock = [message];
-      if (message['user_id'] === userID) lastRendered = 'me';
+      if (parseInt(message['user_id']) === userID) lastRendered = 'me';
       else lastRendered = 'you';
       // Render if it's the only iteration
       if (currentMessages.length === 1) {
