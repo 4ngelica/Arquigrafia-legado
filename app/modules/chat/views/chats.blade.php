@@ -23,6 +23,7 @@
 				var currentChat;
 				var usersSearch = []; // Users shown on search
 				var sol; // Selectable options list
+				var solAddToChat; // Selectable options list to add to chat
 				console.log("Current Chats", currentChats);
     </script>
 
@@ -36,9 +37,9 @@
 				<h2>Mensagens</h2>
 				<div class="new-message"><a href="#" onclick="pressedNewChat();">NOVA CONVERSA</a></div>
 			</div>
-			<div id="select-users-container">
+			<div id="new-chat-container" class="select-users-container">
 				<select id="select-users" name="character" multiple="multiple"></select>
-				<button id="btn-create-chat">OK</button>
+				<button id="btn-create-chat" class="btn-add">OK</button>
 			</div>
 			<hr>
 
@@ -52,6 +53,10 @@
 				<!-- WILL RENDER HERE THE CURRENT CHAT USER -->
 			</div>
 			<hr>
+			<div id="add-users-chat-container" class="select-users-container">
+				<select id="select-users-add-chat" name="character" multiple="multiple"></select>
+				<button id="btn-add-to-chat" class="btn-add">OK</button>
+			</div>
 			<div id="chat" class="chat_box_wrapper" style="opacity: 1; display: block; transform: translateX(0px);">
 			  <div class="chat_box touchscroll chat_box_colors_a" id="chat-messages">
 					<!-- HANDLEBARS WILL RENDER THE MESSAGES HERE -->
@@ -133,6 +138,13 @@
 		  @{{/each}}
     </ul>
   </div>
+</script>
+
+<script id="chat-header-template" type="text/x-handlebars-template">
+	<div class="chat-header-container">
+		<div class="chat-header-title-container"><h2><a href="">@{{userName}}</a></h2></div>
+		<div class="add-user"><a href="#" onclick="pressedAddToChat();">ADICIONAR</a></div>
+	</div>
 </script>
 
 @stop
