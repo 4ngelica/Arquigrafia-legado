@@ -416,13 +416,23 @@ function createChat(type) {
         type: "PUT",
         url : `/chats/${currentChat.thread.id}`,
         data: data,
-        success : function(newThread){
-          if(newThread == 'false')
+        success : function(updatedChat){
+          if(updatedChat == 'false')
             location.reload();
-          console.log('USUARIOS ADICIONADOS', newThread);
+          console.log('USUARIOS ADICIONADOS', updatedChat);
           // After adding users to chat
           $('#add-users-chat-container').hide();
           configureSOLAddToChat();
+          // First, we remove the current chat from array
+          var chatIndex = currentChats.indexOf(currentChat);
+          currentChats.splice(chatIndex, 1);
+          // Second, we add the updated chat to the currentChats array
+          currentChats.push(updatedChat);
+          // Then we set the currentChat as the updatedChat
+          currentChat = updatedChat;
+          // Then, we re-render the chat items and messages
+          renderChatItems();
+          renderCurrentChat();
         }
     }, "json");
   }
