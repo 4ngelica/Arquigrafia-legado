@@ -16,6 +16,8 @@ use lib\log\EventLogger;
 
 class MessagesController extends \BaseController {
 	public function store() {
+		if(!Auth::check())
+			return \Response::json('false');
 		// Saving message
 		$input = Input::all();
 		$id = $input['user_id'];
@@ -45,6 +47,8 @@ class MessagesController extends \BaseController {
 	}
 
 	public function index(){
+		if(!Auth::check())
+			return \Response::json('false');
 		$input = Input::all();
 		$id = $input['thread_id'];
 		$thread = Thread::find($id);
