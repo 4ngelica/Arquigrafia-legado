@@ -1051,7 +1051,8 @@
 
             if ($alreadyInitializedSol) {
                 // result.push($alreadyInitializedSol);
-                $alreadyInitializedSol.$container.html('');
+                // $alreadyInitializedSol.$container.html('');
+                $this.siblings('.sol-container').empty().remove();
                 var newSol = new SearchableOptionList($this, options);
                 result.push(newSol);
                 setTimeout(function () {

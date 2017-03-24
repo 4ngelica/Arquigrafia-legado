@@ -57,6 +57,9 @@ function configureSOL() {
       var solData = [];
 
       for (var i = 0; i < rawData.length; i++) {
+        // If the user is me, dont add to option list
+        if (rawData[i].id === userID) continue;
+
         option = {
           "type": "option",
           "value": rawData[i].id,
@@ -71,6 +74,41 @@ function configureSOL() {
   });
 }
 
+// Initializes Searchable Option List to Add User to Chat
+function configureSOLAddToChat() {
+  solAddToChat = $('#select-users-add-chat').searchableOptionList({
+    showSelectAll: false,
+    maxHeight: 100,
+    data: '/data/users.json',
+    converter: function (sol, rawData) {
+      var solData = [];
+
+      for (var i = 0; i < rawData.length; i++) {
+        // Removing from list the participants of chat
+        var participantAlreadyChat = false;
+        for (var j = 0; j < currentChat.participants.length; j++) {
+          if (currentChat.participants[j].user_id === rawData[i].id) {
+            participantAlreadyChat = true;
+          }
+        }
+        // If the participant is already on this chat, remove from list
+        if (participantAlreadyChat) continue;
+
+        option = {
+          "type": "option",
+          "value": rawData[i].id,
+          "label": rawData[i].name,
+        };
+
+        solData.push(option);
+      }
+
+      return solData;
+    },
+  });
+}
+
+
 // Add zero to hour
 function addZero(i) {
   if (i < 10) i = "0" + i;
@@ -79,7 +117,16 @@ function addZero(i) {
 
 // Renders the chat header (name of the chat)
 function renderChatHeader(userName) {
-  $('#chat-header').html(`<h2><a href=''>${userName}</a></h2>`);
+  // Compiling handlebars template
+  var source = $("#chat-header-template").html();
+  var template = Handlebars.compile(source);
+  // Info to handlebars
+  var context = {
+    userName,
+  };
+  // Setting html to chat-header
+  var html = template(context);
+  $('#chat-header').html(html)
 }
 
 // Render a message block (one block of messages)
@@ -190,6 +237,7 @@ function renderMessages() {
   $('#chat').scrollTop($('#chat-messages').height())
 }
 
+// Sort chat items by last_message date
 function sortChatItems() {
   currentChats.sort(function(obj1, obj2) {
     a = 0;
@@ -321,11 +369,17 @@ function sendMessage() {
 }
 
 // Get the selected users and creates a chat
-function createChat() {
-  selectedInputs = sol.getSelection();
+// The type parameter can be 'create' or 'add-users', representing the two SOLs available
+function createChat(type) {
+  // Getting selection from Selectable Option list
+  if (type === 'create') selectedInputs = sol.getSelection();
+  else if (type === 'add-users') selectedInputs = solAddToChat.getSelection();
+
+  // Populating selectedUserIDs
   selectedUserIDs = [];
   for (var i = 0; i < selectedInputs.length; i += 1) {
-     selectedUserIDs.push($(selectedInputs[i]).data('sol-item').value);
+    selectedUserID = $(selectedInputs[i]).data('sol-item').value;
+    selectedUserIDs.push(selectedUserID);
   }
 
   if (selectedUserIDs.length === 0) {
@@ -333,25 +387,40 @@ function createChat() {
     return;
   }
 
-  data = {
-    participants: selectedUserIDs,
-  }
+  // If we're creating a chat
+  if (type === 'create') {
+    data = {
+      participants: selectedUserIDs,
+    }
 
-  $.ajax({
-      type: "POST",
-      url : `/chats`,
-      data: data,
-      success : function(data){
-        console.log('CHAT CRIADO', data);
-        configureSOL();
-        $('#select-users-container').hide();
-      }
-  }, "json");
+    $.ajax({
+        type: "POST",
+        url : `/chats`,
+        data: data,
+        success : function(data){
+          console.log('CHAT CRIADO', data);
+          configureSOL();
+          $('#new-chat-container').hide();
+        }
+    }, "json");
+  }
+  // If we are adding users to a chat
+  else if (type === 'add-users') {
+    console.log('ADDING USERS', selectedUserIDs);
+
+    // Adter adding users to chat
+    $('#add-users-chat-container').hide();
+    configureSOLAddToChat();
+  }
 }
 
 // Called when pressed New Chat
 function pressedNewChat() {
-  $('#select-users-container').toggle(200);
+  $('#new-chat-container').toggle(200);
+}
+
+function pressedAddToChat() {
+  $('#add-users-chat-container').toggle(200);
 }
 
 // Render current chat header and messages
@@ -412,6 +481,9 @@ function setChatActive(chatIndex) {
       $(`#chat-item-${i_chats}`).removeClass('active');
     }
   }
+  // Setting up Selectable Option List for that chat, showing all users
+  $('#add-users-chat-container').hide();
+  configureSOLAddToChat();
 }
 
 // Sets the last message for a specific thread
@@ -455,7 +527,12 @@ $(document).ready(function() {
 
   // Event when click on btn-create-chat button
   $("#btn-create-chat").click(function () {
-    createChat();
+    createChat('create');
+  });
+
+  // Event when click on btn-add-to-chat button
+  $("#btn-add-to-chat").click(function () {
+    createChat('add-users');
   });
 
   // When press enter on message-input
@@ -473,7 +550,8 @@ $(document).ready(function() {
   renderCurrentChat();
 
   // Hiding select users container at the begining
-  $('#select-users-container').hide();
+  $('#new-chat-container').hide();
+  $('#add-users-chat-container').hide();
   // Getting all users -- JUST FOR TESTING
   configureSOL();
 });
