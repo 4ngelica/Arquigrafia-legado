@@ -78,6 +78,34 @@ class ThreadsController extends \BaseController {
 		}
 	}
 
+	public function update($id){
+		$user = Auth::user();
+		$thread = Thread::find($id);
+		$input = Input::all();
+		$participants = $thread->participants->get();
+		try{
+			if(!is_array($input['participants']))
+				throw new Exception('Incorrect participants format.');
+			else if(count($input['participants']) < 1)
+				throw new Exception('Incorrect number of participants.');
+			else if ( (count($participants) + count($input['participants']) ) > 49)
+				throw new Exception('Incorrect number of participants.');
+			else {
+				$thread->addParticipants($input['participants']);
+				$participants = $thread->participants->get();
+				foreach($input['participants'] as $newParticipant){
+					$names = $thread->participantsString($newParticipant);
+					Pusherer::trigger(strval($newParticipant), 'new_thread', array('thread' => $thread, 
+						'participants' => $participants, 'names' => $names));
+				}
+
+				return \Response::json($thread);
+			}
+		} catch (Exception $error){
+			return \Response::json('Erro ao realizar operação.', 500);
+		}
+	}
+
 	public function destroy($id) {
 		$user = Auth::user();
 		$input = Input::all();
