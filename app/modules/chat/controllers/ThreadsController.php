@@ -82,7 +82,7 @@ class ThreadsController extends \BaseController {
 		$user = Auth::user();
 		$thread = Thread::find($id);
 		$input = Input::all();
-		$participants = $thread->participants->get();
+		$participants = $thread->participants()->get();
 		try{
 			if(!is_array($input['participants']))
 				throw new Exception('Incorrect participants format.');
@@ -92,14 +92,21 @@ class ThreadsController extends \BaseController {
 				throw new Exception('Incorrect number of participants.');
 			else {
 				$thread->addParticipants($input['participants']);
-				$participants = $thread->participants->get();
+				$participants = $thread->participants()->get();
 				foreach($input['participants'] as $newParticipant){
 					$names = $thread->participantsString($newParticipant);
-					Pusherer::trigger(strval($newParticipant), 'new_thread', array('thread' => $thread, 
+					Pusherer::trigger(strval($newParticipant), 'new_thread', array('thread' => $thread,
 						'participants' => $participants, 'names' => $names));
 				}
 
-				return \Response::json($thread);
+				$participants = $thread->participants()->with(array('user' => function($query) {
+					$query->select('id', 'name', 'lastName', 'photo');
+				}))->get();
+				$names = $thread->participantsString($user->id);
+				$last_message = Message::where('thread_id', $thread->id)->orderBy('id', 'desc')->take(1)->get()->first();
+
+				$data = ['thread' => $thread, 'participants' => $participants, 'names' => $names, 'last_message' => $last_message];
+				return \Response::json($data);
 			}
 		} catch (Exception $error){
 			return \Response::json('Erro ao realizar operação.', 500);

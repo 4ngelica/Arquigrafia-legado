@@ -387,12 +387,12 @@ function createChat(type) {
     return;
   }
 
+  data = {
+    participants: selectedUserIDs,
+  }
+
   // If we're creating a chat
   if (type === 'create') {
-    data = {
-      participants: selectedUserIDs,
-    }
-
     $.ajax({
         type: "POST",
         url : `/chats`,
@@ -406,11 +406,27 @@ function createChat(type) {
   }
   // If we are adding users to a chat
   else if (type === 'add-users') {
-    console.log('ADDING USERS', selectedUserIDs);
-
-    // Adter adding users to chat
-    $('#add-users-chat-container').hide();
-    configureSOLAddToChat();
+    $.ajax({
+        type: "PUT",
+        url : `/chats/${currentChat.thread.id}`,
+        data: data,
+        success : function(updatedChat){
+          console.log('USUARIOS ADICIONADOS', updatedChat);
+          // After adding users to chat
+          $('#add-users-chat-container').hide();
+          configureSOLAddToChat();
+          // First, we remove the current chat from array
+          var chatIndex = currentChats.indexOf(currentChat);
+          currentChats.splice(chatIndex, 1);
+          // Second, we add the updated chat to the currentChats array
+          currentChats.push(updatedChat);
+          // Then we set the currentChat as the updatedChat
+          currentChat = updatedChat;
+          // Then, we re-render the chat items and messages
+          renderChatItems();
+          renderCurrentChat();
+        }
+    }, "json");
   }
 }
 
