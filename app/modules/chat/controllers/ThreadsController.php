@@ -82,7 +82,7 @@ class ThreadsController extends \BaseController {
 		$user = Auth::user();
 		$thread = Thread::find($id);
 		$input = Input::all();
-		$participants = $thread->participants->get();
+		$participants = $thread->participants()->get();
 		try{
 			if(!is_array($input['participants']))
 				throw new Exception('Incorrect participants format.');
@@ -92,10 +92,10 @@ class ThreadsController extends \BaseController {
 				throw new Exception('Incorrect number of participants.');
 			else {
 				$thread->addParticipants($input['participants']);
-				$participants = $thread->participants->get();
+				$participants = $thread->participants()->get();
 				foreach($input['participants'] as $newParticipant){
 					$names = $thread->participantsString($newParticipant);
-					Pusherer::trigger(strval($newParticipant), 'new_thread', array('thread' => $thread, 
+					Pusherer::trigger(strval($newParticipant), 'new_thread', array('thread' => $thread,
 						'participants' => $participants, 'names' => $names));
 				}
 
