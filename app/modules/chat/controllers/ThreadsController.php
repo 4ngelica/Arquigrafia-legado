@@ -99,7 +99,14 @@ class ThreadsController extends \BaseController {
 						'participants' => $participants, 'names' => $names));
 				}
 
-				return \Response::json($thread);
+				$participants = $thread->participants()->with(array('user' => function($query) {
+					$query->select('id', 'name', 'lastName', 'photo');
+				}))->get();
+				$names = $threads->participantsString($user->id);
+				$last_message = Message::where('thread_id', $thread->id)->orderBy('id', 'desc')->take(1)->get()->first();
+
+				$data = ['thread' => $thread, 'participants' => $participants, 'names' => $names, 'last_message' => $last_message];
+				return \Response::json($data);
 			}
 		} catch (Exception $error){
 			return \Response::json('Erro ao realizar operação.', 500);
