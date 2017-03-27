@@ -19,7 +19,7 @@ function connectPusher() {
     renderChatItems();
 
     // If the currentChat displayed is the chat that the message arrived
-    if (currentChat.thread.id === data.thread_id) {
+    if (currentChat.thread.id == data.thread_id) {
       // Adding the new message to message block
       currentMessages.push(data.message);
       // Rendering messages again
@@ -58,7 +58,7 @@ function configureSOL() {
 
       for (var i = 0; i < rawData.length; i++) {
         // If the user is me, dont add to option list
-        if (rawData[i].id === userID) continue;
+        if (rawData[i].id == userID) continue;
 
         option = {
           "type": "option",
@@ -87,7 +87,7 @@ function configureSOLAddToChat() {
         // Removing from list the participants of chat
         var participantAlreadyChat = false;
         for (var j = 0; j < currentChat.participants.length; j++) {
-          if (currentChat.participants[j].user_id === rawData[i].id) {
+          if (currentChat.participants[j].user_id == rawData[i].id) {
             participantAlreadyChat = true;
           }
         }
@@ -102,6 +102,8 @@ function configureSOLAddToChat() {
 
         solData.push(option);
       }
+
+      $('#add-users-chat-container').toggle(200);
 
       return solData;
     },
@@ -147,7 +149,7 @@ function renderMessageBlock(position, messageBlock) {
   console.log('MESSAGE BLOCK', messageBlock);
   // Defining source
   var source;
-  if (position === 'right') source = $("#message-right-block-template").html();
+  if (position == 'right') source = $("#message-right-block-template").html();
   else source = $("#message-left-block-template").html();
   // Compiling template
   var template = Handlebars.compile(source);
@@ -181,17 +183,17 @@ function renderMessages() {
   for (var i = 0; i < currentMessages.length; i += 1) {
     var message = currentMessages[i];
     if(i > 0)
-      lastId = parseInt(currentMessages[i - 1]['user_id']);
+      lastId = currentMessages[i - 1]['user_id'];
 
     // If it is the first iteration
-    if (typeof lastRendered === 'undefined') {
+    if (typeof lastRendered == 'undefined') {
       // Saving the first messageBlock
       messageBlock = [message];
-      if (parseInt(message['user_id']) === userID) lastRendered = 'me';
+      if (message['user_id'] == userID) lastRendered = 'me';
       else lastRendered = 'you';
       // Render if it's the only iteration
-      if (currentMessages.length === 1) {
-        if (lastRendered === 'me') renderMessageBlock('left', messageBlock);
+      if (currentMessages.length == 1) {
+        if (lastRendered == 'me') renderMessageBlock('left', messageBlock);
         else renderMessageBlock('right', messageBlock);
       }
       // Continue to the next iteration
@@ -199,19 +201,19 @@ function renderMessages() {
     }
 
     // If the message is from me, and the last message was from me
-    if (parseInt(message['user_id']) === userID && lastRendered === 'me') {
+    if (message['user_id'] == userID && lastRendered == 'me') {
       messageBlock.push(message)
     }
     // Else if the message is from me, and the last message was from you
-    else if (parseInt(message['user_id']) === userID && lastRendered === 'you') {
+    else if (message['user_id'] == userID && lastRendered == 'you') {
       renderMessageBlock('right', messageBlock);
       messageBlock = [message];
       lastRendered = 'me';
     }
     // Else if the message is from you, and the last message is from you
-    else if (parseInt(message['user_id']) !== userID && lastRendered === 'you') {
+    else if (message['user_id'] !== userID && lastRendered == 'you') {
       //If the previous message was from the same user
-      if(lastId === parseInt(message['user_id']))
+      if(lastId == message['user_id'])
         messageBlock.push(message);
       else {
         renderMessageBlock('right', messageBlock);
@@ -220,15 +222,15 @@ function renderMessages() {
       }
     }
     // Else if the message is from you, but the last message is from me
-    else if (parseInt(message['user_id']) !== userID && lastRendered !== 'you') {
+    else if (message['user_id'] !== userID && lastRendered !== 'you') {
       renderMessageBlock('left', messageBlock);
       messageBlock = [message];
       lastRendered = 'you';
     }
 
     // Rendering the last block
-    if (i === currentMessages.length - 1) {
-      if (lastRendered === 'me') renderMessageBlock('left', messageBlock);
+    if (i == currentMessages.length - 1) {
+      if (lastRendered == 'me') renderMessageBlock('left', messageBlock);
       else renderMessageBlock('right', messageBlock);
     }
   }
@@ -254,7 +256,7 @@ function checkThreadRead(chat) {
   // If there's no last message, I read the chat
   if (!lastMessage) return true;
   // If the last message is mine, I read the chat
-  if (lastMessage.user_id === userID) return true;
+  if (lastMessage.user_id == userID) return true;
 
   // Checking if we've already read the message
   participant = getParticipantFromChat(userID, chat);
@@ -281,7 +283,7 @@ function renderChatItems() {
   // Rendering chats
   currentChats.forEach(function(chat, index) {
     // Setting currentChat if it's the first chat
-    if (typeof currentChat === 'undefined' && index === 0) currentChat = chat;
+    if (typeof currentChat == 'undefined' && index == 0) currentChat = chat;
 
     var source = $("#chat-item-template").html();
     var template = Handlebars.compile(source);
@@ -302,7 +304,7 @@ function renderChatItems() {
     $('#chat-items').append(html)
 
     // Setting chat as active
-    if (currentChat === chat) {
+    if (currentChat == chat) {
       setChatActive(index);
     }
   });
@@ -372,8 +374,8 @@ function sendMessage() {
 // The type parameter can be 'create' or 'add-users', representing the two SOLs available
 function createChat(type) {
   // Getting selection from Selectable Option list
-  if (type === 'create') selectedInputs = sol.getSelection();
-  else if (type === 'add-users') selectedInputs = solAddToChat.getSelection();
+  if (type == 'create') selectedInputs = sol.getSelection();
+  else if (type == 'add-users') selectedInputs = solAddToChat.getSelection();
 
   // Populating selectedUserIDs
   selectedUserIDs = [];
@@ -382,7 +384,7 @@ function createChat(type) {
     selectedUserIDs.push(selectedUserID);
   }
 
-  if (selectedUserIDs.length === 0) {
+  if (selectedUserIDs.length == 0) {
     alert('Você precisa selecionar pelo menos um usuário!')
     return;
   }
@@ -392,7 +394,7 @@ function createChat(type) {
   }
 
   // If we're creating a chat
-  if (type === 'create') {
+  if (type == 'create') {
     $.ajax({
         type: "POST",
         url : `/chats`,
@@ -405,7 +407,7 @@ function createChat(type) {
     }, "json");
   }
   // If we are adding users to a chat
-  else if (type === 'add-users') {
+  else if (type == 'add-users') {
     $.ajax({
         type: "PUT",
         url : `/chats/${currentChat.thread.id}`,
@@ -436,7 +438,7 @@ function pressedNewChat() {
 }
 
 function pressedAddToChat() {
-  $('#add-users-chat-container').toggle(200);
+  configureSOLAddToChat();
 }
 
 // Render current chat header and messages
@@ -461,11 +463,12 @@ function setChatAsRead(threadID) {
         // Marking chat as read locally
         // Mapping through all chats and checkin which one is the thread that we wanna set as read
         currentChats = currentChats.map(function (chat) {
-          if (chat.thread.id === threadID) {
+          if (chat.thread.id == threadID) {
             // Map through all participants and check which is one is the current user
             chat.participants = chat.participants.map(function (participant) {
               // If the participant is the current user, we set the last read to now
-              if(participant.user_id === userID) {
+              if(participant.user_id == userID) {
+                // Adds the current date to last_read
                 participant.last_read = moment().format();
               }
               return participant;
@@ -491,7 +494,7 @@ function pressedChat(chatIndex) {
 // Sets the chat as active
 function setChatActive(chatIndex) {
   for (var i_chats = 0; i_chats < currentChats.length; i_chats += 1) {
-    if (i_chats === chatIndex) {
+    if (i_chats == chatIndex) {
       $(`#chat-item-${i_chats}`).addClass('active');
     } else {
       $(`#chat-item-${i_chats}`).removeClass('active');
@@ -499,13 +502,12 @@ function setChatActive(chatIndex) {
   }
   // Setting up Selectable Option List for that chat, showing all users
   $('#add-users-chat-container').hide();
-  configureSOLAddToChat();
 }
 
 // Sets the last message for a specific thread
 function setLastMessage(threadID, lastMessage) {
   currentChats.forEach(function(chat, index) {
-    if (chat.thread.id === threadID) {
+    if (chat.thread.id == threadID) {
       currentChats[index].last_message = lastMessage;
     }
   });
