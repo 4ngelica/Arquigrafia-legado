@@ -115,7 +115,7 @@
 				<p>
 					@{{#if @first}}<span class="chat_message_time">@{{ ../userName }}:</span>@{{/if}}
 					@{{ message.body }}
-					@{{#if @last}}<span class="chat_message_time">@{{ ../hours }}</span>@{{/if}}
+					<span class="chat_message_time">@{{ ../hours }}</span>
 				</p>
 			</li>
 		  @{{/each}}
@@ -136,7 +136,7 @@
 					<p>
 						@{{#if @first}}<span class="chat_message_time">@{{ ../userName }}:</span>@{{/if}}
 						@{{ message.body }}
-						@{{#if @last}}<span class="chat_message_time">@{{ ../hours }}</span>@{{/if}}
+						<span class="chat_message_time">@{{ ../hours }}</span>
 					</p>
 				</li>
 		  @{{/each}}
