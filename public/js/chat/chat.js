@@ -323,6 +323,8 @@ function getMessages() {
       data: params,
       success : function(messages) {
         console.log(messages);
+        if(messages == 'false')
+          location.reload();
         currentMessages = messages;
         renderMessages();
       }
@@ -366,6 +368,8 @@ function sendMessage() {
       data: sendData,
       success : function(data){
         console.log(data);
+        if(data == 'false')
+          location.reload();
       }
   }, "json");
 }
@@ -400,6 +404,8 @@ function createChat(type) {
         url : `/chats`,
         data: data,
         success : function(data){
+          if(data == 'false')
+            location.reload();
           console.log('CHAT CRIADO', data);
           configureSOL();
           $('#new-chat-container').hide();
@@ -413,6 +419,8 @@ function createChat(type) {
         url : `/chats/${currentChat.thread.id}`,
         data: data,
         success : function(updatedChat){
+          if(updatedChat == 'false')
+            location.reload();
           console.log('USUARIOS ADICIONADOS', updatedChat);
           // After adding users to chat
           $('#add-users-chat-container').hide();

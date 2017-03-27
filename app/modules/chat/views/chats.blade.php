@@ -95,6 +95,10 @@
 			<h3>@{{ chatName }}</h3>
 			<p>@{{ lastMessage }}</p>
 		</div>
+
+		<div class="notification-icon">
+			<span>1</span>
+		</div>
 	</div>
 </script>
 
