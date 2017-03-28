@@ -575,6 +575,13 @@ $(document).ready(function() {
   renderChatItems();
   renderCurrentChat();
 
+  for(var i = 0; i < currentChats.length; i++){
+    if(currentChats[i].thread.id == initialThread){
+      pressedChat(i);
+      break;
+    }
+  }
+
   // Hiding select users container at the begining
   $('#new-chat-container').hide();
   $('#add-users-chat-container').hide();
