@@ -9,6 +9,7 @@
 <script src="{{ URL::to("/") }}/js/jquery.isotope.min.js"></script>
 
 <script type="text/javascript" src="{{ URL::to("/") }}/js/panel.js"></script>
+<script type="text/javascript">var userID = {{$user->id}}</script>
 
 
 <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/checkbox.css" />
@@ -70,6 +71,11 @@
     					</a>
 					</div>
  				@endif
+ 				<div id="send_message">
+ 					<a href="#">
+ 						<p  class="label new-label"><span>Enviar mensagem</span></p>
+ 					</a>
+ 				</div>
  			@elseif (Auth::check() && $user->id == Auth::user()->id && !Session::has('institutionId'))
  				<a href="{{ URL::to("/users/" . $user->id . "/edit") }}" id="single_view_contact_add" title="Edite o seu perfil">Editar perfil</a><br />
 			@endif	

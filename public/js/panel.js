@@ -9,6 +9,23 @@ $(document).ready(function(e) {
       rowHeight: 114
     }
 	});
+
+	$('#send_message a').click(function() {
+		data = {
+		    participants: [userID],
+		}
+
+		$.ajax({
+        type: "POST",
+        url : `/chats`,
+        data: data,
+        success : function(data){
+          console.log('CHAT CRIADO', data);
+          if(data != false)
+          	window.location.replace('/chats/' + data);
+        }
+    }, "json");
+	});
 });
 
 $(window).load(function(e) {

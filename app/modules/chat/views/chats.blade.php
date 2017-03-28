@@ -17,6 +17,9 @@
     <script type="text/javascript">
         // Defining variables pushed from PHP
         var userID = {{ $user_id }};
+        @if (isset($thread))
+        	var initialThread = {{$thread}};
+        @endif
         var userName = "{{ $user_name }}";
 				var currentMessages = [];
 				var currentChats = {{ json_encode($data) }};

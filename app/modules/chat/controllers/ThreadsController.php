@@ -148,10 +148,23 @@ class ThreadsController extends \BaseController {
 	}
 
 	public function show($id) {
+		if(!Auth::check())
+			return Redirect::to('/users/login');
+		$user = Auth::user();
+		$threads = $user->threads()->get();
+		$array = array();
 		$thread = Thread::find($id);
-		$messages = $thread->messages()->get();
-		$participants = $thread->participants()->get();
-		return View::make('test', ['output' => $thread]);
+
+		for($i = 0; $i < count($threads); $i++) {
+			$participants = $threads[$i]->participants()->with(array('user' => function($query) {
+				$query->select('id', 'name', 'lastName', 'photo');
+			}))->get();
+			$names = $threads[$i]->participantsString($user->id);
+			$last_message = Message::where('thread_id', $threads[$i]->id)->orderBy('id', 'desc')->take(1)->get()->first();
+			array_push($array, ['thread' => $threads[$i], 'participants' => $participants,
+									   'names' => $names, 'last_message' => $last_message]);
+		}
+		return View::make('chats', ['data' => $array, 'user_id' => $user->id, 'user_name' => $user->name, 'thread' => $thread->id]);
 	}
 
 	public function searchUser(){
