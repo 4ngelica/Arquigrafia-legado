@@ -364,7 +364,7 @@ input.submit-button {
 }
 
 .not-seen {
-  background-color: #FFAAAA;
+  display: block !important;
 }
 
 .notification-icon {

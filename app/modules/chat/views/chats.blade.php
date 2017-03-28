@@ -86,7 +86,7 @@
 
 <!-- HANDLEBARS TEMPLATES -->
 <script id="chat-item-template" type="text/x-handlebars-template">
-	<div id="chat-item-@{{chatIndex}}" class="wrapper-single-conversation @{{#if notRead }} not-seen @{{/if}}" onclick="pressedChat(@{{ chatIndex }});">
+	<div id="chat-item-@{{chatIndex}}" class="wrapper-single-conversation" onclick="pressedChat(@{{ chatIndex }});">
 		<div class="single-avatar">
 			<a href=""><img class="avatar-image" src="@{{ avatarURL }}" /></a>
 		</div>
@@ -96,7 +96,7 @@
 			<p>@{{ lastMessage }}</p>
 		</div>
 
-		<div class="notification-icon">
+		<div class="notification-icon @{{#if notRead }} not-seen @{{/if}}">
 			<span>1</span>
 		</div>
 	</div>
