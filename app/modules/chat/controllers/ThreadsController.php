@@ -17,6 +17,8 @@ use lib\log\EventLogger;
 
 class ThreadsController extends \BaseController {
 	public function store() {
+		if(!Auth::check())
+			return \Response::json('false');
 		$input = Input::all();
 		$user = Auth::user();
 		try {
@@ -79,6 +81,8 @@ class ThreadsController extends \BaseController {
 	}
 
 	public function update($id){
+		if(!Auth::check())
+			return \Response::json('false');
 		$user = Auth::user();
 		$thread = Thread::find($id);
 		$input = Input::all();

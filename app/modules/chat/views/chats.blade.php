@@ -86,7 +86,7 @@
 
 <!-- HANDLEBARS TEMPLATES -->
 <script id="chat-item-template" type="text/x-handlebars-template">
-	<div id="chat-item-@{{chatIndex}}" class="wrapper-single-conversation @{{#if notRead }} not-seen @{{/if}}" onclick="pressedChat(@{{ chatIndex }});">
+	<div id="chat-item-@{{chatIndex}}" class="wrapper-single-conversation" onclick="pressedChat(@{{ chatIndex }});">
 		<div class="single-avatar">
 			<a href=""><img class="avatar-image" src="@{{ avatarURL }}" /></a>
 		</div>
@@ -94,6 +94,10 @@
 		<div class="single-name">
 			<h3>@{{ chatName }}</h3>
 			<p>@{{ lastMessage }}</p>
+		</div>
+
+		<div class="notification-icon @{{#if notRead }} not-seen @{{/if}}">
+			<span>1</span>
 		</div>
 	</div>
 </script>
@@ -111,7 +115,7 @@
 				<p>
 					@{{#if @first}}<span class="chat_message_time">@{{ ../userName }}:</span>@{{/if}}
 					@{{ message.body }}
-					@{{#if @last}}<span class="chat_message_time">@{{ ../hours }}</span>@{{/if}}
+					<span class="chat_message_time">@{{ ../hours }}</span>
 				</p>
 			</li>
 		  @{{/each}}
@@ -132,7 +136,7 @@
 					<p>
 						@{{#if @first}}<span class="chat_message_time">@{{ ../userName }}:</span>@{{/if}}
 						@{{ message.body }}
-						@{{#if @last}}<span class="chat_message_time">@{{ ../hours }}</span>@{{/if}}
+						<span class="chat_message_time">@{{ ../hours }}</span>
 					</p>
 				</li>
 		  @{{/each}}
