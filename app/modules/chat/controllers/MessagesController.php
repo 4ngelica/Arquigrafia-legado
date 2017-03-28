@@ -42,7 +42,7 @@ class MessagesController extends \BaseController {
 			// Sending Pusher event
 			Pusherer::trigger(strval($participant->user_id), 'new_message', array( 'thread_id' => $thread->id, 'message' => $message, 'user_id' => $id ));;
 		}
-
+		$thread->markAsRead($id);
 		EventLogger::printEventLogs(null, 'new_message', ['thread' => $thread->id, 'message' => $message->id], 'Web');
 	}
 
