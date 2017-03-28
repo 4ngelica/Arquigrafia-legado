@@ -574,17 +574,20 @@ $(document).ready(function() {
   // Render Chat Items
   renderChatItems();
   renderCurrentChat();
-
-  for(var i = 0; i < currentChats.length; i++){
-    if(currentChats[i].thread.id == initialThread){
-      pressedChat(i);
-      break;
+  if(typeof(initialThread) != 'undefined'){
+    for(var i = 0; i < currentChats.length; i++){
+      if(currentChats[i].thread.id == initialThread){
+        pressedChat(i);
+        break;
+      }
     }
   }
 
   // Hiding select users container at the begining
   $('#new-chat-container').hide();
   $('#add-users-chat-container').hide();
+  $('#bubble2').hide();
   // Getting all users -- JUST FOR TESTING
   configureSOL();
+
 });
