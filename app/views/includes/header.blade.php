@@ -90,7 +90,11 @@
           </li>
 
           <li>
-            <div class="new-message"><a href="{{ URL::to('/chats') }}">MENSAGENS</a></div>
+            <div class="new-message">
+              <a href="{{ URL::to('/chats') }}">MENSAGENS</a>
+              @if (Auth::user()->newMessagesCount() > 0) <div id="bubble2"> {{Auth::user()->newMessagesCount()}} </div>  @endif
+            </div>
+
           </li>
 
         <!-- <li><a href="{{ URL::to("/badges") }}" id="badge" title="Vizualizar badges">&nbsp;</a></li>-->
