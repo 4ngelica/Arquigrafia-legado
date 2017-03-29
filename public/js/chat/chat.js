@@ -123,6 +123,7 @@ function renderChatHeader(userName) {
   var source = $("#chat-header-template").html();
   var template = Handlebars.compile(source);
   // Info to handlebars
+  userName = (userName.length > 45) ? userName.substring(0, 45) + '...' : userName ;
   var context = {
     userName,
   };
@@ -295,7 +296,7 @@ function renderChatItems() {
 
     var context = {
       chatIndex: index,
-      chatName: chat.names,
+      chatName: (chat.names.length > 45) ? chat.names.substring(0, 45) + "..." : chat.names,
       lastMessage: lastMessage,
       notRead: !checkThreadRead(chat),
       avatarURL: '/img/avatar-48.png',
