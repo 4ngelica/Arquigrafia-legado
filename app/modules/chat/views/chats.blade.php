@@ -149,7 +149,7 @@
 
 <script id="chat-header-template" type="text/x-handlebars-template">
 	<div class="chat-header-container">
-		<div class="chat-header-title-container"><h2><a href="">@{{userName}}</a></h2></div>
+		<div class="chat-header-title-container"><h2>@{{userName}}</h2></div>
 		<div class="add-user"><a href="#" onclick="pressedAddToChat();">ADICIONAR</a></div>
 	</div>
 </script>
