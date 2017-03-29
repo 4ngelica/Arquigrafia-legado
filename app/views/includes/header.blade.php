@@ -91,7 +91,7 @@
           @endif
 
           <li>
-            <div class="new-message">
+            <div id="new-message-container" class="new-message">
               <a href="{{ URL::to('/chats') }}">MENSAGENS</a>
               @if (Auth::user()->newMessagesCount() > 0) <div id="bubble2"> {{Auth::user()->newMessagesCount()}} </div>  @endif
             </div>
