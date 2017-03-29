@@ -26,13 +26,14 @@ class MessagesController extends \BaseController {
 		$message->body = $input['message'];
 		$message->user_id = $id;
 		$message->save();
-		$thread->markAsRead($id);
+		
 
 		// Getting current user data
 		$user = \User::find($id);
 
 		// Find thread that we wanna send the message
 		$thread = Thread::find($message->thread_id);
+		$thread->markAsRead($id);
 		// Getting all participants from that thread
 		$participants = $thread->participants()->get();
 		// Sending pusherer events
@@ -43,6 +44,7 @@ class MessagesController extends \BaseController {
 			// Sending Pusher event
 			Pusherer::trigger(strval($participant->user_id), 'new_message', array( 'thread_id' => $thread->id, 'message' => $message, 'user_id' => $id ));;
 		}
+		$thread->markAsRead($user->id);
 		EventLogger::printEventLogs(null, 'new_message', ['thread' => $thread->id, 'message' => $message->id], 'Web');
 	}
 
