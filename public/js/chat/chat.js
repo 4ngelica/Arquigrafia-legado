@@ -49,6 +49,7 @@ function getParticipantFromChat(userIDRequired, chat) {
 
 // Initializes searchableOptionList
 function configureSOL() {
+  SearchableOptionList.defaults.texts.searchplaceholder = "Encontre usuários para nova conversa";
   sol = $('#select-users').searchableOptionList({
     showSelectAll: false,
     maxHeight: 100,
@@ -76,6 +77,7 @@ function configureSOL() {
 
 // Initializes Searchable Option List to Add User to Chat
 function configureSOLAddToChat() {
+  SearchableOptionList.defaults.texts.searchplaceholder = "Encontre usuários para adicionar a esta conversa";
   solAddToChat = $('#select-users-add-chat').searchableOptionList({
     showSelectAll: false,
     maxHeight: 100,
