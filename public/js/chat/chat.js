@@ -126,8 +126,15 @@ function renderChatHeader(userName) {
   var template = Handlebars.compile(source);
   // Info to handlebars
   userName = (userName.length > 35) ? userName.substring(0, 35) + '...' : userName ;
+  var currentParticipants = currentChat.participants.slice();
+  for(var i = 0; i < currentParticipants.length; i++){
+    if(currentParticipants[i].user_id == userID){
+      currentParticipants.splice(i, 1);
+    }
+  }
   var context = {
     userName,
+    currentParticipants,
   };
   // Setting html to chat-header
   var html = template(context);
@@ -542,6 +549,11 @@ function searchUsers() {
   }, "json");
 }
 
+//showing all users from a chat
+function toggleParticipants() {
+  $(".all-users").toggle();
+}
+
 /**
  * ON DOCUMENT READY
 **/
@@ -592,5 +604,5 @@ $(document).ready(function() {
   $('#bubble2').hide();
   // Getting all users -- JUST FOR TESTING
   configureSOL();
-
+  $(".all-users").hide();
 });
