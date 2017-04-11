@@ -125,12 +125,14 @@ function renderChatHeader(userName) {
   var source = $("#chat-header-template").html();
   var template = Handlebars.compile(source);
   // Info to handlebars
-  userName = (userName.length > 35) ? userName.substring(0, 35) + '...' : userName ;
+  userName = (userName.length > 25) ? userName.substring(0, 25) + '...' : userName ;
   var currentParticipants = currentChat.participants.slice();
   for(var i = 0; i < currentParticipants.length; i++){
     if(currentParticipants[i].user_id == userID){
       currentParticipants.splice(i, 1);
     }
+    if(currentParticipants[i].user.photo == null)
+      currentParticipants[i].user.photo = "/img/avatar-48.png";
   }
   var context = {
     userName,
@@ -507,6 +509,7 @@ function pressedChat(chatIndex) {
   setChatActive(chatIndex);
   renderCurrentChat();
   setChatAsRead(currentChat.thread.id);
+  $(".all-users").hide();
 }
 
 // Sets the chat as active
