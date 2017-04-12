@@ -39,6 +39,11 @@
 .add-user a{ padding: 10px 8px 8px 28px; background: url(../../img/add-button-inside-black-circle.png) left center no-repeat transparent; border-radius: 5px; }
 .add-user a:hover{ border-radius: 5px; color: #000; text-decoration: underline; }
 
+.show-users {position: absolute; left: 0px; top: 10px; font-size: 10px;}
+.show-users a{ padding: 10px 8px 8px 28px; background: url(../../img/add-button-inside-black-circle.png) left center no-repeat transparent; border-radius: 5px; }
+.show-users a:hover{ border-radius: 5px; color: #000; text-decoration: underline; }
+
+
 .wrapper-single-conversation {padding: 20px; border-bottom: 2px solid #999; display: flex; position: relative;}
 .wrapper-single-conversation.active {background: #f3f4f4; transition: 0.2s;}
 .wrapper-single-conversation h3 {text-transform: none;}
