@@ -454,7 +454,7 @@ function createChat(type) {
 
 // Called when pressed New Chat
 function pressedNewChat() {
-  $('#new-chat-container').toggle(200);
+  $('#new-chat-container').toggle(150);
 }
 
 function pressedAddToChat() {
@@ -554,7 +554,7 @@ function searchUsers() {
 
 //showing all users from a chat
 function toggleParticipants() {
-  $(".all-users").toggle();
+  $(".all-users").toggle(200);
 }
 
 /**

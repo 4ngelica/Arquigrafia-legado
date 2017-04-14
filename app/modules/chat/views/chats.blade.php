@@ -149,21 +149,20 @@
 
 <script id="chat-header-template" type="text/x-handlebars-template">
 	<div class="chat-header-container">
-		<div class="show-users"><a href="#" onclick="toggleParticipants();">EXIBIR</a></div>
+		<div class="show-users"><a href="#" onclick="toggleParticipants();">MOSTRAR TODOS </a></div>
 		<div class="chat-header-title-container"><h2>@{{userName}}</h2></div>
 		<div class="add-user"><a href="#" onclick="pressedAddToChat();">ADICIONAR</a></div>
-		
-			<div class="all-users">
-				@{{#each currentParticipants as |listParticipant| }}
-					<div class="link-user">
-						<a href="/users/@{{listParticipant.user_id}}">
-							<img src="@{{listParticipant.user.photo}}"></img>
-							<p>@{{listParticipant.user.name}}</p>
-						</a>
-					</div>
-				@{{/each}}
+	</div>
+
+	<div class="all-users">
+		@{{#each currentParticipants as |listParticipant| }}
+			<div class="link-user">
+				<a href="/users/@{{listParticipant.user_id}}">
+					<img src="@{{listParticipant.user.photo}}"></img>
+					<p>@{{listParticipant.user.name}}</p>
+				</a>
 			</div>
-		
+		@{{/each}}
 	</div>
 </script>
 
