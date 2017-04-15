@@ -2,7 +2,7 @@
 	  $type = 'add';
 ?>
 
-<table class="page form-table" width="100%" border="0"
+<table class="page form-table users-result-table" width="100%" border="0"
 	cellspacing="0" cellpadding="0">
   @foreach($users as $user)
 		@if ($count % 8 == 0)
@@ -12,11 +12,11 @@
       <div style="width: 100%; text-align: center;">
         <a href='{{ URL::to("/users/{$user->id}") }}'>
           @if ( !empty($user->photo) )
+            <div class="img_avatar_result" style="background: url({{ asset($user->photo) }}) center center no-repeat; background-size: cover;"></div>
             <img  src="{{ asset($user->photo) }}"
               style="width: 100px; height: 100px;"/>
           @else
-            <img src="{{ URL::to('/img/avatar-60.png') }}"
-              style="width: 100px; height: 100px;"/>
+              <div class="img_avatar_result" style="background: url({{ URL::to('/img/avatar-60.png') }}) center center no-repeat; background-size: cover;"></div>
           @endif
         </a>
       </div>
