@@ -13,10 +13,8 @@
         <a href='{{ URL::to("/users/{$user->id}") }}'>
           @if ( !empty($user->photo) )
             <div class="img_avatar_result" style="background: url({{ asset($user->photo) }}) center center no-repeat; background-size: cover;"></div>
-            <img  src="{{ asset($user->photo) }}"
-              style="width: 100px; height: 100px;"/>
           @else
-              <div class="img_avatar_result" style="background: url({{ URL::to('/img/avatar-60.png') }}) center center no-repeat; background-size: cover;"></div>
+            <div class="img_avatar_result" style="background: url({{ URL::to('/img/avatar-60.png') }}) center center no-repeat; background-size: cover;"></div>
           @endif
         </a>
       </div>
