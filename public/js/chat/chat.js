@@ -125,9 +125,18 @@ function renderChatHeader(userName) {
   var source = $("#chat-header-template").html();
   var template = Handlebars.compile(source);
   // Info to handlebars
-  userName = (userName.length > 35) ? userName.substring(0, 35) + '...' : userName ;
+  userName = (userName.length > 25) ? userName.substring(0, 25) + '...' : userName ;
+  var currentParticipants = currentChat.participants.slice();
+  for(var i = 0; i < currentParticipants.length; i++){
+    if(currentParticipants[i].user_id == userID){
+      currentParticipants.splice(i, 1);
+    }
+    if(currentParticipants[i].user.photo == null)
+      currentParticipants[i].user.photo = "/img/avatar-48.png";
+  }
   var context = {
     userName,
+    currentParticipants,
   };
   // Setting html to chat-header
   var html = template(context);
@@ -445,7 +454,7 @@ function createChat(type) {
 
 // Called when pressed New Chat
 function pressedNewChat() {
-  $('#new-chat-container').toggle(200);
+  $('#new-chat-container').toggle(150);
 }
 
 function pressedAddToChat() {
@@ -500,6 +509,7 @@ function pressedChat(chatIndex) {
   setChatActive(chatIndex);
   renderCurrentChat();
   setChatAsRead(currentChat.thread.id);
+  $(".all-users").hide();
 }
 
 // Sets the chat as active
@@ -540,6 +550,11 @@ function searchUsers() {
         configureSOL();
       }
   }, "json");
+}
+
+//showing all users from a chat
+function toggleParticipants() {
+  $(".all-users").toggle(200);
 }
 
 /**
@@ -592,5 +607,5 @@ $(document).ready(function() {
   $('#bubble2').hide();
   // Getting all users -- JUST FOR TESTING
   configureSOL();
-
+  $(".all-users").hide();
 });
