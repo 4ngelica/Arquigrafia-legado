@@ -136,6 +136,19 @@
     <input type="hidden" id="pageCurrent1" value="{{$page}}">
     <input type="hidden" id="urlType" value="simple">
 
+    <div class="container">
+      <div id="add1" class="twelveMid columns add" >
+           @if ( $users != null )
+              @if($users->count() > 0 )
+                @include('users.includes.searchResult_include')
+              @endif
+           @else   
+              <div class="wrap">
+              </div>
+           @endif
+      </div>
+    </div>
+
     <!--   PAINEL DE IMAGENS - GALERIA - CARROSSEL   -->
      <!--  <div class="wrap">
          <div id="panel">
