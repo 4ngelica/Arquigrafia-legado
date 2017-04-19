@@ -267,7 +267,7 @@ class PagesController extends BaseController {
 
             // Searching users
             $query = User::where(function($query) use($needle) {
-              $query->where('name', 'LIKE', '%'. $needle .'%');
+              $query->where('name', 'LIKE', '%'. $needle .'%')->where('active', '=', 'yes');
             });
             $users = $query->get();
 
