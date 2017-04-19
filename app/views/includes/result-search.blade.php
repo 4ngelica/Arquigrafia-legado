@@ -1,11 +1,11 @@
 <div class="container">
   <div class="twelveMid columns">
     <div id="add_images" class="" style="display: block;">
-       <div id="add" class="twelveMid columns add" >
+      <!--  <div id="add" class="twelveMid columns add" >
          @if ( $users != null && $users->count() > 0 )
             @include('users.includes.searchResult_include')
          @endif
-       </div>
+       </div> -->
      </div>
    </div>
   <div class="twelveMid columns">
