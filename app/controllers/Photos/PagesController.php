@@ -269,7 +269,7 @@ class PagesController extends BaseController {
             $query = User::where(function($query) use($needle) {
               $query->where('name', 'LIKE', '%'. $needle .'%');
             });
-            $users = $query->take(8)->get();
+            $users = $query->get();
 
             if (Auth::check()) {
                 $user_id = Auth::user()->id;
