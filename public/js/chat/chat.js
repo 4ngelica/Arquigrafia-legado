@@ -127,13 +127,15 @@ function renderChatHeader(userName) {
   // Info to handlebars
   userName = (userName.length > 25) ? userName.substring(0, 25) + '...' : userName ;
   var currentParticipants = currentChat.participants.slice();
+  var spliceIndex = null;
   for(var i = 0; i < currentParticipants.length; i++){
     if(currentParticipants[i].user_id == userID){
-      currentParticipants.splice(i, 1);
+      spliceIndex = i;
     }
     if(currentParticipants[i].user.photo == null)
       currentParticipants[i].user.photo = "/img/avatar-48.png";
   }
+  currentParticipants.splice(spliceIndex, 1);
   var context = {
     userName,
     currentParticipants,
