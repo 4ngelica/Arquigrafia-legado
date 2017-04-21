@@ -6,6 +6,7 @@ use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use lib\date\Date;
 use lib\log\EventLogger;
+use Cmgmyr\Messenger\Traits\Messagable;
 
 use modules\gamification\traits\UserGamificationTrait;
 use modules\institutions\models\Institution;
@@ -17,6 +18,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	use UserTrait, RemindableTrait;
 	
 	use UserGamificationTrait;
+
+	use Messagable;
 
 	protected $fillable = ['id','name','email','password','login','verify_code'];
 

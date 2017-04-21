@@ -7,7 +7,7 @@
 <!-- ISOTOPE -->
 <script src="{{ URL::to("/") }}/js/jquery.isotope.min.js"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/panel.js"></script>
-<script src="{{ URL::to('/js/searchPagination.js') }}"></script> 
+<script src="{{ URL::to('/js/searchPagination.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ URL::to('/css/tabs.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/album.css" />
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/checkbox-edition.css" />
@@ -26,12 +26,9 @@
 
     };
     console.log({{$page}});
-    var coverPage = 1;    
-    var covers_counter = 0;    
-    var update = null;
-    
-    
-    
+    var coverPage = 1;
+    var covers_counter = 0;
+    var update = null;    
   </script>
 @stop
 
@@ -40,12 +37,12 @@
   <div id="content">
 
     <div class="container">
-      <div id="search_result" class="twelve columns row">  
+      <div id="search_result" class="twelve columns row">
         <h1>
-          @if ($city != "") 
+          @if ($city != "")
               Resultados encontrados para: "{{ ucwords($query) }}" da cidade de "{{ucwords($city)}}"
           @elseif ( isset($binomial_option) )
-            Resultados encontrados para arquiteturas com característica: 
+            Resultados encontrados para arquiteturas com característica:
             @if ( isset($value) )
               {{ $value }}%
             @endif
@@ -57,7 +54,7 @@
        <!-- To data search  -->
         @if( count($dateFilter) != 0 )
           <p>
-            Data: 
+            Data:
             @foreach ($dateFilter as $k => $date)
               @if ( $k != "do" )
                 <a href="{{ URL::to("/search?q=".$query."&d=".$k)}}"> {{ $date }} </a>,
@@ -68,15 +65,15 @@
           </p>
         @endif
        <!-- -->
-        @if( count($tags) != 0 )            
+        @if( count($tags) != 0 )
           <p style="display: inline">
-            Tags contendo o termo: 
+            Tags contendo o termo:
             @foreach($tags as $k => $tag)
               @if ($k != count($tags)-1 )
                 <form id="{{$k}}" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" style="display: inline">
                   <input type="hidden" name="q" value="{{$tag->name}}"/>
-                  <a href="javascript: submitform({{$k}});">{{ $tag->name }}</a>, 
-                </form>  
+                  <a href="javascript: submitform({{$k}});">{{ $tag->name }}</a>,
+                </form>
               @else
                 <form id="{{$k}}" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" style="display: inline">
                 <input type="hidden" name="q" value="{{$tag->name}}"/>
@@ -94,17 +91,17 @@
         @endif
 
 
-        @if( count($authors) != 0 )            
+        @if( count($authors) != 0 )
           <p style="display: inline">
-            Autores contendo o termo: 
+            Autores contendo o termo:
             @foreach($authors as $v => $author)
-            
+
               @if ($v != count($authors)-1 )
                 <form id="a{{$v}}" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" style="display: inline">
                   <input type="hidden" name="q" value="{{$author->name}}"/>
                   <input type="hidden" name="type" value="a"/>
-                  <a href="javascript: submitformS('a{{$v}}');">{{ $author->name }}</a>; 
-                </form>  
+                  <a href="javascript: submitformS('a{{$v}}');">{{ $author->name }}</a>;
+                </form>
               @else
                 <form id="a{{$v}}" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" style="display: inline">
                 <input type="hidden" name="q" value="{{$author->name}}"/>
@@ -116,7 +113,7 @@
           </p>
           <script type="text/javascript">
             function submitformS(objectAuthor)
-            { 
+            {
               document.getElementById(objectAuthor).submit();
             }
           </script>
@@ -138,8 +135,21 @@
     <input type="hidden" id="pgVisited" value="{{$pageVisited}}">
     <input type="hidden" id="pageCurrent1" value="{{$page}}">
     <input type="hidden" id="urlType" value="simple">
-    
-    <!--   PAINEL DE IMAGENS - GALERIA - CARROSSEL   -->  
+
+    <div class="container">
+      <div id="add1" class="twelveMid columns add" >
+           @if ( $users != null )
+              @if($users->count() > 0 )
+                @include('users.includes.searchResult_include')
+              @endif
+           @else   
+              <div class="wrap">
+              </div>
+           @endif
+      </div>
+    </div>
+
+    <!--   PAINEL DE IMAGENS - GALERIA - CARROSSEL   -->
      <!--  <div class="wrap">
          <div id="panel">
             include('includes.panel')
@@ -150,11 +160,11 @@
     <!--   FIM - PAINEL DE IMAGENS  -->
 
     <!-- FOTOS PAGINADAS -->
-   
+
     @include('includes.result-search')
-  
+
     <!-- FIM FOTOS PAGINADAS -->
   </div>
   <!--   FIM - MEIO DO SITE   -->
-  
+
 @stop

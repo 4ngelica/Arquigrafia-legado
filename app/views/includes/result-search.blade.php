@@ -1,21 +1,27 @@
 <div class="container">
-      <div class="twelveMid columns">    
-       <div id="add_images" class="" style="display: block;"> 
-        <div id="add" class="twelveMid columns add" >
-          <!--<img class="loader" src="{{ URL::to('/img/ajax-loader.gif') }}" /> style="height: 1500px;"-->
-          @if ( $photos!= null)
-              @if ($photos->count() > 0)
-                
-                 @include('photos.includes.searchResult_include')
-                 
-              @else
-                <p>Não foi encontrada nenhuma imagem sua para sua busca.</p>
-              @endif
-           @else
-               <div class="wrap">
-               </div>
-           @endif   
-        </div>
+  <div class="twelveMid columns">
+    <div id="add_images" class="" style="display: block;">
+      <!--  <div id="add" class="twelveMid columns add" >
+         @if ( $users != null && $users->count() > 0 )
+            @include('users.includes.searchResult_include')
+         @endif
+       </div> -->
+     </div>
+   </div>
+  <div class="twelveMid columns">
+    <div id="add_images" class="" style="display: block;">
+       <div id="add" class="twelveMid columns add" >
+         @if ( $photos!= null)
+            @if ($photos->count() > 0)
+            @include('photos.includes.searchResult_include')
+         @else
+            <p>Não foi encontrada nenhuma imagem sua para sua busca.</p>
+         @endif
+         @else
+            <div class="wrap">
+            </div>
+         @endif
+      </div>
         @if ( $photos!= null)
         <div class="eleven columns block add">
             <div class="eight columns alpha buttons">
@@ -24,14 +30,10 @@
               <p>{{$page}} / {{$maxPage}}</p>
               <input type="button" class="btn greater-than" value="&gt;">
               <input type="button" class="btn greater greater-than" value="&gt;&gt;">
-            </div>          
+            </div>
         </div>
         @endif
         </div>
-        
+
       </div>
 </div>
-
-
-
-

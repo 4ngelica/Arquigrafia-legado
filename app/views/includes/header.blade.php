@@ -62,22 +62,7 @@
 
         <a href="{{ URL::to("/users/logout/") }}" id="logout" class="btn">SAIR</a><br />
         <ul id="logged_menu">
-          @if (Auth::user()->photos->count() > 0 )
-            @if(Auth::user()->albums->count() > 0)
-              <li><a href="{{ URL::to('/albums') }}" title="Meus álbuns"><i class="photos">&nbsp;</i> ALBUNS</a></li>
-            @else
-              <li><a href="{{ URL::to('/albums/create') }}" title="Crie seu álbum personalizado"><i class="photos">&nbsp;</i> ALBUNS</a></li>
-            @endif
-          @endif
-          <!-- <li><a href="#" id="comunities" title="Comunidades">&nbsp;</a></li> -->
-          @if(Session::has('institutionId'))
-            <li><a href="{{ URL::to("/institutions/form/upload") }}" name="modal" title="Enviar uma imagem"><i class="upload">&nbsp;</i> UPLOAD</a></li>
-          @else
-            <li><a href="{{ URL::to("/photos/upload") }}" name="modal" title="Enviar uma imagem"><i class="upload">&nbsp;</i> UPLOAD</a></li>
-          @endif
-          <!-- <li><a href="#" id="messages" title="Você tem 19 mensagens">&nbsp;</a></li> -->
-
-          <li>
+            <li>
             <div id="notification-icon-container">
               <?php
                 $notesCounter = Auth::user()->notifications()->unread()->count();
@@ -87,6 +72,30 @@
               <a onclick="toggleNotes()" id="notification" title="{{$title}}"><i class="notification">&nbsp;</i> NOTIFICAÇÕES</a>
               @if ($notesCounter > 0) <div id="bubble"> {{$notesCounter}} </div>  @endif
             </div>
+          </li>
+
+          <!-- <li><a href="#" id="comunities" title="Comunidades">&nbsp;</a></li> -->
+          @if(Session::has('institutionId'))
+            <li><a href="{{ URL::to("/institutions/form/upload") }}" name="modal" title="Enviar uma imagem"><i class="upload">&nbsp;</i> UPLOAD</a></li>
+          @else
+            <li><a href="{{ URL::to("/photos/upload") }}" name="modal" title="Enviar uma imagem"><i class="upload">&nbsp;</i> UPLOAD</a></li>
+          @endif
+          <!-- <li><a href="#" id="messages" title="Você tem 19 mensagens">&nbsp;</a></li> -->
+
+          @if (Auth::user()->photos->count() > 0 )
+            @if(Auth::user()->albums->count() > 0)
+              <li><a href="{{ URL::to('/albums') }}" title="Meus álbuns"><i class="photos">&nbsp;</i> ALBUNS</a></li>
+            @else
+              <li><a href="{{ URL::to('/albums/create') }}" title="Crie seu álbum personalizado"><i class="photos">&nbsp;</i> ALBUNS</a></li>
+            @endif
+          @endif
+
+          <li>
+            <div id="new-message-container" class="new-message">
+              <a href="{{ URL::to('/chats') }}">MENSAGENS</a>
+              @if (Auth::user()->newMessagesCount() > 0) <div id="bubble2"> {{Auth::user()->newMessagesCount()}} </div>  @endif
+            </div>
+
           </li>
 
         <!-- <li><a href="{{ URL::to("/badges") }}" id="badge" title="Vizualizar badges">&nbsp;</a></li>-->
