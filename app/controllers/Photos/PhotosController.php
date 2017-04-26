@@ -100,6 +100,28 @@ class PhotosController extends \BaseController {
         }
       }
     }
+    //checking missing information
+    $missing = array();
+    if($photos->address == null)
+      $missing[] = 'address';
+    if($photos->city == null)
+      $missing[] = 'city';
+    if($photos->country == null)
+      $missing[] = 'country';
+    if($photos->description == null)
+      $missing[] = 'description';
+    if($photos->district == null)
+      $missing[] = 'district';
+    if($photos->imageAuthor == null)
+      $missing[] = 'imageAuthor';
+    if($photos->state == null)
+      $missing[] = 'state';
+    if($photos->title == null)
+      $missing[] = 'title';
+    if($photos->workAuthor == null)
+      $missing[] = 'workAuthor';
+    if($photos->workDate == null)
+      $missing[] = 'workDate';
 
     return View::make('/photos/show',
       ['photos' => $photos, 'owner' => $photo_owner, 'follow' => $follow, 'tags' => $tags,
@@ -121,7 +143,8 @@ class PhotosController extends \BaseController {
       'typeSearch' => $typeSearch,
       'urlBack' => $urlBack,
       'institutionId' => $photos->institution_id,
-      'type'=> $photos->type
+      'type'=> $photos->type,
+      'missing' => $missing
     ]);
   }
 
