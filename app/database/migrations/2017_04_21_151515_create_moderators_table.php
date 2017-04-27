@@ -15,7 +15,7 @@ class CreateModeratorsTable extends Migration {
 		Schema::create('moderators', function(Blueprint $table){
 			$table->bigIncrements('id');
 			$table->bigInteger('user_id')->unsigned();
-			$table->bigInteger('moderation_type_id');
+			$table->bigInteger('moderation_type_id')->unsigned();
 			$table->foreign('user_id')->references('id')->on('users');
 			$table->foreign('moderation_type_id')->references('id')->on('moderation_type');
 			$table->string('level');
