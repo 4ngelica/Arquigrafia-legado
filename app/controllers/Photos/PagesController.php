@@ -267,9 +267,9 @@ class PagesController extends BaseController {
 
             // Searching users
             $query = User::where(function($query) use($needle) {
-              $query->where('name', 'LIKE', '%'. $needle .'%');
+              $query->where('name', 'LIKE', '%'. $needle .'%')->where('active', '=', 'yes');
             });
-            $users = $query->take(8)->get();
+            $users = $query->get();
 
             if (Auth::check()) {
                 $user_id = Auth::user()->id;
