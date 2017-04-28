@@ -74,7 +74,7 @@
 			form_window_loaded = true;
 		});
 
-		$('#forgot_password').live("click", function(e){
+		$('#forgot_password').on("click", function(e){
 			e.preventDefault();
 			$('#mask').fadeOut('fast');
 			$('#form_window').fadeOut('slow');
@@ -84,7 +84,7 @@
 		});
 
 		
-		$('#registration_user').live("click", function(e){
+		$('#registration_user').on("click", function(e){
 			e.preventDefault();
 			$('#mask').fadeOut('fast');
 			$('#form_window').fadeOut('slow');

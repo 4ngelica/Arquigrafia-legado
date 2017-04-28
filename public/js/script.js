@@ -55,7 +55,7 @@ $(document).ready(function(){
 			$('#confirmation_window').fadeIn('slow');
 		});		
 
-		$('.title_plus').live('click', function (e){
+		$('.title_plus').on('click', function (e){
 			e.preventDefault();
 			$('#mask').fadeIn('fast');
 			$('#form_window').fadeIn('slow');
@@ -68,19 +68,19 @@ $(document).ready(function(){
 			});
 		});
 		
-		$('#stoaLogin').live('click', function (e) {
+		$('#stoaLogin').on('click', function (e) {
 			e.preventDefault();
 			$('#mask').fadeIn('fast');
 			$('#form_login_window').fadeIn('slow');
 		});
 
-		$('#institutionLogin').live('click', function (e) {
+		$('#institutionLogin').on('click', function (e) {
 			e.preventDefault();
 			$('#mask').fadeIn('fast');
 			$('#form_login_inst_window').fadeIn('slow');
 		});
 
-		$('.tabs .tab-links a').live('click', function(e) {
+		$('.tabs .tab-links a').on('click', function(e) {
       e.preventDefault();
       var currentAttrValue = $(this).attr('href');
       $('.tabs ' + currentAttrValue).fadeIn('slow').siblings().hide();

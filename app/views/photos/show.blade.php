@@ -6,7 +6,15 @@
 
   <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/checkbox.css" />
   <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4fdf62121c50304d"></script>
-  
+
+  <!-- jBox -->
+  <script src="//code.jboxcdn.com/0.4.7/jBox.min.js"></script>
+  <link href="//code.jboxcdn.com/0.4.7/jBox.css" rel="stylesheet">
+
+  <!-- Suggestions Modal -->
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/suggestions/suggestions-modal.css" />
+  <script type="text/javascript" src="{{ URL::to("/") }}/js/suggestions/suggestions-modal.js"></script>
+
   <!-- Google Maps API -->
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBuBk5ghbTdpdm_nBWg6xHEzdRXdryK6rU&callback=initMap"></script>
   <script type="text/javascript">
@@ -91,7 +99,7 @@
             </span>
             <span class="right" title="{{ $photos->likes->count() }} pessoas curtiram essa imagem">
               <i id="likes"></i> <small>{{ $photos->likes->count() }}</small>
-            </span>            
+            </span>
             @if ($institutionId == NULL && $owner->equal(Auth::user()))
               <span class="right">
                 <a id="delete_button" href="{{ URL::to('/photos/' . $photos->id) }}" title="Excluir imagem"></a>
@@ -128,29 +136,29 @@
 
       <!--   BOX DE BOTOES DA IMAGEM   -->
       <div id="single_view_buttons_box">
-        @if ($typeSearch == '')          
-          <div class="first columns"> 
+        @if ($typeSearch == '')
+          <div class="first columns">
             <a href="{{ URL::previous()}}" class='btn left'>VOLTAR</a>
           </div>
         @elseif($typeSearch == 'advance')
-          
-           <div class="first columns"> 
+
+           <div class="first columns">
             <a href="{{ URL::previous()}}&pg=1" class='btn left'>VOLTAR</a>
             </div>
         @elseif($typeSearch == 'simples')
-        <div class="first columns">       
+        <div class="first columns">
         {{ Form::open(array('url' => $urlBack ,'id'=> 'frmDetailPhoto' ,'method' => 'post')) }}
-        
-          {{ Form::hidden('q', $querySearch) }} 
-          {{ Form::hidden('pg', "1") }} 
-          {{ Form::hidden('typeSearch', $typeSearch) }} 
-          {{ Form::hidden('visitedPage', "$currentPage") }}   
-          {{ Form::hidden('urlPrev', $urlBack, array('id'  => 'urlPrev') ) }}   
-           
+
+          {{ Form::hidden('q', $querySearch) }}
+          {{ Form::hidden('pg', "1") }}
+          {{ Form::hidden('typeSearch', $typeSearch) }}
+          {{ Form::hidden('visitedPage', "$currentPage") }}
+          {{ Form::hidden('urlPrev', $urlBack, array('id'  => 'urlPrev') ) }}
+
           {{Form::submit('VOLTAR', ['class' => 'btn return-show', 'id' =>'btnBack', 'onclick' => 'return updateForm();' ])}}
-          
-            
-        
+
+
+
         {{ Form::close() }}
         </div>
         @endif
@@ -161,7 +169,7 @@
               <a href="{{ URL::to('/albums/get/list/' . $photos->id) }}" title="Adicione aos seus álbuns" id="plus"></a>
             </li>
             @if($type != "video")
-              @if($photos->authorized)               
+              @if($photos->authorized)
               <li>
                 <a href="{{ asset('photos/download/'.$photos->id) }}" title="Faça o download" id="download" target="_blank"></a>
               </li>
@@ -170,7 +178,7 @@
               <a onclick="notAuthorized();return false;" href="#" title="Faça o download" id="download" target="_blank"></a>
               </li>
              @endif
-            @endif 
+            @endif
             @if(!Session::has('institutionId'))
             <li>
               <a href="{{ URL::to('/evaluations/' . $photos->id . '/evaluate?f=sb' )}}" title="Registre suas impressões sobre {{$architectureName}}" id="evaluate" ></a>
@@ -246,7 +254,7 @@
       <!--   BOX DE COMENTARIOS   -->
       <div id="comments_block" class="eight columns row alpha omega">
         <h3>Comentários</h3>
-        @if(Auth::check())           
+        @if(Auth::check())
           <br>
         @endif
         <?php $comments = $photos->comments; ?>
@@ -275,9 +283,9 @@
                 <br class="clear">
                 </br>
                 <p align="justify" style="font-size: 7pt; width: 558px">
-                    Cada usuário é responsável por seus próprios comentários. 
-                    O Arquigrafia não se responsabiliza pelos comentários postados, 
-                    mas apenas por tornar indisponível no site o conteúdo considerado 
+                    Cada usuário é responsável por seus próprios comentários.
+                    O Arquigrafia não se responsabiliza pelos comentários postados,
+                    mas apenas por tornar indisponível no site o conteúdo considerado
                     infringente ou danoso por determinação judicial (art.19 da Lei 12.965/14).
                 </p>
             </div>
@@ -335,7 +343,7 @@
               @endif
             </span>
           </hgroup>
-          
+
            @foreach($similarPhotos as $k => $similarPhoto)
              @if($photos->id != $similarPhoto->id)
                @if(!Session::has('institutionId'))
@@ -343,7 +351,7 @@
                 class="gallery_photo" title="{{ $similarPhoto->name }}">
                 <img src="{{ URL::to("/arquigrafia-images/" . $similarPhoto->id . "_home.jpg") }}" class="gallery_photo" />
               </a>
-              @else 
+              @else
                 <a  class="hovertext" href='{{"/photos/" . $similarPhoto->id  }}'
                 class="gallery_photo" title="{{ $similarPhoto->name }}">
                 <img src="{{ URL::to("/arquigrafia-images/" . $similarPhoto->id . "_home.jpg") }}" class="gallery_photo" />
@@ -355,7 +363,7 @@
               </a>-->
              @endif
            @endforeach
-          
+
         </div>
       @endif
       <!-- -->
@@ -368,11 +376,11 @@
         <!--<a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">-->
           @if(!is_null($ownerInstitution))
            <a href="{{ URL::to("/institutions/".$ownerInstitution->id) }}" id="user_name">
-              @if($ownerInstitution->photo != "")              
+              @if($ownerInstitution->photo != "")
                 <img id="single_view_user_thumbnail" src="{{ asset($ownerInstitution->photo) }}" class="user_photo_thumbnail"/>
               @else
                 <img id="single_view_user_thumbnail" src="{{ URL::to("/") }}/img/avatar-institution.png" class="user_photo_thumbnail"/>
-              @endif  
+              @endif
           @elseif ($owner->photo != "")
             <a href="{{ URL::to("/users/".$owner->id) }}" id="user_name">
             <img id="single_view_user_thumbnail" src="{{ asset($owner->photo) }}" class="user_photo_thumbnail"/>
@@ -387,7 +395,7 @@
         @else
         <h1 id="single_view_owner_name"><a href="{{ URL::to("/users/".$owner->id) }}" id="name">{{ $owner->name }}</a></h1>
         @endif
-        
+
         @if(!is_null($ownerInstitution) && Auth::check() && !$ownerInstitution->equal(Auth::user()) && !Session::has('institutionId'))
             @if (!empty($followInstitution) && $followInstitution == true )
               <a href="{{ URL::to("/friends/followInstitution/" . $ownerInstitution->id) }}" id="single_view_contact_add">Seguir</a><br />
@@ -398,7 +406,7 @@
                   </a>
               </div>
             @endif
-        @elseif ( Auth::check() && !$owner->equal(Auth::user()) && !Session::has('institutionId'))        
+        @elseif ( Auth::check() && !$owner->equal(Auth::user()) && !Session::has('institutionId'))
           @if (!empty($follow) && $follow == true )
             <a href="{{ URL::to("/friends/follow/" . $owner->id) }}" id="single_view_contact_add">Seguir</a><br />
           @else
@@ -425,7 +433,7 @@
           <a href= '{{"/photos/" . $photos->id . "/edit" }}' title="Editar informações da imagem">
           <img src="{{ asset("img/edit.png") }}" width="16" height="16"/>
           </a>
-        
+
         @endif
       </hgroup>
 
@@ -443,7 +451,7 @@
       @endif
       <div id="imageAuthor_container">
       @if ( !empty($photos->imageAuthor) )
-        <h4>Autor(es) {{ $type == "video" ? "do video" : "da Imagem " }} :</h4>          
+        <h4>Autor(es) {{ $type == "video" ? "do video" : "da Imagem " }} :</h4>
         <p>
           <a href="{{ URL::to("/search?q=".$photos->imageAuthor)}}">
             {{ $photos->imageAuthor }}
@@ -462,21 +470,21 @@
         </p>
       @endif
       </div>
-      
+
       <div id="workAuthor_container">
       @if (!empty($authorsList) )
         <h4>Autor(es) da Obra:</h4>
         <p><?php $i=1; ?>
           @foreach ($authorsList as $authors)
 
-          <a href="{{ URL::to("/search?q=".$authors) }}">            
+          <a href="{{ URL::to("/search?q=".$authors) }}">
             {{ $photos->authorTextFormat($authors); }}
-          </a>  
+          </a>
             @if($i!=count($authorsList));
             @endif
             <?php $i++; ?>
           @endforeach
-        </p>     
+        </p>
       @endif
       </div>
       <div id="workdate_container">
@@ -554,7 +562,7 @@
       @if (Auth::check() && !Session::has('institutionId'))
         <a href="{{ URL::to('/evaluations/' . $photos->id . '/evaluate?f=g' ) }}">
       @endif
-      
+
       @if (empty($average))
         @if(!Session::has('institutionId'))
         <h4>Interpretações da arquitetura:</h4>
@@ -567,7 +575,7 @@
         <br>
         <div id="evaluation_average"></div>
       @endif
-      
+
 
       @if (Auth::check() && !Session::has('institutionId'))
         </a>
@@ -595,7 +603,7 @@
       @else
         @if (empty($average) && !Session::get('institutionId'))
           <p>
-            Faça o <a href="{{ URL::to('/users/login') }}">Login</a> 
+            Faça o <a href="{{ URL::to('/users/login') }}">Login</a>
             e seja o primeiro a registrar impressões sobre {{ $architectureName }}
           </p>
         @else
@@ -735,15 +743,15 @@
                   @endforeach
                 @endif
               ],
-              yAxis: 0,              
+              yAxis: 0,
               name: 'Sua impressão',
               marker: {
                 symbol: 'circle',
                 enabled: true
-              },              
+              },
               color: '#000000',
           }
-          @endif 
+          @endif
           ]
       });
     });
@@ -756,13 +764,13 @@
   }
 });*/
 
-  //function updateForm(){    
- 
+  //function updateForm(){
+
 
   // var urlPrev = $('#urlPrev').val();
    //var substring = "more";
 
-   // if(urlPrev.indexOf(substring) > -1){     
+   // if(urlPrev.indexOf(substring) > -1){
       //$('#frmDetailPhoto').attr('method','GET');
      // $('#frmDetailPhoto').attr('method','POST');
       //window.location.replace("/search/more/");
@@ -772,5 +780,5 @@
    //location.reload();
 
   </script>
-  
+
 @stop

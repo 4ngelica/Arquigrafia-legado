@@ -4,7 +4,8 @@
 
 <title>Arquigrafia - Seu universo de imagens de arquitetura</title>
 
-  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.min.css">
+<script type="text/javascript" src="{{ URL::to("/") }}/js/jquery-ui/jquery-ui.min.js" charset="utf-8"></script>
 <!-- ISOTOPE -->
 <script src="{{ URL::to("/") }}/js/jquery.isotope.min.js"></script>
 
@@ -29,21 +30,21 @@
     <div class="container">
       <div id="user_header" class="twelve columns">
         <!-- Avatar with edit profile -->
-        @if (Auth::check() && Auth::user()->id == $user->id)  
-         <div class="div_avatar_size" >      
+        @if (Auth::check() && Auth::user()->id == $user->id)
+         <div class="div_avatar_size" >
            <a href= '{{ url("users/" . $user->id . "/edit") }}' title="Editar perfil" >
            @if ($user->photo != "")
-             <img class ="class_img_avatar" class="avatar" src="{{ asset($user->photo) }}" class="user_photo_thumbnail"/>          
+             <img class ="class_img_avatar" class="avatar" src="{{ asset($user->photo) }}" class="user_photo_thumbnail"/>
            @else
              <img class="avatar" src="{{ asset("img/avatar-perfil.png") }}"
                width="62" height="62" class="user_photo_thumbnail"/>
            @endif
           </a>
-         </div> 
+         </div>
         @else
           @if ($user->photo != "")
           	<div class="div_avatar_size" >
-            	<img class ="class_img_avatar" class="avatar" src="{{ asset($user->photo) }}"  class="user_photo_thumbnail"/>          
+            	<img class ="class_img_avatar" class="avatar" src="{{ asset($user->photo) }}"  class="user_photo_thumbnail"/>
             </div>
           @else
             <img class="avatar" src="{{ asset("img/avatar-60.png") }}"
@@ -52,17 +53,17 @@
         @endif
 
         <div class="info" class="position_info">
-          <h1>{{ $user->name}} {{ $user->secondName}}</h1>         
+          <h1>{{ $user->name}} {{ $user->secondName}}</h1>
           <p>
             <a href="{{ URL::to('/leaderboard') }}">
               Ver Quadro de Colaboradores
             </a>
           </p>
-         
+
 
 			@if (Auth::check() && $user->id != Auth::user()->id && !Session::has('institutionId'))
     			@if (!empty($follow) && $follow == true )
-	    			<a href="{{ URL::to("/friends/follow/" . $user->id) }}" 	    				
+	    			<a href="{{ URL::to("/friends/follow/" . $user->id) }}"
 	    				id="single_view_contact_add">Seguir</a><br />
  				@else
             		<div id="unfollow-button" class="label_following">
@@ -78,16 +79,16 @@
  				</div>
  			@elseif (Auth::check() && $user->id == Auth::user()->id && !Session::has('institutionId'))
  				<a href="{{ URL::to("/users/" . $user->id . "/edit") }}" id="single_view_contact_add" title="Edite o seu perfil">Editar perfil</a><br />
-			@endif	
-			  
+			@endif
+
 	        </div>
 	      	<div class="count">Imagens compartilhadas ({{ count($photos) }})</div>
 	      </div>
 	    </div>
-    
+
     <!-- GALERIA DO USUÁRIO -->
     <div id="user_gallery">
-      
+
       @if($photos->count() > 0)
         <div class="wrap">
             @include('includes.panel-stripe')
@@ -97,7 +98,7 @@
       		<div class="six columns">
 	      		<p>
 	      			@if (Auth::check() && $user->id == Auth::user()->id && !Session::has('institutionId'))
-	      				Você ainda não possui imagens no seu perfil. Faça o upload de uma imagem 
+	      				Você ainda não possui imagens no seu perfil. Faça o upload de uma imagem
 	      				<a href="{{ URL::to('/photos/upload') }}">aqui</a>
 	      			@else
 	      				Não possui imagens.
@@ -106,12 +107,12 @@
       		</div>
       	</div>
       @endif
-    
+
     </div>
 
     <br>
     <br>
-    
+
     <!-- USUÁRIO -->
     <div class="container row">
     	<div class="four columns">
@@ -165,66 +166,66 @@
 			@endif
 			@if ( !empty($user->site) )
 				<li><strong>Site pessoal: </strong> <a href="{{ $user->site }}" target="_blank">{{ $user->site }}</a></li>
-			@endif	
+			@endif
 			</br>
 
-      
 
-      
+
+
         </ul>
       </div>
-      
+
       <div class="four columns">
         <hgroup class="profile_block_title">
           <h3><i class="follow"></i>Seguindo ({{$user->following->count() + $institutionFollowed->count()}})</h3>
           <!--<a href="#" id="small" class="profile_block_link">Ver todos</a>-->
           </hgroup>
         <!--   BOX - AMIGOS   -->
-    		<div class="profile_box">			
+    		<div class="profile_box">
 				@foreach($user->following as $following)
 				<div class="gallery_box_inst">
-					<a href= "{{ URL::to('/users/' .  $following->id) }}" 
+					<a href= "{{ URL::to('/users/' .  $following->id) }}"
 					   class="gallery_box_inst" title="{{$following->name}}"	>
-					@if ($following->photo != "")					
-						<img width="40" height="40" class="avatar" 
+					@if ($following->photo != "")
+						<img width="40" height="40" class="avatar"
 						src="{{ asset($following->photo) }}" class="user_photo_thumbnail"
 						class="gallery_box_inst"  />
-					</a>	
+					</a>
 					@else
-						<img width="40" height="40" class="avatar" 
-						src="{{ asset("img/avatar-60.png") }}" class="user_photo_thumbnail" 
+						<img width="40" height="40" class="avatar"
+						src="{{ asset("img/avatar-60.png") }}" class="user_photo_thumbnail"
 						class="gallery_box_inst"  />
-					</a>						
+					</a>
 					@endif
 					<a href="{{ URL::to("/users/". $following->id) }}" class="name_text_follow">
                			{{ Str::limit(ucfirst($following->name), 5) }}
-          			</a>					
-				</div> 
-				@endforeach  
-				@foreach($institutionFollowed as $followingInstitution) 
+          			</a>
+				</div>
+				@endforeach
+				@foreach($institutionFollowed as $followingInstitution)
 				   <div class="gallery_box_inst">
 						<a href= "{{ '/institutions/' .  $followingInstitution->id }}"
 						   class="gallery_box_inst" title="{{$followingInstitution->name}}"   >
-						@if ($followingInstitution->photo != "")					
-							<img width="40" height="40" class="avatar" 
-							src="{{ asset($followingInstitution->photo) }}" class="user_photo_thumbnail" 
+						@if ($followingInstitution->photo != "")
+							<img width="40" height="40" class="avatar"
+							src="{{ asset($followingInstitution->photo) }}" class="user_photo_thumbnail"
 							class="gallery_box_inst" />
-						</a>	
+						</a>
 						@else
-							<img width="40" height="40" class="avatar" 
-							src="{{ asset("img/avatar-60.png") }}"  class="user_photo_thumbnail" 
+							<img width="40" height="40" class="avatar"
+							src="{{ asset("img/avatar-60.png") }}"  class="user_photo_thumbnail"
 							class="gallery_box_inst" />
 						</a>
 						<a href="{{ URL::to('/institutions/'. $followingInstitution->id) }}" class="name_text_follow">
                			{{ Str::limit($followingInstitution->name, 5) }}
-               			</a>							
-						@endif 
+               			</a>
+						@endif
 
-				   </div>	
-				@endforeach        
-			</div>        
+				   </div>
+				@endforeach
+			</div>
       </div>
-      
+
       <div class="four columns">
         <hgroup class="profile_block_title">
           <h3><i class="follow"></i>Seguidores ({{$user->followers->count()}})</h3>
@@ -234,11 +235,11 @@
     <div class="profile_box">
           <!--   LINHA - FOTOS - AMIGOS   -->
           <!--   FOTO - AMIGO   -->
-          
+
           @foreach($user->followers as $follower)
            <div class="gallery_box_inst">
 					<a href= "{{ '/users/' .  $follower->id }}" class="gallery_box_inst" title="{{$follower->name}}">
-					 @if ($follower->photo != "") 				
+					 @if ($follower->photo != "")
 						<img width="40" height="40" class="avatar" src="{{ asset($follower->photo) }}" class="user_photo_thumbnail" class="gallery_box_inst"/>
 					 @else
 						<img width="40" height="40" class="avatar" src="{{ asset("img/avatar-60.png") }}" class="user_photo_thumbnail" class="gallery_box_inst"/>
@@ -248,17 +249,17 @@
                			{{ Str::limit(ucfirst($follower->name), 5) }}
               		</a>
 		   </div>
-		@endforeach   
-		
+		@endforeach
+
 		</div>
-        
+
       </div>
-      
+
     </div>
 
     	    <!-- MEUS ALBUNS -->
 	<div class="container row">
-				
+
 			<div class="twelve columns albums">
 				<hgroup class="profile_block_title">
 					<h3><i class="photos"></i>
@@ -270,7 +271,7 @@
 					</h3>
 				</hgroup>
 				<?php //$albums = $user->albums; ?>
-				
+
 				<div class="profile_box">
 					@if ($albums->count() > 0)
 						@foreach($albums as $album)
@@ -302,15 +303,15 @@
 						</p>
 					@endif
 				</div>
-			
+
 			</div>
-	
+
 	</div>
     @include('user_badges')
 
 	<br>
 	<br>
-	
+
 	<!-- MINHAS AVALIAÇÕES -->
 	<div class="container">
 		<div class="twelve columns albums">
@@ -324,14 +325,14 @@
 						Imagens interpretadas
 					@endif
 				</h3>
-			</hgroup>			
-			
+			</hgroup>
+
 			<div class="profile_box">
 				@if ($evaluatedPhotos->count() > 0)
 					@foreach($evaluatedPhotos as $evaluatedPhoto)
 						@if (Auth::check() && $user->id == Auth::user()->id && !Session::has('institutionId'))
 							<div class="gallery_box">
-								<a href='{{"/evaluations/" . $evaluatedPhoto->id . "/evaluate/" }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">									
+								<a href='{{"/evaluations/" . $evaluatedPhoto->id . "/evaluate/" }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">
 									<img src="{{ URL::to("/arquigrafia-images/" . $evaluatedPhoto->id . "_home.jpg") }}" class="gallery_photo" />
 								</a>
 								<a href='{{"/evaluations/" . $evaluatedPhoto->id . "/evaluate/" }}' class="name">
@@ -341,7 +342,7 @@
 							</div>
 						@else
 							<div class="gallery_box">
-								<a href='{{"/evaluations/" . $evaluatedPhoto->id . "/viewEvaluation/" . $user->id }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">									
+								<a href='{{"/evaluations/" . $evaluatedPhoto->id . "/viewEvaluation/" . $user->id }}' class="gallery_photo" title="{{ $evaluatedPhoto->name }}">
 									<img src="{{ URL::to("/arquigrafia-images/" . $evaluatedPhoto->id . "_home.jpg") }}" class="gallery_photo" />
 								</a>
 								<a href='{{"/evaluations/" . $evaluatedPhoto->id . "/viewEvaluation/" . $user->id }}' class="name">
@@ -364,8 +365,8 @@
 			</div>
 		</div>
 	</div>
-	
-    
+
+
 		<!--   MODAL   -->
 	<div id="mask"></div>
 	<div id="form_window" class="form window">

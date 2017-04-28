@@ -6,12 +6,15 @@
 <link href="{{ URL::to("/") }}/css/main.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<script type="text/javascript" src="{{ URL::to("/") }}/js/jquery-3.1.1.min.js"></script>
-<script type="text/javascript" src="{{ URL::to("/") }}/js/jquery-ui.min.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/jquery-ui/jquery-ui.min.js"></script>
 
-<link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui.structure.min.css" rel="stylesheet">
-<link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui.min.css" rel="stylesheet">
-<link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui.theme.min.css" rel="stylesheet">
+<link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet">
+<link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.min.css" rel="stylesheet">
+<link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.theme.min.css" rel="stylesheet">
 
 <script src="{{ URL::to("/") }}/js/main.js"></script>
 </head>
@@ -49,10 +52,10 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="260px" height="45px" viewBox="0 0 260 45" enable-background="new 0 0 260 45" xml:space="preserve">
 <g>
-	<polyline fill="none" stroke="#010101" stroke-width="2" stroke-miterlimit="10" points="15.419,24.032 20.63,24.032 20.63,27.037 
+	<polyline fill="none" stroke="#010101" stroke-width="2" stroke-miterlimit="10" points="15.419,24.032 20.63,24.032 20.63,27.037
 		15.419,27.037 15.419,19.026 20.63,19.026 20.63,27.037 	"/>
-	<polyline fill="none" stroke="#010101" stroke-width="2" stroke-miterlimit="10" points="20.631,18.932 20.631,15.737 
-		11.769,15.737 11.769,30.641 23.954,30.641 23.954,12.544 8.448,12.544 8.448,33.833 27.275,33.833 27.275,24.254 27.275,9.349 
+	<polyline fill="none" stroke="#010101" stroke-width="2" stroke-miterlimit="10" points="20.631,18.932 20.631,15.737
+		11.769,15.737 11.769,30.641 23.954,30.641 23.954,12.544 8.448,12.544 8.448,33.833 27.275,33.833 27.275,24.254 27.275,9.349
 		5.124,9.349 5.124,37.029 30.599,37.029 30.599,6.153 1.804,6.153 1.804,40.224 34.665,40.224 	"/>
 </g>
 <text transform="matrix(1.0338 0 0 1 42.2119 27.9512)" fill="#010101" font-family="'Roboto'" font-size="24.453">ARQUIGRAFIA</text>
@@ -63,7 +66,7 @@
 <div class="buttons">
 <!--   BOTÃO DA BARRA DE BUSCA   -->
 <div class="search-field">
-<form id="tfnewsearch" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" target="_blank">	
+<form id="tfnewsearch" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" target="_blank">
 	<input type="text" class="tftextinput" style="color:#000" name="q" size="21" maxlength="120" value="">
 	<input type="submit" value="search" class="tfbutton" style="background:none;" />
 	<input type="hidden" value="8" name="perPage" />
@@ -94,7 +97,7 @@
 </div>
 
 
-<!-- PÁGINA 1 --> 
+<!-- PÁGINA 1 -->
 
 
 <div class="fullscreen_post_bg">
@@ -106,7 +109,7 @@
 		<div class="lang-button"><a href="{{ URL::to("/landing/en") }}">en</a></div>
 		<div class="lang-button"><a href="{{ URL::to("/landing/pt") }}">pt</a></div>
 		<div class="search-field">
-			<form id="tfnewsearch" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" target="_blank">	
+			<form id="tfnewsearch" action="{{ URL::to("/") }}/search" method="post" accept-charset="UTF-8" target="_blank">
 				<input type="text" class="tftextinput" style="color:#000" name="q" size="21" maxlength="120" value="">
 				<input type="submit" value="search" class="tfbutton" style="background:none;" />
 				<input type="hidden" value="8" name="perPage" />
@@ -128,10 +131,10 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="540px" height="90px" viewBox="0 0 540 90" enable-background="new 0 0 540 90" xml:space="preserve">
 <g>
-	<polyline fill="none" stroke="#010101" stroke-width="3" stroke-miterlimit="10" points="34.077,45.697 44.254,45.697 
+	<polyline fill="none" stroke="#010101" stroke-width="3" stroke-miterlimit="10" points="34.077,45.697 44.254,45.697
 		44.254,51.563 34.077,51.563 34.077,35.919 44.254,35.919 44.254,51.563 	"/>
-	<polyline fill="none" stroke="#010101" stroke-width="3" stroke-miterlimit="10" points="44.255,35.736 44.255,29.498 
-		26.951,29.498 26.951,58.601 50.743,58.601 50.743,23.264 20.466,23.264 20.466,64.835 57.229,64.835 57.229,46.13 57.229,17.023 
+	<polyline fill="none" stroke="#010101" stroke-width="3" stroke-miterlimit="10" points="44.255,35.736 44.255,29.498
+		26.951,29.498 26.951,58.601 50.743,58.601 50.743,23.264 20.466,23.264 20.466,64.835 57.229,64.835 57.229,46.13 57.229,17.023
 		13.976,17.023 13.976,71.074 63.72,71.074 63.72,10.784 7.492,10.784 7.492,77.312 71.658,77.312 	"/>
 </g>
 <text transform="matrix(1.0338 0 0 1 83.8008 56.7783)" fill="#010101" font-family="'Roboto'" font-size="67.2074">ARQUIGRAFIA</text>
@@ -141,9 +144,9 @@
 
 <div class="buttons-inicio">
 
-					
-					<!--   BOTÃO CADASTRO INICIO   -->	
-					<a href="{{ URL::to("/users/account") }}">	
+
+					<!--   BOTÃO CADASTRO INICIO   -->
+					<a href="{{ URL::to("/users/account") }}">
 					<div class="cadastro-inicio">
 						{{trans('landing.textBtnCount')}}
 					</div>
@@ -159,11 +162,11 @@
 					<!--  END BOTÃO LOGIN INICIO  -->
 
 
-				</div>	
+				</div>
 
 
 
-			</div> 
+			</div>
 
 
 		</div>
@@ -185,7 +188,7 @@
 
 
 
-<!-- PÁGINA 2 --> 
+<!-- PÁGINA 2 -->
 
 
 	<div id="page2" class="wrapper">
@@ -196,7 +199,7 @@
 			<div class="column-8" style="padding: 0;">
 
 			<div class="title-loginpage">{{trans('landing.titlePage2')}}</div>
-			
+
 			<div class="column-5">
 
 			<div class="texto-loginpage">{{trans('landing.paragraphPage2')}}
@@ -323,14 +326,14 @@
 			</div>
 
 
-			</div> 
+			</div>
 		</div>
 
 		</div>
 	</div>
 
 
-	<!-- PÁGINA 3 --> 
+	<!-- PÁGINA 3 -->
 
 
 	<div id="page3" class="wrapper">
@@ -343,13 +346,13 @@
 
 			<div class="title-redesocial">{{ trans('landing.titlePage3') }}</div>
 			<div class="texto-redesocial">{{ trans('landing.paragraphPage3') }}</div>
-			</div> 
+			</div>
 		</div>
 		</div>
 	</div>
 
 
-<!-- PÁGINA 4 --> 
+<!-- PÁGINA 4 -->
 
 
 <div id="page4" class="wrapper">
@@ -386,22 +389,22 @@
 	<path fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" d="M485.902,95.575"/>
 	<path fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" d="M613.192,121.662"/>
 	<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="617.241" y1="127.06" x2="495.797" y2="207.123"/>
-	
+
 		<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="491.749" y1="206.673" x2="586.204" y2="429.319"/>
 	<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="174.646" y1="93.325" x2="109.877" y2="266.045"/>
-	
+
 		<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="112.126" y1="270.542" x2="224.932" y2="226.822"/>
-	
+
 		<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="224.932" y1="226.822" x2="367.607" y2="228.263"/>
 	<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="485.902" y1="95.575" x2="370.307" y2="235.01"/>
-	
+
 		<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="502.545" y1="348.355" x2="356.812" y2="410.428"/>
 	<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="580.808" y1="427.97" x2="472.858" y2="449.559"/>
 	<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="462.062" y1="448.21" x2="282.596" y2="567.854"/>
-	
+
 		<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="346.017" y1="413.127" x2="193.088" y2="392.887"/>
 	<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="469.709" y1="440.564" x2="467.46" y2="444.162"/>
-	
+
 		<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="469.709" y1="440.564" x2="352.765" y2="417.175"/>
 	<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="290.692" y1="566.954" x2="143.611" y2="469.8"/>
 	<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="137.764" y1="469.8" x2="116.624" y2="270.093"/>
@@ -417,84 +420,84 @@
 	<path fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" d="M321.279,51.495"/>
 	<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="422.932" y1="59.423" x2="485.902" y2="95.575"/>
 	<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="414.836" y1="60.771" x2="570.014" y2="8.315"/>
-	
+
 		<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="463.412" y1="444.162" x2="482.978" y2="520.401"/>
-	
+
 		<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="267.585" y1="317.321" x2="108.527" y2="278.189"/>
 	<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="116.624" y1="270.093" x2="76.143" y2="149.999"/>
 	<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="24.867" y1="529.173" x2="137.764" y2="469.8"/>
-	
+
 		<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="352.314" y1="412.678" x2="279.898" y2="564.256"/>
-	
+
 		<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="281.247" y1="572.353" x2="138.213" y2="554.811"/>
 	<circle fill="#B3B3B3" cx="130.117" cy="550.762" r="14.843"/>
 	<line fill="none" stroke="#B3B3B3" stroke-width="3" stroke-miterlimit="10" x1="491.749" y1="206.673" x2="598.35" y2="280.888"/>
 </g>
 <g id="Layer_2">
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 128.3218 321.6133)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="64.2894">arquitetura</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 66.0913 271.7554)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="31.9793">niemeyer</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 138.1196 238.0259)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="43.7041">fau</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 324.4551 352.5957)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="25.4199">concreto</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 229.2202 357.2598)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="33.4646">igreja</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 438.7949 326.6396)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="36.0577">parque</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 59.1792 356.3652)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="32.7614">vegetação</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 211.8862 247.6528)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="31.3396">fachada</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 210.4487 274.813)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="20.2999">vão</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 112.3765 398.4727)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="42.5462">brasília</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 69.6138 235.4985)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="21.0197">metro</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 270.2769 212.7349)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="39.1656">estação</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 421.875 382.7158)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="64.2894">centro</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 90.063 198.5522)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="64.2894">ponte</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.8931 0 0 1 254.1655 386.0479)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="15.7439">cptm</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 346.8027 275.4126)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="32.9515">faculdade</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 331.2549 243.8794)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="23.2826">vidro</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 253.6528 418.9756)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="29.8338">laje</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9783 0 0 1 364.2412 418.4336)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="27.1058">modernismo</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 206.9077 216.9429)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="13.8289">maquete</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 297.2485 435.4941)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="15.1223">pilar</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 46.4907 327.7734)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="22.6319">edifício</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 307.8579 413.9092)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="23.3563">trem</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 297.646 384.5967)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="24.6659">são paulo</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 388.8438 244.5884)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="17.9231">público</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 278.5005 271.8062)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="17.0962">avenida</text>
-	
+
 		<text id="tagsvg" transform="matrix(0.9543 0 0 1 74.894 422.7412)" opacity="0.8" fill="#010101" font-family="'Roboto'" font-size="20.2152">inteligência coletiva</text>
 </g>
 </svg>
 </div>
-			
+
 <div class="column-3" style="width: 37.5%; align-content:center; align-items:center; display:inline-grid; height: 580px;">
 <div class="title-taggear">{{ trans('landing.titlePage4') }}</div>
-			
+
 <div class="texto-taggear">{{ trans('landing.paragraphPage4') }}</div>
 			</div>
-			</div> 
+			</div>
 		</div>
 		</div>
 	</div>
@@ -506,11 +509,11 @@
 			<div class="column-8" style="padding: 0;display:flex;justify-content:center;align-items:center; margin-top: -30px;">
 			<div class="column-3" style="width: 40%; padding: 0;">
 				<div class="title-grafico">{{ trans('landing.titlePage5') }}</div>
-				
+
 				<div class="texto-grafico">
 					{{ trans('landing.paragraphPage5') }}
 				</div>
-			</div> 
+			</div>
 <div class="column-5" style="width: 60%;">
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -557,12 +560,12 @@
 <text transform="matrix(1 0 0 1 503.4912 345.335)" opacity="0.8" fill="#FFFFFF" font-family="'Roboto'" font-size="12.4009">100</text>
 </svg>
 			</div>
-		</div>	
+		</div>
 		</div>
 		</div>
 	</div>
 </div>
-<!-- PÁGINA 6 --> 
+<!-- PÁGINA 6 -->
 	<div id="page6" class="wrapper">
 		<div class="row">
 		<div style="display:flex;justify-content:center;align-items:center;height:100vh;">
@@ -610,12 +613,12 @@
 			<img class="hover-image" id="img-conjuntonacional" src="{{ asset('img/map-conjuntonacional.png')}}">
 			<img class="hover-image" id="img-trianon" src="{{ asset('img/map-trianon.png')}}">
 			</div>
-			
-			</div> 
+
+			</div>
 		</div>
 		</div>
 	</div>
-<!-- PÁGINA 7 --> 
+<!-- PÁGINA 7 -->
 	<div id="page7" class="wrapper">
 		<div class="row">
 		<div style="display:flex;justify-content:center;align-items:center;height:100vh;">
@@ -625,18 +628,18 @@
 					<div class="title-final" style="text-align: left;">{{ trans('landing.titlePage7') }}</div>
 					<div class="texto-final" style="text-align: left;">{{ trans('landing.paragraphPage7') }}</div>
 					<div class="buttons-final">
-					<!--   BOTÃO CADASTRO FINAL  -->	
+					<!--   BOTÃO CADASTRO FINAL  -->
 					<div class="cadastro-final">
-					<a href="{{ URL::to("/users/account") }}">	
+					<a href="{{ URL::to("/users/account") }}">
 					{{ trans('landing.textBtnCount') }}
 					</a>
 					</div>
 					<!--   END BOTÃO CADASTRO FINAL  -->
-			
+
 					<div style="font-size: 20px;color:#7f7f7f;-webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;">
 					{{ trans('landing.registerBtn') }}</div>
-						
+
 					<!--   BOTÃO LOGIN FINAL  -->
 					<div class="login-final">
 						<a href="{{ URL::to("/users/login/") }}">
@@ -649,13 +652,13 @@
 					</div>
 					<div class="playstore">{{trans('landing.txtSoon')}}<img src="{{ asset('img/playstore.png')}}"></div>
 					</div>
-					
-				</div>	
+
+				</div>
 				</div>
 				<div class="column-2" style="padding: 0; width: 33.3333333%; margin-top: 75px;">
 						<img src="{{ asset('img/app-iphone.png')}}">
 				</div>
-			</div>  
+			</div>
 		</div>
 		</div>
 	</div>
