@@ -29,17 +29,17 @@ $(document).ready(function() {
 		toggleCurrentPagePhotos(checkbox);
 	});
 
-	$('.ch_photo').live('click', function() {
+	$('.ch_photo').on('click', function() {
 		updatePageInfo($(this));
 	});
 
-	$('.ch_photo + img').live('click', function () {
+	$('.ch_photo + img').on('click', function () {
 		var checkbox = $(this).siblings('.ch_photo');
 		checkbox.toggleCheckbox();
 		updatePageInfo(checkbox);
 	});
 
-	$('.clear_search').live('click', function(e) {
+	$('.clear_search').on('click', function(e) {
 		var type = $(this).getType();
 		e.preventDefault();
 		searchPhotos(type, '');
@@ -194,7 +194,7 @@ function tooltipPhotos() {
 					var title = $(element).attr('title');
 					photo_content.append($(this));
 					photo_content.append('<p>' + title + '</p>');
-					
+
 					$(element).toolTip('image-tooltip-theme', photo_content.html(),
 						$(element).getPosition());
 				}
@@ -281,7 +281,7 @@ function requestPage(page, type, URL, callback, paginator, runInBackground) {
 		$("." + type + " .loader").hide();
 		data = parseData(data);
 		if (data == false) {
-			failedRequest(type, 'Aconteceu um erro! Tente novamente mais tarde.');	
+			failedRequest(type, 'Aconteceu um erro! Tente novamente mais tarde.');
 		} else {
 			callback(type, data, paginator, page);
 		}
@@ -353,7 +353,7 @@ var updateContent = function(type, response) {
 			resetData(type, response);
 	} else {
 		$(response['content']).appendTo('#' + type).hide().fadeIn(function() {
-			resetData(type, response);		
+			resetData(type, response);
 		});
 	}
 };

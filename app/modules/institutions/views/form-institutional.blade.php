@@ -17,9 +17,8 @@
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/tags-autocomplete.js" charset="utf-8"></script>
 	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.ajax.js" charset="utf-8"></script>
 
-
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-	<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+	<link rel="stylesheet" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.min.css">
+  <script type="text/javascript" src="{{ URL::to("/") }}/js/jquery-ui/jquery-ui.min.js" charset="utf-8"></script>
 
 	 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
@@ -73,7 +72,7 @@
 @stop
 @section('content')
 	<script type="text/javascript">
-		$( window ).load(function() {
+		$( window ).on('load',function() {
 			$("#preview_photo").hide();
 			if (document.getElementById("new_album-name").value != "") {
 				var select_album = document.getElementsByClassName('select-album');
@@ -112,7 +111,7 @@
 				<div class="twelve columns row step-1">
 					<a href="{{ URL::to('/drafts') }}" class="right">Uploads incompletos</a>
 					<h1><span class="step-text">Upload</span></h1>
-					<div class="eleven columns alpha" id="media_type">        
+					<div class="eleven columns alpha" id="media_type">
 				        <br>
 				        <div class="form-row">
 				            <input type="radio" name="type" value="photo" id="type_photo" checked="checked">
@@ -144,9 +143,9 @@
 						</div>
 					</div>
 					<div id="divVideo" class="twelve columns alpha">
-						</br>  
-				        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube ou vimeo:') }}</div>  
-				        <div class="four columns alpha">    
+						</br>
+				        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube ou vimeo:') }}</div>
+				        <div class="four columns alpha">
 				            <p>{{ Form::text('video', $video, array('id' => 'video','style'=>'width:280px')) }} <br>
 				            </p>
 				            <div class="error">{{ $errors->first('video') }}</div>
@@ -606,7 +605,7 @@
 
 		var typeChecked  = "{{Input::old('type')}}";
 
-        
+
         if(typeChecked == "video" ){
                 document.getElementById('type_video').checked = true;
                 $('#divVideo').show();
@@ -747,4 +746,3 @@
 	});
 </script>
 @stop
-

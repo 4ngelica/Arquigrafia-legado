@@ -121,6 +121,11 @@ class Photo extends Eloquent {
 		return $this->belongsToMany('User', 'binomial_evaluation');
 	}
 
+	public function suggestions()
+	{
+		return $this->hasMany('modules\moderation\models\Suggestion');
+	}
+
 	public static function extractVideoId($url){
 		$array1 = explode("://", $url);
 		$array2 = explode("/", $array1[count($array1) - 1]);

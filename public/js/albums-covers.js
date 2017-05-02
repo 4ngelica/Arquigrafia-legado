@@ -2,14 +2,14 @@ $(document).ready(function() {
 	var all_covers = [];
 	var empty_album_message = "<p>Para alterar a capa do álbum, é preciso ter pelo menos uma imagem.</p>";
 	var select_cover_btn = "<a id=\"cover_btn\" href=\"#\" class=\"btn\">Selecionar capa</a>";
-	$(".add_photo").live("change", function () {
+	$(".add_photo").on("change", function () {
 		var selected_photos = $(".add_photo:checked");
 		if (selected_photos.length == 0)
 			$(".cover_btn_box").html(empty_album_message);
 		if (selected_photos.length == 1)
 			$(".cover_btn_box").html(select_cover_btn);
 	});
-	$(".cover_btn").live("click", function(e) {
+	$(".cover_btn").on("click", function(e) {
 		e.preventDefault();
 		var callback = function(data) {
 			generateCoversHtml(data);
@@ -22,7 +22,7 @@ $(document).ready(function() {
 			callback(data);
 		});
 	});
-	$(".covers").live("click", function(e) {
+	$(".covers").on("click", function(e) {
 		if ($(this).is(":checked"))
 		{
 			var cover = $(".covers:checked").val();
@@ -36,7 +36,7 @@ $(document).ready(function() {
 		}
 	});
 
-	$("#get_more_covers").live("click", function(e) {
+	$("#get_more_covers").on("click", function(e) {
 		e.preventDefault();
 		if (++coverPage == maxCoverPage)	$(this).hide();
 		var removed_photos = $(".rm_photo:checked").map(function() { return $(this).val(); }).get();
@@ -55,7 +55,7 @@ $(document).ready(function() {
 
 function generateCoversHtml(covers) {
 	var coverHtml;
-	var coversHtml = 
+	var coversHtml =
 		'<div class=\"list\">' +
 			'<h2> Suas fotos </h2>' +
 			'<p class=\"row\"> Selecione uma imagem para ser a capa</p>' +
@@ -90,7 +90,7 @@ function generateRowsAndCss(covers) {
 	}
 	if (covers_counter % 3 != 0) {
 		coverHtml += "</tr>";
-		$("#covers_registration table").append(coverHtml);	
+		$("#covers_registration table").append(coverHtml);
 	}
 	for (var i = 0; i < covers.length; i++)
 	{

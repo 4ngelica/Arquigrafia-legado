@@ -34,7 +34,7 @@ $(function(){
 
 $(document).ready(function() {
 
-  $('#plus').live('click', function(e){
+  $('#plus').on('click', function(e){
     e.preventDefault();
     $.fancybox.close(true);
     $('#mask').fadeIn('fast');
@@ -48,7 +48,7 @@ $(document).ready(function() {
     });
   });
 
-  $('#denounce_photo').live('click', function(e){
+  $('#denounce_photo').on('click', function(e){
     e.preventDefault();
     $.fancybox.close(true);
     $('#mask').fadeIn('fast');
@@ -259,7 +259,7 @@ $(document).ready(function() {
   //   $(this).siblings('#' + this.htmlFor).prop('checked', true).trigger('click');
   // });
 
-  $('.decade, .century').live('change', function() {
+  $('.decade, .century').on('change', function() {
     var select = $(this);
     translateDate(select);  
   });

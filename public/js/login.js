@@ -8,7 +8,7 @@ var Login = (function($){
 	
 	
 	init = function() {
-		$(submit_id).live('submit', function(e){
+		$(submit_id).on('submit', function(e){
 			e.preventDefault();
 			
 			$.post(this.action, $(this).serialize(), success, 'json')
