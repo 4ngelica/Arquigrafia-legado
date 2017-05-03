@@ -2,13 +2,16 @@
 
 @section('head')
 
-<?php //include "includes/head.php"; ?> 
+<?php //include "includes/head.php"; ?>
 
 <title>Arquigrafia - Seu universo de imagens de arquitetura</title>
 
 <!--   JQUERY - Google Ajax API CDN (Also supports SSL via HTTPS)   -->
-<script type="text/javascript" src="{{ URL::to("/") }}/js/jquery-1.7.1.min.js"></script>
-<script type="text/javascript" src="{{ URL::to("/") }}/js/jquery-ui-1.8.17.custom.min.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/jquery-ui/jquery-ui.min.js"></script>
 
 <!-- Google Maps API -->
 <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>
@@ -29,7 +32,7 @@
 		<!--   GROUP   -->
 		<div class="container">
     	<div class="eight columns">
-        
+
         <div id="group_header" class="eight columns alpha omega row">
        		<div class="two columns alpha">
           	<img src="{{ URL::to("/") }}/placeholders/group-cover-1.jpg">
@@ -41,14 +44,14 @@
   <span class="date">Criado em 11/12/2013</span>
           </div>
         </div>
-        
+
         <div id="group_content">
-          
+
           <!-- POSTAGENS DO GRUPO -->
           <div class="column row alpha omega">
             <form name="group_form" id="group_form" method="post" enctype="multipart/form-data" action="/photo/2778">
               <input type="hidden" name="groupMgr.entity" value="2778" />
-              <input type="hidden" name="groupMgr.userId" value="21" /> 
+              <input type="hidden" name="groupMgr.userId" value="21" />
               <div class="column alpha omega"><img class="user_thumbnail"  src="{{ URL::to("/") }}/placeholders/avatar.jpg" /></div>
               <div class="three columns">
                 <strong><a href="#" id="name">Pedro Emilio Guglielmo</a></strong><br>
@@ -58,7 +61,7 @@
               </div>
             </form>
           </div>
-          
+
           <div class="column row alpha omega group_entry">
             <div class="column alpha omega"><img class="user_thumbnail"  src="{{ URL::to("/") }}/placeholders/avatar-3.jpg" /></div>
             <div class="three columns">
@@ -67,7 +70,7 @@
             <p>Do mesmo modo, a consolidação das estruturas não pode mais se dissociar das novas proposições.</p>
             </div>
           </div>
-          
+
           <div class="column row alpha omega group_entry">
             <div class="column alpha omega"><img class="user_thumbnail"  src="{{ URL::to("/") }}/placeholders/avatar-2.jpg" /></div>
             <div class="three columns">
@@ -76,11 +79,11 @@
               <p>Do mesmo modo, a consolidação das estruturas não pode mais se dissociar das novas proposições.</p>
             </div>
           </div>
-          
-          
+
+
         </div>
       </div>
-      	
+
       <!-- USUARIOS NO GRUPO -->
       <div class="four columns row">
         <hgroup class="profile_block_title">
@@ -127,15 +130,15 @@
           </div>
         </div>
       </div>
-      
+
       <br class="clear">
-      
+
       <!-- IMAGENS NO GRUPO -->
       <div id="group_photos" class="four columns">
         <hgroup class="profile_block_title">
           <h3><i class="photos"></i> Fotos no grupo (5)</h3>
         </hgroup>
-        
+
         <div class="profile_box">
           <div class="gallery_box">
               <a href="single.php" class="gallery_photo">
@@ -159,14 +162,14 @@
           </div>
         </div>
       </div>
-      
+
       </div>
     </div>
-    
-    
+
+
     <!-- FOOTER -->
     <?php //include "includes/footer.php"; ?>
-    
+
 		<!--   MODAL   -->
 		<div id="mask"></div>
 		<div id="form_window">

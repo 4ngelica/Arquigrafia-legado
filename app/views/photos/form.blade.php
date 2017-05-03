@@ -22,17 +22,16 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/rotate.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/readURL.js" charset="utf-8"></script>
 
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-{{-- <script src="//code.jquery.com/jquery-1.10.2.js"></script> --}}
-    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    
+<link rel="stylesheet" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.min.css">
+<script type="text/javascript" src="{{ URL::to("/") }}/js/jquery-ui/jquery-ui.min.js" charset="utf-8"></script>
+
     <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
-    
+
     @stop
     @section('content')
     <script type="text/javascript">
-    $( window ).load(function() {
+    $( window ).on('load', function() {
         $("#preview_photo").hide();
         if (document.getElementById("new_album-name").value != "") {
             var select_album = document.getElementsByClassName('select-album');
@@ -65,7 +64,7 @@
         }
     });
     </script>
-    
+
     <style>
     /* Style select*/
     fieldset {
@@ -89,7 +88,7 @@
     {{ Form::open(array('url'=>'photos', 'files'=> true)) }}
     <div class="twelve columns row step-1">
     <h1><span class="step-text">Upload</span></h1>
-    <div class="eleven columns alpha" id="media_type">        
+    <div class="eleven columns alpha" id="media_type">
         <br>
         <div class="form-row">
             <input type="radio" name="type" value="photo" id="type_photo" checked="checked">
@@ -113,13 +112,13 @@
     {{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
     <br></br>
     <div class="error">{{ $errors->first('photo') }}</div>
-    
+
     </p>
     </div>
     <div id="divVideo" class="twelve columns alpha">
-        </br>  
-        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube ou vimeo:') }}</div>  
-        <div class="four columns alpha">    
+        </br>
+        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube ou vimeo:') }}</div>
+        <div class="four columns alpha">
             <p>{{ Form::text('video', $video, array('id' => 'video','style'=>'width:280px')) }} <br>
             </p>
             <div class="error">{{ $errors->first('video') }}</div>
@@ -134,7 +133,7 @@
     </br>
     <h4>Campos obrigatórios (*)</h4>
     <p>{{ Form::hidden('pageSource', $pageSource) }} </p>
-    
+
     <br>
     <div class="seven columns alpha row">
     <table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -296,7 +295,7 @@
     </script>
     </div>
     <div  style="padding:0 0 0 1px; width: 539px; margin-right: 0; float: left; display: inline; margin-left: 8px; margin-bottom: 20px;">
-    
+
     <table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
     <!--<tr> class="six columns omega row"
     <div class="two columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
@@ -306,21 +305,21 @@
     </p>
     </div>
     </tr> -->
-     <tr> <td>               
+     <tr> <td>
             <div class="oneUpload columns alpha"><p>{{ Form::label('photo_imageDate', 'Data da imagem:') }}</p></div>
             <div class="fivemidUpdateForm columns omega">
-                <p>{{ Form::text('photo_imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }} 
-                    <span class="space_txt_element">Não sabe a data precisa? 
-                                            <a onclick="date_visibility('date_img_inaccurate');" >Clique aqui.</a> 
+                <p>{{ Form::text('photo_imageDate','',array('id' => 'datePickerImageDate','placeholder'=>'DD/MM/AAAA')) }}
+                    <span class="space_txt_element">Não sabe a data precisa?
+                                            <a onclick="date_visibility('date_img_inaccurate');" >Clique aqui.</a>
                     </span>
-                    <br> <div id="error_image_date" class="error">{{ $errors->first('photo_imageDate') }}</div> 
+                    <br> <div id="error_image_date" class="error">{{ $errors->first('photo_imageDate') }}</div>
                 </p>
                 <p>
-                    <div id="date_img_inaccurate" style="display:none;">                                    
-                        @include('photos.includes.dateImage')                                   
+                    <div id="date_img_inaccurate" style="display:none;">
+                        @include('photos.includes.dateImage')
                     </div>
                     <label id="answer_date_image" class="resultDateWork"></label>
-                </p>       
+                </p>
             </div>
          </td>
         </tr>
@@ -331,7 +330,7 @@
             <div class="oneUpload columns alpha"><p>{{ Form::label('photo_workAuthor', 'Autor da obra:') }}</p></div>
             <div class="fourUpload columns">
              <p>
-                
+
                 -- Form::text('photo_workAuthor', '',array('id' => 'photo_workAuthor', 'placeholder' => 'SOBRENOME, nome','style'=>'height:15px; width:280px; font-size:12px; border:solid 1px #ccc')) }}
                 <button class="btn" id="add_work_authors" style="font-size: 11px;">ADICIONAR</button>
                 <br>
@@ -367,7 +366,7 @@
     </td>
     </tr>
     <tr><td>
-    
+
     </td>
     </tr>
     <tr><td>
@@ -375,7 +374,7 @@
     <div class="two columns omega">
     <p>
     {{ Form::textarea('photo_description', Input::old('photo_description'),['size' =>'36x7']) }} <br>
-    
+
     </p>
     </div>
     </td>
@@ -428,17 +427,17 @@
     </div>
     </div>
     {{ Form::close() }}
-    
+
     </div>
-    
+
     </div>
-    
+
     <script type="text/javascript">
     $(document).ready(function() {
-        
+
         var typeChecked  = "{{Input::old('type')}}";
 
-        
+
         if(typeChecked == "video" ){
                 document.getElementById('type_video').checked = true;
                 $('#divVideo').show();
@@ -448,11 +447,11 @@
             document.getElementById('video').value = null;
             $('#divVideo').hide();
             $('#divPhoto').show();
-            
+
         }
 
-       
-        
+
+
         $('input[type=radio][name=type]').change(function(){
             if(this.value == "video"){
                 $('#divVideo').show();
@@ -464,7 +463,7 @@
         });
 
 
-        if({{Input::old('autoOpenModal','false')}}){    
+        if({{Input::old('autoOpenModal','false')}}){
             $( "#dialog-confirm" ).html("<b>Cadastro de imagem realizado com sucesso!</b> <br><br> Gostaria de utilizar os dados da imagem cadastrada para o próximo upload?");
             $( "#dialog-confirm" ).dialog({
                 resizable: false,
@@ -500,7 +499,7 @@
         @if(Input::old('tags')!=null)
             <?php $tags = explode (",", Input::old('tags')); ?>
         @endif
-        
+
         @if (isset($tags) && $tags !=null)
             @foreach ( $tags as $tag )
                 $('#tags').textext()[0].tags().addTags([ {{ '"' . $tag . '"' }} ]);
@@ -527,14 +526,14 @@
             <?php //print_r(Input::old('work_authors'));
             $work_authors = explode (";", Input::old('work_authors')); ?>
         @endif
-        
+
         @if (isset($work_authors) && $work_authors != null)
                               // console.log("AC = "+ auth);
             @foreach ( $work_authors as $work_author )
                 $('#work_authors').textext()[0].tags().addTags([ {{ '"' . $work_author . '"' }} ]);
             @endforeach
         @endif
-      
+
 
         $('#add_work_authors').click(function(e) {
             e.preventDefault();
@@ -545,47 +544,47 @@
             //alert("A" +key)
             if(key ==13)
                authorsList();
-            
+
             if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
                 e.preventDefault();
         });
 
         function authorsList(){
-            var authors = $('#photo_workAuthor').val();            
+            var authors = $('#photo_workAuthor').val();
             if (authors == '') return;
             $('#work_authors').textext()[0].tags().addTags([ authors ]);
             $('#photo_workAuthor').val('');
         }
 
-        @if( Input::old('century_image'))       
+        @if( Input::old('century_image'))
             var centuryInputImage = "{{Input::old('century_image')}}";
             //alert(centuryInputImage);
             showPeriodCenturyImage(centuryInputImage);
-            retrieveCenturyImage(centuryInputImage);            
-        @endif
-        
-        @if( Input::old('decade_select_image')) 
-            var decadeInputImage = "{{Input::old('decade_select_image')}}";
-            //retrieveDecade(decadeInputImage,"image");     
-            retrieveDecadeImage(decadeInputImage);      
-            getCenturyOfDecade(decadeInputImage,"imageDate");   
+            retrieveCenturyImage(centuryInputImage);
         @endif
 
-        @if( Input::old('century'))             
+        @if( Input::old('decade_select_image'))
+            var decadeInputImage = "{{Input::old('decade_select_image')}}";
+            //retrieveDecade(decadeInputImage,"image");
+            retrieveDecadeImage(decadeInputImage);
+            getCenturyOfDecade(decadeInputImage,"imageDate");
+        @endif
+
+        @if( Input::old('century'))
             var centuryInput = "{{Input::old('century')}}";
             //alert(centuryInput);
             showPeriodCentury(centuryInput);
-            retrieveCentury(centuryInput);          
-        @endif
-        
-        @if( Input::old('decade_select'))   
-            var decadeInput = "{{Input::old('decade_select')}}";
-            retrieveDecade(decadeInput);        
-            getCenturyOfDecade(decadeInput,"workDate");     
+            retrieveCentury(centuryInput);
         @endif
 
-        @if($dates == false) 
-            window.onload = cleanToLoad;        
+        @if( Input::old('decade_select'))
+            var decadeInput = "{{Input::old('decade_select')}}";
+            retrieveDecade(decadeInput);
+            getCenturyOfDecade(decadeInput,"workDate");
+        @endif
+
+        @if($dates == false)
+            window.onload = cleanToLoad;
         @endif
 
         if({{Input::old('dates','true')}}){
@@ -602,14 +601,13 @@
 
     });
     $(function() {
-        
+
         $( "#datePickerImageDate" ).datepicker({
             dateFormat:'dd/mm/yy'
         }
         );
     });
-    
+
     </script>
-    
+
     @stop
-    

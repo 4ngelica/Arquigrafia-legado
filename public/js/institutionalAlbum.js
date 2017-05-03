@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	
-	$('#newInstitutionalAlbum').live('click', function (e) {
+	$('#newInstitutionalAlbum').on('click', function (e) {
 			e.preventDefault();
 			$('#mask').fadeIn('fast');
 			$('#form_inst_album_window').fadeIn('slow');
