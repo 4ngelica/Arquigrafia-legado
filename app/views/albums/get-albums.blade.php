@@ -1,8 +1,8 @@
   <h4>Selecione dentre seus álbuns ou crie um novo álbum para adicionar a imagem selecionada.</h4>
   <div class="tabs">
     <ul class="tab-links">
-      <li class="active"><a href="#your_albums">Seus álbuns</a></li>
-      <li><a href="#create_album">Novo álbum</a></li>
+      <li class="active"><a class="tab-link" href="#your_albums">Seus álbuns</a></li>
+      <li><a class="tab-link" href="#create_album">Novo álbum</a></li>
     </ul>
     <div class="tab-content">
       <div id="your_albums" class="tab active">
@@ -19,7 +19,7 @@
                   <tr>
                 @endif
                 <td width="33%">
-                  <input type="checkbox"  id="{{ 'album_' . $album->id }}" 
+                  <input type="checkbox"  id="{{ 'album_' . $album->id }}"
                     name="albums[]" class="albums" value="{{ $album->id }}">
                    <label for="{{ 'album_' . $album->id }}"></label>
                   <p>{{ $album->title }}</p>
@@ -29,7 +29,7 @@
                 @endif
                 <?php $album_counter++ ?>
               @endforeach
-              
+
               @if($album_counter %3 > 0)
                 @while($album_counter %3 > 0)
                   <td width="33%"></td>
@@ -52,10 +52,10 @@
             <table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
                 <td>
-                  <div class="img_container"> 
+                  <div class="img_container">
                     <img id="cover-img" src="{{ URL::to('/arquigrafia-images/' . $photo_id . '_view.jpg') }}">
                     <p>Capa do álbum</p>
-                  </div> 
+                  </div>
                 </td>
   	            <td>
   		            <div class="four columns"><p>{{ Form::label('title', 'Título*') }}</p></div>
@@ -105,6 +105,13 @@
         e.preventDefault();
       }
     });
+
+    $('.tab-link').on('click', function(e) {
+      e.preventDefault();
+      var currentAttrValue = $(this).attr('href');
+      $('.tabs ' + currentAttrValue).fadeIn('slow').siblings().hide();
+      $(this).parent('li').addClass('active').siblings().removeClass('active');
+    });
   </script>
   <style>
     .tab label { font-size: 16px; }
@@ -128,4 +135,3 @@
       }
     @endforeach
   </style>
-
