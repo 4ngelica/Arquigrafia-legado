@@ -102,26 +102,26 @@ class PhotosController extends \BaseController {
     }
     //checking missing information
     $missing = array();
-    if($photos->address == null)
-      $missing[] = 'address';
+    if($photos->street == null)
+      $missing[] = ['street', Photo::$information_questions['street'] ];
     if($photos->city == null)
-      $missing[] = 'city';
+      $missing[] = ['city', Photo::$information_questions['city'] ];
     if($photos->country == null)
-      $missing[] = 'country';
+      $missing[] = ['country', Photo::$information_questions['country'] ];
     if($photos->description == null)
-      $missing[] = 'description';
+      $missing[] = ['description', Photo::$information_questions['description'] ];
     if($photos->district == null)
-      $missing[] = 'district';
+      $missing[] = ['district', Photo::$information_questions['district'] ];
     if($photos->imageAuthor == null)
-      $missing[] = 'imageAuthor';
+      $missing[] = ['imageAuthor', Photo::$information_questions['imageAuthor'] ];
     if($photos->state == null)
-      $missing[] = 'state';
+      $missing[] = ['state', Photo::$information_questions['state'] ];
     if($photos->title == null)
-      $missing[] = 'title';
+      $missing[] = ['name', Photo::$information_questions['name'] ];
     if($photos->workAuthor == null)
-      $missing[] = 'workAuthor';
+      $missing[] = ['workAuthor', Photo::$information_questions['workAuthor'] ];
     if($photos->workDate == null)
-      $missing[] = 'workDate';
+      $missing[] = ['workDate', Photo::$information_questions['workDate'] ];
 
     return View::make('/photos/show',
       ['photos' => $photos, 'owner' => $photo_owner, 'follow' => $follow, 'tags' => $tags,
