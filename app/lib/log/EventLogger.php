@@ -205,6 +205,14 @@ class EventLogger {
                 $info = sprintf('[%s] Criou a mensagem %s para o chat %s pela página %s, via %s', 
                                 $date_and_time, $eventContent['message'], $eventContent['thread'], $sourcePage, $device);
                 break;
+            case "completion":
+                $info = sprintf('[%s] Completude de dados de ID nº: %s, pela página %s, via %s',
+                                $date_and_time, $eventContent['suggestion'], $sourcePage, $device);
+                break;
+            case "moderation":
+                $info = sprintf('[%s] Moderacao de dados no Id: %s, pela página %s, via %s',
+                                $date_and_time, $eventContent['suggestion'], $sourcePage, $device);
+                break;
             default:
                 break;               
         }

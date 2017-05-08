@@ -39,6 +39,7 @@ class SuggestionScontroller extends \BaseController {
 		//accepted
 		$suggestion->accepted = false;
 		$suggestion->save();
+		EventLogger::printEventLogs(null, 'completion', ['suggestion' => $suggestion->id], 'Web');
 		return \Response::json('Data sent successfully');
 	}
 }
