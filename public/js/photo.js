@@ -1,31 +1,32 @@
 $(function(){
   try {
     $('.fancybox').fancybox({
-      
+
       beforeShow: function () {
-            $.fancybox.wrap.bind("contextmenu", function (e) {
-                  return false; 
-            });
+        $.fancybox.wrap.bind("contextmenu", function (e) {
+          return false;
+        });
       },
-        
+
       afterLoad : function() {
-      var download = $('#single_view_image_buttons');
-           if (download.size() === 0) {
-        this.title = '<a id="download_login_link" href="/users/login">Faça o login para fazer o download</a>';
-      } else {
-        var buttons = $("#single_view_buttons_box").clone(),
-        social_network_buttons = buttons.find("#single_view_social_network_buttons");
-                
-        social_network_buttons.remove();
-        this.title = '' + buttons.html();
-      }
+        var download = $('#single_view_image_buttons');
+
+        if (download.length === 0) {
+          this.title = '<a id="download_login_link" href="/users/login">Faça o login para fazer o download</a>';
+        } else {
+          var buttons = $("#single_view_buttons_box").clone(),
+          social_network_buttons = buttons.find("#single_view_social_network_buttons");
+
+          social_network_buttons.remove();
+          this.title = '' + buttons.html();
+        }
 
       },
 
-      scrolling: 'no', 
+      scrolling: 'no',
       minWidth: 500,
       minHeight: 600,
-      
+
     });
   } catch(err) {
     console.error('Função fancybox não definida.');
@@ -78,7 +79,7 @@ $(document).ready(function() {
       $("#likes + small").text(data.likes_count);
       $('#likes').closest('span').attr('title', data.likes_count + " pessoas curtiram essa imagem");
     });
-    
+
   });
 
   $(".like_comment").click(function(e) {
@@ -104,7 +105,7 @@ $(document).ready(function() {
       });
 
   });
-  
+
   $('#improve_image_data').click(function(e) {
     e.preventDefault();
     if (!hasField) {
@@ -117,7 +118,7 @@ $(document).ready(function() {
     e.preventDefault();
     loadQuestion();
   });
-  
+
   $('#information_input a.close').click(function(e) {
     e.preventDefault();
     $('#information_input').slideUp('fast');
@@ -228,7 +229,7 @@ $(document).ready(function() {
   }
 
   applyMasks();
-  
+
   $('.date_interval').click(function() {
     var radio = $(this);
     var checked = radio.val();
@@ -261,14 +262,14 @@ $(document).ready(function() {
 
   $('.decade, .century').on('change', function() {
     var select = $(this);
-    translateDate(select);  
+    translateDate(select);
   });
 });
 
   function applyMasks() {
     try {
-      $('.day').inputmask("99/99/9999", 
-      { 
+      $('.day').inputmask("99/99/9999",
+      {
         'oncomplete' : function() {
           console.log($(this).val())
           var t = translateDay( $(this).val() );
@@ -279,8 +280,8 @@ $(document).ready(function() {
           }
          }
       });
-      $('.month').inputmask("99/9999", 
-      { 
+      $('.month').inputmask("99/9999",
+      {
         'oncomplete' : function() {
           console.log($(this).val())
           var t = translateMonth( $(this).val() );
@@ -291,8 +292,8 @@ $(document).ready(function() {
           }
          }
       });
-      $('.year').inputmask("9999", 
-      { 
+      $('.year').inputmask("9999",
+      {
         'oncomplete' : function() {
           var t = translateYear( $(this).val() );
           if (t) {
@@ -320,7 +321,7 @@ $(document).ready(function() {
     var date_type = element.attr('class');
     var date_value = element.val();
     var translation;
-    translation = (translator[date_type])(date_value);    
+    translation = (translator[date_type])(date_value);
     element.siblings('.date_translation').text(translation);
   }
 

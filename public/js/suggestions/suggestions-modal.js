@@ -1,272 +1,214 @@
+/**
+ * This variable stores the array of modals.
+ * This variable is needed because when we animate one modal to another
+ * we need to hide this modal and close it later (see onClose on showModal function)
+ * @type {Array}
+ */
+var suggestionModals = [];
 
-/* Playground Demo: Avatars */
+/**
+ * Generates the jBox TITLE html using Handlebars
+ * @param  {String} iconType  The icon that will be rendered on the title area of jBox
+ * @return {String} The HTML string that represents the jBox title
+ */
+function getTitleHTML(iconType) {
+  var sourceTitle = $("#suggestion-modal-title").html();
+  var templateTitle = Handlebars.compile(sourceTitle);
+  var titleHTML = templateTitle();
 
-
-// All data we are using for this demo we will store in the variable DemoAvatars
-
-var DemoAvatars = {
-  Avatars: ['Stephan', 'Susan', 'Jack', 'Elizabeth', 'Fungus', 'Donald', 'Gary', 'Trixi', 'Samuel', 'Maria'],
-  Modals: {}
-};
-
-
-// All the magic happens in the function generateAvatarJBox
-
-function generateAvatarJBox(initial)
-{
-  // We only need to initialize the tooltips for the avatar collection once
-  // We can later refer to this jBox instance with DemoAvatars.AvatarsTooltip
-  
-  !DemoAvatars.AvatarsTooltip && (DemoAvatars.AvatarsTooltip = new jBox('Tooltip', {
-    theme: 'TooltipBorder',             // We are using the border theme...
-    addClass: 'AvatarsTooltip',         // ...and add a class so we can adjust the theme with CSS
-    attach: '[data-avatar-tooltip]',    // We attach the tooltip to the elements with the attribute data-avatar-tooltip...
-    getContent: 'data-avatar-tooltip',  // ... and also get the content from the same attribute
-    zIndex: 12000,                      // These tooltips have the highest z-index
-    animation: 'move',
-    
-    // Adding the liked or disliked class depending on the container the avatar is in
-    onOpen: function () {
-      this.wrapper.removeClass('AvatarsTooltipLike AvatarsTooltipDislike').addClass('AvatarsTooltip' + (this.source.parent().attr('id') == 'LikedAvatars' ? 'Like' : 'Dislike'));
-    }
-  }));
-  
-  
-  // When we are creating the initial jBox, reset global variables
-  
-  if (initial) {
-    DemoAvatars.clicked = false;
-    DemoAvatars.current = -1;
-  }
-  
-  
-  // Increase current avatar index
-  
-  DemoAvatars.current++;
-  
-  
-  // When we looped through all the avatars, show a jBox Modal with a hint that there are no more avatars nearby
-  
-  if (DemoAvatars.current >= DemoAvatars.Avatars.length) {
-    
-    DemoAvatars.Modals.AvatarsComplete = new jBox('Modal', {
-      
-      // We use similar options to our Avatar modal so they look similar
-      id: 'AvatarsComplete',
-      addClass: 'AvatarsModal',
-      width: 300,
-      height: 250,
-      animation: 'zoomIn',
-      overlay: false,
-      blockScroll: false,
-      closeButton: false,
-      closeOnEsc: false,
-      adjustDistance: {
-        top: 40,
-        right: 5,
-        bottom: 55,
-        left: 5
-      },
-      footer: '<button class="button-close">Close</button>',
-      title: 'Whoops',
-      content: '<div>There are currently no more avatars near you</div>',
-      zIndex: 10000,
-      
-      // Once this jBox is created, we tel the close button to close the initial avatar modal
-      onCreated: function () {
-        this.footer.find('button').on('click', function () {
-          DemoAvatars.Modals.AvatarsInitial.close();
-        });
-      }
-    }).open();
-    
-    // Nothing more to do, abort here
-    return null;
-  }
-  
-  
-  // We are creating a new jBox Modal with the avatars each time this function gets called
-  
-  var jBoxAvatar = new jBox('Modal', {
-    addClass: 'AvatarsModal',
-    width: 300,
-    height: 250,
-    animation: 'zoomIn',
-    zIndex: 10000,
-    
-    // Adjusting the distance to the viewport so we have space for the avatar collection at the bottom and the close button of the modal at the top
-    adjustDistance: {
-      top: 40,
-      right: 5,
-      bottom: 55,
-      left: 5
-    },
-    
-    // We are setting these options differently for the initial and the following jBoxes
-    id: initial ? 'AvatarsInitial' : 'AvatarsModal' + DemoAvatars.current,
-    overlay: initial ? true : false,            // Only one overlay is needed
-    blockScroll: initial ? true : false,        // The initial jBox will block scrolling, no need for the others to o the same
-    closeButton: initial ? 'overlay' : false,   // The initial jBox will have the close button in the overlay, the others won't need one
-    closeOnEsc: initial ? true : false,         // Only the inital jBox can be closed with [ESC] button
-    
-    // Placing the buttons in the footer area
-    footer: '<div class="clearfix"><button class="button-cross cross"></button><button class="button-heart heart"></button></div>',
-    
-    // Open this jBox when it is being initialized
-    onInit: function () {
-      this.open();
-      
-      // Here we store the index we used for this jBox
-      this.AvatarIndex = DemoAvatars.current;
-    },
-    
-    // When the jBox is created, add the click events to the buttons
-    onCreated: function () {
-      
-      // Create the containers for the liked or disliked avatars
-      if (initial) {
-        $('<div id="LikedAvatars" class="AvatarsCollection"/>').appendTo($('body'));
-        $('<div id="DislikedAvatars" class="AvatarsCollection"/>').appendTo($('body'));
-      }
-      
-      $.each(this.footer.find('button'), function (index, el) {
-        
-        // Adding the click events for the buttons in the footer
-        $(el).on('click', function () {
-          
-          // Storing a global var that the user clicked on a button
-          DemoAvatars.clicked = true;
-          
-          // When a user clicks a button close the tooltips
-          DemoAvatars.AvatarsTooltipLike && DemoAvatars.AvatarsTooltipLike.close();
-          DemoAvatars.AvatarsTooltipDislike && DemoAvatars.AvatarsTooltipDislike.close();
-          
-          // When we click a button, the jBox disappears, let's tell this jBox that we removed it
-          this.AvatarRemoved = true;
-          
-          // Did we like or dislike the avatar?
-          var liked = $(el).hasClass('button-heart');
-          
-          // Slide the jBox to the left or right depending on which button the user clicked
-          this.animate('slide' + (liked ? 'Right' : 'Left'), {
-            
-            // Once the jBox is removed, hide it and show the avatar in the collection
-            complete: function () {
-              this.wrapper.css('display', 'none');
-              
-              // Which container to use
-              var collectionContainer = liked ? $('#LikedAvatars') : $('#DislikedAvatars');
-              
-              // If there if not enough space for the avatars to show in one line remove the first one
-              if (collectionContainer.find('div[data-avatar-tooltip]').length && ((collectionContainer.find('div[data-avatar-tooltip]').length + 1) * $(collectionContainer.find('div[data-avatar-tooltip]')[0]).outerWidth(true) > collectionContainer.outerWidth())) {
-                $(collectionContainer.find('div[data-avatar-tooltip]')[0]).remove();
-              }
-              
-              // Add the avatar to the collection
-              this.animate('popIn', {
-                element: $('<div data-avatar-tooltip="You ' + (liked ? 'liked' : 'disliked') + ' ' + DemoAvatars.Avatars[this.AvatarIndex] + '"/>').append($('<div/>').html('<img src="https://stephanwagner.me/img/jBox/avatar/' + DemoAvatars.Avatars[this.AvatarIndex] + '.svg"/>')).appendTo(collectionContainer)
-              });
-              
-              // Attach the avatar tooltip
-              DemoAvatars.AvatarsTooltip && DemoAvatars.AvatarsTooltip.attach();
-              
-            }.bind(this)
-          });
-          
-          // Open another Avatar jBox
-          generateAvatarJBox();
-          
-        }.bind(this));
-      }.bind(this));
-    },
-    
-    // When we open the jBox, set the new content and show the tooltips if it's the initial jBox
-    onOpen: function () {
-      
-      // Set title and content depending on current index
-      this.setTitle(DemoAvatars.Avatars[DemoAvatars.current]);
-      this.content.css({backgroundImage: 'url(https://stephanwagner.me/img/jBox/avatar/' + DemoAvatars.Avatars[DemoAvatars.current] + '.svg)'});
-      
-      // If it's the inital jBox, show the tooltips after a short delay
-      initial && setTimeout(function () {
-        
-        // We are creating the two tooltips in a loop as they are very similar
-        $.each(['Dislike', 'Like'], function (index, item) {
-          
-          // We store the tooltips in the global var so we can refer to them later
-          DemoAvatars['AvatarsTooltip' + item] = new jBox('Tooltip', {
-            theme: 'TooltipBorder',
-            addClass: 'AvatarsTooltip AvatarsTooltip' + item,
-            minWidth: 110,
-            content: item,
-            position: {
-              y: 'bottom'
-            },
-            offset: {
-              y: 5
-            },
-            target: '#AvatarsInitial .jBox-footer .button-' + (item == 'Like' ? 'heart' : 'cross'),
-            animation: 'move',
-            zIndex: 11000,
-            
-            // Abort opening the tooltips when we clicked on a like or dislike button already
-            onOpen: function () {
-              DemoAvatars.clicked && this.close();
-            }
-          }).open();
-          
-        });
-        
-      }, 500);
-    }
-  });
-  
-  // If it's the inital jBox add onClose events
-  initial && (jBoxAvatar.options.onClose = function ()
-  {
-    // Loop through all avatar jBoxes and close them if they are not removed yet
-    $.each(DemoAvatars.Modals, function (index, jBox) {
-      jBox.id != 'AvatarsInitial' && !jBox.AvatarRemoved && jBox.close();
-    }.bind(this));
-    
-    // Remove the collection containers with a sliding animation
-    $.each(['Liked', 'Disliked'], function (index, item) {
-      this.animate('slide' + (item == 'Liked' ? 'Right' : 'Left'), {
-        element: $('#' + item + 'Avatars'),
-        complete: function () {
-          $('#' + item + 'Avatars').remove();
-        }
-      });
-    }.bind(this));
-    
-    // Close the tooltips
-    DemoAvatars.AvatarsTooltipLike && DemoAvatars.AvatarsTooltipLike.close();
-    DemoAvatars.AvatarsTooltipDislike && DemoAvatars.AvatarsTooltipDislike.close();
-  });
-  
-  // If it's the inital jBox add onCloseComplete events
-  initial && (jBoxAvatar.options.onCloseComplete = function ()
-  {
-    // Loop through all modal jBoxes and remove them from DOM
-    $.each(DemoAvatars.Modals, function (index, jBox) {
-      jBox.destroy();
-      delete DemoAvatars.Modals[jBox.id];
-    });
-    
-    // Remove the tooltips from DOM
-    DemoAvatars.AvatarsTooltipLike && DemoAvatars.AvatarsTooltipLike.destroy();
-    DemoAvatars.AvatarsTooltipDislike && DemoAvatars.AvatarsTooltipDislike.destroy();
-  });
-  
-  // Store the jBox in the modal collection
-  DemoAvatars.Modals[jBoxAvatar.id] = jBoxAvatar;
+  return titleHTML;
 }
 
+/**
+ * Generates the jBox CONTENT html using Handlebars
+ * @param  {String} type     Can be 'confirm' or 'text'. Represents the type of content
+ * @param  {String} name     The top name that will show on modal
+ * @param  {String} question The question that you wanna ask to the user
+ * @return {String}          The HTML that represents the jBox content
+ */
+function getContentHTML(type, name, question) {
+  var sourceContent;
+  // Rendering the right content by type
+  if (type === 'confirm') {
+     sourceContent = $("#suggestion-modal-confirm-content").html();
+  } else if (type === 'text') {
+    sourceContent = $("#suggestion-modal-text-content").html();
+  } else {
+    return '';
+  }
+  var templateContent = Handlebars.compile(sourceContent);
+  var contentHTML = templateContent({ name, question });
 
-// On domready, add the click event to the button
+  return contentHTML;
+}
+
+/**
+ * Generates the jBox FOOTER html using Handlebars
+ * @param  {String} type Can be 'confirm' or 'jump'. Represents the type of footer.
+ * @return {String}      The HTML that represents the jBox footer
+ */
+function getFooterHTML(type) {
+  if (type === 'confirm') {
+    var sourceFooter = $("#suggestion-modal-confirm-footer").html();
+  } else if (type === 'jump') {
+    var sourceFooter = $("#suggestion-modal-jump-footer").html();
+  }
+  var templateTitle = Handlebars.compile(sourceFooter);
+  var footerHTML = templateTitle();
+
+  return footerHTML;
+}
+
+/**
+ * Sending the suggestion through AJAX request to the server
+ * @param  {[type]} userID        The current logged user ID
+ * @param  {[type]} photoID       The current photo ID
+ * @param  {[type]} attributeType The attribute that you wanna send the suggestion
+ * @param  {[type]} text          The text of the suggestion that you're sending
+ */
+function sendSuggestion(userID, photoID, attributeType, text) {
+  // Mounting params
+  data = {
+    user_id: userID,
+    photo_id: photoID,
+    attribute_type: attributeType,
+    text: text,
+  };
+
+  console.log('DADOS DA SUGESTAO', data);
+
+  // Sending ajax request
+  $.ajax({
+      type: "POST",
+      url : `/suggestions`,
+      data: data,
+      success : function(data){
+        console.log('SUGESTAO ENVIADA', data);
+      }
+  }, "json");
+}
+
+/**
+ * Changes the 'page' of the modal.
+ * Basically here we're rendering the next modal and showing the next question.
+ * @param  {Number} currentIndex The current page (index) that we're at the moment
+ */
+function changePage(currentIndex) {
+  var currentModal = suggestionModals[currentIndex];
+  // Checking if there's a next page to change
+  if (missingFields.length > currentIndex + 1) {
+    // Showing the next modal (with index + 1)
+    showModal('text', photo.name, missingFields[currentIndex + 1][1], currentIndex + 1);
+  } else {
+    // Close the current modal and return
+    if (currentModal) currentModal.close();
+    return;
+  }
+
+  // Slide the jBox to the left
+  suggestionModals[currentIndex].animate('slideLeft', {
+    // Once the jBox animated, hide it
+    complete: function () {
+      // Hiding the current modal
+      if (currentModal) currentModal.wrapper.css('display', 'none');
+    }.bind(this)
+  });
+}
+
+/**
+ * This function shows a Suggestion Modal
+ * @param  {String} type     The type of the modal. Can be 'confirm' or 'text'
+ * @param  {String} name     The item name
+ * @param  {String} question The question that the modal will show to user
+ * @param  {String} currentIndex The currentIndex that we're showing the modal (represents the current question)
+ */
+function showModal(type, name, question, currentIndex) {
+  // Getting the HTML content that we're gonna show on the modal
+  var titleHTML = getTitleHTML();
+  var contentHTML = getContentHTML(type, name, question);
+  var footerHTML;
+  // Getting footer based on type
+  if (type === 'confirm') {
+    footerHTML = getFooterHTML('confirm');
+  } else {
+    footerHTML = getFooterHTML('jump');
+  }
+  // Is this the initial modal?
+  var initial = currentIndex == 0;
+
+  // Showing jBox modal
+  suggestionModals[currentIndex.toString()] = new jBox('Modal', {
+    animation: 'zoomIn',
+    overlay: initial ? true : false, // Only shows the overlay for the first modal
+    blockScroll: false,
+    closeButton: false,
+    closeOnEsc: initial ? true : false, // Only sets the closeOnEsc for the first modal
+    footer: footerHTML,
+    title: titleHTML,
+    content: contentHTML,
+    zIndex: 10000,
+
+    // Once this jBox is created, the onCreated function is called
+    onCreated: function () {
+      // We gonna tell the close button to close the currentIndex modal
+      $('.close-button').on('click', function () {
+        // Closing current modal
+        suggestionModals[currentIndex].close();
+      });
+
+      $('.enviar-button').on('click', function() {
+        // Getting the text from suggestion-text textarea
+        var suggestionText = suggestionModals[currentIndex].content.find('#sugestion-text').val();
+        if (!suggestionText || suggestionText == '') {
+          alert('Você precisa preencher algo para enviar.');
+          return
+        }
+        // Sending suggestion
+        sendSuggestion(user.id, photo.id, missingFields[currentIndex][0], suggestionText);
+        // Change page (go to the next modal)
+        changePage(currentIndex);
+      })
+
+      // When click on jump button, changes page doing nothing else
+      $('.pular-etapa-button').on('click', function() {
+        changePage(currentIndex);
+      });
+
+      // Event when clicks on sim-button
+      $('.sim-button').on('click', function() {
+        changePage(currentIndex);
+      });
+
+      // Event when clicks on nao-button
+      $('.nao-button').on('click', function() {
+        changePage(currentIndex);
+      });
+
+      // Event when clicks on nao-sei-button
+      $('.nao-sei-button').on('click', function() {
+        changePage(currentIndex);
+      });
+    },
+    // When any of the modals is closed, this function is called
+    onClose: function () {
+      // When closing one of the modals, close all modals
+      suggestionModals.forEach(function(modal) {
+        modal.close();
+      });
+      // Cleaning suggestionModals array
+      suggestionModals = [];
+    },
+  }).open();
+}
 
 $(document).ready(function() {
-  
-  $('#DemoAvatars').click(function () { generateAvatarJBox(true); });
-  
+  // On DOM ready, add the click event to the open modal button
+  $('#OpenModal').click(function () {
+    // Don't show the modal when we don't have a user logged in
+    if (!user || !user.id) return;
+    // Only shows the modal if we have missing fields
+    if (missingFields && missingFields.length > 0) {
+      showModal('text', photo.name, missingFields[0][1], 0);
+    }
+  });
 });

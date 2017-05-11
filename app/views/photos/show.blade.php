@@ -11,6 +11,9 @@
   <script src="//code.jboxcdn.com/0.4.7/jBox.min.js"></script>
   <link href="//code.jboxcdn.com/0.4.7/jBox.css" rel="stylesheet">
 
+  <!-- Handlebars -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.min.js"></script>
+
   <!-- Suggestions Modal -->
   <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/suggestions/suggestions-modal.css" />
   <script type="text/javascript" src="{{ URL::to("/") }}/js/suggestions/suggestions-modal.js"></script>
@@ -18,8 +21,13 @@
   <!-- Google Maps API -->
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBuBk5ghbTdpdm_nBWg6xHEzdRXdryK6rU&callback=initMap"></script>
   <script type="text/javascript">
-  $(document).ready(function(){
+  // Missing fields and questions (to show on Modal)
+  var photo = {{ json_encode($photos) }};
+  var user = {{ json_encode($user) }}
+  var missingFields = {{ json_encode($missing) }};
+  console.log('MISSING', missingFields);
 
+  $(document).ready(function(){
     //MAP AND GEOREFERENCING CREATION AND SETTING
     var geocoder;
     var map;
@@ -34,7 +42,6 @@
       if (street) address = street + "," + district + "," + city + "-" + state + "," + country;
       else if (district) address = district + "," + city + "-" + state + "," + country;
       else address = city + "-" + state + "," + country;
-      console.log(address);
 
       geocoder = new google.maps.Geocoder();
 
@@ -62,7 +69,6 @@
     }
 
     initialize();
-
   });
   </script>
   <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/jquery.fancybox.css" />
@@ -434,7 +440,7 @@
           <img src="{{ asset("img/edit.png") }}" width="16" height="16"/>
           </a>
 
-        @endif
+          @endif
       </hgroup>
 
       {{-- @include('photo_feedback') --}}
@@ -551,6 +557,9 @@
         </span>
       </a>
       </br>
+
+      <!-- Suggestions Modal -->
+      <a id="OpenModal">Open Modal</a>
 
        <!-- GOOGLE MAPS -->
       <h4>Localização:</h4>
@@ -779,6 +788,60 @@
    // }
    //location.reload();
 
+  </script>
+
+  <!-- SUGGESTION MODAL HANDLEBARS COMPONENTS -->
+  <script id="suggestion-modal-title" type="text/x-handlebars-template">
+    <div class="title-container">
+      <div class="field-icon" style="background: url(/img/suggestions-modal/location-icon.png) no-repeat center center #fff;">
+      </div>
+      <button class="close-button"></button>
+    </div>
+  </script>
+
+  <script id="suggestion-modal-text-content" type="text/x-handlebars-template">
+    <div class="jBox-content sugestion">
+  		<div class="field-name sugestion">
+        @{{name}}
+  		</div>
+
+  		<div class="field-question sugestion">
+        @{{question}}
+
+  			<textarea id="sugestion-text" class="sugestion"></textarea>
+  			<button class="enviar-button">Enviar</button>
+  		</div>
+  	</div>
+  </script>
+
+  <script id="suggestion-modal-confirm-content" type="text/x-handlebars-template">
+    <div class="jBox-content">
+      <div class="field-name">
+        @{{name}}
+      </div>
+
+      <div class="field-question">
+        @{{question}}
+      </div>
+    </div>
+  </script>
+
+  <script id="suggestion-modal-confirm-footer" type="text/x-handlebars-template">
+    <div class="jBox-footer">
+      <div class="clearfix">
+        <button class="sim-button">Sim</button>
+        <button class="nao-button">Não</button>
+        <button class="nao-sei-button">Não sei</button>
+      </div>
+    </div>
+  </script>
+
+  <script id="suggestion-modal-jump-footer" type="text/x-handlebars-template">
+    <div class="jBox-footer sugestion">
+      <div class="clearfix">
+  			<button class="pular-etapa-button">Pular esta etapa</button>
+  		</div>
+    </div>
   </script>
 
 @stop
