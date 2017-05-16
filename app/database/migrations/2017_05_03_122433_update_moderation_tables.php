@@ -12,32 +12,32 @@ class UpdateModerationTables extends Migration {
 	 */
 	public function up()
 	{
-		$q = "insert into photo_attribute_type (attribute_type) values ('city')";
+		$q = "insert into photo_attribute_types (attribute_type) values ('city')";
 		DB::insert(DB::raw($q));
-		$q = "insert into photo_attribute_type (attribute_type) values ('country')";
+		$q = "insert into photo_attribute_types (attribute_type) values ('country')";
 		DB::insert(DB::raw($q));
-		$q = "insert into photo_attribute_type (attribute_type) values ('description')";
+		$q = "insert into photo_attribute_types (attribute_type) values ('description')";
 		DB::insert(DB::raw($q));
-		$q = "insert into photo_attribute_type (attribute_type) values ('district')";
+		$q = "insert into photo_attribute_types (attribute_type) values ('district')";
 		DB::insert(DB::raw($q));
-		$q = "insert into photo_attribute_type (attribute_type) values ('imageAuthor')";
+		$q = "insert into photo_attribute_types (attribute_type) values ('imageAuthor')";
 		DB::insert(DB::raw($q));
-		$q = "insert into photo_attribute_type (attribute_type) values ('state')";
+		$q = "insert into photo_attribute_types (attribute_type) values ('state')";
 		DB::insert(DB::raw($q));
-		$q = "insert into photo_attribute_type (attribute_type) values ('street')";
+		$q = "insert into photo_attribute_types (attribute_type) values ('street')";
 		DB::insert(DB::raw($q));
-		$q = "insert into photo_attribute_type (attribute_type) values ('name')";
+		$q = "insert into photo_attribute_types (attribute_type) values ('name')";
 		DB::insert(DB::raw($q));
-		$q = "insert into photo_attribute_type (attribute_type) values ('workAuthor')";
+		$q = "insert into photo_attribute_types (attribute_type) values ('workAuthor')";
 		DB::insert(DB::raw($q));
-		$q = "insert into photo_attribute_type (attribute_type) values ('workDate')";
+		$q = "insert into photo_attribute_types (attribute_type) values ('workDate')";
 		DB::insert(DB::raw($q));
 
-		$q = "insert into moderation_type (moderation_type) values ('junior')";
+		$q = "insert into moderation_types (moderation_type) values ('junior')";
 		DB::insert(DB::raw($q));
-		$q = "insert into moderation_type (moderation_type) values ('pleno')";
+		$q = "insert into moderation_types (moderation_type) values ('pleno')";
 		DB::insert(DB::raw($q));
-		$q = "insert into moderation_type (moderation_type) values ('senior')";
+		$q = "insert into moderation_types (moderation_type) values ('senior')";
 		DB::insert(DB::raw($q));
 
 	}

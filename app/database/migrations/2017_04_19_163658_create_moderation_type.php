@@ -12,7 +12,7 @@ class CreateModerationType extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('moderation_type', function(Blueprint $table) {
+		Schema::create('moderation_types', function(Blueprint $table) {
 			$table->bigIncrements('id');
 			$table->string('moderation_type');
 		});
