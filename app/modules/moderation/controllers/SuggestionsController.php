@@ -5,11 +5,13 @@ namespace modules\moderation\controllers;
 use lib\log\EventLogger;
 use Carbon\Carbon;
 use Photo;
+use modules\moderation\models\Suggestion;
+use modules\moderation\models\PhotoAttributeType;
 
-class SuggestionScontroller extends \BaseController {
+class SuggestionsController extends \BaseController {
 
 
-	public function store(){
+	public function testname(){
 		$input = \Input::all();
 
 		$rules = array(
@@ -21,7 +23,7 @@ class SuggestionScontroller extends \BaseController {
 
 		$validator = \Validator::make($input, $rules);
 		if($validator->fails()){
-			return $validator->messages();
+			return \Response::make($validator->messages(), 400);
 		}
 
 		$suggestion = new Suggestion();

@@ -100,28 +100,96 @@ class PhotosController extends \BaseController {
         }
       }
     }
-    //checking missing information
+    //Generating suggestion/validation data
     $missing = array();
+    $present = array();
+    //Checking which fields are present or missing
     if($photos->street == null)
-      $missing[] = ['street', Photo::$information_questions['street'] ];
+      $missing[] = 'street';
+    else
+      $present[] = 'street';
     if($photos->city == null)
-      $missing[] = ['city', Photo::$information_questions['city'] ];
+      $missing[] = 'city';
+    else
+      $present[] = 'city';
     if($photos->country == null)
-      $missing[] = ['country', Photo::$information_questions['country'] ];
+      $missing[] = 'country';
+    else
+      $present[] = 'country';
     if($photos->description == null)
-      $missing[] = ['description', Photo::$information_questions['description'] ];
+      $missing[] = 'description';
+    else
+      $present[] = 'description';
     if($photos->district == null)
-      $missing[] = ['district', Photo::$information_questions['district'] ];
+      $missing[] = 'district';
+    else
+      $present[] = 'district';
     if($photos->imageAuthor == null)
-      $missing[] = ['imageAuthor', Photo::$information_questions['imageAuthor'] ];
+      $missing[] = 'imageAuthor';
+    else
+      $present[] = 'imageAuthor';
     if($photos->state == null)
-      $missing[] = ['state', Photo::$information_questions['state'] ];
-    if($photos->title == null)
-      $missing[] = ['name', Photo::$information_questions['name'] ];
+      $missing[] = 'state';
+    else
+      $present[] = 'state';
+    if($photos->name == null)
+      $missing[] = 'name';
+    else
+      $present[] = 'name';
     if($photos->workAuthor == null)
-      $missing[] = ['workAuthor', Photo::$information_questions['workAuthor'] ];
+      $missing[] = 'workAuthor';
+    else
+      $present[] = 'workAuthor';
     if($photos->workDate == null)
-      $missing[] = ['workDate', Photo::$information_questions['workDate'] ];
+      $missing[] = 'workDate';
+    else
+      $present[] = 'workDate';
+
+    $final = array();
+    //shuffling arrays
+    shuffle($missing);
+    shuffle($present);
+
+    //Setting first field to be either missing or present to alternate between both results
+    $next = '';
+    if(count($missing) > count($present))
+      $next = 'missing';
+    else
+      $next = 'present';
+
+    //Loop for the 10 possible reords
+    for($i = 0; $i < 10; $i++){
+      //Fills array if field is missing
+      if($next == 'missing'){
+        $final[] = [
+          'type' => 'suggestion',
+          'name' => Photo::$fields_data[$missing[0]]['name'],
+          'question' => Photo::$fields_data[$missing[0]]['information'],
+          'attribute_type' => $missing[0],
+          'field_type' => Photo::$fields_data[$missing[0]]['type']
+        ];
+        array_splice($missing, 0, 1);
+      } //Fills array if field is present
+      else{
+        $final[] = [
+          'type' => 'confirm',
+          'name' => (array)$photos[$present[0]],
+          'question' => Photo::$fields_data[$present[0]]['validation'],
+          'attribute_type' => $present[0],
+          'field_type' => Photo::$fields_data[$present[0]]['type']
+        ];
+        array_splice($present, 0, 1);
+      }
+
+      if(count($missing) == 0)//If missing fields are done, stop alternation
+        $next = 'present';
+      elseif(count($present) == 0)//If present fields are done, stop alternation
+        $next = 'missing';
+      elseif($next == 'missing')//Alternate based on last record
+        $next = 'present';
+      elseif($next == 'present')//Alternate based on last record
+        $next = 'missing';
+    }
 
     return View::make('/photos/show',
       ['photos' => $photos, 'owner' => $photo_owner, 'follow' => $follow, 'tags' => $tags,
@@ -144,7 +212,7 @@ class PhotosController extends \BaseController {
       'urlBack' => $urlBack,
       'institutionId' => $photos->institution_id,
       'type'=> $photos->type,
-      'missing' => $missing
+      'missing' => $final
     ]);
   }
 

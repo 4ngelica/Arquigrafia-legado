@@ -21,7 +21,8 @@ return array(
 		__DIR__.'/../modules/collaborative/views',
 		__DIR__.'/../modules/evaluations/views',
 		__DIR__.'/../modules/gamification/views',
-		__DIR__.'/../modules/chat/views'
+		__DIR__.'/../modules/chat/views',
+		__DIR__.'/../modules/moderation/views'
 	),
 
 	/*

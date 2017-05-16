@@ -60,19 +60,66 @@ class Photo extends Eloquent {
 		'NO' => ['Não', '-nc']
 	];
 
-	public static	$information_questions = [
-		'city' => 'Qual é a cidade da obra?',
-		'country' => 'Qual é o país da obra?',
-		'dataCriacao' => 'Qual é a data desta imagem?',
-		'description' => 'Qual é a descrição para a imagem?',
-		'district' => 'Qual é o bairro da obra?',
-		'imageAuthor' => 'Quem é o autor desta imagem?',
-		'name' => 'Qual é o nome desta obra?',
-		'state' => 'Qual é o Estado desta arquitetura?',
-		'street' => 'Qual é a rua desta obra?',
-		'workAuthor' => 'Quem é o autor da obra?',
-		'workDate' => 'Quando foi construída a obra?'
+	public static $fields_data = [
+		'city'        => ['information' => 'Qual é a cidade da obra?',
+					      'validation'  =>'Esta cidade está correta?',
+					      'name'        => 'Cidade',
+					      'type'        => 'string'],
+		'country'     => ['information' => 'Qual é o país da obra?',
+						  'validation'  => 'Este país está correto?',
+						  'name'        => 'País',
+						  'type'        => 'string'],
+		'dataCriacao' => ['information' => 'Qual é a data desta imagem?',
+						  'validation'  => 'A data desta imagem está correta?',
+						  'name'        => 'Data da Imagem',
+						  'type'        => 'string'],
+		'description' => ['information' => 'Qual é a descrição para a imagem?',
+						  'validation'  => 'A descrição desta imagem está correta?',
+						  'name'        => 'Descrição',
+						  'type'        => 'string'],
+		'district'    => ['information' => 'Qual é o bairro da obra?',
+						  'validation'  => 'O bairro desta cidade está correto?',
+						  'name'        => 'Bairro',
+						  'type'        => 'string'],
+		'imageAuthor' => ['information' => 'Quem é o autor desta imagem?',
+						  'validation'  => 'Este é o autor correto da imagem?',
+						  'name'        => 'Autor',
+						  'type'        => 'string'],
+		'name'        => ['information' => 'Qual é o nome desta obra?',
+						  'validation'  => 'Este é o nome correto da imagem?',
+						  'name'        => 'Nome',
+						  'type'        => 'string'],
+		'state'       => ['information' => 'Qual é o estado desta arquitetura?',
+						  'validation'  => 'Este é o estado correto desta arquitetura?',
+						  'name'        => 'Estado',
+						  'type'        => 'string'],
+		'street'      => ['information' => 'Qual é a rua desta obra?',
+						  'validation'  => 'Esta é a rua correta desta obra?',
+						  'name'        => 'Rua',
+						  'type'        => 'string'],
+		'workAuthor'  => ['information' => 'Quem é o autor da obra?',
+						  'validation'  => 'Este é o autor da obra?',
+						  'name'        => 'Autor da Obra',
+						  'type'        => 'string'],
+		'workDate'    => ['information' => 'Quando foi construída a obra?',
+						  'validation'  => 'Esta é a data em que a obra foi construída?',
+						  'name'        => 'Data da Obra',
+						  'type'        => 'string']
 	];
+
+	// public static	$information_questions = [
+	// 	'city' => 'Qual é a cidade da obra?',
+	// 	'country' => 'Qual é o país da obra?',
+	// 	'dataCriacao' => 'Qual é a data desta imagem?',
+	// 	'description' => 'Qual é a descrição para a imagem?',
+	// 	'district' => 'Qual é o bairro da obra?',
+	// 	'imageAuthor' => 'Quem é o autor desta imagem?',
+	// 	'name' => 'Qual é o nome desta obra?',
+	// 	'state' => 'Qual é o Estado desta arquitetura?',
+	// 	'street' => 'Qual é a rua desta obra?',
+	// 	'workAuthor' => 'Quem é o autor da obra?',
+	// 	'workDate' => 'Quando foi construída a obra?'
+	// ];
 
 	protected $date;
 
