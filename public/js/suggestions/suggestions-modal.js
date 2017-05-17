@@ -31,7 +31,7 @@ function getContentHTML(type, name, question) {
   // Rendering the right content by type
   if (type === 'confirm') {
      sourceContent = $("#suggestion-modal-confirm-content").html();
-  } else if (type === 'text') {
+  } else if (type === 'suggestion') {
     sourceContent = $("#suggestion-modal-text-content").html();
   } else {
     return '';
@@ -61,10 +61,10 @@ function getFooterHTML(type) {
 
 /**
  * Sending the suggestion through AJAX request to the server
- * @param  {[type]} userID        The current logged user ID
- * @param  {[type]} photoID       The current photo ID
- * @param  {[type]} attributeType The attribute that you wanna send the suggestion
- * @param  {[type]} text          The text of the suggestion that you're sending
+ * @param  {Number} userID        The current logged user ID
+ * @param  {Number} photoID       The current photo ID
+ * @param  {String} attributeType The attribute that you wanna send the suggestion
+ * @param  {String} text          The text of the suggestion that you're sending
  */
 function sendSuggestion(userID, photoID, attributeType, text) {
   // Mounting params
@@ -89,6 +89,30 @@ function sendSuggestion(userID, photoID, attributeType, text) {
 }
 
 /**
+ * Shows to user the modal asking for a suggestion.
+ * @param  {Number} currentIndex The current page (index) that we're at the moment
+ */
+function askSuggestion(currentIndex) {
+  var currentModal = suggestionModals[currentIndex];
+  // Checking if there's a next page to change
+  showModal(
+    'suggestion',
+    missingFields[currentIndex].name,
+    'Você sabe a informação correta? Nos ajude sugerindo uma modificação.',
+    currentIndex,
+  );
+
+  // Slide the jBox to the left
+  suggestionModals[currentIndex].animate('pulse', {
+    // Once the jBox animated, hide it
+    complete: function () {
+      // Hiding the current modal
+      if (currentModal) currentModal.wrapper.css('display', 'none');
+    }.bind(this)
+  });
+}
+
+/**
  * Changes the 'page' of the modal.
  * Basically here we're rendering the next modal and showing the next question.
  * @param  {Number} currentIndex The current page (index) that we're at the moment
@@ -98,7 +122,7 @@ function changePage(currentIndex) {
   // Checking if there's a next page to change
   if (missingFields.length > currentIndex + 1) {
     // Showing the next modal (with index + 1)
-    showModal('text', photo.name, missingFields[currentIndex + 1][1], currentIndex + 1);
+    showModal(missingFields[currentIndex + 1].type, missingFields[currentIndex + 1].name, missingFields[currentIndex + 1].question, currentIndex + 1);
   } else {
     // Close the current modal and return
     if (currentModal) currentModal.close();
@@ -164,24 +188,29 @@ function showModal(type, name, question, currentIndex) {
           return
         }
         // Sending suggestion
-        sendSuggestion(user.id, photo.id, missingFields[currentIndex][0], suggestionText);
+        sendSuggestion(user.id, photo.id, missingFields[currentIndex].attribute_type, suggestionText);
         // Change page (go to the next modal)
         changePage(currentIndex);
       })
 
       // When click on jump button, changes page doing nothing else
       $('.pular-etapa-button').on('click', function() {
+        // Change page (go to the next modal)
         changePage(currentIndex);
       });
 
       // Event when clicks on sim-button
       $('.sim-button').on('click', function() {
+        // Sending suggestion
+        sendSuggestion(user.id, photo.id, missingFields[currentIndex].attribute_type, missingFields[currentIndex].name);
+        // Change page (go to the next modal)
         changePage(currentIndex);
       });
 
       // Event when clicks on nao-button
       $('.nao-button').on('click', function() {
-        changePage(currentIndex);
+        // Asking user for suggestion
+        askSuggestion(currentIndex);
       });
 
       // Event when clicks on nao-sei-button
@@ -208,7 +237,7 @@ $(document).ready(function() {
     if (!user || !user.id) return;
     // Only shows the modal if we have missing fields
     if (missingFields && missingFields.length > 0) {
-      showModal('text', photo.name, missingFields[0][1], 0);
+      showModal(missingFields[0].type, missingFields[0].name, missingFields[0].question, 0);
     }
   });
 });

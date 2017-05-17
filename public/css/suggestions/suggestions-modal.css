@@ -150,10 +150,11 @@
 
 .jBox-content.sugestion {
 	justify-content: start;
+  padding: 0 10px;
 }
 
 .field-name.sugestion {
-	margin-top: 10px;
+	margin-top: 0px;
 	font-size: 14px;
 }
 
