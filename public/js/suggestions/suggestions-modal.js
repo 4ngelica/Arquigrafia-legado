@@ -94,10 +94,13 @@ function sendSuggestion(userID, photoID, attributeType, text) {
  */
 function askSuggestion(currentIndex) {
   var currentModal = suggestionModals[currentIndex];
+  var fieldName = missingFields[currentIndex].field_name;
+  var fieldContent = missingFields[currentIndex].field_content;
   // Checking if there's a next page to change
   showModal(
     'suggestion',
-    missingFields[currentIndex].name,
+    'O ' + fieldName + ' atual é: \"' + fieldContent + '\"',
+    null,
     'Você sabe a informação correta? Nos ajude sugerindo uma modificação.',
     currentIndex,
   );
@@ -122,7 +125,13 @@ function changePage(currentIndex) {
   // Checking if there's a next page to change
   if (missingFields.length > currentIndex + 1) {
     // Showing the next modal (with index + 1)
-    showModal(missingFields[currentIndex + 1].type, missingFields[currentIndex + 1].name, missingFields[currentIndex + 1].question, currentIndex + 1);
+    showModal(
+      missingFields[currentIndex + 1].type,
+      missingFields[currentIndex + 1].field_name,
+      missingFields[currentIndex + 1].field_content,
+      missingFields[currentIndex + 1].question,
+      currentIndex + 1
+    );
   } else {
     // Close the current modal and return
     if (currentModal) currentModal.close();
@@ -141,20 +150,23 @@ function changePage(currentIndex) {
 
 /**
  * This function shows a Suggestion Modal
- * @param  {String} type     The type of the modal. Can be 'confirm' or 'text'
- * @param  {String} name     The item name
- * @param  {String} question The question that the modal will show to user
- * @param  {String} currentIndex The currentIndex that we're showing the modal (represents the current question)
+ * @param  {String} type          The type of the modal. Can be 'confirm' or 'text'
+ * @param  {String} name          The item name
+ * @param  {String} content       The item content (sometimes is null, if the field is not filled)
+ * @param  {String} question      The question that the modal will show to user
+ * @param  {String} currentIndex  The currentIndex that we're showing the modal (represents the current question)
  */
-function showModal(type, name, question, currentIndex) {
+function showModal(type, name, content, question, currentIndex) {
   // Getting the HTML content that we're gonna show on the modal
   var titleHTML = getTitleHTML();
-  var contentHTML = getContentHTML(type, name, question);
+  var contentHTML;
   var footerHTML;
-  // Getting footer based on type
+  // Getting content and footer based on type
   if (type === 'confirm') {
+    contentHTML = getContentHTML(type, content, question);
     footerHTML = getFooterHTML('confirm');
   } else {
+    contentHTML = getContentHTML(type, name, question);
     footerHTML = getFooterHTML('jump');
   }
   // Is this the initial modal?
@@ -202,7 +214,7 @@ function showModal(type, name, question, currentIndex) {
       // Event when clicks on sim-button
       $('.sim-button').on('click', function() {
         // Sending suggestion
-        sendSuggestion(user.id, photo.id, missingFields[currentIndex].attribute_type, missingFields[currentIndex].name);
+        sendSuggestion(user.id, photo.id, missingFields[currentIndex].attribute_type, missingFields[currentIndex].field_content);
         // Change page (go to the next modal)
         changePage(currentIndex);
       });
@@ -237,7 +249,13 @@ $(document).ready(function() {
     if (!user || !user.id) return;
     // Only shows the modal if we have missing fields
     if (missingFields && missingFields.length > 0) {
-      showModal(missingFields[0].type, missingFields[0].name, missingFields[0].question, 0);
+      showModal(
+        missingFields[0].type,
+        missingFields[0].field_name,
+        missingFields[0].field_content,
+        missingFields[0].question,
+        0,
+      );
     }
   });
 });
