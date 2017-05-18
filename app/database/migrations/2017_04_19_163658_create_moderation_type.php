@@ -25,7 +25,7 @@ class CreateModerationType extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('moderation_type');
+		Schema::drop('moderation_types');
 	}
 
 }

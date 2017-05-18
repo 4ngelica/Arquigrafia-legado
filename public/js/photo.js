@@ -13,14 +13,7 @@ $(function(){
 
         if (download.length === 0) {
           this.title = '<a id="download_login_link" href="/users/login">Faça o login para fazer o download</a>';
-        } else {
-          var buttons = $("#single_view_buttons_box").clone(),
-          social_network_buttons = buttons.find("#single_view_social_network_buttons");
-
-          social_network_buttons.remove();
-          this.title = '' + buttons.html();
         }
-
       },
 
       scrolling: 'no',

@@ -162,21 +162,22 @@ class PhotosController extends \BaseController {
       //Fills array if field is missing
       if($next == 'missing'){
         $final[] = [
-          'type' => 'suggestion',
-          'name' => Photo::$fields_data[$missing[0]]['name'],
-          'question' => Photo::$fields_data[$missing[0]]['information'],
+          'type'           => 'suggestion',
+          'field_name'     => Photo::$fields_data[$missing[0]]['name'],
+          'question'       => Photo::$fields_data[$missing[0]]['information'],
           'attribute_type' => $missing[0],
-          'field_type' => Photo::$fields_data[$missing[0]]['type']
+          'field_type'     => Photo::$fields_data[$missing[0]]['type']
         ];
         array_splice($missing, 0, 1);
       } //Fills array if field is present
       else{
         $final[] = [
-          'type' => 'confirm',
-          'name' => (array)$photos[$present[0]],
-          'question' => Photo::$fields_data[$present[0]]['validation'],
+          'type'           => 'confirm',
+          'field_name'     => Photo::$fields_data[$present[0]]['name'],
+          'field_content'  => (array)$photos[$present[0]],
+          'question'       => Photo::$fields_data[$present[0]]['validation'],
           'attribute_type' => $present[0],
-          'field_type' => Photo::$fields_data[$present[0]]['type']
+          'field_type'     => Photo::$fields_data[$present[0]]['type']
         ];
         array_splice($present, 0, 1);
       }
@@ -321,9 +322,9 @@ class PhotosController extends \BaseController {
 
           return Redirect::to('/photos/upload')->with(['tags' => $input['tags'],
           'decadeInput'=>$input["decade_select"],
-          'centuryInput'=>$input["century"],
+          'centuryInput'=>(!empty($input["century"])) ? $input["century"] : null,
           'decadeImageInput'=>$input["decade_select_image"],
-          'centuryImageInput'=>$input["century_image"] ,
+          'centuryImageInput'=>(!empty($input["century_image"])) ? $input["century_image"] : null,
           'work_authors'=>$input["work_authors"],
           'type'=> $input["type"],
           'video' => $input["video"]
@@ -383,6 +384,7 @@ class PhotosController extends \BaseController {
 
 
             $photo->user_id = Auth::user()->id;
+            $photo->authorized = true;
             $photo->dataUpload = date('Y-m-d H:i:s');
             $photo->save();
 

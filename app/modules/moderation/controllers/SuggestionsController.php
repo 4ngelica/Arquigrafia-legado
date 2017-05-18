@@ -32,7 +32,8 @@ class SuggestionsController extends \BaseController {
 		//photo_id
 		$suggestion->photo_id = $input['photo_id'];
 		//attribute_type
-		$attribute = PhotoAttributeType::find($input['attribute_type']);
+		$attribute = PhotoAttributeType::where('attribute_type', '=', $input['attribute_type'])->first();
+
 		$suggestion->attribute_type = $attribute->id;
 		//text
 		$suggestion->text = $input['text'];

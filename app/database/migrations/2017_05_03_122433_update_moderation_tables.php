@@ -49,9 +49,9 @@ class UpdateModerationTables extends Migration {
 	 */
 	public function down()
 	{
-		$q = "delete from photo_attribute_type";
+		$q = "delete from photo_attribute_types";
 		DB::insert(DB::raw($q));
-		$q = "delete from moderation_type";
+		$q = "delete from moderation_types";
 		DB::insert(DB::raw($q));
 	}
 
