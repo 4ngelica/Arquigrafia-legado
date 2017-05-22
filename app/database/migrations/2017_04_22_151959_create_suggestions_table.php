@@ -20,7 +20,7 @@ class CreateSuggestionsTable extends Migration {
 			$table->bigInteger('moderator_id')->unsigned();
 			$table->foreign('user_id')->references('id')->on('users');
 			$table->foreign('photo_id')->references('id')->on('photos');
-			$table->foreign('attribute_type')->references('id')->on('photo_attribute_type');
+			$table->foreign('attribute_type')->references('id')->on('photo_attribute_types');
 			$table->string('text');
 			$table->boolean('accepted');
 			$table->foreign('moderator_id')->references('id')->on('moderators');

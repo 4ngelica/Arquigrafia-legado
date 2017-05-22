@@ -100,28 +100,97 @@ class PhotosController extends \BaseController {
         }
       }
     }
-    //checking missing information
+    //Generating suggestion/validation data
     $missing = array();
-    if($photos->address == null)
-      $missing[] = 'address';
+    $present = array();
+    //Checking which fields are present or missing
+    if($photos->street == null)
+      $missing[] = 'street';
+    else
+      $present[] = 'street';
     if($photos->city == null)
       $missing[] = 'city';
+    else
+      $present[] = 'city';
     if($photos->country == null)
       $missing[] = 'country';
+    else
+      $present[] = 'country';
     if($photos->description == null)
       $missing[] = 'description';
+    else
+      $present[] = 'description';
     if($photos->district == null)
       $missing[] = 'district';
+    else
+      $present[] = 'district';
     if($photos->imageAuthor == null)
       $missing[] = 'imageAuthor';
+    else
+      $present[] = 'imageAuthor';
     if($photos->state == null)
       $missing[] = 'state';
-    if($photos->title == null)
-      $missing[] = 'title';
+    else
+      $present[] = 'state';
+    if($photos->name == null)
+      $missing[] = 'name';
+    else
+      $present[] = 'name';
     if($photos->workAuthor == null)
       $missing[] = 'workAuthor';
+    else
+      $present[] = 'workAuthor';
     if($photos->workDate == null)
       $missing[] = 'workDate';
+    else
+      $present[] = 'workDate';
+
+    $final = array();
+    //shuffling arrays
+    shuffle($missing);
+    shuffle($present);
+
+    //Setting first field to be either missing or present to alternate between both results
+    $next = '';
+    if(count($missing) > count($present))
+      $next = 'missing';
+    else
+      $next = 'present';
+
+    //Loop for the 10 possible reords
+    for($i = 0; $i < 10; $i++){
+      //Fills array if field is missing
+      if($next == 'missing'){
+        $final[] = [
+          'type'           => 'suggestion',
+          'field_name'     => Photo::$fields_data[$missing[0]]['name'],
+          'question'       => Photo::$fields_data[$missing[0]]['information'],
+          'attribute_type' => $missing[0],
+          'field_type'     => Photo::$fields_data[$missing[0]]['type']
+        ];
+        array_splice($missing, 0, 1);
+      } //Fills array if field is present
+      else{
+        $final[] = [
+          'type'           => 'confirm',
+          'field_name'     => Photo::$fields_data[$present[0]]['name'],
+          'field_content'  => (array)$photos[$present[0]],
+          'question'       => Photo::$fields_data[$present[0]]['validation'],
+          'attribute_type' => $present[0],
+          'field_type'     => Photo::$fields_data[$present[0]]['type']
+        ];
+        array_splice($present, 0, 1);
+      }
+
+      if(count($missing) == 0)//If missing fields are done, stop alternation
+        $next = 'present';
+      elseif(count($present) == 0)//If present fields are done, stop alternation
+        $next = 'missing';
+      elseif($next == 'missing')//Alternate based on last record
+        $next = 'present';
+      elseif($next == 'present')//Alternate based on last record
+        $next = 'missing';
+    }
 
     return View::make('/photos/show',
       ['photos' => $photos, 'owner' => $photo_owner, 'follow' => $follow, 'tags' => $tags,
@@ -144,7 +213,7 @@ class PhotosController extends \BaseController {
       'urlBack' => $urlBack,
       'institutionId' => $photos->institution_id,
       'type'=> $photos->type,
-      'missing' => $missing
+      'missing' => $final
     ]);
   }
 
@@ -253,9 +322,9 @@ class PhotosController extends \BaseController {
 
           return Redirect::to('/photos/upload')->with(['tags' => $input['tags'],
           'decadeInput'=>$input["decade_select"],
-          'centuryInput'=>$input["century"],
+          'centuryInput'=>(!empty($input["century"])) ? $input["century"] : null,
           'decadeImageInput'=>$input["decade_select_image"],
-          'centuryImageInput'=>$input["century_image"] ,
+          'centuryImageInput'=>(!empty($input["century_image"])) ? $input["century_image"] : null,
           'work_authors'=>$input["work_authors"],
           'type'=> $input["type"],
           'video' => $input["video"]
@@ -315,6 +384,7 @@ class PhotosController extends \BaseController {
 
 
             $photo->user_id = Auth::user()->id;
+            $photo->authorized = true;
             $photo->dataUpload = date('Y-m-d H:i:s');
             $photo->save();
 

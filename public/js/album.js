@@ -29,14 +29,15 @@ $(document).ready(function() {
 		toggleCurrentPagePhotos(checkbox);
 	});
 
-	$('.ch_photo').on('click', function() {
+	$('.add').on('click', '.ch_photo', function() {
 		updatePageInfo($(this));
 	});
 
-	$('.ch_photo + img').on('click', function () {
+	$('.add').on('click', '.ch_photo + img', function () {
 		var checkbox = $(this).siblings('.ch_photo');
 		checkbox.toggleCheckbox();
 		updatePageInfo(checkbox);
+		return false;
 	});
 
 	$('.clear_search').on('click', function(e) {

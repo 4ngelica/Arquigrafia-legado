@@ -1,174 +1,212 @@
+/* common */
+.truncate {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
 
-.AvatarsModal .jBox-footer button {
-  width: 50%;
-  height: 50px;
+.noselect {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.clearfix:after,
+.clearfix:before {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+/* jbox style */
+.jBox-container {
+	width: 350px;
+	height: auto;
+	min-height: 350px;
+	background: #dadada;
+	margin: 50px;
+	display: inline-table;
+}
+
+.jBox-footer button {
+  width: 33.33%;
+  height: 95px;
   border: 0;
   padding: 0;
   display: block;
   float: left;
-  background: center center no-repeat;
+  background: center 15px no-repeat;
   transition: background-color .2s;
+  padding: 50px 0 0;
+  font-size: 14px;
 }
 
-.AvatarsModal .jBox-footer button:active {
+.jBox-footer button:active {
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2);
 }
 
-#AvatarsComplete.AvatarsModal .jBox-footer button {
-  width: 100%;
-  float: none;
+.jBox-footer .nao-button {
+  background-size: 38px auto;
+  background-image: url(/img/suggestions-modal/nao-button.png);
 }
 
-.AvatarsModal .jBox-footer .button-cross {
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KPHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTTUwNy4zLDQxMS4zQzUwNy4zLDQxMS4zLDUwNy4zLDQxMS4zLDUwNy4zLDQxMS4zTDM1MiwyNTZsMTU1LjMtMTU1LjNjMCwwLDAsMCwwLDBDNTA5LDk5LDUxMC4yLDk3LDUxMSw5NQpjMi4xLTUuNywwLjktMTIuMy0zLjctMTYuOUw0MzQsNC43QzQyOS40LDAuMSw0MjIuNy0xLjEsNDE3LDFjLTIuMSwwLjgtNCwyLTUuNywzLjdjMCwwLDAsMCwwLDBMMjU2LDE2MEwxMDAuNyw0LjdjMCwwLDAsMCwwLDAKQzk5LDMsOTcsMS44LDk1LDFjLTUuNy0yLjEtMTIuMy0wLjktMTYuOSwzLjdMNC43LDc4QzAuMSw4Mi42LTEuMSw4OS4zLDEsOTVjMC44LDIuMSwyLDQsMy43LDUuN2MwLDAsMCwwLDAsMEwxNjAsMjU2TDQuNyw0MTEuMwpjMCwwLDAsMCwwLDBDMyw0MTMsMS44LDQxNSwxLDQxN2MtMi4xLDUuNy0wLjksMTIuMywzLjcsMTYuOWw3My40LDczLjRjNC42LDQuNiwxMS4yLDUuOCwxNi45LDMuN2MyLjEtMC44LDQtMiw1LjctMy43YzAsMCwwLDAsMCwwCkwyNTYsMzUybDE1NS4zLDE1NS4zYzAsMCwwLDAsMCwwYzEuNywxLjcsMy42LDIuOSw1LjcsMy43YzUuNywyLjEsMTIuMywwLjksMTYuOS0zLjdsNzMuNC03My40YzQuNi00LjYsNS44LTExLjIsMy43LTE2LjkKQzUxMC4yLDQxNSw1MDksNDEzLDUwNy4zLDQxMS4zTDUwNy4zLDQxMS4zeiIvPgo8L3N2Zz4K);
-  background-color: #e33;
-  background-size: 24px auto;
-  border-radius: 0 0 0 4px;
-}
-
-.AvatarsModal .jBox-footer .button-cross:hover {
+.jBox-footer .nao-button:hover {
   background-color: #f33;
 }
 
-.AvatarsModal .jBox-footer .button-cross:active {
-  background-color: #e33;
+.jBox-footer .sim-button {
+  background-size: 43px auto;
+  background-image: url(/img/suggestions-modal/sim-button.png);
 }
 
-.AvatarsModal .jBox-footer .button-heart {
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggMzg0Ij4KPHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTTIyNCwzODRjLTQsMC04LTEuNS0xMS00LjVMNTcsMjI5Yy0yLTEuOC01Ny01Mi01Ny0xMTJDMCw0My44LDQ0LjgsMCwxMTkuNSwwYzQzLjgsMCw4NC44LDM0LjUsMTA0LjUsNTQKYzE5LjgtMTkuNSw2MC44LTU0LDEwNC41LTU0QzQwMy4yLDAsNDQ4LDQzLjgsNDQ4LDExN2MwLDYwLTU1LDExMC4yLTU3LjIsMTEyLjVMMjM1LDM3OS41QzIzMiwzODIuNSwyMjgsMzg0LDIyNCwzODR6Ii8+Cjwvc3ZnPg==);
-  background-color: #7d0;
-  background-size: 30px auto;
-  border-radius: 0 0 4px 0;
-}
-
-.AvatarsModal .jBox-footer .button-heart:hover {
+.jBox-footer .sim-button:hover {
   background-color: #8e0;
 }
 
-.AvatarsModal .jBox-footer .button-heart:active {
-  background-color: #7d0;
+.jBox-footer .nao-sei-button {
+  background-size: 38px auto;
+  background-image: url(/img/suggestions-modal/nao-sei-button.png);
 }
 
-.AvatarsModal .jBox-footer .button-close {
-  background-color: #ddd;
-  border-radius: 0 0 4px 4px;
-}
-
-.AvatarsModal .jBox-footer .button-close:hover {
+.jBox-footer .nao-sei-button:hover {
   background-color: #eee;
 }
 
-.AvatarsModal .jBox-footer .button-close:active {
-  background-color: #ddd;
-}
-
-.AvatarsModal .jBox-content {
-  padding: 0;
-  background: center -10px no-repeat;
-}
-
-#AvatarsComplete.AvatarsModal .jBox-content {
-  font-style: italic;
-  text-align: center;
-  color: #999;
-}
-
-#AvatarsComplete.AvatarsModal .jBox-content > div {
+.jBox-title .close-button {
+  background: url(/img/suggestions-modal/close-button.png) center center no-repeat;
+  background-size: contain;
+  opacity: 0.4;
+  width: 20px;
+  height: 18px;
   position: absolute;
-  top: calc(50% - 23px);
-  left: 25px;
-  right: 25px;
+  right: 0;
+  top: 0;
+  border: none;
+  margin: 5px 5px 0 0;
 }
 
-.AvatarsModal .jBox-title {
+.jBox-title .close-button:hover {
+	opacity: 0.8;
+}
+
+
+.jBox-title {
   font-size: 26px;
   color: #000;
   font-weight: 300;
   text-align: center;
   padding: 0;
   line-height: 60px;
+  display: flex;
+  justify-content: center;
+  background-color: #dadada !important;
+  border-bottom: 0 !important;
 }
 
-.AvatarsModal .jBox-footer {
+.jBox-footer {
   border-top: 0;
-  background: none;
+  background: #fff;
   padding: 0;
 }
 
-.AvatarsTooltip .jBox-content {
-  color: #fff;
+.jBox-content {
+  color: #000;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 300px;
+  padding: 0 25px;
+  scroll: false;
 }
 
-.AvatarsTooltip .jBox-container,
-.AvatarsTooltip .jBox-pointer:after {
-  background: #000;
-  box-shadow: none;
+.field-icon {
+	width: 75px;
+	height: 75px;
+	background: #fff;
+	border-radius: 50%;
+	margin-top: -50px;
 }
 
-.AvatarsTooltipLike .jBox-container,
-.AvatarsTooltipLike .jBox-pointer:after {
-  border-color: #7d0;
+.field-name {
+	font-weight: 700;
+	margin-top: auto;
+  font-size: 17px;
 }
 
-.AvatarsTooltipDislike .jBox-container,
-.AvatarsTooltipDislike .jBox-pointer:after {
-  border-color: #e33;
+
+.field-question {
+	align-self: center;
+	margin-top: auto;
+	margin-bottom: 25px;
+  font-size: 17px;
 }
 
-.AvatarsCollection {
-  width: 50%;
-  position: fixed;
-  bottom: 5px;
-  z-index: 11000;
+/* sugestion box */
+
+.jBox-content.sugestion {
+	justify-content: start;
+  padding: 0 10px;
 }
 
-.AvatarsCollection#DislikedAvatars {
-  left: 4px;
+.field-name.sugestion {
+	margin-top: 0px;
+	font-size: 14px;
 }
 
-.AvatarsCollection#LikedAvatars {
-  right: 4px;
+.field-question.sugestion {
+	align-self: center;
+	margin: 50px 0 10px 0;
 }
 
-.AvatarsCollection > div {
-  width: 47px;
-  height: 45px;
-  padding: 0 1px;
+textarea.sugestion {
+	max-width: 300px;
+	width: 100%;
+	max-height: 120px;
+	margin-bottom: 20px;
+	border: none;
+	min-height: 100px;
+	margin: 10px 0;
+  resize: none;
 }
 
-.AvatarsCollection#DislikedAvatars > div {
-  float: left;
+.enviar-button {
+	background: #000;
+	color: #fff;
+	padding: 5px 10px;
+	border: none;
+	font-size: 14px;
+	float: right;
+	font-weight: 700;
 }
 
-.AvatarsCollection#LikedAvatars > div {
-  float: right;
+.enviar-button:hover {
+	background: #666;
+	transition: background-color .2s;
 }
 
-.AvatarsCollection > div > div {
-  position: relative;
-  overflow: hidden;
-  width: 45px;
-  height: 45px;
-  border: 2px solid red;
-  border-radius: 50%;
-  background: #000;
+.jBox-footer.sugestion button {
+  width: 100%;
+  height: 70px;
+  border: 0;
+  padding: 0;
+  display: block;
+  text-align: right;
+  font-weight: 700;
+  background: center 15px no-repeat;
+  transition: background-color .2s;
+  padding: 5px 70px 5px 5px;
+  font-size: 14px;
 }
 
-.AvatarsCollection#DislikedAvatars > div > div {
-  border-color: #e33;
+.jBox-footer.sugestion .pular-etapa-button {
+	background: url(/img/suggestions-modal/pular-etapa-button.png) right 25px center no-repeat;
 }
 
-.AvatarsCollection#LikedAvatars > div > div {
-  border-color: #7d0;
-}
-
-.AvatarsCollection > div > div > img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 60px;
-  height: 60px;
-  margin-top: -27px;
-  margin-left: -30px;
+.jBox-footer.sugestion .pular-etapa-button:hover {
+	background: url(/img/suggestions-modal/pular-etapa-button.png) right 25px center no-repeat #eee;
 }
