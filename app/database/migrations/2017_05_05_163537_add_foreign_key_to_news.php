@@ -18,8 +18,8 @@ class AddForeignKeyToNews extends Migration {
 		DB::insert(DB::raw($q));
 
 		Schema::table('news', function(Blueprint $table){
-			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-			$table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');
+			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('sender_id')->references('id')->on('users');
 		});
 		
 	}
