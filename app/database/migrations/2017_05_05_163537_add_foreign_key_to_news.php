@@ -16,12 +16,6 @@ class AddForeignKeyToNews extends Migration {
 		DB::unprepared(DB::raw($q));
 		$q = "ALTER TABLE news MODIFY COLUMN sender_id int(10) unsigned NOT NULL;";
 		DB::unprepared(DB::raw($q));
-
-		Schema::table('news', function(Blueprint $table){
-			$table->foreign('user_id')->references('id')->on('users');
-			$table->foreign('sender_id')->references('id')->on('users');
-		});
-		
 	}
 
 	/**
@@ -31,11 +25,6 @@ class AddForeignKeyToNews extends Migration {
 	 */
 	public function down()
 	{
-		$q = "ALTER TABLE news DROP FOREIGN KEY news_user_id_foreign;";
-		DB::insert(DB::raw($q));
-		$q = "ALTER TABLE news DROP FOREIGN KEY sender_id_foreign;";
-		DB::insert(DB::raw($q));
-
 		$q = "ALTER TABLE news MODIFY COLUMN user_id bigint(20) NOT NULL;";
 		DB::insert(DB::raw($q));
 		$q = "ALTER TABLE news MODIFY COLUMN sender_id bigint(20) NOT NULL;";
