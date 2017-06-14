@@ -26,6 +26,8 @@
   var user = {{ json_encode($user) }}
   var missingFields = {{ json_encode($missing) }};
   console.log('MISSING', missingFields);
+  console.log('USER', user);
+  console.log('PHOTO', photo);
 
   $(document).ready(function(){
     //MAP AND GEOREFERENCING CREATION AND SETTING
@@ -558,8 +560,35 @@
       </a>
       </br>
 
-      <!-- Suggestions Modal -->
-      <a id="OpenModal">Open Modal</a>
+      <!-- Suggestions Modal Button -->
+      @if ($photos->institution === null)
+        {{--*/ $percentage = 100 - (count($missing)*10) /*--}}
+        <div class="progress-bar button">
+      		<div class="fill-bar fill-{{ $percentage }}">{{ $percentage }}%</div>
+      	</div>
+
+        <div class="modal-wrapper">
+          <div class="title2">Você conhece mais informações sobre esta arquitetura?</div>
+
+      		<div class="title1">
+            Nós precisamos saber:
+            @if (isset($missing))
+              @foreach($missing as $missingField)
+                @if($missingField === end($missing))
+                  {{$missingField['field_name']}}
+                @else
+                  {{$missingField['field_name']}},
+                @endif
+              @endforeach
+            @endif
+          </div>
+
+      		<div class="modal-button" id="OpenModal">
+      			<a href="#">Conheço!</a>
+      		</div>
+      	</div>
+        </br>
+      @endif
 
        <!-- GOOGLE MAPS -->
       <h4>Localização:</h4>
@@ -793,7 +822,7 @@
   <!-- SUGGESTION MODAL HANDLEBARS COMPONENTS -->
   <script id="suggestion-modal-title" type="text/x-handlebars-template">
     <div class="title-container">
-      <div class="field-icon" style="background: url(/img/suggestions-modal/location-icon.png) no-repeat center center #fff;">
+      <div class="field-icon" style="background: url(/img/suggestions-modal/@{{icon}}.png) no-repeat center center #fff;">
       </div>
       <button class="close-button"></button>
     </div>
@@ -826,6 +855,14 @@
     </div>
   </script>
 
+  <script id="suggestion-modal-last-page-content" type="text/x-handlebars-template">
+    <div class="jBox-content">
+      <div class="field-name feedback">
+  			Obrigado por contribuir com informações para o nosso acervo digital!
+  		</div>
+    </div>
+  </script>
+
   <script id="suggestion-modal-confirm-footer" type="text/x-handlebars-template">
     <div class="jBox-footer">
       <div class="clearfix">
@@ -834,6 +871,9 @@
         <button class="nao-sei-button">Não sei</button>
       </div>
     </div>
+    <div class="progress-bar">
+			<div class="fill-bar fill-@{{percentage}}"></div>
+		</div>
   </script>
 
   <script id="suggestion-modal-jump-footer" type="text/x-handlebars-template">
@@ -841,6 +881,20 @@
       <div class="clearfix">
   			<button class="pular-etapa-button">Pular esta etapa</button>
   		</div>
+    </div>
+    <div class="progress-bar">
+			<div class="fill-bar fill-@{{percentage}}"></div>
+		</div>
+  </script>
+
+  <script id="suggestion-modal-close-footer" type="text/x-handlebars-template">
+    <div class="jBox-footer sugestion">
+      <div class="clearfix">
+        <button class="pular-etapa-button">Fechar</button>
+      </div>
+    </div>
+    <div class="progress-bar">
+      <div class="fill-bar fill-@{{percentage}}"></div>
     </div>
   </script>
 
