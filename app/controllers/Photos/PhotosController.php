@@ -144,6 +144,10 @@ class PhotosController extends \BaseController {
       $missing[] = 'workDate';
     else
       $present[] = 'workDate';
+    if($photos->project_author == null)
+      $missing[] = 'projectAuthor';
+    else
+      $present[] = 'projectAuthor';
 
     $final = array();
     //shuffling arrays
@@ -157,8 +161,9 @@ class PhotosController extends \BaseController {
     else
       $next = 'present';
 
+    $isReviewing = false;
     //Loop for the 10 possible reords
-    for($i = 0; $i < 10; $i++){
+    for($i = 0; $i < 11; $i++){
       //Fills array if field is missing
       if($next == 'missing'){
         $final[] = [
@@ -166,7 +171,8 @@ class PhotosController extends \BaseController {
           'field_name'     => Photo::$fields_data[$missing[0]]['name'],
           'question'       => Photo::$fields_data[$missing[0]]['information'],
           'attribute_type' => $missing[0],
-          'field_type'     => Photo::$fields_data[$missing[0]]['type']
+          'field_type'     => Photo::$fields_data[$missing[0]]['type'],
+          'status'         => $photos->checkValidationFields($missing[0])
         ];
         array_splice($missing, 0, 1);
       } //Fills array if field is present
@@ -177,9 +183,13 @@ class PhotosController extends \BaseController {
           'field_content'  => (array)$photos[$present[0]],
           'question'       => Photo::$fields_data[$present[0]]['validation'],
           'attribute_type' => $present[0],
-          'field_type'     => Photo::$fields_data[$present[0]]['type']
+          'field_type'     => Photo::$fields_data[$present[0]]['type'],
+          'status'         => $photos->checkValidationFields($present[0])
         ];
         array_splice($present, 0, 1);
+      }
+      if($final[count($final) - 1] == 'reviewing'){
+        $isReviewing = true;
       }
 
       if(count($missing) == 0)//If missing fields are done, stop alternation
@@ -191,6 +201,8 @@ class PhotosController extends \BaseController {
       elseif($next == 'present')//Alternate based on last record
         $next = 'missing';
     }
+
+
 
     return View::make('/photos/show',
       ['photos' => $photos, 'owner' => $photo_owner, 'follow' => $follow, 'tags' => $tags,
@@ -213,7 +225,8 @@ class PhotosController extends \BaseController {
       'urlBack' => $urlBack,
       'institutionId' => $photos->institution_id,
       'type'=> $photos->type,
-      'missing' => $final
+      'missing' => $final,
+      'isReviewing' => $isReviewing
     ]);
   }
 
