@@ -813,6 +813,14 @@ class Photo extends Eloquent {
 		else
 			return 'none';
 	}
+	public function checkPhotoReviewing(){
+		$fields = ['city', 'country', 'description', 'district', 'imageAuthor', 'state', 'street', 'name', 'projectAuthor', 'workAuthor', 'workDate'];
+		foreach ($fields as $field) {
+			if($this->checkValidationFields($field) ==  'reviewing')
+				return true;
+		}
+		return false;
+	}
 
 
 }

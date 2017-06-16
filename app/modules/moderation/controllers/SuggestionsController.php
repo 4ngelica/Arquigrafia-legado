@@ -41,8 +41,7 @@ class SuggestionsController extends \BaseController {
 		$suggestion->text = $input['text'];
 		//moderator_id
 		//TO DO
-		//accepted
-		$suggestion->accepted = false;
+
 		$suggestion->save();
 		EventLogger::printEventLogs(null, 'completion', ['suggestion' => $suggestion->id], 'Web');
 		return \Response::json('Data sent successfully');
@@ -52,14 +51,25 @@ class SuggestionsController extends \BaseController {
     $input = \Input::all();
     $user = \Auth::user();
     $photo = Photo::find($input['photo']);
-    \Notification::create('suggestion_sent', $user, $photo, [$user], null);
+		$points = $input['points'];
+    //\Notification::create('suggestion_sent', $user, $photo, [$user], null);
 
-    $photosObj = Photo::where('accepted', 0)->whereNull('institution_id')->get()->random(3);
+    $photosObj = Photo::where('accepted', 0)->whereNull('institution_id')->get()->shuffle();
+		$i = 0;
+		$photosFiltered = array();
+
+		while(count($photosFiltered) < 3 && $i < count($photosObj)){
+			$i = 0;
+			if(!$photosObj[$i]->checkPhotoReviewing()){
+				$photosFiltered[] = $photosObj[$i];
+			}
+			$i++;
+		}
+
 		$photos = array();
-		foreach ($photosObj as $photo) {
+		foreach ($photosFiltered as $photo) {
 			$photos[] = ['id' => $photo->id, 'name' => $photo->name, 'nome_arquivo' => $photo->nome_arquivo];
 		}
-    //'type', 'sender_id', 'sender_type', 'object_id', 'objetc_type', 'data'
     return \Response::json($photos);
   }
 }
