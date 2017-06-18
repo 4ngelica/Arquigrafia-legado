@@ -16,7 +16,7 @@
 
   <!-- Suggestions Modal -->
   <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/suggestions/suggestions-modal.css" />
-  <script type="text/javascript" src="{{ URL::to("/") }}/js/suggestions/suggestions-modal.js"></script>
+  <script type="text/javascript" src="{{ URL::to("/") }}/js/dist/suggestions.bundle.js"></script>
 
   <!-- Google Maps API -->
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBuBk5ghbTdpdm_nBWg6xHEzdRXdryK6rU&callback=initMap"></script>
@@ -25,9 +25,11 @@
   var photo = {{ json_encode($photos) }};
   var user = {{ json_encode($user) }}
   var missingFields = {{ json_encode($missing) }};
+  var isReviewing = {{ json_encode($isReviewing) }};
   console.log('MISSING', missingFields);
   console.log('USER', user);
   console.log('PHOTO', photo);
+  console.log('isReviewing', isReviewing);
 
   $(document).ready(function(){
     //MAP AND GEOREFERENCING CREATION AND SETTING
@@ -581,30 +583,33 @@
       		</div>
       	</div>
 
-        <div class="modal-wrapper">
-          <div class="title2">Você conhece mais informações sobre esta arquitetura?</div>
+        @if (!$isReviewing)
+          <div class="modal-wrapper">
+            <div class="title2">Você conhece mais informações sobre esta arquitetura?</div>
 
-      		<div class="title1">
-            Por exemplo:
-            @if (isset($missing))
-              @foreach($missing as $missingField)
-                @if($missingField == end($missing))
-                  {{$missingField['field_name']}}?
-                @else
-                  {{$missingField['field_name']}},
-                @endif
-              @endforeach
-            @endif
-          </div>
+        		<div class="title1">
+              Por exemplo:
+              @if (isset($missing))
+                @foreach($missing as $missingField)
+                  @if($missingField == end($missing))
+                    {{$missingField['field_name']}}?
+                  @else
+                    {{$missingField['field_name']}},
+                  @endif
+                @endforeach
+              @endif
+            </div>
 
-      		<div class="modal-button" id="OpenModal">
-            @if ($user == null)
-              <a href="#">Faça o login e contribua com mais informações sobre esta imagem!</a>
-            @else
-              <a href="#">Conheço!</a>
-            @endif
-      		</div>
-      	</div>
+        		<div class="modal-button" id="OpenModal">
+              @if ($user == null)
+                <a href="#">Faça o login e contribua com mais informações sobre esta imagem!</a>
+              @else
+                <a href="#">Conheço!</a>
+              @endif
+        		</div>
+        	</div>
+        @endif
+
         </br>
       @endif
 
