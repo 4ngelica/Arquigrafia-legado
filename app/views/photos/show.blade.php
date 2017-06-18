@@ -561,21 +561,35 @@
       </br>
 
       <!-- Suggestions Modal Button -->
-      @if ($photos->institution === null)
-        {{--*/ $percentage = 100 - (count($missing)*10) /*--}}
+      @if ($photos->institution == null && $photos->type != "video")
+        {{--*/ $percentage = 130 - (count($missing)*10) /*--}}
         <div class="progress-bar button">
-      		<div class="fill-bar fill-{{ $percentage }}">{{ $percentage }}%</div>
+      		<div id="completed" class="fill-bar fill-{{ $percentage }}">
+      			<span>{{ $percentage }}%</span>
+      			<div class="bar-info">
+      				<strong>Dados completos</strong><br>
+      				A foto está com 30% dos dados completos!<br>
+      			</div>
+      		</div>
+      		<div id="revision" class="fill-bar fill-{{ $percentage }}">
+      			<span>{{ $percentage }}%</span>
+      			<div class="bar-info">
+      				<strong>Dados em revisão</strong><br>
+      				A foto está com 30% dos dados em revisão!<br>
+      				Essas informações serão validadas pelos nossos moderadores e, caso estejam corretas, entrarão para os dados da foto!
+      			</div>
+      		</div>
       	</div>
 
         <div class="modal-wrapper">
           <div class="title2">Você conhece mais informações sobre esta arquitetura?</div>
 
       		<div class="title1">
-            Nós precisamos saber:
+            Por exemplo:
             @if (isset($missing))
               @foreach($missing as $missingField)
-                @if($missingField === end($missing))
-                  {{$missingField['field_name']}}
+                @if($missingField == end($missing))
+                  {{$missingField['field_name']}}?
                 @else
                   {{$missingField['field_name']}},
                 @endif
@@ -584,7 +598,11 @@
           </div>
 
       		<div class="modal-button" id="OpenModal">
-      			<a href="#">Conheço!</a>
+            @if ($user == null)
+              <a href="#">Faça o login e contribua com mais informações sobre esta imagem!</a>
+            @else
+              <a href="#">Conheço!</a>
+            @endif
       		</div>
       	</div>
         </br>

@@ -84,6 +84,9 @@ function getTitleHTML(attributeType) {
     case 'lastPage':
       icon = 'feedback-icon';
       break;
+		case 'projectAuthor':
+			icon = 'author-icon';
+			break;
     default:
       break;
   }

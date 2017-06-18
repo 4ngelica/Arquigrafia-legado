@@ -347,3 +347,68 @@ textarea.sugestion {
   width: 100%;
   background: rgba(0, 0, 0, 1);
 }
+
+.progress-bar.button {
+  height: 25px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  position: relative;
+  font-size: 0;
+}
+
+.progress-bar.button .fill-bar {
+  height: 15px;
+  background: none;
+  text-align: center;
+  color: #fff;
+  padding-top: 5px;
+  padding-bottom: 2px;
+  display: inline-table;
+  font-size: 16px;
+  position: relative;
+  cursor: pointer;
+}
+
+.progress-bar.button .bar-info {
+  display: none;
+  width: 140px;
+  font-size: 12px;
+  position: absolute;
+  bottom: 30px;
+  background: #fff;
+  text-align: center;
+  padding: 5px;
+  -webkit-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.35);
+  -moz-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.35);
+  box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.35);
+  left: -5px;
+  color: #000;
+}
+
+.progress-bar.button .bar-info::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 43%;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 8px;
+  border-color: white transparent transparent transparent;
+}
+
+.progress-bar.button #completed:hover .bar-info {
+  display: block;
+}
+
+.progress-bar.button #revision:hover .bar-info {
+  display: block;
+}
+
+.progress-bar.button #completed {
+  background: rgba(0, 0, 0, 1);
+}
+
+.progress-bar.button #revision {
+  background: rgba(0, 0, 0, 0.5);
+}
