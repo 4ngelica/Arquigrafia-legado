@@ -814,7 +814,7 @@ class Photo extends Eloquent {
 			return 'none';
 	}
 	public function checkPhotoReviewing(){
-		$fields = ['city', 'country', 'description', 'district', 'imageAuthor', 'state', 'street', 'name', 'projectAuthor', 'workAuthor', 'workDate'];
+		$fields = ['city', 'country', 'description', 'district', 'state', 'street', 'name', 'projectAuthor', 'workAuthor', 'workDate'];
 		foreach ($fields as $field) {
 			if($this->checkValidationFields($field) ==  'reviewing')
 				return true;

@@ -103,6 +103,8 @@ class PhotosController extends \BaseController {
     //Generating suggestion/validation data
     $missing = array();
     $present = array();
+    //Completeness Data
+    $completeness = ['present' => 0, 'reviewing' => 0, 'missing' => 0];
     //Checking which fields are present or missing
     if($photos->street == null)
       $missing[] = 'street';
@@ -124,10 +126,10 @@ class PhotosController extends \BaseController {
       $missing[] = 'district';
     else
       $present[] = 'district';
-    if($photos->imageAuthor == null)
-      $missing[] = 'imageAuthor';
-    else
-      $present[] = 'imageAuthor';
+    // if($photos->imageAuthor == null)
+    //   $missing[] = 'imageAuthor';
+    // else
+    //   $present[] = 'imageAuthor';
     if($photos->state == null)
       $missing[] = 'state';
     else
@@ -163,7 +165,7 @@ class PhotosController extends \BaseController {
 
     $isReviewing = false;
     //Loop for the 10 possible reords
-    for($i = 0; $i < 11; $i++){
+    for($i = 0; $i < 10; $i++){
       //Fills array if field is missing
       if($next == 'missing'){
         $final[] = [
@@ -188,8 +190,13 @@ class PhotosController extends \BaseController {
         ];
         array_splice($present, 0, 1);
       }
-      if($final[count($final) - 1] == 'reviewing'){
+      if($final[count($final) - 1]['status'] == 'reviewing'){
         $isReviewing = true;
+        $completeness['reviewing']++;
+      } elseif ($next == 'present'){
+        $completeness['present']++;
+      } else{
+        $completeness['missing']++;
       }
 
       if(count($missing) == 0)//If missing fields are done, stop alternation
@@ -201,8 +208,12 @@ class PhotosController extends \BaseController {
       elseif($next == 'present')//Alternate based on last record
         $next = 'missing';
     }
+    //Percentages calculation
+    $total = count($final);
 
-
+    $completeness['missing'] = 100 * ($completeness['missing'] / $total);
+    $completeness['present'] = 100 * ($completeness['present'] / $total);
+    $completeness['reviewing'] = 100 * ($completeness['reviewing'] / $total);
 
     return View::make('/photos/show',
       ['photos' => $photos, 'owner' => $photo_owner, 'follow' => $follow, 'tags' => $tags,
@@ -226,7 +237,8 @@ class PhotosController extends \BaseController {
       'institutionId' => $photos->institution_id,
       'type'=> $photos->type,
       'missing' => $final,
-      'isReviewing' => $isReviewing
+      'isReviewing' => $isReviewing,
+      'completeness' => $completeness
     ]);
   }
 

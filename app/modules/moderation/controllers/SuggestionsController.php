@@ -54,7 +54,7 @@ class SuggestionsController extends \BaseController {
 		$points = $input['points'];
     //\Notification::create('suggestion_sent', $user, $photo, [$user], null);
 
-    $photosObj = Photo::where('accepted', 0)->whereNull('institution_id')->get()->shuffle();
+    $photosObj = Photo::where('accepted', 0)->where('type', '<>', 'video')->whereNull('institution_id')->get()->shuffle();
 		$i = 0;
 		$photosFiltered = array();
 
