@@ -8,7 +8,7 @@
   <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4fdf62121c50304d"></script>
 
   <!-- jBox -->
-  <script src="//code.jboxcdn.com/0.4.7/jBox.min.js"></script>
+  <!-- <script src="//code.jboxcdn.com/0.4.7/jBox.min.js"></script> -->
   <link href="//code.jboxcdn.com/0.4.7/jBox.css" rel="stylesheet">
 
   <!-- Handlebars -->
@@ -16,7 +16,7 @@
 
   <!-- Suggestions Modal -->
   <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/suggestions/suggestions-modal.css" />
-  <script type="text/javascript" src="{{ URL::to("/") }}/js/suggestions/suggestions-modal.js"></script>
+  <script type="text/javascript" src="{{ URL::to("/") }}/js/dist/suggestions.bundle.js"></script>
 
   <!-- Google Maps API -->
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBuBk5ghbTdpdm_nBWg6xHEzdRXdryK6rU&callback=initMap"></script>
@@ -25,9 +25,11 @@
   var photo = {{ json_encode($photos) }};
   var user = {{ json_encode($user) }}
   var missingFields = {{ json_encode($missing) }};
+  var isReviewing = {{ json_encode($isReviewing) }};
   console.log('MISSING', missingFields);
   console.log('USER', user);
   console.log('PHOTO', photo);
+  console.log('isReviewing', isReviewing);
 
   $(document).ready(function(){
     //MAP AND GEOREFERENCING CREATION AND SETTING
@@ -561,32 +563,53 @@
       </br>
 
       <!-- Suggestions Modal Button -->
-      @if ($photos->institution === null)
-        {{--*/ $percentage = 100 - (count($missing)*10) /*--}}
+      @if ($photos->institution == null && $photos->type != "video")
+        {{--*/ $percentage = 130 - (count($missing)*10) /*--}}
         <div class="progress-bar button">
-      		<div class="fill-bar fill-{{ $percentage }}">{{ $percentage }}%</div>
-      	</div>
-
-        <div class="modal-wrapper">
-          <div class="title2">Você conhece mais informações sobre esta arquitetura?</div>
-
-      		<div class="title1">
-            Nós precisamos saber:
-            @if (isset($missing))
-              @foreach($missing as $missingField)
-                @if($missingField === end($missing))
-                  {{$missingField['field_name']}}
-                @else
-                  {{$missingField['field_name']}},
-                @endif
-              @endforeach
-            @endif
-          </div>
-
-      		<div class="modal-button" id="OpenModal">
-      			<a href="#">Conheço!</a>
+      		<div id="completed" class="fill-bar fill-{{ $percentage }}">
+      			<span>{{ $percentage }}%</span>
+      			<div class="bar-info">
+      				<strong>Dados completos</strong><br>
+      				A foto está com 30% dos dados completos!<br>
+      			</div>
+      		</div>
+      		<div id="revision" class="fill-bar fill-{{ $percentage }}">
+      			<span>{{ $percentage }}%</span>
+      			<div class="bar-info">
+      				<strong>Dados em revisão</strong><br>
+      				A foto está com 30% dos dados em revisão!<br>
+      				Essas informações serão validadas pelos nossos moderadores e, caso estejam corretas, entrarão para os dados da foto!
+      			</div>
       		</div>
       	</div>
+
+        @if (!$isReviewing)
+          <div class="modal-wrapper">
+            <div class="title2">Você conhece mais informações sobre esta arquitetura?</div>
+
+        		<div class="title1">
+              Por exemplo:
+              @if (isset($missing))
+                @foreach($missing as $missingField)
+                  @if($missingField == end($missing))
+                    {{$missingField['field_name']}}?
+                  @else
+                    {{$missingField['field_name']}},
+                  @endif
+                @endforeach
+              @endif
+            </div>
+
+        		<div class="modal-button" id="OpenModal">
+              @if ($user == null)
+                <a href="#">Faça o login e contribua com mais informações sobre esta imagem!</a>
+              @else
+                <a href="#">Conheço!</a>
+              @endif
+        		</div>
+        	</div>
+        @endif
+
         </br>
       @endif
 
@@ -863,6 +886,32 @@
     </div>
   </script>
 
+  <script id="suggestion-modal-last-page-gamed-content" type="text/x-handlebars-template">
+    <div class="jBox-content feedback">
+      <div class="field-name feedback">
+  			@{{ question }}
+  		</div>
+
+
+  		<div id="next-photos-container" class="image-sugestions">
+        <!-- HANDLEBARS WILL RENDER THE IMAGES HERE -->
+  		</div>
+    </div>
+  </script>
+
+  <script id="suggestion-modal-last-page-gamed-photos" type="text/x-handlebars-template">
+    <span class="image-sugestions-text">Continue a colaborar:</span>
+
+    @{{#each photos}}
+      <div class="single-image-sugestions">
+        <a href="/photos/@{{ id }}">
+          <img src="/arquigrafia-images/@{{ id }}_home.jpg" />
+        </a>
+      </div>
+    @{{/each}}
+
+  </script>
+
   <script id="suggestion-modal-confirm-footer" type="text/x-handlebars-template">
     <div class="jBox-footer">
       <div class="clearfix">
@@ -897,5 +946,6 @@
       <div class="fill-bar fill-@{{percentage}}"></div>
     </div>
   </script>
+
 
 @stop

@@ -16,3 +16,5 @@ public/arquigrafia-avatars/*
 public/packages/darsain/*
 public/arquigrafia-imports/*
 app/storage/original-images/*
+
+node_modules/*
