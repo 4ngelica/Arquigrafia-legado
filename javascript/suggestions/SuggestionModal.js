@@ -1,9 +1,18 @@
+import jBox from 'jbox';
+import $ from 'jquery';
 import MathController from '../general/MathController';
 import SuggestionController from './SuggestionController';
 
 class SuggestionModal {
 
-  constructor(missingFields) {
+  /**
+   * Constructor
+   * @param  {Object} missingFields   Objects with all fields and the questions to ask to the user
+   * @param  {Object} user            The current user logged in
+   * @param  {Object} photo           The current photo
+   * @param  {Boolean} gamed          Will render the gamed or not gamed modal
+   */
+  constructor(missingFields, user, photo, gamed) {
     /**
      * This variable stores the array of modals.
      * This variable is needed because when we animate one modal to another
@@ -14,6 +23,9 @@ class SuggestionModal {
 
     // Setting Missing fields
     this.missingFields = missingFields;
+    this.user = user;
+    this.photo = photo;
+    this.gamed = gamed;
   }
 
   /**
@@ -74,6 +86,8 @@ class SuggestionModal {
       sourceContent = $("#suggestion-modal-text-content").html();
     } else if (type === 'lastPage') {
       sourceContent = $("#suggestion-modal-last-page-content").html();
+    } else if (type === 'lastPageGamed') {
+      sourceContent = $("#suggestion-modal-last-page-gamed-content").html();
     } else {
       return '';
     }
@@ -197,8 +211,11 @@ class SuggestionModal {
     if (type === 'confirm') {
       contentHTML = this.getContentHTML(type, content, question);
       footerHTML = this.getFooterHTML('confirm', currentIndex);
-    } else if (type === 'lastPage') {
-      contentHTML = this.getContentHTML(type, content, question);
+    } else if (type === 'lastPage' && this.gamed) {
+      contentHTML = this.getContentHTML('lastPageGamed', content, question);
+      footerHTML = this.getFooterHTML(type, currentIndex);
+    } else if (type === 'lastPage' && !this.gamed) {
+      contentHTML = this.getContentHTML('lastPage', content, question);
       footerHTML = this.getFooterHTML(type, currentIndex);
     } else {
       contentHTML = this.getContentHTML(type, name, question);
@@ -235,7 +252,7 @@ class SuggestionModal {
             return
           }
           // Sending suggestion
-          SuggestionController.sendSuggestion(user.id, photo.id, this.missingFields[currentIndex].attribute_type, suggestionText);
+          SuggestionController.sendSuggestion(this.user.id, this.photo.id, this.missingFields[currentIndex].attribute_type, suggestionText);
           // Change page (go to the next modal)
           this.changePage(currentIndex);
         }).bind(this));
@@ -249,7 +266,7 @@ class SuggestionModal {
         // Event when clicks on sim-button
         $('.sim-button').on('click', (() => {
           // Sending suggestion
-          SuggestionController.sendSuggestion(user.id, photo.id, this.missingFields[currentIndex].attribute_type, this.missingFields[currentIndex].field_content);
+          SuggestionController.sendSuggestion(this.user.id, this.photo.id, this.missingFields[currentIndex].attribute_type, this.missingFields[currentIndex].field_content[0]);
           // Change page (go to the next modal)
           this.changePage(currentIndex);
         }).bind(this));

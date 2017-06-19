@@ -1,5 +1,14 @@
 import $ from 'jquery';
 import SuggestionModal from './SuggestionModal';
+import MathController from '../general/MathController';
+
+/**
+ * This file is used as a interface between the page and the ES6 classes
+ * This files requires some global variables:
+ * user - The current user logged in
+ * photo - The photo that the user is seeing
+ * missingFields - Fields that are missing and need suggestions
+ */
 
 $(document).ready(() => {
   // Don't show modal when it's a institution
@@ -21,9 +30,12 @@ $(document).ready(() => {
       return;
     }
 
+    // When the user ID is EVEN = Gamed
+    const gamed = !MathController.isEven(user.id);
+
     // Only shows the modal if we have missing fields
     if (missingFields && missingFields.length > 0) {
-      const suggestionModal = new SuggestionModal(missingFields);
+      const suggestionModal = new SuggestionModal(missingFields, user, photo, gamed);
       suggestionModal.showModal(
         missingFields[0].type,
         missingFields[0].field_name,

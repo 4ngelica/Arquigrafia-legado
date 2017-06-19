@@ -43,6 +43,14 @@ class MathController {
     return MathController.decimalAdjust('floor', value, exp);
   }
 
+  static isEven(number) {
+    if (number % 2 === 0) {
+      return true;
+    }
+
+    return false;
+  }
+
 }
 
 export default MathController;

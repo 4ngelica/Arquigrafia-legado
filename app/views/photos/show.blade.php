@@ -8,7 +8,7 @@
   <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4fdf62121c50304d"></script>
 
   <!-- jBox -->
-  <script src="//code.jboxcdn.com/0.4.7/jBox.min.js"></script>
+  <!-- <script src="//code.jboxcdn.com/0.4.7/jBox.min.js"></script> -->
   <link href="//code.jboxcdn.com/0.4.7/jBox.css" rel="stylesheet">
 
   <!-- Handlebars -->
@@ -886,6 +886,36 @@
     </div>
   </script>
 
+  <script id="suggestion-modal-last-page-gamed-content" type="text/x-handlebars-template">
+    <div class="jBox-content feedback">
+      <div class="field-name feedback">
+  			Obrigado por responder as questões!
+  		</div>
+
+
+  		<div class="image-sugestions">
+  		<span class="image-sugestions-text">Continue a colaborar:</span>
+  			<div class="single-image-sugestions">
+  				<a href="link">
+  					<img src="http://uploads-anchieta-br.s3-sa-east-1.amazonaws.com/wp-content/uploads/2016/04/20222554/por-que-arquitetura-e-urbanismo-750x361.jpg" />
+  				</a>
+  			</div>
+
+  			<div class="single-image-sugestions">
+  				<a href="link">
+  					<img src="http://uploads-anchieta-br.s3-sa-east-1.amazonaws.com/wp-content/uploads/2016/04/20222554/por-que-arquitetura-e-urbanismo-750x361.jpg" />
+  				</a>
+  			</div>
+
+  			<div class="single-image-sugestions">
+  				<a href="link">
+  					<img src="http://uploads-anchieta-br.s3-sa-east-1.amazonaws.com/wp-content/uploads/2016/04/20222554/por-que-arquitetura-e-urbanismo-750x361.jpg" />
+  				</a>
+  			</div>
+  		</div>
+    </div>
+  </script>
+
   <script id="suggestion-modal-confirm-footer" type="text/x-handlebars-template">
     <div class="jBox-footer">
       <div class="clearfix">
@@ -920,5 +950,6 @@
       <div class="fill-bar fill-@{{percentage}}"></div>
     </div>
   </script>
+
 
 @stop

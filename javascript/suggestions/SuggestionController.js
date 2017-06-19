@@ -31,6 +31,25 @@ class SuggestionController {
         }
     }, "json");
   }
+
+  static sendFinalSuggestions(photoID) {
+    // Mounting params
+    const data = {
+      photo_id: photoID,
+    };
+
+    console.log('DADOS DA SUGESTAO', data);
+
+    // Sending ajax request
+    $.ajax({
+        type: "POST",
+        url : `/suggestions/sent`,
+        data: data,
+        success : function(data){
+          console.log('RESULTADO', data);
+        }
+    }, "json");
+  }
 }
 
 export default SuggestionController;

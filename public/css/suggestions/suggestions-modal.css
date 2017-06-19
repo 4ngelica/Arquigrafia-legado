@@ -412,3 +412,44 @@ textarea.sugestion {
 .progress-bar.button #revision {
   background: rgba(0, 0, 0, 0.5);
 }
+
+/*feedback box */
+
+.jBox-content.feedback {
+  width: 550px;
+}
+
+.field-name.feedback {
+  font-size: 24px;
+  margin-top: auto;
+}
+
+.image-sugestions {
+  margin-bottom: 30px;
+  width: 100%;
+  text-align: center;
+  margin-top: auto;
+}
+
+.single-image-sugestions {
+  display: inline-block;
+  width: 150px;
+  margin-right: 10px;
+}
+
+.single-image-sugestions:last-child {
+  margin-right: 0;
+}
+
+.single-image-sugestions img {
+  width: 100%;
+  height: auto;
+}
+
+span.image-sugestions-text {
+  font-size: 16px;
+  text-align: center;
+  display: block;
+  margin-bottom: 10px;
+  color: #000;
+}
