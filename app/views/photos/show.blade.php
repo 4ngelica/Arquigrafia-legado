@@ -889,31 +889,27 @@
   <script id="suggestion-modal-last-page-gamed-content" type="text/x-handlebars-template">
     <div class="jBox-content feedback">
       <div class="field-name feedback">
-  			Obrigado por responder as questões!
+  			@{{ question }}
   		</div>
 
 
-  		<div class="image-sugestions">
-  		<span class="image-sugestions-text">Continue a colaborar:</span>
-  			<div class="single-image-sugestions">
-  				<a href="link">
-  					<img src="http://uploads-anchieta-br.s3-sa-east-1.amazonaws.com/wp-content/uploads/2016/04/20222554/por-que-arquitetura-e-urbanismo-750x361.jpg" />
-  				</a>
-  			</div>
-
-  			<div class="single-image-sugestions">
-  				<a href="link">
-  					<img src="http://uploads-anchieta-br.s3-sa-east-1.amazonaws.com/wp-content/uploads/2016/04/20222554/por-que-arquitetura-e-urbanismo-750x361.jpg" />
-  				</a>
-  			</div>
-
-  			<div class="single-image-sugestions">
-  				<a href="link">
-  					<img src="http://uploads-anchieta-br.s3-sa-east-1.amazonaws.com/wp-content/uploads/2016/04/20222554/por-que-arquitetura-e-urbanismo-750x361.jpg" />
-  				</a>
-  			</div>
+  		<div id="next-photos-container" class="image-sugestions">
+        <!-- HANDLEBARS WILL RENDER THE IMAGES HERE -->
   		</div>
     </div>
+  </script>
+
+  <script id="suggestion-modal-last-page-gamed-photos" type="text/x-handlebars-template">
+    <span class="image-sugestions-text">Continue a colaborar:</span>
+
+    @{{#each photos}}
+      <div class="single-image-sugestions">
+        <a href="/photos/@{{ id }}">
+          <img src="/arquigrafia-images/@{{ id }}_home.jpg" />
+        </a>
+      </div>
+    @{{/each}}
+
   </script>
 
   <script id="suggestion-modal-confirm-footer" type="text/x-handlebars-template">

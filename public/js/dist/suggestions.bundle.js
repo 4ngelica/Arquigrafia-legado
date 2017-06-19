@@ -10469,6 +10469,7 @@ var SuggestionModal = function () {
     this.user = user;
     this.photo = photo;
     this.gamed = gamed;
+    this.points = 0;
   }
 
   /**
@@ -10575,6 +10576,21 @@ var SuggestionModal = function () {
     }
 
     /**
+     * This functions renders the Photos at the final modal on the Gamed version
+     * @param  {Array} photos   The photos that will be rendered
+     */
+
+  }, {
+    key: 'renderGamedNextPhotos',
+    value: function renderGamedNextPhotos(photos) {
+      var sourceNextPhotos = (0, _jquery2.default)("#suggestion-modal-last-page-gamed-photos").html();
+      var templateNextPhotos = Handlebars.compile(sourceNextPhotos);
+      var nextPhotosHTML = templateNextPhotos({ photos: photos });
+
+      (0, _jquery2.default)('#next-photos-container').html(nextPhotosHTML);
+    }
+
+    /**
      * Shows to user the modal asking for a suggestion.
      * @param  {Number} currentIndex The current page (index) that we're at the moment
      */
@@ -10615,7 +10631,7 @@ var SuggestionModal = function () {
         this.showModal(this.missingFields[currentIndex + 1].type, this.missingFields[currentIndex + 1].field_name, this.missingFields[currentIndex + 1].field_content, this.missingFields[currentIndex + 1].question, this.missingFields[currentIndex + 1].attribute_type, currentIndex + 1);
       } else if (currentIndex + 1 === this.missingFields.length) {
         // Here we're at the last modal page
-        this.showModal('lastPage', null, null, null, 'lastPage', currentIndex + 1);
+        this.showModal('lastPage', null, null, 'Obrigado por responder as quest\xF5es! Voc\xEA pode ganhar at\xE9 ' + this.points + ' pontos!', 'lastPage', currentIndex + 1);
       } else {
         // Close the current modal and return
         if (currentModal) currentModal.close();
@@ -10630,6 +10646,16 @@ var SuggestionModal = function () {
           if (currentModal) currentModal.wrapper.css('display', 'none');
         }.bind(this)
       });
+    }
+
+    /**
+     * Mark that we had won points
+     */
+
+  }, {
+    key: 'wonPoints',
+    value: function wonPoints() {
+      this.points += 5;
     }
 
     /**
@@ -10654,12 +10680,18 @@ var SuggestionModal = function () {
       if (type === 'confirm') {
         contentHTML = this.getContentHTML(type, content, question);
         footerHTML = this.getFooterHTML('confirm', currentIndex);
-      } else if (type === 'lastPage' && this.gamed) {
-        contentHTML = this.getContentHTML('lastPageGamed', content, question);
+      } else if (type === 'lastPage') {
+        // Defining content
+        if (this.gamed) contentHTML = this.getContentHTML('lastPageGamed', null, question);else contentHTML = this.getContentHTML('lastPage', null, null);
+        // Defining footer
         footerHTML = this.getFooterHTML(type, currentIndex);
-      } else if (type === 'lastPage' && !this.gamed) {
-        contentHTML = this.getContentHTML('lastPage', content, question);
-        footerHTML = this.getFooterHTML(type, currentIndex);
+        // Sending that we're at the final page
+        _SuggestionController2.default.sendFinalSuggestions(this.photo.id, this.points).then(function (photos) {
+          // Rendering photos if we're at the gamed version
+          if (_this.gamed) _this.renderGamedNextPhotos(photos);
+        }).catch(function (error) {
+          console.log(error);
+        });
       } else {
         contentHTML = this.getContentHTML(type, name, question);
         footerHTML = this.getFooterHTML('jump', currentIndex);
@@ -10694,6 +10726,8 @@ var SuggestionModal = function () {
               alert('Você precisa preencher algo para enviar.');
               return;
             }
+            // Marking that we won points
+            _this.wonPoints();
             // Sending suggestion
             _SuggestionController2.default.sendSuggestion(_this.user.id, _this.photo.id, _this.missingFields[currentIndex].attribute_type, suggestionText);
             // Change page (go to the next modal)
@@ -10708,6 +10742,8 @@ var SuggestionModal = function () {
 
           // Event when clicks on sim-button
           (0, _jquery2.default)('.sim-button').on('click', function () {
+            // Marking that we won points
+            _this.wonPoints();
             // Sending suggestion
             _SuggestionController2.default.sendSuggestion(_this.user.id, _this.photo.id, _this.missingFields[currentIndex].attribute_type, _this.missingFields[currentIndex].field_content[0]);
             // Change page (go to the next modal)
@@ -10733,6 +10769,8 @@ var SuggestionModal = function () {
           });
           // Cleaning suggestionModals array
           _this.suggestionModals = [];
+          // Reloading page
+          location.reload();
         }.bind(this)
       }).open();
     }
@@ -10760,6 +10798,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 /**
  * This is responsable for controlling suggestions
+ * This is where we will put the network requests
  */
 
 var SuggestionController = function () {
@@ -10798,25 +10837,39 @@ var SuggestionController = function () {
         }
       }, "json");
     }
+
+    /**
+     * Sended at the end, to get the final pictures
+     * @param  {String} photoID    The ID of the picture that we're in
+     * @param  {Number} points     The points that the user may get
+     * @return {Promise}           Promise with the result of the request
+     */
+
   }, {
     key: 'sendFinalSuggestions',
-    value: function sendFinalSuggestions(photoID) {
+    value: function sendFinalSuggestions(photoID, points) {
       // Mounting params
       var data = {
-        photo_id: photoID
+        photo: photoID,
+        points: points
       };
 
-      console.log('DADOS DA SUGESTAO', data);
+      console.log('DADOS ENVIADOS', data);
 
-      // Sending ajax request
-      $.ajax({
-        type: "POST",
-        url: '/suggestions/sent',
-        data: data,
-        success: function success(data) {
-          console.log('RESULTADO', data);
-        }
-      }, "json");
+      return new Promise(function (resolve, reject) {
+        // Sending ajax request
+        $.ajax({
+          type: "POST",
+          url: '/suggestions/sent',
+          data: data,
+          success: function success(data) {
+            resolve(data);
+          },
+          error: function error(_error) {
+            reject(_error);
+          }
+        }, "json");
+      });
     }
   }]);
 
@@ -10874,7 +10927,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     }
 
     // When the user ID is EVEN = Gamed
-    var gamed = !_MathController2.default.isEven(user.id);
+    var gamed = _MathController2.default.isEven(user.id);
 
     // Only shows the modal if we have missing fields
     if (missingFields && missingFields.length > 0) {

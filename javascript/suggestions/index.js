@@ -31,7 +31,7 @@ $(document).ready(() => {
     }
 
     // When the user ID is EVEN = Gamed
-    const gamed = !MathController.isEven(user.id);
+    const gamed = MathController.isEven(user.id);
 
     // Only shows the modal if we have missing fields
     if (missingFields && missingFields.length > 0) {

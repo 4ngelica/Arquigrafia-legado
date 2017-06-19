@@ -215,11 +215,6 @@ textarea.sugestion {
   width: 550px;
 }
 
-.field-name.feedback {
-  font-size: 24px;
-  margin-top: 0;
-}
-
 /* SUGGESTION MODAL BUTTON - Photos */
 .modal-wrapper {
   font-size: 16px;
@@ -421,7 +416,7 @@ textarea.sugestion {
 
 .field-name.feedback {
   font-size: 24px;
-  margin-top: auto;
+  margin-top: 0;
 }
 
 .image-sugestions {

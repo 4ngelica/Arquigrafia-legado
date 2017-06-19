@@ -1,5 +1,6 @@
 /**
  * This is responsable for controlling suggestions
+ * This is where we will put the network requests
  */
 
 class SuggestionController {
@@ -32,23 +33,36 @@ class SuggestionController {
     }, "json");
   }
 
-  static sendFinalSuggestions(photoID) {
+
+  /**
+   * Sended at the end, to get the final pictures
+   * @param  {String} photoID    The ID of the picture that we're in
+   * @param  {Number} points     The points that the user may get
+   * @return {Promise}           Promise with the result of the request
+   */
+  static sendFinalSuggestions(photoID, points) {
     // Mounting params
     const data = {
-      photo_id: photoID,
+      photo: photoID,
+      points,
     };
 
-    console.log('DADOS DA SUGESTAO', data);
+    console.log('DADOS ENVIADOS', data);
 
-    // Sending ajax request
-    $.ajax({
-        type: "POST",
-        url : `/suggestions/sent`,
-        data: data,
-        success : function(data){
-          console.log('RESULTADO', data);
-        }
-    }, "json");
+    return new Promise((resolve, reject) => {
+      // Sending ajax request
+      $.ajax({
+          type: "POST",
+          url : `/suggestions/sent`,
+          data: data,
+          success : (data) => {
+            resolve(data);
+          },
+          error: (error) => {
+            reject(error);
+          },
+      }, "json");
+    });
   }
 }
 

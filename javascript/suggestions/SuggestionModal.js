@@ -26,6 +26,7 @@ class SuggestionModal {
     this.user = user;
     this.photo = photo;
     this.gamed = gamed;
+    this.points = 0;
   }
 
   /**
@@ -122,6 +123,18 @@ class SuggestionModal {
   }
 
   /**
+   * This functions renders the Photos at the final modal on the Gamed version
+   * @param  {Array} photos   The photos that will be rendered
+   */
+  renderGamedNextPhotos(photos) {
+    var sourceNextPhotos = $("#suggestion-modal-last-page-gamed-photos").html();
+    var templateNextPhotos = Handlebars.compile(sourceNextPhotos);
+    var nextPhotosHTML = templateNextPhotos({ photos });
+
+    $('#next-photos-container').html(nextPhotosHTML);
+  }
+
+  /**
    * Shows to user the modal asking for a suggestion.
    * @param  {Number} currentIndex The current page (index) that we're at the moment
    */
@@ -174,7 +187,7 @@ class SuggestionModal {
         'lastPage',
         null,
         null,
-        null,
+        `Obrigado por responder as questões! Você pode ganhar até ${this.points} pontos!`,
         'lastPage',
         currentIndex + 1
       );
@@ -195,6 +208,13 @@ class SuggestionModal {
   }
 
   /**
+   * Mark that we had won points
+   */
+  wonPoints() {
+    this.points += 5;
+  }
+
+  /**
    * This function shows a Suggestion Modal
    * @param  {String} type          The type of the modal. Can be 'confirm' or 'text'
    * @param  {String} name          The item name
@@ -211,12 +231,21 @@ class SuggestionModal {
     if (type === 'confirm') {
       contentHTML = this.getContentHTML(type, content, question);
       footerHTML = this.getFooterHTML('confirm', currentIndex);
-    } else if (type === 'lastPage' && this.gamed) {
-      contentHTML = this.getContentHTML('lastPageGamed', content, question);
+    } else if (type === 'lastPage') {
+      // Defining content
+      if (this.gamed) contentHTML = this.getContentHTML('lastPageGamed', null, question);
+      else contentHTML = this.getContentHTML('lastPage', null, null);
+      // Defining footer
       footerHTML = this.getFooterHTML(type, currentIndex);
-    } else if (type === 'lastPage' && !this.gamed) {
-      contentHTML = this.getContentHTML('lastPage', content, question);
-      footerHTML = this.getFooterHTML(type, currentIndex);
+      // Sending that we're at the final page
+      SuggestionController
+        .sendFinalSuggestions(this.photo.id, this.points)
+        .then((photos) => {
+          // Rendering photos if we're at the gamed version
+          if (this.gamed) this.renderGamedNextPhotos(photos);
+        }).catch((error) => {
+          console.log(error);
+        });
     } else {
       contentHTML = this.getContentHTML(type, name, question);
       footerHTML = this.getFooterHTML('jump', currentIndex);
@@ -251,6 +280,8 @@ class SuggestionModal {
             alert('Você precisa preencher algo para enviar.');
             return
           }
+          // Marking that we won points
+          this.wonPoints();
           // Sending suggestion
           SuggestionController.sendSuggestion(this.user.id, this.photo.id, this.missingFields[currentIndex].attribute_type, suggestionText);
           // Change page (go to the next modal)
@@ -265,6 +296,8 @@ class SuggestionModal {
 
         // Event when clicks on sim-button
         $('.sim-button').on('click', (() => {
+          // Marking that we won points
+          this.wonPoints();
           // Sending suggestion
           SuggestionController.sendSuggestion(this.user.id, this.photo.id, this.missingFields[currentIndex].attribute_type, this.missingFields[currentIndex].field_content[0]);
           // Change page (go to the next modal)
@@ -290,6 +323,8 @@ class SuggestionModal {
         });
         // Cleaning suggestionModals array
         this.suggestionModals = [];
+        // Reloading page
+        location.reload();
       }).bind(this),
     }).open();
   }
