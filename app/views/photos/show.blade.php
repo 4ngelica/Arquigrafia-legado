@@ -869,13 +869,21 @@
   		</div>
 
   		<div class="field-question sugestion">
-        @{{question}}
+        <div class="question-container">
+          @{{question}}
+        </div>
 
-  			<textarea id="sugestion-text" class="sugestion"></textarea>
-  			<button class="enviar-button">Enviar</button>
+        <div>
+          <textarea id="sugestion-text" class="sugestion"></textarea>
+        </div>
+        <div>
+          <button class="enviar-button">Enviar</button>
+        </div>
   		</div>
-      <div id="error-message-sugestion" class="error-message sugestion hidden">
-        <p>Antes de clicar em Enviar, informe sua resposta. Caso não saiba a resposta clique em "@{{ jumpLabel }}"</p>
+      <div style="width: 100%;">
+        <div id="error-message-sugestion" class="error-message sugestion hidden">
+          <p>Antes de clicar em Enviar, informe sua resposta. Caso não saiba a resposta clique em "@{{ jumpLabel }}".</p>
+        </div>
       </div>
   	</div>
   </script>

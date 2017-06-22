@@ -134,14 +134,15 @@
 
 .field-name {
 	font-weight: 700;
-	margin-top: auto;
+	/*margin-top: auto;*/
   font-size: 17px;
 }
 
 
 .field-question {
 	align-self: center;
-	margin-top: auto;
+	/*margin-top: auto;*/
+	margin-top: 25px;
 	margin-bottom: 25px;
   font-size: 17px;
 }
@@ -162,9 +163,19 @@
 	margin-top: 0px;
 	font-size: 12px;
   color: red;
+  width: 280px;
+  display: table;
+  margin: 0 auto;
+}
+
+.question-container {
+  width: 280px;
+  display: table;
+  margin: 0 auto;
 }
 
 .field-question.sugestion {
+  width: 100%;
 	align-self: center;
 	margin: 50px 0 10px 0;
 }
@@ -430,7 +441,7 @@ textarea.sugestion {
 
 .field-name.feedback {
   font-size: 24px;
-  margin-top: 0;
+  /*margin-top: 0;*/
 }
 
 .image-sugestions {
