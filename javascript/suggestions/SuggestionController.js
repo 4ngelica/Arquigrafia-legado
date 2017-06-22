@@ -27,9 +27,12 @@ class SuggestionController {
         type: "POST",
         url : `/suggestions`,
         data: data,
-        success : function(data){
+        success : (data) => {
           console.log('SUGESTAO ENVIADA', data);
-        }
+        },
+        error: (error) => {
+          console.log('ERROR', error);
+        },
     }, "json");
   }
 

@@ -26,10 +26,12 @@
   var user = {{ json_encode($user) }}
   var missingFields = {{ json_encode($missing) }};
   var isReviewing = {{ json_encode($isReviewing) }};
+  var completeness = {{ json_encode($completeness) }};
   console.log('MISSING', missingFields);
   console.log('USER', user);
   console.log('PHOTO', photo);
   console.log('isReviewing', isReviewing);
+  console.log('completeness', completeness);
 
   $(document).ready(function(){
     //MAP AND GEOREFERENCING CREATION AND SETTING
@@ -447,6 +449,34 @@
           @endif
       </hgroup>
 
+      <div id="progress-bar" class="progress-bar button hidden">
+        <div id="completed" class="fill-bar fill-{{ $completeness['present'] }}">
+          <span>{{ $completeness['present'] }}%</span>
+          <div class="bar-info">
+            <strong>Dados completos:</strong><br>
+            Esta foto tem {{ $completeness['present'] }}% dos dados preenchidos pelo autor ou aceitos após revisão da comunidade.
+          </div>
+        </div>
+        @if ($completeness['reviewing'] != 0)
+          <div id="revision" class="fill-bar fill-{{ $completeness['reviewing'] }}">
+            <span>{{ $completeness['reviewing'] }}%</span>
+            <div class="bar-info">
+              <strong>Dados em revisão:</strong><br>
+              Esta foto tem {{ $completeness['reviewing'] }}% dos dados em revisão que serão validados antes de serem disponibilizados.
+            </div>
+          </div>
+        @endif
+        @if ($completeness['missing'] != 0)
+          <div id="missing" class="fill-bar black fill-{{ $completeness['missing'] }}">
+            <span>{{ $completeness['missing'] }}%</span>
+            <div class="bar-info">
+              <strong>Dados a preencher:</strong><br>
+              Esta foto tem {{ $completeness['missing'] }}% dos dados ainda não preenchidos. Colabore com seus conhecimentos!
+            </div>
+          </div>
+        @endif
+      </div>
+
       {{-- @include('photo_feedback') --}}
 
       <div id="description_container">
@@ -564,25 +594,6 @@
 
       <!-- Suggestions Modal Button -->
       @if ($photos->institution == null && $photos->type != "video")
-        {{--*/ $percentage = 130 - (count($missing)*10) /*--}}
-        <div class="progress-bar button">
-      		<div id="completed" class="fill-bar fill-{{ $percentage }}">
-      			<span>{{ $percentage }}%</span>
-      			<div class="bar-info">
-      				<strong>Dados completos</strong><br>
-      				A foto está com 30% dos dados completos!<br>
-      			</div>
-      		</div>
-      		<div id="revision" class="fill-bar fill-{{ $percentage }}">
-      			<span>{{ $percentage }}%</span>
-      			<div class="bar-info">
-      				<strong>Dados em revisão</strong><br>
-      				A foto está com 30% dos dados em revisão!<br>
-      				Essas informações serão validadas pelos nossos moderadores e, caso estejam corretas, entrarão para os dados da foto!
-      			</div>
-      		</div>
-      	</div>
-
         @if (!$isReviewing)
           <div class="modal-wrapper">
             <div class="title2">Você conhece mais informações sobre esta arquitetura?</div>
@@ -863,6 +874,9 @@
   			<textarea id="sugestion-text" class="sugestion"></textarea>
   			<button class="enviar-button">Enviar</button>
   		</div>
+      <div id="error-message-sugestion" class="error-message sugestion hidden">
+        <p>Antes de clicar em Enviar, informe sua resposta. Caso não saiba a resposta clique em "@{{ jumpLabel }}"</p>
+      </div>
   	</div>
   </script>
 
@@ -900,7 +914,7 @@
   </script>
 
   <script id="suggestion-modal-last-page-gamed-photos" type="text/x-handlebars-template">
-    <span class="image-sugestions-text">Continue a colaborar:</span>
+    <span class="image-sugestions-text">Outras imagens para colaborar:</span>
 
     @{{#each photos}}
       <div class="single-image-sugestions">
@@ -917,7 +931,7 @@
       <div class="clearfix">
         <button class="sim-button">Sim</button>
         <button class="nao-button">Não</button>
-        <button class="nao-sei-button">Não sei</button>
+        <button class="nao-sei-button">@{{ jumpLabel }}</button>
       </div>
     </div>
     <div class="progress-bar">
@@ -928,7 +942,7 @@
   <script id="suggestion-modal-jump-footer" type="text/x-handlebars-template">
     <div class="jBox-footer sugestion">
       <div class="clearfix">
-  			<button class="pular-etapa-button">Pular esta etapa</button>
+  			<button class="pular-etapa-button">@{{ label }}</button>
   		</div>
     </div>
     <div class="progress-bar">
@@ -939,7 +953,7 @@
   <script id="suggestion-modal-close-footer" type="text/x-handlebars-template">
     <div class="jBox-footer sugestion">
       <div class="clearfix">
-        <button class="pular-etapa-button">Fechar</button>
+        <button class="fechar-button">Fechar</button>
       </div>
     </div>
     <div class="progress-bar">
