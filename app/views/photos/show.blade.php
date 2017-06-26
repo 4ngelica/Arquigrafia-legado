@@ -924,13 +924,31 @@
   <script id="suggestion-modal-last-page-gamed-photos" type="text/x-handlebars-template">
     <span class="image-sugestions-text">Outras imagens para colaborar:</span>
 
-    @{{#each photos}}
+    <!-- @{{#each photos}}
       <div class="single-image-sugestions">
         <a href="/photos/@{{ id }}">
           <img src="/arquigrafia-images/@{{ id }}_home.jpg" />
         </a>
       </div>
-    @{{/each}}
+    @{{/each}} -->
+
+    <div class="single-image-sugestions">
+      <a href="/photos/6069">
+        <img src="/arquigrafia-images/6069_home.jpg" />
+      </a>
+    </div>
+
+    <div class="single-image-sugestions">
+      <a href="/photos/4757">
+        <img src="/arquigrafia-images/4757_home.jpg" />
+      </a>
+    </div>
+
+    <div class="single-image-sugestions">
+      <a href="/photos/8608">
+        <img src="/arquigrafia-images/8608_home.jpg" />
+      </a>
+    </div>
 
   </script>
 
