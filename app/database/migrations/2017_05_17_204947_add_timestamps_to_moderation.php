@@ -27,7 +27,14 @@ class AddTimestampsToModeration extends Migration {
 	 */
 	public function down()
 	{
-		//
+		Schema::table('suggestions', function($table){
+			$table->dropColumn('created_at');
+		  $table->dropColumn('updated_at');
+		});
+		Schema::table('moderators', function($table){
+			$table->dropColumn('created_at');
+		  $table->dropColumn('updated_at');
+		});
 	}
 
 }
