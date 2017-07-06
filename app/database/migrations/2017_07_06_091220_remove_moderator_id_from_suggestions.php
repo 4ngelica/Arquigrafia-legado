@@ -13,6 +13,7 @@ class RemoveModeratorIdFromSuggestions extends Migration {
 	public function up()
 	{
 		Schema::table('suggestions', function($table){
+			$table->dropForeign(['moderator_id']);
 		  $table->dropColumn('moderator_id');
 		});
 	}
