@@ -126,10 +126,10 @@ class PhotosController extends \BaseController {
       $missing[] = 'district';
     else
       $present[] = 'district';
-    // if($photos->imageAuthor == null)
-    //   $missing[] = 'imageAuthor';
-    // else
-    //   $present[] = 'imageAuthor';
+    if($photos->imageAuthor == null)
+      $missing[] = 'imageAuthor';
+    else
+      $present[] = 'imageAuthor';
     if($photos->state == null)
       $missing[] = 'state';
     else
@@ -138,10 +138,10 @@ class PhotosController extends \BaseController {
       $missing[] = 'name';
     else
       $present[] = 'name';
-    if($photos->workAuthor == null)
-      $missing[] = 'workAuthor';
-    else
-      $present[] = 'workAuthor';
+    // if($photos->workAuthor == null)
+    //   $missing[] = 'workAuthor';
+    // else
+    //   $present[] = 'workAuthor';
     if($photos->workDate == null)
       $missing[] = 'workDate';
     else

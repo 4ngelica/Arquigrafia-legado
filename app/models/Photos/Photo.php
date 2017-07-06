@@ -63,11 +63,11 @@ class Photo extends Eloquent {
 	];
 
 	public static $fields_data = [
-		'city'        => ['information' => 'Qual é a cidade da obra?',
+		'city'        => ['information' => 'Qual é a cidade desta obra?',
 					      'validation'  => 'Esta cidade está correta?',
 					      'name'        => 'Cidade',
 					      'type'        => 'string'],
-		'country'     => ['information' => 'Qual é o país da obra?',
+		'country'     => ['information' => 'Qual é o país desta obra?',
 						  'validation'  => 'Este país está correto?',
 						  'name'        => 'País',
 						  'type'        => 'string'],
@@ -75,27 +75,27 @@ class Photo extends Eloquent {
 						  'validation'  => 'A data desta imagem está correta?',
 						  'name'        => 'Data da Imagem',
 						  'type'        => 'string'],
-		'description' => ['information' => 'Qual é a descrição para a imagem?',
+		'description' => ['information' => 'Como você descreveria esta imagem?',
 						  'validation'  => 'A descrição desta imagem está correta?',
 						  'name'        => 'Descrição',
 						  'type'        => 'string'],
-		'district'    => ['information' => 'Qual é o bairro da obra?',
+		'district'    => ['information' => 'Qual é o bairro desta obra?',
 						  'validation'  => 'O bairro desta obra está correto?',
 						  'name'        => 'Bairro',
 						  'type'        => 'string'],
 		'imageAuthor' => ['information' => 'Quem é o autor desta imagem?',
-						  'validation'  => 'Este é o autor correto da imagem?',
+						  'validation'  => 'Este é o autor correto desta imagem?',
 						  'name'        => 'Autor',
 						  'type'        => 'string'],
 		'name'        => ['information' => 'Qual é o nome desta obra?',
-						  'validation'  => 'Este é o nome correto da obra?',
+						  'validation'  => 'Este é o nome correto desta obra?',
 						  'name'        => 'Nome',
 						  'type'        => 'string'],
 		'projectAuthor' => ['information' => 'Qual é o nome do autor deste projeto?',
 						  'validation'  => 'Este é o nome correto do autor deste projeto?',
 						  'name'        => 'Autor do Projeto',
 						  'type'        => 'string'],
-		'state'         => ['information' => 'Em qual estado do país está a arquitetura?',
+		'state'         => ['information' => 'Em qual estado do país está esta arquitetura?',
 						  'validation'  => 'Este é o estado correto desta arquitetura?',
 						  'name'        => 'Estado',
 						  'type'        => 'string'],
@@ -103,12 +103,12 @@ class Photo extends Eloquent {
 						  'validation'  => 'Este é o endereço correto desta obra?',
 						  'name'        => 'Rua',
 						  'type'        => 'string'],
-		'workAuthor'  => ['information' => 'Quem é o autor da obra?',
-						  'validation'  => 'Este é o autor da obra?',
+		'workAuthor'  => ['information' => 'Quem é o autor desta obra?',
+						  'validation'  => 'Este é o autor desta obra?',
 						  'name'        => 'Autor da Obra',
 						  'type'        => 'string'],
-		'workDate'    => ['information' => 'Quando foi construída a obra?',
-						  'validation'  => 'Esta é a data em que a obra foi construída?',
+		'workDate'    => ['information' => 'Quando foi construída esta obra?',
+						  'validation'  => 'Esta é a data em que esta obra foi construída?',
 						  'name'        => 'Data da Obra',
 						  'type'        => 'string']
 	];
@@ -814,7 +814,7 @@ class Photo extends Eloquent {
 			return 'none';
 	}
 	public function checkPhotoReviewing(){
-		$fields = ['city', 'country', 'description', 'district', 'state', 'street', 'name', 'projectAuthor', 'workAuthor', 'workDate'];
+		$fields = ['city', 'country', 'description', 'district', 'imageAuthor','state', 'street', 'name', 'projectAuthor', 'workDate'];
 		foreach ($fields as $field) {
 			if($this->checkValidationFields($field) ==  'reviewing')
 				return true;
