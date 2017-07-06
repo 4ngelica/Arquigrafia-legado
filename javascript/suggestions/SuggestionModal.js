@@ -79,21 +79,35 @@ class SuggestionModal {
    * @return {String}          The HTML that represents the jBox content
    */
   getContentHTML(type, name, question) {
-    var sourceContent;
+    let sourceContent;
+    let templateContent;
+    let contentHTML;
+
     // Rendering the right content by type
     if (type === 'confirm') {
        sourceContent = $("#suggestion-modal-confirm-content").html();
+       templateContent = Handlebars.compile(sourceContent);
+       contentHTML = templateContent({ name, question });
     } else if (type === 'suggestion') {
       sourceContent = $("#suggestion-modal-text-content").html();
+      templateContent = Handlebars.compile(sourceContent);
+
+      let jumpLabel;
+      if (this.gamed) jumpLabel = "Pular";
+      else jumpLabel = "Não sei";
+
+      contentHTML = templateContent({ name, question, jumpLabel });
     } else if (type === 'lastPage') {
       sourceContent = $("#suggestion-modal-last-page-content").html();
+      templateContent = Handlebars.compile(sourceContent);
+      contentHTML = templateContent({ name, question });
     } else if (type === 'lastPageGamed') {
       sourceContent = $("#suggestion-modal-last-page-gamed-content").html();
+      templateContent = Handlebars.compile(sourceContent);
+      contentHTML = templateContent({ name, question });
     } else {
       return '';
     }
-    var templateContent = Handlebars.compile(sourceContent);
-    var contentHTML = templateContent({ name, question });
 
     return contentHTML;
   }
@@ -108,16 +122,33 @@ class SuggestionModal {
     var percentage = 0;
     var numItems = this.missingFields.length;
     percentage = MathController.ceil10((currentIndex/numItems)*100, 1);
+    let sourceFooter;
+    let templateTitle;
+    let footerHTML;
 
     if (type === 'confirm') {
-      var sourceFooter = $("#suggestion-modal-confirm-footer").html();
+      sourceFooter = $("#suggestion-modal-confirm-footer").html();
+      templateTitle = Handlebars.compile(sourceFooter);
+
+      let jumpLabel;
+      if (this.gamed) jumpLabel = "Pular";
+      else jumpLabel = "Não sei";
+
+      footerHTML = templateTitle({ percentage, jumpLabel });
     } else if (type === 'jump') {
-      var sourceFooter = $("#suggestion-modal-jump-footer").html();
+      sourceFooter = $("#suggestion-modal-jump-footer").html();
+      templateTitle = Handlebars.compile(sourceFooter);
+
+      let label;
+      if (this.gamed) label = "Pular";
+      else label = "Não sei";
+
+      footerHTML = templateTitle({ percentage, label });
     } else if (type === 'lastPage') {
-      var sourceFooter = $("#suggestion-modal-close-footer").html();
+      sourceFooter = $("#suggestion-modal-close-footer").html();
+      templateTitle = Handlebars.compile(sourceFooter);
+      footerHTML = templateTitle({ percentage });
     }
-    var templateTitle = Handlebars.compile(sourceFooter);
-    var footerHTML = templateTitle({ percentage });
 
     return footerHTML;
   }
@@ -182,12 +213,20 @@ class SuggestionModal {
         currentIndex + 1
       );
     } else if (currentIndex + 1 === this.missingFields.length) {
+      let message;
+
+      if (this.points === 0) {
+        message = "Colabore com informações sobre outras imagens";
+      } else {
+        message = `Obrigado por responder as questões! Você pode ganhar até ${this.points} pontos!`;
+      }
+
       // Here we're at the last modal page
       this.showModal(
         'lastPage',
         null,
         null,
-        `Obrigado por responder as questões! Você pode ganhar até ${this.points} pontos!`,
+        message,
         'lastPage',
         currentIndex + 1
       );
@@ -277,7 +316,8 @@ class SuggestionModal {
           // Getting the text from suggestion-text textarea
           var suggestionText = this.suggestionModals[currentIndex].content.find('#sugestion-text').val();
           if (!suggestionText || suggestionText == '') {
-            alert('Você precisa preencher algo para enviar.');
+            // Showing error message
+            $(".error-message.sugestion").removeClass("hidden");
             return
           }
           // Marking that we won points
@@ -290,6 +330,12 @@ class SuggestionModal {
 
         // When click on jump button, changes page doing nothing else
         $('.pular-etapa-button').on('click', (() => {
+          // Change page (go to the next modal)
+          this.changePage(currentIndex);
+        }).bind(this));
+
+        // When click on close button, changes page doing nothing else
+        $('.fechar-button').on('click', (() => {
           // Change page (go to the next modal)
           this.changePage(currentIndex);
         }).bind(this));

@@ -1,4 +1,5 @@
 var path = require('path');
+var webpack = require('webpack');
 
 module.exports = {
   entry: {
@@ -12,5 +13,10 @@ module.exports = {
     rules: [
       { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
     ]
-  }
+  },
+  plugins:[
+    new webpack.ProvidePlugin({
+        Promise: "bluebird",
+    })
+  ],
 };

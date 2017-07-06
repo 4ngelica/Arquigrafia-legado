@@ -119,8 +119,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 300px;
-  padding: 0 25px;
+  height: 330px;
+  padding: 0 20px;
   scroll: false;
 }
 
@@ -134,14 +134,15 @@
 
 .field-name {
 	font-weight: 700;
-	margin-top: auto;
+	/*margin-top: auto;*/
   font-size: 17px;
 }
 
 
 .field-question {
 	align-self: center;
-	margin-top: auto;
+	/*margin-top: auto;*/
+	margin-top: 25px;
 	margin-bottom: 25px;
   font-size: 17px;
 }
@@ -158,7 +159,23 @@
 	font-size: 14px;
 }
 
+.error-message.sugestion {
+	margin-top: 0px;
+	font-size: 12px;
+  color: red;
+  width: 280px;
+  display: table;
+  margin: 0 auto;
+}
+
+.question-container {
+  width: 280px;
+  display: table;
+  margin: 0 auto;
+}
+
 .field-question.sugestion {
+  width: 100%;
 	align-self: center;
 	margin: 50px 0 10px 0;
 }
@@ -201,6 +218,14 @@ textarea.sugestion {
   transition: background-color .2s;
   padding: 5px 70px 5px 5px;
   font-size: 14px;
+}
+
+.jBox-footer.sugestion .fechar-button {
+	background: url(/img/suggestions-modal/fechar-button.png) right 25px center no-repeat;
+}
+
+.jBox-footer.sugestion .fechar-button:hover {
+	background: url(/img/suggestions-modal/fechar-button.png) right 25px center no-repeat #eee;
 }
 
 .jBox-footer.sugestion .pular-etapa-button {
@@ -269,18 +294,6 @@ textarea.sugestion {
   text-align: center;
   color: #fff;
   padding-top: 5px;
-}
-
-
-.progress-bar.button .fill-bar {
-  width: 0%;
-  height: 15px;
-  background: none;
-  text-align: center;
-  color: #fff;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  font-size: 14px;
 }
 
 .progress-bar .fill-bar.fill-0 {
@@ -352,16 +365,20 @@ textarea.sugestion {
 }
 
 .progress-bar.button .fill-bar {
-  height: 15px;
+  height: 18px;
   background: none;
   text-align: center;
   color: #fff;
   padding-top: 5px;
   padding-bottom: 2px;
   display: inline-table;
-  font-size: 16px;
+  font-size: 13px;
   position: relative;
   cursor: pointer;
+}
+
+.progress-bar.button .fill-bar.black {
+  color: #000;
 }
 
 .progress-bar.button .bar-info {
@@ -400,12 +417,20 @@ textarea.sugestion {
   display: block;
 }
 
+.progress-bar.button #missing:hover .bar-info {
+  display: block;
+}
+
 .progress-bar.button #completed {
   background: rgba(0, 0, 0, 1);
 }
 
 .progress-bar.button #revision {
   background: rgba(0, 0, 0, 0.5);
+}
+
+.progress-bar.button #missing {
+  background: rgba(255, 255, 255, 1);
 }
 
 /*feedback box */
@@ -416,7 +441,7 @@ textarea.sugestion {
 
 .field-name.feedback {
   font-size: 24px;
-  margin-top: 0;
+  /*margin-top: 0;*/
 }
 
 .image-sugestions {

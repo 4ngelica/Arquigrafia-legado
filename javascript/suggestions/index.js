@@ -15,6 +15,15 @@ $(document).ready(() => {
   if (photo.institution) $('#OpenModal').hide();
   else $('#OpenModal').show();
 
+  // When the user ID is EVEN = Gamed
+  let gamed = false;
+  if (user) gamed = MathController.isEven(user.id);
+
+  // Removing hidden if it's gamed
+  if (gamed) {
+    $("#progress-bar").removeClass("hidden");
+  }
+
   // On DOM ready, add the click event to the open modal button
   $('#OpenModal').click(function () {
     // Don't show the modal when we don't have a user logged in
@@ -29,9 +38,6 @@ $(document).ready(() => {
       window.location = "/photos/" + photo.id + "/edit"
       return;
     }
-
-    // When the user ID is EVEN = Gamed
-    const gamed = MathController.isEven(user.id);
 
     // Only shows the modal if we have missing fields
     if (missingFields && missingFields.length > 0) {

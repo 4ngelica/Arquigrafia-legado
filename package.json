@@ -13,6 +13,7 @@
     "webpack": "^2.6.1"
   },
   "dependencies": {
+    "bluebird": "^3.5.0",
     "jbox": "^0.4.8",
     "jquery": "^3.2.1"
   }
