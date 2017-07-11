@@ -615,7 +615,7 @@
               @if ($user == null)
                 <a href="#">Faça o login e contribua com mais informações sobre esta imagem!</a>
               @else
-                <a href="#">Conheço!</a>
+                <a href="#">Ajude a completar dados!</a>
               @endif
         		</div>
         	</div>
@@ -924,15 +924,15 @@
   <script id="suggestion-modal-last-page-gamed-photos" type="text/x-handlebars-template">
     <span class="image-sugestions-text">Outras imagens para colaborar:</span>
 
-    <!-- @{{#each photos}}
+    @{{#each photos}}
       <div class="single-image-sugestions">
         <a href="/photos/@{{ id }}">
           <img src="/arquigrafia-images/@{{ id }}_home.jpg" />
         </a>
       </div>
-    @{{/each}} -->
+    @{{/each}}
 
-    <div class="single-image-sugestions">
+    <!-- <div class="single-image-sugestions">
       <a href="/photos/6069">
         <img src="/arquigrafia-images/6069_home.jpg" />
       </a>
@@ -948,7 +948,7 @@
       <a href="/photos/8608">
         <img src="/arquigrafia-images/8608_home.jpg" />
       </a>
-    </div>
+    </div> -->
 
   </script>
 
