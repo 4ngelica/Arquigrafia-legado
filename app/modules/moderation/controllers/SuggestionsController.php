@@ -66,7 +66,7 @@ class SuggestionsController extends \BaseController {
 				EventLogger::printEventLogs(null, 'completion-incomplete', ['suggestions' => $suggestions], 'Web');
 			}
 
-			\Notification::create('suggestionReceived', $owner, $photo, [$owner], null);
+			\Notification::create('suggestionReceived', $user, $photo, [$owner], null);
 			Mail::send('emails.users.suggestion-received', array('name' => $owner->name, 'email' => $owner->email, 'id' => $owner->id ),
 				 function($msg) use($email) {
 					 $msg->to($email)
@@ -121,12 +121,12 @@ class SuggestionsController extends \BaseController {
 			$suggestion->accepted = true;
 			$suggestion->save();
 			Photo::updateSuggestion($field, $suggestion->text, $suggestion->photo_id);
-			\Notification::create('suggestionAccepted', $suggestion->user, $photo, [$user], null);
+			\Notification::create('suggestionAccepted', $user, $photo, [$suggestion->user], null);
 		}
 		if($status == 'rejected'){
 			$suggestion->accepted = false;
 			$suggestion->save();
-			\Notification::create('suggestionDenied', $user, $photo, [$user], null);
+			\Notification::create('suggestionDenied', $user, $photo, [$suggestion->user], null);
 		}
 		return \Redirect::to('/users/' . $id_self . '/suggestions');
 	}
