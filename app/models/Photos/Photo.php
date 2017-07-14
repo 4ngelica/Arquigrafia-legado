@@ -821,6 +821,45 @@ class Photo extends Eloquent {
 		}
 		return false;
 	}
+	public static function updateSuggestion($field, $data, $id){
+		$photo = Photo::find($id);
 
+		switch ($field) {
+			case 'city':
+				$photo->city = $data;
+				break;
+			case 'country':
+				$photo->country = $data;
+				break;
+			case 'description':
+				$photo->description = $data;
+				break;
+			case 'district':
+				$photo->district = $data;
+				break;
+			case 'imageAuthor':
+				$photo->imageAuthor = $data;
+				break;
+			case 'state':
+				$photo->state = $data;
+				break;
+			case 'street':
+				$photo->street = $data;
+				break;
+			case 'name':
+				$photo->name = $data;
+				break;
+			case 'projectAuthor':
+				$photo->project_author = $data;
+				break;
+			case 'workDate':
+				$photo->wordate = $data;
+				break;
+			default:
+				# code...
+				break;
+		}
+		$photo->save();
+	}
 
 }

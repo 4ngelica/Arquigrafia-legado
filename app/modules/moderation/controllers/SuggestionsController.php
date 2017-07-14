@@ -41,8 +41,8 @@ class SuggestionsController extends \BaseController {
 		$suggestion->text = $input['text'];
 		//moderator_id
 		//TO DO
-
 		$suggestion->save();
+		$photo = $suggestion->photo;
 		EventLogger::printEventLogs(null, 'completion', ['suggestion' => $suggestion->id], 'Web');
 		return \Response::json('Data sent successfully');
 	}
@@ -51,25 +51,83 @@ class SuggestionsController extends \BaseController {
     $input = \Input::all();
     $user = \Auth::user();
     $photo = Photo::find($input['photo']);
+		$owner = $photo->user_id;
 		$points = $input['points'];
-    //\Notification::create('suggestion_sent', $user, $photo, [$user], null);
+		$status = $input['status'];
+		$suggestions = $input['suggestions'];
 
-    $photosObj = Photo::where('accepted', 0)->where('type', '<>', 'video')->whereNull('institution_id')->get()->shuffle();
-		$i = 0;
-		$photosFiltered = array();
-
-		while(count($photosFiltered) < 3 && $i < count($photosObj)){
-			$i = 0;
-			if(!$photosObj[$i]->checkPhotoReviewing()){
-				$photosFiltered[] = $photosObj[$i];
+		if($status == 'none') {
+			EventLogger::printEventLogs(null, 'completion-none', 'Web');
+		}
+		else {
+			if($status == 'complete'){
+				EventLogger::printEventLogs(null, 'completion-complete', ['suggestions' => $suggestions], 'Web');
+			}	elseif($status == 'incomplete'){
+				EventLogger::printEventLogs(null, 'completion-incomplete', ['suggestions' => $suggestions], 'Web');
 			}
-			$i++;
+
+			\Notification::create('suggestionReceived', $owner, $photo, [$owner], null);
+			Mail::send('emails.users.suggestion-received', array('name' => $owner->name, 'email' => $owner->email, 'id' => $owner->id ),
+				 function($msg) use($email) {
+					 $msg->to($email)
+							 ->subject('[Arquigrafia]- Recebimento de Sugestão');
+			 });
+
+	    $photosObj = Photo::where('accepted', 0)->where('type', '<>', 'video')->whereNull('institution_id')->get()->shuffle();
+			$i = 0;
+			$photosFiltered = array();
+			$i = 0;
+			while(count($photosFiltered) < 3 && $i < count($photosObj)){
+				if(!$photosObj[$i]->checkPhotoReviewing()){
+					$photosFiltered[] = $photosObj[$i];
+				}
+				$i++;
+			}
+
+			$photos = array();
+			foreach ($photosFiltered as $photo) {
+				$photos[] = ['id' => $photo->id, 'name' => $photo->name, 'nome_arquivo' => $photo->nome_arquivo];
+			}
+	    return \Response::json($photos);
+		}
+	}
+
+	public function edit($id){
+		$user = \Auth::user();
+		$photos = $user->photos->lists('id');
+		//$photos = [1];
+		$suggestions = Suggestion::whereNull('accepted')->whereIn('photo_id', $photos)->get();
+		//dd($suggestions);
+		$final = [];
+		foreach ($suggestions as $suggestion){
+			$field = PhotoAttributeType::find($suggestion->attribute_type)->attribute_type;
+			$photo = $suggestion->photo;
+			$final[] = ['suggestion' => $suggestion, 'photo' => $photo, 'field' => $field];
 		}
 
-		$photos = array();
-		foreach ($photosFiltered as $photo) {
-			$photos[] = ['id' => $photo->id, 'name' => $photo->name, 'nome_arquivo' => $photo->nome_arquivo];
+		return \View::make('show-suggestions', ['suggestions' => $final]);
+	}
+
+	public function update(){
+		$input = \Input::all();
+		$id_self = \Auth::user()->id;
+		$suggestion = Suggestion::find($input['suggestion_id']);
+		$photo = $suggestion->photo;
+		$user = $photo->user;
+		$status = $input['operation'];
+
+		if($status == 'accepted'){
+			$field = PhotoAttributeType::find($suggestion->attribute_type)->attribute_type;
+			$suggestion->accepted = true;
+			$suggestion->save();
+			Photo::updateSuggestion($field, $suggestion->text, $suggestion->photo_id);
+			\Notification::create('suggestionAccepted', $suggestion->user, $photo, [$user], null);
 		}
-    return \Response::json($photos);
-  }
+		if($status == 'rejected'){
+			$suggestion->accepted = false;
+			$suggestion->save();
+			\Notification::create('suggestionDenied', $user, $photo, [$user], null);
+		}
+		return \Redirect::to('/users/' . $id_self . '/suggestions');
+	}
 }

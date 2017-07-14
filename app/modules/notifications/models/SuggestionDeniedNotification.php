@@ -4,9 +4,9 @@ namespace modules\notifications\models;
 use \Tricki\Notification\Models\Notification;
 use User;
 
-class SuggestionSentNotification extends \Tricki\Notification\Models\Notification
+class SuggestionDeniedNotification extends \Tricki\Notification\Models\Notification
 {
-	public static $type = 'suggestion_sent';
+	public static $type = 'suggestionDenied';
 
     public function render() {
         return array($this->getTypes(),

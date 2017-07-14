@@ -191,6 +191,57 @@
                         </div>
                     </li>
                 </div>
+            @elseif($info_array[0] == "suggestionReceived")
+                <div id={{$notification->id}} class="notes {{$notification->id}}<?php if($notification->read_at == null) echo ' not-read'?>">
+                    <li>
+                        <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
+                        <div onclick="markRead(this);">
+
+                                <img class="mini"
+                                src="{{ URL::to("/") }}/img/avatar-48.png" >
+                            </a>
+                            Você recebeu uma sugestão
+
+
+                            </br>
+
+                        </div>
+                    </li>
+                </div>
+            @elseif($info_array[0] == "suggestionAccepted")
+                <div id={{$notification->id}} class="notes {{$notification->id}}<?php if($notification->read_at == null) echo ' not-read'?>">
+                    <li>
+                        <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
+                        <div onclick="markRead(this);">
+
+                                <img class="mini"
+                                src="{{ URL::to("/") }}/img/avatar-48.png" >
+                            </a>
+                            Você teve sua sugestão aceita
+
+
+                            </br>
+
+                        </div>
+                    </li>
+                </div>
+            @elseif($info_array[0] == "suggestionDenied")
+                <div id={{$notification->id}} class="notes {{$notification->id}}<?php if($notification->read_at == null) echo ' not-read'?>">
+                    <li>
+                        <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
+                        <div onclick="markRead(this);">
+
+                                <img class="mini"
+                                src="{{ URL::to("/") }}/img/avatar-48.png" >
+                            </a>
+                            Você teve sua sugestão rejeitada
+
+
+                            </br>
+
+                        </div>
+                    </li>
+                </div>
             @endif
         @endforeach
     </ul>

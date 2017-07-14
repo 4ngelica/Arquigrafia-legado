@@ -5,6 +5,6 @@ class PhotoAttributeType extends \Eloquent {
 	protected $fillable = ['attribute'];
 
 	public function suggestions(){
-		return $this->hasMany('Suggestion');
+		return $this->hasMany('Suggestion', 'attribute_type');
 	}
 }
