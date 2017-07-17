@@ -51,7 +51,7 @@ class SuggestionsController extends \BaseController {
     $input = \Input::all();
     $user = \Auth::user();
     $photo = Photo::find($input['photo']);
-		$owner = $photo->user_id;
+		$owner = $photo->user;
 		$points = $input['points'];
 		$status = $input['status'];
 		$suggestions = $input['suggestions'];
