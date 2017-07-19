@@ -16312,6 +16312,8 @@ var SuggestionModal = function () {
     this.photo = photo;
     this.gamed = gamed;
     this.points = 0;
+    this.currentIndex = 0;
+    this.numberSuggestions = 0;
   }
 
   /**
@@ -16384,10 +16386,17 @@ var SuggestionModal = function () {
         sourceContent = (0, _jquery2.default)("#suggestion-modal-text-content").html();
         templateContent = Handlebars.compile(sourceContent);
 
+        // Setting jumpLabel
         var jumpLabel = void 0;
         if (this.gamed) jumpLabel = "Pular";else jumpLabel = "Não sei";
 
-        contentHTML = templateContent({ name: name, question: question, jumpLabel: jumpLabel });
+        // Setting image if it's description field
+        var imageID = void 0;
+        if (name === 'Descrição') {
+          imageID = this.photo.id;
+        }
+
+        contentHTML = templateContent({ name: name, question: question, jumpLabel: jumpLabel, imageID: imageID });
       } else if (type === 'lastPage') {
         sourceContent = (0, _jquery2.default)("#suggestion-modal-last-page-content").html();
         templateContent = Handlebars.compile(sourceContent);
@@ -16414,8 +16423,7 @@ var SuggestionModal = function () {
     value: function getFooterHTML(type, currentIndex) {
       // Defining the percentage that will show on footer
       var percentage = 0;
-      var numItems = this.missingFields.length;
-      percentage = _MathController2.default.ceil10(currentIndex / numItems * 100, 1);
+      var numItems = this.missingFields.length + 1; // + 1 for the last page
       var sourceFooter = void 0;
       var templateTitle = void 0;
       var footerHTML = void 0;
@@ -16427,7 +16435,7 @@ var SuggestionModal = function () {
         var jumpLabel = void 0;
         if (this.gamed) jumpLabel = "Pular";else jumpLabel = "Não sei";
 
-        footerHTML = templateTitle({ percentage: percentage, jumpLabel: jumpLabel });
+        footerHTML = templateTitle({ numItems: numItems, currentIndex: currentIndex, jumpLabel: jumpLabel });
       } else if (type === 'jump') {
         sourceFooter = (0, _jquery2.default)("#suggestion-modal-jump-footer").html();
         templateTitle = Handlebars.compile(sourceFooter);
@@ -16435,11 +16443,11 @@ var SuggestionModal = function () {
         var label = void 0;
         if (this.gamed) label = "Pular";else label = "Não sei";
 
-        footerHTML = templateTitle({ percentage: percentage, label: label });
+        footerHTML = templateTitle({ numItems: numItems, currentIndex: currentIndex, label: label });
       } else if (type === 'lastPage') {
         sourceFooter = (0, _jquery2.default)("#suggestion-modal-close-footer").html();
         templateTitle = Handlebars.compile(sourceFooter);
-        footerHTML = templateTitle({ percentage: percentage });
+        footerHTML = templateTitle({ numItems: numItems, currentIndex: currentIndex });
       }
 
       return footerHTML;
@@ -16486,6 +16494,29 @@ var SuggestionModal = function () {
     }
 
     /**
+     * Shows the last modal
+     * @param  {Number} currentIndex The current page (index) that we're at the moment
+     * @param  {Boolean} forceOverlay  Force to show black transparent overlay
+     */
+
+  }, {
+    key: 'showLastModal',
+    value: function showLastModal(currentIndex) {
+      var forceOverlay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+      var message = void 0;
+
+      if (this.points === 0) {
+        message = "Colabore com informações sobre outras imagens";
+      } else {
+        message = 'Obrigado por responder as quest\xF5es! Voc\xEA pode ganhar at\xE9 ' + this.points + ' pontos!';
+      }
+
+      // Here we're at the last modal page
+      this.showModal('lastPage', null, null, message, 'lastPage', currentIndex + 1, forceOverlay);
+    }
+
+    /**
      * Changes the 'page' of the modal.
      * Basically here we're rendering the next modal and showing the next question.
      * @param  {Number} currentIndex The current page (index) that we're at the moment
@@ -16500,16 +16531,7 @@ var SuggestionModal = function () {
         // Showing the next modal (with index + 1)
         this.showModal(this.missingFields[currentIndex + 1].type, this.missingFields[currentIndex + 1].field_name, this.missingFields[currentIndex + 1].field_content, this.missingFields[currentIndex + 1].question, this.missingFields[currentIndex + 1].attribute_type, currentIndex + 1);
       } else if (currentIndex + 1 === this.missingFields.length) {
-        var message = void 0;
-
-        if (this.points === 0) {
-          message = "Colabore com informações sobre outras imagens";
-        } else {
-          message = 'Obrigado por responder as quest\xF5es! Voc\xEA pode ganhar at\xE9 ' + this.points + ' pontos!';
-        }
-
-        // Here we're at the last modal page
-        this.showModal('lastPage', null, null, message, 'lastPage', currentIndex + 1);
+        this.showLastModal(currentIndex);
       } else {
         // Close the current modal and return
         if (currentModal) currentModal.close();
@@ -16534,6 +16556,7 @@ var SuggestionModal = function () {
     key: 'wonPoints',
     value: function wonPoints() {
       this.points += 5;
+      this.numberSuggestions += 1;
     }
 
     /**
@@ -16543,6 +16566,7 @@ var SuggestionModal = function () {
      * @param  {String} content       The item content (sometimes is null, if the field is not filled)
      * @param  {String} question      The question that the modal will show to user
      * @param  {String} currentIndex  The currentIndex that we're showing the modal (represents the current question)
+     * @param  {Boolean} forceOverlay  Force to show black transparent overlay
      */
 
   }, {
@@ -16550,10 +16574,15 @@ var SuggestionModal = function () {
     value: function showModal(type, name, content, question, attributeType, currentIndex) {
       var _this = this;
 
+      var forceOverlay = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : false;
+
+      // Setting this.currentIndex
+      this.currentIndex = currentIndex;
+
       // Getting the HTML content that we're gonna show on the modal
       var titleHTML = this.getTitleHTML(attributeType);
-      var contentHTML;
-      var footerHTML;
+      var contentHTML = void 0;
+      var footerHTML = void 0;
       // Getting content and footer based on type
       if (type === 'confirm') {
         contentHTML = this.getContentHTML(type, content, question);
@@ -16564,7 +16593,11 @@ var SuggestionModal = function () {
         // Defining footer
         footerHTML = this.getFooterHTML(type, currentIndex);
         // Sending that we're at the final page
-        _SuggestionController2.default.sendFinalSuggestions(this.photo.id, this.points).then(function (photos) {
+        var numItems = this.missingFields.length;
+        var abandonStatus = 'complete';
+        if (this.suggestionModals.length < numItems) abandonStatus = 'incomplete';
+
+        _SuggestionController2.default.sendFinalSuggestions(this.photo.id, this.points, this.numberSuggestions, abandonStatus).then(function (photos) {
           // Rendering photos if we're at the gamed version
           if (_this.gamed) _this.renderGamedNextPhotos(photos);
         }).catch(function (error) {
@@ -16580,10 +16613,11 @@ var SuggestionModal = function () {
       // Showing jBox modal
       this.suggestionModals[currentIndex.toString()] = new _jbox2.default('Modal', {
         animation: 'zoomIn',
-        overlay: initial ? true : false, // Only shows the overlay for the first modal
+        overlay: initial || forceOverlay ? true : false, // Only shows the overlay for the first modal
         blockScroll: false,
         closeButton: false,
-        closeOnEsc: initial ? true : false, // Only sets the closeOnEsc for the first modal
+        closeOnEsc: false,
+        closeOnClick: false,
         footer: footerHTML,
         title: titleHTML,
         content: contentHTML,
@@ -16645,9 +16679,43 @@ var SuggestionModal = function () {
           (0, _jquery2.default)('.nao-sei-button').on('click', function () {
             _this.changePage(currentIndex);
           }.bind(_this));
+
+          // Checking when click on send_message
+          (0, _jquery2.default)('#send_message').on('click', function () {
+            // Setting redirectWindow variable
+            var redirectWindow = window.open('', '_blank');
+
+            // Creating chat
+            _SuggestionController2.default.createChat(_this.photo.user_id).then(function (data) {
+              // Open chat tab
+              redirectWindow.location = '/chats/' + data;
+            }).catch(function (error) {
+              console.log('ERRO', error);
+              return;
+            });
+          }.bind(_this));
+
+          if (initial || forceOverlay) {
+            setTimeout(function () {
+              (0, _jquery2.default)('.jBox-overlay').on('click', function () {
+                _this.suggestionModals[_this.currentIndex].close();
+              }.bind(_this));
+            }.bind(_this), 100);
+          }
         }.bind(this),
         // When any of the modals is closed, this function is called
         onClose: function () {
+          var numItems = _this.missingFields.length;
+
+          if (_this.currentIndex + 1 === _this.suggestionModals.length && _this.currentIndex < numItems && _this.points > 0) {
+            // Showing last modal, because we've sent suggestions
+            _this.showLastModal(numItems - 1, currentIndex === 0);
+            return;
+          } else if (_this.currentIndex + 1 === _this.suggestionModals.length && _this.currentIndex < numItems && _this.points === 0) {
+            // Sending final suggestions without going to last page
+            _SuggestionController2.default.sendFinalSuggestions(_this.photo.id, _this.points, _this.numberSuggestions, 'none');
+          }
+
           // When closing one of the modals, close all modals
           _this.suggestionModals.forEach(function (modal) {
             modal.close();
@@ -16730,16 +16798,19 @@ var SuggestionController = function () {
      * Sended at the end, to get the final pictures
      * @param  {String} photoID    The ID of the picture that we're in
      * @param  {Number} points     The points that the user may get
+     * @param  {String} status     Can be 'none', 'complete' or 'incomplete'
      * @return {Promise}           Promise with the result of the request
      */
 
   }, {
     key: 'sendFinalSuggestions',
-    value: function sendFinalSuggestions(photoID, points) {
+    value: function sendFinalSuggestions(photoID, points, numberSuggestions, status) {
       // Mounting params
       var data = {
         photo: photoID,
-        points: points
+        points: points,
+        status: status,
+        suggestions: numberSuggestions
       };
 
       console.log('DADOS ENVIADOS', data);
@@ -16751,10 +16822,35 @@ var SuggestionController = function () {
           url: '/suggestions/sent',
           data: data,
           success: function success(data) {
+            console.log('DADOS RECEBIDOS', data);
             resolve(data);
           },
           error: function error(_error2) {
+            console.log('ERRO AO ENVIAR SUGESTAO FINAL', _error2);
             reject(_error2);
+          }
+        }, "json");
+      });
+    }
+  }, {
+    key: 'createChat',
+    value: function createChat(userID) {
+      return new Promise(function (resolve, reject) {
+        // Defining data to create chat
+        var data = {
+          participants: [userID]
+          // Making ajax request
+        };$.ajax({
+          type: "POST",
+          url: '/chats',
+          data: data,
+          success: function success(response) {
+            console.log('CHAT CRIADO', response);
+            if (response !== false) resolve(response);else reject(response);
+          },
+          error: function error(_error3) {
+            console.log('ERRO AO CRIAR CHAT', _error3);
+            reject(_error3);
           }
         }, "json");
       });
@@ -16804,13 +16900,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
   var gamed = false;
   if (user) gamed = _MathController2.default.isEven(user.id);
 
-  // Removing hidden if it's gamed
-  if (gamed) {
+  // Showing progress bar if it's gamed and it's not institution and not a video
+  if (gamed && !photo.institution && photo.type !== 'video') {
     (0, _jquery2.default)("#progress-bar").removeClass("hidden");
   }
 
   // On DOM ready, add the click event to the open modal button
-  (0, _jquery2.default)('#OpenModal').click(function () {
+  (0, _jquery2.default)('.OpenModal').click(function () {
     // Don't show the modal when we don't have a user logged in
     if (!user || !user.id) {
       // Go to login page
@@ -16829,6 +16925,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
       var suggestionModal = new _SuggestionModal2.default(missingFields, user, photo, gamed);
       suggestionModal.showModal(missingFields[0].type, missingFields[0].field_name, missingFields[0].field_content, missingFields[0].question, missingFields[0].attribute_type, 0);
     }
+  });
+
+  // Registering Handlebars helpers
+  Handlebars.registerHelper('times', function (n, block) {
+    var accum = '';
+    for (var i = 0; i < n; ++i) {
+      accum += block.fn(i);
+    }
+    return accum;
+  });
+  Handlebars.registerHelper('ifCond', function (v1, v2, options) {
+    if (v1 == v2) {
+      return options.fn(this);
+    }
+    return options.inverse(this);
   });
 });
 

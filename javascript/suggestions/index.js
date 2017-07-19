@@ -19,13 +19,13 @@ $(document).ready(() => {
   let gamed = false;
   if (user) gamed = MathController.isEven(user.id);
 
-  // Removing hidden if it's gamed
-  if (gamed) {
+  // Showing progress bar if it's gamed and it's not institution and not a video
+  if (gamed && !photo.institution && photo.type !== 'video') {
     $("#progress-bar").removeClass("hidden");
   }
 
   // On DOM ready, add the click event to the open modal button
-  $('#OpenModal').click(function () {
+  $('.OpenModal').click(() => {
     // Don't show the modal when we don't have a user logged in
     if (!user || !user.id) {
       // Go to login page
@@ -52,4 +52,20 @@ $(document).ready(() => {
       );
     }
   });
+
+  // Registering Handlebars helpers
+  Handlebars.registerHelper('times', (n, block) => {
+    let accum = '';
+    for(let i = 0; i < n; ++i) {
+      accum += block.fn(i);
+    }
+    return accum;
+  });
+  Handlebars.registerHelper('ifCond', function(v1, v2, options) {
+    if(v1 == v2) {
+      return options.fn(this);
+    }
+    return options.inverse(this);
+  });
+
 })

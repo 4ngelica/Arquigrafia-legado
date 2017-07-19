@@ -27,6 +27,8 @@ class SuggestionModal {
     this.photo = photo;
     this.gamed = gamed;
     this.points = 0;
+    this.currentIndex = 0;
+    this.numberSuggestions = 0;
   }
 
   /**
@@ -92,11 +94,18 @@ class SuggestionModal {
       sourceContent = $("#suggestion-modal-text-content").html();
       templateContent = Handlebars.compile(sourceContent);
 
+      // Setting jumpLabel
       let jumpLabel;
       if (this.gamed) jumpLabel = "Pular";
       else jumpLabel = "Não sei";
 
-      contentHTML = templateContent({ name, question, jumpLabel });
+      // Setting image if it's description field
+      let imageID;
+      if (name === 'Descrição') {
+        imageID = this.photo.id;
+      }
+
+      contentHTML = templateContent({ name, question, jumpLabel, imageID });
     } else if (type === 'lastPage') {
       sourceContent = $("#suggestion-modal-last-page-content").html();
       templateContent = Handlebars.compile(sourceContent);
@@ -120,8 +129,7 @@ class SuggestionModal {
   getFooterHTML(type, currentIndex) {
     // Defining the percentage that will show on footer
     var percentage = 0;
-    var numItems = this.missingFields.length;
-    percentage = MathController.ceil10((currentIndex/numItems)*100, 1);
+    var numItems = this.missingFields.length + 1; // + 1 for the last page
     let sourceFooter;
     let templateTitle;
     let footerHTML;
@@ -134,7 +142,7 @@ class SuggestionModal {
       if (this.gamed) jumpLabel = "Pular";
       else jumpLabel = "Não sei";
 
-      footerHTML = templateTitle({ percentage, jumpLabel });
+      footerHTML = templateTitle({ numItems, currentIndex, jumpLabel });
     } else if (type === 'jump') {
       sourceFooter = $("#suggestion-modal-jump-footer").html();
       templateTitle = Handlebars.compile(sourceFooter);
@@ -143,11 +151,11 @@ class SuggestionModal {
       if (this.gamed) label = "Pular";
       else label = "Não sei";
 
-      footerHTML = templateTitle({ percentage, label });
+      footerHTML = templateTitle({ numItems, currentIndex, label });
     } else if (type === 'lastPage') {
       sourceFooter = $("#suggestion-modal-close-footer").html();
       templateTitle = Handlebars.compile(sourceFooter);
-      footerHTML = templateTitle({ percentage });
+      footerHTML = templateTitle({ numItems, currentIndex });
     }
 
     return footerHTML;
@@ -195,6 +203,33 @@ class SuggestionModal {
   }
 
   /**
+   * Shows the last modal
+   * @param  {Number} currentIndex The current page (index) that we're at the moment
+   * @param  {Boolean} forceOverlay  Force to show black transparent overlay
+   */
+
+  showLastModal(currentIndex, forceOverlay=false) {
+    let message;
+
+    if (this.points === 0) {
+      message = "Colabore com informações sobre outras imagens";
+    } else {
+      message = `Obrigado por responder as questões! Você pode ganhar até ${this.points} pontos!`;
+    }
+
+    // Here we're at the last modal page
+    this.showModal(
+      'lastPage',
+      null,
+      null,
+      message,
+      'lastPage',
+      currentIndex + 1,
+      forceOverlay
+    );
+  }
+
+  /**
    * Changes the 'page' of the modal.
    * Basically here we're rendering the next modal and showing the next question.
    * @param  {Number} currentIndex The current page (index) that we're at the moment
@@ -213,23 +248,7 @@ class SuggestionModal {
         currentIndex + 1
       );
     } else if (currentIndex + 1 === this.missingFields.length) {
-      let message;
-
-      if (this.points === 0) {
-        message = "Colabore com informações sobre outras imagens";
-      } else {
-        message = `Obrigado por responder as questões! Você pode ganhar até ${this.points} pontos!`;
-      }
-
-      // Here we're at the last modal page
-      this.showModal(
-        'lastPage',
-        null,
-        null,
-        message,
-        'lastPage',
-        currentIndex + 1
-      );
+      this.showLastModal(currentIndex);
     } else {
       // Close the current modal and return
       if (currentModal) currentModal.close();
@@ -251,6 +270,7 @@ class SuggestionModal {
    */
   wonPoints() {
     this.points += 5;
+    this.numberSuggestions += 1;
   }
 
   /**
@@ -260,12 +280,16 @@ class SuggestionModal {
    * @param  {String} content       The item content (sometimes is null, if the field is not filled)
    * @param  {String} question      The question that the modal will show to user
    * @param  {String} currentIndex  The currentIndex that we're showing the modal (represents the current question)
+   * @param  {Boolean} forceOverlay  Force to show black transparent overlay
    */
-  showModal(type, name, content, question, attributeType, currentIndex) {
+  showModal(type, name, content, question, attributeType, currentIndex, forceOverlay=false) {
+    // Setting this.currentIndex
+    this.currentIndex = currentIndex;
+
     // Getting the HTML content that we're gonna show on the modal
-    var titleHTML = this.getTitleHTML(attributeType);
-    var contentHTML;
-    var footerHTML;
+    let titleHTML = this.getTitleHTML(attributeType);
+    let contentHTML;
+    let footerHTML;
     // Getting content and footer based on type
     if (type === 'confirm') {
       contentHTML = this.getContentHTML(type, content, question);
@@ -277,8 +301,12 @@ class SuggestionModal {
       // Defining footer
       footerHTML = this.getFooterHTML(type, currentIndex);
       // Sending that we're at the final page
+      const numItems = this.missingFields.length;
+      let abandonStatus = 'complete';
+      if (this.suggestionModals.length < numItems) abandonStatus = 'incomplete';
+
       SuggestionController
-        .sendFinalSuggestions(this.photo.id, this.points)
+        .sendFinalSuggestions(this.photo.id, this.points, this.numberSuggestions, abandonStatus)
         .then((photos) => {
           // Rendering photos if we're at the gamed version
           if (this.gamed) this.renderGamedNextPhotos(photos);
@@ -290,15 +318,16 @@ class SuggestionModal {
       footerHTML = this.getFooterHTML('jump', currentIndex);
     }
     // Is this the initial modal?
-    var initial = currentIndex == 0;
+    const initial = currentIndex == 0;
 
     // Showing jBox modal
     this.suggestionModals[currentIndex.toString()] = new jBox('Modal', {
       animation: 'zoomIn',
-      overlay: initial ? true : false, // Only shows the overlay for the first modal
+      overlay: initial || forceOverlay ? true : false, // Only shows the overlay for the first modal
       blockScroll: false,
       closeButton: false,
-      closeOnEsc: initial ? true : false, // Only sets the closeOnEsc for the first modal
+      closeOnEsc: false,
+      closeOnClick: false,
       footer: footerHTML,
       title: titleHTML,
       content: contentHTML,
@@ -360,9 +389,54 @@ class SuggestionModal {
         $('.nao-sei-button').on('click', (() => {
           this.changePage(currentIndex);
         }).bind(this));
+
+        // Checking when click on send_message
+        $('#send_message').on('click', (() => {
+          // Setting redirectWindow variable
+          const redirectWindow = window.open('', '_blank');
+
+          // Creating chat
+          SuggestionController.createChat(this.photo.user_id)
+            .then((data) => {
+              // Open chat tab
+              redirectWindow.location = `/chats/${data}`;
+            }).catch((error) => {
+              console.log('ERRO', error);
+              return;
+            })
+        }).bind(this));
+
+        if (initial || forceOverlay) {
+          setTimeout((() => {
+            $('.jBox-overlay').on('click', (() => {
+              this.suggestionModals[this.currentIndex].close();
+            }).bind(this));
+          }).bind(this), 100)
+        }
+
       }).bind(this),
       // When any of the modals is closed, this function is called
       onClose: (() => {
+        const numItems = this.missingFields.length;
+
+        if (
+          this.currentIndex + 1 === this.suggestionModals.length &&
+          this.currentIndex < numItems
+          && this.points > 0
+        ) {
+          // Showing last modal, because we've sent suggestions
+          this.showLastModal(numItems - 1, currentIndex === 0)
+          return;
+        }
+        else if (
+          this.currentIndex + 1 === this.suggestionModals.length &&
+          this.currentIndex < numItems && this.points === 0
+        ) {
+          // Sending final suggestions without going to last page
+          SuggestionController
+            .sendFinalSuggestions(this.photo.id, this.points, this.numberSuggestions, 'none');
+        }
+
         // When closing one of the modals, close all modals
         this.suggestionModals.forEach((modal) => {
           modal.close();

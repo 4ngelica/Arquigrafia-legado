@@ -449,34 +449,6 @@
           @endif
       </hgroup>
 
-      <div id="progress-bar" class="progress-bar button hidden">
-        <div id="completed" class="fill-bar fill-{{ $completeness['present'] }}">
-          <span>{{ $completeness['present'] }}%</span>
-          <div class="bar-info">
-            <strong>Dados completos:</strong><br>
-            Esta foto tem {{ $completeness['present'] }}% dos dados preenchidos pelo autor ou aceitos após revisão da comunidade.
-          </div>
-        </div>
-        @if ($completeness['reviewing'] != 0)
-          <div id="revision" class="fill-bar fill-{{ $completeness['reviewing'] }}">
-            <span>{{ $completeness['reviewing'] }}%</span>
-            <div class="bar-info">
-              <strong>Dados em revisão:</strong><br>
-              Esta foto tem {{ $completeness['reviewing'] }}% dos dados em revisão que serão validados antes de serem disponibilizados.
-            </div>
-          </div>
-        @endif
-        @if ($completeness['missing'] != 0)
-          <div id="missing" class="fill-bar black fill-{{ $completeness['missing'] }}">
-            <span>{{ $completeness['missing'] }}%</span>
-            <div class="bar-info">
-              <strong>Dados a preencher:</strong><br>
-              Esta foto tem {{ $completeness['missing'] }}% dos dados ainda não preenchidos. Colabore com seus conhecimentos!
-            </div>
-          </div>
-        @endif
-      </div>
-
       {{-- @include('photo_feedback') --}}
 
       <div id="description_container">
@@ -571,6 +543,90 @@
         </p>
       @endif
       </div>
+
+      <div id="progress-bar" class="progress-bar button hidden">
+        @if ($completeness['present'] != 0)
+          <div id="completed" class="fill-bar fill-{{ $completeness['present'] }}">
+            <span>{{ $completeness['present'] }}%</span>
+            <div class="bar-info">
+              <strong>Dados completos:</strong><br />
+              Esta foto tem {{ $completeness['present'] }}% dos dados preenchidos pelo autor ou aceitos após revisão da comunidade.<br />
+              @if (!$isReviewing)
+                <a href="#" class="OpenModal">Gostaria de colaborar com mais informações?</a>
+              @endif
+            </div>
+          </div>
+        @endif
+        @if ($completeness['reviewing'] != 0)
+          <div id="revision" class="fill-bar fill-{{ $completeness['reviewing'] }}">
+            <span>{{ $completeness['reviewing'] }}%</span>
+            <div class="bar-info">
+              <strong>Dados em revisão:</strong><br>
+              Esta foto tem {{ $completeness['reviewing'] }}% dos dados em revisão que serão validados antes de serem disponibilizados.<br />
+            </div>
+          </div>
+        @endif
+        @if ($completeness['missing'] != 0)
+          <div id="missing" class="fill-bar black fill-{{ $completeness['missing'] }}">
+            <span>{{ $completeness['missing'] }}%</span>
+            <div class="bar-info">
+              <strong>Dados a preencher:</strong><br>
+              Esta foto tem {{ $completeness['missing'] }}% dos dados ainda não preenchidos.<br />
+              @if (!$isReviewing)
+                <a href="#" class="OpenModal">Gostaria de colaborar com mais informações?</a>
+              @endif
+            </div>
+          </div>
+        @endif
+      </div>
+
+      <!-- Suggestions Modal Button -->
+      @if ($photos->institution == null && $photos->type != "video")
+        @if (!$isReviewing)
+          <div class="modal-wrapper">
+            <div class="title2">Você conhece mais informações sobre esta arquitetura?</div>
+
+        		<div class="title1">
+              <p style="text-align: justify;">
+                Por exemplo:
+                @if (isset($missing))
+                  @foreach($missing as $missingField)
+                    @if($missingField == end($missing))
+                      {{$missingField['field_name']}}?
+                    @else
+                      {{$missingField['field_name']}},
+                    @endif
+                  @endforeach
+                @endif
+              </p>
+            </div>
+
+        		<div class="modal-button OpenModal">
+              @if ($user == null)
+                <a href="#">Faça o login e contribua com mais informações sobre esta imagem!</a>
+              @else
+                <a href="#">Ajude a completar dados!</a>
+              @endif
+        		</div>
+        	</div>
+        @endif
+
+        </br>
+      @endif
+
+      <!-- Showing message on institutions -->
+      @if ($photos->institution != null && $photos->type != "video")
+        <div class="modal-wrapper">
+          <div class="title1">
+            <p style="text-align: justify;">
+              Essas informações foram definidas pelo Acervo {{$photos->institution['name']}}.
+              Se você tem alguma informação adicional sobre esta imagem, por favor,
+              envie um email para <a href="mailto:{{$photos->institution['email']}}">{{$photos->institution['email']}}</a>
+            </p>
+          </div>
+        </div>
+      @endif
+
       <h4>Licença:</h4>
       <a class="tooltip_license"
         href="http://creativecommons.org/licenses/{{$license[0]}}/3.0/deed.pt_BR" target="_blank" >
@@ -591,38 +647,6 @@
         </span>
       </a>
       </br>
-
-      <!-- Suggestions Modal Button -->
-      @if ($photos->institution == null && $photos->type != "video")
-        @if (!$isReviewing)
-          <div class="modal-wrapper">
-            <div class="title2">Você conhece mais informações sobre esta arquitetura?</div>
-
-        		<div class="title1">
-              Por exemplo:
-              @if (isset($missing))
-                @foreach($missing as $missingField)
-                  @if($missingField == end($missing))
-                    {{$missingField['field_name']}}?
-                  @else
-                    {{$missingField['field_name']}},
-                  @endif
-                @endforeach
-              @endif
-            </div>
-
-        		<div class="modal-button" id="OpenModal">
-              @if ($user == null)
-                <a href="#">Faça o login e contribua com mais informações sobre esta imagem!</a>
-              @else
-                <a href="#">Ajude a completar dados!</a>
-              @endif
-        		</div>
-        	</div>
-        @endif
-
-        </br>
-      @endif
 
        <!-- GOOGLE MAPS -->
       <h4>Localização:</h4>
@@ -869,6 +893,11 @@
   		</div>
 
   		<div class="field-question sugestion">
+
+        @{{#if imageID }}
+          <img class="field-image" src="/arquigrafia-images/@{{ imageID }}_view.jpg" />
+        @{{/if}}
+
         <div class="question-container">
           @{{question}}
         </div>
@@ -903,8 +932,13 @@
   <script id="suggestion-modal-last-page-content" type="text/x-handlebars-template">
     <div class="jBox-content">
       <div class="field-name feedback">
-  			Obrigado por contribuir com informações para o nosso acervo digital!
+  			Obrigado por contribuir com o Arquigrafia! Suas sugestões foram enviadas para verificação do autor da imagem.
   		</div>
+      <div>
+        <p  class="label new-label">
+          Se desejar, entre em contato diretamente com o autor <a href="#" id="send_message"><span>aqui</span></a>
+        </p>
+      </div>
     </div>
   </script>
 
@@ -918,6 +952,12 @@
   		<div id="next-photos-container" class="image-sugestions">
         <!-- HANDLEBARS WILL RENDER THE IMAGES HERE -->
   		</div>
+
+      <div>
+        <p  class="label new-label">
+          Se desejar, entre em contato diretamente com o autor <a href="#" id="send_message"><span>aqui</span></a>
+        </p>
+      </div>
     </div>
   </script>
 
@@ -932,24 +972,6 @@
       </div>
     @{{/each}}
 
-    <!-- <div class="single-image-sugestions">
-      <a href="/photos/6069">
-        <img src="/arquigrafia-images/6069_home.jpg" />
-      </a>
-    </div>
-
-    <div class="single-image-sugestions">
-      <a href="/photos/4757">
-        <img src="/arquigrafia-images/4757_home.jpg" />
-      </a>
-    </div>
-
-    <div class="single-image-sugestions">
-      <a href="/photos/8608">
-        <img src="/arquigrafia-images/8608_home.jpg" />
-      </a>
-    </div> -->
-
   </script>
 
   <script id="suggestion-modal-confirm-footer" type="text/x-handlebars-template">
@@ -960,9 +982,19 @@
         <button class="nao-sei-button">@{{ jumpLabel }}</button>
       </div>
     </div>
-    <div class="progress-bar">
-			<div class="fill-bar fill-@{{percentage}}"></div>
-		</div>
+    <div class="nav-steps-container">
+      <nav class="nav-steps">
+        <ul>
+          @{{#times numItems}}
+            @{{#ifCond this ../currentIndex }}
+              <li class="-selected"></li>
+            @{{else}}
+              <li></li>
+            @{{/ifCond}}
+          @{{/times}}
+        </ul>
+      </nav>
+    </div>
   </script>
 
   <script id="suggestion-modal-jump-footer" type="text/x-handlebars-template">
@@ -971,9 +1003,19 @@
   			<button class="pular-etapa-button">@{{ label }}</button>
   		</div>
     </div>
-    <div class="progress-bar">
-			<div class="fill-bar fill-@{{percentage}}"></div>
-		</div>
+    <div class="nav-steps-container">
+      <nav class="nav-steps">
+        <ul>
+          @{{#times numItems}}
+            @{{#ifCond this ../currentIndex }}
+              <li class="-selected"></li>
+            @{{else}}
+              <li></li>
+            @{{/ifCond}}
+          @{{/times}}
+        </ul>
+      </nav>
+    </div>
   </script>
 
   <script id="suggestion-modal-close-footer" type="text/x-handlebars-template">
@@ -982,8 +1024,18 @@
         <button class="fechar-button">Fechar</button>
       </div>
     </div>
-    <div class="progress-bar">
-      <div class="fill-bar fill-@{{percentage}}"></div>
+    <div class="nav-steps-container">
+      <nav class="nav-steps">
+        <ul>
+          @{{#times numItems}}
+            @{{#ifCond this ../currentIndex }}
+              <li class="-selected"></li>
+            @{{else}}
+              <li></li>
+            @{{/ifCond}}
+          @{{/times}}
+        </ul>
+      </nav>
     </div>
   </script>
 
