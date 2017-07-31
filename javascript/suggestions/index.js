@@ -15,10 +15,6 @@ $(document).ready(() => {
   if (photo.institution) $('#OpenModal').hide();
   else $('#OpenModal').show();
 
-  // When the user ID is EVEN = Gamed
-  let gamed = false;
-  if (user) gamed = MathController.isEven(user.id);
-
   // Showing progress bar if it's gamed and it's not institution and not a video
   if (gamed && !photo.institution && photo.type !== 'video') {
     $("#progress-bar").removeClass("hidden");

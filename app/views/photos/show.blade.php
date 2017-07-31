@@ -33,6 +33,10 @@
   console.log('isReviewing', isReviewing);
   console.log('completeness', completeness);
 
+  // When the user ID is EVEN = Gamed
+  var gamed = {{ json_encode($gamefied) }};
+  // if (user) gamed = MathController.isEven(user.id);
+
   $(document).ready(function(){
     //MAP AND GEOREFERENCING CREATION AND SETTING
     var geocoder;
@@ -580,6 +584,8 @@
         @endif
       </div>
 
+
+
       <!-- Suggestions Modal Button -->
       @if ($photos->institution == null && $photos->type != "video")
         @if (!$isReviewing)
@@ -587,18 +593,16 @@
             <div class="title2">Você conhece mais informações sobre esta arquitetura?</div>
 
         		<div class="title1">
-              <p style="text-align: justify;">
-                Por exemplo:
-                @if (isset($missing))
-                  @foreach($missing as $missingField)
-                    @if($missingField == end($missing))
-                      {{$missingField['field_name']}}?
-                    @else
-                      {{$missingField['field_name']}},
-                    @endif
-                  @endforeach
-                @endif
-              </p>
+              Por exemplo:
+              @if (isset($missing))
+                @foreach($missing as $missingField)
+                  @if($missingField == end($missing))
+                    {{$missingField['field_name']}}?
+                  @else
+                    {{$missingField['field_name']}},
+                  @endif
+                @endforeach
+              @endif
             </div>
 
         		<div class="modal-button OpenModal">
@@ -609,6 +613,10 @@
               @endif
         		</div>
         	</div>
+        @elseif($isReviewing && !$gamefied)
+          <div class="modal-wrapper">
+            <div class="title1">Esta foto tem dados em revisão que serão validados antes de serem disponibilizados</div>
+          </div>
         @endif
 
         </br>
@@ -617,9 +625,9 @@
       <!-- Showing message on institutions -->
       @if ($photos->institution != null && $photos->type != "video")
         <div class="modal-wrapper">
+          <div class="title2">Essas informações foram definidas pelo(a) {{$photos->institution['name']}}.</div>
           <div class="title1">
             <p style="text-align: justify;">
-              Essas informações foram definidas pelo Acervo {{$photos->institution['name']}}.
               Se você tem alguma informação adicional sobre esta imagem, por favor,
               envie um email para <a href="mailto:{{$photos->institution['email']}}">{{$photos->institution['email']}}</a>
             </p>

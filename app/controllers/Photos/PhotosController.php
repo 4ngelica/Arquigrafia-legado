@@ -238,7 +238,8 @@ class PhotosController extends \BaseController {
       'type'=> $photos->type,
       'missing' => $final,
       'isReviewing' => $isReviewing,
-      'completeness' => $completeness
+      'completeness' => $completeness,
+      'gamefied' => true
     ]);
   }
 

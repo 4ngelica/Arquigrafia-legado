@@ -16896,10 +16896,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
   // Don't show modal when it's a institution
   if (photo.institution) (0, _jquery2.default)('#OpenModal').hide();else (0, _jquery2.default)('#OpenModal').show();
 
-  // When the user ID is EVEN = Gamed
-  var gamed = false;
-  if (user) gamed = _MathController2.default.isEven(user.id);
-
   // Showing progress bar if it's gamed and it's not institution and not a video
   if (gamed && !photo.institution && photo.type !== 'video') {
     (0, _jquery2.default)("#progress-bar").removeClass("hidden");

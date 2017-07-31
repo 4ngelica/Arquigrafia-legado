@@ -253,15 +253,18 @@ textarea.sugestion {
 .modal-wrapper .title1 {
   font-weight: 300;
   margin-bottom: 10px;
+  text-align: justify;
 }
 
 .modal-wrapper .title2 {
   font-weight: 700;
   margin-bottom: 7px;
+  text-align: justify;
 }
 
 .modal-wrapper .modal-button {
-  background: url(/img/suggestions-modal/feedback-button.png) left 7px center no-repeat #eee;
+  background: url(/img/suggestions-modal/helping-hand.png) left 7px center no-repeat #eee;
+  background-size: 25px 25px;
   float: left;
   padding: 10px 10px 10px 40px;
   border-radius: 10px;
@@ -273,7 +276,8 @@ textarea.sugestion {
 }
 
 .modal-wrapper .modal-button:hover {
-  background: url(/img/suggestions-modal/feedback-button.png) left 7px center no-repeat #ccc;
+  background: url(/img/suggestions-modal/helping-hand.png) left 7px center no-repeat #ccc;
+  background-size: 25px 25px;
   transition: 0.2s linear;
   cursor: pointer;
 }
