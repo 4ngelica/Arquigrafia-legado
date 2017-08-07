@@ -12,7 +12,7 @@ function markRead(object) {
             if (data != 1) noteIcon.title = "Você tem " + data + " notificações não lidas";
             else noteIcon.title = "Você tem " + data + " notificação não lida";
             if (data > 0) bubble.innerHTML = data;
-            else bubble.style.display = "none";     
+            else bubble.style.display = "none";
         });
     }
 
@@ -38,7 +38,7 @@ function refreshBubbleCounter() {
             if (data != 1) noteIcon.title = "Você tem " + data + " notificações não lidas";
             else noteIcon.title = "Você tem " + data + " notificação não lida";
             if (data > 0) bubble.innerHTML = data;
-            else bubble.style.display = "none"; 
+            else bubble.style.display = "none";
         })
 }
 
@@ -54,7 +54,7 @@ function toggleNotes(){
 }
 
 $(document).ready(function() {
-    
+
     $(".fancybox").fancybox({
         'opacity' : true,
         'margin'  : 2
@@ -74,7 +74,8 @@ $(document).ready(function() {
                     in_or_out = 1;
                     break;
                 }
-                target = target.parentElement;
+                if (target) target = target.parentElement;
+                else break;
             }
             if (notes_box != null) {
                 if (in_or_out == 0) {
