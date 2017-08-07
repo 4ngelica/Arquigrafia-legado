@@ -1,6 +1,6 @@
 /**
- * Method to show the retrieved tags in the form 
- * @param {String} tagsJson 
+ * Method to show the retrieved tags in the form
+ * @param {String} tagsJson
  * @param {textarea} containerText
  * @param {input type} tagInput
  */
@@ -8,7 +8,7 @@ function showTags(tagsJson, containerText, tagInput){
 
     if(tagsJson != null && tagsJson != ''){
         containerText.textext({ plugins: 'tags' });
-        var array = eval(tagsJson);  // convert string to array  
+        var array = eval(tagsJson);  // convert string to array
         for(i=0; i< array.length; i++){
             containerText.textext()[0].tags().addTags([ array[i] ]);
         }
@@ -17,18 +17,15 @@ function showTags(tagsJson, containerText, tagInput){
 }
 
 $(document).ready(function() {
-
-
-    
     //ok
-    $('#tagsArea').textext({ plugins: 'tags' });
+    // $('#tagsArea').textext({ plugins: 'tags' });
     $('#add_tag').click(function(e) {
         e.preventDefault();
         var tag = $('#tags_input').val();
         if (tag == '') return;
         if ($('#tagsArea').textext()[0] == null) {
             var sizeTags = $('#tags').textext()[0].tags()._formData.length;
-            if (sizeTags < 5) { 
+            if (sizeTags < 5) {
                 $('#tags').textext()[0].tags().addTags([ tag ]);
                 $('#tags_input').val('');
             }
@@ -53,7 +50,7 @@ $(document).ready(function() {
     });
 
         $('#workAuthor').keypress(function(e) {
-            var key = e.which || e.keyCode; 
+            var key = e.which || e.keyCode;
             if(key ==13)
                authorsList();
             if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
@@ -64,20 +61,20 @@ $(document).ready(function() {
       function authorsList(){
            var author = $('#workAuthor').val();
            if (author == '') return;
-        
+
             var sizeTags = $('#workAuthor_area').textext()[0].tags()._formData.length;
-            if (sizeTags < 3) { 
+            if (sizeTags < 3) {
                 $('#workAuthor_area').textext()[0].tags().addTags([ author ]);
                 $('#workAuthor').val('');
-            }     
+            }
             else {
                 $('#workAuthor').val('');
             }
       }
 
- 
+
     $(function() {
-        
+
         $( "#datePickerImageDate" ).datepicker({
             dateFormat:'dd/mm/yy'
         });
@@ -91,4 +88,3 @@ $(document).ready(function() {
     });
 
 });
-
