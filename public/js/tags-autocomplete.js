@@ -17,11 +17,7 @@ function showTags(tagsJson, containerText, tagInput){
 }
 
 $(document).ready(function() {
-
-
-    
-    //ok
-    $('#tagsArea').textext({ plugins: 'tags' });
+    // $('#tagsArea').textext({ plugins: 'tags' });
     $('#add_tag').click(function(e) {
         e.preventDefault();
         var tag = $('#tags_input').val();
