@@ -1,0 +1,48 @@
+/** Suggestions List **/
+.form-table.suggestions th {
+  text-align: left;
+  line-height: 30px;
+}
+
+.suggestion_photo {
+  width: 150px;
+}
+
+.suggestion-button {
+  float: left;
+  padding: 15px 15px 15px 40px;
+  border-radius: 10px;
+  margin-right: 5px;
+  position: relative;
+}
+
+.suggestion-button a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.suggestion-button:hover {
+  background-size: 20px 20px;
+  transition: 0.2s linear;
+  cursor: pointer;
+}
+
+.suggestion-button.thumbs-up {
+  background: url(/img/suggestions-list/thumbs-up.png) left 7px center no-repeat #eee;
+  background-size: 25px 25px;
+}
+
+.suggestion-button.thumbs-up:hover {
+  background: url(/img/suggestions-list/thumbs-up.png) left 7px center no-repeat #ccc;
+  background-size: 25px 25px;
+}
+
+.suggestion-button.thumbs-down {
+  background: url(/img/suggestions-list/thumbs-down.png) left 7px center no-repeat #eee;
+  background-size: 25px 25px;
+}
+
+.suggestion-button.thumbs-down:hover {
+  background: url(/img/suggestions-list/thumbs-down.png) left 7px center no-repeat #ccc;
+  background-size: 25px 25px;
+}

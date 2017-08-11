@@ -3,8 +3,9 @@
   <thead>
     <tr>
       <th>Foto</th>
+      <th>Nome da Foto</th>
       <th>Campo</th>
-      <th>Dado</th>
+      <th>Dado Atual</th>
       <th>Sugestão</th>
       <th>Ação</th>
     </tr>

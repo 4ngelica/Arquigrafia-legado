@@ -101,8 +101,9 @@ class SuggestionsController extends \BaseController {
 		$final = [];
 		foreach ($suggestions as $suggestion){
 			$field = PhotoAttributeType::find($suggestion->attribute_type)->attribute_type;
+			$field_name = Photo::$fields_data[$field]['name'];
 			$photo = $suggestion->photo;
-			$final[] = ['suggestion' => $suggestion, 'photo' => $photo, 'field' => $field];
+			$final[] = ['suggestion' => $suggestion, 'photo' => $photo, 'field' => $field, 'field_name' => $field_name];
 		}
 
 		return \View::make('show-suggestions', ['suggestions' => $final]);
