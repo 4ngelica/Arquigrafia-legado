@@ -65,7 +65,7 @@ class SuggestionsController extends \BaseController {
 			}	elseif($status == 'incomplete'){
 				EventLogger::printEventLogs(null, 'completion-incomplete', ['suggestions' => $suggestions], 'Web');
 			}
-
+			$email = $owner->email;
 			\Notification::create('suggestionReceived', $user, $photo, [$owner], null);
 			\Mail::send('emails.users.suggestion-received', array('name' => $owner->name, 'email' => $owner->email, 'id' => $owner->id ),
 				 function($msg) use($email) {
