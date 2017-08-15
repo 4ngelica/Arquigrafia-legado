@@ -8,11 +8,11 @@
 
         <div>
 
-            Sua imagem acaba de ser analisada por um membro do Arquigrafia com sugestões para incluir novas informações sobre ela.<br>
-            Por favor, acesse o link abaixo para visualizar as sugestões feitas.<br>
-            {{ URL::to('users/suggestions') }}<br>
+            Sua imagem {{$image}} acaba de ser analisada por um membro do Arquigrafia com sugestões para incluir novas informações sobre ela.<br>
+            Por favor, acesse o link abaixo para visualizar as sugestões feitas pelo usuário {{$user}}.<br>
+            {{ URL::to('users/suggestions') }}<br><br>
 
-            Atenciosamente,
+            Atenciosamente,<br><br>
             Equipe do Arquigrafia.
 
         </div>

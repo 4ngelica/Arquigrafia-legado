@@ -67,7 +67,8 @@ class SuggestionsController extends \BaseController {
 			}
 			$email = $owner->email;
 			\Notification::create('suggestionReceived', $user, $photo, [$owner], null);
-			\Mail::send('emails.users.suggestion-received', array('name' => $owner->name, 'email' => $owner->email, 'id' => $owner->id ),
+			\Mail::send('emails.users.suggestion-received', array('name' => $owner->name, 'email' => $owner->email, 'id' => $owner->id,
+		 																												'user' => $usar->name, 'image' => $photo->name),
 				 function($msg) use($email) {
 					 $msg->to($email)
 							 ->subject('[Arquigrafia]- Recebimento de Sugestão');
