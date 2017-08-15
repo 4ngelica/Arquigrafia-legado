@@ -93,7 +93,7 @@ class SuggestionsController extends \BaseController {
 	}
 
 	public function edit(){
-		if(!Auth::check())
+		if(!\Auth::check())
 			return Redirect::to('/users/login');
 		$user = \Auth::user();
 		$photos = $user->photos->lists('id');
