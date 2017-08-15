@@ -10,7 +10,7 @@
 
             Sua imagem acaba de ser analisada por um membro do Arquigrafia com sugestões para incluir novas informações sobre ela.<br>
             Por favor, acesse o link abaixo para visualizar as sugestões feitas.<br>
-            {{ URL::to('users/' . $id . '/suggestions') }}<br>
+            {{ URL::to('users/suggestions') }}<br>
 
             Atenciosamente,
             Equipe do Arquigrafia.
