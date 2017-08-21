@@ -2,6 +2,11 @@
 .form-table.suggestions th {
   text-align: left;
   line-height: 30px;
+  padding:0 5px 0 5px;
+}
+
+.form-table.suggestions td {
+  padding: 5px 5px 0 5px;
 }
 
 .suggestion_photo {
@@ -45,4 +50,8 @@
 .suggestion-button.thumbs-down:hover {
   background: url(/img/suggestions-list/thumbs-down.png) left 7px center no-repeat #ccc;
   background-size: 25px 25px;
+}
+
+.table-suggestion-collumn {
+  max-width: 200px;
 }

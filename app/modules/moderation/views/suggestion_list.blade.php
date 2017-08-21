@@ -12,13 +12,13 @@
     <td>{{ $suggestion['field_name'] }}</td>
     <!-- Current Data -->
     @if ($suggestion['suggestion']->photo[$suggestion['field']])
-      <td>{{ $suggestion['suggestion']->photo[$suggestion['field']] }}</td>
+      <td class="table-suggestion-collumn">{{ $suggestion['suggestion']->photo[$suggestion['field']] }}</td>
     @else
       <td>-----</td>
     @endif
     <!-- Suggested data -->
     @if ($suggestion['suggestion']->text)
-      <td>{{ $suggestion['suggestion']->text }}</td>
+      <td class="table-suggestion-collumn">{{ $suggestion['suggestion']->text }}</td>
     @else
       <td>-----</td>
     @endif
