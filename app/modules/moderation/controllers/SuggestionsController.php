@@ -73,7 +73,7 @@ class SuggestionsController extends \BaseController {
 							 ->subject('[Arquigrafia]- Recebimento de Sugestão');
 			 });
 
-	    $photosObj = Photo::where('accepted', 0)->where('type', '<>', 'video')->whereNull('institution_id')->get()->shuffle();
+	    $photosObj = Photo::where('accepted', 0)->where('type', '<>', 'video')->whereNull('institution_id')->orderByRaw("RAND()")->take(150)->get()->shuffle();
 			$i = 0;
 			$photosFiltered = array();
 			$i = 0;
