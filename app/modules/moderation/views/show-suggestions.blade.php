@@ -4,6 +4,8 @@
   <title>Arquigrafia - Seu universo de imagens de arquitetura</title>
   <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/suggestions/suggestions-list.css" />
 
+  <script type="text/javascript" src="{{ URL::to("/") }}/js/dist/suggestionsList.bundle.js"></script>
+
   <script type="text/javascript">
   // Missing fields and questions (to show on Modal)
   var suggestions = {{ json_encode($suggestions) }};

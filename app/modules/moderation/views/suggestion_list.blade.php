@@ -12,16 +12,23 @@
     <td>{{ $suggestion['field_name'] }}</td>
     <!-- Current Data -->
     @if ($suggestion['suggestion']->photo[$suggestion['field']])
-      <td>{{ $suggestion['suggestion']->photo[$suggestion['field']] }}</td>
+      <td class="table-suggestion-collumn">{{ $suggestion['suggestion']->photo[$suggestion['field']] }}</td>
     @else
       <td>-----</td>
     @endif
     <!-- Suggested data -->
     @if ($suggestion['suggestion']->text)
-      <td>{{ $suggestion['suggestion']->text }}</td>
+      <td class="table-suggestion-collumn">{{ $suggestion['suggestion']->text }}</td>
     @else
       <td>-----</td>
     @endif
+    <td>
+      <div class="new-message">
+        <a class="create-chat-link" data-val="{{$suggestion['suggestion']->user['id']}}" href="#">
+          {{ $suggestion['suggestion']->user['name'] }}
+        </a>
+      </div>
+    </td>
     <td>
       <div class="suggestion-button thumbs-up">
         <form id="send-thumbs-up-form" method="post">

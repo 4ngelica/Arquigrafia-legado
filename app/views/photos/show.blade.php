@@ -625,7 +625,7 @@
       <!-- Showing message on institutions -->
       @if ($photos->institution != null && $photos->type != "video")
         <div class="modal-wrapper">
-          <div class="title2">Essas informações foram definidas pelo(a) {{$photos->institution['name']}}.</div>
+          <div class="title2">Essas informações foram definidas pelo {{$photos->institution['name']}}.</div>
           <div class="title1">
             <p style="text-align: justify;">
               Se você tem alguma informação adicional sobre esta imagem, por favor,
