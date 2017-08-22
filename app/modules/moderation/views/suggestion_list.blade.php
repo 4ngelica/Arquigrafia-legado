@@ -23,6 +23,13 @@
       <td>-----</td>
     @endif
     <td>
+      <div class="new-message">
+        <a class="create-chat-link" data-val="{{$suggestion['suggestion']->user['id']}}" href="#">
+          {{ $suggestion['suggestion']->user['name'] }}
+        </a>
+      </div>
+    </td>
+    <td>
       <div class="suggestion-button thumbs-up">
         <form id="send-thumbs-up-form" method="post">
           <input name="suggestion_id" value="{{ $suggestion['suggestion']->id }}" type="hidden"/>

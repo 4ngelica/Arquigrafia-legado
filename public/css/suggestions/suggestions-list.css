@@ -15,7 +15,7 @@
 
 .suggestion-button {
   float: left;
-  padding: 15px 15px 15px 40px;
+  padding: 15px 15px 15px 30px;
   border-radius: 10px;
   margin-right: 5px;
   position: relative;
@@ -34,24 +34,41 @@
 
 .suggestion-button.thumbs-up {
   background: url(/img/suggestions-list/thumbs-up.png) left 7px center no-repeat #eee;
-  background-size: 25px 25px;
+  background-size: 20px 20px;
 }
 
 .suggestion-button.thumbs-up:hover {
   background: url(/img/suggestions-list/thumbs-up.png) left 7px center no-repeat #ccc;
-  background-size: 25px 25px;
+  background-size: 20px 20px;
 }
 
 .suggestion-button.thumbs-down {
   background: url(/img/suggestions-list/thumbs-down.png) left 7px center no-repeat #eee;
-  background-size: 25px 25px;
+  background-size: 20px 20px;
 }
 
 .suggestion-button.thumbs-down:hover {
   background: url(/img/suggestions-list/thumbs-down.png) left 7px center no-repeat #ccc;
-  background-size: 25px 25px;
+  background-size: 20px 20px;
 }
 
 .table-suggestion-collumn {
   max-width: 200px;
+}
+
+.new-message {
+  display: flex;
+  position: relative;
+}
+
+.new-message a{
+  padding: 13px 3px 8px 28px;
+  background: url(../../img/new-message.png) left center no-repeat transparent;
+  border-radius: 5px;
+}
+
+.new-message a:hover{
+  border-radius: 5px;
+  color: #000;
+  text-decoration: underline;
 }

@@ -4,6 +4,7 @@ var webpack = require('webpack');
 module.exports = {
   entry: {
     suggestions: './javascript/suggestions',
+    suggestionsList: './javascript/suggestions-list',
   },
   output: {
     filename: '[name].bundle.js',

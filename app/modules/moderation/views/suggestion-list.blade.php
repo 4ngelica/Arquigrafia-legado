@@ -7,6 +7,7 @@
       <th>Campo</th>
       <th>Dado Atual</th>
       <th>Sugestão</th>
+      <th>Revisor</th>
       <th>Ação</th>
     </tr>
   </thead>
