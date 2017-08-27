@@ -6,7 +6,7 @@
         <a href="{{ URL::to("/home") }}" id="logo"></a>
         <p id="beta">beta</p>
       </div>
-      
+
       <!--   MENU SUPERIOR   -->
       <div id="first_menu" class="four columns">
           <!--   MENU INSTITUCIONAL   -->
@@ -37,9 +37,9 @@
       {{-- <div id="loggin_area_institutional"> --}}
       <div id="loggin_area" class="four columns omega">
 
-      @if (Auth::check()) 
-        @if ( Session::has('institutionId') )            
-          <a id="user_name" href="{{ URL::to('/institutions/' . $institution->id) }}">{{Session::get('displayInstitution') }} {{-- $institution->name; --}}</a>            
+      @if (Auth::check())
+        @if ( Session::has('institutionId') )
+          <a id="user_name" href="{{ URL::to('/institutions/' . $institution->id) }}">{{Session::get('displayInstitution') }} {{-- $institution->name; --}}</a>
           <a id="user_photo" href="{{ URL::to('/institutions/' . $institution->id) }}">
             @if( ! empty($institution->photo) )
               <img src="{{ asset($institution->photo) }}" width="48" height="48" class="user_photo_thumbnail"/>
@@ -95,12 +95,9 @@
               <a href="{{ URL::to('/chats') }}">MENSAGENS</a>
               @if (Auth::user()->newMessagesCount() > 0) <div id="bubble2"> {{Auth::user()->newMessagesCount()}} </div>  @endif
             </div>
-
           </li>
 
         <!-- <li><a href="{{ URL::to("/badges") }}" id="badge" title="Vizualizar badges">&nbsp;</a></li>-->
-
-
         </ul>
 
         <div id="notes-box">
