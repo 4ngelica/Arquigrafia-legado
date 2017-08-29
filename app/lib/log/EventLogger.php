@@ -209,22 +209,26 @@ class EventLogger {
                 $info = sprintf('[%s] Completude de dados de ID nº: %s, pela página %s, via %s',
                                 $date_and_time, $eventContent['suggestion'], $sourcePage, $device);
                 break;
-			case "completion-none":
-					$info = sprintf('[%s] Fluxo de cartões - Abandono sem ação pela página %s, via %s',
-													$date_and_time, $sourcePage, $device);
-					break;
-			case "completion-incomplete":
-					$info = sprintf('[%s] Fluxo de cartões - Abandono com %s sugestões pela página %s, via %s',
-													$date_and_time, $eventContent['suggestions'], $sourcePage, $device);
-					break;
-			case "completion-complete":
-					$info = sprintf('[%s] Fluxo de cartões - Finalizado com %s sugestões pela página %s, via %s',
-													$date_and_time, $eventContent['suggestions'], $sourcePage, $device);
-					break;
+						case "completion-none":
+								$info = sprintf('[%s] Fluxo de cartões - Abandono sem ação pela página %s, via %s',
+																$date_and_time, $sourcePage, $device);
+								break;
+						case "completion-incomplete":
+								$info = sprintf('[%s] Fluxo de cartões - Abandono com %s sugestões pela página %s, via %s',
+																$date_and_time, $eventContent['suggestions'], $sourcePage, $device);
+								break;
+						case "completion-complete":
+								$info = sprintf('[%s] Fluxo de cartões - Finalizado com %s sugestões pela página %s, via %s',
+																$date_and_time, $eventContent['suggestions'], $sourcePage, $device);
+								break;
             case "moderation":
                 $info = sprintf('[%s] Moderacao de dados no Id: %s, pela página %s, via %s',
                                 $date_and_time, $eventContent['suggestion'], $sourcePage, $device);
                 break;
+						case "card-chat":
+								$info = sprintf('[%s] Chat - Acesso pelo fluxo de cartões na página %s, via %s',
+																$date_and_time, $sourcePage, $device);
+								break;
             default:
                 break;
         }
