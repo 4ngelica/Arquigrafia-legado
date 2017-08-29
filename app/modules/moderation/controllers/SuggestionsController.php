@@ -66,13 +66,14 @@ class SuggestionsController extends \BaseController {
 				EventLogger::printEventLogs(null, 'completion-incomplete', ['suggestions' => $suggestions], 'Web');
 			}
 			$email = $owner->email;
-			\Notification::create('suggestionReceived', $user, $photo, [$owner], null);
-			\Mail::send('emails.users.suggestion-received', array('name' => $owner->name, 'email' => $owner->email, 'id' => $owner->id, 'user' => $user->name, 'image' => $photo->name),
-				 function($msg) use($email) {
-					 $msg->to($email)
-							 ->subject('[Arquigrafia]- Recebimento de Sugestão');
-			 });
-
+			if ($points > 0){
+				\Notification::create('suggestionReceived', $user, $photo, [$owner], null);
+				\Mail::send('emails.users.suggestion-received', array('name' => $owner->name, 'email' => $owner->email, 'id' => $owner->id, 'user' => $user->name, 'image' => $photo->name),
+					function($msg) use($email) {
+						$msg->to($email)
+							  ->subject('[Arquigrafia]- Recebimento de Sugestão');
+					});
+		  }
 	    $photosObj = Photo::where('accepted', 0)->where('type', '<>', 'video')->whereNull('institution_id')->orderByRaw("RAND()")->take(50)->get()->shuffle();
 			$i = 0;
 			$photosFiltered = array();
