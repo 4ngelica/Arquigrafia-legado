@@ -125,12 +125,14 @@ class SuggestionsController extends \BaseController {
 			$suggestion->accepted = true;
 			$suggestion->save();
 			Photo::updateSuggestion($field, $suggestion->text, $suggestion->photo_id);
-			\Notification::create('suggestionAccepted', $user, $photo, [$suggestion->user], null);
+			if(!$photo->checkPhotoReviewing())
+				\Notification::create('suggestionAccepted', $user, $photo, [$suggestion->user], null);
 		}
 		if($status == 'rejected'){
 			$suggestion->accepted = false;
 			$suggestion->save();
-			\Notification::create('suggestionDenied', $user, $photo, [$suggestion->user], null);
+			if(!$photo->checkPhotoReviewing())
+				\Notification::create('suggestionDenied', $user, $photo, [$suggestion->user], null);
 		}
 		return \Redirect::to('/users/suggestions');
 	}
