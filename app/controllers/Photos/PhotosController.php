@@ -14,18 +14,28 @@ use modules\evaluations\models\Binomial as Binomial;
 class PhotosController extends \BaseController {
 
   protected $date;
+  protected $gamified;
 
   public function __construct(Date $date = null)
   {
     $this->beforeFilter('auth',
       array( 'except' => ['index','show'] ));
     $this->date = $date ?: new Date;
+    // Setting gamified initial value
+    $this->gamified = false;
   }
 
   public function index()
   {
     $photos = Photo::all();
     return View::make('/photos/index',['photos' => $photos]);
+  }
+
+  public function showGamified($id) {
+    // Setting gamified flag to true
+    $this->gamified = true;
+    // Running show
+    return $this->show($id);
   }
 
   public function show($id)
@@ -239,7 +249,7 @@ class PhotosController extends \BaseController {
       'missing' => $final,
       'isReviewing' => $isReviewing,
       'completeness' => $completeness,
-      'gamefied' => true
+      'gamified' => $this->gamified
     ]);
   }
 

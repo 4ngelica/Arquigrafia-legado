@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/test', function () { 
+Route::get('/test', function () {
   //testes
 });
 
@@ -82,7 +82,7 @@ Route::resource('/users/institutionalLogin','UsersController@institutionalLogin'
 Route::get('/friends/follow/{user_id}', 'UsersController@follow');
 Route::get('/friends/unfollow/{user_id}', 'UsersController@unfollow');
 
-// AVATAR 
+// AVATAR
 Route::get('/profile/10/showphotoprofile/{profile_id}', 'UsersController@profile');
 
 /* ALBUMS */
@@ -108,10 +108,8 @@ Route::get('/photos/migrar','PhotosController@migrar');
 Route::get('/photos/rollmigrar','PhotosController@rollmigrar');
 Route::get('/photos/download/{photo_id}','PhotosController@download');
 Route::resource('/photos','PhotosController');
-
+Route::get('/photos/g/{id}','PhotosController@showGamified');
 
 /* SEARCH PAGE */
 Route::get('/search/paginate/other/photos', 'PagesController@paginatePhotosResult');
 Route::get('/search/more/paginate/other/photos', 'PagesController@paginatePhotosResultAdvance');
-
-

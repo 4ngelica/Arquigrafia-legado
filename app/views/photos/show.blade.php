@@ -34,7 +34,7 @@
   console.log('completeness', completeness);
 
   // When the user ID is EVEN = Gamed
-  var gamed = {{ json_encode($gamefied) }};
+  var gamed = {{ json_encode($gamified) }};
   // if (user) gamed = MathController.isEven(user.id);
 
   $(document).ready(function(){
@@ -613,7 +613,7 @@
               @endif
         		</div>
         	</div>
-        @elseif($isReviewing && !$gamefied)
+        @elseif($isReviewing)
           <div class="modal-wrapper">
             <div class="title1">Esta foto tem dados em revisão que serão validados antes de serem disponibilizados</div>
           </div>
