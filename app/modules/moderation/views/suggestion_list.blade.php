@@ -31,17 +31,19 @@
     </td>
     <td>
       <div class="suggestion-button thumbs-up">
+        <!-- Form for THUMBS UP -->
         <form id="send-thumbs-up-form" method="post">
           <input name="suggestion_id" value="{{ $suggestion['suggestion']->id }}" type="hidden"/>
           <input name="operation" value="accepted" type="hidden"/>
-          <a href="javascript:{}" onclick="document.getElementById('send-thumbs-up-form').submit(); return false;">Aceitar</a>
+          <a class="thumbs-link" href="javascript:{}">Aceitar</a>
         </form>
       </div>
       <div class="suggestion-button thumbs-down">
+        <!-- Form for THUMBS DOWN -->
         <form id="send-thumbs-down-form" method="post">
           <input name="suggestion_id" value="{{ $suggestion['suggestion']->id }}" type="hidden"/>
           <input name="operation" value="rejected" type="hidden"/>
-          <a href="javascript:{}" onclick="document.getElementById('send-thumbs-down-form').submit(); return false;">Rejeitar</a>
+          <a class="thumbs-link" href="javascript:{}">Rejeitar</a>
         </form>
       </div>
     </td>

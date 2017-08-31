@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10330,91 +10330,6 @@ return jQuery;
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-		value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * This class is responsable for Math operations
- */
-
-var MathController = function () {
-		function MathController() {
-				_classCallCheck(this, MathController);
-		}
-
-		_createClass(MathController, null, [{
-				key: 'decimalAdjust',
-
-
-				/**
-    * Decimal adjustment of a number.
-    *
-    * @param	{String}	type	The type of adjustment.
-    * @param	{Number}	value	The number.
-    * @param	{Integer}	exp		The exponent (the 10 logarithm of the adjustment base).
-    * @returns	{Number}			The adjusted value.
-    */
-				value: function decimalAdjust(type, value, exp) {
-						// If the exp is undefined or zero...
-						if (typeof exp === 'undefined' || +exp === 0) {
-								return Math[type](value);
-						}
-						value = +value;
-						exp = +exp;
-						// If the value is not a number or the exp is not an integer...
-						if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
-								return NaN;
-						}
-						// Shift
-						value = value.toString().split('e');
-						value = Math[type](+(value[0] + 'e' + (value[1] ? +value[1] - exp : -exp)));
-						// Shift back
-						value = value.toString().split('e');
-						return +(value[0] + 'e' + (value[1] ? +value[1] + exp : exp));
-				}
-		}, {
-				key: 'ceil10',
-				value: function ceil10(value, exp) {
-						return MathController.decimalAdjust('ceil', value, exp);
-				}
-		}, {
-				key: 'round10',
-				value: function round10(value, exp) {
-						return MathController.decimalAdjust('round', value, exp);
-				}
-		}, {
-				key: 'floor10',
-				value: function floor10(value, exp) {
-						return MathController.decimalAdjust('floor', value, exp);
-				}
-		}, {
-				key: 'isEven',
-				value: function isEven(number) {
-						if (number % 2 === 0) {
-								return true;
-						}
-
-						return false;
-				}
-		}]);
-
-		return MathController;
-}();
-
-exports.default = MathController;
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
 /* WEBPACK VAR INJECTION */(function(process, Promise, global, setImmediate) {/* @preserve
  * The MIT License (MIT)
  * 
@@ -16034,10 +15949,10 @@ module.exports = ret;
 
 },{"./es5":13}]},{},[4])(4)
 });                    ;if (typeof window !== 'undefined' && window !== null) {                               window.P = window.Promise;                                                     } else if (typeof self !== 'undefined' && self !== null) {                             self.P = self.Promise;                                                         }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(2), __webpack_require__(4), __webpack_require__(11).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(1), __webpack_require__(3), __webpack_require__(6).setImmediate))
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -16227,7 +16142,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports) {
 
 var g;
@@ -16254,7 +16169,473 @@ module.exports = g;
 
 
 /***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(Promise) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * This is responsable for controlling suggestions
+ * This is where we will put the network requests
+ */
+
+var SuggestionController = function () {
+  function SuggestionController() {
+    _classCallCheck(this, SuggestionController);
+  }
+
+  _createClass(SuggestionController, null, [{
+    key: 'sendSuggestion',
+
+    /**
+     * Sending the suggestion through AJAX request to the server
+     * @param  {Number} userID        The current logged user ID
+     * @param  {Number} photoID       The current photo ID
+     * @param  {String} attributeType The attribute that you wanna send the suggestion
+     * @param  {String} text          The text of the suggestion that you're sending
+     */
+    value: function sendSuggestion(userID, photoID, attributeType, text) {
+      // Mounting params
+      var data = {
+        user_id: userID,
+        photo_id: photoID,
+        attribute_type: attributeType,
+        text: text
+      };
+
+      console.log('DADOS DA SUGESTAO', data);
+
+      // Sending ajax request
+      $.ajax({
+        type: "POST",
+        url: '/suggestions',
+        data: data,
+        success: function success(data) {
+          console.log('SUGESTAO ENVIADA', data);
+        },
+        error: function error(_error) {
+          console.log('ERROR', _error);
+        }
+      }, "json");
+    }
+
+    /**
+     * Sended at the end, to get the final pictures
+     * @param  {String} photoID    The ID of the picture that we're in
+     * @param  {Number} points     The points that the user may get
+     * @param  {String} status     Can be 'none', 'complete' or 'incomplete'
+     * @return {Promise}           Promise with the result of the request
+     */
+
+  }, {
+    key: 'sendFinalSuggestions',
+    value: function sendFinalSuggestions(photoID, points, numberSuggestions, status) {
+      // Mounting params
+      var data = {
+        photo: photoID,
+        points: points,
+        status: status,
+        suggestions: numberSuggestions
+      };
+
+      console.log('DADOS ENVIADOS', data);
+
+      return new Promise(function (resolve, reject) {
+        // Sending ajax request
+        $.ajax({
+          type: "POST",
+          url: '/suggestions/sent',
+          data: data,
+          success: function success(data) {
+            console.log('DADOS RECEBIDOS', data);
+            resolve(data);
+          },
+          error: function error(_error2) {
+            console.log('ERRO AO ENVIAR SUGESTAO FINAL', _error2);
+            reject(_error2);
+          }
+        }, "json");
+      });
+    }
+  }, {
+    key: 'createChat',
+    value: function createChat(userID) {
+      return new Promise(function (resolve, reject) {
+        // Defining data to create chat
+        var data = {
+          participants: [userID]
+          // Making ajax request
+        };$.ajax({
+          type: "POST",
+          url: '/chats',
+          data: data,
+          success: function success(response) {
+            console.log('CHAT CRIADO', response);
+            if (response !== false) resolve(response);else reject(response);
+          },
+          error: function error(_error3) {
+            console.log('ERRO AO CRIAR CHAT', _error3);
+            reject(_error3);
+          }
+        }, "json");
+      });
+    }
+  }]);
+
+  return SuggestionController;
+}();
+
+exports.default = SuggestionController;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ }),
 /* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
+    "use strict";
+
+    if (global.setImmediate) {
+        return;
+    }
+
+    var nextHandle = 1; // Spec says greater than zero
+    var tasksByHandle = {};
+    var currentlyRunningATask = false;
+    var doc = global.document;
+    var registerImmediate;
+
+    function setImmediate(callback) {
+      // Callback can either be a function or a string
+      if (typeof callback !== "function") {
+        callback = new Function("" + callback);
+      }
+      // Copy function arguments
+      var args = new Array(arguments.length - 1);
+      for (var i = 0; i < args.length; i++) {
+          args[i] = arguments[i + 1];
+      }
+      // Store and register the task
+      var task = { callback: callback, args: args };
+      tasksByHandle[nextHandle] = task;
+      registerImmediate(nextHandle);
+      return nextHandle++;
+    }
+
+    function clearImmediate(handle) {
+        delete tasksByHandle[handle];
+    }
+
+    function run(task) {
+        var callback = task.callback;
+        var args = task.args;
+        switch (args.length) {
+        case 0:
+            callback();
+            break;
+        case 1:
+            callback(args[0]);
+            break;
+        case 2:
+            callback(args[0], args[1]);
+            break;
+        case 3:
+            callback(args[0], args[1], args[2]);
+            break;
+        default:
+            callback.apply(undefined, args);
+            break;
+        }
+    }
+
+    function runIfPresent(handle) {
+        // From the spec: "Wait until any invocations of this algorithm started before this one have completed."
+        // So if we're currently running a task, we'll need to delay this invocation.
+        if (currentlyRunningATask) {
+            // Delay by doing a setTimeout. setImmediate was tried instead, but in Firefox 7 it generated a
+            // "too much recursion" error.
+            setTimeout(runIfPresent, 0, handle);
+        } else {
+            var task = tasksByHandle[handle];
+            if (task) {
+                currentlyRunningATask = true;
+                try {
+                    run(task);
+                } finally {
+                    clearImmediate(handle);
+                    currentlyRunningATask = false;
+                }
+            }
+        }
+    }
+
+    function installNextTickImplementation() {
+        registerImmediate = function(handle) {
+            process.nextTick(function () { runIfPresent(handle); });
+        };
+    }
+
+    function canUsePostMessage() {
+        // The test against `importScripts` prevents this implementation from being installed inside a web worker,
+        // where `global.postMessage` means something completely different and can't be used for this purpose.
+        if (global.postMessage && !global.importScripts) {
+            var postMessageIsAsynchronous = true;
+            var oldOnMessage = global.onmessage;
+            global.onmessage = function() {
+                postMessageIsAsynchronous = false;
+            };
+            global.postMessage("", "*");
+            global.onmessage = oldOnMessage;
+            return postMessageIsAsynchronous;
+        }
+    }
+
+    function installPostMessageImplementation() {
+        // Installs an event handler on `global` for the `message` event: see
+        // * https://developer.mozilla.org/en/DOM/window.postMessage
+        // * http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html#crossDocumentMessages
+
+        var messagePrefix = "setImmediate$" + Math.random() + "$";
+        var onGlobalMessage = function(event) {
+            if (event.source === global &&
+                typeof event.data === "string" &&
+                event.data.indexOf(messagePrefix) === 0) {
+                runIfPresent(+event.data.slice(messagePrefix.length));
+            }
+        };
+
+        if (global.addEventListener) {
+            global.addEventListener("message", onGlobalMessage, false);
+        } else {
+            global.attachEvent("onmessage", onGlobalMessage);
+        }
+
+        registerImmediate = function(handle) {
+            global.postMessage(messagePrefix + handle, "*");
+        };
+    }
+
+    function installMessageChannelImplementation() {
+        var channel = new MessageChannel();
+        channel.port1.onmessage = function(event) {
+            var handle = event.data;
+            runIfPresent(handle);
+        };
+
+        registerImmediate = function(handle) {
+            channel.port2.postMessage(handle);
+        };
+    }
+
+    function installReadyStateChangeImplementation() {
+        var html = doc.documentElement;
+        registerImmediate = function(handle) {
+            // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
+            // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
+            var script = doc.createElement("script");
+            script.onreadystatechange = function () {
+                runIfPresent(handle);
+                script.onreadystatechange = null;
+                html.removeChild(script);
+                script = null;
+            };
+            html.appendChild(script);
+        };
+    }
+
+    function installSetTimeoutImplementation() {
+        registerImmediate = function(handle) {
+            setTimeout(runIfPresent, 0, handle);
+        };
+    }
+
+    // If supported, we should attach to the prototype of global, since that is where setTimeout et al. live.
+    var attachTo = Object.getPrototypeOf && Object.getPrototypeOf(global);
+    attachTo = attachTo && attachTo.setTimeout ? attachTo : global;
+
+    // Don't get fooled by e.g. browserify environments.
+    if ({}.toString.call(global.process) === "[object process]") {
+        // For Node.js before 0.9
+        installNextTickImplementation();
+
+    } else if (canUsePostMessage()) {
+        // For non-IE10 modern browsers
+        installPostMessageImplementation();
+
+    } else if (global.MessageChannel) {
+        // For web workers, where supported
+        installMessageChannelImplementation();
+
+    } else if (doc && "onreadystatechange" in doc.createElement("script")) {
+        // For IE 6–8
+        installReadyStateChangeImplementation();
+
+    } else {
+        // For older browsers
+        installSetTimeoutImplementation();
+    }
+
+    attachTo.setImmediate = setImmediate;
+    attachTo.clearImmediate = clearImmediate;
+}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(2)))
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var apply = Function.prototype.apply;
+
+// DOM APIs, for completeness
+
+exports.setTimeout = function() {
+  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
+};
+exports.setInterval = function() {
+  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
+};
+exports.clearTimeout =
+exports.clearInterval = function(timeout) {
+  if (timeout) {
+    timeout.close();
+  }
+};
+
+function Timeout(id, clearFn) {
+  this._id = id;
+  this._clearFn = clearFn;
+}
+Timeout.prototype.unref = Timeout.prototype.ref = function() {};
+Timeout.prototype.close = function() {
+  this._clearFn.call(window, this._id);
+};
+
+// Does not start the time, just sets up the members needed.
+exports.enroll = function(item, msecs) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = msecs;
+};
+
+exports.unenroll = function(item) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = -1;
+};
+
+exports._unrefActive = exports.active = function(item) {
+  clearTimeout(item._idleTimeoutId);
+
+  var msecs = item._idleTimeout;
+  if (msecs >= 0) {
+    item._idleTimeoutId = setTimeout(function onTimeout() {
+      if (item._onTimeout)
+        item._onTimeout();
+    }, msecs);
+  }
+};
+
+// setimmediate attaches itself to the global object
+__webpack_require__(5);
+exports.setImmediate = setImmediate;
+exports.clearImmediate = clearImmediate;
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+		value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * This class is responsable for Math operations
+ */
+
+var MathController = function () {
+		function MathController() {
+				_classCallCheck(this, MathController);
+		}
+
+		_createClass(MathController, null, [{
+				key: 'decimalAdjust',
+
+
+				/**
+    * Decimal adjustment of a number.
+    *
+    * @param	{String}	type	The type of adjustment.
+    * @param	{Number}	value	The number.
+    * @param	{Integer}	exp		The exponent (the 10 logarithm of the adjustment base).
+    * @returns	{Number}			The adjusted value.
+    */
+				value: function decimalAdjust(type, value, exp) {
+						// If the exp is undefined or zero...
+						if (typeof exp === 'undefined' || +exp === 0) {
+								return Math[type](value);
+						}
+						value = +value;
+						exp = +exp;
+						// If the value is not a number or the exp is not an integer...
+						if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
+								return NaN;
+						}
+						// Shift
+						value = value.toString().split('e');
+						value = Math[type](+(value[0] + 'e' + (value[1] ? +value[1] - exp : -exp)));
+						// Shift back
+						value = value.toString().split('e');
+						return +(value[0] + 'e' + (value[1] ? +value[1] + exp : exp));
+				}
+		}, {
+				key: 'ceil10',
+				value: function ceil10(value, exp) {
+						return MathController.decimalAdjust('ceil', value, exp);
+				}
+		}, {
+				key: 'round10',
+				value: function round10(value, exp) {
+						return MathController.decimalAdjust('round', value, exp);
+				}
+		}, {
+				key: 'floor10',
+				value: function floor10(value, exp) {
+						return MathController.decimalAdjust('floor', value, exp);
+				}
+		}, {
+				key: 'isEven',
+				value: function isEven(number) {
+						if (number % 2 === 0) {
+								return true;
+						}
+
+						return false;
+				}
+		}]);
+
+		return MathController;
+}();
+
+exports.default = MathController;
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16266,7 +16647,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jbox = __webpack_require__(9);
+var _jbox = __webpack_require__(11);
 
 var _jbox2 = _interopRequireDefault(_jbox);
 
@@ -16274,11 +16655,11 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _MathController = __webpack_require__(1);
+var _MathController = __webpack_require__(7);
 
 var _MathController2 = _interopRequireDefault(_MathController);
 
-var _SuggestionController = __webpack_require__(7);
+var _SuggestionController = __webpack_require__(4);
 
 var _SuggestionController2 = _interopRequireDefault(_SuggestionController);
 
@@ -16735,137 +17116,8 @@ var SuggestionModal = function () {
 exports.default = SuggestionModal;
 
 /***/ }),
-/* 6 */,
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(Promise) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * This is responsable for controlling suggestions
- * This is where we will put the network requests
- */
-
-var SuggestionController = function () {
-  function SuggestionController() {
-    _classCallCheck(this, SuggestionController);
-  }
-
-  _createClass(SuggestionController, null, [{
-    key: 'sendSuggestion',
-
-    /**
-     * Sending the suggestion through AJAX request to the server
-     * @param  {Number} userID        The current logged user ID
-     * @param  {Number} photoID       The current photo ID
-     * @param  {String} attributeType The attribute that you wanna send the suggestion
-     * @param  {String} text          The text of the suggestion that you're sending
-     */
-    value: function sendSuggestion(userID, photoID, attributeType, text) {
-      // Mounting params
-      var data = {
-        user_id: userID,
-        photo_id: photoID,
-        attribute_type: attributeType,
-        text: text
-      };
-
-      console.log('DADOS DA SUGESTAO', data);
-
-      // Sending ajax request
-      $.ajax({
-        type: "POST",
-        url: '/suggestions',
-        data: data,
-        success: function success(data) {
-          console.log('SUGESTAO ENVIADA', data);
-        },
-        error: function error(_error) {
-          console.log('ERROR', _error);
-        }
-      }, "json");
-    }
-
-    /**
-     * Sended at the end, to get the final pictures
-     * @param  {String} photoID    The ID of the picture that we're in
-     * @param  {Number} points     The points that the user may get
-     * @param  {String} status     Can be 'none', 'complete' or 'incomplete'
-     * @return {Promise}           Promise with the result of the request
-     */
-
-  }, {
-    key: 'sendFinalSuggestions',
-    value: function sendFinalSuggestions(photoID, points, numberSuggestions, status) {
-      // Mounting params
-      var data = {
-        photo: photoID,
-        points: points,
-        status: status,
-        suggestions: numberSuggestions
-      };
-
-      console.log('DADOS ENVIADOS', data);
-
-      return new Promise(function (resolve, reject) {
-        // Sending ajax request
-        $.ajax({
-          type: "POST",
-          url: '/suggestions/sent',
-          data: data,
-          success: function success(data) {
-            console.log('DADOS RECEBIDOS', data);
-            resolve(data);
-          },
-          error: function error(_error2) {
-            console.log('ERRO AO ENVIAR SUGESTAO FINAL', _error2);
-            reject(_error2);
-          }
-        }, "json");
-      });
-    }
-  }, {
-    key: 'createChat',
-    value: function createChat(userID) {
-      return new Promise(function (resolve, reject) {
-        // Defining data to create chat
-        var data = {
-          participants: [userID]
-          // Making ajax request
-        };$.ajax({
-          type: "POST",
-          url: '/chats',
-          data: data,
-          success: function success(response) {
-            console.log('CHAT CRIADO', response);
-            if (response !== false) resolve(response);else reject(response);
-          },
-          error: function error(_error3) {
-            console.log('ERRO AO CRIAR CHAT', _error3);
-            reject(_error3);
-          }
-        }, "json");
-      });
-    }
-  }]);
-
-  return SuggestionController;
-}();
-
-exports.default = SuggestionController;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
-
-/***/ }),
-/* 8 */
+/* 9 */,
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16875,11 +17127,11 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _SuggestionModal = __webpack_require__(5);
+var _SuggestionModal = __webpack_require__(8);
 
 var _SuggestionModal2 = _interopRequireDefault(_SuggestionModal);
 
-var _MathController = __webpack_require__(1);
+var _MathController = __webpack_require__(7);
 
 var _MathController2 = _interopRequireDefault(_MathController);
 
@@ -16941,7 +17193,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 });
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -18778,258 +19030,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
   
   return jBox;
 }));
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
-    "use strict";
-
-    if (global.setImmediate) {
-        return;
-    }
-
-    var nextHandle = 1; // Spec says greater than zero
-    var tasksByHandle = {};
-    var currentlyRunningATask = false;
-    var doc = global.document;
-    var registerImmediate;
-
-    function setImmediate(callback) {
-      // Callback can either be a function or a string
-      if (typeof callback !== "function") {
-        callback = new Function("" + callback);
-      }
-      // Copy function arguments
-      var args = new Array(arguments.length - 1);
-      for (var i = 0; i < args.length; i++) {
-          args[i] = arguments[i + 1];
-      }
-      // Store and register the task
-      var task = { callback: callback, args: args };
-      tasksByHandle[nextHandle] = task;
-      registerImmediate(nextHandle);
-      return nextHandle++;
-    }
-
-    function clearImmediate(handle) {
-        delete tasksByHandle[handle];
-    }
-
-    function run(task) {
-        var callback = task.callback;
-        var args = task.args;
-        switch (args.length) {
-        case 0:
-            callback();
-            break;
-        case 1:
-            callback(args[0]);
-            break;
-        case 2:
-            callback(args[0], args[1]);
-            break;
-        case 3:
-            callback(args[0], args[1], args[2]);
-            break;
-        default:
-            callback.apply(undefined, args);
-            break;
-        }
-    }
-
-    function runIfPresent(handle) {
-        // From the spec: "Wait until any invocations of this algorithm started before this one have completed."
-        // So if we're currently running a task, we'll need to delay this invocation.
-        if (currentlyRunningATask) {
-            // Delay by doing a setTimeout. setImmediate was tried instead, but in Firefox 7 it generated a
-            // "too much recursion" error.
-            setTimeout(runIfPresent, 0, handle);
-        } else {
-            var task = tasksByHandle[handle];
-            if (task) {
-                currentlyRunningATask = true;
-                try {
-                    run(task);
-                } finally {
-                    clearImmediate(handle);
-                    currentlyRunningATask = false;
-                }
-            }
-        }
-    }
-
-    function installNextTickImplementation() {
-        registerImmediate = function(handle) {
-            process.nextTick(function () { runIfPresent(handle); });
-        };
-    }
-
-    function canUsePostMessage() {
-        // The test against `importScripts` prevents this implementation from being installed inside a web worker,
-        // where `global.postMessage` means something completely different and can't be used for this purpose.
-        if (global.postMessage && !global.importScripts) {
-            var postMessageIsAsynchronous = true;
-            var oldOnMessage = global.onmessage;
-            global.onmessage = function() {
-                postMessageIsAsynchronous = false;
-            };
-            global.postMessage("", "*");
-            global.onmessage = oldOnMessage;
-            return postMessageIsAsynchronous;
-        }
-    }
-
-    function installPostMessageImplementation() {
-        // Installs an event handler on `global` for the `message` event: see
-        // * https://developer.mozilla.org/en/DOM/window.postMessage
-        // * http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html#crossDocumentMessages
-
-        var messagePrefix = "setImmediate$" + Math.random() + "$";
-        var onGlobalMessage = function(event) {
-            if (event.source === global &&
-                typeof event.data === "string" &&
-                event.data.indexOf(messagePrefix) === 0) {
-                runIfPresent(+event.data.slice(messagePrefix.length));
-            }
-        };
-
-        if (global.addEventListener) {
-            global.addEventListener("message", onGlobalMessage, false);
-        } else {
-            global.attachEvent("onmessage", onGlobalMessage);
-        }
-
-        registerImmediate = function(handle) {
-            global.postMessage(messagePrefix + handle, "*");
-        };
-    }
-
-    function installMessageChannelImplementation() {
-        var channel = new MessageChannel();
-        channel.port1.onmessage = function(event) {
-            var handle = event.data;
-            runIfPresent(handle);
-        };
-
-        registerImmediate = function(handle) {
-            channel.port2.postMessage(handle);
-        };
-    }
-
-    function installReadyStateChangeImplementation() {
-        var html = doc.documentElement;
-        registerImmediate = function(handle) {
-            // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
-            // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
-            var script = doc.createElement("script");
-            script.onreadystatechange = function () {
-                runIfPresent(handle);
-                script.onreadystatechange = null;
-                html.removeChild(script);
-                script = null;
-            };
-            html.appendChild(script);
-        };
-    }
-
-    function installSetTimeoutImplementation() {
-        registerImmediate = function(handle) {
-            setTimeout(runIfPresent, 0, handle);
-        };
-    }
-
-    // If supported, we should attach to the prototype of global, since that is where setTimeout et al. live.
-    var attachTo = Object.getPrototypeOf && Object.getPrototypeOf(global);
-    attachTo = attachTo && attachTo.setTimeout ? attachTo : global;
-
-    // Don't get fooled by e.g. browserify environments.
-    if ({}.toString.call(global.process) === "[object process]") {
-        // For Node.js before 0.9
-        installNextTickImplementation();
-
-    } else if (canUsePostMessage()) {
-        // For non-IE10 modern browsers
-        installPostMessageImplementation();
-
-    } else if (global.MessageChannel) {
-        // For web workers, where supported
-        installMessageChannelImplementation();
-
-    } else if (doc && "onreadystatechange" in doc.createElement("script")) {
-        // For IE 6–8
-        installReadyStateChangeImplementation();
-
-    } else {
-        // For older browsers
-        installSetTimeoutImplementation();
-    }
-
-    attachTo.setImmediate = setImmediate;
-    attachTo.clearImmediate = clearImmediate;
-}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(3)))
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var apply = Function.prototype.apply;
-
-// DOM APIs, for completeness
-
-exports.setTimeout = function() {
-  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
-};
-exports.setInterval = function() {
-  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
-};
-exports.clearTimeout =
-exports.clearInterval = function(timeout) {
-  if (timeout) {
-    timeout.close();
-  }
-};
-
-function Timeout(id, clearFn) {
-  this._id = id;
-  this._clearFn = clearFn;
-}
-Timeout.prototype.unref = Timeout.prototype.ref = function() {};
-Timeout.prototype.close = function() {
-  this._clearFn.call(window, this._id);
-};
-
-// Does not start the time, just sets up the members needed.
-exports.enroll = function(item, msecs) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = msecs;
-};
-
-exports.unenroll = function(item) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = -1;
-};
-
-exports._unrefActive = exports.active = function(item) {
-  clearTimeout(item._idleTimeoutId);
-
-  var msecs = item._idleTimeout;
-  if (msecs >= 0) {
-    item._idleTimeoutId = setTimeout(function onTimeout() {
-      if (item._onTimeout)
-        item._onTimeout();
-    }, msecs);
-  }
-};
-
-// setimmediate attaches itself to the global object
-__webpack_require__(10);
-exports.setImmediate = setImmediate;
-exports.clearImmediate = clearImmediate;
-
 
 /***/ })
 /******/ ]);

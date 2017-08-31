@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10327,8 +10327,7 @@ return jQuery;
 
 
 /***/ }),
-/* 1 */,
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process, Promise, global, setImmediate) {/* @preserve
@@ -15950,10 +15949,10 @@ module.exports = ret;
 
 },{"./es5":13}]},{},[4])(4)
 });                    ;if (typeof window !== 'undefined' && window !== null) {                               window.P = window.Promise;                                                     } else if (typeof self !== 'undefined' && self !== null) {                             self.P = self.Promise;                                                         }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(2), __webpack_require__(4), __webpack_require__(11).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(1), __webpack_require__(3), __webpack_require__(6).setImmediate))
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -16143,7 +16142,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports) {
 
 var g;
@@ -16170,44 +16169,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 5 */,
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _SuggestionController = __webpack_require__(7);
-
-var _SuggestionController2 = _interopRequireDefault(_SuggestionController);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-(0, _jquery2.default)(document).ready(function () {
-  // On DOM ready, add the click event to the open modal button
-  (0, _jquery2.default)('.create-chat-link').click(function (e) {
-    // Getting userID
-    var userID = (0, _jquery2.default)(e.currentTarget).data('val');
-    // Setting redirectWindow variable
-    var redirectWindow = window.open('', '_blank');
-
-    // Creating chat
-    _SuggestionController2.default.createChat(userID).then(function (data) {
-      // Open chat tab
-      redirectWindow.location = '/chats/' + data;
-    }).catch(function (error) {
-      console.log('ERRO', error);
-      return;
-    });
-  });
-});
-
-/***/ }),
-/* 7 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16333,12 +16295,10 @@ var SuggestionController = function () {
 }();
 
 exports.default = SuggestionController;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 8 */,
-/* 9 */,
-/* 10 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -16528,10 +16488,10 @@ exports.default = SuggestionController;
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(2)))
 
 /***/ }),
-/* 11 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var apply = Function.prototype.apply;
@@ -16584,10 +16544,62 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(10);
+__webpack_require__(5);
 exports.setImmediate = setImmediate;
 exports.clearImmediate = clearImmediate;
 
+
+/***/ }),
+/* 7 */,
+/* 8 */,
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _SuggestionController = __webpack_require__(4);
+
+var _SuggestionController2 = _interopRequireDefault(_SuggestionController);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// On DOM ready
+(0, _jquery2.default)(document).ready(function () {
+
+  /**
+   * Click event to the open modal button
+   */
+  (0, _jquery2.default)('.create-chat-link').click(function (e) {
+    // Getting userID
+    var userID = (0, _jquery2.default)(e.currentTarget).data('val');
+    // Setting redirectWindow variable
+    var redirectWindow = window.open('', '_blank');
+
+    // Creating chat
+    _SuggestionController2.default.createChat(userID).then(function (data) {
+      // Open chat tab
+      redirectWindow.location = '/chats/' + data;
+    }).catch(function (error) {
+      // Showing error
+      console.log('ERRO', error);
+      return;
+    });
+  });
+
+  /**
+   * User pressed thumbs-down-link or thumbs-up-link
+   */
+  (0, _jquery2.default)('.thumbs-link').click(function (e) {
+    // When the user clicks on Thumbs Down or Thumbs Up Link on Suggestions List, submits the parent form.
+    // Important: The form must be the PARENT element.
+    (0, _jquery2.default)(e.currentTarget.parentElement).submit();
+  });
+});
 
 /***/ })
 /******/ ]);
