@@ -12,8 +12,13 @@ use modules\notifications\models\Notification;
 
 class SuggestionsController extends \BaseController {
 
+	public function __construct() {
+    // Filtering if user is logged out, redirect to login page
+    $this->beforeFilter('auth',
+      array('except' => []));
+  }
 
-	public function store(){
+	public function store() {
 		$input = \Input::all();
 
 		$rules = array(
@@ -94,8 +99,6 @@ class SuggestionsController extends \BaseController {
 	}
 
 	public function edit(){
-		if(!\Auth::check())
-			return \Redirect::to('/users/login');
 		$user = \Auth::user();
 		$photos = $user->photos->lists('id');
 		//$photos = [1];
