@@ -91,7 +91,7 @@ class Photo extends Eloquent {
 						  'validation'  => 'Este é o nome correto desta obra?',
 						  'name'        => 'Nome',
 						  'type'        => 'string'],
-		'projectAuthor' => ['information' => 'Qual é o nome do autor deste projeto?',
+		'project_author' => ['information' => 'Qual é o nome do autor deste projeto?',
 						  'validation'  => 'Este é o nome correto do autor deste projeto?',
 						  'name'        => 'Autor do Projeto',
 						  'type'        => 'string'],
@@ -801,7 +801,7 @@ class Photo extends Eloquent {
 	}
 
 	public function checkValidationFields($field){
-		$validation = ['city', 'country', 'description', 'district', 'imageAuthor', 'state', 'street', 'name', 'projectAuthor', 'workAuthor', 'workDate'];
+		$validation = ['city', 'country', 'description', 'district', 'imageAuthor', 'state', 'street', 'name', 'project_author', 'workDate'];
 		if(!in_array($field, $validation))
 			throw new Exception('Unexpected field type');
 		$list = Suggestion::join('photo_attribute_types', 'suggestions.attribute_type', '=', 'photo_attribute_types.id')
@@ -814,7 +814,7 @@ class Photo extends Eloquent {
 			return 'none';
 	}
 	public function checkPhotoReviewing(){
-		$fields = ['city', 'country', 'description', 'district', 'imageAuthor','state', 'street', 'name', 'projectAuthor', 'workDate'];
+		$fields = ['city', 'country', 'description', 'district', 'imageAuthor','state', 'street', 'name', 'project_author', 'workDate'];
 		foreach ($fields as $field) {
 			if($this->checkValidationFields($field) ==  'reviewing')
 				return true;
@@ -849,7 +849,7 @@ class Photo extends Eloquent {
 			case 'name':
 				$photo->name = $data;
 				break;
-			case 'projectAuthor':
+			case 'project_author':
 				$photo->project_author = $data;
 				break;
 			case 'workDate':

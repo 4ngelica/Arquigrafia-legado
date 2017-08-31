@@ -53,13 +53,10 @@ class SuggestionModal {
       case 'name':
       case 'description':
       case 'imageAuthor':
-      case 'workAuthor':
-        icon = 'image-author-icon';
-        break;
       case 'lastPage':
         icon = 'feedback-icon';
         break;
-  		case 'projectAuthor':
+  		case 'project_author':
   			icon = 'author-icon';
   			break;
       default:

@@ -147,9 +147,9 @@ class PhotosController extends \BaseController {
     else
       $present[] = 'workDate';
     if($photos->project_author == null)
-      $missing[] = 'projectAuthor';
+      $missing[] = 'project_author';
     else
-      $present[] = 'projectAuthor';
+      $present[] = 'project_author';
 
     $final = array();
     //shuffling arrays

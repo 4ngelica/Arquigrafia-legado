@@ -30,20 +30,20 @@
       </div>
     </td>
     <td>
-      <div class="suggestion-button thumbs-up">
+      <div class="suggestion-button thumbs-up thumbs-link">
         <!-- Form for THUMBS UP -->
         <form id="send-thumbs-up-form" method="post">
           <input name="suggestion_id" value="{{ $suggestion['suggestion']->id }}" type="hidden"/>
           <input name="operation" value="accepted" type="hidden"/>
-          <a class="thumbs-link" href="javascript:{}">Aceitar</a>
+          <span>Aceitar</span>
         </form>
       </div>
-      <div class="suggestion-button thumbs-down">
+      <div class="suggestion-button thumbs-down thumbs-link">
         <!-- Form for THUMBS DOWN -->
         <form id="send-thumbs-down-form" method="post">
           <input name="suggestion_id" value="{{ $suggestion['suggestion']->id }}" type="hidden"/>
           <input name="operation" value="rejected" type="hidden"/>
-          <a class="thumbs-link" href="javascript:{}">Rejeitar</a>
+          <span>Rejeitar</span>
         </form>
       </div>
     </td>

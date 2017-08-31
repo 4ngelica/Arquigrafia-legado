@@ -26,12 +26,12 @@ $(document).ready(() => {
   });
 
   /**
-   * User pressed thumbs-down-link or thumbs-up-link
+   * User pressed thumbs-link
    */
   $('.thumbs-link').click((e) => {
-    // When the user clicks on Thumbs Down or Thumbs Up Link on Suggestions List, submits the parent form.
-    // Important: The form must be the PARENT element.
-    $(e.currentTarget.parentElement).submit()
+    // When the user clicks on Thumbs Down or Thumbs Up on Suggestions List, submits the children form.
+    // Important: The form must be the CHILDREN element.
+    $(e.currentTarget).children('form').submit();
   });
 
 });

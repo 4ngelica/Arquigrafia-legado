@@ -16592,12 +16592,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
   });
 
   /**
-   * User pressed thumbs-down-link or thumbs-up-link
+   * User pressed thumbs-link
    */
   (0, _jquery2.default)('.thumbs-link').click(function (e) {
-    // When the user clicks on Thumbs Down or Thumbs Up Link on Suggestions List, submits the parent form.
-    // Important: The form must be the PARENT element.
-    (0, _jquery2.default)(e.currentTarget.parentElement).submit();
+    // When the user clicks on Thumbs Down or Thumbs Up on Suggestions List, submits the children form.
+    // Important: The form must be the CHILDREN element.
+    (0, _jquery2.default)(e.currentTarget).children('form').submit();
   });
 });
 
