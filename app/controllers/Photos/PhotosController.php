@@ -18,8 +18,9 @@ class PhotosController extends \BaseController {
 
   public function __construct(Date $date = null)
   {
+    // Filtering if user is logged out, redirect to login page
     $this->beforeFilter('auth',
-      array( 'except' => ['index','show'] ));
+      array( 'except' => ['index', 'show', 'showGamified'] ));
     $this->date = $date ?: new Date;
     // Setting gamified initial value
     $this->gamified = false;
