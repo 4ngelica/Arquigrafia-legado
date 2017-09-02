@@ -1,7 +1,7 @@
 <?php
 namespace modules\notifications\models;
 
-use \Tricki\Notification\Models\Notification; 
+use \Tricki\Notification\Models\Notification as TrickiNotification; 
 use User;
 
 class FollowNotification extends \Tricki\Notification\Models\Notification
@@ -9,11 +9,11 @@ class FollowNotification extends \Tricki\Notification\Models\Notification
 	public static $type = 'follow';
 
     public function render() {
-        return array($this->getTypes(), 
-                     $this->getSender(),  
-                     $this->getDate(), 
-                     $this->getTime(), 
-                     $this->getSenderID(), 
+        return array($this->getTypes(),
+                     $this->getSender(),
+                     $this->getDate(),
+                     $this->getTime(),
+                     $this->getSenderID(),
                      $this->getData()
                      );
     }

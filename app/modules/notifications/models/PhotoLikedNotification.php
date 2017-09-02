@@ -1,7 +1,7 @@
 <?php
 namespace modules\notifications\models;
 
-use \Tricki\Notification\Models\Notification; 
+use \Tricki\Notification\Models\Notification as TrickiNotification; 
 use User;
 
 class PhotoLikedNotification extends \Tricki\Notification\Models\Notification
@@ -9,12 +9,12 @@ class PhotoLikedNotification extends \Tricki\Notification\Models\Notification
     public static $type = 'photo_liked';
 
     public function render() {
-        return array($this->getTypes(), 
-                     $this->getSender(), 
-                     $this->getPhotoID(), 
-                     $this->getDate(), 
-                     $this->getTime(), 
-                     $this->getSenderID(), 
+        return array($this->getTypes(),
+                     $this->getSender(),
+                     $this->getPhotoID(),
+                     $this->getDate(),
+                     $this->getTime(),
+                     $this->getSenderID(),
                      $this->getData()
                      );
     }

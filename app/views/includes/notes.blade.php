@@ -164,8 +164,7 @@
                         <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
                         <div onclick="markRead(this);">
                             <a href={{URL::to("badges/" . $info_array[3])}}>
-                                <img class="mini"
-                                src="{{ asset('img/badges/' . $info_array[4]) }}" >
+                              <img class="mini" src="{{ asset('img/badges/' . $info_array[4]) }}" >
                             </a>
                             Você ganhou o troféu
                             <a href={{URL::to("badges/" . $info_array[3])}}>"{{ $info_array[2]}}"</a>
@@ -179,15 +178,9 @@
                     <li>
                         <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
                         <div onclick="markRead(this);">
-
-                                <img class="mini"
-                                src="{{ URL::to("/") }}/img/avatar-48.png" >
-                            </a>
-                            Você teve sua sugestão enviada
-
-
-                            </br>
-
+                          <img class="mini" src="{{ URL::to("/") }}/img/avatar-48.png" >
+                          Você teve sua sugestão enviada
+                          </br>
                         </div>
                     </li>
                 </div>
@@ -197,15 +190,9 @@
                       <a href="{{URL::to("/users/suggestions")}}">
                         <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
                         <div onclick="markRead(this);">
-
-                                <img class="mini"
-                                src="{{ URL::to("/") }}/img/avatar-48.png" >
-                            
-                            Você recebeu uma sugestão
-
-
+                          <img class="mini" src="{{ URL::to("/") }}/img/avatar-48.png" >
+                            Você recebeu uma sugestão para imagem "{{ $info_array[6]->name }}" do usuário "{{ $info_array[1] }}"
                             </br>
-
                         </div>
                       </a>
                     </li>
@@ -215,15 +202,9 @@
                     <li>
                         <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
                         <div onclick="markRead(this);">
-
-                                <img class="mini"
-                                src="{{ URL::to("/") }}/img/avatar-48.png" >
-                            </a>
-                            Você teve sua sugestão aceita
-
-
-                            </br>
-
+                          <img class="mini" src="{{ URL::to("/") }}/img/avatar-48.png" >
+                          Você teve sua sugestão aceita
+                          </br>
                         </div>
                     </li>
                 </div>
@@ -232,15 +213,9 @@
                     <li>
                         <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
                         <div onclick="markRead(this);">
-
-                                <img class="mini"
-                                src="{{ URL::to("/") }}/img/avatar-48.png" >
-                            </a>
-                            Você teve sua sugestão rejeitada
-
-
-                            </br>
-
+                          <img class="mini" src="{{ URL::to("/") }}/img/avatar-48.png" >
+                          Você teve sua sugestão rejeitada
+                          </br>
                         </div>
                     </li>
                 </div>
