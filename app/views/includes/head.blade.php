@@ -10,6 +10,7 @@ h.end=i=function(){s.className=s.className.replace(RegExp(' ?'+y),'')};
 // {'GTM-53MPGDL':true}); // PRODUCTION
 {'GTM-P4PGZX9':true}); // REVOADA
 </script>
+<!-- END OPTIMIZE REDUCE PAGE DELAY -->
 <!-- ANALYTICS AND OPTIMIZE -->
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -22,6 +23,14 @@ h.end=i=function(){s.className=s.className.replace(RegExp(' ?'+y),'')};
   ga('require', 'GTM-P4PGZX9'); // REVOADA
   ga('send', 'pageview');
 </script>
+<!-- END OF ANALYTICS AND OPTIMIZE -->
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MRLDGW3');</script>
+<!-- End Google Tag Manager -->
 <!--   ESTILO GERAL   -->
 {{-- <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/style.css" /> --}}
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/style.old.css" />
