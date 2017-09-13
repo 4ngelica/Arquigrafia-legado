@@ -20,7 +20,7 @@ class PhotosController extends \BaseController {
   {
     // Filtering if user is logged out, redirect to login page
     $this->beforeFilter('auth',
-      array( 'except' => ['index', 'show', 'showGamified'] ));
+      array( 'except' => ['index', 'show', 'showGamified', 'showGamifiedWithoutID'] ));
     $this->date = $date ?: new Date;
     // Setting gamified initial value
     $this->gamified = false;
@@ -32,6 +32,18 @@ class PhotosController extends \BaseController {
     return View::make('/photos/index',['photos' => $photos]);
   }
 
+  /**
+   * This function represents the route when the user want to get the
+   * gamified page, but the id is not present on the URL.
+   * This function will recover the ID from session and redirect to gamified page
+   */
+  public function showGamifiedWithoutID() {
+    // Recovering id from Session
+    $id = Session::get('photo_id');
+    // Redirecting to gamified page
+    return Redirect::to('/photos/g/'.$id);
+  }
+
   public function showGamified($id) {
     // Setting gamified flag to true
     $this->gamified = true;
@@ -41,7 +53,11 @@ class PhotosController extends \BaseController {
 
   public function show($id)
   {
+    // Saving the photo id to Session, this id can be used on gamified page
+    Session::put('photo_id', $id);
+    // Getting photo by id
     $photos = Photo::find($id);
+    // If didn't find the photo, go to home
     if ( !isset($photos) ) {
       return Redirect::to('/home');
     }

@@ -107,8 +107,9 @@ Route::get('/photos/upload','PhotosController@form');
 Route::get('/photos/migrar','PhotosController@migrar');
 Route::get('/photos/rollmigrar','PhotosController@rollmigrar');
 Route::get('/photos/download/{photo_id}','PhotosController@download');
-Route::resource('/photos','PhotosController');
+Route::get('/photos/g','PhotosController@showGamifiedWithoutId');
 Route::get('/photos/g/{id}','PhotosController@showGamified');
+Route::resource('/photos','PhotosController');
 
 /* SEARCH PAGE */
 Route::get('/search/paginate/other/photos', 'PagesController@paginatePhotosResult');
