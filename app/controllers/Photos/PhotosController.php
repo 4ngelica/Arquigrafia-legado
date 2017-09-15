@@ -12,7 +12,6 @@ use modules\evaluations\models\Evaluation as Evaluation;
 use modules\evaluations\models\Binomial as Binomial;
 
 class PhotosController extends \BaseController {
-
   protected $date;
   protected $gamified;
 
@@ -20,7 +19,7 @@ class PhotosController extends \BaseController {
   {
     // Filtering if user is logged out, redirect to login page
     $this->beforeFilter('auth',
-      array( 'except' => ['index', 'show', 'showGamified', 'showGamifiedWithoutID'] ));
+      array( 'except' => ['index', 'show', 'showGamified', 'showWithoutID'] ));
     $this->date = $date ?: new Date;
     // Setting gamified initial value
     $this->gamified = false;
@@ -37,7 +36,7 @@ class PhotosController extends \BaseController {
    * gamified page, but the id is not present on the URL.
    * This function will recover the ID from session and redirect to gamified page
    */
-  public function showGamifiedWithoutID() {
+  public function showWithoutID() {
     // Recovering id from Session
     $id = Session::get('photo_id');
     // Redirecting to gamified page
