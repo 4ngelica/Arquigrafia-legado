@@ -72,6 +72,8 @@ Route::get('/users/forget', 'UsersController@forgetForm');
 Route::post('/users/forget', 'UsersController@forget');
 Route::get('/getPicture', 'UsersController@getFacebookPicture');
 
+Route::get('/users/g', 'UsersController@showWithoutID');
+Route::get('/users/g/{id}', 'UsersController@showGamified');
 Route::resource('/users','UsersController');
 Route::resource('/users/stoaLogin','UsersController@stoaLogin');
 

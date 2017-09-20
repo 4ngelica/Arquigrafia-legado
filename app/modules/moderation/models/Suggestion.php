@@ -15,4 +15,13 @@ class Suggestion extends \Eloquent {
 	public function photo(){
 		return $this->belongsTo('Photo');
 	}
+
+	/**
+	 * This function return the number of each suggestion value as points
+	 * For now returns a static number, on the future suggestions can have different values,
+	 * depending on the type
+	 */
+	public function numPoints() {
+		return 5;
+	}
 }

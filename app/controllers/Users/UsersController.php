@@ -12,10 +12,15 @@ use Illuminate\Database\Eloquent\Collection as Collection;
 
 class UsersController extends \BaseController {
 
+  protected $gamified;
+
   public function __construct()
   {
     $this->beforeFilter('auth',
       array('only' => ['follow', 'unfollow']));
+
+    // Setting gamified initial value
+    $this->gamified = false;
     
   }
   
@@ -26,17 +31,66 @@ class UsersController extends \BaseController {
     return View::make('/users/index',['users' => $users]);
   }
 
+  /**
+   * This function represents the route when the user want to get the
+   * gamified page, but the id is not present on the URL.
+   * This function will recover the ID from session and redirect to gamified page
+   */
+  public function showWithoutID()
+  {
+    // Recovering id from Session
+    $id = Session::get('user_id');
+    // Redirecting to gamified page
+    return Redirect::to('/users/g/' . $id);
+  }
+
+  public function showGamified($id)
+  {
+    // Setting gamified flag to true
+    $this->gamified = true;
+    // Running show
+    return $this->show($id);
+  }
+
   public function show($id)
   { 
+    // Saving the id to Session, this id can be used on gamified page
+    Session::put('user_id', $id);
+    // Getting user info
     $user = User::whereid($id)->first();
     $institutionFollowed = $user->followingInstitution;
-    $photos = $user->photos()->get()->reverse(); 
+    $photos = $user->photos()->get()->reverse();
+    // Starting suggestions variables as a empty array
+    $acceptedSuggestions = [];
+    $waitingSuggestions = [];
+    $refusedSuggestions = [];
+    // Also, userPoints and userWaitingPoints start value is 0
+    $userPoints = 0;
+    $userWaitingPoints = 0;
+    // If you're logged in
     if (Auth::check()) {   
-      if (Auth::user()->following->contains($user->id))
-        $follow = false;
-      else 
-        $follow = true; 
-    } else{ 
+      // Marking if you're following the user
+      if (Auth::user()->following->contains($user->id)) $follow = false;
+      else $follow = true;
+
+      // If the current user is the user that we wanna show the profile
+      if ($user->equal(Auth::user())) {
+        // Getting the acceptedSuggestions for user
+        $acceptedSuggestions = $user->suggestions()->where('accepted', '=', 1)->get();
+        foreach ($acceptedSuggestions as $suggestion) {
+          // Adding the suggestion numPoints to user points
+          $userPoints += $suggestion->numPoints();
+        }
+        // Getting waiting points for user
+        $waitingSuggestions = $user->suggestions()->where('accepted', '=', null)->get();
+        foreach ($waitingSuggestions as $suggestion) {
+          // Adding the suggestions numPoints to the waiting points
+          $userWaitingPoints += $suggestion->numPoints();
+        }
+        // Getting refused suggestions
+        $refusedSuggestions = $user->suggestions()->where('accepted', '=', 0)->get();
+      }
+    } else {
       $follow = true;
       $followInstitution = true;
     }
@@ -50,7 +104,13 @@ class UsersController extends \BaseController {
       'lastDateUpdatePhoto' => Photo::getLastUpdatePhotoByUser($id),
       'lastDateUploadPhoto' => Photo::getLastUploadPhotoByUser($id),
       'albums' => $albums,
-      'institutionFollowed' => $institutionFollowed
+      'institutionFollowed' => $institutionFollowed,
+      'gamified' => $this->gamified,
+      'userPoints' => $userPoints,
+      'acceptedSuggestions' => $acceptedSuggestions,
+      'userWaitingPoints' => $userWaitingPoints,
+      'waitingSuggestions' => $waitingSuggestions,
+      'refusedSuggestions' => $refusedSuggestions,
       ]);
   }
   

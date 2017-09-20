@@ -10,7 +10,10 @@
 <script src="{{ URL::to("/") }}/js/jquery.isotope.min.js"></script>
 
 <script type="text/javascript" src="{{ URL::to("/") }}/js/panel.js"></script>
-<script type="text/javascript">var userID = {{$user->id}}</script>
+<script type="text/javascript">
+	var userID = {{$user->id}};
+	console.log({{ $userPoints }})
+</script>
 
 
 <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/checkbox.css" />
@@ -257,7 +260,7 @@
 
     </div>
 
-    	    <!-- MEUS ALBUNS -->
+	<!-- MEUS ALBUNS -->
 	<div class="container row">
 
 			<div class="twelve columns albums">
@@ -307,7 +310,12 @@
 			</div>
 
 	</div>
-    @include('user_badges')
+
+	<!-- MEUS PONTOS -->
+	@include('user_points')
+	
+	<!-- MINHAS CONQUISTAS -->
+	@include('user_badges')
 
 	<br>
 	<br>
