@@ -1,16 +1,17 @@
 {
   "name": "Arquigrafia",
   "version": "1.0.0",
+  "license": "CC-BY-3.0",
   "scripts": {
     "build": "webpack",
     "start": "webpack --watch"
   },
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.25.0",
-    "babel-loader": "^7.0.0",
-    "babel-preset-env": "^1.5.2",
-    "webpack": "^2.6.1"
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
+    "webpack": "^3.6.0"
   },
   "dependencies": {
     "bluebird": "^3.5.0",

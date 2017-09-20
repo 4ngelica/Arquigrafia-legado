@@ -33,9 +33,6 @@
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -63,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 10);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -15949,7 +15946,7 @@ module.exports = ret;
 
 },{"./es5":13}]},{},[4])(4)
 });                    ;if (typeof window !== 'undefined' && window !== null) {                               window.P = window.Promise;                                                     } else if (typeof self !== 'undefined' && self !== null) {                             self.P = self.Promise;                                                         }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(1), __webpack_require__(3), __webpack_require__(6).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(1), __webpack_require__(3), __webpack_require__(5).setImmediate))
 
 /***/ }),
 /* 2 */
@@ -16301,6 +16298,65 @@ exports.default = SuggestionController;
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var apply = Function.prototype.apply;
+
+// DOM APIs, for completeness
+
+exports.setTimeout = function() {
+  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
+};
+exports.setInterval = function() {
+  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
+};
+exports.clearTimeout =
+exports.clearInterval = function(timeout) {
+  if (timeout) {
+    timeout.close();
+  }
+};
+
+function Timeout(id, clearFn) {
+  this._id = id;
+  this._clearFn = clearFn;
+}
+Timeout.prototype.unref = Timeout.prototype.ref = function() {};
+Timeout.prototype.close = function() {
+  this._clearFn.call(window, this._id);
+};
+
+// Does not start the time, just sets up the members needed.
+exports.enroll = function(item, msecs) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = msecs;
+};
+
+exports.unenroll = function(item) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = -1;
+};
+
+exports._unrefActive = exports.active = function(item) {
+  clearTimeout(item._idleTimeoutId);
+
+  var msecs = item._idleTimeout;
+  if (msecs >= 0) {
+    item._idleTimeoutId = setTimeout(function onTimeout() {
+      if (item._onTimeout)
+        item._onTimeout();
+    }, msecs);
+  }
+};
+
+// setimmediate attaches itself to the global object
+__webpack_require__(6);
+exports.setImmediate = setImmediate;
+exports.clearImmediate = clearImmediate;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
     "use strict";
 
@@ -16491,65 +16547,6 @@ exports.default = SuggestionController;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(2)))
 
 /***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var apply = Function.prototype.apply;
-
-// DOM APIs, for completeness
-
-exports.setTimeout = function() {
-  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
-};
-exports.setInterval = function() {
-  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
-};
-exports.clearTimeout =
-exports.clearInterval = function(timeout) {
-  if (timeout) {
-    timeout.close();
-  }
-};
-
-function Timeout(id, clearFn) {
-  this._id = id;
-  this._clearFn = clearFn;
-}
-Timeout.prototype.unref = Timeout.prototype.ref = function() {};
-Timeout.prototype.close = function() {
-  this._clearFn.call(window, this._id);
-};
-
-// Does not start the time, just sets up the members needed.
-exports.enroll = function(item, msecs) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = msecs;
-};
-
-exports.unenroll = function(item) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = -1;
-};
-
-exports._unrefActive = exports.active = function(item) {
-  clearTimeout(item._idleTimeoutId);
-
-  var msecs = item._idleTimeout;
-  if (msecs >= 0) {
-    item._idleTimeoutId = setTimeout(function onTimeout() {
-      if (item._onTimeout)
-        item._onTimeout();
-    }, msecs);
-  }
-};
-
-// setimmediate attaches itself to the global object
-__webpack_require__(5);
-exports.setImmediate = setImmediate;
-exports.clearImmediate = clearImmediate;
-
-
-/***/ }),
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16641,13 +16638,89 @@ exports.default = MathController;
 "use strict";
 
 
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _SuggestionModal = __webpack_require__(9);
+
+var _SuggestionModal2 = _interopRequireDefault(_SuggestionModal);
+
+var _MathController = __webpack_require__(7);
+
+var _MathController2 = _interopRequireDefault(_MathController);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * This file is used as a interface between the page and the ES6 classes
+ * This files requires some global variables:
+ * user - The current user logged in
+ * photo - The photo that the user is seeing
+ * missingFields - Fields that are missing and need suggestions
+ */
+
+(0, _jquery2.default)(document).ready(function () {
+  // Don't show modal when it's a institution
+  if (photo.institution) (0, _jquery2.default)('#OpenModal').hide();else (0, _jquery2.default)('#OpenModal').show();
+
+  // Showing progress bar if it's gamed and it's not institution and not a video
+  if (gamed && !photo.institution && photo.type !== 'video') {
+    (0, _jquery2.default)("#progress-bar").removeClass("hidden");
+  }
+
+  // On DOM ready, add the click event to the open modal button
+  (0, _jquery2.default)('.OpenModal').click(function () {
+    // Don't show the modal when we don't have a user logged in
+    if (!user || !user.id) {
+      // Go to login page
+      window.location = "/users/login";
+      return;
+    };
+
+    // If the user is the owner, go to edit page
+    if (user.id == photo.user_id) {
+      window.location = "/photos/" + photo.id + "/edit";
+      return;
+    }
+
+    // Only shows the modal if we have missing fields
+    if (missingFields && missingFields.length > 0) {
+      var suggestionModal = new _SuggestionModal2.default(missingFields, user, photo, gamed);
+      suggestionModal.showModal(missingFields[0].type, missingFields[0].field_name, missingFields[0].field_content, missingFields[0].question, missingFields[0].attribute_type, 0);
+    }
+  });
+
+  // Registering Handlebars helpers
+  Handlebars.registerHelper('times', function (n, block) {
+    var accum = '';
+    for (var i = 0; i < n; ++i) {
+      accum += block.fn(i);
+    }
+    return accum;
+  });
+  Handlebars.registerHelper('ifCond', function (v1, v2, options) {
+    if (v1 == v2) {
+      return options.fn(this);
+    }
+    return options.inverse(this);
+  });
+});
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jbox = __webpack_require__(11);
+var _jbox = __webpack_require__(10);
 
 var _jbox2 = _interopRequireDefault(_jbox);
 
@@ -17113,84 +17186,7 @@ var SuggestionModal = function () {
 exports.default = SuggestionModal;
 
 /***/ }),
-/* 9 */,
 /* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _SuggestionModal = __webpack_require__(8);
-
-var _SuggestionModal2 = _interopRequireDefault(_SuggestionModal);
-
-var _MathController = __webpack_require__(7);
-
-var _MathController2 = _interopRequireDefault(_MathController);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * This file is used as a interface between the page and the ES6 classes
- * This files requires some global variables:
- * user - The current user logged in
- * photo - The photo that the user is seeing
- * missingFields - Fields that are missing and need suggestions
- */
-
-(0, _jquery2.default)(document).ready(function () {
-  // Don't show modal when it's a institution
-  if (photo.institution) (0, _jquery2.default)('#OpenModal').hide();else (0, _jquery2.default)('#OpenModal').show();
-
-  // Showing progress bar if it's gamed and it's not institution and not a video
-  if (gamed && !photo.institution && photo.type !== 'video') {
-    (0, _jquery2.default)("#progress-bar").removeClass("hidden");
-  }
-
-  // On DOM ready, add the click event to the open modal button
-  (0, _jquery2.default)('.OpenModal').click(function () {
-    // Don't show the modal when we don't have a user logged in
-    if (!user || !user.id) {
-      // Go to login page
-      window.location = "/users/login";
-      return;
-    };
-
-    // If the user is the owner, go to edit page
-    if (user.id == photo.user_id) {
-      window.location = "/photos/" + photo.id + "/edit";
-      return;
-    }
-
-    // Only shows the modal if we have missing fields
-    if (missingFields && missingFields.length > 0) {
-      var suggestionModal = new _SuggestionModal2.default(missingFields, user, photo, gamed);
-      suggestionModal.showModal(missingFields[0].type, missingFields[0].field_name, missingFields[0].field_content, missingFields[0].question, missingFields[0].attribute_type, 0);
-    }
-  });
-
-  // Registering Handlebars helpers
-  Handlebars.registerHelper('times', function (n, block) {
-    var accum = '';
-    for (var i = 0; i < n; ++i) {
-      accum += block.fn(i);
-    }
-    return accum;
-  });
-  Handlebars.registerHelper('ifCond', function (v1, v2, options) {
-    if (v1 == v2) {
-      return options.fn(this);
-    }
-    return options.inverse(this);
-  });
-});
-
-/***/ }),
-/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
