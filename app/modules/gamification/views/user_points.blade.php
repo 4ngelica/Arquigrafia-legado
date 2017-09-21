@@ -7,24 +7,14 @@
       </h3>
     </hgroup>
     <div class="profile_box">
-      @if ( !$userPoints && !$waitingPoints && !sizeof($refusedSuggestions))
+      @if ( !$userPoints && !$userWaitingPoints && !sizeof($refusedSuggestions))
         <p>Você ainda não possui nenhum ponto.</p>
       @else
-        @if($userPoints)
-          <p><strong>Pontuação atual:</strong> {{ $userPoints }}</p>
-        @endif
-        @if($userWaitingPoints)
-          <p><strong>Pontuação a ser aprovada:</strong>  {{ $userWaitingPoints }}</p>
-        @endif
-        @if(sizeof($acceptedSuggestions))
-          <p><strong>Número de sugestões aceitas:</strong>  {{ sizeof($acceptedSuggestions) }}
-        @endif
-        @if(sizeof($waitingSuggestions))
-          <p><strong>Número de sugestões aguardando aprovação:</strong> {{ sizeof($waitingSuggestions) }}
-          @if(sizeof($refusedSuggestions))
-          @endif
-          <p><strong>Número de sugestões recusadas:</strong> {{ sizeof($refusedSuggestions) }}
-        @endif
+        <p><strong>Pontuação atual:</strong> {{ $userPoints }}</p>
+        <p><strong>Pontuação a ser aprovada:</strong>  {{ $userWaitingPoints }}</p>
+        <p><strong>Número de sugestões aceitas:</strong>  {{ sizeof($acceptedSuggestions) }}
+        <p><strong>Número de sugestões aguardando aprovação:</strong> {{ sizeof($waitingSuggestions) }}
+        <p><strong>Número de sugestões recusadas:</strong> {{ sizeof($refusedSuggestions) }}
       @endif
     </div>
   </div>
