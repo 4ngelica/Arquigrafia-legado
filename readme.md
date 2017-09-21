@@ -1,4 +1,4 @@
-## Arquigrafia
+# Arquigrafia
 
 The Arquigrafia project intends to research how the individual and the collective
 knowledge building processes relate to each other, by sharing subjectivities on interactive and communicative experiences based on an online collective gallery of Brazilian architecture digital images. 
@@ -11,14 +11,14 @@ professional architects and, in a broader approach, among all those interested i
 
 Keywords: Architecture, Iconography, Web 2.0, Collaborative Systems, Collective intelligence.
 
-
-### License
+## License
 
 The Arquigrafia project is open-sourced software licensed under the [Creative Commons Attribution 3.0](http://creativecommons.org/licenses/by/3.0/deed.pt_BR).
 
-### Configuration Tutorial
+## Configuration Tutorial
 
 - This projects use Laravel Messenger for Laravel 4, and need to run migrate:
+
 ```bash
-$ php artisan migrate --package=cmgmyr/messenger
+php artisan migrate --package=cmgmyr/messenger
 ```
