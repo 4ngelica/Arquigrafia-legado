@@ -15,3 +15,10 @@ Keywords: Architecture, Iconography, Web 2.0, Collaborative Systems, Collective 
 ### License
 
 The Arquigrafia project is open-sourced software licensed under the [Creative Commons Attribution 3.0](http://creativecommons.org/licenses/by/3.0/deed.pt_BR).
+
+### Configuration Tutorial
+
+- This projects use Laravel Messenger for Laravel 4, and need to run migrate:
+```bash
+$ php artisan migrate --package=cmgmyr/messenger
+```
