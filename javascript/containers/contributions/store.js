@@ -14,8 +14,8 @@ const state = {
 
 // mutations are operations that actually mutates the state.
 const mutations = {
-  changeTab(state, tab) {
-    state.selectedTab = tab.id;
+  changeTab(storeState, tab) {
+    storeState.selectedTab = tab.id;
   },
 };
 

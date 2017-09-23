@@ -19021,8 +19021,8 @@ var state = {
 
 // mutations are operations that actually mutates the state.
 var mutations = {
-  changeTab: function changeTab(state, tab) {
-    state.selectedTab = tab.id;
+  changeTab: function changeTab(storeState, tab) {
+    storeState.selectedTab = tab.id;
   }
 };
 
