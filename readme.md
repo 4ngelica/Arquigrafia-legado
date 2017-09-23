@@ -17,7 +17,7 @@ The Arquigrafia project is open-sourced software licensed under the [Creative Co
 
 ## Configuration Tutorial
 
-- This projects use Laravel Messenger for Laravel 4, and need to run migrate:
+- This project use Laravel Messenger for Laravel 4, and need to run migrate:
 
 ```bash
 php artisan migrate --package=cmgmyr/messenger

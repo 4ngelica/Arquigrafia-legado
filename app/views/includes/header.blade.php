@@ -62,7 +62,7 @@
 
         <a href="{{ URL::to("/users/logout/") }}" id="logout" class="btn">SAIR</a><br />
         <ul id="logged_menu">
-            <li>
+          <li>
             <div id="notification-icon-container">
               <?php
                 $notesCounter = Auth::user()->notifications()->unread()->count();
@@ -95,6 +95,12 @@
               <a href="{{ URL::to('/chats') }}">MENSAGENS</a>
               @if (Auth::user()->newMessagesCount() > 0) <div id="bubble2"> {{Auth::user()->newMessagesCount()}} </div>  @endif
             </div>
+          </li>
+
+          <li class="contributions-list">
+            <a href="{{ URL::to('/users/contributions') }}" title="Contribuições">
+              <i class="contributions">&nbsp;</i> CONTRIBUIÇÕES
+            </a>
           </li>
 
         <!-- <li><a href="{{ URL::to("/badges") }}" id="badge" title="Vizualizar badges">&nbsp;</a></li>-->

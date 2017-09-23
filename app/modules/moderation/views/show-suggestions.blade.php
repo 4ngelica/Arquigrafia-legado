@@ -7,7 +7,6 @@
   <script type="text/javascript" src="{{ URL::to("/") }}/js/dist/suggestionsList.bundle.js"></script>
 
   <script type="text/javascript">
-  // Missing fields and questions (to show on Modal)
   var suggestions = {{ json_encode($suggestions) }};
   </script>
 @stop

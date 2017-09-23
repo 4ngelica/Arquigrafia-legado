@@ -29,7 +29,7 @@ return array(
 	|
 	*/
 
-	'lifetime' => 120,
+	'lifetime' => 10080, // 10080 minutes: One week
 
 	'expire_on_close' => false,
 

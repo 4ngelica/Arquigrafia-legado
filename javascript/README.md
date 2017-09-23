@@ -1,6 +1,6 @@
-# Javascript Modules
+# Javascript/Vue.js Modules
 
-This is the Javascript modules inside Arquigrafia.
+This is the Javascript/Vue.js modules inside Arquigrafia.
 
 - You must have npm or yarn. And before working, run:
 ```bash

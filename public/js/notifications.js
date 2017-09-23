@@ -26,7 +26,7 @@ function readAll() {
     var bubble = document.getElementById("bubble");
     var noteIcon = document.getElementById("notification");
     noteIcon.title = "Você tem " + data + " notificações não lidas";
-    bubble.style.display = "none";
+    if (bubble) bubble.style.display = "none";
   });
 }
 
