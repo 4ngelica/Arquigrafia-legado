@@ -3,7 +3,6 @@ import SuggestionController from '../suggestions/SuggestionController';
 
 // On DOM ready
 $(document).ready(() => {
-
   /**
    * Click event to the open modal button
    */
@@ -20,18 +19,17 @@ $(document).ready(() => {
         redirectWindow.location = `/chats/${data}`;
       }).catch((error) => {
         // Showing error
-        console.log('ERRO', error);
-        return;
-      })
+        console.info('ERRO', error);
+      });
   });
 
   /**
    * User pressed thumbs-link
    */
   $('.thumbs-link').click((e) => {
-    // When the user clicks on Thumbs Down or Thumbs Up on Suggestions List, submits the children form.
+    // When the user clicks on Thumbs Down or
+    // Thumbs Up on Suggestions List, submits the children form.
     // Important: The form must be the CHILDREN element.
     $(e.currentTarget).children('form').submit();
   });
-
 });

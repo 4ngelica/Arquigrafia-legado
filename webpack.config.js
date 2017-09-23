@@ -4,9 +4,9 @@ var vueLoaderConfig = require('./vue-loader.conf')
 
 module.exports = {
   entry: {
-    suggestions: './javascript/suggestions',
-    suggestionsList: './javascript/suggestions-list',
-    contributions: './javascript/contributions',
+    suggestions: './javascript/containers/suggestions',
+    suggestionsList: './javascript/containers/suggestions-list',
+    contributions: './javascript/containers/contributions',
   },
   output: {
     filename: '[name].bundle.js',

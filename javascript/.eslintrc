@@ -4,7 +4,8 @@
   "plugins": [
       "react",
       "jsx-a11y",
-      "import"
+      "import",
+      "jest"
   ],
   "rules": {
       "no-console": ["error", { "allow": ["info", "warn", "error"] }],
@@ -18,5 +19,8 @@
       "window": true,
       "fetch": true,
       "$": true
+  },
+  "env": {
+    "jest": true
   }
 }

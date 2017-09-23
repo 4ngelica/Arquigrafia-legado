@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import SuggestionModal from './SuggestionModal';
-import MathController from '../general/MathController';
 
 /**
  * This file is used as a interface between the page and the ES6 classes

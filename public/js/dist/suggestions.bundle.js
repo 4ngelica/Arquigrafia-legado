@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = 12);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -16548,94 +16548,11 @@ exports.default = SuggestionController;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-		value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * This class is responsable for Math operations
- */
-
-var MathController = function () {
-		function MathController() {
-				_classCallCheck(this, MathController);
-		}
-
-		_createClass(MathController, null, [{
-				key: 'decimalAdjust',
-
-
-				/**
-    * Decimal adjustment of a number.
-    *
-    * @param	{String}	type	The type of adjustment.
-    * @param	{Number}	value	The number.
-    * @param	{Integer}	exp		The exponent (the 10 logarithm of the adjustment base).
-    * @returns	{Number}			The adjusted value.
-    */
-				value: function decimalAdjust(type, value, exp) {
-						// If the exp is undefined or zero...
-						if (typeof exp === 'undefined' || +exp === 0) {
-								return Math[type](value);
-						}
-						value = +value;
-						exp = +exp;
-						// If the value is not a number or the exp is not an integer...
-						if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
-								return NaN;
-						}
-						// Shift
-						value = value.toString().split('e');
-						value = Math[type](+(value[0] + 'e' + (value[1] ? +value[1] - exp : -exp)));
-						// Shift back
-						value = value.toString().split('e');
-						return +(value[0] + 'e' + (value[1] ? +value[1] + exp : exp));
-				}
-		}, {
-				key: 'ceil10',
-				value: function ceil10(value, exp) {
-						return MathController.decimalAdjust('ceil', value, exp);
-				}
-		}, {
-				key: 'round10',
-				value: function round10(value, exp) {
-						return MathController.decimalAdjust('round', value, exp);
-				}
-		}, {
-				key: 'floor10',
-				value: function floor10(value, exp) {
-						return MathController.decimalAdjust('floor', value, exp);
-				}
-		}, {
-				key: 'isEven',
-				value: function isEven(number) {
-						if (number % 2 === 0) {
-								return true;
-						}
-
-						return false;
-				}
-		}]);
-
-		return MathController;
-}();
-
-exports.default = MathController;
-
-/***/ }),
+/* 8 */,
 /* 9 */,
 /* 10 */,
-/* 11 */
+/* 11 */,
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16645,13 +16562,9 @@ var _jquery = __webpack_require__(4);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _SuggestionModal = __webpack_require__(12);
+var _SuggestionModal = __webpack_require__(13);
 
 var _SuggestionModal2 = _interopRequireDefault(_SuggestionModal);
-
-var _MathController = __webpack_require__(8);
-
-var _MathController2 = _interopRequireDefault(_MathController);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -16711,7 +16624,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 });
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16723,17 +16636,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jbox = __webpack_require__(13);
+var _jbox = __webpack_require__(14);
 
 var _jbox2 = _interopRequireDefault(_jbox);
 
 var _jquery = __webpack_require__(4);
 
 var _jquery2 = _interopRequireDefault(_jquery);
-
-var _MathController = __webpack_require__(8);
-
-var _MathController2 = _interopRequireDefault(_MathController);
 
 var _SuggestionController = __webpack_require__(7);
 
@@ -16744,7 +16653,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var SuggestionModal = function () {
-
   /**
    * Constructor
    * @param  {Object} missingFields   Objects with all fields and the questions to ask to the user
@@ -17189,7 +17097,7 @@ var SuggestionModal = function () {
 exports.default = SuggestionModal;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**

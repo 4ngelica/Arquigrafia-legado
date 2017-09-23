@@ -1,10 +1,8 @@
 import jBox from 'jbox';
 import $ from 'jquery';
-import MathController from '../general/MathController';
 import SuggestionController from './SuggestionController';
 
 class SuggestionModal {
-
   /**
    * Constructor
    * @param  {Object} missingFields   Objects with all fields and the questions to ask to the user

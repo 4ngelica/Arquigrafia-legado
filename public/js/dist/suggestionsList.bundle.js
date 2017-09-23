@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 14);
+/******/ 	return __webpack_require__(__webpack_require__.s = 15);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -16554,7 +16554,8 @@ exports.default = SuggestionController;
 /* 11 */,
 /* 12 */,
 /* 13 */,
-/* 14 */
+/* 14 */,
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16572,7 +16573,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // On DOM ready
 (0, _jquery2.default)(document).ready(function () {
-
   /**
    * Click event to the open modal button
    */
@@ -16588,8 +16588,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
       redirectWindow.location = '/chats/' + data;
     }).catch(function (error) {
       // Showing error
-      console.log('ERRO', error);
-      return;
+      console.info('ERRO', error);
     });
   });
 
@@ -16597,7 +16596,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
    * User pressed thumbs-link
    */
   (0, _jquery2.default)('.thumbs-link').click(function (e) {
-    // When the user clicks on Thumbs Down or Thumbs Up on Suggestions List, submits the children form.
+    // When the user clicks on Thumbs Down or
+    // Thumbs Up on Suggestions List, submits the children form.
     // Important: The form must be the CHILDREN element.
     (0, _jquery2.default)(e.currentTarget).children('form').submit();
   });

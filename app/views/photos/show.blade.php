@@ -33,9 +33,8 @@
   console.log('isReviewing', isReviewing);
   console.log('completeness', completeness);
 
-  // When the user ID is EVEN = Gamed
+  // Getting if it's gamed
   var gamed = {{ json_encode($gamified) }};
-  // if (user) gamed = MathController.isEven(user.id);
 
   $(document).ready(function(){
     //MAP AND GEOREFERENCING CREATION AND SETTING

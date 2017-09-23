@@ -5,11 +5,11 @@
 
 <script>
   import { mapActions } from 'vuex'
-  import Tabs from '../general/components/Tabs.vue';
-  import TabContent from '../general/components/TabContent.vue';
-  import ReviewsContent from './components/ReviewsContent.vue';
-  import ModerationContent from './components/ModerationContent.vue';
-  import CuratorshipContent from './components/CuratorshipContent.vue';
+  import Tabs from '../../components/general/Tabs.vue';
+  import TabContent from '../../components/general/TabContent.vue';
+  import ReviewsContent from '../../components/contributions/ReviewsContent.vue';
+  import ModerationContent from '../../components/contributions/ModerationContent.vue';
+  import CuratorshipContent from '../../components/contributions/CuratorshipContent.vue';
   import store from './store';
 
   // Creating our tabs object

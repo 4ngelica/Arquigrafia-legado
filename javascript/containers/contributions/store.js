@@ -16,13 +16,13 @@ const state = {
 const mutations = {
   changeTab(state, tab) {
     state.selectedTab = tab.id;
-  }
-}
+  },
+};
 
 // Actions are functions that cause side effects and can involve async ops
 const actions = {
   changeTab: ({ commit }, tab) => commit('changeTab', tab),
-}
+};
 
 export default new Vuex.Store({
   state,

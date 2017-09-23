@@ -1,12 +1,3 @@
-<template>
-  <div
-    class="tab"
-    v-bind:class="{ active: active }"
-  >
-    <p>Aba Curadoria</p>
-  </div>
-</template>
-
 <script>
 export default {
   name: 'CuratorshipContent',
@@ -19,3 +10,12 @@ export default {
   },
 }
 </script>
+
+<template>
+  <div
+    class="tab"
+    v-bind:class="{ active: active }"
+  >
+    <p>Aba Curadoria</p>
+  </div>
+</template>
