@@ -1,5 +1,8 @@
+/**
+* This component renders a list of tabs, based on an array of tabs passed
+*/
+
 <script>
-/** Exporting Vue Component */
 export default {
   name: 'Tabs',
   props: {

@@ -1,4 +1,10 @@
+/**
+* This is the Curatorship Tab component.
+*/
+
 <script>
+import FormTable from '../general/FormTable.vue';
+
 export default {
   name: 'CuratorshipContent',
   props: {
@@ -8,6 +14,9 @@ export default {
       required: true,
     },
   },
+  components: {
+    FormTable,
+  },
 }
 </script>
 
@@ -16,6 +25,10 @@ export default {
     class="tab"
     v-bind:class="{ active: active }"
   >
-    <p>Aba Curadoria</p>
+    <FormTable
+      :columns="['Capa', 'Nome', 'Descrição', 'Ação']"
+    >
+    
+    </FormTable>
   </div>
 </template>

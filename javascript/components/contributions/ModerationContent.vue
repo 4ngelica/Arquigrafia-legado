@@ -3,7 +3,8 @@
 */
 
 <script>
-import SuggestionTable from './SuggestionTable.vue';
+import FormTable from '../general/FormTable.vue';
+import ItemAcceptRejectSuggestion from './ItemAcceptRejectSuggestion.vue';
 
 export default {
   name: 'ModerationContent',
@@ -15,7 +16,8 @@ export default {
     },
   },
   components: {
-    SuggestionTable,
+    FormTable,
+    ItemAcceptRejectSuggestion,
   },
 }
 </script>
@@ -25,6 +27,18 @@ export default {
     class="tab"
     v-bind:class="{ active: active }"
   >
-    <SuggestionTable />
+    <FormTable
+      :columns="['Foto', 'Nome da Foto', 'Campo', 'Dado Atual', 'Sugestão', 'Revisor', 'Ação']"
+    >
+      <ItemAcceptRejectSuggestion
+        :photoID="1"
+        photoName="Teste"
+        fieldName="Nome"
+        :user="{ id: 1, name: 'Usuario' }"
+        currentFieldData="Nome Atual"
+        suggestedData="Nome Sugerido"
+        :suggestionID="10"
+      />
+    </FormTable>
   </div>
 </template>
