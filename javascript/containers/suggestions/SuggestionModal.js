@@ -1,6 +1,6 @@
 import jBox from 'jbox';
 import $ from 'jquery';
-import SuggestionController from './SuggestionController';
+import { sendFinalSuggestions, sendSuggestion, createChat } from '../../services/SuggestionService';
 
 class SuggestionModal {
   /**
@@ -300,13 +300,12 @@ class SuggestionModal {
       let abandonStatus = 'complete';
       if (this.suggestionModals.length < numItems) abandonStatus = 'incomplete';
 
-      SuggestionController
-        .sendFinalSuggestions(this.photo.id, this.points, this.numberSuggestions, abandonStatus)
+      sendFinalSuggestions(this.photo.id, this.points, this.numberSuggestions, abandonStatus)
         .then((photos) => {
           // Rendering photos if we're at the gamed version
           if (this.gamed) this.renderGamedNextPhotos(photos);
         }).catch((error) => {
-          console.log(error);
+          console.info(error);
         });
     } else {
       contentHTML = this.getContentHTML(type, name, question);
@@ -347,7 +346,7 @@ class SuggestionModal {
           // Marking that we won points
           this.wonPoints();
           // Sending suggestion
-          SuggestionController.sendSuggestion(this.user.id, this.photo.id, this.missingFields[currentIndex].attribute_type, suggestionText);
+          sendSuggestion(this.user.id, this.photo.id, this.missingFields[currentIndex].attribute_type, suggestionText);
           // Change page (go to the next modal)
           this.changePage(currentIndex);
         }).bind(this));
@@ -369,7 +368,7 @@ class SuggestionModal {
           // Marking that we won points
           this.wonPoints();
           // Sending suggestion
-          SuggestionController.sendSuggestion(this.user.id, this.photo.id, this.missingFields[currentIndex].attribute_type, this.missingFields[currentIndex].field_content[0]);
+          sendSuggestion(this.user.id, this.photo.id, this.missingFields[currentIndex].attribute_type, this.missingFields[currentIndex].field_content[0]);
           // Change page (go to the next modal)
           this.changePage(currentIndex);
         }).bind(this));
@@ -391,14 +390,13 @@ class SuggestionModal {
           const redirectWindow = window.open('', '_blank');
 
           // Creating chat
-          SuggestionController.createChat(this.photo.user_id)
+          createChat(this.photo.user_id)
             .then((data) => {
               // Open chat tab
               redirectWindow.location = `/chats/${data}`;
             }).catch((error) => {
-              console.log('ERRO', error);
-              return;
-            })
+              console.info('ERRO', error);
+            });
         }).bind(this));
 
         if (initial || forceOverlay) {
@@ -406,9 +404,8 @@ class SuggestionModal {
             $('.jBox-overlay').on('click', (() => {
               this.suggestionModals[this.currentIndex].close();
             }).bind(this));
-          }).bind(this), 100)
+          }).bind(this), 100);
         }
-
       }).bind(this),
       // When any of the modals is closed, this function is called
       onClose: (() => {
@@ -428,8 +425,7 @@ class SuggestionModal {
           this.currentIndex < numItems && this.points === 0
         ) {
           // Sending final suggestions without going to last page
-          SuggestionController
-            .sendFinalSuggestions(this.photo.id, this.points, this.numberSuggestions, 'none');
+          sendFinalSuggestions(this.photo.id, this.points, this.numberSuggestions, 'none');
         }
 
         // When closing one of the modals, close all modals
@@ -443,7 +439,6 @@ class SuggestionModal {
       }).bind(this),
     }).open();
   }
-
 }
 
 export default SuggestionModal;

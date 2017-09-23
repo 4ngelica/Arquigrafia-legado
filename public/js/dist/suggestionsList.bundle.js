@@ -16428,123 +16428,109 @@ exports.clearImmediate = clearImmediate;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.createChat = exports.sendFinalSuggestions = exports.sendSuggestion = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _jquery = __webpack_require__(4);
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _jquery2 = _interopRequireDefault(_jquery);
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Sending the suggestion through AJAX request to the server
+ * @param  {Number} userID        The current logged user ID
+ * @param  {Number} photoID       The current photo ID
+ * @param  {String} attributeType The attribute that you wanna send the suggestion
+ * @param  {String} text          The text of the suggestion that you're sending
+ */
+var sendSuggestion = exports.sendSuggestion = function sendSuggestion(userID, photoID, attributeType, text) {
+  // Mounting params
+  var data = {
+    user_id: userID,
+    photo_id: photoID,
+    attribute_type: attributeType,
+    text: text
+  };
+
+  console.info('DADOS DA SUGESTAO', data);
+
+  // Sending ajax request
+  _jquery2.default.ajax({
+    type: 'POST',
+    url: '/suggestions',
+    data: data,
+    success: function success(res) {
+      console.info('SUGESTAO ENVIADA', res);
+    },
+    error: function error(_error) {
+      console.info('ERROR', _error);
+    }
+  }, 'json');
+};
+
+/**
+ * Sended at the end, to get the final pictures
+ * @param  {String} photoID    The ID of the picture that we're in
+ * @param  {Number} points     The points that the user may get
+ * @param  {String} status     Can be 'none', 'complete' or 'incomplete'
+ * @return {Promise}           Promise with the result of the request
+ */
 /**
  * This is responsable for controlling suggestions
  * This is where we will put the network requests
  */
 
-var SuggestionController = function () {
-  function SuggestionController() {
-    _classCallCheck(this, SuggestionController);
-  }
+var sendFinalSuggestions = exports.sendFinalSuggestions = function sendFinalSuggestions(photoID, points, numberSuggestions, status) {
+  // Mounting params
+  var data = {
+    photo: photoID,
+    points: points,
+    status: status,
+    suggestions: numberSuggestions
+  };
 
-  _createClass(SuggestionController, null, [{
-    key: 'sendSuggestion',
+  console.info('DADOS ENVIADOS', data);
 
-    /**
-     * Sending the suggestion through AJAX request to the server
-     * @param  {Number} userID        The current logged user ID
-     * @param  {Number} photoID       The current photo ID
-     * @param  {String} attributeType The attribute that you wanna send the suggestion
-     * @param  {String} text          The text of the suggestion that you're sending
-     */
-    value: function sendSuggestion(userID, photoID, attributeType, text) {
-      // Mounting params
-      var data = {
-        user_id: userID,
-        photo_id: photoID,
-        attribute_type: attributeType,
-        text: text
-      };
+  return new Promise(function (resolve, reject) {
+    // Sending ajax request
+    _jquery2.default.ajax({
+      type: 'POST',
+      url: '/suggestions/sent',
+      data: data,
+      success: function success(res) {
+        console.info('DADOS RECEBIDOS', res);
+        resolve(data);
+      },
+      error: function error(_error2) {
+        console.info('ERRO AO ENVIAR SUGESTAO FINAL', _error2);
+        reject(_error2);
+      }
+    }, 'json');
+  });
+};
 
-      console.log('DADOS DA SUGESTAO', data);
-
-      // Sending ajax request
-      $.ajax({
-        type: "POST",
-        url: '/suggestions',
-        data: data,
-        success: function success(data) {
-          console.log('SUGESTAO ENVIADA', data);
-        },
-        error: function error(_error) {
-          console.log('ERROR', _error);
-        }
-      }, "json");
-    }
-
-    /**
-     * Sended at the end, to get the final pictures
-     * @param  {String} photoID    The ID of the picture that we're in
-     * @param  {Number} points     The points that the user may get
-     * @param  {String} status     Can be 'none', 'complete' or 'incomplete'
-     * @return {Promise}           Promise with the result of the request
-     */
-
-  }, {
-    key: 'sendFinalSuggestions',
-    value: function sendFinalSuggestions(photoID, points, numberSuggestions, status) {
-      // Mounting params
-      var data = {
-        photo: photoID,
-        points: points,
-        status: status,
-        suggestions: numberSuggestions
-      };
-
-      console.log('DADOS ENVIADOS', data);
-
-      return new Promise(function (resolve, reject) {
-        // Sending ajax request
-        $.ajax({
-          type: "POST",
-          url: '/suggestions/sent',
-          data: data,
-          success: function success(data) {
-            console.log('DADOS RECEBIDOS', data);
-            resolve(data);
-          },
-          error: function error(_error2) {
-            console.log('ERRO AO ENVIAR SUGESTAO FINAL', _error2);
-            reject(_error2);
-          }
-        }, "json");
-      });
-    }
-  }, {
-    key: 'createChat',
-    value: function createChat(userID) {
-      return new Promise(function (resolve, reject) {
-        // Defining data to create chat
-        var data = {
-          participants: [userID]
-          // Making ajax request
-        };$.ajax({
-          type: "POST",
-          url: '/chats',
-          data: data,
-          success: function success(response) {
-            console.log('CHAT CRIADO', response);
-            if (response !== false) resolve(response);else reject(response);
-          },
-          error: function error(_error3) {
-            console.log('ERRO AO CRIAR CHAT', _error3);
-            reject(_error3);
-          }
-        }, "json");
-      });
-    }
-  }]);
-
-  return SuggestionController;
-}();
-
-exports.default = SuggestionController;
+var createChat = exports.createChat = function createChat(userID) {
+  return new Promise(function (resolve, reject) {
+    // Defining data to create chat
+    var data = {
+      participants: [userID]
+    };
+    // Making ajax request
+    _jquery2.default.ajax({
+      type: 'POST',
+      url: '/chats',
+      data: data,
+      success: function success(response) {
+        console.info('CHAT CRIADO', response);
+        if (response !== false) resolve(response);else reject(response);
+      },
+      error: function error(_error3) {
+        console.info('ERRO AO CRIAR CHAT', _error3);
+        reject(_error3);
+      }
+    }, 'json');
+  });
+};
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
@@ -16565,9 +16551,7 @@ var _jquery = __webpack_require__(4);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _SuggestionController = __webpack_require__(7);
-
-var _SuggestionController2 = _interopRequireDefault(_SuggestionController);
+var _SuggestionService = __webpack_require__(7);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -16583,7 +16567,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     var redirectWindow = window.open('', '_blank');
 
     // Creating chat
-    _SuggestionController2.default.createChat(userID).then(function (data) {
+    (0, _SuggestionService.createChat)(userID).then(function (data) {
       // Open chat tab
       redirectWindow.location = '/chats/' + data;
     }).catch(function (error) {

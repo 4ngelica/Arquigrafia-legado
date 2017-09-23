@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import SuggestionController from '../suggestions/SuggestionController';
+import { createChat } from '../../services/SuggestionService';
 
 // On DOM ready
 $(document).ready(() => {
@@ -13,7 +13,7 @@ $(document).ready(() => {
     const redirectWindow = window.open('', '_blank');
 
     // Creating chat
-    SuggestionController.createChat(userID)
+    createChat(userID)
       .then((data) => {
         // Open chat tab
         redirectWindow.location = `/chats/${data}`;
