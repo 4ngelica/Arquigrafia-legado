@@ -34,6 +34,18 @@ export default {
       type: String,
       default: null,
     },
+    handleAccept: {
+      type: Function,
+      required: true,
+    },
+    handleReject: {
+      type: Function,
+      required: true,
+    },
+    handleCreateChat: {
+      type: Function,
+      required: true,
+    }
   },
 }
 </script>
@@ -58,27 +70,17 @@ export default {
     <td v-else class="table-suggestion-collumn">-----</td>
     <td>
       <div class="new-message">
-        <a class="create-chat-link" :data-val="user.id" href="#">
+        <a class="create-chat-link" href="#" @click="handleCreateChat(user.id)">
           {{ user.name }}
         </a>
       </div>
     </td>
     <td>
-      <div class="suggestion-button thumbs-up thumbs-link">
-        <!-- Form for THUMBS UP -->
-        <form id="send-thumbs-up-form" method="post">
-          <input name="suggestion_id" :value="suggestionID" type="hidden"/>
-          <input name="operation" value="accepted" type="hidden"/>
-          <span>Aceitar</span>
-        </form>
+      <div class="suggestion-button thumbs-up thumbs-link" @click="handleAccept(suggestionID)">
+        <span>Aceitar</span>
       </div>
-      <div class="suggestion-button thumbs-down thumbs-link">
-        <!-- Form for THUMBS DOWN -->
-        <form id="send-thumbs-down-form" method="post">
-          <input name="suggestion_id" :value="suggestionID" type="hidden"/>
-          <input name="operation" value="rejected" type="hidden"/>
-          <span>Rejeitar</span>
-        </form>
+      <div class="suggestion-button thumbs-down thumbs-link" @click="handleReject(suggestionID)">
+        <span>Rejeitar</span>
       </div>
     </td>
   </tr>

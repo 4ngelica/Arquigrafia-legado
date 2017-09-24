@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "CC-BY-3.0",
   "scripts": {
-    "build": "webpack",
+    "build": "NODE_ENV=production webpack",
     "start": "webpack --watch",
     "test": "jest javascript",
     "test:watch": "jest --watch javascript"

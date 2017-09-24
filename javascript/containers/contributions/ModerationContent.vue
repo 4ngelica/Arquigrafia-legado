@@ -3,11 +3,14 @@
 */
 
 <script>
-import FormTable from '../general/FormTable.vue';
-import ItemAcceptRejectSuggestion from './ItemAcceptRejectSuggestion.vue';
+import { mapActions } from 'vuex'
+import FormTable from '../../components/general/FormTable.vue';
+import ItemAcceptRejectSuggestion from '../../components/contributions/ItemAcceptRejectSuggestion.vue';
+import store from './store';
 
 export default {
   name: 'ModerationContent',
+  store,
   props: {
     active: {
       type: Boolean,
@@ -19,6 +22,10 @@ export default {
     FormTable,
     ItemAcceptRejectSuggestion,
   },
+  methods: mapActions([
+    'acceptRejectSuggestion',
+    'createChat',
+  ]),
 }
 </script>
 
@@ -38,6 +45,9 @@ export default {
         currentFieldData="Nome Atual"
         suggestedData="Nome Sugerido"
         :suggestionID="10"
+        :handleAccept="suggestionID => acceptRejectSuggestion({ suggestionID, type: 'accept' })"
+        :handleReject="suggestionID => acceptRejectSuggestion({ suggestionID, type: 'reject' })"
+        :handleCreateChat="userID => createChat({ userID })"
       />
     </FormTable>
   </div>

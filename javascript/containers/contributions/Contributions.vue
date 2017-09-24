@@ -7,9 +7,9 @@
   import { mapActions } from 'vuex'
   import Tabs from '../../components/general/Tabs.vue';
   import TabContent from '../../components/general/TabContent.vue';
-  import ReviewsContent from '../../components/contributions/ReviewsContent.vue';
-  import ModerationContent from '../../components/contributions/ModerationContent.vue';
-  import CuratorshipContent from '../../components/contributions/CuratorshipContent.vue';
+  import ReviewsContent from './ReviewsContent.vue';
+  import ModerationContent from './ModerationContent.vue';
+  import CuratorshipContent from './CuratorshipContent.vue';
   import store from './store';
 
   // Creating our tabs object

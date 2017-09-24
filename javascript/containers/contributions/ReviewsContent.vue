@@ -3,7 +3,7 @@
 */
 
 <script>
-import ItemNotificationImageText from '../notification/ItemNotificationImageText.vue';
+import ItemNotificationImageText from '../../components/notification/ItemNotificationImageText.vue';
 
 export default {
   name: 'ReviewsContent',

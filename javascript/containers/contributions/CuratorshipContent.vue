@@ -3,7 +3,7 @@
 */
 
 <script>
-import FormTable from '../general/FormTable.vue';
+import FormTable from '../../components/general/FormTable.vue';
 
 export default {
   name: 'CuratorshipContent',
