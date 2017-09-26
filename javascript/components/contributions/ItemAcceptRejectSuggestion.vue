@@ -86,7 +86,7 @@ export default {
   </tr>
 </template>
 
-<style>
+<style scoped>
 .form-table.suggestions td {
   padding: 5px 5px 0 5px;
 }
