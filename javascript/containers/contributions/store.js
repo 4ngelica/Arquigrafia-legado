@@ -4,12 +4,14 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { getUserSuggestions } from '../../services/SuggestionService';
 
 Vue.use(Vuex);
 
 // Root state object
 const state = {
   selectedTab: 'reviews',
+  userSuggestions: [],
 };
 
 // Mutations are operations that actually mutates the state.
@@ -32,6 +34,9 @@ const mutations = {
   createExpo() {
     console.info('Create Expo');
   },
+  setUserSuggestions(storeState, { suggestions }) {
+    storeState.userSuggestions = suggestions;
+  },
 };
 
 // Actions are functions that cause side effects and can involve async ops
@@ -53,6 +58,10 @@ const actions = {
   },
   createExpo({ commit }) {
     commit('createExpo');
+  },
+  getUserSuggestions({ commit }) {
+    getUserSuggestions()
+      .then(suggestions => commit('setUserSuggestions', { suggestions }));
   },
 };
 

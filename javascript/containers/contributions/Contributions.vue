@@ -48,7 +48,7 @@
       return {
         tabProps,
         store,
-      }
+      };
     },
     methods: mapActions([
       'changeTab',

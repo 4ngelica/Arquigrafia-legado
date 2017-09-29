@@ -1,6 +1,7 @@
 @extends ('layouts.default')
 
 @section ('head')
+  <title>Arquigrafia - Contribuições</title>
   <link rel="stylesheet" type="text/css" href="{{ URL::to('/css/tabs.css') }}">
   <!-- LOADING VUE.JS BUNDLE -->
   <script src="/js/dist/contributions.bundle.js"></script>

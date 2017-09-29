@@ -3,25 +3,6 @@
 * Can be use to give a "notification" style to the list.
 */
 
-<template>
-  <div>
-    <li>
-      <a v-if="clickableURL != null" :href="clickableURL">
-        <div>
-          <img class="mini" :src="imageURL"> {{ text }}
-          </br>
-        </div>
-      </a>
-      <div v-else>
-        <div>
-          <img class="mini" :src="imageURL"> {{ text }}
-          </br>
-        </div>
-      </div>
-    </li>
-  </div>
-</template>
-
 <script>
 export default {
   name: 'ItemNotificationImageText',
@@ -38,6 +19,60 @@ export default {
       type: String,
       default: null,
     },
+    date: {
+      type: String,
+      required: true,
+    },
   },
 }
 </script>
+
+<template>
+  <li>
+    <div class="container">
+      <a v-if="clickableURL != null" :href="clickableURL" target="_blank">
+        <img class="mini-photo" :src="imageURL">
+        <div class="text-container">
+          <span class="text">{{ text }}</span>
+          <span class="date">{{ date }}</span>
+        </div>
+      </a>
+      <div v-else>
+        <div>
+          <img class="mini-photo" :src="imageURL">
+          <span class="text">{{ text }}</span>
+        </div>
+      </div>
+    </div>
+  </li>
+</template>
+
+<style scoped>
+  .container {
+    float: left;
+    margin-bottom: 10px;
+  }
+
+  .text-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .text {
+    font-size: 15px;
+    font-weight: bold;
+    color: #888;
+  }
+
+  .date {
+    font-size: 12px;
+    color: #ABABAB;
+    margin-top: 3px;
+  }
+
+  .mini-photo {
+    float: left;
+    width: 80px;
+    margin-right: 10px;
+  }
+</style>

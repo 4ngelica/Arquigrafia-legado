@@ -140,4 +140,29 @@ class SuggestionsController extends \BaseController {
 		}
 		return \Redirect::to('/users/suggestions');
 	}
+
+	/**
+	* This function get all the suggestions for a user
+	* @return	A JSON with suggestions
+	*/
+	public function getUserSuggestions() {
+		// Getting the current user connected
+		$id_self = \Auth::user()->id;
+		// Getting the suggestions array
+		$suggestions = Suggestion::whereNull('accepted')->where('user_id', '=', $id_self)->get();
+
+		// Adding objects suggestions
+		foreach ($suggestions as $suggestion) {
+			// Adding photo
+			$suggestion->photo = Photo::select('id','name','user_id')->find($suggestion->photo_id);
+			// Adding user inside photo
+			$suggestion->photo->user = User::select('id','name')->find($suggestion->photo->user_id);
+			// Adding Field
+			$suggestion->field = (object)[];
+			$suggestion->field->attribute_type = PhotoAttributeType::find($suggestion->attribute_type)->attribute_type;
+			$suggestion->field->name = Photo::$fields_data[$suggestion->field->attribute_type]['name'];
+		}
+
+		return \Response::json($suggestions);
+	}
 }

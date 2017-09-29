@@ -1,7 +1,7 @@
 @extends ('layouts.default')
 
 @section ('head')
-  <title>Arquigrafia - Seu universo de imagens de arquitetura</title>
+  <title>Arquigrafia - Sugestões</title>
   <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/suggestions/suggestions-list.css" />
 
   <script type="text/javascript" src="{{ URL::to("/") }}/js/dist/suggestionsList.bundle.js"></script>

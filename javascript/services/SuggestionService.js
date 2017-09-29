@@ -4,6 +4,7 @@
  */
 
 import $ from 'jquery';
+import { request, GET } from './Network';
 
 /**
  * Sending the suggestion through AJAX request to the server
@@ -93,4 +94,17 @@ export const createChat = userID => new Promise((resolve, reject) => {
       reject(error);
     },
   }, 'json');
+});
+
+export const getUserSuggestions = () => new Promise((resolve, reject) => {
+  const url = `${window.location.origin}/suggestions/user_suggestions`;
+  // Get user suggestions (async)
+  request(GET, url)
+    .then((res) => {
+      resolve(res);
+    })
+    .catch((err) => {
+      console.info(err);
+      reject('Erro ao pegar as sugestões do usuário');
+    });
 });
