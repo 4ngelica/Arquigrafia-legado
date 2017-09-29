@@ -23,11 +23,13 @@
       id: 'moderation',
       name: 'Moderação',
       href: '#moderation',
+      // hidden: true,
     },
     {
       id: 'curatorship',
       name: 'Curadoria',
       href: '#curatorship',
+      locked: true,
     },
   ];
 

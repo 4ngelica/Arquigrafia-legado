@@ -12,7 +12,7 @@ const state = {
   selectedTab: 'reviews',
 };
 
-// mutations are operations that actually mutates the state.
+// Mutations are operations that actually mutates the state.
 const mutations = {
   changeTab(storeState, tab) {
     storeState.selectedTab = tab.id;
@@ -22,6 +22,15 @@ const mutations = {
   },
   createChat(storeState, { userID }) {
     console.info('Creating chat', userID);
+  },
+  editExpo(storeState, { expoID }) {
+    console.info('Editing expo', expoID);
+  },
+  removeExpo(storeState, { expoID }) {
+    console.info('Remove expo', expoID);
+  },
+  createExpo() {
+    console.info('Create Expo');
   },
 };
 
@@ -35,6 +44,15 @@ const actions = {
   },
   createChat({ commit }, { userID }) {
     commit('createChat', { userID });
+  },
+  editExpo({ commit }, { expoID }) {
+    commit('editExpo', { expoID });
+  },
+  removeExpo({ commit }, { expoID }) {
+    commit('removeExpo', { expoID });
+  },
+  createExpo({ commit }) {
+    commit('createExpo');
   },
 };
 
