@@ -3,29 +3,30 @@
   "version": "1.0.0",
   "license": "CC-BY-3.0",
   "scripts": {
-    "build": "NODE_ENV=production webpack",
-    "start": "webpack --watch",
+    "build": "NODE_ENV=production webpack --config webpack.prod.js",
+    "start": "webpack --watch --config webpack.dev.js",
     "test": "jest javascript",
     "test:watch": "jest --watch javascript"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
-    "babel-eslint": "^8.0.0",
+    "babel-eslint": "^8.0.1",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.0",
     "babel-preset-es2015": "^6.24.1",
     "css-loader": "^0.28.7",
-    "eslint": "^4.7.2",
+    "eslint": "^4.8.0",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jest": "^21.1.0",
+    "eslint-plugin-jest": "^21.2.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.4.0",
-    "jest": "^21.1.0",
+    "jest": "^21.2.1",
     "vue-loader": "^13.0.5",
     "vue-template-compiler": "^2.4.4",
-    "webpack": "^3.6.0"
+    "webpack": "^3.6.0",
+    "webpack-merge": "^4.1.0"
   },
   "dependencies": {
     "bluebird": "^3.5.0",
@@ -36,6 +37,6 @@
     "vue": "^2.4.4",
     "vue-awesome": "^2.3.3",
     "vue-simple-spinner": "^1.2.8",
-    "vuex": "^2.4.0"
+    "vuex": "^2.4.1"
   }
 }

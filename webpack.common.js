@@ -1,6 +1,6 @@
-var path = require('path');
-var webpack = require('webpack');
-var vueLoaderConfig = require('./vue-loader.conf')
+const path = require('path');
+const webpack = require('webpack');
+const vueLoaderConfig = require('./vue-loader.conf')
 
 module.exports = {
   entry: {
@@ -33,12 +33,7 @@ module.exports = {
   },
   plugins:[
     new webpack.ProvidePlugin({
-        Promise: "bluebird",
+      Promise: "bluebird",
     }),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"'
-      }
-    })
   ],
 };
