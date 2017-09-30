@@ -146,10 +146,19 @@ class SuggestionsController extends \BaseController {
 	* @return	A JSON with suggestions
 	*/
 	public function getUserSuggestions() {
+		// Getting paging input
+		$input = \Input::all();
+		$page = $input['page'];
+		$limit = $input['limit'];
+		$skip = ($page - 1) * $limit;
 		// Getting the current user connected
 		$id_self = \Auth::user()->id;
 		// Getting the suggestions array
-		$suggestions = Suggestion::whereNull('accepted')->where('user_id', '=', $id_self)->get();
+		$suggestions = Suggestion::where('user_id', '=', $id_self)->orderBy('updated_at', 'DESC')->take($limit)->skip($skip)->get();
+		// Getting the number of items on total
+		$totalItems = Suggestion::count();
+		// Getting the number of suggestions
+		$numSuggestions = count($suggestions);
 
 		// Adding objects suggestions
 		foreach ($suggestions as $suggestion) {
@@ -163,6 +172,11 @@ class SuggestionsController extends \BaseController {
 			$suggestion->field->name = Photo::$fields_data[$suggestion->field->attribute_type]['name'];
 		}
 
-		return \Response::json($suggestions);
+		return \Response::json((object)[
+			'suggestions' => $suggestions,
+			'current_page' => $page,
+			'total_items' => $totalItems,
+			'current_num_items' => $numSuggestions
+		]);
 	}
 }

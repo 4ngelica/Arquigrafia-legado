@@ -96,10 +96,16 @@ export const createChat = userID => new Promise((resolve, reject) => {
   }, 'json');
 });
 
-export const getUserSuggestions = () => new Promise((resolve, reject) => {
+export const getUserSuggestions = (page, limit) => new Promise((resolve, reject) => {
+  // Creating URL
   const url = `${window.location.origin}/suggestions/user_suggestions`;
+  // Mounting params
+  const params = {
+    page,
+    limit,
+  };
   // Get user suggestions (async)
-  request(GET, url)
+  request(GET, url, params)
     .then((res) => {
       resolve(res);
     })

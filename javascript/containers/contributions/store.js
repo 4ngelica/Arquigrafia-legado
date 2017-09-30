@@ -12,6 +12,9 @@ Vue.use(Vuex);
 const state = {
   selectedTab: 'reviews',
   userSuggestions: [],
+  currentSuggestionsPage: 1,
+  totalNumSuggestionPages: 1,
+  isLoadingSuggestions: false,
 };
 
 // Mutations are operations that actually mutates the state.
@@ -34,8 +37,17 @@ const mutations = {
   createExpo() {
     console.info('Create Expo');
   },
+  setCurrentSuggestionPage(storeState, { page }) {
+    storeState.currentSuggestionsPage = page;
+  },
   setUserSuggestions(storeState, { suggestions }) {
     storeState.userSuggestions = suggestions;
+  },
+  setTotalNumSuggestionPages(storeState, { totalNumPages }) {
+    storeState.totalNumSuggestionPages = totalNumPages;
+  },
+  setIsLoadingSuggestions(storeState, { loading }) {
+    storeState.isLoadingSuggestions = loading;
   },
 };
 
@@ -59,9 +71,28 @@ const actions = {
   createExpo({ commit }) {
     commit('createExpo');
   },
-  getUserSuggestions({ commit }) {
-    getUserSuggestions()
-      .then(suggestions => commit('setUserSuggestions', { suggestions }));
+  getUserSuggestions({ commit }, { page }) {
+    // Setting fixed limit (max number of items for each page)
+    const limit = 10;
+    // Setting the current page on state
+    commit('setCurrentSuggestionPage', { page });
+    // Setting that we're loading suggestions
+    commit('setIsLoadingSuggestions', { loading: true });
+
+    getUserSuggestions(page, limit)
+      .then((response) => {
+        console.info(response);
+        // Getting total number of pages
+        const totalNumPages = Math.ceil(response.total_items / limit);
+        // Setting total number of pages
+        commit('setTotalNumSuggestionPages', { totalNumPages });
+        // Getting suggestions array
+        const suggestions = response.suggestions;
+        // Setting suggestions
+        commit('setUserSuggestions', { suggestions });
+        // Setting that we've finish to load suggestions
+        commit('setIsLoadingSuggestions', { loading: false });
+      });
   },
 };
 

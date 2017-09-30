@@ -4,9 +4,11 @@
 
 <script>
 import { mapActions } from 'vuex';
+import Pager from '../../components/general/Pager.vue';
 import ItemNotificationImageText from '../../components/notification/ItemNotificationImageText.vue';
 import store from './store.js';
 import { fullDate } from '../../services/DateFormatter.js';
+import Spinner from '../../components/general/Spinner.vue';
 
 export default {
   name: 'ReviewsContent',
@@ -20,12 +22,31 @@ export default {
   },
   components: {
     ItemNotificationImageText,
+    Pager,
+    Spinner,
   },
-  methods: mapActions([
-    'getUserSuggestions',
-  ]),
+  methods: Object.assign({},
+    mapActions([
+      'getUserSuggestions',
+    ]),
+    {
+      handleChangePage(page) {
+        this.getUserSuggestions({ page });
+      },
+      suggestionText(status, text, fieldName, photoName) {
+        if (status === null) {
+          return `Você sugeriu '${text}' para o campo '${fieldName}' na imagem '${photoName}'`;
+        } else if (status) {
+          return `Sua sugestão '${text}' para o campo '${fieldName}' na imagem '${photoName}' foi aceita!`;
+        } else if (!status) {
+          return `Sua sugestão '${text}' para o campo '${fieldName}' na imagem '${photoName}' foi recusada.`;
+        }
+        return '';
+      },
+    }
+  ),
   created() {
-    this.getUserSuggestions();
+    this.getUserSuggestions({ page: 1 });
   },
   data() {
     return {
@@ -41,15 +62,28 @@ export default {
     class="tab"
     v-bind:class="{ active: active }"
   >
-    <ul>
-      <ItemNotificationImageText
-        v-for="suggestion in store.state.userSuggestions"
-        v-bind:key="suggestion.id"
-        :imageURL="`/arquigrafia-images/${suggestion.photo.id}_home.jpg`"
-        :text="`Você sugeriu '${suggestion.text}' para o campo '${suggestion.field.name}' na imagem '${suggestion.photo.name}'`"
-        :date="fullDate(suggestion.created_at)"
-        :clickableURL="`/photos/${suggestion.photo.id}`"
+    <div v-if="store.state.isLoadingSuggestions">
+      <Spinner />
+    </div>
+    <div v-if="!store.state.isLoadingSuggestions && store.state.userSuggestions.length > 0">
+      <ul>
+        <ItemNotificationImageText
+          v-for="suggestion in store.state.userSuggestions"
+          v-bind:key="suggestion.id"
+          :imageURL="`/arquigrafia-images/${suggestion.photo.id}_home.jpg`"
+          :text="suggestionText(suggestion.accepted, suggestion.text, suggestion.field.name, suggestion.photo.name)"
+          :date="fullDate(suggestion.updated_at)"
+          :clickableURL="`/photos/${suggestion.photo.id}`"
+        />
+      </ul>
+      <Pager
+        :currentPage="store.state.currentSuggestionsPage"
+        :numPages="store.state.totalNumSuggestionPages"
+        :handleChangePage="handleChangePage"
       />
-    </ul>
+    </div>
+    <div v-if="!store.state.isLoadingSuggestions && store.state.userSuggestions.length === 0">
+      <p>Você ainda não realizou nenhuma revisão.</p>
+    </div>
   </div>
 </template>
