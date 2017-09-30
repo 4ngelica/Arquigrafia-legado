@@ -59,7 +59,7 @@ export default {
   }
 
   .text {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: bold;
     color: #888;
   }

@@ -33,13 +33,13 @@ export default {
       handleChangePage(page) {
         this.getUserSuggestions({ page });
       },
-      suggestionText(status, text, fieldName, photoName) {
+      suggestionText(status, text, fieldName, photoName, userName) {
         if (status === null) {
-          return `Você sugeriu '${text}' para o campo '${fieldName}' na imagem '${photoName}'`;
+          return `Sua sugestão '${text}' para o campo '${fieldName}' na imagem '${photoName}' foi enviada para a revisão do autor da imagem '${userName}'.`;
         } else if (status) {
-          return `Sua sugestão '${text}' para o campo '${fieldName}' na imagem '${photoName}' foi aceita!`;
+          return `Sua sugestão '${text}' para o campo '${fieldName}' na imagem '${photoName}' foi aceita pelo autor da imagem '${userName}'!`;
         } else if (!status) {
-          return `Sua sugestão '${text}' para o campo '${fieldName}' na imagem '${photoName}' foi recusada.`;
+          return `Sua sugestão '${text}' para o campo '${fieldName}' na imagem '${photoName}' foi recusada pelo autor da imagem '${userName}'.`;
         }
         return '';
       },
@@ -71,7 +71,7 @@ export default {
           v-for="suggestion in store.state.userSuggestions"
           v-bind:key="suggestion.id"
           :imageURL="`/arquigrafia-images/${suggestion.photo.id}_home.jpg`"
-          :text="suggestionText(suggestion.accepted, suggestion.text, suggestion.field.name, suggestion.photo.name)"
+          :text="suggestionText(suggestion.accepted, suggestion.text, suggestion.field.name, suggestion.photo.name, suggestion.photo.user.name)"
           :date="fullDate(suggestion.updated_at)"
           :clickableURL="`/photos/${suggestion.photo.id}`"
         />

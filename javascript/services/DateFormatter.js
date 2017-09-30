@@ -3,7 +3,7 @@ import 'moment/locale/pt';
 
 /**
  * This is a date formatter. It returns a function that formats dates, when you pass a format
- * @param {Date} date The date that we wanna format
+ * @param {String} date The date that we wanna format
  */
 export const dateFormatter = date => (format) => {
   moment.locale('pt');
