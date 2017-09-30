@@ -4,7 +4,7 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { getUserSuggestions } from '../../services/SuggestionService';
+import { getUserSuggestions, getUserSuggestionsStatistics } from '../../services/SuggestionService';
 
 Vue.use(Vuex);
 
@@ -15,6 +15,8 @@ const state = {
   currentSuggestionsPage: 1,
   totalNumSuggestionPages: 1,
   isLoadingSuggestions: false,
+  isLoadingSuggestionsStatistics: false,
+  suggestionsStatistics: null,
 };
 
 // Mutations are operations that actually mutates the state.
@@ -48,6 +50,12 @@ const mutations = {
   },
   setIsLoadingSuggestions(storeState, { loading }) {
     storeState.isLoadingSuggestions = loading;
+  },
+  setIsLoadingSuggestionsStatistics(storeState, { loading }) {
+    storeState.isLoadingSuggestionsStatistics = loading;
+  },
+  setSuggestionsStatistics(storeState, statistics) {
+    storeState.suggestionsStatistics = statistics;
   },
 };
 
@@ -92,6 +100,24 @@ const actions = {
         commit('setUserSuggestions', { suggestions });
         // Setting that we've finish to load suggestions
         commit('setIsLoadingSuggestions', { loading: false });
+      });
+  },
+  getUserSuggestionsStatistics({ commit }) {
+    // Setting that we're loading suggestions statistics
+    commit('setIsLoadingSuggestionsStatistics', { loading: true });
+
+    getUserSuggestionsStatistics()
+      .then((response) => {
+        console.info(response);
+        // Setting statistics object
+        const statistics = {
+          total: response.num_suggestions,
+          waiting: response.num_waiting_suggestions,
+          accepted: response.num_accepted_suggestions,
+          rejected: response.num_rejected_suggestions,
+        };
+        // Setting the statistics
+        commit('setSuggestionsStatistics', statistics);
       });
   },
 };

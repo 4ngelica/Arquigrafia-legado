@@ -31378,7 +31378,7 @@ module.exports = function(module) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getUserSuggestions = exports.createChat = exports.sendFinalSuggestions = exports.sendSuggestion = undefined;
+exports.getUserSuggestionsStatistics = exports.getUserSuggestions = exports.createChat = exports.sendFinalSuggestions = exports.sendSuggestion = undefined;
 
 var _jquery = __webpack_require__(23);
 
@@ -31484,6 +31484,11 @@ var createChat = exports.createChat = function createChat(userID) {
   });
 };
 
+/**
+ * Getting user suggestions
+ * @param {Number} page The page that you wanna get
+ * @param {Number} limit The number of items per page
+ */
 var getUserSuggestions = exports.getUserSuggestions = function getUserSuggestions(page, limit) {
   return new Promise(function (resolve, reject) {
     // Creating URL
@@ -31499,6 +31504,20 @@ var getUserSuggestions = exports.getUserSuggestions = function getUserSuggestion
     }).catch(function (err) {
       console.info(err);
       reject('Erro ao pegar as sugestões do usuário');
+    });
+  });
+};
+
+var getUserSuggestionsStatistics = exports.getUserSuggestionsStatistics = function getUserSuggestionsStatistics() {
+  return new Promise(function (resolve, reject) {
+    // Creating URL
+    var url = window.location.origin + '/suggestions/user_statistics';
+    // Getting user suggestion statistics (async)
+    (0, _Network.request)(_Network.GET, url).then(function (res) {
+      resolve(res);
+    }).catch(function (err) {
+      console.info(err);
+      reject('Erro ao pegar as estatisticas do usuário');
     });
   });
 };
@@ -49315,7 +49334,9 @@ var state = {
   userSuggestions: [],
   currentSuggestionsPage: 1,
   totalNumSuggestionPages: 1,
-  isLoadingSuggestions: false
+  isLoadingSuggestions: false,
+  isLoadingSuggestionsStatistics: false,
+  suggestionsStatistics: null
 };
 
 // Mutations are operations that actually mutates the state.
@@ -49366,49 +49387,57 @@ var mutations = {
     var loading = _ref8.loading;
 
     storeState.isLoadingSuggestions = loading;
+  },
+  setIsLoadingSuggestionsStatistics: function setIsLoadingSuggestionsStatistics(storeState, _ref9) {
+    var loading = _ref9.loading;
+
+    storeState.isLoadingSuggestionsStatistics = loading;
+  },
+  setSuggestionsStatistics: function setSuggestionsStatistics(storeState, statistics) {
+    storeState.suggestionsStatistics = statistics;
   }
 };
 
 // Actions are functions that cause side effects and can involve async ops
 var actions = {
-  changeTab: function changeTab(_ref9, tab) {
-    var commit = _ref9.commit;
+  changeTab: function changeTab(_ref10, tab) {
+    var commit = _ref10.commit;
 
     commit('changeTab', tab);
   },
-  acceptRejectSuggestion: function acceptRejectSuggestion(_ref10, _ref11) {
-    var commit = _ref10.commit;
-    var suggestionID = _ref11.suggestionID,
-        type = _ref11.type;
+  acceptRejectSuggestion: function acceptRejectSuggestion(_ref11, _ref12) {
+    var commit = _ref11.commit;
+    var suggestionID = _ref12.suggestionID,
+        type = _ref12.type;
 
     commit('acceptRejectSuggestion', { suggestionID: suggestionID, type: type });
   },
-  createChat: function createChat(_ref12, _ref13) {
-    var commit = _ref12.commit;
-    var userID = _ref13.userID;
+  createChat: function createChat(_ref13, _ref14) {
+    var commit = _ref13.commit;
+    var userID = _ref14.userID;
 
     commit('createChat', { userID: userID });
   },
-  editExpo: function editExpo(_ref14, _ref15) {
-    var commit = _ref14.commit;
-    var expoID = _ref15.expoID;
+  editExpo: function editExpo(_ref15, _ref16) {
+    var commit = _ref15.commit;
+    var expoID = _ref16.expoID;
 
     commit('editExpo', { expoID: expoID });
   },
-  removeExpo: function removeExpo(_ref16, _ref17) {
-    var commit = _ref16.commit;
-    var expoID = _ref17.expoID;
+  removeExpo: function removeExpo(_ref17, _ref18) {
+    var commit = _ref17.commit;
+    var expoID = _ref18.expoID;
 
     commit('removeExpo', { expoID: expoID });
   },
-  createExpo: function createExpo(_ref18) {
-    var commit = _ref18.commit;
+  createExpo: function createExpo(_ref19) {
+    var commit = _ref19.commit;
 
     commit('createExpo');
   },
-  getUserSuggestions: function getUserSuggestions(_ref19, _ref20) {
-    var commit = _ref19.commit;
-    var page = _ref20.page;
+  getUserSuggestions: function getUserSuggestions(_ref20, _ref21) {
+    var commit = _ref20.commit;
+    var page = _ref21.page;
 
     // Setting fixed limit (max number of items for each page)
     var limit = 10;
@@ -49429,6 +49458,25 @@ var actions = {
       commit('setUserSuggestions', { suggestions: suggestions });
       // Setting that we've finish to load suggestions
       commit('setIsLoadingSuggestions', { loading: false });
+    });
+  },
+  getUserSuggestionsStatistics: function getUserSuggestionsStatistics(_ref22) {
+    var commit = _ref22.commit;
+
+    // Setting that we're loading suggestions statistics
+    commit('setIsLoadingSuggestionsStatistics', { loading: true });
+
+    (0, _SuggestionService.getUserSuggestionsStatistics)().then(function (response) {
+      console.info(response);
+      // Setting statistics object
+      var statistics = {
+        total: response.num_suggestions,
+        waiting: response.num_waiting_suggestions,
+        accepted: response.num_accepted_suggestions,
+        rejected: response.num_rejected_suggestions
+      };
+      // Setting the statistics
+      commit('setSuggestionsStatistics', statistics);
     });
   }
 };
@@ -71666,22 +71714,26 @@ if (false) {
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ReviewsContent_vue__ = __webpack_require__(242);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ReviewsContent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ReviewsContent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_69742ada_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_node_modules_vue_loader_lib_selector_type_template_index_0_ReviewsContent_vue__ = __webpack_require__(264);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_69742ada_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_node_modules_vue_loader_lib_selector_type_template_index_0_ReviewsContent_vue__ = __webpack_require__(298);
 var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(296)
+}
 var normalizeComponent = __webpack_require__(9)
 /* script */
 
 /* template */
 
 /* styles */
-var __vue_styles__ = null
+var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = null
+var __vue_scopeId__ = "data-v-69742ada"
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ReviewsContent_vue___default.a,
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_69742ada_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_node_modules_vue_loader_lib_selector_type_template_index_0_ReviewsContent_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_69742ada_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_node_modules_vue_loader_lib_selector_type_template_index_0_ReviewsContent_vue__["a" /* default */],
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
@@ -71740,12 +71792,11 @@ var _Spinner = __webpack_require__(260);
 
 var _Spinner2 = _interopRequireDefault(_Spinner);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _ContributionsStatistics = __webpack_require__(291);
 
-//
-//
-//
-//
+var _ContributionsStatistics2 = _interopRequireDefault(_ContributionsStatistics);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
   name: 'ReviewsContent',
@@ -71760,9 +71811,10 @@ exports.default = {
   components: {
     ItemNotificationImageText: _ItemNotificationImageText2.default,
     Pager: _Pager2.default,
-    Spinner: _Spinner2.default
+    Spinner: _Spinner2.default,
+    ContributionsStatistics: _ContributionsStatistics2.default
   },
-  methods: Object.assign({}, (0, _vuex.mapActions)(['getUserSuggestions']), {
+  methods: Object.assign({}, (0, _vuex.mapActions)(['getUserSuggestions', 'getUserSuggestionsStatistics']), {
     handleChangePage: function handleChangePage(page) {
       this.getUserSuggestions({ page: page });
     },
@@ -71778,6 +71830,9 @@ exports.default = {
     }
   }),
   created: function created() {
+    // Getting user suggestions statistics
+    this.getUserSuggestionsStatistics();
+    // Getting user suggestions
     this.getUserSuggestions({ page: 1 });
   },
   data: function data() {
@@ -71786,7 +71841,10 @@ exports.default = {
       fullDate: _DateFormatter.fullDate
     };
   }
-};
+}; //
+//
+//
+//
 
 /***/ }),
 /* 243 */
@@ -73434,80 +73492,7 @@ if (false) {
 }
 
 /***/ }),
-/* 264 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "tab", class: { active: _vm.active } }, [
-    _vm.store.state.isLoadingSuggestions
-      ? _c("div", [_c("Spinner")], 1)
-      : _vm._e(),
-    _vm._v(" "),
-    !_vm.store.state.isLoadingSuggestions &&
-    _vm.store.state.userSuggestions.length > 0
-      ? _c(
-          "div",
-          [
-            _c(
-              "ul",
-              _vm._l(_vm.store.state.userSuggestions, function(suggestion) {
-                return _c("ItemNotificationImageText", {
-                  key: suggestion.id,
-                  attrs: {
-                    imageURL:
-                      "/arquigrafia-images/" +
-                      suggestion.photo.id +
-                      "_home.jpg",
-                    text: _vm.suggestionText(
-                      suggestion.accepted,
-                      suggestion.text,
-                      suggestion.field.name,
-                      suggestion.photo.name,
-                      suggestion.photo.user.name
-                    ),
-                    date: _vm.fullDate(suggestion.updated_at),
-                    clickableURL: "/photos/" + suggestion.photo.id
-                  }
-                })
-              })
-            ),
-            _vm._v(" "),
-            _c("Pager", {
-              attrs: {
-                currentPage: _vm.store.state.currentSuggestionsPage,
-                numPages: _vm.store.state.totalNumSuggestionPages,
-                handleChangePage: _vm.handleChangePage
-              }
-            })
-          ],
-          1
-        )
-      : _vm._e(),
-    _vm._v(" "),
-    !_vm.store.state.isLoadingSuggestions &&
-    _vm.store.state.userSuggestions.length === 0
-      ? _c("div", [
-          _c("p", [_vm._v("Você ainda não realizou nenhuma revisão.")])
-        ])
-      : _vm._e()
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-69742ada", esExports)
-  }
-}
-
-/***/ }),
+/* 264 */,
 /* 265 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -74630,6 +74615,325 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
      require("vue-hot-reload-api").rerender("data-v-154a2797", esExports)
+  }
+}
+
+/***/ }),
+/* 291 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ContributionsStatistics_vue__ = __webpack_require__(294);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ContributionsStatistics_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ContributionsStatistics_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_481aa29e_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_node_modules_vue_loader_lib_selector_type_template_index_0_ContributionsStatistics_vue__ = __webpack_require__(295);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(292)
+}
+var normalizeComponent = __webpack_require__(9)
+/* script */
+
+/* template */
+
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-481aa29e"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ContributionsStatistics_vue___default.a,
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_481aa29e_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_node_modules_vue_loader_lib_selector_type_template_index_0_ContributionsStatistics_vue__["a" /* default */],
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "javascript/components/contributions/ContributionsStatistics.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] ContributionsStatistics.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-481aa29e", Component.options)
+  } else {
+    hotAPI.reload("data-v-481aa29e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 292 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(293);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(25)("0dc3b55c", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-481aa29e\",\"scoped\":true,\"hasInlineConfig\":false}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ContributionsStatistics.vue", function() {
+     var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-481aa29e\",\"scoped\":true,\"hasInlineConfig\":false}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ContributionsStatistics.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 293 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(24)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.container[data-v-481aa29e] {\n  display: flex;\n  flex-direction: column;\n}\n.row[data-v-481aa29e] {\n  display: flex;\n  flex-direction: row;\n  margin: 0;\n}\n.column[data-v-481aa29e] {\n  display: flex;\n  flex-direction: column;\n  margin: 0;\n  margin-right: 20px;\n}\np[data-v-481aa29e] {\n  font-size: 12px;\n  margin: 0;\n}\n.title[data-v-481aa29e] {\n  font-weight: bold;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 294 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
+  name: 'ContributionsStatistics',
+  props: {
+    totalSuggestions: {
+      type: Number,
+      required: true
+    },
+    acceptedSuggestions: {
+      type: Number,
+      required: true
+    },
+    waitingSuggestions: {
+      type: Number,
+      required: true
+    },
+    rejectedSuggestions: {
+      type: Number,
+      required: true
+    }
+  }
+};
+
+/***/ }),
+/* 295 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "column" }, [
+        _c("p", [
+          _c("span", { staticClass: "title" }, [_vm._v("Total:")]),
+          _vm._v(" " + _vm._s(_vm.totalSuggestions))
+        ]),
+        _vm._v(" "),
+        _c("p", [
+          _c("span", { staticClass: "title" }, [_vm._v("Aguardando:")]),
+          _vm._v(" " + _vm._s(_vm.waitingSuggestions))
+        ]),
+        _vm._v(" "),
+        _c("p", [
+          _c("span", { staticClass: "title" }, [_vm._v("Aceitas:")]),
+          _vm._v(" " + _vm._s(_vm.acceptedSuggestions))
+        ]),
+        _vm._v(" "),
+        _c("p", [
+          _c("span", { staticClass: "title" }, [_vm._v("Recusadas:")]),
+          _vm._v(" " + _vm._s(_vm.rejectedSuggestions))
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("h3", [_vm._v("Suas Revisões")])
+    ])
+  }
+]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-481aa29e", esExports)
+  }
+}
+
+/***/ }),
+/* 296 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(297);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(25)("1dbb96f9", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-69742ada\",\"scoped\":true,\"hasInlineConfig\":false}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ReviewsContent.vue", function() {
+     var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-69742ada\",\"scoped\":true,\"hasInlineConfig\":false}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ReviewsContent.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 297 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(24)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.statistics-container[data-v-69742ada] {\n  margin-top: 10px;\n  margin-bottom: 20px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 298 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "tab", class: { active: _vm.active } }, [
+    _vm.store.state.suggestionsStatistics !== null
+      ? _c(
+          "div",
+          { staticClass: "statistics-container" },
+          [
+            _c("ContributionsStatistics", {
+              attrs: {
+                acceptedSuggestions:
+                  _vm.store.state.suggestionsStatistics.accepted,
+                waitingSuggestions:
+                  _vm.store.state.suggestionsStatistics.waiting,
+                rejectedSuggestions:
+                  _vm.store.state.suggestionsStatistics.rejected,
+                totalSuggestions: _vm.store.state.suggestionsStatistics.total
+              }
+            })
+          ],
+          1
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.store.state.isLoadingSuggestions
+      ? _c("div", [_c("Spinner")], 1)
+      : _vm._e(),
+    _vm._v(" "),
+    !_vm.store.state.isLoadingSuggestions &&
+    _vm.store.state.userSuggestions.length > 0
+      ? _c(
+          "div",
+          [
+            _c(
+              "ul",
+              _vm._l(_vm.store.state.userSuggestions, function(suggestion) {
+                return _c("ItemNotificationImageText", {
+                  key: suggestion.id,
+                  attrs: {
+                    imageURL:
+                      "/arquigrafia-images/" +
+                      suggestion.photo.id +
+                      "_home.jpg",
+                    text: _vm.suggestionText(
+                      suggestion.accepted,
+                      suggestion.text,
+                      suggestion.field.name,
+                      suggestion.photo.name,
+                      suggestion.photo.user.name
+                    ),
+                    date: _vm.fullDate(suggestion.updated_at),
+                    clickableURL: "/photos/" + suggestion.photo.id
+                  }
+                })
+              })
+            ),
+            _vm._v(" "),
+            _c("Pager", {
+              attrs: {
+                currentPage: _vm.store.state.currentSuggestionsPage,
+                numPages: _vm.store.state.totalNumSuggestionPages,
+                handleChangePage: _vm.handleChangePage
+              }
+            })
+          ],
+          1
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    !_vm.store.state.isLoadingSuggestions &&
+    _vm.store.state.userSuggestions.length === 0
+      ? _c("div", [
+          _c("p", [_vm._v("Você ainda não realizou nenhuma revisão.")])
+        ])
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-69742ada", esExports)
   }
 }
 

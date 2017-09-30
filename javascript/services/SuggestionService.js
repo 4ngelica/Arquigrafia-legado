@@ -96,6 +96,11 @@ export const createChat = userID => new Promise((resolve, reject) => {
   }, 'json');
 });
 
+/**
+ * Getting user suggestions
+ * @param {Number} page The page that you wanna get
+ * @param {Number} limit The number of items per page
+ */
 export const getUserSuggestions = (page, limit) => new Promise((resolve, reject) => {
   // Creating URL
   const url = `${window.location.origin}/suggestions/user_suggestions`;
@@ -112,5 +117,19 @@ export const getUserSuggestions = (page, limit) => new Promise((resolve, reject)
     .catch((err) => {
       console.info(err);
       reject('Erro ao pegar as sugestões do usuário');
+    });
+});
+
+export const getUserSuggestionsStatistics = () => new Promise((resolve, reject) => {
+  // Creating URL
+  const url = `${window.location.origin}/suggestions/user_statistics`;
+  // Getting user suggestion statistics (async)
+  request(GET, url)
+    .then((res) => {
+      resolve(res);
+    })
+    .catch((err) => {
+      console.info(err);
+      reject('Erro ao pegar as estatisticas do usuário');
     });
 });

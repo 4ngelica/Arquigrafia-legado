@@ -179,4 +179,28 @@ class SuggestionsController extends \BaseController {
 			'current_num_items' => $numSuggestions
 		]);
 	}
+
+	/**
+	*	This functions gets the statistics about suggestions
+	* @return	A JSON with statistics
+	*/
+	public function getUserSuggestionsStatistics() {
+		// Getting the current user connected
+		$id_self = \Auth::user()->id;
+		// Getting the number of suggestions 
+		$numSuggestions = Suggestion::count();
+		// Number of waiting suggestions
+		$numWaitingSuggestions = Suggestion::whereNull('accepted')->count();
+		// Number of accepted suggestions
+		$numAcceptedSuggestions = Suggestion::where('accepted', '=', '1')->count();
+		// Number of rejected suggestions
+		$numRejectedSuggestions = Suggestion::where('accepted', '=', '0')->count();
+
+		return \Response::json((object)[
+			'num_suggestions' => $numSuggestions,
+			'num_waiting_suggestions' => $numWaitingSuggestions,
+			'num_accepted_suggestions' => $numAcceptedSuggestions,
+			'num_rejected_suggestions' => $numRejectedSuggestions
+		]);
+	}
 }

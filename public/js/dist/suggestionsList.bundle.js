@@ -26512,7 +26512,7 @@ module.exports = function(module) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getUserSuggestions = exports.createChat = exports.sendFinalSuggestions = exports.sendSuggestion = undefined;
+exports.getUserSuggestionsStatistics = exports.getUserSuggestions = exports.createChat = exports.sendFinalSuggestions = exports.sendSuggestion = undefined;
 
 var _jquery = __webpack_require__(23);
 
@@ -26618,6 +26618,11 @@ var createChat = exports.createChat = function createChat(userID) {
   });
 };
 
+/**
+ * Getting user suggestions
+ * @param {Number} page The page that you wanna get
+ * @param {Number} limit The number of items per page
+ */
 var getUserSuggestions = exports.getUserSuggestions = function getUserSuggestions(page, limit) {
   return new Promise(function (resolve, reject) {
     // Creating URL
@@ -26633,6 +26638,20 @@ var getUserSuggestions = exports.getUserSuggestions = function getUserSuggestion
     }).catch(function (err) {
       console.info(err);
       reject('Erro ao pegar as sugestões do usuário');
+    });
+  });
+};
+
+var getUserSuggestionsStatistics = exports.getUserSuggestionsStatistics = function getUserSuggestionsStatistics() {
+  return new Promise(function (resolve, reject) {
+    // Creating URL
+    var url = window.location.origin + '/suggestions/user_statistics';
+    // Getting user suggestion statistics (async)
+    (0, _Network.request)(_Network.GET, url).then(function (res) {
+      resolve(res);
+    }).catch(function (err) {
+      console.info(err);
+      reject('Erro ao pegar as estatisticas do usuário');
     });
   });
 };

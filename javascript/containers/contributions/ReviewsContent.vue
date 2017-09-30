@@ -9,6 +9,7 @@ import ItemNotificationImageText from '../../components/notification/ItemNotific
 import store from './store.js';
 import { fullDate } from '../../services/DateFormatter.js';
 import Spinner from '../../components/general/Spinner.vue';
+import ContributionsStatistics from '../../components/contributions/ContributionsStatistics.vue';
 
 export default {
   name: 'ReviewsContent',
@@ -24,10 +25,12 @@ export default {
     ItemNotificationImageText,
     Pager,
     Spinner,
+    ContributionsStatistics,
   },
   methods: Object.assign({},
     mapActions([
       'getUserSuggestions',
+      'getUserSuggestionsStatistics',
     ]),
     {
       handleChangePage(page) {
@@ -46,6 +49,9 @@ export default {
     }
   ),
   created() {
+    // Getting user suggestions statistics
+    this.getUserSuggestionsStatistics();
+    // Getting user suggestions
     this.getUserSuggestions({ page: 1 });
   },
   data() {
@@ -62,6 +68,14 @@ export default {
     class="tab"
     v-bind:class="{ active: active }"
   >
+    <div v-if="store.state.suggestionsStatistics !== null" class="statistics-container">
+      <ContributionsStatistics
+        :acceptedSuggestions="store.state.suggestionsStatistics.accepted"
+        :waitingSuggestions="store.state.suggestionsStatistics.waiting"
+        :rejectedSuggestions="store.state.suggestionsStatistics.rejected"
+        :totalSuggestions="store.state.suggestionsStatistics.total"
+      />
+    </div>
     <div v-if="store.state.isLoadingSuggestions">
       <Spinner />
     </div>
@@ -87,3 +101,10 @@ export default {
     </div>
   </div>
 </template>
+
+<style scoped>
+  .statistics-container {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+</style>
