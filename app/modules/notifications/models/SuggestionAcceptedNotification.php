@@ -3,6 +3,7 @@ namespace modules\notifications\models;
 
 use \Tricki\Notification\Models\Notification as TrickiNotification;
 use User;
+use Photo;
 
 class SuggestionAcceptedNotification extends \Tricki\Notification\Models\Notification
 {
