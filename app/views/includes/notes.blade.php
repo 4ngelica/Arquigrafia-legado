@@ -204,7 +204,7 @@
                             <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
                             <div onclick="markRead(this);">
                             <img class="mini" src="{{ URL::to("/") }}/img/avatar-48.png" >
-                                Sua sugestão para imagem "{{ $info_array[6]->name }}" do usuário "{{ $info_array[1] }}" foi aceita!
+                                Sua sugestão para imagem "{{ $info_array[6]->name }}" do usuário "{{ $info_array[1] }}" foi analisada.
                                 </br>
                             </div>
                         </a>
@@ -217,7 +217,7 @@
                             <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
                             <div onclick="markRead(this);">
                             <img class="mini" src="{{ URL::to("/") }}/img/avatar-48.png" >
-                                Sua sugestão para imagem "{{ $info_array[6]->name }}" do usuário "{{ $info_array[1] }}" foi rejeitada.
+                                Sua sugestão para imagem "{{ $info_array[6]->name }}" do usuário "{{ $info_array[1] }}" foi analisada.
                                 </br>
                             </div>
                         </a>

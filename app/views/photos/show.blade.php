@@ -555,7 +555,7 @@
               <strong>Dados completos:</strong><br />
               Esta foto tem {{ $completeness['present'] }}% dos dados preenchidos pelo autor ou aceitos após revisão da comunidade.<br />
               @if (!$isReviewing)
-                <a href="#" class="OpenModal">Gostaria de colaborar com mais informações?</a>
+                <a href="#" class="OpenModal">Colabore com mais informações aqui</a>
               @endif
             </div>
           </div>
@@ -576,7 +576,7 @@
               <strong>Dados a preencher:</strong><br>
               Esta foto tem {{ $completeness['missing'] }}% dos dados ainda não preenchidos.<br />
               @if (!$isReviewing)
-                <a href="#" class="OpenModal">Gostaria de colaborar com mais informações?</a>
+                <a href="#" class="OpenModal">Colabore com mais informações aqui</a>
               @endif
             </div>
           </div>
@@ -943,7 +943,7 @@
   		</div>
       <div>
         <p  class="label new-label">
-          Se desejar, entre em contato diretamente com o autor <a href="#" id="send_message"><span>aqui</span></a>
+          Se desejar, entre em contato diretamente com o autor <a href="/users/@{{ userID }}" target="_blank"><span>aqui</span></a>
         </p>
       </div>
     </div>
@@ -962,7 +962,7 @@
 
       <div>
         <p  class="label new-label">
-          Se desejar, entre em contato diretamente com o autor <a href="#" id="send_message"><span>aqui</span></a>
+          Se desejar, entre em contato diretamente com o autor <a href="/users/@{{ userID }}" target="_blank"><span>aqui</span></a>
         </p>
       </div>
     </div>

@@ -102,13 +102,13 @@ class SuggestionModal {
 
       contentHTML = templateContent({ name, question, jumpLabel, imageID });
     } else if (type === 'lastPage') {
-      sourceContent = $("#suggestion-modal-last-page-content").html();
+      sourceContent = $('#suggestion-modal-last-page-content').html();
       templateContent = Handlebars.compile(sourceContent);
-      contentHTML = templateContent({ name, question });
+      contentHTML = templateContent({ name, question, userID: this.photo.user_id });
     } else if (type === 'lastPageGamed') {
-      sourceContent = $("#suggestion-modal-last-page-gamed-content").html();
+      sourceContent = $('#suggestion-modal-last-page-gamed-content').html();
       templateContent = Handlebars.compile(sourceContent);
-      contentHTML = templateContent({ name, question });
+      contentHTML = templateContent({ name, question, userID: this.photo.user_id });
     } else {
       return '';
     }
