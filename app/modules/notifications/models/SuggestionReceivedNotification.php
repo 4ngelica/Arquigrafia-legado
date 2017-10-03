@@ -16,8 +16,7 @@ class SuggestionReceivedNotification extends \Tricki\Notification\Models\Notific
                      $this->getTime(),
                      $this->getSenderID(),
                      $this->getData(),
-										 $this->getPhoto()
-                     );
+					 $this->getPhoto());
     }
 
     public function getDate() {
@@ -54,7 +53,7 @@ class SuggestionReceivedNotification extends \Tricki\Notification\Models\Notific
         return $this->data;
     }
 
-		public function getPhoto() {
-			return Photo::find($this->object_id);
-		}
+    public function getPhoto() {
+        return Photo::find($this->object_id);
+    }
 }

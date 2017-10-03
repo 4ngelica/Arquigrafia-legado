@@ -156,7 +156,7 @@ class SuggestionsController extends \BaseController {
 		// Getting the suggestions array
 		$suggestions = Suggestion::where('user_id', '=', $id_self)->orderBy('updated_at', 'DESC')->take($limit)->skip($skip)->get();
 		// Getting the number of items on total
-		$totalItems = Suggestion::count();
+		$totalItems = Suggestion::where('user_id', '=', $id_self)->count();
 		// Getting the number of suggestions
 		$numSuggestions = count($suggestions);
 
@@ -188,13 +188,13 @@ class SuggestionsController extends \BaseController {
 		// Getting the current user connected
 		$id_self = \Auth::user()->id;
 		// Getting the number of suggestions 
-		$numSuggestions = Suggestion::count();
+		$numSuggestions = Suggestion::where('user_id', '=', $id_self)->count();
 		// Number of waiting suggestions
-		$numWaitingSuggestions = Suggestion::whereNull('accepted')->count();
+		$numWaitingSuggestions = Suggestion::where('user_id', '=', $id_self)->whereNull('accepted')->count();
 		// Number of accepted suggestions
-		$numAcceptedSuggestions = Suggestion::where('accepted', '=', '1')->count();
+		$numAcceptedSuggestions = Suggestion::where('user_id', '=', $id_self)->where('accepted', '=', '1')->count();
 		// Number of rejected suggestions
-		$numRejectedSuggestions = Suggestion::where('accepted', '=', '0')->count();
+		$numRejectedSuggestions = Suggestion::where('user_id', '=', $id_self)->where('accepted', '=', '0')->count();
 
 		return \Response::json((object)[
 			'num_suggestions' => $numSuggestions,

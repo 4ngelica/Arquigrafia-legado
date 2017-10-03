@@ -98,9 +98,11 @@
           </li>
 
           <li class="contributions-list">
-            <a href="{{ URL::to('/users/contributions') }}" title="Contribuições">
-              <i class="contributions">&nbsp;</i> CONTRIBUIÇÕES
-            </a>
+            <div>
+              <a href="{{ URL::to('/users/contributions') }}" title="Contribuições">
+                <i class="contributions">&nbsp;</i> CONTRIBUIÇÕES
+              </a>
+            </div>
           </li>
 
         <!-- <li><a href="{{ URL::to("/badges") }}" id="badge" title="Vizualizar badges">&nbsp;</a></li>-->

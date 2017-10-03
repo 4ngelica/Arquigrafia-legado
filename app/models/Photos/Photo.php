@@ -853,7 +853,7 @@ class Photo extends Eloquent {
 				$photo->project_author = $data;
 				break;
 			case 'workDate':
-				$photo->wordate = $data;
+				$photo->workDate = $data;
 				break;
 			default:
 				# code...

@@ -200,23 +200,27 @@
             @elseif($info_array[0] == "suggestionAccepted")
                 <div id={{$notification->id}} class="notes {{$notification->id}}<?php if($notification->read_at == null) echo ' not-read'?>">
                     <li>
-                        <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
-                        <div onclick="markRead(this);">
-                          <img class="mini" src="{{ URL::to("/") }}/img/avatar-48.png" >
-                          Você teve sua sugestão aceita
-                          </br>
-                        </div>
+                        <a href="{{URL::to("/users/contributions")}}">
+                            <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
+                            <div onclick="markRead(this);">
+                            <img class="mini" src="{{ URL::to("/") }}/img/avatar-48.png" >
+                                Sua sugestão para imagem "{{ $info_array[6]->name }}" do usuário "{{ $info_array[1] }}" foi aceita!
+                                </br>
+                            </div>
+                        </a>
                     </li>
                 </div>
             @elseif($info_array[0] == "suggestionDenied")
                 <div id={{$notification->id}} class="notes {{$notification->id}}<?php if($notification->read_at == null) echo ' not-read'?>">
                     <li>
-                        <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
-                        <div onclick="markRead(this);">
-                          <img class="mini" src="{{ URL::to("/") }}/img/avatar-48.png" >
-                          Você teve sua sugestão rejeitada
-                          </br>
-                        </div>
+                        <a href="{{URL::to("/users/contributions")}}">
+                            <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
+                            <div onclick="markRead(this);">
+                            <img class="mini" src="{{ URL::to("/") }}/img/avatar-48.png" >
+                                Sua sugestão para imagem "{{ $info_array[6]->name }}" do usuário "{{ $info_array[1] }}" foi rejeitada.
+                                </br>
+                            </div>
+                        </a>
                     </li>
                 </div>
             @endif

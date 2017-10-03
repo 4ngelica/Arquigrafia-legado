@@ -3,6 +3,7 @@ namespace modules\notifications\models;
 
 use \Tricki\Notification\Models\Notification as TrickiNotification;
 use User;
+use Photo;
 
 class SuggestionDeniedNotification extends \Tricki\Notification\Models\Notification
 {
@@ -14,8 +15,8 @@ class SuggestionDeniedNotification extends \Tricki\Notification\Models\Notificat
                      $this->getDate(),
                      $this->getTime(),
                      $this->getSenderID(),
-                     $this->getData()
-                     );
+                     $this->getData(),
+                     $this->getPhoto());
     }
 
     public function getDate() {
@@ -50,5 +51,9 @@ class SuggestionDeniedNotification extends \Tricki\Notification\Models\Notificat
 
     public function getData() {
         return $this->data;
+    }
+
+    public function getPhoto() {
+        return Photo::find($this->object_id);
     }
 }
