@@ -164,10 +164,6 @@ class PhotosController extends \BaseController {
       $missing[] = 'name';
     else
       $present[] = 'name';
-    // if($photos->workAuthor == null)
-    //   $missing[] = 'workAuthor';
-    // else
-    //   $present[] = 'workAuthor';
     if($photos->workDate == null)
       $missing[] = 'workDate';
     else
@@ -178,11 +174,11 @@ class PhotosController extends \BaseController {
       $present[] = 'project_author';
 
     $final = array();
-    //shuffling arrays
+    // Shuffling arrays
     shuffle($missing);
     shuffle($present);
 
-    //Setting first field to be either missing or present to alternate between both results
+    // Setting first field to be either missing or present to alternate between both results
     $next = '';
     if(count($missing) > count($present))
       $next = 'missing';
@@ -190,10 +186,10 @@ class PhotosController extends \BaseController {
       $next = 'present';
 
     $isReviewing = false;
-    //Loop for the 10 possible reords
+    // Loop for the 10 possible reords
     for($i = 0; $i < 10; $i++){
-      //Fills array if field is missing
-      if($next == 'missing'){
+      // Fills array if field is missing
+      if($next == 'missing') {
         $final[] = [
           'type'           => 'suggestion',
           'field_name'     => Photo::$fields_data[$missing[0]]['name'],
@@ -203,8 +199,8 @@ class PhotosController extends \BaseController {
           'status'         => $photos->checkValidationFields($missing[0])
         ];
         array_splice($missing, 0, 1);
-      } //Fills array if field is present
-      else{
+      } else {
+        // Fills array if field is present
         $final[] = [
           'type'           => 'confirm',
           'field_name'     => Photo::$fields_data[$present[0]]['name'],
@@ -216,22 +212,23 @@ class PhotosController extends \BaseController {
         ];
         array_splice($present, 0, 1);
       }
-      if($final[count($final) - 1]['status'] == 'reviewing'){
+
+      if($final[count($final) - 1]['status'] == 'reviewing') {
         $isReviewing = true;
         $completeness['reviewing']++;
-      } elseif ($next == 'present'){
+      } elseif ($next == 'present') {
         $completeness['present']++;
-      } else{
+      } else {
         $completeness['missing']++;
       }
 
-      if(count($missing) == 0)//If missing fields are done, stop alternation
+      if(count($missing) == 0) // If missing fields are done, stop alternation
         $next = 'present';
-      elseif(count($present) == 0)//If present fields are done, stop alternation
+      elseif(count($present) == 0) // If present fields are done, stop alternation
         $next = 'missing';
-      elseif($next == 'missing')//Alternate based on last record
+      elseif($next == 'missing') // Alternate based on last record
         $next = 'present';
-      elseif($next == 'present')//Alternate based on last record
+      elseif($next == 'present') // Alternate based on last record
         $next = 'missing';
     }
     //Percentages calculation

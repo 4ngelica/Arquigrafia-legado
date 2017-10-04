@@ -34,6 +34,9 @@ $(document).ready(() => {
       return;
     }
 
+    // Filtering the missing fields (Remove the already reviewed ones)
+    missingFields = missingFields.filter(field => field.status !== 'reviewed');
+
     // Only shows the modal if we have missing fields
     if (missingFields && missingFields.length > 0) {
       const suggestionModal = new SuggestionModal(missingFields, user, photo, gamed);

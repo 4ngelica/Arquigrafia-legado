@@ -800,19 +800,28 @@ class Photo extends Eloquent {
 			Photo::where('id',$photo->id)->update(['nome_arquivo' => $photo->id.".".$ext ]);
 	}
 
-	public function checkValidationFields($field){
+	public function checkValidationFields($field) {
 		$validation = ['city', 'country', 'description', 'district', 'imageAuthor', 'state', 'street', 'name', 'project_author', 'workDate'];
 		if(!in_array($field, $validation))
 			throw new Exception('Unexpected field type');
-		$list = Suggestion::join('photo_attribute_types', 'suggestions.attribute_type', '=', 'photo_attribute_types.id')
+
+		// Defining main query
+		$query = Suggestion::join('photo_attribute_types', 'suggestions.attribute_type', '=', 'photo_attribute_types.id')
 		->where('suggestions.photo_id', $this->id)->where('photo_attribute_types.attribute_type', $field);
-		if(count($list->whereNull('suggestions.accepted')->get()) > 0)
+
+		// Creating the two sub-queries that we're going to use
+		$query1 = clone $query;
+		$query2 = clone $query;
+		
+		if($query1->whereNull('suggestions.accepted')->count() > 0)
 			return 'reviewing';
-		elseif(count($list->where('suggestions.text', '{$this->name}')->where('suggestions.accepted', 1)->get()) > 0)
+		elseif($query2->where('suggestions.text', $this[$field])->where('suggestions.accepted', 1)->count() > 0)
 			return 'reviewed';
-		else
+		else {
 			return 'none';
+		}
 	}
+
 	public function checkPhotoReviewing(){
 		$fields = ['city', 'country', 'description', 'district', 'imageAuthor','state', 'street', 'name', 'project_author', 'workDate'];
 		foreach ($fields as $field) {
