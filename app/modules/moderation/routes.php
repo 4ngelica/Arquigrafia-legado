@@ -9,3 +9,4 @@ Route::get('/users/contributions', 'modules\moderation\controllers\Contributions
 // JSON Responses Routes
 Route::get('/suggestions/user_suggestions', 'modules\moderation\controllers\SuggestionsController@getUserSuggestions');
 Route::get('/suggestions/user_statistics', 'modules\moderation\controllers\SuggestionsController@getUserSuggestionsStatistics');
+Route::get('/suggestions/log_open_modal', 'modules\moderation\controllers\SuggestionsController@logOpenModal');

@@ -4,7 +4,7 @@
  */
 
 import $ from 'jquery';
-import { request, GET } from './Network';
+import { request, GET, POST } from './Network';
 
 /**
  * Sending the suggestion through AJAX request to the server
@@ -120,6 +120,10 @@ export const getUserSuggestions = (page, limit) => new Promise((resolve, reject)
     });
 });
 
+/**
+ * This function get the statistics about suggestions provided for a user
+ * @return  A promise with the response of the request
+ */
 export const getUserSuggestionsStatistics = () => new Promise((resolve, reject) => {
   // Creating URL
   const url = `${window.location.origin}/suggestions/user_statistics`;
@@ -132,4 +136,18 @@ export const getUserSuggestionsStatistics = () => new Promise((resolve, reject) 
       console.info(err);
       reject('Erro ao pegar as estatisticas do usuário');
     });
+});
+
+export const logOpenModal = (photoID, origin) => new Promise((resolve, reject) => {
+  // Creating URL
+  const url = `${window.location.origin}/suggestions/log_open_modal`;
+  // Creating params
+  const params = {
+    origin,
+    photo_id: photoID,
+  };
+  // Making request
+  request(GET, url, params)
+    .then(res => resolve(res))
+    .catch(err => reject(err));
 });

@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import SuggestionModal from './SuggestionModal';
+import { logOpenModal } from '../../services/SuggestionService';
 
 /**
  * This file is used as a interface between the page and the ES6 classes
@@ -20,7 +21,7 @@ $(document).ready(() => {
   }
 
   // On DOM ready, add the click event to the open modal button
-  $('.OpenModal').click(() => {
+  $('.OpenModal').click((element) => {
     // Don't show the modal when we don't have a user logged in
     if (!user || !user.id) {
       // Go to login page
@@ -39,6 +40,11 @@ $(document).ready(() => {
 
     // Only shows the modal if we have missing fields
     if (missingFields && missingFields.length > 0) {
+      // Sending to API the element origin (for logging purposes)
+      const elementOrigin = element.target.getAttribute('data-origin');
+      logOpenModal(photo.id, elementOrigin);
+
+      // Opening modal
       const suggestionModal = new SuggestionModal(missingFields, user, photo, gamed);
       suggestionModal.showModal(
         missingFields[0].type,

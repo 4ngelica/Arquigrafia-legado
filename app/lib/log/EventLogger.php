@@ -225,10 +225,14 @@ class EventLogger {
                 $info = sprintf('[%s] Moderacao de dados no Id: %s, pela página %s, via %s',
                                 $date_and_time, $eventContent['suggestion'], $sourcePage, $device);
                 break;
-						case "card-chat":
-								$info = sprintf('[%s] Chat - Acesso pelo fluxo de cartões na página %s, via %s',
-																$date_and_time, $sourcePage, $device);
-								break;
+            case "card-chat":
+                    $info = sprintf('[%s] Chat - Acesso pelo fluxo de cartões na página %s, via %s',
+                                                    $date_and_time, $sourcePage, $device);
+                    break;
+            case "open-modal":
+                    $info = sprintf('[%s] Open Modal - Abriu o modal na página %s, pela origem %s, via %s',
+                                                    $date_and_time, $sourcePage, $eventContent['origin'], $device);
+                    break;
             default:
                 break;
         }

@@ -15,7 +15,7 @@ class SuggestionsController extends \BaseController {
 	public function __construct() {
     // Filtering if user is logged out, redirect to login page
     $this->beforeFilter('auth',
-      array('except' => []));
+      array('except' => ['logOpenModal']));
   }
 
 	public function store() {
@@ -202,5 +202,20 @@ class SuggestionsController extends \BaseController {
 			'num_accepted_suggestions' => $numAcceptedSuggestions,
 			'num_rejected_suggestions' => $numRejectedSuggestions
 		]);
+	}
+
+	/**
+	*	This function logs the event when the user opens a Modal
+	*/
+	public function logOpenModal() {
+		// Getting inputs
+		$input = \Input::all();
+		$photoId = $input['photo_id'];
+		$origin = $input['origin'];
+
+		// Printing log
+		EventLogger::printEventLogs($photoId, 'open-modal', ['origin' => $origin], 'Web');
+		
+		return \Response::json((object)['logged' => true]);
 	}
 }

@@ -555,7 +555,7 @@
               <strong>Dados completos:</strong><br />
               Esta foto tem {{ $completeness['present'] }}% dos dados preenchidos pelo autor ou aceitos após revisão da comunidade.<br />
               @if (!$isReviewing)
-                <a href="#" class="OpenModal">Colabore com mais informações aqui</a>
+                <a href="#" class="OpenModal" data-origin="progress-bar">Colabore com mais informações aqui</a>
               @endif
             </div>
           </div>
@@ -576,7 +576,7 @@
               <strong>Dados a preencher:</strong><br>
               Esta foto tem {{ $completeness['missing'] }}% dos dados ainda não preenchidos.<br />
               @if (!$isReviewing)
-                <a href="#" class="OpenModal">Colabore com mais informações aqui</a>
+                <a href="#" class="OpenModal" data-origin="progress-bar">Colabore com mais informações aqui</a>
               @endif
             </div>
           </div>
@@ -606,9 +606,9 @@
 
         		<div class="modal-button OpenModal">
               @if ($user == null)
-                <a href="#">Faça o login e contribua com mais informações sobre esta imagem!</a>
+                <a href="#" data-origin="button">Faça o login e contribua com mais informações sobre esta imagem!</a>
               @else
-                <a href="#">Ajude a completar dados!</a>
+                <a href="#" data-origin="button">Ajude a completar dados!</a>
               @endif
         		</div>
         	</div>
