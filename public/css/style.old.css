@@ -125,7 +125,7 @@ input[type="range"] {width: 220px;}
 input:-moz-placeholder { color:#bbb; }
 
 /* --- HEADER --- */
-.header { height: auto; margin: 25px auto 0px; }
+.header { height: auto; margin: 25px auto 15px; }
 .header a { text-decoration: none; }
 .header #logo { float: left; display: block; width: 250px; height: 50px; margin: 7px 1px 0 0px; background: url(../img/logo.png) no-repeat; }
 .header p#beta { float: left; margin: 21px 0 0 0; color: #222; font-size: 12px; }
@@ -147,7 +147,7 @@ ul#top_menu_items li #contact { background: url(../img/sprite.png) no-repeat -78
 #loggin_area_institutional { position: relative; float: right; width: 277px; height: 53px; }
 
 /* registro e login - ON */
-ul#logged_menu { list-style: none; float: left; margin: 17px 0px 2px 0; font-size: 10px; width: 200px; }
+ul#logged_menu { list-style: none; float: left; margin: 10px 0px 2px 0; font-size: 10px; width: 200px; }
 ul#logged_menu li { display: inline-block; margin-left: 2px; height: 15px; zoom: 1; }
 ul#logged_menu li i {padding: 8px 19px 0 0;}
 ul#logged_menu li #messages, ul#logged_menu li #users, ul#logged_menu li #comunities, ul#logged_menu li #notification, ul#logged_menu li #badge { text-decoration: none;}

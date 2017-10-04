@@ -10,6 +10,7 @@
   import ReviewsContent from './ReviewsContent.vue';
   import ModerationContent from './ModerationContent.vue';
   import CuratorshipContent from './CuratorshipContent.vue';
+  import EditionsContent from './EditionsContent.vue';
   import store from './store';
 
   // Creating our tabs object
@@ -18,6 +19,11 @@
       id: 'reviews',
       name: 'Revisões',
       href: '#reviews',
+    },
+    {
+      id: 'editions',
+      name: 'Edições',
+      href: '#editions',
     },
     {
       id: 'moderation',
@@ -45,6 +51,7 @@
       ReviewsContent,
       ModerationContent,
       CuratorshipContent,
+      EditionsContent,
     },
     data() {
       return {
@@ -69,6 +76,7 @@
       :selectedTab="store.state.selectedTab"
     >
       <ReviewsContent key="reviews" :active="store.state.selectedTab === 'reviews'" />
+      <EditionsContent key="editions" :active="store.state.selectedTab === 'editions'" />
       <ModerationContent key="moderation" :active="store.state.selectedTab === 'moderation'" />
       <CuratorshipContent key="curatorship" :active="store.state.selectedTab === 'curatorship'" />
     </TabContent>

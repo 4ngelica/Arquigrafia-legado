@@ -100,14 +100,16 @@ export const createChat = userID => new Promise((resolve, reject) => {
  * Getting user suggestions
  * @param {Number} page The page that you wanna get
  * @param {Number} limit The number of items per page
+ * @param {String} type The type of the suggestions. Can be 'reviews' or 'editions'.
  */
-export const getUserSuggestions = (page, limit) => new Promise((resolve, reject) => {
+export const getUserSuggestions = (page, limit, type) => new Promise((resolve, reject) => {
   // Creating URL
   const url = `${window.location.origin}/suggestions/user_suggestions`;
   // Mounting params
   const params = {
     page,
     limit,
+    type,
   };
   // Get user suggestions (async)
   request(GET, url, params)
@@ -122,13 +124,18 @@ export const getUserSuggestions = (page, limit) => new Promise((resolve, reject)
 
 /**
  * This function get the statistics about suggestions provided for a user
+ * @param {String} type The type of the suggestions. Can be 'reviews' or 'editions'.
  * @return  A promise with the response of the request
  */
-export const getUserSuggestionsStatistics = () => new Promise((resolve, reject) => {
+export const getUserSuggestionsStatistics = type => new Promise((resolve, reject) => {
   // Creating URL
   const url = `${window.location.origin}/suggestions/user_statistics`;
+  // Defining params
+  const params = {
+    type,
+  };
   // Getting user suggestion statistics (async)
-  request(GET, url)
+  request(GET, url, params)
     .then((res) => {
       resolve(res);
     })

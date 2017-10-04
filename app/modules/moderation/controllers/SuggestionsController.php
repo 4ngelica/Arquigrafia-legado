@@ -34,16 +34,24 @@ class SuggestionsController extends \BaseController {
 		}
 
 		$suggestion = new Suggestion();
-		//user_id
+		// Setting user_id
 		$suggestion->user_id = $input['user_id'];
-		//photo_id
+		// Setting photo_id
 		$suggestion->photo_id = $input['photo_id'];
-		//attribute_type
+		// Setting attribute_type
 		$attribute = PhotoAttributeType::where('attribute_type', '=', $input['attribute_type'])->first();
-
 		$suggestion->attribute_type = $attribute->id;
-		//text
+		// Setting text
 		$suggestion->text = $input['text'];
+		// Setting the type
+		$currentFieldText = $suggestion->photo[$input['attribute_type']];
+		if ($currentFieldText == null) {
+			// If there's nothing on the field, it's a edition
+			$suggestion->type = 'edition';
+		} else {
+			// If the user is something on a field, it's a review suggestion
+			$suggestion->type = 'review';
+		}
 		//moderator_id
 		//TO DO
 		$suggestion->save();
@@ -143,6 +151,8 @@ class SuggestionsController extends \BaseController {
 
 	/**
 	* This function get all the suggestions for a user
+	* Inputs:
+	* type - Can be 'reviews' or 'editions'. If not pass any type, it gets all the suggestions
 	* @return	A JSON with suggestions
 	*/
 	public function getUserSuggestions() {
@@ -151,12 +161,30 @@ class SuggestionsController extends \BaseController {
 		$page = $input['page'];
 		$limit = $input['limit'];
 		$skip = ($page - 1) * $limit;
+		// Getting the type
+		$type = null;
+		if (isset($input['type'])) {
+			$type = $input['type'];
+		}
 		// Getting the current user connected
 		$id_self = \Auth::user()->id;
 		// Getting the suggestions array
-		$suggestions = Suggestion::where('user_id', '=', $id_self)->orderBy('updated_at', 'DESC')->take($limit)->skip($skip)->get();
+		$suggestionsQuery = Suggestion::where('user_id', '=', $id_self)->orderBy('updated_at', 'DESC')->take($limit)->skip($skip);
 		// Getting the number of items on total
-		$totalItems = Suggestion::where('user_id', '=', $id_self)->count();
+		$totalItemsQuery = Suggestion::where('user_id', '=', $id_self);
+
+		// Getting suggestions by type
+		if ($type == 'reviews') {
+			$suggestions = $suggestionsQuery->where('type', '=', 'review')->get();
+			$totalItems = $totalItemsQuery->where('type', '=', 'review')->count();
+		} else if ($type == 'editions') {
+			$suggestions = $suggestionsQuery->where('type', '=', 'edition')->get();
+			$totalItems = $totalItemsQuery->where('type', '=', 'edition')->count();
+		} else {
+			$suggestions = $suggestionsQuery->get();
+			$totalItems = $totalItemsQuery->count();
+		}
+
 		// Getting the number of suggestions
 		$numSuggestions = count($suggestions);
 
@@ -182,25 +210,48 @@ class SuggestionsController extends \BaseController {
 
 	/**
 	*	This functions gets the statistics about suggestions
+	* Inputs:
+	* type - Can be 'reviews' or 'editions'. If not pass any type, it gets all the suggestions
 	* @return	A JSON with statistics
 	*/
 	public function getUserSuggestionsStatistics() {
+		// Generating input object
+		$input = \Input::all();
+		// Getting the type
+		$type = null;
+		if (isset($input['type'])) {
+			$type = $input['type'];
+		}
 		// Getting the current user connected
 		$id_self = \Auth::user()->id;
 		// Getting the number of suggestions 
-		$numSuggestions = Suggestion::where('user_id', '=', $id_self)->count();
+		$numSuggestionsQuery = Suggestion::where('user_id', '=', $id_self);
 		// Number of waiting suggestions
-		$numWaitingSuggestions = Suggestion::where('user_id', '=', $id_self)->whereNull('accepted')->count();
+		$numWaitingSuggestionsQuery = Suggestion::where('user_id', '=', $id_self)->whereNull('accepted');
 		// Number of accepted suggestions
-		$numAcceptedSuggestions = Suggestion::where('user_id', '=', $id_self)->where('accepted', '=', '1')->count();
+		$numAcceptedSuggestionsQuery = Suggestion::where('user_id', '=', $id_self)->where('accepted', '=', '1');
 		// Number of rejected suggestions
-		$numRejectedSuggestions = Suggestion::where('user_id', '=', $id_self)->where('accepted', '=', '0')->count();
+		$numRejectedSuggestionsQuery = Suggestion::where('user_id', '=', $id_self)->where('accepted', '=', '0');
+
+		// Adding the type queries
+		if ($type == 'reviews') {
+			$numSuggestionsQuery->where('type', '=', 'review');
+			$numWaitingSuggestionsQuery->where('type', '=', 'review');
+			$numAcceptedSuggestionsQuery->where('type', '=', 'review');
+			$numRejectedSuggestionsQuery->where('type', '=', 'review');
+		} else if ($type == 'editions') {
+			$numSuggestionsQuery->where('type', '=', 'edition');
+			$numWaitingSuggestionsQuery->where('type', '=', 'edition');
+			$numAcceptedSuggestionsQuery->where('type', '=', 'edition');
+			$numRejectedSuggestionsQuery->where('type', '=', 'edition');
+		}
 
 		return \Response::json((object)[
-			'num_suggestions' => $numSuggestions,
-			'num_waiting_suggestions' => $numWaitingSuggestions,
-			'num_accepted_suggestions' => $numAcceptedSuggestions,
-			'num_rejected_suggestions' => $numRejectedSuggestions
+			'type' => $type,
+			'num_suggestions' => $numSuggestionsQuery->count(),
+			'num_waiting_suggestions' => $numWaitingSuggestionsQuery->count(),
+			'num_accepted_suggestions' => $numAcceptedSuggestionsQuery->count(),
+			'num_rejected_suggestions' => $numRejectedSuggestionsQuery->count()
 		]);
 	}
 

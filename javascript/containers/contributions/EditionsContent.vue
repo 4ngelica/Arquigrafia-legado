@@ -12,7 +12,7 @@ import Spinner from '../../components/general/Spinner.vue';
 import ContributionsStatistics from '../../components/contributions/ContributionsStatistics.vue';
 
 export default {
-  name: 'ReviewsContent',
+  name: 'EditionsContent',
   store,
   props: {
     active: {
@@ -34,7 +34,7 @@ export default {
     ]),
     {
       handleChangePage(page) {
-        this.getUserSuggestions({ page, type: 'reviews' });
+        this.getUserSuggestions({ page, type: 'editions' });
       },
       suggestionText(status, text, fieldName, photoName, userName) {
         if (status === null) {
@@ -50,9 +50,9 @@ export default {
   ),
   created() {
     // Getting user suggestions statistics
-    this.getUserSuggestionsStatistics({ type: 'reviews' });
+    this.getUserSuggestionsStatistics({ type: 'editions' });
     // Getting user suggestions
-    this.getUserSuggestions({ page: 1, type: 'reviews' });
+    this.getUserSuggestions({ page: 1, type: 'editions' });
   },
   data() {
     return {
@@ -68,22 +68,22 @@ export default {
     class="tab"
     v-bind:class="{ active: active }"
   >
-    <div v-if="store.state.reviewsSuggestionsStatistics !== null" class="statistics-container">
+    <div v-if="store.state.editionsSuggestionsStatistics !== null" class="statistics-container">
       <ContributionsStatistics
-        title="Suas Revisões"
-        :acceptedSuggestions="store.state.reviewsSuggestionsStatistics.accepted"
-        :waitingSuggestions="store.state.reviewsSuggestionsStatistics.waiting"
-        :rejectedSuggestions="store.state.reviewsSuggestionsStatistics.rejected"
-        :totalSuggestions="store.state.reviewsSuggestionsStatistics.total"
+        title="Suas Edições"
+        :acceptedSuggestions="store.state.editionsSuggestionsStatistics.accepted"
+        :waitingSuggestions="store.state.editionsSuggestionsStatistics.waiting"
+        :rejectedSuggestions="store.state.editionsSuggestionsStatistics.rejected"
+        :totalSuggestions="store.state.editionsSuggestionsStatistics.total"
       />
     </div>
-    <div v-if="store.state.isLoadingSuggestions">
+    <div v-if="store.state.isLoadingEditionsSuggestions">
       <Spinner />
     </div>
-    <div v-if="!store.state.isLoadingReviewsSuggestions && store.state.userReviewsSuggestions.length > 0">
+    <div v-if="!store.state.isLoadingEditionsSuggestions && store.state.userEditionsSuggestions.length > 0">
       <ul>
         <ItemNotificationImageText
-          v-for="suggestion in store.state.userReviewsSuggestions"
+          v-for="suggestion in store.state.userEditionsSuggestions"
           v-bind:key="suggestion.id"
           :imageURL="`/arquigrafia-images/${suggestion.photo.id}_home.jpg`"
           :text="suggestionText(suggestion.accepted, suggestion.text, suggestion.field.name, suggestion.photo.name, suggestion.photo.user.name)"
@@ -92,12 +92,12 @@ export default {
         />
       </ul>
       <Pager
-        :currentPage="store.state.reviewsCurrentSuggestionsPage"
-        :numPages="store.state.reviewsTotalNumSuggestionPages"
+        :currentPage="store.state.editionsCurrentSuggestionsPage"
+        :numPages="store.state.editionsTotalNumSuggestionPages"
         :handleChangePage="handleChangePage"
       />
     </div>
-    <div v-if="!store.state.isLoadingReviewsSuggestions && store.state.userReviewsSuggestions.length === 0">
+    <div v-if="!store.state.isLoadingEditionsSuggestions && store.state.userEditionsSuggestions.length === 0">
       <p>Você ainda não realizou nenhuma revisão.</p>
     </div>
   </div>

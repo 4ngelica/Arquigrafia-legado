@@ -2,6 +2,10 @@
   export default {
     name: 'ContributionsStatistics',
     props: {
+      title: {
+        type: String,
+        required: true,
+      },
       totalSuggestions: {
         type: Number,
         required: true,
@@ -25,7 +29,7 @@
 <template>
   <div class="container">
     <div class="row">
-      <h3>Suas Revisões</h3>
+      <h3>{{ title }}</h3>
     </div>
     <div class="row">
       <div class="column">

@@ -11,12 +11,18 @@ Vue.use(Vuex);
 // Root state object
 const state = {
   selectedTab: 'reviews',
-  userSuggestions: [],
-  currentSuggestionsPage: 1,
-  totalNumSuggestionPages: 1,
-  isLoadingSuggestions: false,
-  isLoadingSuggestionsStatistics: false,
-  suggestionsStatistics: null,
+  userReviewsSuggestions: [],
+  userEditionsSuggestions: [],
+  reviewsCurrentSuggestionsPage: 1,
+  editionsCurrentSuggestionsPage: 1,
+  reviewsTotalNumSuggestionPages: 1,
+  editionsTotalNumSuggestionPages: 1,
+  isLoadingReviewsSuggestions: false,
+  isLoadingEditionsSuggestions: false,
+  isLoadingReviewsSuggestionsStatistics: false,
+  isLoadingEditionsSuggestionsStatistics: false,
+  reviewsSuggestionsStatistics: null,
+  editionsSuggestionsStatistics: null,
 };
 
 // Mutations are operations that actually mutates the state.
@@ -39,23 +45,47 @@ const mutations = {
   createExpo() {
     console.info('Create Expo');
   },
-  setCurrentSuggestionPage(storeState, { page }) {
-    storeState.currentSuggestionsPage = page;
+  setCurrentSuggestionPage(storeState, { page, type }) {
+    if (type === 'reviews') {
+      storeState.reviewsCurrentSuggestionsPage = page;
+    } else if (type === 'editions') {
+      storeState.editionsCurrentSuggestionsPage = page;
+    }
   },
-  setUserSuggestions(storeState, { suggestions }) {
-    storeState.userSuggestions = suggestions;
+  setUserSuggestions(storeState, { suggestions, type }) {
+    if (type === 'reviews') {
+      storeState.userReviewsSuggestions = suggestions;
+    } else if (type === 'editions') {
+      storeState.userEditionsSuggestions = suggestions;
+    }
   },
-  setTotalNumSuggestionPages(storeState, { totalNumPages }) {
-    storeState.totalNumSuggestionPages = totalNumPages;
+  setTotalNumSuggestionPages(storeState, { totalNumPages, type }) {
+    if (type === 'reviews') {
+      storeState.reviewsTotalNumSuggestionPages = totalNumPages;
+    } else if (type === 'editions') {
+      storeState.editionsTotalNumSuggestionPages = totalNumPages;
+    }
   },
-  setIsLoadingSuggestions(storeState, { loading }) {
-    storeState.isLoadingSuggestions = loading;
+  setIsLoadingSuggestions(storeState, { loading, type }) {
+    if (type === 'reviews') {
+      storeState.isLoadingReviewsSuggestions = loading;
+    } else if (type === 'editions') {
+      storeState.isLoadingEditionsSuggestions = loading;
+    }
   },
-  setIsLoadingSuggestionsStatistics(storeState, { loading }) {
-    storeState.isLoadingSuggestionsStatistics = loading;
+  setIsLoadingSuggestionsStatistics(storeState, { loading, type }) {
+    if (type === 'reviews') {
+      storeState.isLoadingReviewsSuggestionsStatistics = loading;
+    } else if (type === 'editions') {
+      storeState.isLoadingEditionsSuggestionsStatistics = loading;
+    }
   },
   setSuggestionsStatistics(storeState, statistics) {
-    storeState.suggestionsStatistics = statistics;
+    if (statistics.type === 'reviews') {
+      storeState.reviewsSuggestionsStatistics = statistics;
+    } else if (statistics.type === 'editions') {
+      storeState.editionsSuggestionsStatistics = statistics;
+    }
   },
 };
 
@@ -79,38 +109,39 @@ const actions = {
   createExpo({ commit }) {
     commit('createExpo');
   },
-  getUserSuggestions({ commit }, { page }) {
+  getUserSuggestions({ commit }, { page, type }) {
     // Setting fixed limit (max number of items for each page)
     const limit = 10;
     // Setting the current page on state
-    commit('setCurrentSuggestionPage', { page });
+    commit('setCurrentSuggestionPage', { page, type });
     // Setting that we're loading suggestions
-    commit('setIsLoadingSuggestions', { loading: true });
+    commit('setIsLoadingSuggestions', { loading: true, type });
 
-    getUserSuggestions(page, limit)
+    getUserSuggestions(page, limit, type)
       .then((response) => {
         console.info(response);
         // Getting total number of pages
         const totalNumPages = Math.ceil(response.total_items / limit);
         // Setting total number of pages
-        commit('setTotalNumSuggestionPages', { totalNumPages });
+        commit('setTotalNumSuggestionPages', { totalNumPages, type });
         // Getting suggestions array
         const suggestions = response.suggestions;
         // Setting suggestions
-        commit('setUserSuggestions', { suggestions });
+        commit('setUserSuggestions', { suggestions, type });
         // Setting that we've finish to load suggestions
-        commit('setIsLoadingSuggestions', { loading: false });
+        commit('setIsLoadingSuggestions', { loading: false, type });
       });
   },
-  getUserSuggestionsStatistics({ commit }) {
+  getUserSuggestionsStatistics({ commit }, { type }) {
     // Setting that we're loading suggestions statistics
-    commit('setIsLoadingSuggestionsStatistics', { loading: true });
+    commit('setIsLoadingSuggestionsStatistics', { loading: true, type });
 
-    getUserSuggestionsStatistics()
+    getUserSuggestionsStatistics(type)
       .then((response) => {
         console.info(response);
         // Setting statistics object
         const statistics = {
+          type: response.type,
           total: response.num_suggestions,
           waiting: response.num_waiting_suggestions,
           accepted: response.num_accepted_suggestions,
@@ -118,6 +149,8 @@ const actions = {
         };
         // Setting the statistics
         commit('setSuggestionsStatistics', statistics);
+        // Setting that we've finish to load statistics
+        commit('setIsLoadingSuggestionsStatistics', { loading: false, type });
       });
   },
 };
