@@ -12,9 +12,12 @@ class AddAuthorizedToPhotos extends Migration {
 	 */
 	public function up()
 	{
-		Schema::table('photos', function(Blueprint $table){
-			$table->boolean('authorized')->default(true);
-		});
+		// Check if the table photos has the authorized column
+		if(!Schema::hasColumn('photos', 'authorized')) {
+			Schema::table('photos', function(Blueprint $table){
+				$table->boolean('authorized')->default(true);
+			});
+		}
 	}
 
 	/**
