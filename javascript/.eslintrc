@@ -5,7 +5,8 @@
       "react",
       "jsx-a11y",
       "import",
-      "jest"
+      "jest",
+      "vue"
   ],
   "rules": {
       "no-console": ["error", { "allow": ["info", "warn", "error"] }],

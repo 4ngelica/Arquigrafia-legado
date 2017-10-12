@@ -520,11 +520,24 @@
         <p>
           @if (!empty($photos->street) && !empty($photos->city))
             <a href="{{ URL::to("/search?q=".$photos->street."&city=".$photos->city) }}">
-              {{ $photos->street }},
+              {{ $photos->street }}
             </a>
+            <br />
           @elseif (!empty($photos->street))
             <a href="{{ URL::to("/search?q=".$photos->street) }}">
               {{ $photos->street }}
+            </a>
+            <br />
+          @endif
+
+          @if (!empty($photos->district) && !empty($photos->city))
+            <a href="{{ URL::to("/search?q=".$photos->district."&city=".$photos->city) }}">
+              {{ $photos->district }}
+            </a>
+            <br />
+          @elseif (!empty($photos->district))
+            <a href="{{ URL::to("/search?q=".$photos->district) }}">
+              {{ $photos->district }}
             </a>
             <br />
           @endif

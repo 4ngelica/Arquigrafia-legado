@@ -4,7 +4,7 @@
 */
 
 <script>
-  import { mapActions } from 'vuex'
+  import { mapActions } from 'vuex';
   import Tabs from '../../components/general/Tabs.vue';
   import TabContent from '../../components/general/TabContent.vue';
   import ReviewsContent from './ReviewsContent.vue';
@@ -12,34 +12,8 @@
   import CuratorshipContent from './CuratorshipContent.vue';
   import EditionsContent from './EditionsContent.vue';
   import store from './store';
-
-  // Creating our tabs object
-  const tabProps = [
-    {
-      id: 'reviews',
-      name: 'Revisões',
-      href: '#reviews',
-    },
-    {
-      id: 'editions',
-      name: 'Edições',
-      href: '#editions',
-    },
-    {
-      id: 'moderation',
-      name: 'Moderação',
-      href: '#moderation',
-      hidden: true,
-      locked: true,
-    },
-    {
-      id: 'curatorship',
-      name: 'Curadoria',
-      href: '#curatorship',
-      hidden: true,
-      locked: true,
-    },
-  ];
+  import { tabProps, getTabById } from '../../services/ContributionsTabsService';
+  import { getFilterById } from '../../services/ContributionsFiltersService';
 
   /** Exporting Vue Component */
   export default {
@@ -53,14 +27,48 @@
       CuratorshipContent,
       EditionsContent,
     },
+    props: {
+      currentUser: {
+        type: Object,
+        required: true,
+      },
+      isGamefied: {
+        type: Boolean,
+        required: true,
+      },
+      selectedTab: {
+        type: String,
+      },
+      selectedFilterId: {
+        type: String,
+      },
+    },
     data() {
       return {
         tabProps,
         store,
       };
     },
+    created() {
+      this.setCurrentUser({ currentUser: this.currentUser });
+      this.setGamefied({ isGamefied: this.isGamefied });
+      // Selecting tab on start
+      if (this.selectedTab === 'reviews' || this.selectedTab === 'editions') {
+        const tab = getTabById(this.selectedTab);
+        this.changeTab(tab);
+
+        // Selecting filter on start
+        if (this.selectedFilterId && getFilterById(this.selectedFilterId) !== null) {
+          const filter = getFilterById(this.selectedFilterId);
+          this.setSelectedFilter({ filter, type: this.selectedTab });
+        }
+      }
+    },
     methods: mapActions([
+      'setCurrentUser',
       'changeTab',
+      'setGamefied',
+      'setSelectedFilter',
     ]),
   };
 </script>

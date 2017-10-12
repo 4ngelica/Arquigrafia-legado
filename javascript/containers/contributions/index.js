@@ -10,15 +10,26 @@ import Contributions from './Contributions.vue';
  * In this function we create the Vue component for Contributions
  * @return  The vue component
  */
-const createContributionsComponent = () => (
+const createContributionsComponent = (currentUser, isGamefied, selectedTab, selectedFilterId) => (
   new Vue({
     el: '#contributions-content',
-    template: '<Contributions />',
+    data: {
+      currentUser,
+      isGamefied,
+      selectedTab,
+      selectedFilterId,
+    },
+    template: '<Contributions :currentUser="currentUser" :isGamefied="isGamefied" :selectedTab="selectedTab" :selectedFilterId="selectedFilterId" />',
     components: { Contributions },
   })
 );
 
+/**
+ * There are some global variables that comes from PHP server side, which are:
+ * @param  {Object}  currentUser  The current user logged in
+ * @param  {Boolean}  isGamefied  If it's rendering (or not) the gamefied page
+ */
 $(document).ready(() => {
   // When document is ready, we create the Vue component for page
-  createContributionsComponent();
+  createContributionsComponent(currentUser, isGamefied, selectedTab, selectedFilterId); // eslint-disable-line
 });

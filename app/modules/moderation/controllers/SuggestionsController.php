@@ -73,13 +73,13 @@ class SuggestionsController extends \BaseController {
 			EventLogger::printEventLogs(null, 'completion-none', null, 'Web');
 		}
 		else {
-			if($status == 'complete'){
+			if($status == 'complete') {
 				EventLogger::printEventLogs(null, 'completion-complete', ['suggestions' => $suggestions], 'Web');
-			}	elseif($status == 'incomplete'){
+			}	elseif($status == 'incomplete') {
 				EventLogger::printEventLogs(null, 'completion-incomplete', ['suggestions' => $suggestions], 'Web');
 			}
 			$email = $owner->email;
-			if ($points > 0){
+			if ($points > 0) {
 				\Notification::create('suggestionReceived', $user, $photo, [$owner], null);
 				\Mail::send('emails.users.suggestion-received', array('name' => $owner->name, 'email' => $owner->email, 'id' => $owner->id, 'user' => $user->name, 'image' => $photo->name),
 					function($msg) use($email) {
@@ -87,10 +87,12 @@ class SuggestionsController extends \BaseController {
 							  ->subject('[Arquigrafia]- Recebimento de Sugestão');
 					});
 		  }
+
 	    $photosObj = Photo::where('accepted', 0)->where('type', '<>', 'video')->whereNull('institution_id')->orderByRaw("RAND()")->take(50)->get()->shuffle();
 			$i = 0;
 			$photosFiltered = array();
 			$i = 0;
+
 			while(count($photosFiltered) < 3 && $i < count($photosObj)){
 				if(!$photosObj[$i]->checkPhotoReviewing()){
 					$photosFiltered[] = $photosObj[$i];
@@ -153,6 +155,9 @@ class SuggestionsController extends \BaseController {
 	* This function get all the suggestions for a user
 	* Inputs:
 	* type - Can be 'reviews' or 'editions'. If not pass any type, it gets all the suggestions
+  * limit - Number of items per page
+  * page - The current page
+  * filterId - You can pass a filter, can be 'accepted', 'rejected', 'waiting'
 	* @return	A JSON with suggestions
 	*/
 	public function getUserSuggestions() {
@@ -160,6 +165,7 @@ class SuggestionsController extends \BaseController {
 		$input = \Input::all();
 		$page = $input['page'];
 		$limit = $input['limit'];
+    $filterId = $input['filter_id'];
 		$skip = ($page - 1) * $limit;
 		// Getting the type
 		$type = null;
@@ -172,6 +178,18 @@ class SuggestionsController extends \BaseController {
 		$suggestionsQuery = Suggestion::where('user_id', '=', $id_self)->orderBy('updated_at', 'DESC')->take($limit)->skip($skip);
 		// Getting the number of items on total
 		$totalItemsQuery = Suggestion::where('user_id', '=', $id_self);
+
+    // Setting filters on suggestionsQuery and totalItemsQuery
+    if ($filterId == 'accepted') {
+      $suggestionsQuery->where('accepted', '=', '1');
+      $totalItemsQuery->where('accepted', '=', '1');
+    } else if ($filterId == 'rejected') {
+      $suggestionsQuery->where('accepted', '=', '0');
+      $totalItemsQuery->where('accepted', '=', '0');
+    } else if ($filterId == 'waiting') {
+      $suggestionsQuery->where('accepted', '=', null);
+      $totalItemsQuery->where('accepted', '=', null);
+    }
 
 		// Getting suggestions by type
 		if ($type == 'reviews') {
@@ -232,6 +250,9 @@ class SuggestionsController extends \BaseController {
 		$numAcceptedSuggestionsQuery = Suggestion::where('user_id', '=', $id_self)->where('accepted', '=', '1');
 		// Number of rejected suggestions
 		$numRejectedSuggestionsQuery = Suggestion::where('user_id', '=', $id_self)->where('accepted', '=', '0');
+    // Number of points by type
+    $numPointsByType = 0;
+    $numTotalPoints = 0;
 
 		// Adding the type queries
 		if ($type == 'reviews') {
@@ -239,19 +260,40 @@ class SuggestionsController extends \BaseController {
 			$numWaitingSuggestionsQuery->where('type', '=', 'review');
 			$numAcceptedSuggestionsQuery->where('type', '=', 'review');
 			$numRejectedSuggestionsQuery->where('type', '=', 'review');
+      Suggestion::where('user_id', '=', $id_self)->where('type', '=', 'review')->where('accepted', '=', '1')->get()->each(function($suggestion) use(&$numPointsByType) {
+        $numPointsByType += $suggestion->numPoints();
+      });
 		} else if ($type == 'editions') {
 			$numSuggestionsQuery->where('type', '=', 'edition');
 			$numWaitingSuggestionsQuery->where('type', '=', 'edition');
 			$numAcceptedSuggestionsQuery->where('type', '=', 'edition');
 			$numRejectedSuggestionsQuery->where('type', '=', 'edition');
-		}
+      Suggestion::where('user_id', '=', $id_self)->where('type', '=', 'edition')->where('accepted', '=', '1')->get()->each(function($suggestion) use(&$numPointsByType) {
+        $numPointsByType += $suggestion->numPoints();
+      });
+    }
+
+    // Executing queries
+    $numSuggestions = $numSuggestionsQuery->count();
+    $numWaitingSuggestions = $numWaitingSuggestionsQuery->count();
+    $numAcceptedSuggestions = $numAcceptedSuggestionsQuery->count();
+    $numRejectedSuggestions = $numRejectedSuggestionsQuery->count();
+
+    // Getting the total number of suggestions
+    $numTotalSuggestions = Suggestion::where('user_id', '=', $id_self)->count();
+    // Getting the total number of points
+    Suggestion::where('user_id', '=', $id_self)->where('accepted', '=', '1')->get()->each(function($suggestion) use (&$numTotalPoints) {
+      $numTotalPoints += $suggestion->numPoints();
+    });
 
 		return \Response::json((object)[
 			'type' => $type,
-			'num_suggestions' => $numSuggestionsQuery->count(),
-			'num_waiting_suggestions' => $numWaitingSuggestionsQuery->count(),
-			'num_accepted_suggestions' => $numAcceptedSuggestionsQuery->count(),
-			'num_rejected_suggestions' => $numRejectedSuggestionsQuery->count()
+			'num_suggestions' => $numSuggestions,
+			'num_waiting_suggestions' => $numWaitingSuggestions,
+			'num_accepted_suggestions' => $numAcceptedSuggestions,
+			'num_rejected_suggestions' => $numRejectedSuggestions,
+      'num_total_points' => $numTotalPoints,
+      'num_points_by_type' => $numPointsByType
 		]);
 	}
 

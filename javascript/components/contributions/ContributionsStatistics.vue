@@ -22,8 +22,20 @@
         type: Number,
         required: true,
       },
+      obtainedPoints: {
+        type: Number,
+        required: true,
+      },
+      obtainedPointsLink: {
+        type: String,
+        required: true,
+      },
+      showPoints: {
+        type: Boolean,
+        required: true,
+      },
     },
-  }
+  };
 </script>
 
 <template>
@@ -37,6 +49,7 @@
         <p><span class="title">Aguardando:</span> {{ waitingSuggestions }}</p>
         <p><span class="title">Aceitas:</span> {{ acceptedSuggestions }}</p>
         <p><span class="title">Recusadas:</span> {{ rejectedSuggestions }}</p>
+        <a v-if="showPoints" :href="obtainedPointsLink" target="_blank"><p><span class="title">Pontuação Obtida:</span> {{ obtainedPoints }}</p></a>
       </div>
     </div>
   </div>

@@ -301,9 +301,9 @@ class SuggestionModal {
       if (this.suggestionModals.length < numItems) abandonStatus = 'incomplete';
 
       sendFinalSuggestions(this.photo.id, this.points, this.numberSuggestions, abandonStatus)
-        .then((photos) => {
+        .then((data) => {
           // Rendering photos if we're at the gamed version
-          if (this.gamed) this.renderGamedNextPhotos(photos);
+          if (this.gamed) this.renderGamedNextPhotos(data);
         }).catch((error) => {
           console.info(error);
         });

@@ -6,10 +6,11 @@
 import { mapActions } from 'vuex';
 import Pager from '../../components/general/Pager.vue';
 import ItemNotificationImageText from '../../components/notification/ItemNotificationImageText.vue';
-import store from './store.js';
-import { fullDate } from '../../services/DateFormatter.js';
+import store from './store';
+import { fullDate } from '../../services/DateFormatter';
 import Spinner from '../../components/general/Spinner.vue';
 import ContributionsStatistics from '../../components/contributions/ContributionsStatistics.vue';
+import ContributionsFilters from '../../components/contributions/ContributionsFilters.vue';
 
 export default {
   name: 'ReviewsContent',
@@ -26,15 +27,21 @@ export default {
     Pager,
     Spinner,
     ContributionsStatistics,
+    ContributionsFilters,
   },
-  methods: Object.assign({},
+  methods: Object.assign(
+    {},
     mapActions([
       'getUserSuggestions',
       'getUserSuggestionsStatistics',
+      'setSelectedFilter',
     ]),
     {
       handleChangePage(page) {
         this.getUserSuggestions({ page, type: 'reviews' });
+      },
+      handleSelectFilter(filterItem) {
+        this.setSelectedFilter({ filter: filterItem, type: 'reviews' });
       },
       suggestionText(status, text, fieldName, photoName, userName) {
         if (status === null) {
@@ -46,7 +53,7 @@ export default {
         }
         return '';
       },
-    }
+    },
   ),
   created() {
     // Getting user suggestions statistics
@@ -60,7 +67,7 @@ export default {
       fullDate,
     };
   },
-}
+};
 </script>
 
 <template>
@@ -75,6 +82,16 @@ export default {
         :waitingSuggestions="store.state.reviewsSuggestionsStatistics.waiting"
         :rejectedSuggestions="store.state.reviewsSuggestionsStatistics.rejected"
         :totalSuggestions="store.state.reviewsSuggestionsStatistics.total"
+        :showPoints="store.state.isGamefied"
+        :obtainedPoints="store.state.reviewsSuggestionsStatistics.points"
+        :obtainedPointsLink="`/users/g/${store.state.currentUser.id}#my_points`"
+      />
+    </div>
+    <div>
+      <ContributionsFilters
+        :filterItems="store.state.filterItems"
+        :handleSelectFilter="handleSelectFilter"
+        :selectedFilter="store.state.selectedFilterReviews"
       />
     </div>
     <div v-if="store.state.isLoadingSuggestions">
@@ -98,7 +115,7 @@ export default {
       />
     </div>
     <div v-if="!store.state.isLoadingReviewsSuggestions && store.state.userReviewsSuggestions.length === 0">
-      <p>Você ainda não realizou nenhuma revisão.</p>
+      <p>Não foi encontrado nenhuma revisão.</p>
     </div>
   </div>
 </template>
@@ -106,6 +123,6 @@ export default {
 <style scoped>
   .statistics-container {
     margin-top: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 </style>

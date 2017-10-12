@@ -1,5 +1,5 @@
 @if( $user->equal(Auth::user()) && $gamified )
-<div class="container row">
+<div id="my_points" class="container row">
   <div class="twelve columns">
     <hgroup class="profile_block_title">
       <h3><i class="points"></i>

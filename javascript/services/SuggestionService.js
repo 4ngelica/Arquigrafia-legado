@@ -4,7 +4,7 @@
  */
 
 import $ from 'jquery';
-import { request, GET, POST } from './Network';
+import { request, GET } from './Network';
 
 /**
  * Sending the suggestion through AJAX request to the server
@@ -64,7 +64,7 @@ export const sendFinalSuggestions = (photoID, points, numberSuggestions, status)
       data,
       success: (res) => {
         console.info('DADOS RECEBIDOS', res);
-        resolve(data);
+        resolve(res);
       },
       error: (error) => {
         console.info('ERRO AO ENVIAR SUGESTAO FINAL', error);
@@ -102,25 +102,27 @@ export const createChat = userID => new Promise((resolve, reject) => {
  * @param {Number} limit The number of items per page
  * @param {String} type The type of the suggestions. Can be 'reviews' or 'editions'.
  */
-export const getUserSuggestions = (page, limit, type) => new Promise((resolve, reject) => {
-  // Creating URL
-  const url = `${window.location.origin}/suggestions/user_suggestions`;
-  // Mounting params
-  const params = {
-    page,
-    limit,
-    type,
-  };
-  // Get user suggestions (async)
-  request(GET, url, params)
-    .then((res) => {
-      resolve(res);
-    })
-    .catch((err) => {
-      console.info(err);
-      reject('Erro ao pegar as sugestões do usuário');
-    });
-});
+export const getUserSuggestions = (page, limit, type, filterId) =>
+  new Promise((resolve, reject) => {
+    // Creating URL
+    const url = `${window.location.origin}/suggestions/user_suggestions`;
+    // Mounting params
+    const params = {
+      page,
+      limit,
+      type,
+      filter_id: filterId,
+    };
+    // Get user suggestions (async)
+    request(GET, url, params)
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        console.info(err);
+        reject(new Error('Erro ao pegar as sugestões do usuário'));
+      });
+  });
 
 /**
  * This function get the statistics about suggestions provided for a user
@@ -141,7 +143,7 @@ export const getUserSuggestionsStatistics = type => new Promise((resolve, reject
     })
     .catch((err) => {
       console.info(err);
-      reject('Erro ao pegar as estatisticas do usuário');
+      reject(new Error('Erro ao pegar as estatisticas do usuário'));
     });
 });
 
