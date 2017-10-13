@@ -124,6 +124,47 @@
   scroll: false;
 }
 
+.points-container {
+  position: absolute;
+  left: 10px;
+  top: 30px;
+}
+
+.points-container .points-info {
+  display: none;
+  width: 100%;
+  min-width: 180px;
+  font-size: 11px;
+  position: absolute;
+  top: 20px;
+  left: -5px;
+  background: #fff;
+  text-align: center;
+  padding: 5px;
+  -webkit-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.35);
+  -moz-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.35);
+  box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.35);
+  color: #000;
+  z-index: 999;
+}
+
+.points-container:hover .points-info {
+  display: block;
+}
+
+.points-container p {
+  font-size: 12px;
+  text-align: left;
+  margin: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  line-height: 14px;
+}
+
+.points-container .bold-text {
+  font-weight: bold;
+}
+
 .field-icon {
 	width: 75px;
 	height: 75px;

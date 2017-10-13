@@ -54,16 +54,25 @@ class SuggestionModal {
       case 'lastPage':
         icon = 'feedback-icon';
         break;
-  		case 'project_author':
-  			icon = 'author-icon';
-  			break;
+      case 'project_author':
+        icon = 'author-icon';
+        break;
       default:
         break;
     }
 
-    var sourceTitle = $("#suggestion-modal-title").html();
-    var templateTitle = Handlebars.compile(sourceTitle);
-    var titleHTML = templateTitle({ icon });
+    let sourceTitle;
+    let templateTitle;
+    let titleHTML;
+    if (this.gamed) {
+      sourceTitle = $('#suggestion-modal-title-gamefied').html();
+      templateTitle = Handlebars.compile(sourceTitle);
+      titleHTML = templateTitle({ icon, points: this.points });
+    } else {
+      sourceTitle = $('#suggestion-modal-title').html();
+      templateTitle = Handlebars.compile(sourceTitle);
+      titleHTML = templateTitle({ icon });
+    }
 
     return titleHTML;
   }

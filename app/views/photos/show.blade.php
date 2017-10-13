@@ -868,35 +868,26 @@
           ]
       });
     });
-
-  /*$("#btnBack").click(function(){
-    alert("ok");
-    if(urlType == "advance"){
-        alert("adv");
-        $( "#advanceSearch" ).submit();
-  }
-});*/
-
-  //function updateForm(){
-
-
-  // var urlPrev = $('#urlPrev').val();
-   //var substring = "more";
-
-   // if(urlPrev.indexOf(substring) > -1){
-      //$('#frmDetailPhoto').attr('method','GET');
-     // $('#frmDetailPhoto').attr('method','POST');
-      //window.location.replace("/search/more/");
-  ///  }else{
-    //  $('#frmDetailPhoto').attr('method','POST');
-   // }
-   //location.reload();
-
   </script>
 
   <!-- SUGGESTION MODAL HANDLEBARS COMPONENTS -->
   <script id="suggestion-modal-title" type="text/x-handlebars-template">
     <div class="title-container">
+      <div class="field-icon" style="background: url(/img/suggestions-modal/@{{icon}}.png) no-repeat center center #fff;">
+      </div>
+      <button class="close-button"></button>
+    </div>
+  </script>
+
+  <script id="suggestion-modal-title-gamefied" type="text/x-handlebars-template">
+    <div class="title-container">
+      <div class="points-container">
+        <p><span class="bold-text">Pontos Bloqueados:</span> @{{ points }}</p>
+        <div class="points-info">
+          <p><span class="bold-text">Pontuação Bloqueada:</span></p>
+          <p>Você poderá obter a pontuação bloqueada assim que suas sugestões forem aceitas.</p>
+        </div>
+      </div>
       <div class="field-icon" style="background: url(/img/suggestions-modal/@{{icon}}.png) no-repeat center center #fff;">
       </div>
       <button class="close-button"></button>
