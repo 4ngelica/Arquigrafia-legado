@@ -27,11 +27,6 @@
   var missingFields = {{ json_encode($missing) }};
   var isReviewing = {{ json_encode($isReviewing) }};
   var completeness = {{ json_encode($completeness) }};
-  console.log('MISSING', missingFields);
-  console.log('USER', user);
-  console.log('PHOTO', photo);
-  console.log('isReviewing', isReviewing);
-  console.log('completeness', completeness);
 
   // Getting if it's gamed
   var gamed = {{ json_encode($gamified) }};
@@ -518,43 +513,45 @@
         !empty($photos->state) || !empty($photos->country) )
         <h4>Endereço:</h4>
         <p>
-          @if (!empty($photos->street) && !empty($photos->city))
+          <!-- Printing the addresss -->
+          @if (!empty($photos->street) && !empty($photos->district) && !empty($photos->city))
             <a href="{{ URL::to("/search?q=".$photos->street."&city=".$photos->city) }}">
-              {{ $photos->street }}
+              {{ $photos->street }}, {{ $photos->district }} - {{ $photos->city }}
             </a>
             <br />
-          @elseif (!empty($photos->street))
+          @elseif (!empty($photos->street) && !empty($photos->district) && empty($photos->city))
+            <a href="{{ URL::to("/search?q=".$photos->street) }}">
+              {{ $photos->street }}, {{ $photos->district }}
+            </a>
+            <br />
+          @elseif (!empty($photos->street) && empty($photos->district) && !empty($photos->city))
+            <a href="{{ URL::to("/search?q=".$photos->street."&city=".$photos->city) }}">
+              {{ $photos->street }} - {{ $photos->city }}
+            </a>
+            <br />
+          @elseif (empty($photos->street) && !empty($photos->district) && !empty($photos->city))
+            {{ $photos->district }} - {{ $photos->city }}
+            <br />
+          @elseif (empty($photos->street) && empty($photos->district) && !empty($photos->city))
+            {{ $photos->city }}
+            <br />
+          @elseif (empty($photos->street) && !empty($photos->district) && empty($photos->city))
+            {{ $photos->district }}
+            <br />
+          @elseif (!empty($photos->street) && empty($photos->district) && empty($photos->city))
             <a href="{{ URL::to("/search?q=".$photos->street) }}">
               {{ $photos->street }}
             </a>
             <br />
           @endif
 
-          @if (!empty($photos->district) && !empty($photos->city))
-            <a href="{{ URL::to("/search?q=".$photos->district."&city=".$photos->city) }}">
-              {{ $photos->district }}
-            </a>
-            <br />
-          @elseif (!empty($photos->district))
-            <a href="{{ URL::to("/search?q=".$photos->district) }}">
-              {{ $photos->district }}
-            </a>
-            <br />
-          @endif
-
-          @if (!empty($photos->city))
-            <a href="{{ URL::to("/search?q=".$photos->city) }}">
-              {{ $photos->city }}
-            </a>
-            <br />
-          @endif
-
+          <!-- Printing the country and state -->
           @if (!empty($photos->state) && !empty($photos->country))
             <a href="{{ URL::to("/search?q=".$photos->state) }}">{{ $photos->state }}</a> - {{ $photos->country }}
           @elseif (!empty($photos->state))
             <a href="{{ URL::to("/search?q=".$photos->state) }}">{{ $photos->state }}</a>
-          @else
-            {{ $photos->country }}
+          @elseif(!empty($photos->country))
+            <a href="{{ URL::to("/search?q=".$photos->country) }}">{{ $photos->country }}</a>
           @endif
         </p>
       @endif

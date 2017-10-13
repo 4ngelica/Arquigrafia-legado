@@ -147,7 +147,17 @@ class SuggestionsController extends \BaseController {
 			$suggestion->save();
 			if(!$photo->checkPhotoReviewing())
 				\Notification::create('suggestionDenied', $user, $photo, [$suggestion->user], null);
-		}
+    }
+
+    // Sending email to user 
+    $email = $suggestion->user->email;
+    \Mail::send('emails.users.suggestion-analyzed', array('userName' => $suggestion->user->name, 'imageName' => $photo->name),
+      function($msg) use($email) {
+        $msg->to($email)
+          ->subject('[Arquigrafia]- Sugestão Analisada');
+      });
+
+
 		return \Redirect::to('/users/suggestions');
 	}
 

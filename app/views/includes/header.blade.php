@@ -82,13 +82,13 @@
           @endif
           <!-- <li><a href="#" id="messages" title="Você tem 19 mensagens">&nbsp;</a></li> -->
 
-          @if (Auth::user()->photos->count() > 0 )
+          {{-- @if (Auth::user()->photos->count() > 0 ) --}}
             @if(Auth::user()->albums->count() > 0)
               <li><a href="{{ URL::to('/albums') }}" title="Meus álbuns"><i class="photos">&nbsp;</i> ALBUNS</a></li>
             @else
               <li><a href="{{ URL::to('/albums/create') }}" title="Crie seu álbum personalizado"><i class="photos">&nbsp;</i> ALBUNS</a></li>
             @endif
-          @endif
+          {{-- @endif --}}
 
           <li>
             <div id="new-message-container" class="new-message">
