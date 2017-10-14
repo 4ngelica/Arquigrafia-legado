@@ -115,7 +115,7 @@ export default {
       />
     </div>
     <div v-if="!store.state.isLoadingEditionsSuggestions && store.state.userEditionsSuggestions.length === 0">
-      <p>Não foi encontrado nenhuma edição.</p>
+      <p>Ainda não há nenhuma edição.</p>
     </div>
   </div>
 </template>
