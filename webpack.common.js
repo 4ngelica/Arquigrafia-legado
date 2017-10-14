@@ -35,5 +35,6 @@ module.exports = {
     new webpack.ProvidePlugin({
       Promise: "bluebird",
     }),
+    new webpack.ContextReplacementPlugin(/\.\/locale$/, 'empty-module', false, /js$/),
   ],
 };

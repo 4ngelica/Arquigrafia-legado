@@ -882,10 +882,10 @@
   <script id="suggestion-modal-title-gamefied" type="text/x-handlebars-template">
     <div class="title-container">
       <div class="points-container">
-        <p><span class="bold-text">Pontos Bloqueados:</span> @{{ points }}</p>
+        <p><span class="bold-text">Pontos Pendentes:</span> @{{ points }}</p>
         <div class="points-info">
-          <p><span class="bold-text">Pontuação Bloqueada:</span></p>
-          <p>Você poderá obter a pontuação bloqueada assim que suas sugestões forem aceitas.</p>
+          <p><span class="bold-text">Pontuação Pendente:</span></p>
+          <p>Você poderá obter a pontuação pendente assim que suas sugestões forem aceitas.</p>
         </div>
       </div>
       <div class="field-icon" style="background: url(/img/suggestions-modal/@{{icon}}.png) no-repeat center center #fff;">
