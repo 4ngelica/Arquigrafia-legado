@@ -59,13 +59,10 @@ Route::get('/users/forget', 'UsersController@forgetForm');
 Route::post('/users/forget', 'UsersController@forget');
 Route::get('/getPicture', 'UsersController@getFacebookPicture');
 
-Route::get('/users/g', 'UsersController@showWithoutID');
-Route::get('/users/g/{id}', 'UsersController@showGamified');
 Route::resource('/users','UsersController');
 Route::resource('/users/stoaLogin','UsersController@stoaLogin');
 
 Route::resource('/users/institutionalLogin','UsersController@institutionalLogin');
-
 
 /* FOLLOW */
 Route::get('/friends/follow/{user_id}', 'UsersController@follow');
@@ -96,8 +93,6 @@ Route::get('/photos/upload','PhotosController@form');
 Route::get('/photos/migrar','PhotosController@migrar');
 Route::get('/photos/rollmigrar','PhotosController@rollmigrar');
 Route::get('/photos/download/{photo_id}','PhotosController@download');
-Route::get('/photos/g','PhotosController@showWithoutID');
-Route::get('/photos/g/{id}','PhotosController@showGamified');
 Route::resource('/photos','PhotosController');
 
 /* SEARCH PAGE */

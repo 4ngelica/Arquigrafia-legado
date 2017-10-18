@@ -9,21 +9,16 @@ use Facebook\FacebookAuthorizationException;
 use Facebook\FacebookRequestException;
 use modules\institutions\models\Institution as Institution;
 use Illuminate\Database\Eloquent\Collection as Collection;
+use modules\gamification\models\Gamified as Gamified;
 
 class UsersController extends \BaseController {
-
-  protected $gamified;
 
   public function __construct()
   {
     $this->beforeFilter('auth',
       array('only' => ['follow', 'unfollow']));
-
-    // Setting gamified initial value
-    $this->gamified = false;
-    
   }
-  
+
   public function index()
   {
     $users = User::all();
@@ -31,31 +26,13 @@ class UsersController extends \BaseController {
     return View::make('/users/index',['users' => $users]);
   }
 
-  /**
-   * This function represents the route when the user want to get the
-   * gamified page, but the id is not present on the URL.
-   * This function will recover the ID from session and redirect to gamified page
-   */
-  public function showWithoutID()
-  {
-    // Recovering id from Session
-    $id = Session::get('user_id');
-    // Redirecting to gamified page
-    return Redirect::to('/users/g/' . $id);
-  }
-
-  public function showGamified($id)
-  {
-    // Setting gamified flag to true
-    $this->gamified = true;
-    // Running show
-    return $this->show($id);
-  }
 
   public function show($id)
-  { 
-    // Saving the id to Session, this id can be used on gamified page
-    Session::put('user_id', $id);
+  {
+    // This page has a gamified variant, get the gamified variant
+    $variationId = Gamified::getGamifiedVariationId();
+    $isGamified = Gamified::isGamified($variationId);
+
     // Getting user info
     $user = User::whereid($id)->first();
     $institutionFollowed = $user->followingInstitution;
@@ -105,12 +82,13 @@ class UsersController extends \BaseController {
       'lastDateUploadPhoto' => Photo::getLastUploadPhotoByUser($id),
       'albums' => $albums,
       'institutionFollowed' => $institutionFollowed,
-      'gamified' => $this->gamified,
       'userPoints' => $userPoints,
       'acceptedSuggestions' => $acceptedSuggestions,
       'userWaitingPoints' => $userWaitingPoints,
       'waitingSuggestions' => $waitingSuggestions,
       'refusedSuggestions' => $refusedSuggestions,
+      'gamified' => $isGamified,
+      'variationId' => $variationId
       ]);
   }
   

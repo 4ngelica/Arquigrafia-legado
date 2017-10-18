@@ -483,7 +483,7 @@
 
       <div id="workAuthor_container">
       @if (!empty($authorsList) )
-        <h4>Autor(es) da Obra:</h4>
+        <h4>Autor(es) do Projeto:</h4>
         <p><?php $i=1; ?>
           @foreach ($authorsList as $authors)
 

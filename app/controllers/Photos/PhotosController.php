@@ -10,19 +10,17 @@ use modules\collaborative\models\Comment as Comment;
 use modules\collaborative\models\Like as Like;
 use modules\evaluations\models\Evaluation as Evaluation;
 use modules\evaluations\models\Binomial as Binomial;
+use modules\gamification\models\Gamified as Gamified;
 
 class PhotosController extends \BaseController {
   protected $date;
-  protected $gamified;
 
   public function __construct(Date $date = null)
   {
     // Filtering if user is logged out, redirect to login page
     $this->beforeFilter('auth',
-      array( 'except' => ['index', 'show', 'showGamified', 'showWithoutID'] ));
+      array( 'except' => ['index', 'show']));
     $this->date = $date ?: new Date;
-    // Setting gamified initial value
-    $this->gamified = false;
   }
 
   public function index()
@@ -31,29 +29,12 @@ class PhotosController extends \BaseController {
     return View::make('/photos/index',['photos' => $photos]);
   }
 
-  /**
-   * This function represents the route when the user want to get the
-   * gamified page, but the id is not present on the URL.
-   * This function will recover the ID from session and redirect to gamified page
-   */
-  public function showWithoutID() {
-    // Recovering id from Session
-    $id = Session::get('photo_id');
-    // Redirecting to gamified page
-    return Redirect::to('/photos/g/'.$id);
-  }
-
-  public function showGamified($id) {
-    // Setting gamified flag to true
-    $this->gamified = true;
-    // Running show
-    return $this->show($id);
-  }
-
   public function show($id)
   {
-    // Saving the photo id to Session, this id can be used on gamified page
-    Session::put('photo_id', $id);
+    // This page has a gamified variant, get the gamified variant
+    $variationId = Gamified::getGamifiedVariationId();
+    $isGamified = Gamified::isGamified($variationId);
+
     // Getting photo by id
     $photos = Photo::find($id);
     // If didn't find the photo, go to home
@@ -262,7 +243,8 @@ class PhotosController extends \BaseController {
       'missing' => $final,
       'isReviewing' => $isReviewing,
       'completeness' => $completeness,
-      'gamified' => $this->gamified
+      'gamified' => $isGamified,
+      'variationId' => $variationId
     ]);
   }
 
