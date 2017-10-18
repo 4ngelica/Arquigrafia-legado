@@ -201,7 +201,7 @@ class SuggestionModal {
     if (fieldType === 'array_strings') {
       // If the content is an array of strings, we need to inform to
       // the user that it need to separate content with ;
-      modalQuestionText += ' Para mais de um valor, separe com ";")';
+      modalQuestionText += ' (Para mais de um valor, separe com ";")';
     }
     // Checking if there's a next page to change
     this.showModal(

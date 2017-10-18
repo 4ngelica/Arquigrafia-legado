@@ -43,7 +43,7 @@
   },
   "jest": {
     "globals": {
-      "widow": true
+      "window": true
     }
   }
 }
