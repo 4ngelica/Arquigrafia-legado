@@ -40,5 +40,10 @@
     "vue-awesome": "^2.3.3",
     "vue-simple-spinner": "^1.2.8",
     "vuex": "^2.4.1"
+  },
+  "jest": {
+    "globals": {
+      "widow": true
+    }
   }
 }

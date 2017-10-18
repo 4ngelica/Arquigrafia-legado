@@ -11,8 +11,16 @@
     <!-- Field -->
     <td>{{ $suggestion['field_name'] }}</td>
     <!-- Current Data -->
-    @if ($suggestion['suggestion']->photo[$suggestion['field']])
-      <td class="table-suggestion-collumn">{{ $suggestion['suggestion']->photo[$suggestion['field']] }}</td>
+    @if ($suggestion['field_content'] && gettype($suggestion['field_content']) == 'array')
+      <td class="table-suggestion-collumn">
+        @foreach ($suggestion['field_content'] as $contentItem)
+          {{ $contentItem }}@if ($contentItem != end($suggestion['field_content']));@endif
+        @endforeach
+      </td>
+    @elseif ($suggestion['field_content'])
+      <td class="table-suggestion-collumn">
+        {{ $suggestion['field_content'] }}
+      </td>
     @else
       <td>-----</td>
     @endif

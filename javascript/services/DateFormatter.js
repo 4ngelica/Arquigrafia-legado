@@ -7,8 +7,7 @@ import 'moment/locale/pt';
  */
 export const dateFormatter = date => (format) => {
   moment.locale('pt');
-  const momentDate = moment(date);
-  return momentDate.isValid() ? momentDate.format(format) : '';
+  return date && moment(date).isValid() ? moment(date).format(format) : '';
 };
 
 export const day = date => dateFormatter(date)('DD');

@@ -91,10 +91,6 @@ class Photo extends Eloquent {
 						  'validation'  => 'Este é o nome correto desta obra?',
 						  'name'        => 'Nome',
 						  'type'        => 'string'],
-		'project_author' => ['information' => 'Qual é o nome do autor deste projeto?',
-						  'validation'  => 'Este é o nome correto do autor deste projeto?',
-						  'name'        => 'Autor do Projeto',
-						  'type'        => 'string'],
 		'state'         => ['information' => 'Em qual estado do país está esta arquitetura?',
 						  'validation'  => 'Este é o estado correto desta arquitetura?',
 						  'name'        => 'Estado',
@@ -103,10 +99,10 @@ class Photo extends Eloquent {
 						  'validation'  => 'Este é o endereço correto desta obra?',
 						  'name'        => 'Rua',
 						  'type'        => 'string'],
-		'workAuthor'  => ['information' => 'Quem é o autor desta obra?',
-						  'validation'  => 'Este é o autor desta obra?',
-						  'name'        => 'Autor da Obra',
-						  'type'        => 'string'],
+		'authors'  => ['information' => 'Qual é o nome do autor deste projeto? (Havendo mais de um, separe por ";")',
+						  'validation'  => 'Este é o autor deste projeto?',
+						  'name'        => 'Autor do Projeto',
+						  'type'        => 'array_strings'],
 		'workDate'    => ['information' => 'Quando foi construída esta obra?',
 						  'validation'  => 'Esta é a data em que esta obra foi construída?',
 						  'name'        => 'Data da Obra',
@@ -801,7 +797,7 @@ class Photo extends Eloquent {
 	}
 
 	public function checkValidationFields($field) {
-		$validation = ['city', 'country', 'description', 'district', 'imageAuthor', 'state', 'street', 'name', 'project_author', 'workDate'];
+		$validation = ['city', 'country', 'description', 'district', 'imageAuthor', 'state', 'street', 'name', 'authors', 'workDate'];
 		if(!in_array($field, $validation))
 			throw new Exception('Unexpected field type');
 
@@ -822,14 +818,31 @@ class Photo extends Eloquent {
 		}
 	}
 
+  /**
+   * This function returns the content of a given fieldName
+   * @params  {String}  fieldName  The name of the field that you wanna get the content
+   * @return  {Array, String}  Returns a string or a array of strings of that given content
+   */
+  public function getFieldContent($fieldName) {
+    // If the field is not authors, we can just return the field content
+    if ($fieldName !== 'authors') {
+      return $this[$fieldName];
+    }
+    // If the field required is 'authors' so we need to mount our data array
+    return array_map(function ($item) {
+      return $item->name;
+    }, json_decode(json_encode($this->authors)));
+  }
+
 	public function checkPhotoReviewing(){
-		$fields = ['city', 'country', 'description', 'district', 'imageAuthor','state', 'street', 'name', 'project_author', 'workDate'];
+		$fields = ['city', 'country', 'description', 'district', 'imageAuthor','state', 'street', 'name', 'authors', 'workDate'];
 		foreach ($fields as $field) {
 			if($this->checkValidationFields($field) ==  'reviewing')
 				return true;
 		}
 		return false;
 	}
+
 	public static function updateSuggestion($field, $data, $id){
 		$photo = Photo::find($id);
 
@@ -861,6 +874,12 @@ class Photo extends Eloquent {
 			case 'project_author':
 				$photo->project_author = $data;
 				break;
+      case 'authors':
+        $author = new Author();
+        // First, we're going to remove the current authors in photo
+        $author->deleteAuthorPhoto($photo);
+        // Then, we're saving the new authors to photo
+        $author->saveAuthors($data, $photo);
 			case 'workDate':
 				$photo->workDate = $data;
 				break;

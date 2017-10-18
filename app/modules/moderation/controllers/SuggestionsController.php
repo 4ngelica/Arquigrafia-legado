@@ -118,9 +118,10 @@ class SuggestionsController extends \BaseController {
 		foreach ($suggestions as $suggestion){
 			$field = PhotoAttributeType::find($suggestion->attribute_type)->attribute_type;
 			$field_name = Photo::$fields_data[$field]['name'];
-			$photo = $suggestion->photo;
+			$photo = Photo::find($suggestion->photo->id);
 			$user = $suggestion->user;
-			$final[] = ['suggestion' => $suggestion, 'photo' => $photo, 'field' => $field, 'field_name' => $field_name, 'user' => $user];
+      $field_content = $photo->getFieldContent($field);
+			$final[] = ['suggestion' => $suggestion, 'photo' => $photo, 'field' => $field, 'field_name' => $field_name, 'user' => $user, 'field_content' => $field_content];
 		}
 
 		return \View::make('show-suggestions', ['suggestions' => $final]);

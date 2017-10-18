@@ -2,7 +2,7 @@ import { day, month, year, hours, fullDate, nameDay } from '../services/DateForm
 
 // new Date(year, month, day, hours, minutes, seconds, milliseconds)
 // The date below is a wednesdey
-const date = new Date(2017, 8, 13, 10, 0, 0, 0);
+const date = '2017-09-13T10:00';
 
 test('should return the day 13', () => {
   expect(day(date)).toBe('13');

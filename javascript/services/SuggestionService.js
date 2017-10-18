@@ -101,6 +101,7 @@ export const createChat = userID => new Promise((resolve, reject) => {
  * @param {Number} page The page that you wanna get
  * @param {Number} limit The number of items per page
  * @param {String} type The type of the suggestions. Can be 'reviews' or 'editions'.
+ * @param {String} filterId The filter id. Can be 'accepted', 'rejected', 'waiting'.
  */
 export const getUserSuggestions = (page, limit, type, filterId) =>
   new Promise((resolve, reject) => {
@@ -116,6 +117,7 @@ export const getUserSuggestions = (page, limit, type, filterId) =>
     // Get user suggestions (async)
     request(GET, url, params)
       .then((res) => {
+        console.info('Suggestions Response', res);
         resolve(res);
       })
       .catch((err) => {

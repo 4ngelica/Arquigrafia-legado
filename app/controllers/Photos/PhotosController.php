@@ -168,10 +168,10 @@ class PhotosController extends \BaseController {
       $missing[] = 'workDate';
     else
       $present[] = 'workDate';
-    if($photos->project_author == null)
-      $missing[] = 'project_author';
+    if($photos->authors == null || sizeof($photos->authors) == 0)
+      $missing[] = 'authors';
     else
-      $present[] = 'project_author';
+      $present[] = 'authors';
 
     $final = array();
     // Shuffling arrays
@@ -204,7 +204,7 @@ class PhotosController extends \BaseController {
         $final[] = [
           'type'           => 'confirm',
           'field_name'     => Photo::$fields_data[$present[0]]['name'],
-          'field_content'  => (array)$photos[$present[0]],
+          'field_content'  => $photos->getFieldContent($present[0]),
           'question'       => Photo::$fields_data[$present[0]]['validation'],
           'attribute_type' => $present[0],
           'field_type'     => Photo::$fields_data[$present[0]]['type'],
