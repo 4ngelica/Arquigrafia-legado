@@ -9,10 +9,11 @@ class Gamified extends \Eloquent {
    * @return  {Number}  "0" for non-gamified and "1" for gamefied
    */
   public static function getGamifiedVariationId() {
-    // Getting the variation Id
-    $variationId = \Session::get('gamified_variation_id');
-    // If we don't have a variationId, we will define one and save on session
-    if (empty($variationId)) {
+    if (\Session::has('gamified_variation_id')) {
+      // Getting the variation Id
+      $variationId = \Session::get('gamified_variation_id');
+    } else {
+      // If we don't have a variationId, we will define one and save on session
       $variationId = rand(0, 1);
       \Session::put('gamified_variation_id', $variationId);
     }
