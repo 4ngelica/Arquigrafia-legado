@@ -792,4 +792,35 @@ class UsersController extends \BaseController {
     DB::table('friendship_institution')->where('following_user_id', '=', $accountFrom->id)
       ->update(array('following_user_id' => $accountTo->id));
   }
+
+   public function usersList()
+  {
+        if (Auth::check()) {
+            echo "Criando o arquivo Json com a lista de usuarios";
+
+            $pathFile = public_path('data')."/users.json";
+            $usersAll = User::userDataToJson();
+            $users = $usersAll->toJson();
+
+            //criando todo o arquivo json dos usuarios
+            File::put($pathFile, $users);
+        }else{
+          dd("Precisa estar logado");
+
+        }
+  }
+
+  public function updateUsersListJson($user){
+      $pathFile = public_path('data')."/users.json";
+
+      if (File::exists($pathFile)){
+                  Log::info("Adicionando texto no arquivo json de usuario");
+
+                  $search = ']';
+                  $replace = ',{"id":'.$user->id.', "name": "'.$user->name.'"}]';
+                  file_put_contents($pathFile, str_replace($search, $replace, file_get_contents($pathFile)));
+      }
+  }
+
+
 }
