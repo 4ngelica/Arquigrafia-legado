@@ -13,9 +13,9 @@ use modules\notifications\models\Notification;
 class SuggestionsController extends \BaseController {
 
 	public function __construct() {
-    // Filtering if user is logged out, redirect to login page
-    $this->beforeFilter('auth',
-      array('except' => ['logOpenModal']));
+    // filtering if user is logged out, redirect to login page
+    $this->beforefilter('auth',
+      array('except' => ['logopenmodal']));
   }
 
 	public function store() {
@@ -42,7 +42,21 @@ class SuggestionsController extends \BaseController {
 		$attribute = PhotoAttributeType::where('attribute_type', '=', $input['attribute_type'])->first();
 		$suggestion->attribute_type = $attribute->id;
 		// Setting text
-		$suggestion->text = $input['text'];
+    if (gettype($input['text']) == 'array') {
+      // If the insert text that we're inserting is an array, by convention we separate with ;
+      foreach($input['text'] as $textItem) {
+        if ($input['text'][0] == $textItem) {
+          // If it's the first item, just set textItem as suggestion text
+          $suggestion->text = $textItem;
+        } else {
+          // Separate suggestions with ;
+          $suggestion->text = $suggestion->text . '; ' . $textItem;
+        }
+      }
+    } else {
+      // If it's not an array, just set the text
+		  $suggestion->text = $input['text'];
+    }
 		// Setting the type
 		$currentFieldText = $suggestion->photo[$input['attribute_type']];
 		if ($currentFieldText == null) {
@@ -306,20 +320,5 @@ class SuggestionsController extends \BaseController {
       'num_total_points' => $numTotalPoints,
       'num_points_by_type' => $numPointsByType
 		]);
-	}
-
-	/**
-	*	This function logs the event when the user opens a Modal
-	*/
-	public function logOpenModal() {
-		// Getting inputs
-		$input = \Input::all();
-		$photoId = $input['photo_id'];
-		$origin = $input['origin'];
-
-		// Printing log
-		EventLogger::printEventLogs($photoId, 'open-modal', ['origin' => $origin], 'Web');
-		
-		return \Response::json((object)['logged' => true]);
 	}
 }

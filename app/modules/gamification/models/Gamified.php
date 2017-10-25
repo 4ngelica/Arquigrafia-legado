@@ -2,8 +2,11 @@
 
 namespace modules\gamification\models;
 
+/**
+ * This class controls the Gamified aspects of Arquigrafia.
+ * It's used to inform the controllers which version is running (Gamified or Not-Gamified).
+ */
 class Gamified extends \Eloquent {
-
   /*
    * This function return the variation Id for a page based on user session.
    * @return  {Number}  "0" for non-gamified and "1" for gamefied
@@ -15,10 +18,22 @@ class Gamified extends \Eloquent {
     } else {
       // If we don't have a variationId, we will define one and save on session
       $variationId = rand(0, 1);
-      \Session::put('gamified_variation_id', $variationId);
+      self::saveGamifiedVariationId($variationId);
     }
 
     return $variationId;
+  }
+
+  /**
+   * This function saves the gamified variation id on Session
+   * @params  {Number}  variationId  The variation id that you wanna save
+   * @return  {Number}  Returns the variationId saved
+   */
+  public static function saveGamifiedVariationId($variationId) {
+    // Saving on Session
+    \Session::put('gamified_variation_id', $variationId);
+    // Returns the saved variationId
+    return \Session::get('gamified_variation_id');
   }
 
   /*
@@ -28,5 +43,4 @@ class Gamified extends \Eloquent {
   public static function isGamified($variationId) {
     return $variationId == 1;
   }
-
 }

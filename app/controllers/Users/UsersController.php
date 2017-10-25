@@ -334,8 +334,14 @@ class UsersController extends \BaseController {
     if (Auth::check()) {
       EventLogger::printEventLogs(null, 'logout', null, 'Web');
 
+      // Before logging out, we're going to save the gamified state
+      $variationId = Gamified::getGamifiedVariationId();
+      // Logging out
       Auth::logout();
       Session::flush();
+      // Saving variationId on Session again
+      Gamified::saveGamifiedVariationId($variationId);
+
       return Redirect::to('/home');
     }
     return Redirect::to('/home');

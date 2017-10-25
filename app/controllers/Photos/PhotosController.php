@@ -145,10 +145,10 @@ class PhotosController extends \BaseController {
       $missing[] = 'name';
     else
       $present[] = 'name';
-    if($photos->workDate == null)
-      $missing[] = 'workDate';
-    else
-      $present[] = 'workDate';
+    // if($photos->workDate == null)
+    //   $missing[] = 'workDate';
+    // else
+    //   $present[] = 'workDate';
     if($photos->authors == null || sizeof($photos->authors) == 0)
       $missing[] = 'authors';
     else
@@ -167,8 +167,8 @@ class PhotosController extends \BaseController {
       $next = 'present';
 
     $isReviewing = false;
-    // Loop for the 10 possible reords
-    for($i = 0; $i < 10; $i++){
+    // Loop for the 9 possible reords
+    for($i = 0; $i < 9; $i++){
       // Fills array if field is missing
       if($next == 'missing') {
         $final[] = [
@@ -215,9 +215,11 @@ class PhotosController extends \BaseController {
     //Percentages calculation
     $total = count($final);
 
-    $completeness['missing'] = 100 * ($completeness['missing'] / $total);
-    $completeness['present'] = 100 * ($completeness['present'] / $total);
-    $completeness['reviewing'] = 100 * ($completeness['reviewing'] / $total);
+    // Getting the completeness percent
+    // This percent will be given in 10% scale (0-10-20...)
+    $completeness['missing'] = round(10 * ($completeness['missing'] / $total)) * 10;
+    $completeness['present'] = round(10 * ($completeness['present'] / $total)) * 10;
+    $completeness['reviewing'] = round(10 * ($completeness['reviewing'] / $total)) * 10;
 
     return View::make('/photos/show',
       ['photos' => $photos, 'owner' => $photo_owner, 'follow' => $follow, 'tags' => $tags,

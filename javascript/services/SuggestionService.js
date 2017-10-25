@@ -4,7 +4,7 @@
  */
 
 import $ from 'jquery';
-import { request, GET } from './Network';
+import { request, GET, POST } from './Network';
 
 /**
  * Sending the suggestion through AJAX request to the server
@@ -151,14 +151,24 @@ export const getUserSuggestionsStatistics = type => new Promise((resolve, reject
 
 export const logOpenModal = (photoID, origin) => new Promise((resolve, reject) => {
   // Creating URL
-  const url = `${window.location.origin}/suggestions/log_open_modal`;
+  const url = `${window.location.origin}/logs`;
   // Creating params
   const params = {
-    origin,
+    payload: {
+      origin,
+    },
     photo_id: photoID,
+    class: 'open-modal',
   };
   // Making request
-  request(GET, url, params)
-    .then(res => resolve(res))
-    .catch(err => reject(err));
+  request(POST, url, params)
+    .then((res) => {
+      console.info('LOG OPEN MODAL', res);
+      resolve(res);
+    })
+    .catch((err) => {
+      console.info('ERROR ON LOG OPEN MODAL', err);
+      reject(err);
+    });
 });
+

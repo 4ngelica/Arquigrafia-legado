@@ -96,3 +96,4 @@ require app_path().'/modules/draft/draft.php';
 require app_path().'/modules/api/api.php';
 require app_path().'/modules/chat/chat.php';
 require app_path().'/modules/moderation/moderation.php';
+require app_path().'/modules/logs/logs.php';

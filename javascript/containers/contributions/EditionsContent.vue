@@ -84,7 +84,7 @@ export default {
         :totalSuggestions="store.state.editionsSuggestionsStatistics.total"
         :showPoints="store.state.isGamefied"
         :obtainedPoints="store.state.editionsSuggestionsStatistics.points"
-        :obtainedPointsLink="`/users/g/${store.state.currentUser.id}#my_points`"
+        :obtainedPointsLink="`/users/${store.state.currentUser.id}#my_points`"
       />
     </div>
     <div>

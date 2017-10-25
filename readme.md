@@ -22,3 +22,9 @@ The Arquigrafia project is open-sourced software licensed under the [Creative Co
 ```bash
 php artisan migrate --package=cmgmyr/messenger
 ```
+
+- Since we're still using PHP 5.6, some JSON post requests might throw an deprecation warning. So, we need to set on PHP.ini:
+
+```
+always_populate_raw_post_data = -1
+```
