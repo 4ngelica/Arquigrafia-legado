@@ -28,3 +28,32 @@ php artisan migrate --package=cmgmyr/messenger
 ```
 always_populate_raw_post_data = -1
 ```
+
+## Important comands
+
+### Yarn commands
+You can use [yarn](https://yarnpkg.com/en/) to call some comands.
+
+- Starting PHP server
+
+```
+$ yarn php
+```
+
+- Starting JS server (auto-bundle)
+
+```
+$ yarn start
+```
+
+- Starting Jest test server
+
+```
+$ yarn test:watch
+```
+
+- Build JS files for production
+
+```
+$ yarn build
+```
