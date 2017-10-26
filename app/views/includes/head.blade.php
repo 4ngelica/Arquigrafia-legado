@@ -35,6 +35,7 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/jquery.fancybox.pack.js"></script>
 <!--NOTIFICAÇÕES-->
 <script type="text/javascript" src="{{ URL::to("/") }}/js/notifications.js"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/dist/notifications.bundle.js"></script>
 
 <!-- AUTOCOMPLETE -->
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />

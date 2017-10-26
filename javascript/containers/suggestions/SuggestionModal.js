@@ -1,7 +1,10 @@
 import jBox from 'jbox';
 import $ from 'jquery';
-import { sendFinalSuggestions, sendSuggestion, createChat } from '../../services/SuggestionService';
+import { sendFinalSuggestions, sendSuggestion } from '../../services/SuggestionService';
+import { createChat } from '../../services/ChatsService';
 import { createLog } from '../../services/LogsService';
+
+/* global Handlebars location */
 
 class SuggestionModal {
   /**
@@ -451,13 +454,25 @@ class SuggestionModal {
           const redirectWindow = window.open('', '_blank');
 
           // Creating chat
-          createChat(this.photo.user_id)
+          createChat(window.location.origin, this.photo.user_id)
             .then((data) => {
               // Open chat tab
               redirectWindow.location = `/chats/${data}`;
             }).catch((error) => {
               console.info('ERRO', error);
             });
+        }));
+
+        $('#last-modal-user-profile').on('click', (() => {
+          // Defining params to log
+          const originURL = window.location.origin;
+          const logClass = 'pressed-final-modal-profile-link';
+          const payload = {
+            photo_id: this.photo.id,
+            num_suggestions: this.numberSuggestions,
+          };
+          // Here, we're going to log the click action
+          createLog(originURL, logClass, payload);
         }));
 
 

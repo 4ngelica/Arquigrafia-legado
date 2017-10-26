@@ -237,6 +237,30 @@ class EventLogger {
               $info = sprintf('[%s] Fluxo de cartões - Acesso imagem %s na última página. Finalizado com %s sugestões pela página %s, via %s',
                 $date_and_time, $eventContent['redirect_photo_id'], $eventContent['num_suggestions'], $sourcePage, $device);
               break;
+            case "pressed-final-modal-profile-link":
+              $info = sprintf('[%s] Fluxo de cartões - Acesso ao perfil de dono da imagem %s pela última página. Finalizado com %s sugestões pela página %s, via %s',
+                $date_and_time, $eventContent['photo_id'], $eventContent['num_suggestions'], $sourcePage, $device);
+              break;
+            case "create-chat-user":
+              $info = sprintf('[%s] Criou um chat com o usuário %s pela página %s, via %s',
+                $date_and_time, $eventContent['chat_user_id'], $sourcePage, $device);
+              break;
+            case "pressed-suggestion-analysed-notification":
+              $info = sprintf('[%s] Clique em Notificação %s de sugestão analisada pela página %s, via %s',
+                $date_and_time, $eventContent['notification_id'], $sourcePage, $device);
+              break;
+            case "pressed-suggestion-received-notification":
+              $info = sprintf('[%s] Clique em Notificação %s de sugestão recebida pela página %s, via %s',
+                $date_and_time, $eventContent['notification_id'], $sourcePage, $device);
+              break;
+            case "accepted-rejected-suggestion":
+              $info = sprintf('[%s] Completude de dados de ID nº %s com revisão %s pelo autor da imagem pela página %s, via %s',
+                $date_and_time, $eventContent['suggestion_id'], $eventContent['status'], $sourcePage, $device);
+              break;
+            case "redirect-users-contributions":
+              $info = sprintf('[%s] Redirecionado para as Contribuições pela página %s, via %s',
+                $date_and_time, $sourcePage, $device);
+              break;
             default:
                 break;
         }

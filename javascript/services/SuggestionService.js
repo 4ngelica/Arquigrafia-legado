@@ -74,28 +74,6 @@ export const sendFinalSuggestions = (photoID, points, numberSuggestions, status)
   });
 };
 
-export const createChat = userID => new Promise((resolve, reject) => {
-  // Defining data to create chat
-  const data = {
-    participants: [userID],
-  };
-  // Making ajax request
-  $.ajax({
-    type: 'POST',
-    url: '/chats',
-    data,
-    success: (response) => {
-      console.info('CHAT CRIADO', response);
-      if (response !== false) resolve(response);
-      else reject(response);
-    },
-    error: (error) => {
-      console.info('ERRO AO CRIAR CHAT', error);
-      reject(error);
-    },
-  }, 'json');
-});
-
 /**
  * Getting user suggestions
  * @param {Number} page The page that you wanna get

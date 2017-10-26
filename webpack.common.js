@@ -7,6 +7,9 @@ module.exports = {
     suggestions: './javascript/containers/suggestions',
     suggestionsList: './javascript/containers/suggestions-list',
     contributions: './javascript/containers/contributions',
+    profile: './javascript/containers/profile',
+    default: './javascript/containers/default',
+    notifications: './javascript/containers/notifications',
   },
   output: {
     filename: '[name].bundle.js',

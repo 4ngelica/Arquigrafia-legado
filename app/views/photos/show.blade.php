@@ -944,7 +944,7 @@
   		</div>
       <div>
         <p  class="label new-label">
-          Se desejar, entre em contato diretamente com o autor <a href="/users/@{{ userID }}" target="_blank"><span>aqui</span></a>
+          Se desejar, entre em contato diretamente com o autor <a href="/users/@{{ userID }}" id="last-modal-user-profile" target="_blank"><span>aqui</span></a>
         </p>
       </div>
     </div>
@@ -963,7 +963,7 @@
 
       <div>
         <p  class="label new-label">
-          Se desejar, entre em contato diretamente com o autor <a href="/users/@{{ userID }}" target="_blank"><span>aqui</span></a>
+          Se desejar, entre em contato diretamente com o autor <a href="/users/@{{ userID }}" id="last-modal-user-profile" target="_blank"><span>aqui</span></a>
         </p>
       </div>
     </div>

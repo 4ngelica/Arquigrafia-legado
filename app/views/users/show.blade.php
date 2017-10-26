@@ -10,7 +10,9 @@
 <script src="{{ URL::to("/") }}/js/jquery.isotope.min.js"></script>
 
 <script type="text/javascript" src="{{ URL::to("/") }}/js/panel.js"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/dist/profile.bundle.js"></script>
 <script type="text/javascript">
+  var profileUser = {{ json_encode($user) }}
 	var userID = {{$user->id}};
 	console.log({{ $userPoints }})
 </script>

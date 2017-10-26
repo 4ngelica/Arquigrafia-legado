@@ -38,7 +38,7 @@
       </div>
     </td>
     <td>
-      <div class="suggestion-button thumbs-up thumbs-link">
+      <div class="suggestion-button thumbs-up thumbs-link" data-id="{{ $suggestion['suggestion']->id }}">
         <!-- Form for THUMBS UP -->
         <form id="send-thumbs-up-form" method="post">
           <input name="suggestion_id" value="{{ $suggestion['suggestion']->id }}" type="hidden"/>
@@ -46,7 +46,7 @@
           <span>Aceitar</span>
         </form>
       </div>
-      <div class="suggestion-button thumbs-down thumbs-link">
+      <div class="suggestion-button thumbs-down thumbs-link" data-id="{{ $suggestion['suggestion']->id }}">
         <!-- Form for THUMBS DOWN -->
         <form id="send-thumbs-down-form" method="post">
           <input name="suggestion_id" value="{{ $suggestion['suggestion']->id }}" type="hidden"/>

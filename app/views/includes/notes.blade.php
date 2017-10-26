@@ -187,7 +187,7 @@
             @elseif($info_array[0] == "suggestionReceived")
                 <div id={{$notification->id}} class="notes {{$notification->id}}<?php if($notification->read_at == null) echo ' not-read'?>">
                     <li>
-                      <a href="{{URL::to("/users/suggestions")}}">
+                      <a class="suggestion-received-notification-link" data-id={{ $notification->id }} href="{{URL::to("/users/suggestions")}}">
                         <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
                         <div onclick="markRead(this);">
                           <img class="mini" src="{{ URL::to("/") }}/img/avatar-48.png" >
@@ -200,7 +200,7 @@
             @elseif($info_array[0] == "suggestionAccepted")
                 <div id={{$notification->id}} class="notes {{$notification->id}}<?php if($notification->read_at == null) echo ' not-read'?>">
                     <li>
-                        <a href="{{URL::to("/users/contributions")}}">
+                        <a class="suggestion-analysed-notification-link" data-id={{ $notification->id }} href="{{URL::to("/users/contributions")}}">
                             <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
                             <div onclick="markRead(this);">
                             <img class="mini" src="{{ URL::to("/") }}/img/avatar-48.png" >
@@ -213,7 +213,7 @@
             @elseif($info_array[0] == "suggestionDenied")
                 <div id={{$notification->id}} class="notes {{$notification->id}}<?php if($notification->read_at == null) echo ' not-read'?>">
                     <li>
-                        <a href="{{URL::to("/users/contributions")}}">
+                        <a class="suggestion-analysed-notification-link" data-id={{ $notification->id }} href="{{URL::to("/users/contributions")}}">
                             <div class="read-button" title="Marcar como lida"  onclick="markRead(this);"></div>
                             <div onclick="markRead(this);">
                             <img class="mini" src="{{ URL::to("/") }}/img/avatar-48.png" >

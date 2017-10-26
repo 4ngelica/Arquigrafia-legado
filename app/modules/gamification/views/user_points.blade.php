@@ -12,13 +12,13 @@
       @else
         <p><strong>Pontuação atual:</strong> {{ $userPoints }}</p>
         <p><strong>Pontuação a ser aprovada:</strong>  {{ $userWaitingPoints }}</p>
-        <a href="{{ URL::to('/users/contributions') }}">
+        <a class="num-suggestions-profile" href="{{ URL::to('/users/contributions') }}">
           <p><strong>Número de sugestões aceitas:</strong>  {{ sizeof($acceptedSuggestions) }}
         </a>
-        <a href="{{ URL::to('/users/contributions') }}">
+        <a class="num-suggestions-profile" href="{{ URL::to('/users/contributions') }}">
           <p><strong>Número de sugestões aguardando aprovação:</strong> {{ sizeof($waitingSuggestions) }}
         </a>
-        <a href="{{ URL::to('/users/contributions') }}">
+        <a class="num-suggestions-profile" href="{{ URL::to('/users/contributions') }}">
           <p><strong>Número de sugestões recusadas:</strong> {{ sizeof($refusedSuggestions) }}
         </a>
       @endif
