@@ -973,8 +973,8 @@
     <span class="image-sugestions-text">Outras imagens para colaborar:</span>
 
     @{{#each photos}}
-      <div class="single-image-sugestions">
-        <a href="/photos/@{{ id }}">
+      <div class="single-image-sugestions suggestion-last-modal-image" data-id="@{{ id }}">
+        <a href="/photos/@{{ id }}" target="_blank">
           <img src="/arquigrafia-images/@{{ id }}_home.jpg" />
         </a>
       </div>

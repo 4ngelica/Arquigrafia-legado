@@ -226,13 +226,17 @@ class EventLogger {
                                 $date_and_time, $eventContent['suggestion'], $sourcePage, $device);
                 break;
             case "card-chat":
-                    $info = sprintf('[%s] Chat - Acesso pelo fluxo de cartões na página %s, via %s',
-                                                    $date_and_time, $sourcePage, $device);
-                    break;
+              $info = sprintf('[%s] Chat - Acesso pelo fluxo de cartões na página %s, via %s',
+                $date_and_time, $sourcePage, $device);
+              break;
             case "open-modal":
-                    $info = sprintf('[%s] Open Modal - Abriu o modal na página %s, pela origem %s, via %s',
-                                                    $date_and_time, $sourcePage, $eventContent['origin'], $device);
-                    break;
+              $info = sprintf('[%s] Open Modal - Abriu o modal na página %s, pela origem %s, via %s',
+                $date_and_time, $sourcePage, $eventContent['origin'], $device);
+              break;
+            case "pressed-final-modal-photo":
+              $info = sprintf('[%s] Fluxo de cartões - Acesso imagem %s na última página. Finalizado com %s sugestões pela página %s, via %s',
+                $date_and_time, $eventContent['redirect_photo_id'], $eventContent['num_suggestions'], $sourcePage, $device);
+              break;
             default:
                 break;
         }

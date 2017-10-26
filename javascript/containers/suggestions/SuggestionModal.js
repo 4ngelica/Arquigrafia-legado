@@ -1,6 +1,7 @@
 import jBox from 'jbox';
 import $ from 'jquery';
 import { sendFinalSuggestions, sendSuggestion, createChat } from '../../services/SuggestionService';
+import { createLog } from '../../services/LogsService';
 
 class SuggestionModal {
   /**
@@ -174,6 +175,21 @@ class SuggestionModal {
     const nextPhotosHTML = templateNextPhotos({ photos });
 
     $('#next-photos-container').html(nextPhotosHTML);
+
+    // Adding callback when clicked on image
+    $('.suggestion-last-modal-image').on('click', ((element) => {
+      // Defining params to log
+      const originURL = window.location.origin;
+      const logClass = 'pressed-final-modal-photo';
+      const redirectPhotoId = element.target.parentElement.parentElement.getAttribute('data-id');
+      const payload = {
+        current_photo_id: this.photo.id,
+        redirect_photo_id: redirectPhotoId,
+        num_suggestions: this.numberSuggestions,
+      };
+      // Here, we're going to log the click action
+      createLog(originURL, logClass, payload);
+    }));
   }
 
   /**
@@ -443,6 +459,7 @@ class SuggestionModal {
               console.info('ERRO', error);
             });
         }));
+
 
         if (initial || forceOverlay) {
           setTimeout((() => {
