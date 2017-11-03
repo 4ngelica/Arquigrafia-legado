@@ -1,6 +1,4 @@
-*,
-*:after,
-*:before {
+*, *:after, *:before {
   margin: 0;
   padding: 0;
   -webkit-box-sizing: border-box;
@@ -683,7 +681,7 @@ div.hover:hover div.appear {
   transition: linear 0.1s;
 }
 
-.header-main { 
+.header-main {
   padding: 15px;
   position: absolute;
   width: 100%;
