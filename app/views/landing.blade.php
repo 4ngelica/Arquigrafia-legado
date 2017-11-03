@@ -5,17 +5,14 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
   <!-- JAVASCRIPT -->
-  <script
-    src="https://code.jquery.com/jquery-3.2.1.min.js"
-    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <script src="{{ URL::to("/") }}/js/main.js"></script>
   <script type="text/javascript" src="{{ URL::to("/") }}/js/jquery-ui/jquery-ui.min.js"></script>
   <!-- END JAVASCRIPT -->
 
   <!-- CSS -->
   <link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet">
-  <link href="{{ URL::to("/") }}/css/main.css" rel="stylesheet">
+  <link href="{{ URL::to("/") }}/css/grid.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.min.css" rel="stylesheet">
   <link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.theme.min.css" rel="stylesheet">
@@ -569,7 +566,11 @@
               <div class="botao-refsite">
                 <a href="{{ URL::to("/home") }}" style="color:white;">{{ trans('landing.siteBtn')}}</a>
               </div>
-              <div class="playstore">{{trans('landing.txtSoon')}}<img src="{{ asset('img/playstore.png')}}"></div>
+              <div class="playstore">
+                <a href="https://play.google.com/store/apps/details?id=com.ionicframework.arquigrafiamobile302511&hl=pt-br" target="_blank">
+                  <img src="{{ asset('img/playstore.png')}}" />
+                </a>
+              </div>
             </div>
           </div>
         </div>
