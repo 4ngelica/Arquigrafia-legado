@@ -61,7 +61,7 @@ class Author extends Eloquent {
       
   }
   public function updateAuthors($authors_list,$photo)
-  {   
+  {
       $this->deleteAuthorPhoto($photo);
       $this->saveAuthors($authors_list,$photo);      
   }
