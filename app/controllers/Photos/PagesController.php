@@ -1,4 +1,9 @@
 <?php
+/*
+|--------------------------------------------------------------------------
+| Default Page Controller
+|--------------------------------------------------------------------------
+ */
 
 use lib\log\EventLogger;
 use lib\date\Date;
@@ -10,13 +15,6 @@ use modules\evaluations\models\Evaluation as Evaluation;
 use modules\collaborative\models\Tag as Tag;
 
 class PagesController extends BaseController {
-
-/*
-|--------------------------------------------------------------------------
-| Default Page Controller
-|--------------------------------------------------------------------------
- */
-
   protected $date;
 
   public function __construct(Date $date = null) {
@@ -474,6 +472,4 @@ class PagesController extends BaseController {
 
     return Response::json($response);
   }
-
-
 }
