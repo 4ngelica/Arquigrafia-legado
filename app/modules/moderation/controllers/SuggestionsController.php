@@ -66,11 +66,11 @@ class SuggestionsController extends \BaseController {
 			// If the user is something on a field, it's a review suggestion
 			$suggestion->type = 'review';
 		}
-		//moderator_id
-		//TO DO
+    // Saving suggestion
 		$suggestion->save();
-		$photo = $suggestion->photo;
+    // Printing log
 		EventLogger::printEventLogs(null, 'completion', ['suggestion' => $suggestion->id], 'Web');
+
 		return \Response::json('Data sent successfully');
 	}
 

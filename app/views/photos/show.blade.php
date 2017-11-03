@@ -564,7 +564,7 @@
             <div class="bar-info">
               <strong>Dados completos:</strong><br />
               Esta foto tem {{ $completeness['present'] }}% dos dados preenchidos pelo autor ou aceitos após revisão da comunidade.<br />
-              @if (!$isReviewing)
+              @if (!$isReviewing && $completeness['present'] != 100)
                 <a href="#" class="OpenModal" data-origin="progress-bar">Colabore com mais informações aqui</a>
               @endif
             </div>
@@ -597,7 +597,7 @@
 
       <!-- Suggestions Modal Button -->
       @if ($photos->institution == null && $photos->type != "video")
-        @if (!$isReviewing)
+        @if (!$isReviewing && $completeness['present'] != 100)
           <div class="modal-wrapper">
             <div class="title2">Você conhece mais informações sobre esta arquitetura?</div>
 
@@ -625,6 +625,16 @@
         @elseif($isReviewing)
           <div class="modal-wrapper">
             <div class="title1">Esta foto tem dados em revisão que serão validados antes de serem disponibilizados</div>
+          </div>
+        @elseif($completeness['present'] == 100)
+          <div class="modal-wrapper">
+            <div class="title2">Essas informações foram definidas por membros do Arquigrafia.</div>
+            <div class="title1">
+              <p style="text-align: justify;">
+                Se você tem alguma informação adicional sobre esta imagem, por favor,
+                envie um email para <a href="mailto:arquigrafiabrasil@gmail.com">arquigrafiabrasil@gmail.com</a>
+              </p>
+            </div>
           </div>
         @endif
 

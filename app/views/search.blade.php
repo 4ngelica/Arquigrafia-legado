@@ -138,7 +138,7 @@
 
     <div class="container">
       <div id="add1" class="twelveMid columns add" >
-           @if ( $users != null )
+           @if ( isset($users) && $users != null )
               @if($users->count() > 0 )
                 @include('users.includes.searchResult_include')
               @endif
@@ -149,22 +149,9 @@
       </div>
     </div>
 
-    <!--   PAINEL DE IMAGENS - GALERIA - CARROSSEL   -->
-     <!--  <div class="wrap">
-         <div id="panel">
-            include('includes.panel')
-        </div>
-        <div class="panel-back"></div>
-        <div class="panel-next"></div>
-        </div> -->
-    <!--   FIM - PAINEL DE IMAGENS  -->
-
     <!-- FOTOS PAGINADAS -->
-
     @include('includes.result-search')
-
     <!-- FIM FOTOS PAGINADAS -->
   </div>
   <!--   FIM - MEIO DO SITE   -->
-
 @stop

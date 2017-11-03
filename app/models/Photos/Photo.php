@@ -805,15 +805,28 @@ class Photo extends Eloquent {
 		$query = Suggestion::join('photo_attribute_types', 'suggestions.attribute_type', '=', 'photo_attribute_types.id')
 		->where('suggestions.photo_id', $this->id)->where('photo_attribute_types.attribute_type', $field);
 
-		// Creating the two sub-queries that we're going to use
+		// Creating the sub-queries that we're going to use
 		$query1 = clone $query;
 		$query2 = clone $query;
-		
-		if($query1->whereNull('suggestions.accepted')->count() > 0)
+		$query3 = clone $query;
+
+    // Defining field content
+    if ($field == 'authors') {
+      // The 'authors' field has objects inside. This is the reason we have to implode the name of the authors
+      $authors = array_map(function($author) { return $author['name']; }, json_decode(json_encode($this[$field]),TRUE));
+      $fieldContent = implode('; ', $authors);
+    } else {
+      $fieldContent = $this[$field];
+    }
+
+    // Returning the status
+		if($query1->whereNull('suggestions.accepted')->count() > 0) {
+      // If the accepted field on suggestion is null, return reviewing
 			return 'reviewing';
-		elseif($query2->where('suggestions.text', $this[$field])->where('suggestions.accepted', 1)->count() > 0)
+    } elseif($query2->where('suggestions.text', $fieldContent)->where('suggestions.accepted', 1)->count() > 0)
+    {
 			return 'reviewed';
-		else {
+    } else {
 			return 'none';
 		}
 	}
