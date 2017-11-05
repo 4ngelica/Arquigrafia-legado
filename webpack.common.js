@@ -10,6 +10,7 @@ module.exports = {
     profile: './javascript/containers/profile',
     default: './javascript/containers/default',
     notifications: './javascript/containers/notifications',
+    landing: './javascript/containers/landing',
   },
   output: {
     filename: '[name].bundle.js',

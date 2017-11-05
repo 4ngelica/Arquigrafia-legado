@@ -116,7 +116,7 @@ body {
   min-width: inherit;
   height: 60px;
   padding: 10px;
-  z-index: 1; }
+  z-index: 0; }
 
 .header-page .buttons {
   float: right;
