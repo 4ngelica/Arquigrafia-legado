@@ -46,9 +46,9 @@ export default {
       suggestionText(status, text, fieldName, photoName, userName) {
         if (status === null) {
           return `Sua sugestão '${text}' para o campo '${fieldName}' na imagem '${photoName}' foi enviada para a revisão do autor da imagem '${userName}'.`;
-        } else if (status) {
+        } else if (status === 1) {
           return `Sua sugestão '${text}' para o campo '${fieldName}' na imagem '${photoName}' foi aceita pelo autor da imagem '${userName}'!`;
-        } else if (!status) {
+        } else if (status === 0) {
           return `Sua sugestão '${text}' para o campo '${fieldName}' na imagem '${photoName}' foi recusada pelo autor da imagem '${userName}'.`;
         }
         return '';
