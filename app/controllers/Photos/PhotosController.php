@@ -830,7 +830,7 @@ class PhotosController extends \BaseController {
   }
 
   public function getCompletenessPhotos() {
-	  $photosObj = Photo::where('accepted', 0)->where('type', '<>', 'video')->whereNull('institution_id')->orderByRaw("RAND()")->take(50)->get()->shuffle();
+	  $photosObj = Photo::where('accepted', 0)->where('type', '<>', 'video')->whereNull('institution_id')->orderByRaw("RAND()")->take(500)->get()->shuffle();
 
 		return \Response::json((object)[
 			'photos' => $photosObj,
