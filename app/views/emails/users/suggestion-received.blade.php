@@ -4,7 +4,7 @@
     <meta charset="utf-8">
   </head>
   <body>
-    <h2>Olá, {{$name}}</h2>
+    <h2>Olá, {{$name}}!</h2>
 
     <div>
       Sua imagem {{$image}} acaba de ser analisada por um membro do Arquigrafia com sugestões para incluir novas informações.<br>

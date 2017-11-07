@@ -4,7 +4,7 @@
     <meta charset="utf-8">
   </head>
   <body>
-    <h2>Olá, {{$userName}}</h2>
+    <h2>Olá, {{$userName}}!</h2>
 
     <div>
       Sua sugestão para a imagem {{$imageName}} acaba de ser analisada pelo autor da imagem.<br>

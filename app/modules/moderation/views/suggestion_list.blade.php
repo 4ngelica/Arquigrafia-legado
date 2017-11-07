@@ -32,7 +32,7 @@
     @endif
     <td>
       <div class="new-message">
-        <a class="create-chat-link" data-val="{{$suggestion['suggestion']->user['id']}}" href="#">
+        <a target="_blank" href="/users/{{$suggestion['suggestion']->user['id']}}">
           {{ $suggestion['suggestion']->user['name'] }}
         </a>
       </div>

@@ -895,7 +895,7 @@
         <p><span class="bold-text">Pontos Pendentes:</span> @{{ points }}</p>
         <div class="points-info">
           <p><span class="bold-text">Pontuação Pendente:</span></p>
-          <p>Você poderá obter a pontuação pendente assim que suas sugestões forem aceitas.</p>
+          <p>Você poderá obter a pontuação pendente assim que suas sugestões forem aceitas pelo autor da imagem.</p>
         </div>
       </div>
       <div class="field-icon" style="background: url(/img/suggestions-modal/@{{icon}}.png) no-repeat center center #fff;">
