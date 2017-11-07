@@ -261,6 +261,10 @@ class EventLogger {
               $info = sprintf('[%s] Redirecionado para as Contribuições pela página %s, via %s',
                 $date_and_time, $sourcePage, $device);
               break;
+            case "redirect-my-points":
+              $info = sprintf('[%s] Redirecionado para #my_points no perfil pela página %s, via %s',
+                $date_and_time, $sourcePage, $device);
+              break;
             default:
                 break;
         }

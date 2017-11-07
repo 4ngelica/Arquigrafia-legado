@@ -34,6 +34,10 @@
         type: Boolean,
         required: true,
       },
+      handlePressObtainedPointsLink: {
+        type: Function,
+        required: true,
+      },
     },
   };
 </script>
@@ -49,7 +53,7 @@
         <p><span class="title">Aguardando:</span> {{ waitingSuggestions }}</p>
         <p><span class="title">Aceitas:</span> {{ acceptedSuggestions }}</p>
         <p><span class="title">Recusadas:</span> {{ rejectedSuggestions }}</p>
-        <a v-if="showPoints" :href="obtainedPointsLink" target="_blank"><p><span class="title">Pontuação Obtida:</span> {{ obtainedPoints }}</p></a>
+        <a v-if="showPoints" @click="handlePressObtainedPointsLink()" :href="obtainedPointsLink" target="_blank"><p><span class="title">Pontuação Obtida:</span> {{ obtainedPoints }}</p></a>
       </div>
     </div>
   </div>

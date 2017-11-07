@@ -11,6 +11,7 @@ import { fullDate } from '../../services/DateFormatter';
 import Spinner from '../../components/general/Spinner.vue';
 import ContributionsStatistics from '../../components/contributions/ContributionsStatistics.vue';
 import ContributionsFilters from '../../components/contributions/ContributionsFilters.vue';
+import { createLog } from '../../services/LogsService';
 
 export default {
   name: 'EditionsContent',
@@ -53,6 +54,10 @@ export default {
         }
         return '';
       },
+      handlePressObtainedPointsLink() {
+        // Here we're just logging that we pressed the obtained points link
+        createLog(window.location.origin, 'redirect-my-points', {});
+      },
     },
   ),
   created() {
@@ -85,6 +90,7 @@ export default {
         :showPoints="store.state.isGamefied"
         :obtainedPoints="store.state.editionsSuggestionsStatistics.points"
         :obtainedPointsLink="`/users/${store.state.currentUser.id}#my_points`"
+        :handlePressObtainedPointsLink="handlePressObtainedPointsLink"
       />
     </div>
     <div>
