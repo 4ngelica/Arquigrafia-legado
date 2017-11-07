@@ -85,8 +85,7 @@ class SuggestionsController extends \BaseController {
 
 		if($status == 'none') {
 			EventLogger::printEventLogs(null, 'completion-none', null, 'Web');
-		}
-		else {
+		} else {
 			if($status == 'complete') {
 				EventLogger::printEventLogs(null, 'completion-complete', ['suggestions' => $suggestions], 'Web');
 			}	elseif($status == 'incomplete') {

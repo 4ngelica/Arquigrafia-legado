@@ -93,6 +93,8 @@ Route::get('/photos/upload','PhotosController@form');
 Route::get('/photos/migrar','PhotosController@migrar');
 Route::get('/photos/rollmigrar','PhotosController@rollmigrar');
 Route::get('/photos/download/{photo_id}','PhotosController@download');
+Route::get('/photos/completeness', 'PhotosController@showCompleteness');
+Route::get('/photos/to_complete', 'PhotosController@getCompletenessPhotos');
 Route::resource('/photos','PhotosController');
 
 /* SEARCH PAGE */

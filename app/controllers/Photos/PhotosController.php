@@ -19,7 +19,7 @@ class PhotosController extends \BaseController {
   {
     // Filtering if user is logged out, redirect to login page
     $this->beforeFilter('auth',
-      array( 'except' => ['index', 'show']));
+      array( 'except' => ['index', 'show', 'showCompleteness', 'getCompletenessPhotos']));
     $this->date = $date ?: new Date;
   }
 
@@ -811,8 +811,7 @@ class PhotosController extends \BaseController {
       }
   }
 
-  public function destroy($id)
-  {
+  public function destroy($id) {
     $photo = Photo::find($id);
     foreach($photo->tags as $tag) {
       $tag->count = $tag->count - 1;
@@ -824,5 +823,17 @@ class PhotosController extends \BaseController {
 
     EventLogger::printEventLogs($id, "delete", null, "Web");
     return Redirect::to('/users/' . $photo->user_id);
+  }
+
+  public function showCompleteness() {
+    return View::make('/photos/completeness', []);
+  }
+
+  public function getCompletenessPhotos() {
+	  $photosObj = Photo::where('accepted', 0)->where('type', '<>', 'video')->whereNull('institution_id')->orderByRaw("RAND()")->take(50)->get()->shuffle();
+
+		return \Response::json((object)[
+			'photos' => $photosObj,
+		]);
   }
 }

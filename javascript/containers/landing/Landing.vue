@@ -15,6 +15,7 @@
   import LandingPage5 from '../../components/landing/LandingPage5.vue';
   import LandingPage6 from '../../components/landing/LandingPage6.vue';
   import LandingPage7 from '../../components/landing/LandingPage7.vue';
+  import CornerRibbon from '../../components/general/CornerRibbon.vue';
 
   export default {
     name: 'Landing',
@@ -29,6 +30,7 @@
       LandingPage5,
       LandingPage6,
       LandingPage7,
+      CornerRibbon,
     },
     methods: mapActions([
       'setCurrentLang',
@@ -38,6 +40,12 @@
 
 <template>
   <div>
+    <CornerRibbon
+      text1="Contribua com o Arquigrafia."
+      text2="Saiba como clicando aqui!"
+      link="/photos/completeness"
+      color="blue"
+    />
     <LandingNavigationMenu />
     <HeaderPage :handleChangeLang="(lang) => setCurrentLang({ lang })" />
     <LandingPage1 :handleChangeLang="(lang) => setCurrentLang({ lang })" />

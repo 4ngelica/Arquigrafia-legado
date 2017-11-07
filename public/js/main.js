@@ -30,23 +30,6 @@ $(document).ready(function() {
 
 	});
 
-
-	var bottom_page = $("#bottom-page");
-	bottom_page.click(function (event) {
-		event.preventDefault();
-
-		nav_clicked = true;
-
-		var go_to = $(this).children().attr("href");
-		$("html, body").animate({
-			scrollTop: $(go_to).offset().top
-		}, 900, 'easeInOutQuart', function () {
-			nav_clicked = false;
-		});
-
-	});
-
-
 	var sections_height = $(window).height();
 	$(window).scroll(function() {
 		if (!nav_clicked) {

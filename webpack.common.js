@@ -11,6 +11,7 @@ module.exports = {
     default: './javascript/containers/default',
     notifications: './javascript/containers/notifications',
     landing: './javascript/containers/landing',
+    photosCompleteness: './javascript/containers/photos-completeness',
   },
   output: {
     filename: '[name].bundle.js',
@@ -32,6 +33,10 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: "babel-loader"
+      },
+      {
+        test: /\.css$/,
+        use: [ 'style-loader', 'css-loader' ],
       },
     ]
   },

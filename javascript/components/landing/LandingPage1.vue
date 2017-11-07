@@ -1,5 +1,6 @@
 <script>
   import i18n from '../../lang/i18n';
+  import BottomPageStrip from './BottomPageStrip.vue';
 
   export default {
     name: 'LandingPage1',
@@ -9,6 +10,9 @@
         type: Function,
         required: true,
       },
+    },
+    components: {
+      BottomPageStrip,
     },
   };
 </script>
@@ -21,13 +25,13 @@
       <div class="cadastro-button"><a href="/home">Ir para o site >></a></div>
       <div class="lang-button"><a href="#" @click="handleChangeLang('en')">en</a></div>
       <div class="lang-button"><a href="#" @click="handleChangeLang('pt')">pt</a></div>
-      <div class="search-field">
-        <form id="tfnewsearch" action="/search" method="post" accept-charset="UTF-8" target="_blank">
-          <input type="text" class="tftextinput" style="color:#000" name="q" size="21" maxlength="120" value="">
-          <input type="submit" value="search" class="tfbutton" style="background:none;" />
-          <input type="hidden" value="8" name="perPage" />
-        </form>
-      </div>
+      <!-- <div class="search&#45;field"> -->
+      <!--   <form id="tfnewsearch" action="/search" method="post" accept&#45;charset="UTF&#45;8" target="_blank"> -->
+      <!--     <input type="text" class="tftextinput" style="color:#000" name="q" size="21" maxlength="120" value=""> -->
+      <!--     <input type="submit" value="search" class="tfbutton" style="background:none;" /> -->
+      <!--     <input type="hidden" value="8" name="perPage" /> -->
+      <!--   </form> -->
+      <!-- </div> -->
     </div>
     <!-- END HEADER PAGINA INICIAL -->
     <div id="page1" class="wrapper">
@@ -75,8 +79,9 @@
       <img src="/img/arrow-landing.png" />
     </div>
 
-    <div id="bottom-page">
-      <a href="#page2">{{ $t('landing.textPage1') }}</a>
-    </div>
+    <BottomPageStrip
+      :text="$t('landing.textPage1')"
+      link="#page2"
+    />
   </div>
 </template>

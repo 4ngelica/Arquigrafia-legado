@@ -13,10 +13,10 @@
 
   <!-- CSS -->
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-  {{-- <link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet"> --}}
+  <link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet">
   <link href="{{ URL::to("/") }}/css/grid.css" rel="stylesheet">
-  {{-- <link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.min.css" rel="stylesheet"> --}}
-  {{-- <link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.theme.min.css" rel="stylesheet"> --}}
+  <link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.theme.min.css" rel="stylesheet">
   <!-- END CSS -->
 </head>
 <body>
