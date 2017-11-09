@@ -1,9 +1,4 @@
-
-
-
 $(document).ready(function(){
-
-	
 	$('#newInstitutionalAlbum').on('click', function (e) {
 			e.preventDefault();
 			$('#mask').fadeIn('fast');
@@ -12,7 +7,7 @@ $(document).ready(function(){
 
 	$('#formRepopulate form p.error').hide();
 	$('#formRepopulate form').submit(function (e) {
-	 	e.preventDefault();
+    e.preventDefault();
 		var form = $(this);
 		var data = form.serializeArray();
 		$.post('/albums/institutionalAlbum', data)
@@ -22,18 +17,7 @@ $(document).ready(function(){
 			} else {
 				form.find('p.error').show();
 			}
-			
 		});
 	});
-
-
-
-
-	
-
-
 });
-
-
-
 
