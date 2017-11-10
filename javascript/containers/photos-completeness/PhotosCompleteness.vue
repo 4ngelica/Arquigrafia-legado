@@ -33,9 +33,9 @@
       <div id="search_result" class="twelve columns row">
         <h1>Aprimorando o acervo</h1>
         <p>Agora você pode compartilhar seu conhecimento sobre a arquitetura representada em uma imagem!</p>
-        <p>Para contribuir clique em "Ajude a completar dados" a partir da página com os detalhes de qualquer imagem inserida por membros do Arquigrafia.</p>
+        <p>Para contribuir, clique em "Ajude a completar dados" a partir da página com os detalhes de qualquer imagem inserida por usuários do Arquigrafia.</p>
         <p>Você será questionado para completar dados faltantes ou revisar dados já inseridos.</p>
-        <p>O objetivo é completar e verificar dados de imagens, garantindo maior qualidade. Comece agora mesmo a contribuir acessando qualquer imagem abaixo e ajude a aprimorar o nosso acervo!</p>
+        <p>Comece agora mesmo a contribuir acessando uma imagem abaixo e ajude a aprimorar o nosso acervo!</p>
       </div>
     </div>
     <div v-if="store.state.isLoadingPhotos">
