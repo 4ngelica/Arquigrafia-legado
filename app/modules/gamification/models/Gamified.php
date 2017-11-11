@@ -43,4 +43,15 @@ class Gamified extends \Eloquent {
   public static function isGamified($variationId) {
     return $variationId == 1;
   }
+
+  /**
+   * Get the tag for gamified/non-gamified version
+   * @return  {String}  VG for gamified and VN for non gamified
+   */
+  public static function getGamifiedVariationTag() {
+    $variationId = self::getGamifiedVariationId();
+
+    if ($variationId == 1) return 'VG';
+    else return 'VN';
+  }
 }
