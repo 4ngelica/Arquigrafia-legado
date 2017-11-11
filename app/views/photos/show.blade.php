@@ -596,7 +596,7 @@
 
 
       <!-- Suggestions Modal Button -->
-      @if ($photos->institution == null && $photos->type != "video")
+    @if ($photos->institution == null && $photos->type != "video")  
         @if (!$isReviewing && $completeness['present'] != 100)
           <div class="modal-wrapper">
             <div class="title2">Você conhece mais informações sobre esta arquitetura?</div>
@@ -624,7 +624,7 @@
         	</div>
         @elseif($isReviewing)
           <div class="modal-wrapper">
-            <div class="title1">Esta foto tem dados em revisão que serão validados antes de serem disponibilizados</div>
+            <div class="title1">A revisão desta imagem está temporariamente bloqueada até que a análise de sugestões feitas por membros do Arquigrafia seja concluída.</div>
           </div>
         @elseif($completeness['present'] == 100)
           <div class="modal-wrapper">
@@ -652,7 +652,7 @@
             </p>
           </div>
         </div>
-      @endif
+      @endif 
 
       <h4>Licença:</h4>
       <a class="tooltip_license"
