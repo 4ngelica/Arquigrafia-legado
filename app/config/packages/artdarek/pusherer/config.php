@@ -18,17 +18,17 @@ return array(
 	/**
 	 * App id
 	 */
-	'app_id' => '301955',
+	'app_id' => '',
 
 	/**
 	 * App Key
 	 */
-	'key' => '2b939ef19651ba2daa48',
+	'key' => '',
 
 	/**
 	 * App Secret
 	 */
-	'secret' => '277fbdbb721a38741e1d',
+	'secret' => '',
 
 	/**
 	 * App Options
