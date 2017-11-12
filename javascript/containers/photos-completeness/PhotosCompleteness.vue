@@ -31,12 +31,16 @@
   <div>
     <div class="container">
       <div id="search_result" class="twelve columns row">
-        <h1>O poder da colaboração: a força da inteligência coletiva!</h1>
-	<p>Grandes grupos de pessoas podem produzir grandes transformações, somando suas inteligências com o mesmo propósito.</p>
-        <p>Pensando nisso, o Arquigrafia quer somar forças com você para aprimorar o acervo de imagens que agora conta com mais de 12300 imagens.</p>
-        <p>Para contribuir clique em "Ajude a completar dados" a partir da página de qualquer imagem inserida por usuários particulares do Arquigrafia.</p>
-        <p>A partir daí, questões irão auxiliar você a completar dados faltantes ou revisar dados já inseridos.</p>
-        <p>Comece agora mesmo a contribuir acessando uma imagem abaixo e ajude a aprimorar a qualidade das informações de nosso acervo!</p>
+       <!-- <h1>O poder da colaboração: a força da inteligência coletiva!</h1>-->
+        <b>
+	<p>Ajude o Arquigrafia a ser uma fonte de conhecimento e informação sobre Arquitetura e seus Espaços Urbanos no mundo!</p>
+        <p>Você pode colaborar complementado os dados sobre as imagens.</p>
+        <p>Clique em "Ajude a completar dados" a partir da página de qualquer imagem compartilhada por usuários particulares do Arquigrafia.</p>
+        <p>Questões vão auxiliar você a completar ou revisar os dados já inseridos.</p>
+        <p>Juntos vamos aprimorar esse acervo de mais de 12300 imagens.</p>
+<!--<p>Comece agora mesmo a contribuir acessando uma imagem abaixo e ajude a aprimorar a qualidade das informações de nosso acervo!</p>-->
+<p> Contamos com você!</p>
+      </b>
       </div>
     </div>
     <div v-if="store.state.isLoadingPhotos">
