@@ -1,0 +1,539 @@
+/* common */
+.truncate {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.noselect {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.clearfix:after,
+.clearfix:before {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+/* jbox style */
+.jBox-container {
+	width: 350px;
+	height: auto;
+	min-height: 350px;
+	background: #dadada;
+	margin: 50px;
+	display: inline-table;
+}
+
+.jBox-footer button {
+  width: 33.33%;
+  height: 95px;
+  border: 0;
+  padding: 0;
+  display: block;
+  float: left;
+  background: center 15px no-repeat;
+  transition: background-color .2s;
+  padding: 50px 0 0;
+  font-size: 14px;
+}
+
+.jBox-footer button:active {
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2);
+}
+
+.jBox-footer .nao-button {
+  background-size: 38px auto;
+  background-image: url(/img/suggestions-modal/nao-button.png);
+}
+
+.jBox-footer .nao-button:hover {
+  background-color: #eee;
+}
+
+.jBox-footer .sim-button {
+  background-size: 43px auto;
+  background-image: url(/img/suggestions-modal/sim-button.png);
+}
+
+.jBox-footer .sim-button:hover {
+  background-color: #eee;
+}
+
+.jBox-footer .nao-sei-button {
+  background-size: 38px auto;
+  background-image: url(/img/suggestions-modal/nao-sei-button.png);
+}
+
+.jBox-footer .nao-sei-button:hover {
+  background-color: #eee;
+}
+
+.jBox-title .close-button {
+  background: url(/img/suggestions-modal/close-button.png) center center no-repeat;
+  background-size: contain;
+  opacity: 0.4;
+  width: 20px;
+  height: 18px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  border: none;
+  margin: 5px 5px 0 0;
+}
+
+.jBox-title .close-button:hover {
+	opacity: 0.8;
+}
+
+
+.jBox-title {
+  font-size: 26px;
+  color: #000;
+  font-weight: 300;
+  text-align: center;
+  padding: 0;
+  line-height: 80px;
+  display: flex;
+  justify-content: center;
+  background-color: #dadada !important;
+  border-bottom: 0 !important;
+}
+
+.jBox-footer {
+  border-top: 0;
+  background: #fff;
+  padding: 0;
+}
+
+.jBox-content {
+  color: #000;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 300px;
+  padding: 0 20px;
+  scroll: false;
+}
+
+.points-container {
+  position: absolute;
+  left: 0px;
+  top: 30px;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 8px;
+}
+
+.points-container .points-info {
+  display: none;
+  width: 100%;
+  min-width: 180px;
+  font-size: 11px;
+  position: absolute;
+  top: 30px;
+  left: -5px;
+  background: #fff;
+  text-align: center;
+  padding: 5px;
+  -webkit-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.35);
+  -moz-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.35);
+  box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.35);
+  color: #000;
+  z-index: 999;
+}
+
+.points-container:hover .points-info {
+  display: block;
+}
+
+.points-container p {
+  font-size: 12px;
+  text-align: left;
+  margin: 0;
+  line-height: 14px;
+}
+
+.points-container .bold-text {
+  font-weight: bold;
+}
+
+.field-icon {
+	width: 75px;
+	height: 75px;
+	background: #fff;
+	border-radius: 50%;
+	margin-top: -50px;
+}
+
+.field-name {
+	font-weight: 700;
+	/*margin-top: auto;*/
+  font-size: 17px;
+}
+
+.field-image {
+  max-width: 100%;
+  max-height: 180px;
+  padding-bottom: 10px;
+}
+
+.field-question {
+	align-self: center;
+	/*margin-top: auto;*/
+	margin-top: 15px;
+	margin-bottom: 15px;
+  font-size: 17px;
+}
+
+/* sugestion box */
+
+.jBox-content.sugestion {
+	justify-content: start;
+  padding: 0 10px;
+}
+
+.field-name.sugestion {
+	margin-top: 0px;
+	font-size: 14px;
+}
+
+.error-message.sugestion {
+	margin-top: 0px;
+	font-size: 12px;
+  color: red;
+  width: 280px;
+  display: table;
+  margin: 0 auto;
+}
+
+.question-container {
+  width: 280px;
+  display: table;
+  margin: 0 auto;
+}
+
+.field-question.sugestion {
+  width: 100%;
+	align-self: center;
+	margin: 20px 0 10px 0;
+}
+
+textarea.sugestion {
+	max-width: 300px;
+	width: 100%;
+	max-height: 120px;
+	margin-bottom: 20px;
+	border: none;
+	min-height: 100px;
+	margin: 10px 0;
+  resize: none;
+}
+
+.enviar-button {
+	background: #000;
+	color: #fff;
+	padding: 5px 10px;
+	border: none;
+	font-size: 14px;
+	float: right;
+	font-weight: 700;
+}
+
+.enviar-button:hover {
+	background: #666;
+	transition: background-color .2s;
+}
+
+.jBox-footer.sugestion button {
+  width: 100%;
+  height: 70px;
+  border: 0;
+  padding: 0;
+  display: block;
+  text-align: right;
+  font-weight: 700;
+  background: center 15px no-repeat;
+  transition: background-color .2s;
+  padding: 5px 70px 5px 5px;
+  font-size: 14px;
+}
+
+.jBox-footer.sugestion .fechar-button {
+	background: url(/img/suggestions-modal/fechar-button.png) right 25px center no-repeat;
+}
+
+.jBox-footer.sugestion .fechar-button:hover {
+	background: url(/img/suggestions-modal/fechar-button.png) right 25px center no-repeat #eee;
+}
+
+.jBox-footer.sugestion .pular-etapa-button {
+	background: url(/img/suggestions-modal/pular-etapa-button.png) right 25px center no-repeat;
+}
+
+.jBox-footer.sugestion .pular-etapa-button:hover {
+	background: url(/img/suggestions-modal/pular-etapa-button.png) right 25px center no-repeat #eee;
+}
+
+.jBox-container.feedback {
+  width: 550px;
+}
+
+/* SUGGESTION MODAL BUTTON - Photos */
+.modal-wrapper {
+  font-size: 16px;
+}
+
+.modal-wrapper .title1 {
+  font-weight: 300;
+  margin-bottom: 10px;
+  text-align: justify;
+}
+
+.modal-wrapper .title2 {
+  font-weight: 700;
+  margin-bottom: 7px;
+  text-align: justify;
+}
+
+.modal-wrapper .modal-button {
+  background: url(/img/suggestions-modal/helping-hand.png) left 7px center no-repeat #eee;
+  background-size: 25px 25px;
+  float: left;
+  padding: 10px 10px 10px 40px;
+  border-radius: 10px;
+}
+
+.modal-wrapper .modal-button a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.modal-wrapper .modal-button:hover {
+  background: url(/img/suggestions-modal/helping-hand.png) left 7px center no-repeat #ccc;
+  background-size: 25px 25px;
+  transition: 0.2s linear;
+  cursor: pointer;
+}
+
+/* FILL BAR */
+
+.progress-bar {
+  width: 100%;
+  height: 30px;
+  background: #fff;
+}
+
+.progress-bar.button {
+  height: 25px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.progress-bar .fill-bar {
+  width: 0%;
+  height: 25px;
+  background: none;
+  text-align: center;
+  color: #fff;
+  padding-top: 5px;
+}
+
+.progress-bar .fill-bar.fill-0 {
+  width: 0%;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.progress-bar .fill-bar.fill-10 {
+  width: 10%;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.progress-bar .fill-bar.fill-20 {
+  width: 20%;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.progress-bar .fill-bar.fill-30 {
+  width: 30%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.progress-bar .fill-bar.fill-30 {
+  width: 30%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.progress-bar .fill-bar.fill-40 {
+  width: 40%;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.progress-bar .fill-bar.fill-50 {
+  width: 50%;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.progress-bar .fill-bar.fill-60 {
+  width: 60%;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.progress-bar .fill-bar.fill-70 {
+  width: 70%;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.progress-bar .fill-bar.fill-80 {
+  width: 80%;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.progress-bar .fill-bar.fill-90 {
+  width: 90%;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.progress-bar .fill-bar.fill-100 {
+  width: 100%;
+  background: rgba(0, 0, 0, 1);
+}
+
+.progress-bar.button {
+  height: 25px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  position: relative;
+  font-size: 0;
+}
+
+.progress-bar.button .fill-bar {
+  height: 18px;
+  background: none;
+  text-align: center;
+  color: #fff;
+  padding-top: 5px;
+  padding-bottom: 2px;
+  display: inline-table;
+  font-size: 13px;
+  position: relative;
+  cursor: pointer;
+}
+
+.progress-bar.button .fill-bar.black {
+  color: #000;
+}
+
+.progress-bar.button .bar-info {
+  display: none;
+  width: 100%;
+  min-width: 120px;
+  font-size: 11px;
+  position: absolute;
+  bottom: 30px;
+  right: -5px;
+  background: #fff;
+  text-align: center;
+  padding: 5px;
+  -webkit-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.35);
+  -moz-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.35);
+  box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.35);
+  color: #000;
+}
+
+.progress-bar.button .bar-info::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 8px;
+  border-color: white transparent transparent transparent;
+}
+
+.progress-bar.button #completed:hover .bar-info {
+  display: block;
+}
+
+.progress-bar.button #revision:hover .bar-info {
+  display: block;
+}
+
+.progress-bar.button #missing:hover .bar-info {
+  display: block;
+}
+
+.progress-bar.button #completed {
+  background: rgba(0, 0, 0, 1);
+}
+
+.progress-bar.button #revision {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.progress-bar.button #missing {
+  background: rgba(255, 255, 255, 1);
+}
+
+/*feedback box */
+
+.jBox-content.feedback {
+  width: 550px;
+}
+
+.field-name.feedback {
+  font-size: 24px;
+  /*margin-top: 0;*/
+}
+
+.image-sugestions {
+  margin-bottom: 30px;
+  width: 100%;
+  text-align: center;
+  margin-top: auto;
+}
+
+.single-image-sugestions {
+  display: inline-block;
+  width: 150px;
+  margin-right: 10px;
+}
+
+.single-image-sugestions:last-child {
+  margin-right: 0;
+}
+
+.single-image-sugestions img {
+  width: 100%;
+  height: auto;
+}
+
+span.image-sugestions-text {
+  font-size: 16px;
+  text-align: center;
+  display: block;
+  margin-bottom: 10px;
+  color: #000;
+}
+
+.nav-steps-container {
+  width: 100%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  text-align: center;
+}
+.nav-steps ul { margin: 0; font-size: 15pt; }
+.nav-steps ul > li:before { content: '•'; }
+.nav-steps ul > li { padding: 0; display: inline-block; color: #bbb; }
+.nav-steps ul > li.-selected { color: #000; }

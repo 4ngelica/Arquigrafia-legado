@@ -1,7 +1,7 @@
 <?php
 namespace modules\notifications\models;
 
-use \Tricki\Notification\Models\Notification;
+use \Tricki\Notification\Models\Notification as TrickiNotification;
 use User;
 use modules\gamification\models\Badge;
 

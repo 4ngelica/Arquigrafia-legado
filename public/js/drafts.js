@@ -104,13 +104,13 @@ $(document).ready(function() {
     }
   });
 
-  $('.delete_draft').live('click', function (evt) {
+  $('.delete_draft').on('click', function (evt) {
     $('a.delete_draft_confirm').data('draft', $(this).data('draft'));
     $('#mask').fadeIn('fast');
     $('#draft_window').fadeIn('slow');
   });
 
-  $('.delete_draft_confirm').live('click', function (evt) {
+  $('.delete_draft_confirm').on('click', function (evt) {
     var id = $(this).data('draft');
     var draft = $('#draft_' + id);
     var data = {

@@ -1,0 +1,58 @@
+{
+  "name": "arquigrafia",
+  "version": "1.0.0",
+  "license": "CC-BY-3.0",
+  "scripts": {
+    "build": "NODE_ENV=production webpack --config webpack.prod.js",
+    "start": "webpack --watch --config webpack.dev.js",
+    "test": "jest javascript",
+    "test:watch": "jest --watch javascript",
+    "lint": "eslint ./javascript/",
+    "php": "./start-php-server.sh"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.2",
+    "babel-jest": "^21.2.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "css-loader": "^0.28.7",
+    "empty-module": "0.0.2",
+    "eslint": "^4.10.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jest": "^21.2.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
+    "eslint-plugin-vue": "^2.1.0",
+    "jest": "^21.2.1",
+    "node-sass": "^4.6.0",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.19.0",
+    "vue-loader": "^13.4.0",
+    "vue-template-compiler": "^2.5.3",
+    "webpack": "^3.8.1",
+    "webpack-merge": "^4.1.1"
+  },
+  "dependencies": {
+    "@panter/vue-i18next": "^0.8.1",
+    "bluebird": "^3.5.1",
+    "i18next": "^10.0.7",
+    "i18next-browser-languagedetector": "^2.1.0",
+    "jbox": "^0.4.8",
+    "jquery": "^3.2.1",
+    "moment": "^2.19.1",
+    "node-fetch": "^1.7.3",
+    "vue": "^2.5.3",
+    "vue-awesome": "^2.3.3",
+    "vue-fraction-grid": "^1.1.0",
+    "vue-simple-spinner": "^1.2.8",
+    "vuex": "^3.0.1"
+  },
+  "jest": {
+    "globals": {
+      "window": true
+    }
+  }
+}

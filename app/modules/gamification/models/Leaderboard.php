@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace modules\gamification\models;
 use User;
 use Illuminate\Support\Collection as Collection;
@@ -17,7 +17,7 @@ class Leaderboard extends \Eloquent {
   }
 
   public function scopeFromUsers($query, $users) {
-    $ids = $users;    
+    $ids = $users;
     if ($users instanceof Collection) {
       $ids = array_unique($users->lists('id'));
     }
@@ -25,7 +25,10 @@ class Leaderboard extends \Eloquent {
   }
 
   public function increaseScore($save = true) {
-    $this->count += 1;
+    if($this->type == 'completion')
+      $this->count += 5;
+    else
+      $this->count += 1;
     if ($save) {
       $this->save();
     }
@@ -46,6 +49,11 @@ class Leaderboard extends \Eloquent {
       ]);
     static::create([
         'type' => 'evaluations',
+        'count' => 0,
+        'user_id' => $user->id
+      ]);
+    static::create([
+        'type' => 'completion',
         'count' => 0,
         'user_id' => $user->id
       ]);

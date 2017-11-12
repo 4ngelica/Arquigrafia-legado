@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection as Collection;
 use modules\institutions\models\Institution;
 use modules\collaborative\models\Like as Like;
 use modules\evaluations\models\Evaluation as Evaluation;
+use modules\moderation\models\Suggestion as Suggestion;
 
 class Photo extends Eloquent {
 
@@ -46,6 +47,7 @@ class Photo extends Eloquent {
 		'support',
 		'authorized',
 		'institution_id',
+		'project_author',
 	];
 
 	static $allowModificationsList = [
@@ -59,19 +61,66 @@ class Photo extends Eloquent {
 		'NO' => ['Não', '-nc']
 	];
 
-	private static	$information_questions = [
-		'city' => 'Deseja adicionar a cidade da obra?',
-		'country' => 'Deseja adicionar o país da obra?',
-		'dataCriacao' => 'Qual é a data desta imagem?',
-		'description' => 'Deseja adicionar uma descrição para a imagem?',
-		'district' => 'Qual é o bairro da obra?',
-		'imageAuthor' => 'Quem é o autor desta imagem?',
-		'name' => 'Qual é o nome desta obra?',
-		'state' => 'Qual é o Estado desta arquitetura?',
-		'street' => 'Qual é a rua desta obra?',
-		'workAuthor' => 'Quem é o autor da obra?',
-		'workdate' => 'Quando foi construída a obra?'
+	public static $fields_data = [
+		'city'        => ['information' => 'Qual é a cidade desta obra?',
+					      'validation'  => 'Esta cidade está correta?',
+					      'name'        => 'Cidade',
+					      'type'        => 'string'],
+		'country'     => ['information' => 'Qual é o país desta obra?',
+						  'validation'  => 'Este país está correto?',
+						  'name'        => 'País',
+						  'type'        => 'string'],
+		'dataCriacao' => ['information' => 'Qual é a data desta imagem?',
+						  'validation'  => 'A data desta imagem está correta?',
+						  'name'        => 'Data da Imagem',
+						  'type'        => 'string'],
+		'description' => ['information' => 'Como você descreveria esta imagem?',
+						  'validation'  => 'A descrição desta imagem está correta?',
+						  'name'        => 'Descrição',
+						  'type'        => 'string'],
+		'district'    => ['information' => 'Qual é o bairro desta obra?',
+						  'validation'  => 'O bairro desta obra está correto?',
+						  'name'        => 'Bairro',
+						  'type'        => 'string'],
+		'imageAuthor' => ['information' => 'Quem é o autor desta imagem?',
+						  'validation'  => 'Este é o autor correto desta imagem?',
+						  'name'        => 'Autor',
+						  'type'        => 'string'],
+		'name'        => ['information' => 'Qual é o nome desta obra?',
+						  'validation'  => 'Este é o nome correto desta obra?',
+						  'name'        => 'Nome',
+						  'type'        => 'string'],
+		'state'         => ['information' => 'Em qual estado do país está esta arquitetura?',
+						  'validation'  => 'Este é o estado correto desta arquitetura?',
+						  'name'        => 'Estado',
+						  'type'        => 'string'],
+		'street'      => ['information' => 'Qual é o endereço desta obra?',
+						  'validation'  => 'Este é o endereço correto desta obra?',
+						  'name'        => 'Rua',
+						  'type'        => 'string'],
+		'authors'  => ['information' => 'Qual é o nome do autor deste projeto? (Havendo mais de um, separe por ";")',
+						  'validation'  => 'Este é o autor deste projeto?',
+						  'name'        => 'Autor do Projeto',
+						  'type'        => 'array_strings'],
+		'workDate'    => ['information' => 'Quando foi construída esta obra?',
+						  'validation'  => 'Esta é a data em que esta obra foi construída?',
+						  'name'        => 'Data da Obra',
+						  'type'        => 'string']
 	];
+
+	// public static	$information_questions = [
+	// 	'city' => 'Qual é a cidade da obra?',
+	// 	'country' => 'Qual é o país da obra?',
+	// 	'dataCriacao' => 'Qual é a data desta imagem?',
+	// 	'description' => 'Qual é a descrição para a imagem?',
+	// 	'district' => 'Qual é o bairro da obra?',
+	// 	'imageAuthor' => 'Quem é o autor desta imagem?',
+	// 	'name' => 'Qual é o nome desta obra?',
+	// 	'state' => 'Qual é o Estado desta arquitetura?',
+	// 	'street' => 'Qual é a rua desta obra?',
+	// 	'workAuthor' => 'Quem é o autor da obra?',
+	// 	'workDate' => 'Quando foi construída a obra?'
+	// ];
 
 	protected $date;
 
@@ -118,6 +167,11 @@ class Photo extends Eloquent {
 	public function evaluators()
 	{
 		return $this->belongsToMany('User', 'binomial_evaluation');
+	}
+
+	public function suggestions()
+	{
+		return $this->hasMany('modules\moderation\models\Suggestion');
 	}
 
 	public static function extractVideoId($url){
@@ -193,7 +247,7 @@ class Photo extends Eloquent {
 		return static::notInAlbum($album, $q)->withUser($user)
 			->withoutInstitutions()->paginate($perPage);
 
-		
+
 	}
 
 	public static function paginateInstitutionPhotosNotInAlbum($inst, $album, $q = null, $perPage = 24) {
@@ -234,7 +288,7 @@ class Photo extends Eloquent {
 	}
 
 
-	public static function getLastUpdatePhotoByUser($user_id) {		
+	public static function getLastUpdatePhotoByUser($user_id) {
 		return $dataUpdate = Photo::where("user_id", $user_id)->orderBy('updated_at','desc')->first();
 	}
 	public static function getLastUploadPhotoByUser($user_id) {
@@ -261,9 +315,9 @@ class Photo extends Eloquent {
 				//clean array for news id photo
 				$arrayPhotosId = array();
 				$flag=false;
-				
+
 				foreach ($avgPhotosBinomials as $avgPhotoBinomial) {
-				
+
 					if(abs($avgPhotoBinomial->avgPosition - $avg->avgPosition)<=25){
 						$flag=true;
 						array_push($arrayPhotosId,$avgPhotoBinomial->photo_id);
@@ -294,10 +348,10 @@ class Photo extends Eloquent {
  				if(!empty($photoObj) && !is_null($photoObj)){
  					$similarPhotosDB = DB::table('photos')
  					->select('id', 'name')
- 					->where('id',$photoObj->id)				
+ 					->where('id',$photoObj->id)
  					->get();
  					array_push($arrayPhotosDB,$similarPhotosDB[0]);
- 				} 	
+ 				}
 
 			}
 		}
@@ -369,7 +423,7 @@ class Photo extends Eloquent {
 	public function scopeInAlbum($query, $album, $q = null) {
 		return $query->whereHas('albums', function($query) use($album) {
 			$query->where('album_id', $album->id);
-		})->whereMatches($q);	
+		})->whereMatches($q);
 	}
 
 	public function scopeWhereMatches($query, $needle) {
@@ -400,7 +454,7 @@ class Photo extends Eloquent {
 
 	public function scopeWithBinomials($query, $binomials) {
 		foreach($binomials as $binomial => $avg) {
-			$query->whereIn('photos.id', function ($sub_query) use ($binomial, $avg) { 
+			$query->whereIn('photos.id', function ($sub_query) use ($binomial, $avg) {
 				$sub_query->select('photo_id')->from('binomial_evaluation')
 					->whereRaw('binomial_id = ' . $binomial)
 					->groupBy('photo_id')
@@ -412,7 +466,7 @@ class Photo extends Eloquent {
 	}
 
 	public function scopeWithTags($query, $tags) {
-		if ( ! empty($tags) ) { 
+		if ( ! empty($tags) ) {
 			$query->whereHas('tags', function($sub_query) use ($tags) {
 				$sub_query->whereIn('name', $tags);
 			});
@@ -421,15 +475,15 @@ class Photo extends Eloquent {
 	}
 
 	public function scopeWithTagsVarious($query, $tags) {
-		if(!empty($tags)) { 
-				
+		if(!empty($tags)) {
+
 				$query->join('tag_assignments','tag_assignments.photo_id','=','photos.id');
 				$query->join('tags','tags.id','=','tag_assignments.tag_id');
 				$query->where(function($sub_query) use ($tags) {
 					foreach ($tags as $tag) {
-						$sub_query->orWhere('tags.name', '=', $tag);						
+						$sub_query->orWhere('tags.name', '=', $tag);
 					}
-				});	
+				});
 		}
 		return $query;
 	}
@@ -438,25 +492,25 @@ class Photo extends Eloquent {
 		if ( ! empty($authors) ) {
 			$query->whereHas('authors', function($sub_query) use ($authors) {
 				$sub_query->whereIn('name', $authors);
-				
-				
+
+
 			});
 		}
 		return $query;
 	}
 	public function scopeWithAuthorsVarious($query, $authors) {
 
-			if(!empty($authors)) { 
-				
+			if(!empty($authors)) {
+
 				$query->join('photo_author','photo_author.photo_id','=','photos.id');
 				$query->join('authors','authors.id','=','photo_author.author_id');
 				$query->where(function($sub_query) use ($authors) {
 					foreach ($authors as $author) {
 						$sub_query->orWhere('authors.name', 'LIKE', '%' .  $author. '%');
 					}
-				});	
+				});
 			}
-			
+
 		return $query;
 	}
 
@@ -472,11 +526,11 @@ class Photo extends Eloquent {
 
 
 
-	public function getFormatWorkdateAttribute($dateWork,$type) {		
+	public function getFormatWorkdateAttribute($dateWork,$type) {
 		return  $this->date->formatToWorkDate($dateWork,$type);
 	}
 
-	public function getFormatDataCriacaoAttribute($dataCriacao,$type) {		
+	public function getFormatDataCriacaoAttribute($dataCriacao,$type) {
 		return  $this->date->formatToDataCriacao($dataCriacao,$type);
 	}
 
@@ -536,14 +590,14 @@ class Photo extends Eloquent {
 
 	public static function search($input, $tags, $binomials, $authorsArea) {
 
-		if(Session::has('CurrPage') && Session::get('CurrPage')!= 1){ 			
+		if(Session::has('CurrPage') && Session::get('CurrPage')!= 1){
 		   Session::forget('CurrPage');
 		}else{
 		   Session::put('CurrPage',1);
 		}
 		foreach (['workdate', 'dataCriacao', 'dataUpload'] as $date) {
 			if ( isset($input[$date])
-					&& DateTime::createFromFormat('Y', $input[$date]) == FALSE ) { 				
+					&& DateTime::createFromFormat('Y', $input[$date]) == FALSE ) {
 					$input[$date] = Date::formatedDate($input[$date]);
 			}
 		}
@@ -554,19 +608,19 @@ class Photo extends Eloquent {
 				$query->where($license, array_pull($input, $license) );
 			}
 		}
-		if(Input::has('workAuthor_area')){  						
-			$input = array_except($input, 'workAuthor_area'); 
+		if(Input::has('workAuthor_area')){
+			$input = array_except($input, 'workAuthor_area');
 		}
-		foreach ( $input as $column => $value) { 			
+		foreach ( $input as $column => $value) {
 			$query->where('photos.'.$column, 'LIKE', '%' . $value . '%');
 		}
 
 		$query->withTagsVarious($tags);
-		$query->withBinomials($binomials);			
+		$query->withBinomials($binomials);
 		$query->withAuthorsVarious($authorsArea);
 
 		$query->groupBy('photos.id');
-		$resultSet = $query->get();		
+		$resultSet = $query->get();
     	return $resultSet;
 	}
 
@@ -574,14 +628,14 @@ class Photo extends Eloquent {
 
 
 	public function authorTextFormat($authorName){
-		
+
 		if(strpos($authorName, ",")){
 			$arrayAuthor = explode(',', $authorName);
 			$first = true;
-			$authorString = ""; 
+			$authorString = "";
 			foreach ($arrayAuthor as $t ) {
 				if($first == true){
-					$authorString.= strtoupper($t).", ";				
+					$authorString.= strtoupper($t).", ";
 				}else{
 					$arrayText = explode(' ', $t);
 					foreach ($arrayText as $a ) {
@@ -590,16 +644,16 @@ class Photo extends Eloquent {
 						}else{
 							$authorString.= $a." ";
 						}
-							
+
 					}
 				}
-				$first = false;	
+				$first = false;
 			}
-			
+
 		}else{
 			$authorString = ucwords($authorName);
 		}
-		return $authorString;		
+		return $authorString;
 	}
 
 	public function hasInstitution() {
@@ -608,23 +662,23 @@ class Photo extends Eloquent {
 
 
 	public function scopeWithTagsName($query, $tag) {
-		if(!empty($tag)) { 				
+		if(!empty($tag)) {
 				$query->join('tag_assignments','tag_assignments.photo_id','=','photos.id');
 				$query->join('tags','tags.id','=','tag_assignments.tag_id');
-				$query->where(function($sub_query) use ($tag) {					
-						$sub_query->where('tags.name', '=', $tag); 
-				});	
+				$query->where(function($sub_query) use ($tag) {
+						$sub_query->where('tags.name', '=', $tag);
+				});
 		}
 		return $query;
 	}
 
 	public function scopeWithAuthorName($query, $author) {
-		if(!empty($author)) { 				
+		if(!empty($author)) {
 				$query->join('photo_author','photo_author.photo_id','=','photos.id');
 				$query->join('authors','authors.id','=','photo_author.author_id');
-				$query->where(function($sub_query) use ($author) {					
-						$sub_query->where('authors.name', '=', $author); 
-				});	
+				$query->where(function($sub_query) use ($author) {
+						$sub_query->where('authors.name', '=', $author);
+				});
 		}
 		return $query;
 	}
@@ -634,16 +688,16 @@ class Photo extends Eloquent {
 	public function scopeWithAttributesBuilder($query, $needle) {
 		$qq = $query->orWhere('photos.name', 'LIKE', '%'. $needle .'%')
 			->orWhere('photos.description', 'LIKE', '%'. $needle .'%')
-			->orWhere('photos.imageAuthor', 'LIKE', '%' . $needle . '%')			
+			->orWhere('photos.imageAuthor', 'LIKE', '%' . $needle . '%')
 			->orWhere('photos.country', 'LIKE', '%'. $needle .'%')
 			->orWhere('photos.state', 'LIKE', '%'. $needle .'%')
-			->orWhere('photos.city', 'LIKE', '%'. $needle .'%');			
-		return $qq;	
+			->orWhere('photos.city', 'LIKE', '%'. $needle .'%');
+		return $qq;
 	}
 
 	public function scopeWithBinomialsxxx($query, $binomials) {
 		foreach($binomials as $binomial => $avg) {
-			$query->whereIn('photos.id', function ($sub_query) use ($binomial, $avg) { //id //photos.id 
+			$query->whereIn('photos.id', function ($sub_query) use ($binomial, $avg) { //id //photos.id
 				$sub_query->select('photo_id')->from('binomial_evaluation')
 					->whereRaw('binomial_id = ' . $binomial)
 					->groupBy('photo_id')
@@ -654,28 +708,28 @@ class Photo extends Eloquent {
 		return $query;
 	}
 
-	public static function search2($needle,$perPage = 24 ) { 
+	public static function search2($needle,$perPage = 24 ) {
 
 		$query = static::query()->select(DB::raw('photos.*'))
 		->withAttributesBuilder($needle)->withTagsName($needle)
 		->withAuthorName($needle)
-		->groupBy('photos.id')->paginate($perPage); 		
-    	
+		->groupBy('photos.id')->paginate($perPage);
+
     	return $query;
 	}
 
-	public static function searchPhotosField($needle,$perPage = 24 ) { 
+	public static function searchPhotosField($needle,$perPage = 24 ) {
 		$query = static::query()->select(DB::raw('photos.*'))
 		->withAttributesBuilder($needle)
 		->orderBy('photos.id')
 		->groupBy('photos.id')
-		->paginate($perPage); 
-		//$resultSet = $query->get(); 	
+		->paginate($perPage);
+		//$resultSet = $query->get();
     	//return $resultSet;
     	return $query;
 	}
 
-	public static function searchPhotosWithTags($needle,$perPage = 24 ) { 
+	public static function searchPhotosWithTags($needle,$perPage = 24 ) {
 		$query = static::query()->select(DB::raw('photos.*'))
 		->withTagsName($needle)
 		->orderBy('photos.id')
@@ -684,63 +738,169 @@ class Photo extends Eloquent {
     	return $query;
 	}
 
-	public static function searchPhotosWithAuthor($needle,$perPage = 24 ) { 
+	public static function searchPhotosWithAuthor($needle,$perPage = 24 ) {
 		$query = static::query()->select(DB::raw('photos.*'))
 		->withAuthorName($needle)
 		->orderBy('photos.id')
 		->groupBy('photos.id')
-		->paginate($perPage); 		
-    	
+		->paginate($perPage);
+
     	return $query;
 	}
 
 
 
 
-	public function scopePhotosVarious($query, $photos, $q = null) { 
-		if(!empty($photos)) { 				
+	public function scopePhotosVarious($query, $photos, $q = null) {
+		if(!empty($photos)) {
 				$query->where(function($sub_query) use ($photos) {
-					foreach ($photos as $photo) {				
-						$sub_query->orwhere('photos.id', '=', $photo->id);						
-					} })->whereMatches($q);	
+					foreach ($photos as $photo) {
+						$sub_query->orwhere('photos.id', '=', $photo->id);
+					} })->whereMatches($q);
 		}
 		return $query;
 	}
 
 
-	public static function paginatePhotosSearch($photos, $perPage = 36,$q = null) { 		
+	public static function paginatePhotosSearch($photos, $perPage = 36,$q = null) {
 		if($photos!= null){
-			$qq = static::PhotosVarious($photos, $q)->orderBy('photos.created_at', 'DESC')->paginate($perPage);			
+			$qq = static::PhotosVarious($photos, $q)->orderBy('photos.created_at', 'DESC')->paginate($perPage);
 			return $qq;
 		}else{
 			return null;
-		}			
+		}
 	}
 
-	
-	public static function paginateAllPhotosSearch($photos, $q = null, $perPage = 36) { 		
-		return static::PhotosVarious($photos,$q)->orderBy('photos.created_at', 'DESC')->paginate($perPage);	
+
+	public static function paginateAllPhotosSearch($photos, $q = null, $perPage = 36) {
+		return static::PhotosVarious($photos,$q)->orderBy('photos.created_at', 'DESC')->paginate($perPage);
 	}
 
-	public static function paginateAllPhotosSearchAdvance($photos, $q = null, $perPage = 36) { 		
-		return static::PhotosVarious($photos,$q)->orderBy('photos.created_at', 'DESC')->paginate($perPage);	
-		
+	public static function paginateAllPhotosSearchAdvance($photos, $q = null, $perPage = 36) {
+		return static::PhotosVarious($photos,$q)->orderBy('photos.created_at', 'DESC')->paginate($perPage);
+
 	}
 
-	public static function paginatePhotosSearchAdvance($photos, $perPage = 36,$q = null) {		
+	public static function paginatePhotosSearchAdvance($photos, $perPage = 36,$q = null) {
 		if($photos!= null)
-			return static::PhotosVarious($photos, $q)->orderBy('photos.created_at', 'DESC')->paginate($perPage);	
-		else 
+			return static::PhotosVarious($photos, $q)->orderBy('photos.created_at', 'DESC')->paginate($perPage);
+		else
 			return null;
-					
+
 	}
 
 	public static function fileNamePhoto($photo,$ext)
-	{	
+	{
 		if($photo!= null)
-			Photo::where('id',$photo->id)->update(['nome_arquivo' => $photo->id.".".$ext ]); 		
+			Photo::where('id',$photo->id)->update(['nome_arquivo' => $photo->id.".".$ext ]);
 	}
-	
+
+	public function checkValidationFields($field) {
+		$validation = ['city', 'country', 'description', 'district', 'imageAuthor', 'state', 'street', 'name', 'authors', 'workDate'];
+		if(!in_array($field, $validation))
+			throw new Exception('Unexpected field type');
+
+		// Defining main query
+		$query = Suggestion::join('photo_attribute_types', 'suggestions.attribute_type', '=', 'photo_attribute_types.id')
+		->where('suggestions.photo_id', $this->id)->where('photo_attribute_types.attribute_type', $field);
+
+		// Creating the sub-queries that we're going to use
+		$query1 = clone $query;
+		$query2 = clone $query;
+		$query3 = clone $query;
+
+    // Defining field content
+    if ($field == 'authors') {
+      // The 'authors' field has objects inside. This is the reason we have to implode the name of the authors
+      $authors = array_map(function($author) { return $author['name']; }, json_decode(json_encode($this[$field]),TRUE));
+      $fieldContent = implode('; ', $authors);
+    } else {
+      $fieldContent = $this[$field];
+    }
+
+    // Returning the status
+		if($query1->whereNull('suggestions.accepted')->count() > 0) {
+      // If the accepted field on suggestion is null, return reviewing
+			return 'reviewing';
+    } elseif($query2->where('suggestions.text', $fieldContent)->where('suggestions.accepted', 1)->count() > 0)
+    {
+			return 'reviewed';
+    } else {
+			return 'none';
+		}
+	}
+
+  /**
+   * This function returns the content of a given fieldName
+   * @params  {String}  fieldName  The name of the field that you wanna get the content
+   * @return  {Array, String}  Returns a string or a array of strings of that given content
+   */
+  public function getFieldContent($fieldName) {
+    // If the field is not authors, we can just return the field content
+    if ($fieldName !== 'authors') {
+      return $this[$fieldName];
+    }
+    // If the field required is 'authors' so we need to mount our data array
+    return array_map(function ($item) {
+      return $item->name;
+    }, json_decode(json_encode($this->authors)));
+  }
+
+	public function checkPhotoReviewing(){
+		$fields = ['city', 'country', 'description', 'district', 'imageAuthor','state', 'street', 'name', 'authors', 'workDate'];
+		foreach ($fields as $field) {
+			if($this->checkValidationFields($field) ==  'reviewing')
+				return true;
+		}
+		return false;
+	}
+
+	public static function updateSuggestion($field, $data, $id){
+		$photo = Photo::find($id);
+
+		switch ($field) {
+			case 'city':
+				$photo->city = $data;
+				break;
+			case 'country':
+				$photo->country = $data;
+				break;
+			case 'description':
+				$photo->description = $data;
+				break;
+			case 'district':
+				$photo->district = $data;
+				break;
+			case 'imageAuthor':
+				$photo->imageAuthor = $data;
+				break;
+			case 'state':
+				$photo->state = $data;
+				break;
+			case 'street':
+				$photo->street = $data;
+				break;
+			case 'name':
+				$photo->name = $data;
+				break;
+			case 'project_author':
+				$photo->project_author = $data;
+				break;
+      case 'authors':
+        $author = new Author();
+        // First, we're going to remove the current authors in photo
+        $author->deleteAuthorPhoto($photo);
+        // Then, we're saving the new authors to photo
+        $author->saveAuthors($data, $photo);
+			case 'workDate':
+				$photo->workDate = $data;
+				break;
+			default:
+				# code...
+				break;
+		}
+		$photo->save();
+	}
 
 }
 

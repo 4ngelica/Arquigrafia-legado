@@ -27,6 +27,6 @@
 	@else
 	   @include("includes.notes", ['user' => $user, 'max' => $max])
     @endif
- 	<?php } ?> 
+ 	<?php } ?>
     </div>
 @stop

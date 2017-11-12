@@ -29,17 +29,18 @@ $(document).ready(function() {
 		toggleCurrentPagePhotos(checkbox);
 	});
 
-	$('.ch_photo').live('click', function() {
+	$('.add').on('click', '.ch_photo', function() {
 		updatePageInfo($(this));
 	});
 
-	$('.ch_photo + img').live('click', function () {
+	$('.add').on('click', '.ch_photo + img', function () {
 		var checkbox = $(this).siblings('.ch_photo');
 		checkbox.toggleCheckbox();
 		updatePageInfo(checkbox);
+		return false;
 	});
 
-	$('.clear_search').live('click', function(e) {
+	$('.clear_search').on('click', function(e) {
 		var type = $(this).getType();
 		e.preventDefault();
 		searchPhotos(type, '');
@@ -186,7 +187,7 @@ function tooltipPhotos() {
 		var element = this;
 		var id = $(this).data('id');
 		var img = $('<img />').attr('src', '/arquigrafia-images/' + id + '_view.jpg')
-			.load(function () {
+			.on('load', function () {
 				if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
 					alert('broken image: ' + id);
 				} else {
@@ -194,7 +195,7 @@ function tooltipPhotos() {
 					var title = $(element).attr('title');
 					photo_content.append($(this));
 					photo_content.append('<p>' + title + '</p>');
-					
+
 					$(element).toolTip('image-tooltip-theme', photo_content.html(),
 						$(element).getPosition());
 				}
@@ -281,7 +282,7 @@ function requestPage(page, type, URL, callback, paginator, runInBackground) {
 		$("." + type + " .loader").hide();
 		data = parseData(data);
 		if (data == false) {
-			failedRequest(type, 'Aconteceu um erro! Tente novamente mais tarde.');	
+			failedRequest(type, 'Aconteceu um erro! Tente novamente mais tarde.');
 		} else {
 			callback(type, data, paginator, page);
 		}
@@ -353,7 +354,7 @@ var updateContent = function(type, response) {
 			resetData(type, response);
 	} else {
 		$(response['content']).appendTo('#' + type).hide().fadeIn(function() {
-			resetData(type, response);		
+			resetData(type, response);
 		});
 	}
 };

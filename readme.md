@@ -1,4 +1,4 @@
-## Arquigrafia
+# Arquigrafia
 
 The Arquigrafia project intends to research how the individual and the collective
 knowledge building processes relate to each other, by sharing subjectivities on interactive and communicative experiences based on an online collective gallery of Brazilian architecture digital images. 
@@ -11,7 +11,49 @@ professional architects and, in a broader approach, among all those interested i
 
 Keywords: Architecture, Iconography, Web 2.0, Collaborative Systems, Collective intelligence.
 
-
-### License
+## License
 
 The Arquigrafia project is open-sourced software licensed under the [Creative Commons Attribution 3.0](http://creativecommons.org/licenses/by/3.0/deed.pt_BR).
+
+## Configuration Tutorial
+
+- This project use Laravel Messenger for Laravel 4, and need to run migrate:
+
+```bash
+php artisan migrate --package=cmgmyr/messenger
+```
+
+- Since we're still using PHP 5.6, some JSON post requests might throw an deprecation warning. So, we need to set on PHP.ini:
+
+```
+always_populate_raw_post_data = -1
+```
+
+## Important comands
+
+### Yarn commands
+You can use [yarn](https://yarnpkg.com/en/) to call some comands.
+
+- Starting PHP server
+
+```
+$ yarn php
+```
+
+- Starting JS server (auto-bundle)
+
+```
+$ yarn start
+```
+
+- Starting Jest test server
+
+```
+$ yarn test:watch
+```
+
+- Build JS files for production
+
+```
+$ yarn build
+```

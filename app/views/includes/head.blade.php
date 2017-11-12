@@ -1,16 +1,41 @@
 <!--   FAVICON   -->
 <link rel="icon" href="{{ URL::to("/") }}/img/arquigrafia_icon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="{{ URL::to("/") }}/img/arquigrafia_icon.ico" type="image/x-icon" />
+<!-- ANALYTICS AND OPTIMIZE -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  // ga('create', 'UA-20571872-1', 'auto'); // PRODUCTION
+  ga('create', 'UA-106049892-1', 'auto'); // REVOADA
+  // ga('require', 'GTM-53MPGDL'); // PRODUCTION
+  // ga('require', 'GTM-P4PGZX9'); // REVOADA
+  @if (isset($variationId))
+    ga('set', 'exp', "yl5QR8HKT52zj_0ELUSxQQ.{{ $variationId }}")
+  @endif
+  ga('send', 'pageview');
+</script>
+<!-- END OF ANALYTICS AND OPTIMIZE -->
+
 <!--   ESTILO GERAL   -->
 {{-- <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/style.css" /> --}}
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/style.old.css" />
+
 <!-- JQUERRY -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
 <link rel="stylesheet" type="text/css" media="screen" href="{{ URL::to("/") }}/css/jquery.fancybox.css" />
+<!-- JQUERY-UI -->
+<link rel="stylesheet" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.min.css">
+<script type="text/javascript" src="{{ URL::to("/") }}/js/jquery-ui/jquery-ui.min.js" charset="utf-8"></script>
 <!-- FANCYBOX -->
 <script type="text/javascript" src="{{ URL::to("/") }}/js/jquery.fancybox.pack.js"></script>
 <!--NOTIFICAÇÕES-->
 <script type="text/javascript" src="{{ URL::to("/") }}/js/notifications.js"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/dist/notifications.bundle.js"></script>
 
 <!-- AUTOCOMPLETE -->
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
@@ -27,10 +52,6 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.filter.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.ajax.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/search-autocomplete.js" charset="utf-8"></script>
-
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-{{-- <script src="//code.jquery.com/jquery-1.10.2.js"></script> --}}
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />

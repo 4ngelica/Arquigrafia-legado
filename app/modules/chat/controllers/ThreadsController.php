@@ -186,4 +186,10 @@ class ThreadsController extends \BaseController {
 			return \Response::json(false);
 		}
 	}
+
+	public function cards(){
+		EventLogger::printEventLogs(null, 'card-chat', null, 'Web');
+		Input::flash();
+		return \Redirect::to('/chats')->withInput();
+	}
 }

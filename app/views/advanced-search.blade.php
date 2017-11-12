@@ -8,9 +8,6 @@
 <script src="{{ URL::to("/") }}/js/jquery.isotope.min.js"></script>
 
 <script type="text/javascript" src="{{ URL::to("/") }}/js/panel.js"></script>
-<!--Pickers -->
-<!--<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>-->
 
 <!-- AUTOCOMPLETE -->
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
@@ -31,14 +28,14 @@
 <script type="text/javascript" src="{{ URL::to("/") }}/js/tag-autocomplete-part.js" charset="utf-8"></script>
 <script type="text/javascript" src="{{ URL::to("/") }}/js/city-autocomplete.js" charset="utf-8"></script>
 
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.min.css">
+<script type="text/javascript" src="{{ URL::to("/") }}/js/jquery-ui/jquery-ui.min.js" charset="utf-8"></script>
 
 <script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
 <!-- pages -->
-<script src="{{ URL::to('/js/searchPagination.js') }}"></script> 
-<script src="{{ URL::to('/js/albums-covers.js') }}"></script> 
+<script src="{{ URL::to('/js/searchPagination.js') }}"></script>
+<script src="{{ URL::to('/js/albums-covers.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ URL::to('/css/tabs.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/album.css" />
 <link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/checkbox-edition.css" />
@@ -54,10 +51,10 @@
         selected_photos: 0,
       }
     };
-    var coverPage = 1;    
-    var covers_counter = 0;    
+    var coverPage = 1;
+    var covers_counter = 0;
     var update = null;
-   
+
   </script>
 @stop
 
@@ -132,11 +129,11 @@
                   </tr>
                 </table>
               </div>
-              
+
               <div class="four columns" style="margin-left: 15px; margin-right: 15px;">
                 <h3>Arquitetura</h3>
                 <table class="form-table" width="100%" border="0" cellspacing="0" cellpadding="0">
-                  
+
                   <tr>
                     <td>
                       {{ Form::label('workdate', 'Data da obra:') }}
@@ -178,7 +175,7 @@
                       <p style="font-size: 7pt">Máximo 3 Autores</p>
                     </td>
                     <td>
-                      
+
 
                         <div class="two columns alpha" style="width: 88% !important;">
                         {{ Form::text('workAuthor', null , array('style' => "width: 88%")) }} <br>
@@ -193,7 +190,7 @@
                       <textarea name="workAuthor_area" id="workAuthor_area" cols="41" rows="1" style="display: none;"></textarea>
                     </td>
                   </tr>
-                  
+
                 </table>
               </div>
               <!-- 2015-05-06 msy end -->
@@ -280,11 +277,11 @@
                       @if(!is_null($institutions))
                         {{ Form::select('institution_id', array(""=>"Escolha") + $institutions , Input::get('institution_id')) }}
                       @else
-                        {{ Form::select('institution_id', [""=>"Escolha o acervo institutional"], "",array('class' => 'left')) }} 
+                        {{ Form::select('institution_id', [""=>"Escolha o acervo institutional"], "",array('class' => 'left')) }}
                       @endif
                     </td>
                   </tr>
-                </table>  
+                </table>
 
               </div>
             </div>
@@ -344,9 +341,9 @@
         {{ Form::close() }}
 
       </div>
-      {{ Form::hidden('pgVisited', $pageVisited, array('id'  => 'pgVisited') ) }} 
-      {{ Form::hidden('pageCurrent1', $page, array('id'  => 'pageCurrent1') ) }} 
-      {{ Form::hidden('urlType', "advance", array('id'  => 'urlType') ) }} 
+      {{ Form::hidden('pgVisited', $pageVisited, array('id'  => 'pgVisited') ) }}
+      {{ Form::hidden('pageCurrent1', $page, array('id'  => 'pageCurrent1') ) }}
+      {{ Form::hidden('urlType', "advance", array('id'  => 'urlType') ) }}
 
       @if (count($photos))
         <!--   PAINEL DE IMAGENS - GALERIA - CARROSSEL   -->
@@ -355,10 +352,10 @@
             include('includes.panel')
           </div>
   		    <div class="panel-back"></div>
-          <div class="panel-next"></div>          
-        </div> -->        
+          <div class="panel-next"></div>
+        </div> -->
       <!--   FIM - PAINEL DE IMAGENS  -->
-      
+
       @include('includes.result-search')
     @endif
     </div>
@@ -374,12 +371,12 @@
             $('#binomial_container').addClass('hidden');
           }
         });
-        
+
         @if ( isset($authorsArea) )
           @foreach ( $authorsArea as $author )
             $('#workAuthor_area').textext()[0].tags().addTags([ {{ '"' . $author . '"' }} ]);
           @endforeach
-        @endif 
+        @endif
 
 
         $('#tags').textext({ plugins: 'tags' });
@@ -388,9 +385,9 @@
             $('#tags').textext()[0].tags().addTags([ {{ '"' . $tag . '"' }} ]);
           @endforeach
         @endif
-        
 
-        
+
+
       });
 
 

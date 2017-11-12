@@ -6,7 +6,7 @@
         <a href="{{ URL::to("/home") }}" id="logo"></a>
         <p id="beta">beta</p>
       </div>
-      
+
       <!--   MENU SUPERIOR   -->
       <div id="first_menu" class="four columns">
           <!--   MENU INSTITUCIONAL   -->
@@ -37,9 +37,9 @@
       {{-- <div id="loggin_area_institutional"> --}}
       <div id="loggin_area" class="four columns omega">
 
-      @if (Auth::check()) 
-        @if ( Session::has('institutionId') )            
-          <a id="user_name" href="{{ URL::to('/institutions/' . $institution->id) }}">{{Session::get('displayInstitution') }} {{-- $institution->name; --}}</a>            
+      @if (Auth::check())
+        @if ( Session::has('institutionId') )
+          <a id="user_name" href="{{ URL::to('/institutions/' . $institution->id) }}">{{Session::get('displayInstitution') }} {{-- $institution->name; --}}</a>
           <a id="user_photo" href="{{ URL::to('/institutions/' . $institution->id) }}">
             @if( ! empty($institution->photo) )
               <img src="{{ asset($institution->photo) }}" width="48" height="48" class="user_photo_thumbnail"/>
@@ -62,7 +62,7 @@
 
         <a href="{{ URL::to("/users/logout/") }}" id="logout" class="btn">SAIR</a><br />
         <ul id="logged_menu">
-            <li>
+          <li>
             <div id="notification-icon-container">
               <?php
                 $notesCounter = Auth::user()->notifications()->unread()->count();
@@ -82,25 +82,30 @@
           @endif
           <!-- <li><a href="#" id="messages" title="Você tem 19 mensagens">&nbsp;</a></li> -->
 
-          @if (Auth::user()->photos->count() > 0 )
+          {{-- @if (Auth::user()->photos->count() > 0 ) --}}
             @if(Auth::user()->albums->count() > 0)
               <li><a href="{{ URL::to('/albums') }}" title="Meus álbuns"><i class="photos">&nbsp;</i> ALBUNS</a></li>
             @else
               <li><a href="{{ URL::to('/albums/create') }}" title="Crie seu álbum personalizado"><i class="photos">&nbsp;</i> ALBUNS</a></li>
             @endif
-          @endif
+          {{-- @endif --}}
 
           <li>
             <div id="new-message-container" class="new-message">
               <a href="{{ URL::to('/chats') }}">MENSAGENS</a>
               @if (Auth::user()->newMessagesCount() > 0) <div id="bubble2"> {{Auth::user()->newMessagesCount()}} </div>  @endif
             </div>
+          </li>
 
+          <li class="contributions-list">
+            <div>
+              <a href="{{ URL::to('/users/contributions') }}" title="Contribuições">
+                <i class="contributions">&nbsp;</i> CONTRIBUIÇÕES
+              </a>
+            </div>
           </li>
 
         <!-- <li><a href="{{ URL::to("/badges") }}" id="badge" title="Vizualizar badges">&nbsp;</a></li>-->
-
-
         </ul>
 
         <div id="notes-box">
