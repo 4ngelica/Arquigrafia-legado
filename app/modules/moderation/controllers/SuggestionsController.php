@@ -148,7 +148,7 @@ class SuggestionsController extends \BaseController {
 		$user = $photo->user;
 		$status = $input['operation'];
 
-		if($status == 'accepted'){
+		if ($status == 'accepted') {
 			$field = PhotoAttributeType::find($suggestion->attribute_type)->attribute_type;
 			$suggestion->accepted = true;
 			$suggestion->save();
@@ -156,21 +156,23 @@ class SuggestionsController extends \BaseController {
 			if(!$photo->checkPhotoReviewing())
 				\Notification::create('suggestionAccepted', $user, $photo, [$suggestion->user], null);
 		}
-		if($status == 'rejected'){
+		if ($status == 'rejected') {
 			$suggestion->accepted = false;
 			$suggestion->save();
-			if(!$photo->checkPhotoReviewing())
+			if (!$photo->checkPhotoReviewing())
 				\Notification::create('suggestionDenied', $user, $photo, [$suggestion->user], null);
     }
 
-    // Sending email to user 
-    $email = $suggestion->user->email;
-    \Mail::send('emails.users.suggestion-analyzed', array('userName' => $suggestion->user->name, 'imageName' => $photo->name),
-      function($msg) use($email) {
-        $msg->to($email)
-          ->subject('[Arquigrafia]- Sugestão Analisada');
-      });
-
+    // Sending email to user
+		if (!$photo->checkPhotoReviewing()) {
+			// Only send email if the photo is not reviewing
+	    $email = $suggestion->user->email;
+	    \Mail::send('emails.users.suggestion-analyzed', array('userName' => $suggestion->user->name, 'imageName' => $photo->name),
+	      function($msg) use($email) {
+	        $msg->to($email)
+	          ->subject('[Arquigrafia]- Sugestão Analisada');
+	      });
+		}
 
 		return \Redirect::to('/users/suggestions');
 	}
@@ -266,7 +268,7 @@ class SuggestionsController extends \BaseController {
 		}
 		// Getting the current user connected
 		$id_self = \Auth::user()->id;
-		// Getting the number of suggestions 
+		// Getting the number of suggestions
 		$numSuggestionsQuery = Suggestion::where('user_id', '=', $id_self);
 		// Number of waiting suggestions
 		$numWaitingSuggestionsQuery = Suggestion::where('user_id', '=', $id_self)->whereNull('accepted');
