@@ -265,9 +265,9 @@
         </div></td>
         </tr>
 
+       <!-- <div class="oneUpload columns alpha"><p>{{ Form::label('photo_workAuthor', 'Autor da obra:') }}</p></div>-->
 
-
-        <tr><td> @include('photos.includes.workAuthor') </td></tr>
+       <tr><td>Autor da obra: @include('photos.includes.workAuthor') </td></tr>
 
         <tr><td>
          <div class="oneUpload columns alpha"><p>{{ Form::label('photo_workDate', 'Ano de conclusão da obra:') }}</p></div>

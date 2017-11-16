@@ -20,8 +20,8 @@ app/storage/original-images/*
 node_modules/*
 
 app/config/database.php
- app/config/local/database.php
- public/data/users.json
+app/config/local/database.php
+public/data/users.json
 
 app/config/packages/artdarek/pusherer/config.php
 app/config/packages/barryvdh/laravel-cors/config.php
