@@ -1,4 +1,6 @@
-<?php namespace modules\collaborative\models;
+<?php
+
+namespace modules\collaborative\models;
 use User;
 use modules\gamification\traits\LikableGamificationTrait;
 

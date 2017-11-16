@@ -1,0 +1,41 @@
+{
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "plugins": [
+      "react",
+      "jsx-a11y",
+      "import",
+      "jest",
+      "vue"
+  ],
+  "rules": {
+      "no-console": ["error", { "allow": ["info", "warn", "error"] }],
+      "no-underscore-dangle": "off",
+      "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+      "react/forbid-prop-types": [1, { "forbid": ["any"] }],
+      "class-methods-use-this": 0,
+      "no-param-reassign": ["error", {
+        "props": true,
+        "ignorePropertyModificationsFor": [
+          "acc", // for reduce accumulators
+          "e", // for e.returnvalue
+          "ctx", // for Koa routing
+          "req", // for Express requests
+          "request", // for Express requests
+          "res", // for Express responses
+          "response", // for Express responses
+          "storeState", // for Vuex state mutation
+          "$scope" // for Angular 1 scopes
+        ]
+      }]
+  },
+  "globals": {
+      "document": true,
+      "window": true,
+      "fetch": true,
+      "$": true
+  },
+  "env": {
+    "jest": true
+  }
+}

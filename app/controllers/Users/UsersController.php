@@ -9,6 +9,7 @@ use Facebook\FacebookAuthorizationException;
 use Facebook\FacebookRequestException;
 use modules\institutions\models\Institution as Institution;
 use Illuminate\Database\Eloquent\Collection as Collection;
+use modules\gamification\models\Gamified as Gamified;
 
 class UsersController extends \BaseController {
 
@@ -16,9 +17,8 @@ class UsersController extends \BaseController {
   {
     $this->beforeFilter('auth',
       array('only' => ['follow', 'unfollow']));
-    
   }
-  
+
   public function index()
   {
     $users = User::all();
@@ -26,17 +26,48 @@ class UsersController extends \BaseController {
     return View::make('/users/index',['users' => $users]);
   }
 
+
   public function show($id)
-  { 
+  {
+    // This page has a gamified variant, get the gamified variant
+    $variationId = Gamified::getGamifiedVariationId();
+    $isGamified = Gamified::isGamified($variationId);
+
+    // Getting user info
     $user = User::whereid($id)->first();
     $institutionFollowed = $user->followingInstitution;
-    $photos = $user->photos()->get()->reverse(); 
+    $photos = $user->photos()->get()->reverse();
+    // Starting suggestions variables as a empty array
+    $acceptedSuggestions = [];
+    $waitingSuggestions = [];
+    $refusedSuggestions = [];
+    // Also, userPoints and userWaitingPoints start value is 0
+    $userPoints = 0;
+    $userWaitingPoints = 0;
+    // If you're logged in
     if (Auth::check()) {   
-      if (Auth::user()->following->contains($user->id))
-        $follow = false;
-      else 
-        $follow = true; 
-    } else{ 
+      // Marking if you're following the user
+      if (Auth::user()->following->contains($user->id)) $follow = false;
+      else $follow = true;
+
+      // If the current user is the user that we wanna show the profile
+      if ($user->equal(Auth::user())) {
+        // Getting the acceptedSuggestions for user
+        $acceptedSuggestions = $user->suggestions()->where('accepted', '=', 1)->get();
+        foreach ($acceptedSuggestions as $suggestion) {
+          // Adding the suggestion numPoints to user points
+          $userPoints += $suggestion->numPoints();
+        }
+        // Getting waiting points for user
+        $waitingSuggestions = $user->suggestions()->where('accepted', '=', null)->get();
+        foreach ($waitingSuggestions as $suggestion) {
+          // Adding the suggestions numPoints to the waiting points
+          $userWaitingPoints += $suggestion->numPoints();
+        }
+        // Getting refused suggestions
+        $refusedSuggestions = $user->suggestions()->where('accepted', '=', 0)->get();
+      }
+    } else {
       $follow = true;
       $followInstitution = true;
     }
@@ -50,7 +81,14 @@ class UsersController extends \BaseController {
       'lastDateUpdatePhoto' => Photo::getLastUpdatePhotoByUser($id),
       'lastDateUploadPhoto' => Photo::getLastUploadPhotoByUser($id),
       'albums' => $albums,
-      'institutionFollowed' => $institutionFollowed
+      'institutionFollowed' => $institutionFollowed,
+      'userPoints' => $userPoints,
+      'acceptedSuggestions' => $acceptedSuggestions,
+      'userWaitingPoints' => $userWaitingPoints,
+      'waitingSuggestions' => $waitingSuggestions,
+      'refusedSuggestions' => $refusedSuggestions,
+      'gamified' => $isGamified,
+      'variationId' => $variationId
       ]);
   }
   
@@ -296,8 +334,14 @@ class UsersController extends \BaseController {
     if (Auth::check()) {
       EventLogger::printEventLogs(null, 'logout', null, 'Web');
 
+      // Before logging out, we're going to save the gamified state
+      $variationId = Gamified::getGamifiedVariationId();
+      // Logging out
       Auth::logout();
       Session::flush();
+      // Saving variationId on Session again
+      Gamified::saveGamifiedVariationId($variationId);
+
       return Redirect::to('/home');
     }
     return Redirect::to('/home');
@@ -754,4 +798,35 @@ class UsersController extends \BaseController {
     DB::table('friendship_institution')->where('following_user_id', '=', $accountFrom->id)
       ->update(array('following_user_id' => $accountTo->id));
   }
+
+   public function usersList()
+  {
+        if (Auth::check()) {
+            echo "Criando o arquivo Json com a lista de usuarios";
+
+            $pathFile = public_path('data')."/users.json";
+            $usersAll = User::userDataToJson();
+            $users = $usersAll->toJson();
+
+            //criando todo o arquivo json dos usuarios
+            File::put($pathFile, $users);
+        }else{
+          dd("Precisa estar logado");
+
+        }
+  }
+
+  public function updateUsersListJson($user){
+      $pathFile = public_path('data')."/users.json";
+
+      if (File::exists($pathFile)){
+                  Log::info("Adicionando texto no arquivo json de usuario");
+
+                  $search = ']';
+                  $replace = ',{"id":'.$user->id.', "name": "'.$user->name.'"}]';
+                  file_put_contents($pathFile, str_replace($search, $replace, file_get_contents($pathFile)));
+      }
+  }
+
+
 }

@@ -15,20 +15,19 @@
 
     var paginators = {
       add: {
-        currentPage: {{ $page}},//1,
+        currentPage: {{ $page }},
         maxPage: {{ $maxPage }},
         url: '{{ $url }}',
         loadedPages: [1],
         selectedItems: 0,
         searchQuery: '',
         selected_photos: 0,
-      }
-
+      },
     };
     console.log({{$page}});
     var coverPage = 1;
     var covers_counter = 0;
-    var update = null;    
+    var update = null;
   </script>
 @stop
 
@@ -138,33 +137,20 @@
 
     <div class="container">
       <div id="add1" class="twelveMid columns add" >
-           @if ( $users != null )
-              @if($users->count() > 0 )
-                @include('users.includes.searchResult_include')
-              @endif
-           @else   
-              <div class="wrap">
-              </div>
-           @endif
+        @if ( isset($users) && $users != null )
+          @if($users->count() > 0 )
+            @include('users.includes.searchResult_include')
+          @endif
+        @else
+          <div class="wrap">
+          </div>
+        @endif
       </div>
     </div>
 
-    <!--   PAINEL DE IMAGENS - GALERIA - CARROSSEL   -->
-     <!--  <div class="wrap">
-         <div id="panel">
-            include('includes.panel')
-        </div>
-        <div class="panel-back"></div>
-        <div class="panel-next"></div>
-        </div> -->
-    <!--   FIM - PAINEL DE IMAGENS  -->
-
     <!-- FOTOS PAGINADAS -->
-
     @include('includes.result-search')
-
     <!-- FIM FOTOS PAGINADAS -->
   </div>
   <!--   FIM - MEIO DO SITE   -->
-
 @stop

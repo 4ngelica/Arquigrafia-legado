@@ -1,37 +1,35 @@
 @extends('layouts.default')
 @section('head')
-	<title>Arquigrafia - Fotos - Upload</title>
+<title>Arquigrafia - Fotos - Upload</title>
 
-	<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
-	<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.core.css" />
-	<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.plugin.autocomplete.css" />
-	<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.plugin.tags.css" />
-	<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/styletags.css" />
+<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/styletags.css" />
 
-	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
-	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.core.js" charset="utf-8"></script>
-	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.tags.js" charset="utf-8"></script>
-	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.autocomplete.js" charset="utf-8"></script>
-	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.suggestions.js" charset="utf-8"></script>
-	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.filter.js" charset="utf-8"></script>
-	<script type="text/javascript" src="{{ URL::to("/") }}/js/tags-autocomplete.js" charset="utf-8"></script>
-	<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.ajax.js" charset="utf-8"></script>
+<!-- TEXTEXT -->
+<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.css" />
+<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.core.css" />
+<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.plugin.autocomplete.css" />
+<link rel="stylesheet" type="text/css" href="{{ URL::to("/") }}/css/textext.plugin.tags.css" />
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.js"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.core.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.tags.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.autocomplete.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.suggestions.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.filter.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/textext.plugin.ajax.js" charset="utf-8"></script>
 
+<! -- GENERAL JS -->
+<script type="text/javascript" src="{{ URL::to("/") }}/js/tags-autocomplete.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/repopulateForm.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-list.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-autocomplete-part.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/city-autocomplete.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/date-work.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/rotate.js" charset="utf-8"></script>
+<script type="text/javascript" src="{{ URL::to("/") }}/js/readURL.js" charset="utf-8"></script>
 
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-	<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-
-	 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-
-	<script type="text/javascript" src="{{ URL::to("/") }}/js/repopulateForm.js" charset="utf-8"></script>
-
-	<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-list.js" charset="utf-8"></script>
-	<script type="text/javascript" src="{{ URL::to("/") }}/js/tag-autocomplete-part.js" charset="utf-8"></script>
-	<script type="text/javascript" src="{{ URL::to("/") }}/js/city-autocomplete.js" charset="utf-8"></script>
-	<script type="text/javascript" src="{{ URL::to("/") }}/js/date-work.js" charset="utf-8"></script>
-		<script type="text/javascript" src="{{ URL::to("/") }}/js/rotate.js" charset="utf-8"></script>
-		<script type="text/javascript" src="{{ URL::to("/") }}/js/readURL.js" charset="utf-8"></script>
-
+<!-- JQUERY -->
+<link rel="stylesheet" href="{{ URL::to("/") }}/css/jquery-ui/jquery-ui.min.css">
+<script type="text/javascript" src="{{ URL::to("/") }}/js/jquery-ui/jquery-ui.min.js" charset="utf-8"></script>
 <style>
 	.ui-autocomplete {
 		max-height: 100px;
@@ -47,33 +45,38 @@
 		height: 100px;
 	}
 	/* Style select*/
-
-		fieldset {
-			border: 0;
-			margin: 0 0 0px -10px;
-			font-size: 10px;
-		}
-		label {
-			display: block;
-			margin: 30px 0 0 0;
-		}
-		select {
-			width: 160px;
-		}
-		.overflow {
-			height: 350px;
-		}
-
-
-	</style>
-	<script type="text/javascript">
-	document.onload = function() {
-			}
-	</script>
+  fieldset {
+    border: 0;
+    margin: 0 0 0px -10px;
+    font-size: 10px;
+  }
+  label {
+    display: block;
+    margin: 30px 0 0 0;
+  }
+  select {
+    width: 160px;
+  }
+  .overflow {
+    height: 350px;
+  }
+</style>
 @stop
 @section('content')
 	<script type="text/javascript">
-		$( window ).load(function() {
+		$( window ).on('load',function() {
+      // Tags
+      $('#tagsArea').textext({ plugins: 'tags' });
+      @if(Input::old('tags')!=null)
+        <?php $tags = explode (",", Input::old('tags')); ?>
+      @endif
+
+      @if (isset($tags) && $tags !=null)
+        @foreach ( $tags as $tag )
+            $('#tagsArea').textext()[0].tags().addTags([ {{ '"' . $tag . '"' }} ]);
+        @endforeach
+      @endif
+
 			$("#preview_photo").hide();
 			if (document.getElementById("new_album-name").value != "") {
 				var select_album = document.getElementsByClassName('select-album');
@@ -92,8 +95,7 @@
 					}
 				}
 				document.getElementById("new_album-name").value = "";
-			}
-			else if (document.getElementById("photo_album").value != "") {
+			} else if (document.getElementById("photo_album").value != "") {
 				var select_album = document.getElementsByClassName('select-album');
 				var new_album = document.getElementsByClassName('new-album-name');
 				var i;
@@ -112,7 +114,7 @@
 				<div class="twelve columns row step-1">
 					<a href="{{ URL::to('/drafts') }}" class="right">Uploads incompletos</a>
 					<h1><span class="step-text">Upload</span></h1>
-					<div class="eleven columns alpha" id="media_type">        
+					<div class="eleven columns alpha" id="media_type">
 				        <br>
 				        <div class="form-row">
 				            <input type="radio" name="type" value="photo" id="type_photo" checked="checked">
@@ -126,32 +128,37 @@
 					<div id="divPhoto">
 						<div class="four columns alpha">
 							<img src="" id="preview_photo">
-												<div id="image_rotate" style="display:none;">
-												<br></br>
-												<a class="btn right" onclick="Rotate(document.getElementById('preview_photo'),
-														Math.PI/2);">Girar 90° para direita</a>
-												<a class="btn left" onclick="Rotate(document.getElementById('preview_photo'),
-														-Math.PI/2);">Girar 90° para esquerda</a>
-												</div>
-												<br></br>
+                <div id="image_rotate" style="display:none;">
+                <br />
+                <a class="btn right" onclick="Rotate(document.getElementById('preview_photo'), Math.PI/2);">
+                  Girar 90° para direita
+                </a>
+                <a class="btn left" onclick="Rotate(document.getElementById('preview_photo'), -Math.PI/2);">
+                  Girar 90° para esquerda
+                </a>
+                </div>
+                <br />
 							<p>
 								{{ Form::label('photo','Imagem:') }}
 								{{ Form::file('photo', array('id'=>'imageUpload', 'onchange' => 'readURL(this);')) }}
 								<div class="error">{{ $errors->first('photo') }}</div>
-														<br></br>
+                <br />
 							</p>
 							<br>
 						</div>
 					</div>
 					<div id="divVideo" class="twelve columns alpha">
-						</br>  
-				        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube ou vimeo:') }}</div>  
-				        <div class="four columns alpha">    
-				            <p>{{ Form::text('video', $video, array('id' => 'video','style'=>'width:280px')) }} <br>
+						</br>
+				        <div class="two columns alpha">{{ Form::label('video', 'Link do vídeo youtube ou vimeo:') }}</div>
+				        <div class="four columns alpha">
+				            <p>
+                      {{ Form::text('video', $video, array('id' => 'video','style'=>'width:280px')) }} <br />
 				            </p>
 				            <div class="error">{{ $errors->first('video') }}</div>
-				            <p>Ex. https://www.youtube.com/watch?v=XXXXXXXX  <br>
-				                ou  https://vimeo.com/XXXXXXXX</p>
+				            <p>
+                      Ex. https://www.youtube.com/watch?v=XXXXXXXX  <br />
+				              ou  https://vimeo.com/XXXXXXXX
+                    </p>
 				        </div>
 					</div>
 				</div>
@@ -244,20 +251,6 @@
 									</div>
 								</td>
 							</tr>
-<!--
-							<tr>
-								<td>
-									<div class="two columns alpha">
-										<p>{{ Form::label('cataloguingTimeTxt', 'Data de Catalogação:') }}</p>
-									</div>
-									<div class="three columns omega">
-										<p>{{ Form::text('cataloguingTime', Input::old('cataloguingTime')) }} <br>
-											<div class="error">{{ $errors->first('cataloguingTime') }}</div>
-										</p>
-									</div>
-								</td>
-							</tr>
--->
 							<tr>
 								<td>
 									<div class="two columns alpha">
@@ -298,21 +291,16 @@
 							<tr>
 								<td>
 									<div class="two columns alpha"><p>{{ Form::label('tags_input', 'Tags*:') }}</p></div>
-									<div class="three columns">
-										<p><div style="max-width:150px;">
-											{{ Form::text('tags_input',null,array('id' => 'tags_input','style'=>'width: 200px; height:15px; border:solid 1px #ccc')) }}
-											 </div>
-
-											<br>
-											<div class="error">{{ $errors->first('tagsArea') }}</div>
-										</p>
-									</div>
-									<div>
-										<button class="btn" id="add_tag" style="font-size: 11px;">ADICIONAR TAG</button>
-									</div>
+                  <div class="four columns">
+                    <p>
+                      {{ Form::text('tags_input') }}
+                      <button class="btn" id="add_tag" style="font-size: 11px;">ADICIONAR TAG</button>
+                      <br>
+                      <div class="error">{{ $errors->first('tags') }}</div>
+                    </p>
+                  </div>
 									<div class="five columns alpha">
-										<textarea name="tagsArea" id="tagsArea" cols="60" rows="1" style="display: none;">
-										</textarea>
+                    <textarea name="tagsArea" id="tagsArea" cols="60" rows="1" style="display: none;"></textarea>
 									</div>
 								</td>
 							</tr>
@@ -358,11 +346,6 @@
 								</div>
 							</td>
 							</tr>
-							<!--
-							<tr>
-								<div class="two columns omega"><p></p></div>
-								<div class="two columns omega"><p><br></p></div>
-							</tr>	-->
 							<tr><td>
 								<div class="two columns alpha"><p>{{ Form::label('state', 'Estado:') }}</p></div>
 								<div class="two columns omega">
@@ -546,21 +529,6 @@
 							<label for="allowModificationsNO">Não</label><br class="clear">
 						</div>
 					</div>
-					<!--<div class="twelve columns omega row">
-						<h4>Álbuns do	</h4>
-						<div>
-							include('photos.includes.institutional_albums')
-
-						</div>
-					</div>-->
-
-					<!--<div class="twelve columns omega row">
-						<div>
-							include('photos.includes.repopulate_photos');
-
-						</div>
-					</div>-->
-
 					<div class="twelve columns">
 						<div><input name="enviar" type="submit" class="btn" value="ENVIAR"></div>
 						<div id="divDraftButton"><input name="draft" type="submit" class="btn" value="SALVAR INFORMAÇÕES SEM A IMAGEM"></div>
@@ -568,9 +536,7 @@
 					</div>
 				</div>
 			{{ Form::close() }}
-
 		</div>
-
 	</div>
 
 <script type="text/javascript">
@@ -603,34 +569,31 @@
 </script>
 <script type="text/javascript">
 	$(document).ready(function() {
-
 		var typeChecked  = "{{Input::old('type')}}";
+    if(typeChecked == "video" ) {
+      document.getElementById('type_video').checked = true;
+      $('#divVideo').show();
+      $('#divPhoto').hide();
+      $('#divDraftButton').hide();
+    } else {
+      document.getElementById('type_photo').checked = true;
+      document.getElementById('video').value = null;
+      $('#divVideo').hide();
+      $('#divPhoto').show();
+      $('#divDraftButton').show();
+    }
 
-        
-        if(typeChecked == "video" ){
-                document.getElementById('type_video').checked = true;
-                $('#divVideo').show();
-                $('#divPhoto').hide();
-                $('#divDraftButton').hide();
-        }else{
-            document.getElementById('type_photo').checked = true;
-            document.getElementById('video').value = null;
-            $('#divVideo').hide();
-            $('#divPhoto').show();
-            $('#divDraftButton').show();
-        }
-
-        $('input[type=radio][name=type]').change(function(){
-            if(this.value == "video"){
-                $('#divVideo').show();
-                $('#divPhoto').hide();
-                $('#divDraftButton').hide();
-            } if(this.value == "photo") {
-                $('#divVideo').hide();
-                $('#divPhoto').show();
-                $('#divDraftButton').show();
-            }
-        });
+    $('input[type=radio][name=type]').change(function(){
+      if(this.value == "video"){
+        $('#divVideo').show();
+        $('#divPhoto').hide();
+        $('#divDraftButton').hide();
+      } if(this.value == "photo") {
+        $('#divVideo').hide();
+        $('#divPhoto').show();
+        $('#divDraftButton').show();
+      }
+    });
 
 		if ({{ Input::old('autoOpenModal','false') }}) {
 			var text;
@@ -669,11 +632,6 @@
 				document.getElementById(radio_checked_modifications).checked = true;
 			}
 		}
-
-		@if (Input::old('tagsArea') != null)
-			var tagsArea = "{{ Input::old('tagsArea') }}".split(',');
-			showTags(tagsArea, $('#tagsArea'), $('#tags_input'));
-		@endif
 
 		//authors
 		$('#work_authors').textext({ plugins: 'tags' });
@@ -747,4 +705,3 @@
 	});
 </script>
 @stop
-

@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/test', function () { 
+Route::get('/test', function () {
   //testes
 });
 
@@ -19,19 +19,6 @@ Route::get('/photos/import', 'ImportsController@import');
 
 /* phpinfo() */
 Route::get('/info/', function(){ return View::make('i'); });
-
-//Route::get('/', 'PagesController@main');
-
-
-
-// Route::get('/', function(){
-//         if (Auth::check())
-//         {	dd("dddd"); die();
-//             Route::get('/', 'PagesController@home');
-//         } else {
-//             Route::get('/', 'PagesController@main');
-//         }
-// });
 
 Route::group(['prefix' => '/'], function()
 {
@@ -77,12 +64,11 @@ Route::resource('/users/stoaLogin','UsersController@stoaLogin');
 
 Route::resource('/users/institutionalLogin','UsersController@institutionalLogin');
 
-
 /* FOLLOW */
 Route::get('/friends/follow/{user_id}', 'UsersController@follow');
 Route::get('/friends/unfollow/{user_id}', 'UsersController@unfollow');
 
-// AVATAR 
+// AVATAR
 Route::get('/profile/10/showphotoprofile/{profile_id}', 'UsersController@profile');
 
 /* ALBUMS */
@@ -107,11 +93,11 @@ Route::get('/photos/upload','PhotosController@form');
 Route::get('/photos/migrar','PhotosController@migrar');
 Route::get('/photos/rollmigrar','PhotosController@rollmigrar');
 Route::get('/photos/download/{photo_id}','PhotosController@download');
+Route::get('/photos/completeness', 'PhotosController@showCompleteness');
+Route::get('/photos/to_complete', 'PhotosController@getCompletenessPhotos');
 Route::resource('/photos','PhotosController');
-
 
 /* SEARCH PAGE */
 Route::get('/search/paginate/other/photos', 'PagesController@paginatePhotosResult');
 Route::get('/search/more/paginate/other/photos', 'PagesController@paginatePhotosResultAdvance');
-
 

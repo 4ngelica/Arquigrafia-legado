@@ -1,7 +1,7 @@
 <?php
 namespace modules\notifications\models;
 
-use \Tricki\Notification\Models\Notification; 
+use \Tricki\Notification\Models\Notification as TrickiNotification;
 use \modules\collaborative\models\Comment;
 use User;
 use Photo;
@@ -11,15 +11,15 @@ class CommentLikedNotification extends \Tricki\Notification\Models\Notification
     public static $type = 'comment_liked';
 
     public function render() {
-        return array($this->getTypes(), 
-                     $this->getSender(), 
-                     $this->getPhotoID(), 
-                     $this->getDate(), 
-                     $this->getTime(), 
-                     $this->getSenderID(), 
-                     $this->getPhotoOwnerID(), 
-                     $this->getPhotoOwnerName(), 
-                     $this->getCommentID(), 
+        return array($this->getTypes(),
+                     $this->getSender(),
+                     $this->getPhotoID(),
+                     $this->getDate(),
+                     $this->getTime(),
+                     $this->getSenderID(),
+                     $this->getPhotoOwnerID(),
+                     $this->getPhotoOwnerName(),
+                     $this->getCommentID(),
                      $this->getData()
                      );
     }
