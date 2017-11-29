@@ -320,7 +320,8 @@ class PagesController extends BaseController {
     $fields = Input::only( array(
       'name', 'description', 'city', 'state', 'country',
       'imageAuthor', 'dataCriacao', 'dataUpload', 'workdate', 'district',
-      'street', 'allowCommercialUses', 'allowModifications', 'institution_id'
+      'street', 'allowCommercialUses', 'allowModifications', 'institution_id',
+      'tombo'
     ));
     $fields = array_filter(array_map('trim', $fields));
 
@@ -332,16 +333,16 @@ class PagesController extends BaseController {
     $haveSession = 0;
     $pageLinked = 0;
 
-    if(Session::has('CurrPage') && Session::get('CurrPage')!= 1){
+    if (Session::has('CurrPage') && Session::get('CurrPage')!= 1) {
       $pageRetrieved = Session::get('CurrPage');
       $haveSession = 1;
-    }else{
+    } else {
       Session::put('CurrPage',1);
     }
 
     $institutions = Institution::institutionsList();
 
-    if( count($fields) == 0 ) { // busca vazia
+    if (count($fields) == 0) { // busca vazia
       if(Session::has('last_advanced_search')){
         return View::make('/advanced-search', Session::get('last_advanced_search'));
 

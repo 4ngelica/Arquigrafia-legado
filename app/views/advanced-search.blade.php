@@ -163,6 +163,14 @@
                   </tr>
                   <tr>
                     <td>
+                      {{ Form::label('tombo', 'Número de Tombo:') }}
+                    </td>
+                    <td>
+                      {{ Form::text('tombo', Input::get("tombo") ) }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
                       {{ Form::label('imageAuthor', 'Autor da imagem:') }}
                     </td>
                     <td>
