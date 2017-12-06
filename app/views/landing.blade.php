@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+ <meta name="google-site-verification" content="uwgMilVeoINPyn1gsSwhwdedqljen2sAyLMRaIZ_oe0" /> 
   <title>Bem-vindo ao Arquigrafia!</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
+ 
   <!-- JAVASCRIPT -->
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <script src="{{ URL::to("/") }}/js/main.js"></script>

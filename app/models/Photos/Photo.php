@@ -1,4 +1,5 @@
 <?php
+
 use modules\draft\traits\DraftingTrait;
 use lib\date\Date;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
@@ -903,4 +904,3 @@ class Photo extends Eloquent {
 	}
 
 }
-

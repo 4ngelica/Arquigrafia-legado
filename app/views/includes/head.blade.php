@@ -12,7 +12,7 @@
   // ga('require', 'GTM-53MPGDL'); // PRODUCTION
   // ga('require', 'GTM-P4PGZX9'); // REVOADA
   @if (isset($variationId))
-    ga('set', 'exp', "yl5QR8HKT52zj_0ELUSxQQ.{{ $variationId }}")
+    ga('set', 'exp', "CuUpvCcWQH2KBRHe6e8jnA.{{ $variationId }}")
   @endif
   ga('send', 'pageview');
 </script>
