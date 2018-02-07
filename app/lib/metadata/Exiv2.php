@@ -143,7 +143,7 @@ class Exiv2 {
 		$today = date('Y-m-d');
 		$log = new Logger('Exiv2_logger');
 		$file = storage_path() . '/logs/exiv2/' . $today . '.log';
-		if (!file_exists($file)) {
+		if (file_exists($file)) {
 			$handle = fopen($file, 'a+');
 			fclose($handle);
 		}
