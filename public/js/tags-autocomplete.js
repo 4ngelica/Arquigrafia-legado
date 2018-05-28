@@ -18,19 +18,57 @@ function showTags(tagsJson, containerText, tagInput){
 
 $(document).ready(function() {
 
-  $('#add_tag').click(function(e) {
-    e.preventDefault();
-    var tag = $('#tags_input').val();
-    if (tag == '') return;
-    $('#tagsArea').textext()[0].tags().addTags([ tag ]);
-    $('#tags_input').val('');
-  });
+//  $('#add_tag').click(function(e) {
+//    e.preventDefault();
+//    var tag = $('#tags_input').val();
+//    if (tag == '') return;
+//    $('#tagsArea').textext()[0].tags().addTags([ tag ]);
+//    $('#tags_input').val('');
+//  });
 
-  $('#tags_input').keypress(function(e) {
-    var key = e.which || e.keyCode;
-    if (key == 44 || key == 46 || key == 59)
-      e.preventDefault();
-  });
+//  $('#tags_input').keypress(function(e) {
+//    var key = e.which || e.keyCode;
+//    if (key == 44 || key == 46 || key == 59)
+//      e.preventDefault();
+//  });
+
+
+$('#add_tag').click(function(e) {
+        e.preventDefault();
+       var tag = $('#tags_input').val();
+        if (tag == '') return;
+       if ($('#tagsArea').textext()[0] == null) {
+            var sizeTags = $('#tags').textext()[0].tags()._formData.length;
+             if (sizeTags < 5) {
+                $('#tags').textext()[0].tags().addTags([ tag ]);
+                $('#tags_input').val('');
+            }
+        }
+        else {
+            $('#tagsArea').textext()[0].tags().addTags([ tag ]);
+            $('#tags_input').val('');
+        }
+    });
+     $('#tags_input').keypress(function(e) {
+             var key = e.which || e.keyCode; //alert("B"+key);
+             if (key == 44 || key == 46 || key == 59) // key = , ou Key = . ou key = ;
+                 e.preventDefault();
+         });
+ 
+     //author
+      $('#workAuthor_area').textext({ plugins: 'tags' });
+ 
+     $('#add_author').click(function(e) {
+         e.preventDefault();
+         authorsList();
+     });
+
+
+
+
+
+
+
 
   //author
   $('#workAuthor_area').textext({ plugins: 'tags' });
