@@ -41,10 +41,10 @@
 <template>
   <div>
     <CornerRibbon
-      text1="Contribua com o Arquigrafia."
-      text2="Saiba como clicando aqui!"
+      text1="Arquigrafia de luto pelo"
+      text2="Museu Nacional!"
       link="/photos/completeness"
-      color="blue"
+      color="black"
     />
     <LandingNavigationMenu />
     <HeaderPage :handleChangeLang="(lang) => setCurrentLang({ lang })" />
