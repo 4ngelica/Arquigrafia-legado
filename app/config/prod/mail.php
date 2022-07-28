@@ -5,6 +5,6 @@
                         'address' => 'email@gmail.com',
                         'name' => 'Equipe do Arquigrafia'),
                 'username' => 'email@gmail.com',
-                'password' => 'suasenha',
+                'password' => 'nopass',  
                 'port' => 587
         );
