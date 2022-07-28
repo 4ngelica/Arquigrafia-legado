@@ -16,6 +16,7 @@ public/img/project_photos/*
 public/packages/darsain/*
 public/arquigrafia-imports/*
 app/storage/original-images/*
+app/storage/views/*
 
 node_modules/*
 
