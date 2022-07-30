@@ -10,13 +10,18 @@ Thumbs.db
 *dwsync.xml
 
 public/arquigrafia-images/*
+!public/arquigrafia-images/.gitkeep
 public/arquigrafia-avatars/*
+!public/arquigrafia-avatars/.gitkeep
 public/arquigrafia-avatars-inst/*
+!public/arquigrafia-avatars-inst/.gitkeep
 public/img/project_photos/*
 public/packages/darsain/*
 public/arquigrafia-imports/*
 app/storage/original-images/*
+!app/storage/original-images/.gitkeep
 app/storage/views/*
+!app/storage/views/.gitkeep
 
 node_modules/*
 
@@ -25,6 +30,7 @@ public/data/*
 
 app/storage/logs/*
 app/storage/sessions/*
+!app/storage/sessions/.gitkeep
 
 public/profile/*
 public/profile/placeholders/*
