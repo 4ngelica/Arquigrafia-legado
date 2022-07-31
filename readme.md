@@ -15,9 +15,30 @@ Keywords: Architecture, Iconography, Web 2.0, Collaborative Systems, Collective 
 
 The Arquigrafia project is open-sourced software licensed under the [Creative Commons Attribution 3.0](http://creativecommons.org/licenses/by/3.0/deed.pt_BR).
 
+## Prerequisites
+
+- Composer
+- PHP 5.6
+- Mysql 5.5.3 (higher versions may throw a database exception when running migrations)
+
 ## Configuration Tutorial
 
-- This project use Laravel Messenger for Laravel 4, and need to run migrate:
+- Get the dependencies and generate the application key:
+
+```bash
+composer install /
+php artisan key:generate
+```
+
+- Create your mysql database and place the configuration at *app/config/local/database.php*. Some migrations use sql queries that references the database name as "arquigrafia", so you must keep this pattern or change those files.
+
+- Run the migrations.
+
+```bash
+php artisan migrate
+```
+
+This project use Laravel Messenger for Laravel 4, and need to run migrate:
 
 ```bash
 php artisan migrate --package=cmgmyr/messenger
@@ -28,6 +49,9 @@ php artisan migrate --package=cmgmyr/messenger
 ```
 always_populate_raw_post_data = -1
 ```
+
+- Some features like user registration depends on smpt, so place the mail credentials at app/config/local/mail.php. Check for these [here](https://support.google.com/accounts/answer/185833?hl=en#app-passwords).
+
 
 ## Important comands
 
