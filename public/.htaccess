@@ -4,6 +4,12 @@
     </IfModule>
 
     RewriteEngine On
+    RewriteCond %{HTTP_HOST} !=""
+    RewriteCond %{HTTP_HOST} !^www\. [NC]
+    RewriteCond %{HTTPS}s ^on(s)|
+    RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+    RewriteEngine On
 		#RewriteBase /arquigrafia/public
     # Redirect Trailing Slashes...
     RewriteRule ^(.*)/$ /$1 [L,R=301]

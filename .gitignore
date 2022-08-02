@@ -9,28 +9,29 @@ Thumbs.db
 
 *dwsync.xml
 
-*database.php
-app/config/facebook.php
 public/arquigrafia-images/*
+!public/arquigrafia-images/.gitkeep
 public/arquigrafia-avatars/*
+!public/arquigrafia-avatars/.gitkeep
+public/arquigrafia-avatars-inst/*
+!public/arquigrafia-avatars-inst/.gitkeep
+public/img/project_photos/*
 public/packages/darsain/*
 public/arquigrafia-imports/*
 app/storage/original-images/*
+!app/storage/original-images/.gitkeep
+app/storage/views/*
+!app/storage/views/.gitkeep
 
 node_modules/*
 
-app/config/database.php
-app/config/local/database.php
 public/data/users.json
+public/data/*
 
-app/config/packages/artdarek/pusherer/config.php
-app/config/packages/barryvdh/laravel-cors/config.php
-app/config/packages/intervention/image/config.php        
-app/config/packages/tricki/laravel-notification/config.php
-app/config/database.php
- 
-app/config/local/app.php
-app/config/local/database.php
-app/config/local/mail.php
-app/config/mail.php
-app/config/app.php
+app/storage/logs/*
+app/storage/sessions/*
+!app/storage/sessions/.gitkeep
+
+public/profile/*
+public/profile/placeholders/*
+public/audios/*
