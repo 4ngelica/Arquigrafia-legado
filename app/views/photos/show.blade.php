@@ -114,6 +114,14 @@
               <span class="right">
                 <a id="delete_button" href="{{ URL::to('/photos/' . $photos->id) }}" title="Excluir imagem"></a>
               </span>
+            @elseif ($institutionId == NULL && Auth::user()->isAdmin() || $institutionId == NULL && Auth::user()->isResponsible())
+              <span class="right">
+                <a id="delete_button" href="{{ URL::to('/photos/' . $photos->id) }}" title="Excluir imagem"></a>
+              </span>
+            @elseif ($institutionId != NULL && Auth::user()->isAdmin() || $institutionId != NULL && Auth::user()->isResponsible())
+              <span class="right">
+                <a id="delete_button" class="institution" href="{{ URL::to('/institutions/' . $photos->id) }}" title="Excluir imagem"></a>
+              </span>
             @elseif(Session::has('institutionId') && $institutionId != NULL && $owner->equal(Auth::user()))
               <span class="right">
                 <a id="delete_button" class="institution" href="{{ URL::to('/institutions/' . $photos->id) }}" title="Excluir imagem"></a>
