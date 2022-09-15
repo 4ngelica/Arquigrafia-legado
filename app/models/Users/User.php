@@ -16,7 +16,7 @@ use modules\collaborative\models\Like;
 class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	use UserTrait, RemindableTrait;
-	
+
 	use UserGamificationTrait;
 
 	use Messagable;
@@ -60,7 +60,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	{
 		return $this->hasMany('modules\collaborative\models\Like');
 	}
-	
+
 	public function albums()
 	{
 		return $this->hasMany('Album');
@@ -109,7 +109,21 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $this->belongsToMany('Role', 'users_roles');
 	}
 
+	public function isAdmin()
+	{
+		if ($this->roles()->pluck('role_id') == 1) {
+			return true;
+		}
+		return false;
+	}
 
+	public function isResponsible()
+	{
+		if ($this->roles()->pluck('role_id') == 4) {
+			return true;
+		}
+	 	return false;
+	}
 
 	protected $hidden = array('password', 'remember_token');
 
@@ -170,11 +184,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	public static function userInformation($login){
-		
+
 		$user = User::whereRaw('((login = ?) or (email = ?)) and (id_stoa is NULL or id_stoa != login) and (id_facebook is NULL or id_facebook != login)', array($login, $login))->first();
           return $user;
 	}
-	
+
 
 	public static function userInformationObtain($email){
 		$user = User::where('email','=',$email)->whereRaw('(id_stoa is NULL or id_stoa != login) and (id_facebook is NULL or id_facebook != login)')->first();
@@ -182,7 +196,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	public static function userVerifyCode($verify_code){
-		$newUser = User::where('verify_code','=',$verify_code)->first();			
+		$newUser = User::where('verify_code','=',$verify_code)->first();
         return $newUser;
 	}
 
@@ -198,13 +212,13 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
      			->where('users.login',$login)
      			->orWhere('users.email',$login)
      			->get();
-     			
+
      			if (!empty($employees)){
      				return true;
      			}else{
      				return false;
      			}
-     			
+
 
 	}
 
@@ -216,6 +230,30 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		$this->oldAccount = 0;
 		$this->password = Hash::make($password);
 		$this->save();
+	}
+
+	public static function boot() {
+		parent::boot();
+
+		static::deleting(function($user) { // before delete() method call this
+				 $user->photos()->delete();
+				 $user->albums()->delete();
+				 $user->comments()->delete();
+				 $user->evaluations()->delete();
+				 $user->suggestions()->delete();
+				 $user->notifications()->delete();
+				 $user->likes()->delete();
+				 $user->news()->delete();
+				 $user->userPhotos($user->id)->delete();
+				 $user->userAlbums()->delete();
+				 $user->moderator()->delete();
+				 $user->occupation()->delete();
+				 $user->followers()->delete();
+				 $user->following()->delete();
+				 $user->institutions()->delete();
+				 $user->followingInstitution()->delete();
+				 $user->roles()->delete();
+		});
 	}
 
 }

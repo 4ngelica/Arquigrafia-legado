@@ -59,6 +59,11 @@ Route::get('/users/forget', 'UsersController@forgetForm');
 Route::post('/users/forget', 'UsersController@forget');
 Route::get('/getPicture', 'UsersController@getFacebookPicture');
 
+Route::get('/admin', 'UsersController@adminPanel');
+Route::post('/admin/{id}', 'UsersController@changeUserRole');
+Route::delete('/admin/{id}', 'UsersController@deleteUser');
+
+
 Route::resource('/users','UsersController');
 Route::resource('/users/stoaLogin','UsersController@stoaLogin');
 

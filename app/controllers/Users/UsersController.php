@@ -829,5 +829,35 @@ class UsersController extends \BaseController {
       }
   }
 
+  public function changeUserRole($id){
+    $input = Input::all();
+    $user = User::where('id', $id)->first();
+    if($user) {
+      $usersrole = UsersRole::where('user_id', $id)->first();
+      if(!$usersrole){
+        UsersRole::create([
+          'user_id' => $id,
+          'role_id' => $input['role_id']
+        ])->save();
+      }else{
+        UsersRole::where('user_id', $id)->update([
+          'user_id' => $id,
+          'role_id' => $input['role_id'],
+        ]);
+      }
+    }
 
+    return Redirect::back();
+  }
+
+  public function deleteUser($id){
+    $user = User::where('id', $id)->first();
+    $user->delete();
+    return Redirect::back();
+  }
+
+  public function adminPanel(){
+    $users = User::with('roles')->orderBy('name', 'ASC')->paginate(60);
+    return View::make('users.admin',['users' => $users]);
+  }
 }
