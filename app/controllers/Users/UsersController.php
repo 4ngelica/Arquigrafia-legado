@@ -234,24 +234,24 @@ class UsersController extends \BaseController {
   // formulário de login
   public function loginForm()
   {
-    // if (Auth::check())
-    //     return Redirect::to('/home');
-    //
-    // session_start();
-    // $fb_config = Config::get('facebook');
-    // FacebookSession::setDefaultApplication($fb_config["id"], $fb_config["secret"]);
-    // $helper = new FacebookRedirectLoginHelper(url('/users/login/fb/callback'));
-    // $fburl = $helper->getLoginUrl(array(
-    //       'scope' => 'email',
-    // ));
-    //
-    // $institutions = Institution::institutionsList();
-    //
-    // if (!Session::has('filter.login') && !Session::has('login.message')) //nao foi acionado pelo filtro, retornar para pagina anterior
-    //      Session::put('url.previous', URL::previous());
-    //
-    // return View::make('/modal/login')->with(['fburl' => $fburl,'institutions' => $institutions]);
-    return View::make('modal.maintenance');
+    if (Auth::check())
+        return Redirect::to('/home');
+
+    session_start();
+    $fb_config = Config::get('facebook');
+    FacebookSession::setDefaultApplication($fb_config["id"], $fb_config["secret"]);
+    $helper = new FacebookRedirectLoginHelper(url('/users/login/fb/callback'));
+    $fburl = $helper->getLoginUrl(array(
+          'scope' => 'email',
+    ));
+
+    $institutions = Institution::institutionsList();
+
+    if (!Session::has('filter.login') && !Session::has('login.message')) //nao foi acionado pelo filtro, retornar para pagina anterior
+         Session::put('url.previous', URL::previous());
+
+    return View::make('/modal/login')->with(['fburl' => $fburl,'institutions' => $institutions]);
+    // return View::make('modal.maintenance');
   }
 
    // validacao do login

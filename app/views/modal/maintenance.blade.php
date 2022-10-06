@@ -2,7 +2,7 @@
 
 @section('head')
    <title>
-      Arquigrafia - Entrar
+      Arquigrafia - Manutenção
    </title>
    <script type="text/javascript" src="{{ URL::to('/js/stoaLogin.js') }}"></script>
    <script type="text/javascript" src="{{ URL::to('/js/institutionLogin.js') }}"></script>
@@ -23,7 +23,7 @@
         <div class="six eight-xs columns offset-by-three offset-by-two-xs">
           <p>&nbsp;</p>
           <h2>Estamos em manutenção!
-            Para garantir uma experiência melhor, o login e cadastro de novos usuários está pausado temporariamente.</h2>
+            Para garantir uma experiência melhor, o cadastro de novos usuários está pausado temporariamente.</h2>
             <p class="text-center"><a href="/home" class="btn">Home</a> &nbsp; <a href="mailto: arquigrafiabr@gmail.com" class="btn">Contato</a></p>
           <p>&nbsp;</p>
         </div>
