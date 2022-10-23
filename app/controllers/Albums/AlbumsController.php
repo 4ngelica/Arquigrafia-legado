@@ -44,7 +44,7 @@ class AlbumsController extends \BaseController {
 			]);
 	}
 
-	public function show($id) { 
+	public function show($id) {
 		$album = Album::find($id);
 		$institutionlogged = false;
 		if (is_null($album)) {
@@ -52,16 +52,16 @@ class AlbumsController extends \BaseController {
 		}
 
 		$photos = $album->photos;
-		if (!is_null($album->institution)){			
+		if (!is_null($album->institution)){
 			$user = $album->institution;
 			$other_albums = Album::withInstitution($user)->except($album)->get();
 		} else {
-			$user = $album->user;				
+			$user = $album->user;
 			$other_albums = Album::withUser($user)->whereNull('institution_id')->except($album)->get();
 		}
 		if(Session::has('institutionId'))
 			$institutionlogged = true;
-		
+
 		return View::make('albums.show')
 			->with([
 				'photos' => $photos,
@@ -102,7 +102,7 @@ class AlbumsController extends \BaseController {
 		$album = Album::find($id);
 		$user = Auth::user();
 		$institution = Institution::find( Session::get('institutionId') );
-		if ( isset($album) && ( $user->equal($album->user) || 
+		if ( isset($album) && ( $user->equal($album->user) ||
 			(isset($institution) && $institution->equal($album->institution) ) ) )
 		{
 			$album->delete();
@@ -113,15 +113,15 @@ class AlbumsController extends \BaseController {
 
 	public function edit($id) {
 		$user = Auth::user();
-		$album = Album::find($id);		
+		$album = Album::find($id);
 		$institution = Institution::find( Session::get('institutionId') );
 		if ( Session::has('institutionId')) {
-			if(is_null($album) || !$institution->equal($album->institution)) 
-				return Redirect::to('/home');			
+			if(is_null($album) || !$institution->equal($album->institution))
+				return Redirect::to('/home');
 		} else if(is_null($album) || !($user->equal($album->user) && $album->institution_id == null)){
-				return Redirect::to('/home');			
+				return Redirect::to('/home');
 		}
-		
+
 		$album_photos = Photo::paginateAlbumPhotos($album);
 		if ( isset($institution) ) {
 			$other_photos = Photo::paginateInstitutionPhotosNotInAlbum($institution, $album);
@@ -212,19 +212,19 @@ class AlbumsController extends \BaseController {
 		foreach ($photos as $photo) {
 			$photos_ids[] = $photo->id;
 		}
-		return $photos_ids;		
+		return $photos_ids;
 	}
 
 	public function getList($id) {
 		//
 		$albums_with_photo = Photo::find($id)->albums; // albums que já têm essa foto
-		
-		if(Session::has('institutionId')) { 
+
+		if(Session::has('institutionId')) {
 			$albums = Album::withInstitution(Session::get('institutionId'))->except($albums_with_photo)->get();
 		}else{
 			$albums = Album::withUser( Auth::user() )->whereNull('institution_id')->except($albums_with_photo)->get();
 		}
-		
+
 		return Response::json(View::make('albums.get-albums')
 			->with(['albums' => $albums, 'photo_id' => $id])
 			->render());

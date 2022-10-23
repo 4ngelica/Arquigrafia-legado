@@ -1,0 +1,51 @@
+FROM php:5.6-apache
+
+RUN apt-get upgrade -y
+RUN apt-get -y update --fix-missing
+
+RUN apt-get update && apt-get install -y \
+        libzip-dev \
+        zip \
+        libmagickwand-dev \
+        libpng-dev \
+        libjpeg-dev \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libgd-dev \
+        openssl \
+        libssl-dev \
+        libmcrypt-dev \
+  && docker-php-ext-install zip
+
+RUN pecl install imagick && docker-php-ext-enable imagick
+
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && docker-php-ext-install gd
+
+RUN docker-php-ext-configure exif --enable-exif && docker-php-ext-install exif
+
+RUN docker-php-ext-install mcrypt && docker-php-ext-enable mcrypt
+
+RUN a2enmod headers && sed -ri -e 's/^([ \t])(<\/VirtualHost>)/\1\tHeader set Access-Control-Allow-Origin ""\n\1\2/g' /etc/apache2/sites-available/*.conf
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --version=2.0.7 --filename=composer
+RUN docker-php-ext-install pdo  pdo_mysql
+
+COPY . /var/www/html
+
+COPY ./php/dev-php.ini /usr/local/etc/php/php.ini
+COPY ./default.conf /etc/apache2/sites-enabled/000-default.conf
+
+#RUN apt-get update && apt-get install -y \
+#    software-properties-common \
+#    npm
+#RUN npm install npm@8.3.1 -g && \
+#    npm install n -g && \
+#    n latest --unsafe-perm=true --allow-root
+
+WORKDIR /var/www/html
+
+RUN a2enmod rewrite headers ssl
+RUN service apache2 restart
+
+EXPOSE 80
+EXPOSE 443

@@ -22,6 +22,7 @@ app/storage/original-images/*
 !app/storage/original-images/.gitkeep
 app/storage/views/*
 !app/storage/views/.gitkeep
+docker-compose.yml
 
 node_modules/*
 

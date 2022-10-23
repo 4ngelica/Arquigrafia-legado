@@ -222,6 +222,8 @@ class Photo extends Eloquent {
 	}
 
 	public static function paginateUserPhotos($user, $perPage = 24) {
+		// dd(	 static::withUser($user)
+		// 			->withoutInstitutions()->paginate($perPage));
 		return static::withUser($user)
 			->withoutInstitutions()->paginate($perPage);
 	}
